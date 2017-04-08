@@ -1,0 +1,10 @@
+*.pdf
+*.csv
+*.RData
+*.feather
+*.aux
+*.bbl
+*cache*
+*.html
+*figure/
+*_files/
