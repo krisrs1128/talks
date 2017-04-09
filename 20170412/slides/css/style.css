@@ -31,3 +31,9 @@ body {
     fill: none;
     stroke-width: 1
 }
+
+.partial_dependence {
+    fill: none;
+    stroke: #555555;
+    stroke-width: 3;
+}
