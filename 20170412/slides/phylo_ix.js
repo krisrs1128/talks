@@ -1,5 +1,5 @@
 
-function draw_phylo_ix() {
+function counts_phylo_ix() {
   d3.select("#vis svg")
     .selectAll("circle")
     .data(combined, function(d) { return d.Meas_ID + d.rsv; })
