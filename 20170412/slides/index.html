@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+        <script src="setup.js"></script>
+        <script src="phylo_ix.js"></script>
+        <script src="data/combined.js"></script>
+        <script src="title.js"></script>
+        <link href='css/style.css' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div id="vis"></div>
+	      <div id="section">
+		        <div id="sectionTitle"></div>
+		        <div id="sectionText"></div>
+	      </div>
+        <script>
+         var width = 1000;
+         var height = 600;
+         var phylo_ix_scale = d3.scaleLinear()
+                                .domain([10, 2610])
+                                .range([20, width - 20]);
+         var counts_scale = d3.scaleLinear()
+                              .domain([0, 13.45])
+                              .range([height - 10, 10]);
+         var taxa_top = combined.map(function(d) { return d.order_top; });
+         var taxa_cols = d3.scaleOrdinal()
+                           .domain(d3.set(taxa_top))
+                           .range(['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3',
+                                   '#a6d854', '#ffd92f', '#e5c494', '#b3b3b3']);
+         setup_page();
+         title_page();
+         draw_phylo_ix();
+        </script>
+    </body>
+</html>
