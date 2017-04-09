@@ -18,14 +18,6 @@ function initialize_samples() {
 }
 
 function initialize_rsvs() {
-  line_fun = d3.line()
-    .x(function(d) {
-      return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day);
-    })
-    .y(function(d) {
-      return scales.subject(d.subject) + scales.counts(d.jittered_count);
-    });
-
   d3.select("#vis svg")
     .selectAll(".rsv")
     .data(rsv)
@@ -33,7 +25,6 @@ function initialize_rsvs() {
     .append("path")
     .attrs({
       "class": "rsv",
-      "d": line_fun,
       "stroke": function(d) { return scales.taxa_cols(d[0].order_top); },
       "opacity": 0
     });
