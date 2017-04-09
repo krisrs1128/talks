@@ -5,6 +5,5 @@
 *.aux
 *.bbl
 *cache*
-*.html
 *figure/
 *_files/
