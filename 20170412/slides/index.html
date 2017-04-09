@@ -66,19 +66,20 @@
        scales.binarized.range([scales.subject.step(), 10]);
        scales.relative_day.range([0, scales.taxa_top.step()]);
 
-       var line_fun;
        setup_page();
        title_page();
        initialize_samples();
        //counts_taxa();
        //taxa_partial_dependence();
-       setTimeout(counts_phylo_ix, 1000);
-       setTimeout(phylo_ix_partial_dependence, 2000);
+       /* setTimeout(counts_phylo_ix, 1000);*/
+       /* setTimeout(phylo_ix_partial_dependence, 2000);*/
        /* setTimeout(binarize_phylo_ix, 3000);*/
        /* setTimeout(binarize_phylo_ix_partial_dependence, 4000);*/
-       //initialize_rsvs();
-       //setTimeout(counts_relative_day, 1000);
-       //setTimeout(relative_day_partial_dependence, 1500);
+       initialize_rsvs();
+       setTimeout(counts_relative_day, 1000);
+       setTimeout(relative_day_partial_dependence, 1500);
+       setTimeout(binarized_relative_day, 2000);
+       setTimeout(binarized_relative_day_partial_dependence, 2500);
       </script>
   </body>
 </html>

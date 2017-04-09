@@ -69,10 +69,18 @@ function phylo_ix_partial_dependence() {
   );
 }
 
-function binarize_phylo_ix_partial_dependence() {
+function binarized_phylo_ix_partial_dependence() {
   partial_dependence_path(
     f_combined["phylo_ix"],
     function(d) { return scales.phylo_ix(d.phylo_ix) },
+    function(d) { return scales.subject(d.subject) + scales.binarized(d.f_bar); }
+  );
+}
+
+function binarized_relative_day_partial_dependence() {
+  partial_dependence_path(
+    f_combined["rday"],
+    function(d) { return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day); },
     function(d) { return scales.subject(d.subject) + scales.binarized(d.f_bar); }
   );
 }
