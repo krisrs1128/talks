@@ -26,3 +26,8 @@ body {
 	  text-align: justify;
 	  line-height: 150%;
 }
+
+.rsv {
+    fill: none;
+    stroke-width: 1
+}
