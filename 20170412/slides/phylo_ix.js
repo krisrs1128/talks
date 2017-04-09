@@ -10,9 +10,9 @@ function initialize_samples() {
       "opacity": 0,
       "r": 3,
       "fill": function(d) { return scales.taxa_cols(d.order_top); },
-      "cx": function(d) { return scales.phylo_ix(d.phylo_ix); },
+      "cx": function(d) { return scales.taxa(d.order) + 10 * Math.random(); },
       "cy": function(d) {
-        return scales.subject(d.subject) + scales.counts(d.jittered_count)
+        return scales.subject(d.subject) + scales.counts(d.jittered_count);
       }
     });
 }
@@ -45,9 +45,6 @@ function counts_phylo_ix() {
     .duration(1000)
     .attrs({
       "cx": function(d) { return scales.phylo_ix(d.phylo_ix); },
-      "cy": function(d) {
-        return scales.subject(d.subject) + scales.counts(d.jittered_count);
-      },
       "fill": function(d) { return scales.taxa_cols(d.order_top); },
       "opacity": 0.8
     });
@@ -59,7 +56,10 @@ function binarize_phylo_ix() {
     .transition()
     .duration(1000)
     .attrs({
-      "cy": function(d) { return scales.binarized(d.jittered_binarized); }
+      "cy": function(d) {
+        return scales.subject(d.subject) + scales.binarized(d.jittered_binarized);
+      },
+      "opacity": 0.4
     });
 }
 
@@ -69,6 +69,9 @@ function counts_taxa() {
     .duration(1000)
     .attrs({
       "cx": function(d) { return scales.taxa(d.order) + 10 * Math.random(); },
+      "cy": function(d) {
+        return scales.subject(d.subject) + scales.counts(d.jittered_count);
+      },
       "opacity": 0.6
     });
 }

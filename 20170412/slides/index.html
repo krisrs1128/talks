@@ -45,8 +45,7 @@
            "counts": d3.scaleLinear()
                        .domain(feature_extent("jittered_count")),
            "binarized": d3.scaleLinear()
-                          .domain(feature_extent("jittered_binarized"))
-                          .range([height - 10, 10]),
+                          .domain(feature_extent("jittered_binarized")),
            "relative_day": d3.scaleLinear()
                              .domain(feature_extent("relative_day")),
            "taxa": d3.scaleBand()
@@ -58,7 +57,8 @@
                                   "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3"])
        }
 
-       scales.counts.range([scales.subject.step(), 0]);
+       scales.counts.range([scales.subject.step(), 10]);
+       scales.binarized.range([scales.subject.step(), 10]);
        scales.relative_day.range([0, scales.taxa_top.step()]);
 
        var line_fun;
@@ -66,8 +66,10 @@
        title_page();
        initialize_samples();
        initialize_rsvs();
-       counts_phylo_ix();
-       setTimeout(counts_relative_day, 1000);
+       counts_taxa();
+       setTimeout(counts_phylo_ix, 2000);
+       setTimeout(binarize_phylo_ix, 4000);
+       setTimeout(counts_relative_day, 5000);
       </script>
   </body>
 </html>
