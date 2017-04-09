@@ -44,7 +44,8 @@ function partial_dependence_path(cur_data, x_scale, y_scale) {
       "opacity": 0,
       "class": "partial_dependence",
       "d": partial_dependence_line
-    });
+    })
+    .style("stroke-dasharray", function(d) { return scales.model_dashes(d[0].method); });
 
   d3.selectAll(".partial_dependence")
     .transition()
@@ -54,7 +55,7 @@ function partial_dependence_path(cur_data, x_scale, y_scale) {
 
 function relative_day_partial_dependence() {
   partial_dependence_path(
-    f_combined["relative_day"],
+    f_combined["rday"],
     function(d) { return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day); },
     function(d) { return scales.subject(d.subject) + scales.counts(d.f_bar); }
   );
@@ -65,5 +66,13 @@ function phylo_ix_partial_dependence() {
     f_combined["phylo_ix"],
     function(d) { return scales.phylo_ix(d.phylo_ix) },
     function(d) { return scales.subject(d.subject) + scales.counts(d.f_bar); }
+  );
+}
+
+function binarize_phylo_ix_partial_dependence() {
+  partial_dependence_path(
+    f_combined["phylo_ix"],
+    function(d) { return scales.phylo_ix(d.phylo_ix) },
+    function(d) { return scales.subject(d.subject) + scales.binarized(d.f_bar); }
   );
 }
