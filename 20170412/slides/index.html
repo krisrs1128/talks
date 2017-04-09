@@ -34,7 +34,7 @@
 
        var scales = {
            "taxa_top": d3.scaleBand()
-                         .domain([order_top_levels, "dummy"])
+                         .domain(order_top_levels)
                          .range([20, width - 20]),
            "subject": d3.scaleBand()
                         .domain(d3.set(feature_array("subject")).values())
@@ -48,8 +48,7 @@
                           .domain(feature_extent("jittered_binarized"))
                           .range([height - 10, 10]),
            "relative_day": d3.scaleLinear()
-                             .domain(feature_extent("relative_day"))
-                             .range([20, width - 20]),
+                             .domain(feature_extent("relative_day")),
            "taxa": d3.scaleBand()
                      .domain(order_levels)
                      .range([20, width - 20]),
@@ -60,6 +59,7 @@
        }
 
        scales.counts.range([scales.subject.step(), 0]);
+       scales.relative_day.range([0, scales.taxa_top.step()]);
 
        var line_fun;
        setup_page();
