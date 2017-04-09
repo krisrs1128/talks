@@ -19,7 +19,9 @@ function initialize_samples() {
 
 function initialize_rsvs() {
   line_fun = d3.line()
-    .x(function(d) { return scales.relative_day(d.relative_day); })
+    .x(function(d) {
+      return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day);
+    })
     .y(function(d) {
       return scales.subject(d.subject) + scales.counts(d.jittered_count);
     });
