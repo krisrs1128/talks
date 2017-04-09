@@ -43,7 +43,7 @@ function counts_phylo_ix() {
     .duration(1000)
     .attrs({
       "cx": function(d) { return scales.phylo_ix(d.phylo_ix); },
-      "cy": function(d) { 
+      "cy": function(d) {
         return scales.subject(d.subject) + scales.counts(d.jittered_count);
       },
       "fill": function(d) { return scales.taxa_cols(d.order_top); },
