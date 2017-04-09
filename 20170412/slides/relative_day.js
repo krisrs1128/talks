@@ -5,7 +5,9 @@ function counts_relative_day() {
     .duration(1000)
     .attrs({
       "opacity": 0.8,
-      "cx": function(d) { return scales.relative_day(d.relative_day); },
+      "cx": function(d) {
+        return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day);
+      },
       "cy": function(d) {
         return scales.subject(d.subject) + scales.counts(d.jittered_count);
       }
