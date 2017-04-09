@@ -6,10 +6,12 @@
       <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
       <script src="phylo_ix.js"></script>
       <script src="relative_day.js"></script>
+      <script src="models.js"></script>
       <script src="data/combined.js"></script>
       <script src="data/rsv.js"></script>
       <script src="data/order_levels.js"></script>
       <script src="data/order_top_levels.js"></script>
+      <script src="data/f_combined.js"></script>
       <script src="title.js"></script>
       <script src="setup.js"></script>
       <link href='css/style.css' rel='stylesheet' type='text/css'>
@@ -65,11 +67,13 @@
        setup_page();
        title_page();
        initialize_samples();
-       initialize_rsvs();
+       initialize_partial_dependence();
        counts_taxa();
-       setTimeout(counts_phylo_ix, 2000);
-       setTimeout(binarize_phylo_ix, 4000);
-       setTimeout(counts_relative_day, 5000);
+       taxa_partial_dependence();
+       //setTimeout(counts_phylo_ix, 2000);
+       //setTimeout(binarize_phylo_ix, 4000);
+       //initialize_rsvs();
+       //setTimeout(counts_relative_day, 5000);
       </script>
   </body>
 </html>
