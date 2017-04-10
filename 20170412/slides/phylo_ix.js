@@ -41,7 +41,7 @@ function counts_phylo_ix() {
     });
 }
 
-function binarize_phylo_ix() {
+function binarize_samples() {
   d3.select("#vis svg")
     .selectAll(".sample")
     .transition()
