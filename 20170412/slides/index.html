@@ -78,32 +78,15 @@
        /* setTimeout(binarize_phylo_ix, 3000);*/
        /* setTimeout(binarize_phylo_ix_partial_dependence, 4000);*/
 
-       var counter = 10;
+       var counter = 9;
        function order() {
-           if (counter == 0) {title_page();}
-           if (counter == 1) { slide1(); }
-           if (counter == 2) { slide2(); }
-           if (counter == 3) { slide3(); }
-           if (counter == 4) { slide4(); }
-           if (counter == 5) { slide5(); }
-           if (counter == 6) { slide6(); }
-           if (counter == 7) { slide7(); }
-           if (counter == 8) { slide8(); }
-           if (counter == 9) { slide9(); }
-           if (counter == 10) { slide10(); }
-           if (counter == 11) { slide11(); }
-           if (counter == 12) { slide12(); }
-           if (counter == 13) { slide13(); }
-           if (counter == 14) { slide14(); }
-           if (counter == 15) { slide15(); }
-           if (counter == 16) { slide16(); }
-           if (counter == 17) { slide17(); }
-           if (counter == 18) { slide18(); }
-           if (counter == 19) { slide19(); }
-           if (counter == 20) { slide20(); }
-           if (counter == 21) { slide21(); }
-           if (counter == 22) { slide22(); }
-           MathJax.Hub.Queue(["Typeset",MathJax.Hub])
+           if (counter == 0) {
+               title_page();
+           } else {
+               eval("slide" + counter + "()");
+           }
+
+           MathJax.Hub.Queue(["Typeset", MathJax.Hub])
        }
 
        // from https://github.com/nbremer/urbanization/blob/gh-pages/index.html

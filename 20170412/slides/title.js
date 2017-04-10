@@ -227,11 +227,27 @@ function slide16() {
 }
 
 function slide17() {
+  initialize_rsvs();
   counts_relative_day();
+  slide_text(
+    [
+      "We've now separated each order into a separate panel column",
+      "As before, the rows describe different subjects",
+      "Within a panel, we have arranged samples by time and drawn lines linking the same RSV across timepoints"
+    ],
+    "Order + Time Effects"
+  );
 }
 
 function slide18() {
   relative_day_partial_dependence("full", "counts");
+  slide_text(
+    [
+      "Again, failing to distinguish between zero and nonzero counts leads to poor model fit",
+      "Note that CART never attempts to model any change over time",
+    ],
+    "Order + Time Effects"
+  );
 }
 
 function slide19() {
@@ -243,6 +259,14 @@ function slide19() {
 
 function slide20() {
   relative_day_partial_dependence("conditional", "counts");
+  slide_text(
+    [
+      "Viewing the conditionally-positive partial dependences, we identify very little variation over time, at least when marginalizing everything besides order and subject",
+      "That is, there seems to be little difference between this figure and the earlier one which only varied subject and taxonomic order",
+      "Generally, the subject time effect seems relatively weak"
+    ],
+    "Order + Time Effects"
+  );
 }
 
 function slide21() {
@@ -256,7 +280,49 @@ function slide21() {
 function slide22() {
   binarized_relative_day();
   relative_day_partial_dependence("binarized", "binarize");
+
+  slide_text(
+    [
+      "Modeling presence-absence, we note a very slight increasing trend in predicted probability of presence, at least in the time range displayed here"
+    ],
+    "Order + Time Effects"
+  );
 }
+
+function slide23() {
+  slide_text(
+    [
+      "We now consider effects occuring at a finer scale than taxonomic order, but without simply modeling raw RSV averages over time",
+      "Our approach is to arrange all RSVs along the phylogenetic tree and use the ordering along the tips to define a new feature",
+      "We have also defined features using an MDS on cophentic distance, but these effects are harder to visualize"
+    ],
+    "Phylogentic Position Effect"
+  );
+}
+
+function slide24() {
+  d3.selectAll(".rsv")
+    .transition()
+    .duration(1000)
+    .attr("opacity", 0)
+    .remove();
+  d3.selectAll(".partial_dependence")
+    .transition()
+    .duration(1000)
+    .attr("opacity", 0)
+    .remove();
+
+  counts_phylo_ix();
+}
+
+function slide25() {
+  phylo_ix_partial_dependence();
+}
+
+function slide26() {
+  binarize_samples();
+}
+
 
 function slide_text(bullet_content, title) {
   d3.select("#section_title")
