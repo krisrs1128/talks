@@ -40,7 +40,7 @@ body {
 .partial_dependence {
     fill: none;
     stroke: #555555;
-    stroke-width: 3;
+    stroke-width: 0.7;
 }
 
 .progressButton {
