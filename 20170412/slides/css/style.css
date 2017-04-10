@@ -43,43 +43,17 @@ body {
     stroke-width: 3;
 }
 
-#progress {
-    z-index: 1;
-    display: block;
-    position: relative;
-    width: 40%;
-    height: 6px;
-    margin: 0px auto;
-    padding-bottom: 30px;
-    visibility: hidden;
-}
-
 .progressButton {
-    display: block;
-    font-size: 10px;
+    width: 4%;
+    font-size: 14px;
     font-weight: 300;
-    position: relative;
-    /*width: 80px;*/
-    text-align: center;
-    width: 5%;
-    margin: 0 auto;
+    padding: 5px;
     border: 1px solid;
     cursor: pointer;
-    display:inline-block;
 }
 
 .activeButton {
     color: #363636;
     border-color: #363636;
     cursor: pointer;
-}
-
-#clickerWrapper {
-    z-index: 10;
-    display: block;
-    position: absolute;
-    margin-left: 5%;
-    width: 1000px;
-    top: 680px;
-    visibility: auto;
 }
