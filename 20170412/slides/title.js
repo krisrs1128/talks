@@ -122,6 +122,7 @@ function slide6() {
     "Implementation Principles: Shared Computation"
   );
 }
+
 function slide7() {
   slide_text(
     [
@@ -131,6 +132,46 @@ function slide7() {
     ],
     "Implementation Principles: Interpretation"
   );
+}
+
+function slide8() {
+  slide_text(
+    [
+      "We will apply these ideas to reanalyze data from the cleanout study",
+      "For illustration, we filter to subjects A and I, though with more computation, we could run on all subjects",
+      "Feature set considered: \{Day (relative to cleanout), Subject ID, Taxonomic Order, position on phylogenetic tree\}",
+      "We randomly remove 20\% of entries from the OTU table for validation, and all CV folds are contained in the remaining 80\%."
+    ],
+    "Experiment Setup"
+  );
+  d3.select("#vis svg")
+    .remove();
+}
+
+function slide9() {
+  slide_text(
+    [
+      "We first try to capture broad taxonomic effects using the taxonomic order feature",
+      "Each point represents one \\(\\text{rsv} \\times \\text{timepoint} \\times \\text{subject}\\) unit (for the rest of the slides)",
+      "For visualization (but not model estimation), we have downsampled the RSVs and limited the number fo timepoints in view"
+    ],
+    "Order Effects"
+  );
+}
+
+function slide10() {
+  d3.select("#vis")
+    .append("svg")
+    .attrs({
+      "width": width,
+      "height": height
+    });
+  initialize_samples();
+  counts_taxa();
+}
+
+function slide11() {
+  taxa_partial_dependence();
 }
 
 function slide_text(bullet_content, title) {
