@@ -4,6 +4,7 @@
       <title>Title</title>
       <script src="https://d3js.org/d3.v4.min.js"></script>
       <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full"></script>
       <script src="phylo_ix.js"></script>
       <script src="relative_day.js"></script>
       <script src="models.js"></script>
@@ -19,15 +20,15 @@
       <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
   </head>
   <body>
+      <div id="clickerWrapper">
+			    <div id="clicker_front" class="progressButton activeButton">Continue</div>
+			    <div id="clicker_back" class="progressButton activeButton">Back</div>
+      </div>
 		  <div id="section_title"></div>
       <section class="container">
           <div id="content"></div>
           <div id="vis"></div>
       </section>
-      <div id="clickerWrapper">
-			    <div id="clicker_front" class="progressButton activeButton">Continue</div>
-			    <div id="clicker_back" class="progressButton activeButton">Back</div>
-      </div>
       <script>
        var width = 500;
        var height = 600;
@@ -72,7 +73,7 @@
        scales.binarized.range([scales.subject.step(), 10]);
        scales.relative_day.range([0, scales.taxa_top.step()]);
 
-       setup_page();
+       //setup_page();
        //counts_taxa();
        //taxa_partial_dependence();
        /* setTimeout(counts_phylo_ix, 1000);*/
@@ -80,15 +81,21 @@
        /* setTimeout(binarize_phylo_ix, 3000);*/
        /* setTimeout(binarize_phylo_ix_partial_dependence, 4000);*/
 
-       var counter = 0
+       var counter = 7;
        function order() {
            if (counter == 0) {title_page();}
            if (counter == 1) { slide1(); }
            if (counter == 2) { slide2(); }
-           if (counter == 3) {
+           if (counter == 3) { slide3(); }
+           if (counter == 4) { slide4(); }
+           if (counter == 5) { slide5(); }
+           if (counter == 6) { slide6(); }
+           if (counter == 7) { slide7(); }
+           if (counter == 8) {
                initialize_samples();
                counts_relative_day();
            }
+           MathJax.Hub.Queue(["Typeset",MathJax.Hub])
        }
 
        // from https://github.com/nbremer/urbanization/blob/gh-pages/index.html
@@ -96,14 +103,16 @@
 			   .on("click", function(e){
 				     order();
              counter += 1;
+             console.log(counter);
 			   });
 
 		   //Order of steps when clicking the back button
 		   d3.select("#clicker_back")
 			   .on("click", function(e){
-				     counter = counter - 2;
+				     counter -= 1;
 				     if (counter < 0) counter = 0;
 				     order();
+             console.log(counter);
 			   });
 
       </script>
