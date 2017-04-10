@@ -100,10 +100,9 @@
            if (counter == 17) { slide17(); }
            if (counter == 18) { slide18(); }
            if (counter == 19) { slide19(); }
-           if (counter == 20) {
-               initialize_samples();
-               counts_relative_day();
-           }
+           if (counter == 20) { slide20(); }
+           if (counter == 21) { slide21(); }
+           if (counter == 22) { slide22(); }
            MathJax.Hub.Queue(["Typeset",MathJax.Hub])
        }
 
@@ -111,7 +110,7 @@
        d3.select("#clicker_front")
 			   .on("click", function(e){
 				     order();
-             if (counter < 20) counter += 1;
+             if (counter < 30) counter += 1;
              console.log(counter);
 			   });
 
