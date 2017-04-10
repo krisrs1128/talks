@@ -69,19 +69,16 @@
                              .range(["0", "5,5", "1"])
        }
 
-       scales.counts.range([scales.subject.step(), 0]);
-       scales.binarized.range([scales.subject.step(), 0]);
+       scales.counts.range([scales.subject.step(), 10]);
+       scales.binarized.range([scales.subject.step(), 10]);
        scales.relative_day.range([0, scales.taxa_top.step()]);
 
-       //setup_page();
-       //counts_taxa();
-       //taxa_partial_dependence();
        /* setTimeout(counts_phylo_ix, 1000);*/
        /* setTimeout(phylo_ix_partial_dependence, 2000);*/
        /* setTimeout(binarize_phylo_ix, 3000);*/
        /* setTimeout(binarize_phylo_ix_partial_dependence, 4000);*/
 
-       var counter = 7;
+       var counter = 10;
        function order() {
            if (counter == 0) {title_page();}
            if (counter == 1) { slide1(); }
@@ -95,6 +92,14 @@
            if (counter == 9) { slide9(); }
            if (counter == 10) { slide10(); }
            if (counter == 11) { slide11(); }
+           if (counter == 12) { slide12(); }
+           if (counter == 13) { slide13(); }
+           if (counter == 14) { slide14(); }
+           if (counter == 15) { slide15(); }
+           if (counter == 16) { slide16(); }
+           if (counter == 17) { slide17(); }
+           if (counter == 18) { slide18(); }
+           if (counter == 19) { slide19(); }
            if (counter == 20) {
                initialize_samples();
                counts_relative_day();
