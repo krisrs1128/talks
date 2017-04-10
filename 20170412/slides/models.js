@@ -2,7 +2,7 @@
 function partial_dependence_points(cur_data, x_scale, y_scale) {
   d3.select("#vis svg")
     .selectAll(".partial_dependence")
-    .data(cur_data, function(d) { return d.order + "_" + d.ix } )
+    .data(cur_data, function(d) { return d.order + "_" + d.ix + "_" + d.subject; } )
     .enter()
     .append("circle")
     .attrs({
@@ -41,18 +41,13 @@ function taxa_partial_dependence(filter_types, scale_type) {
 }
 
 function partial_dependence_path(cur_data, x_scale, y_scale) {
-  d3.selectAll(".partial_dependence")
-    .remove();
-
   var partial_dependence_line = d3.line()
       .x(function(d) {return x_scale(d); })
       .y(function(d) { return y_scale(d); });
 
-  console.log(cur_data);
-
   d3.select("#vis svg")
     .selectAll(".partial_dependence")
-    .data(cur_data)
+    .data(cur_data, function(d) { return d.ix + d.order + d.subject;})
     .enter()
     .append("path")
     .attrs({
@@ -63,22 +58,29 @@ function partial_dependence_path(cur_data, x_scale, y_scale) {
     .style("stroke-dasharray", function(d) { return scales.model_dashes(d[0].algorithm); });
 
   d3.selectAll(".partial_dependence")
-    .transition()
+    .transition("show_partial_dependence_path")
     .duration(1000)
     .attr("opacity", 1);
 }
 
-function relative_day_partial_dependence(filter_types) {
-  var rday_data = [].concat.apply([], f_combined["rday"]);
-  var filtered_data = rday_data.filter(
+function relative_day_partial_dependence(filter_types, scale_type) {
+  var filtered_data = f_combined["rday"].filter(
     function(d) {
-      return filter_types.indexOf(d.model_type) != -1;
+      return filter_types.indexOf(d[0].model_type) != -1;
     }
   );
+
+  var panel_scale;
+  if (scale_type == "counts") {
+    panel_scale = scales.counts;
+  } else {
+    panel_scale = scales.binarized;
+
+  }
   partial_dependence_path(
     filtered_data,
     function(d) { return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day); },
-    function(d) { return scales.subject(d.subject) + scales.counts(d.f_bar); }
+    function(d) { return scales.subject(d.subject) + panel_scale(d.f_bar); }
   );
 }
 
