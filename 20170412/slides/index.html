@@ -15,15 +15,21 @@
       <script src="title.js"></script>
       <script src="setup.js"></script>
       <link href='css/style.css' rel='stylesheet' type='text/css'>
+      <link href="https://fonts.googleapis.com/css?family=Hind" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
   </head>
   <body>
-      <div id="vis"></div>
-	    <div id="section">
-		      <div id="sectionTitle"></div>
-	        <div id="sectionText"></div>
-	    </div>
+		  <div id="section_title"></div>
+      <section class="container">
+          <div id="content"></div>
+          <div id="vis"></div>
+      </section>
+      <div id="clickerWrapper">
+			    <div id="clicker_front" class="progressButton activeButton">Continue</div>
+			    <div id="clicker_back" class="progressButton activeButton">Back</div>
+      </div>
       <script>
-       var width = 1000;
+       var width = 500;
        var height = 600;
 
        function feature_array(name) {
@@ -67,19 +73,39 @@
        scales.relative_day.range([0, scales.taxa_top.step()]);
 
        setup_page();
-       title_page();
-       initialize_samples();
        //counts_taxa();
        //taxa_partial_dependence();
        /* setTimeout(counts_phylo_ix, 1000);*/
        /* setTimeout(phylo_ix_partial_dependence, 2000);*/
        /* setTimeout(binarize_phylo_ix, 3000);*/
        /* setTimeout(binarize_phylo_ix_partial_dependence, 4000);*/
-       initialize_rsvs();
-       setTimeout(counts_relative_day, 1000);
-       setTimeout(relative_day_partial_dependence, 1500);
-       setTimeout(binarized_relative_day, 2000);
-       setTimeout(binarized_relative_day_partial_dependence, 2500);
+
+       var counter = 0
+       function order() {
+           if (counter == 0) {title_page();}
+           if (counter == 1) { slide1(); }
+           if (counter == 2) { slide2(); }
+           if (counter == 3) {
+               initialize_samples();
+               counts_relative_day();
+           }
+       }
+
+       // from https://github.com/nbremer/urbanization/blob/gh-pages/index.html
+       d3.select("#clicker_front")
+			   .on("click", function(e){
+				     order();
+             counter += 1;
+			   });
+
+		   //Order of steps when clicking the back button
+		   d3.select("#clicker_back")
+			   .on("click", function(e){
+				     counter = counter - 2;
+				     if (counter < 0) counter = 0;
+				     order();
+			   });
+
       </script>
   </body>
 </html>
