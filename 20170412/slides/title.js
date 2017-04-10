@@ -139,6 +139,7 @@ function slide8() {
     [
       "We will apply these ideas to reanalyze data from the cleanout study",
       "For illustration, we filter to subjects A and I, though with more computation, we could run on all subjects",
+      "We \(\sinh^{-1}\) transform the response",
       "Feature set considered: \{Day (relative to cleanout), Subject ID, Taxonomic Order, position on phylogenetic tree\}",
       "We randomly remove 20\% of entries from the OTU table for validation, and all CV folds are contained in the remaining 80\%."
     ],
@@ -171,7 +172,70 @@ function slide10() {
 }
 
 function slide11() {
-  taxa_partial_dependence();
+  taxa_partial_dependence("full", "counts");
+
+  slide_text(
+    [
+      "Each gray circle represents the partial effect of order, after marginalizing out all other features, for a single model",
+      "Models trained across different folds are all represented",
+      "It appears that zero-inflation has thrown off our naive regression models, placing many predictions midway between the zero and positive mixture components of the response",
+      "As an alternative, consider the hurdle model decomposition, \\begin{align} \\mathbf{E}\\left[Y\\right] = \\mathbf{E}\\left[Y \\vert Y > 0\\right] \\mathbf{Pr}\\left(Y > 0\\right)\\end{align}"
+    ],
+    "Order Effects"
+  );
+}
+
+function slide12() {
+  d3.selectAll(".partial_dependence")
+    .transition("fade_points")
+    .duration(1000)
+    .attr("opacity", 0.1);
+  taxa_partial_dependence("conditional", "counts");
+}
+
+function slide13() {
+  d3.selectAll(".partial_dependence")
+    .transition("remove_points")
+    .duration(1000)
+    .attr("opacity", 0)
+    .remove();
+}
+
+function slide14() {
+  binarize_samples();
+}
+
+function slide15() {
+  taxa_partial_dependence("binarized", "binarize");
+}
+
+function slide16() {
+  d3.selectAll(".partial_dependence")
+    .transition()
+    .duration(1000)
+    .attr("opacity", 0)
+    .remove();
+
+  slide_text(
+    [
+      "Order level taxonomic effects are very coarse, but we can query a range of properties of the fitted response surface",
+      "Next we consider the joint partial dependence of subject, time, and order, conditional on the phylogenetic position feature",
+      "As before, we show estimates from both the naive and hurdle decomposed models"
+    ],
+    "Order + Time Effects"
+  );
+}
+
+function slide17() {
+  counts_relative_day();
+}
+
+function slide18() {
+  relative_day_partial_dependence("full");
+}
+
+function slide19() {
+  relative_day_partial_dependence("conditional");
 }
 
 function slide_text(bullet_content, title) {
