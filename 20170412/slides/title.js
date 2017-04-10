@@ -231,11 +231,31 @@ function slide17() {
 }
 
 function slide18() {
-  relative_day_partial_dependence("full");
+  relative_day_partial_dependence("full", "counts");
 }
 
 function slide19() {
-  relative_day_partial_dependence("conditional");
+  d3.selectAll(".partial_dependence")
+    .transition("fade_relative_day_full_paths")
+    .duration(1000)
+    .style("stroke-opacity", 0.1);
+}
+
+function slide20() {
+  relative_day_partial_dependence("conditional", "counts");
+}
+
+function slide21() {
+  d3.selectAll(".partial_dependence")
+    .transition("fade_relative_day_positive_paths")
+    .duration(1000)
+    .style("stroke-opacity", 0)
+    .remove();
+}
+
+function slide22() {
+  binarized_relative_day();
+  relative_day_partial_dependence("binarized", "binarize");
 }
 
 function slide_text(bullet_content, title) {
