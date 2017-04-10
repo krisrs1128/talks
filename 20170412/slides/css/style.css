@@ -1,5 +1,6 @@
 body {
     /*overflow: hidden;*/
+	  background-color: #F7F7F7;
     margin: 0;
     font-size: 10px;
     font-family: 'Open Sans', sans-serif;
@@ -7,24 +8,28 @@ body {
     color: #292929;
 }
 
-#section {
-    position: absolute;
-    top: 60px;
-    left: 650px;
-    width: 320px;
-    visiblity: hidden;
-}
-
-#sectionTitle {
-    font-size: 32px;
-    font-weight: 300;
-    padding-bottom: 7px;
-}
-
-#sectionText {
-	  color: #6B6B6B;
+#section_title {
 	  text-align: justify;
-	  line-height: 150%;
+    font-family: Hind;
+    font-size: 30px;
+    font-weight: 300;
+    padding-top: 5%;
+    padding-left: 10%;
+}
+
+#content {
+    padding-left: 5%;
+    width: 45%;
+    float: left;
+}
+
+#vis {
+    margin-left: 55%;
+}
+
+.bullet_point {
+    font-size: 25px;
+    font-family: Hind;
 }
 
 .rsv {
@@ -36,4 +41,45 @@ body {
     fill: none;
     stroke: #555555;
     stroke-width: 3;
+}
+
+#progress {
+    z-index: 1;
+    display: block;
+    position: relative;
+    width: 40%;
+    height: 6px;
+    margin: 0px auto;
+    padding-bottom: 30px;
+    visibility: hidden;
+}
+
+.progressButton {
+    display: block;
+    font-size: 10px;
+    font-weight: 300;
+    position: relative;
+    /*width: 80px;*/
+    text-align: center;
+    width: 5%;
+    margin: 0 auto;
+    border: 1px solid;
+    cursor: pointer;
+    display:inline-block;
+}
+
+.activeButton {
+    color: #363636;
+    border-color: #363636;
+    cursor: pointer;
+}
+
+#clickerWrapper {
+    z-index: 10;
+    display: block;
+    position: absolute;
+    margin-left: 5%;
+    width: 1000px;
+    top: 680px;
+    visibility: auto;
 }
