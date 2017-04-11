@@ -1,30 +1,38 @@
 
 function axes_taxa() {
+  var facet_rows = scales.subject.domain();
   var x_axis = d3.axisBottom(scales.taxa)
       .tickSize(0);
   d3.select("#vis svg")
+    .selectAll(".x_axis")
+    .data(facet_rows)
+    .enter()
     .append("g")
     .attrs({
-      "id": "x_axis",
+      "id": function(d) { return "x_axis" + d; },
       "class": "x_axis",
-      "transform": "translate(0," + (scales.subject.range()[0]) + ")",
+      "transform": function(d) { return "translate(0," + (scales.subject(d) + scales.subject.step()) + ")"; },
       "opacity": 0
     })
     .call(x_axis);
 
-  d3.select("#x_axis")
+  d3.selectAll(".x_axis")
     .selectAll("text")
     .attrs({
       "transform": "rotate(20)translate(0,15)"
     });
 
+
+  var last_subject = scales.subject.domain()[0];
+  d3.selectAll(".x_axis:not(#x_axis" + last_subject + ") text")
+    .remove();
+
   var y_axis = d3.axisLeft(scales.counts)
       .tickSize(0)
       .ticks(4);
-  var facet_cols = scales.subject.domain();
   d3.select("#vis svg")
     .selectAll(".y_axis")
-    .data(facet_cols)
+    .data(facet_rows)
     .enter()
     .append("g")
     .attrs({
@@ -111,4 +119,4 @@ function unbinarize_axes() {
     .transition()
     .duration(1000)
     .call(y_axis);
-}
+} 
