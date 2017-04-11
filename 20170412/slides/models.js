@@ -7,7 +7,7 @@ function partial_dependence_points(cur_data, x_scale, y_scale) {
     .append("circle")
     .attrs({
       "class": "partial_dependence",
-      "r": 4,
+      "r": 2,
       "opacity": 0,
       "cx": x_scale,
       "cy": y_scale
@@ -85,6 +85,12 @@ function relative_day_partial_dependence(filter_types, scale_type) {
 }
 
 function phylo_ix_partial_dependence() {
+  var filtered_data = f_combined["phylo_ix"].filter(
+    function(d) {
+      return ["conditional"].indexOf(d[0].model_type) != -1;
+    }
+  );
+
   partial_dependence_path(
     f_combined["phylo_ix"],
     function(d) { return scales.phylo_ix(d.phylo_ix) },
@@ -93,6 +99,12 @@ function phylo_ix_partial_dependence() {
 }
 
 function binarized_phylo_ix_partial_dependence() {
+  var filtered_data = f_combined["phylo_ix"].filter(
+    function(d) {
+      return ["binarize"].indexOf(d[0].model_type) != -1;
+    }
+  );
+
   partial_dependence_path(
     f_combined["phylo_ix"],
     function(d) { return scales.phylo_ix(d.phylo_ix) },
