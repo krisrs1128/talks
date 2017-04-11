@@ -7,7 +7,7 @@ function axes_taxa() {
     .attrs({
       "id": "x_axis",
       "class": "x_axis",
-      "transform": "translate(0," + (10 + scales.subject.range()[0]) + ")",
+      "transform": "translate(0," + (scales.subject.range()[0]) + ")",
       "opacity": 0
     })
     .call(x_axis);
@@ -30,7 +30,7 @@ function axes_taxa() {
     .attrs({
       "id": function(d) { return "y_axis" + d; },
       "class": "y_axis",
-      "transform": function(d) { return "translate(" + (scales.taxa.range()[0] - 10) + "," + (scales.subject(d)) + ")"; },
+      "transform": function(d) { return "translate(" + (scales.taxa.range()[0]) + "," + (scales.subject(d)) + ")"; },
       "opacity": 0
     })
     .call(y_axis);
@@ -59,7 +59,7 @@ function axes_relative_day() {
       "id": function(d) { return "x_axis" + d; },
       "class": "x_axis",
       "transform": function(d) {
-        return "translate(" + scales.taxa_top(d) + "," + (10 + scales.subject.range()[0]) + ")";
+        return "translate(" + scales.taxa_top(d) + "," + (scales.subject.range()[0]) + ")";
       },
       "opacity": 0
     })
@@ -72,7 +72,7 @@ function axes_relative_day() {
 }
 
 function axes_phylo_ix() {
-  d3.selectAll(".axis").remove();
+  d3.selectAll(".x_axis").remove();
 
   var x_axis = d3.axisBottom(scales.phylo_ix)
       .tickSize(0)
@@ -80,14 +80,14 @@ function axes_phylo_ix() {
   d3.select("#vis svg")
     .append("g")
     .attrs({
-      "transform": "translate(0," + (10 + scales.subject.range()[0]) + ")",
+      "transform": "translate(0," + (scales.subject.range()[0]) + ")",
       "id": "x_axis",
       "class": "x_axis",
       "opacity": 0
     })
     .call(x_axis);
 
-  d3.selectAll(".axis")
+  d3.selectAll(".x_axis")
     .transition()
     .duration(1000)
     .attr("opacity", 1);
