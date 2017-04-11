@@ -177,9 +177,9 @@ function slide10() {
       "width": width,
       "height": height
     });
-  axes_taxa();
   initialize_samples();
   counts_taxa();
+  axes_taxa();
 }
 
 function slide11() {
@@ -292,6 +292,7 @@ function slide21() {
 
 function slide22() {
   binarized_relative_day();
+  binarize_axes();
   relative_day_partial_dependence("binarized", "binarize");
 
   slide_text(
