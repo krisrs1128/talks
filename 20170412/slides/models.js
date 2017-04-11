@@ -40,14 +40,15 @@ function taxa_partial_dependence(filter_types, scale_type) {
   );
 }
 
-function partial_dependence_path(cur_data, x_scale, y_scale) {
+function partial_dependence_path(cur_data, x_scale, y_scale, key_fun) {
   var partial_dependence_line = d3.line()
       .x(function(d) {return x_scale(d); })
       .y(function(d) { return y_scale(d); });
 
+  console.log(key_fun);
   d3.select("#vis svg")
     .selectAll(".partial_dependence")
-    .data(cur_data, function(d) { return d.ix + d.order + d.subject;})
+    .data(cur_data, key_fun)
     .enter()
     .append("path")
     .attrs({
@@ -80,7 +81,8 @@ function relative_day_partial_dependence(filter_types, scale_type) {
   partial_dependence_path(
     filtered_data,
     function(d) { return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day); },
-    function(d) { return scales.subject(d.subject) + panel_scale(d.f_bar); }
+    function(d) { return scales.subject(d.subject) + panel_scale(d.f_bar); },
+    function(d) { return d.ix + d.order + d.subject;}
   );
 }
 
@@ -92,9 +94,10 @@ function phylo_ix_partial_dependence() {
   );
 
   partial_dependence_path(
-    f_combined["phylo_ix"],
-    function(d) { return scales.phylo_ix(d.phylo_ix) },
-    function(d) { return scales.subject(d.subject) + scales.counts(d.f_bar); }
+    f_combined["rday"],
+    function(d) { return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day); },
+    function(d) { return scales.subject(d.subject) + scales.binarized(d.f_bar); },
+    function(d) { return d.ix + d.order + d.subject;}
   );
 }
 
@@ -106,16 +109,25 @@ function binarized_phylo_ix_partial_dependence() {
   );
 
   partial_dependence_path(
-    f_combined["phylo_ix"],
-    function(d) { return scales.phylo_ix(d.phylo_ix) },
-    function(d) { return scales.subject(d.subject) + scales.binarized(d.f_bar); }
+    filtered_data,
+    function(d) { return scales.phylo_ix(d.phylo_ix); },
+    function(d) { return scales.subject(d.subject) + scales.counts(d.f_bar); },
+    function(d) { return d.ix + d.subject;}
   );
 }
 
-function binarized_relative_day_partial_dependence() {
+function binarized_phylo_ix_partial_dependence() {
+  var filtered_data = f_combined["phylo_ix"].filter(
+    function(d) {
+      return ["binarize"].indexOf(d[0].model_type) != -1;
+    }
+  );
+
   partial_dependence_path(
-    f_combined["rday"],
-    function(d) { return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day); },
-    function(d) { return scales.subject(d.subject) + scales.binarized(d.f_bar); }
+    filtered_data,
+    function(d) { return scales.phylo_ix(d.phylo_ix) },
+    function(d) { return scales.subject(d.subject) + scales.binarized(d.f_bar); },
+    function(d) { return d.ix + d.subject;}
   );
 }
+
