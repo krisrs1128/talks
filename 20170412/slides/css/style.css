@@ -54,3 +54,8 @@ body {
     border-color: #363636;
     cursor: pointer;
 }
+
+.axis path {
+    stroke-width: 0.5;
+    stroke: "#808080";
+}
