@@ -53,52 +53,32 @@ function axes_relative_day() {
   d3.selectAll(".x_axis").remove();
   unbinarize_axes();
 
+  // Draw new x axis, one per facet panel
   var x_axis = d3.axisBottom(scales.relative_day)
       .tickSize(0)
       .ticks(3, "d");
 
-  var facets = [];
-  for (var i = 0; i < scales.taxa_top.domain().length; i++) {
-    for (var j = 0; j < scales.subject.domain().length; j++) {
-      facets.push({
-        "row": scales.subject.domain()[j],
-        "col": scales.taxa_top.domain()[i],
-        "text_display": j == 0
-      });
-    }
-  }
-
   d3.select("#vis svg")
     .selectAll(".x_axis")
-    .data(facets)
+    .data(scales.taxa_top.domain())
     .enter()
     .append("g")
     .attrs({
       "id": function(d) { return "x_axis" + d; },
       "class": "x_axis",
       "transform": function(d) {
-        return "translate(" + scales.taxa_top(d.col) + "," + (scales.subject(d.row) + scales.subject.step()) + ")";
+        return "translate(" + scales.taxa_top(d) + "," + scales.subject.range()[0] + ")";
       },
       "opacity": 0
     })
     .call(x_axis);
 
   d3.selectAll(".x_axis")
-    .transition("appear")
+    .transition()
     .duration(1000)
     .attr("opacity", 1);
 
-  d3.selectAll(".x_axis")
-    .transition("remove_text")
-    .attrs({
-      "font-size": function(d) {
-        if (d.text_display) {
-          return 12;
-        }
-        return 0;
-      }
-    });
-
+  // Draw the faceting boundaries
   var col_data = [];
   for (var i = 0; i < scales.taxa_top.domain().length; i++) {
     var cur_line = [];
@@ -111,10 +91,26 @@ function axes_relative_day() {
     col_data.push(cur_line);
   }
 
-  // last column
+  var row_data = [];
+  for (var i = 0; i < scales.subject.domain().length; i++) {
+    var cur_line = [];
+    for (j = 0; j < 2; j++) {
+      cur_line.push({
+        "x": scales.taxa_top.range()[j],
+        "y": scales.subject(scales.subject.domain()[i])
+      });
+    }
+    row_data.push(cur_line);
+  }
+
+  // top and right most row & column
   col_data.push([
     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[0]},
     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[1]}
+  ]);
+  row_data.push([
+    {"x": scales.taxa_top.range()[0], "x": scales.subject.range()[1]},
+    {"y": scales.subject.range()[1], "y": scales.subject.range()[1]}
   ]);
 
   var facet_line = d3.line()
@@ -123,15 +119,21 @@ function axes_relative_day() {
 
   d3.select("#vis svg")
     .selectAll(".facet_boundary")
-    .data(col_data)
+    .data(col_data.concat(row_data))
     .enter()
     .append("path")
     .attrs({
       "d": facet_line,
       "class": "facet_boundary",
       "stroke": "black",
-      "fill": "none"
+      "fill": "none",
+      "opacity": 0
     });
+
+  d3.selectAll(".facet_boundary")
+    .transition()
+    .duration(1000)
+    .attr("opacity", 1);
 
 }
 

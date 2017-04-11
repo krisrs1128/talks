@@ -45,7 +45,6 @@ function partial_dependence_path(cur_data, x_scale, y_scale, key_fun) {
       .x(function(d) {return x_scale(d); })
       .y(function(d) { return y_scale(d); });
 
-  console.log(key_fun);
   d3.select("#vis svg")
     .selectAll(".partial_dependence")
     .data(cur_data, key_fun)

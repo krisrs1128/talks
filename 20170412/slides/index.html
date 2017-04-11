@@ -62,7 +62,7 @@
            "binarized": d3.scaleLinear()
                           .domain(feature_extent("jittered_binarized", -0.1, 0.1)),
            "relative_day": d3.scaleLinear()
-                             .domain(feature_extent("relative_day", -3, 0)),
+                             .domain(feature_extent("relative_day", -4, 10)),
            "taxa": d3.scaleBand()
                      .domain(order_levels)
                      .range([30, width - 5]),
