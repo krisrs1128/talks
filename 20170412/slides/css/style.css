@@ -55,11 +55,12 @@ body {
     cursor: pointer;
 }
 
-.axis path {
-    stroke-width: 0.5;
+.x_axis, .y_axis path {
+    stroke-width: 0.2;
     stroke: "#808080";
 }
 
-.axis text {
-    font-size: 10
+.x_axis, .y_axis text {
+    font-size: 10;
+    font-family: Hind;
 }
