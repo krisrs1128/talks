@@ -16,33 +16,6 @@ function initialize_samples() {
     });
 }
 
-function initialize_axes() {
-  var x_axis = d3.axisBottom(scales.taxa)
-      .tickSize(0)
-  d3.select("#vis svg")
-    .append("g")
-    .attrs({
-      "transform": "translate(0," + (10 + scales.subject.range()[0]) + ")",
-      "id": "x_axis",
-      "class": "axis"
-    })
-    .call(x_axis);
-
-  d3.select("#x_axis")
-    .selectAll("text")
-    .attrs({
-      "font-size": 10,
-      "transform": "rotate(20)translate(0,15)"
-    });
-
-  d3.select("#x_axis")
-    .selectAll("path")
-    .attrs({
-      "stroke-width": 0.5,
-      "stroke": "#808080"
-    });
-}
-
 function initialize_rsvs() {
   d3.select("#vis svg")
     .selectAll(".rsv")
