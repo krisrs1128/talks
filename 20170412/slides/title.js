@@ -213,6 +213,7 @@ function slide13() {
 }
 
 function slide14() {
+  binarize_axes();
   binarize_samples();
 }
 
