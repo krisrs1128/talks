@@ -64,3 +64,8 @@ body {
     font-size: 10;
     font-family: Hind;
 }
+
+.facet_boundary {
+    stroke-width: 0.2;
+    stroke: "#808080";
+}

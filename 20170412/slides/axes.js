@@ -99,6 +99,39 @@ function axes_relative_day() {
       }
     });
 
+  var col_data = [];
+  for (var i = 0; i < scales.taxa_top.domain().length; i++) {
+    var cur_line = [];
+    for (j = 0; j < 2; j++) {
+      cur_line.push({
+        "x": scales.taxa_top(scales.taxa_top.domain()[i]),
+        "y": scales.subject.range()[j]
+      });
+    }
+    col_data.push(cur_line);
+  }
+
+  // last column
+  col_data.push([
+    {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[0]},
+    {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[1]}
+  ]);
+
+  var facet_line = d3.line()
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; });
+
+  d3.select("#vis svg")
+    .selectAll(".facet_boundary")
+    .data(col_data)
+    .enter()
+    .append("path")
+    .attrs({
+      "d": facet_line,
+      "class": "facet_boundary",
+      "stroke": "black",
+      "fill": "none"
+    });
 
 }
 
