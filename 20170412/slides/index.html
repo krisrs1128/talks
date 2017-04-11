@@ -42,16 +42,18 @@
            return d3.extent(feature_array(name));
        }
 
+       var phylo_extent = feature_extent("phylo_ix");
+
        var scales = {
            "taxa_top": d3.scaleBand()
                          .domain(order_top_levels)
-                         .range([20, width - 20]),
+                         .range([30, width - 5]),
            "subject": d3.scaleBand()
                         .domain(d3.set(feature_array("subject")).values())
                         .range([height - 50, 0]),
            "phylo_ix": d3.scaleLinear()
-                         .domain(feature_extent("phylo_ix"))
-                         .range([20, width - 20]),
+                         .domain([phylo_extent[0] - 20, phylo_extent[1]])
+                         .range([30, width - 5]),
            "counts": d3.scaleLinear()
                        .domain(feature_extent("jittered_count")),
            "binarized": d3.scaleLinear()
@@ -60,7 +62,7 @@
                              .domain(feature_extent("relative_day")),
            "taxa": d3.scaleBand()
                      .domain(order_levels)
-                     .range([30, width - 10]),
+                     .range([30, width - 5]),
            "taxa_cols": d3.scaleOrdinal()
                           .domain(order_top_levels)
                           .range(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3",
