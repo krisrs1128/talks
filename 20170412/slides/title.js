@@ -18,7 +18,10 @@ function title_page()  {
     .append("text")
     .style("font-size", "40px")
     .style("font-family", "Hind")
-    .text("Abundance Modeling for Exploratory Micribiome Analysis");
+    .text("Abundance Modeling for Exploratory Microbiome Analysis");
+
+  d3.select("#content")
+    .style("width", "95%");
 
   d3.select("#content")
     .append("div")
@@ -51,10 +54,10 @@ function slide1() {
 
 function slide2() {
   slide_text(
-    ["From a high level, we often compute some summary statistics of the data, and interpret them in terms of contextual information",
+    ["Simplifying somewhat aggressively, our work often involves computing summary statistics about a primary data source, and interpret these statistics in terms of supplementary data",
      "For example, we often interpret PCA scores / loadings and LDA mixing weights / topics in terms of sample and taxonomic characteristics",
-     "There are exceptions though, consider hypothesis testing or more careful uncertainty quantification",
-     "If we will be guiding interpretation based on these contextual features anyways, why not directly build a model of the data using them?"
+     "(There are exceptions though, consider hypothesis testing or more careful uncertainty quantification)",
+     "If we will be guiding interpretation based on these contextual features anyways, why not directly build a model of the data based on them?"
     ],
     "Motivation"
   );
@@ -84,6 +87,8 @@ function slide4() {
     "Implementation Principles: Reproducibility"
   );
 
+  d3.select("#content")
+    .style("width", "45%")
   d3.select("#vis")
     .select("img")
     .remove();
@@ -124,10 +129,13 @@ function slide6() {
 }
 
 function slide7() {
+  d3.select("#content")
+    .style("width", "95%");
   slide_text(
     [
-      "A straightforwards, but not particularly informative, follow-up technique is to compare test-set performances ",
-      "To explore the shape of the response surface, which lives in a high-dimensional space, we can visualize partial dependence of the response \\(y\\left(\\mathbf{x}\\right)\\) on a subset \\(s\\) of coordinates, \\begin{align} \\bar y\\left(\\mathbf{x}_{s}\\right) &:= \\mathbf{E}_{F_{X_{-s}}}\\left[y\\left(\\mathbf{x}_{s}, X_{-s}\\right)\\right] \\\\ &\\approx \\frac{1}{n}\\sum_{i = 1}^{n} y\\left(x_{is}, x_{i,-s}\\right)\\end{align}",
+      "A straightforwards, but not particularly informative, follow-up technique is to compare test-set performances",
+      "Feature importances are another standard way of beginning to interpret model fit",
+      "To explore the shape of the response surface, which lives in a high-dimensional space, we can visualize partial dependence of the response \\(\\mu\\left(\\mathbf{x}\\right)\\) on a subset \\(s\\) of coordinates, \\begin{align} \\tilde \\mu\\left(\\mathbf{x}_{s}\\right) &:= \\mathbf{E}_{F_{X_{-s}}}\\left[\\mu\\left(\\mathbf{x}_{s}, X_{-s}\\right)\\right] \\\\ &\\approx \\frac{1}{n}\\sum_{i = 1}^{n} \\mu\\left(x_{is}, x_{i,-s}\\right)\\end{align}",
       "This averages out the effects due to the coordinates outside of \\(s\\)."
     ],
     "Implementation Principles: Interpretation"
@@ -150,6 +158,8 @@ function slide8() {
 }
 
 function slide9() {
+  d3.select("#content")
+    .style("width", "45%");
   slide_text(
     [
       "We first try to capture broad taxonomic effects using the taxonomic order feature",
@@ -167,6 +177,7 @@ function slide10() {
       "width": width,
       "height": height
     });
+  initialize_axes();
   initialize_samples();
   counts_taxa();
 }
@@ -254,7 +265,7 @@ function slide19() {
   d3.selectAll(".partial_dependence")
     .transition("fade_relative_day_full_paths")
     .duration(1000)
-    .style("stroke-opacity", 0.1);
+    .style("stroke-opacity", 0.05);
 }
 
 function slide20() {
@@ -293,8 +304,7 @@ function slide23() {
   slide_text(
     [
       "We now consider effects occuring at a finer scale than taxonomic order, but without simply modeling raw RSV averages over time",
-      "Our approach is to arrange all RSVs along the phylogenetic tree and use the ordering along the tips to define a new feature",
-      "We have also defined features using an MDS on cophentic distance, but these effects are harder to visualize"
+      "Our approach is to arrange all RSVs along the phylogenetic tree and use the ordering along the tips to define a new feature, and look at partial dependence after marginalizing over order",
     ],
     "Phylogentic Position Effect"
   );
@@ -320,9 +330,29 @@ function slide25() {
 }
 
 function slide26() {
-  binarize_samples();
+  d3.selectAll(".partial_dependence")
+    .transition()
+    .duration(1000)
+    .attr("opacity", 0)
+    .remove();
 }
 
+function slide27() {
+  binarize_samples();
+  binarized_phylo_ix_partial_dependence();
+}
+
+function slide28() {
+  slide_text(
+    [
+      "We have walked through a basic exercise in analyzing microbiome data from a supervised modeling perspective",
+      "The primary advantages of this approach are that it allows the investigator to incorporate rich contextual knowledge through careful feature design and honest evaluation of the relevance of those features",
+      "This increased flexibility comes at a cost of more difficult interpretation, and besides partial dependence, there are few devices that facilitate this step",
+      "While it is encouraging that different models trained on across CV folds tend to estimate similar partial dependence, this is still far from honest uncertainty assessment"
+    ],
+    "Conclusion"
+  );
+}
 
 function slide_text(bullet_content, title) {
   d3.select("#section_title")
@@ -345,7 +375,7 @@ function slide_text(bullet_content, title) {
 
   d3.select("#content")
     .append("ul")
-    .style("padding-top", "10%")
+    .style("padding-top", "1%")
     .selectAll(".bullet_point")
     .data(bullet_content)
     .enter()

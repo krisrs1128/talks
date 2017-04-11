@@ -7,7 +7,7 @@ function partial_dependence_points(cur_data, x_scale, y_scale) {
     .append("circle")
     .attrs({
       "class": "partial_dependence",
-      "r": 4,
+      "r": 2,
       "opacity": 0,
       "cx": x_scale,
       "cy": y_scale
@@ -86,7 +86,13 @@ function relative_day_partial_dependence(filter_types, scale_type) {
   );
 }
 
-function binarized_relative_day_partial_dependence() {
+function phylo_ix_partial_dependence() {
+  var filtered_data = f_combined["phylo_ix"].filter(
+    function(d) {
+      return ["conditional"].indexOf(d[0].model_type) != -1;
+    }
+  );
+
   partial_dependence_path(
     f_combined["rday"],
     function(d) { return scales.taxa_top(d.order_top) + scales.relative_day(d.relative_day); },
@@ -95,14 +101,12 @@ function binarized_relative_day_partial_dependence() {
   );
 }
 
-function phylo_ix_partial_dependence() {
+function binarized_phylo_ix_partial_dependence() {
   var filtered_data = f_combined["phylo_ix"].filter(
     function(d) {
-      return ["conditional"].indexOf(d[0].model_type) != -1;
+      return ["binarize"].indexOf(d[0].model_type) != -1;
     }
   );
-
-  console.log(filtered_data);
 
   partial_dependence_path(
     filtered_data,
@@ -115,7 +119,7 @@ function phylo_ix_partial_dependence() {
 function binarized_phylo_ix_partial_dependence() {
   var filtered_data = f_combined["phylo_ix"].filter(
     function(d) {
-      return ["binarized"].indexOf(d[0].model_type) != -1;
+      return ["binarize"].indexOf(d[0].model_type) != -1;
     }
   );
 

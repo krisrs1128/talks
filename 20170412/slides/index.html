@@ -31,7 +31,7 @@
       </section>
       <script>
        var width = 600;
-       var height = 400;
+       var height = 450;
 
        function feature_array(name) {
            return combined.map(function(d) {return d[name] });
@@ -47,7 +47,7 @@
                          .range([20, width - 20]),
            "subject": d3.scaleBand()
                         .domain(d3.set(feature_array("subject")).values())
-                        .range([height - 10, 10]),
+                        .range([height - 50, 0]),
            "phylo_ix": d3.scaleLinear()
                          .domain(feature_extent("phylo_ix"))
                          .range([20, width - 20]),
@@ -72,11 +72,6 @@
        scales.counts.range([scales.subject.step(), 10]);
        scales.binarized.range([scales.subject.step(), 10]);
        scales.relative_day.range([0, scales.taxa_top.step()]);
-
-       /* setTimeout(counts_phylo_ix, 1000);*/
-       /* setTimeout(phylo_ix_partial_dependence, 2000);*/
-       /* setTimeout(binarize_phylo_ix, 3000);*/
-       /* setTimeout(binarize_phylo_ix_partial_dependence, 4000);*/
 
        var counter = 9;
        function order() {
