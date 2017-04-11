@@ -177,7 +177,7 @@ function slide10() {
       "width": width,
       "height": height
     });
-  initialize_axes();
+  axes_taxa();
   initialize_samples();
   counts_taxa();
 }
@@ -240,6 +240,7 @@ function slide16() {
 function slide17() {
   initialize_rsvs();
   counts_relative_day();
+  axes_relative_day();
   slide_text(
     [
       "We've now separated each order into a separate panel column",
