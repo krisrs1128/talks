@@ -164,7 +164,7 @@ function slide9() {
     [
       "We first try to capture broad taxonomic effects using the taxonomic order feature",
       "Each point represents one \\(\\text{rsv} \\times \\text{timepoint} \\times \\text{subject}\\) unit (for the rest of the slides)",
-      "For visualization (but not model estimation), we have downsampled the RSVs and limited the number fo timepoints in view"
+      "For visualization (but not model estimation), we have downsampled the RSVs and limited the number of timepoints in view"
     ],
     "Order Effects"
   );
@@ -323,6 +323,7 @@ function slide24() {
     .attr("opacity", 0)
     .remove();
 
+  axes_phylo_ix();
   counts_phylo_ix();
 }
 
