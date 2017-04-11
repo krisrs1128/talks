@@ -13,13 +13,11 @@ body {
     font-family: Hind;
     font-size: 30px;
     font-weight: 300;
-    padding-top: 5%;
     padding-left: 10%;
 }
 
 #content {
     padding-left: 5%;
-    width: 45%;
     float: left;
 }
 
@@ -40,7 +38,7 @@ body {
 .partial_dependence {
     fill: none;
     stroke: #555555;
-    stroke-width: 0.7;
+    stroke-width: 1.4;
 }
 
 .progressButton {
@@ -48,7 +46,6 @@ body {
     font-size: 14px;
     font-weight: 300;
     padding: 5px;
-    border: 1px solid;
     cursor: pointer;
 }
 
