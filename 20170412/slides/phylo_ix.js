@@ -9,7 +9,7 @@ function initialize_samples() {
       "class": "sample",
       "r": 0,
       "fill": function(d) { return scales.taxa_cols(d.order_top); },
-      "cx": function(d) { return scales.taxa(d.order) + 10 * Math.random(); },
+      "cx": function(d) { return scales.taxa(d.order) + 5 + 10 * Math.random(); },
       "cy": function(d) {
         return scales.subject(d.subject) + scales.counts(d.jittered_count);
       }
@@ -30,6 +30,7 @@ function initialize_rsvs() {
 }
 
 function counts_phylo_ix() {
+  unbinarize_axes();
   d3.selectAll(".sample")
     .transition()
     .duration(1000)
@@ -57,14 +58,10 @@ function counts_taxa() {
     .transition()
     .duration(1000)
     .attrs({
-      "cx": function(d) { return scales.taxa(d.order) + 10 * Math.random(); },
+      "cx": function(d) { return scales.taxa(d.order) + 5 + 10 * Math.random(); },
       "cy": function(d) {
         return scales.subject(d.subject) + scales.counts(d.jittered_count);
       },
       "r": 0.7
     });
-
-  d3.selectAll(".axis")
-    .transition()
-  .duration
 }

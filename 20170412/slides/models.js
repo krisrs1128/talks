@@ -35,7 +35,7 @@ function taxa_partial_dependence(filter_types, scale_type) {
   }
   partial_dependence_points(
     filtered_data,
-    function(d) { return scales.taxa(d.order) + 10 * Math.random(); },
+    function(d) { return scales.taxa(d.order) + 5 + 10 * Math.random(); },
     function(d) { return scales.subject(d.subject) + panel_scale(d.f_bar); }
   );
 }
