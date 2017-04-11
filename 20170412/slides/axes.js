@@ -50,33 +50,56 @@ function axes_taxa() {
 }
 
 function axes_relative_day() {
-  d3.select(".x_axis").remove();
+  d3.selectAll(".x_axis").remove();
   unbinarize_axes();
 
   var x_axis = d3.axisBottom(scales.relative_day)
       .tickSize(0)
       .ticks(3, "d");
 
-  var facet_cols = scales.taxa_top.domain();
+  var facets = [];
+  for (var i = 0; i < scales.taxa_top.domain().length; i++) {
+    for (var j = 0; j < scales.subject.domain().length; j++) {
+      facets.push({
+        "row": scales.subject.domain()[j],
+        "col": scales.taxa_top.domain()[i],
+        "text_display": j == 0
+      });
+    }
+  }
+
   d3.select("#vis svg")
     .selectAll(".x_axis")
-    .data(facet_cols)
+    .data(facets)
     .enter()
     .append("g")
     .attrs({
       "id": function(d) { return "x_axis" + d; },
       "class": "x_axis",
       "transform": function(d) {
-        return "translate(" + scales.taxa_top(d) + "," + (scales.subject.range()[0]) + ")";
+        return "translate(" + scales.taxa_top(d.col) + "," + (scales.subject(d.row) + scales.subject.step()) + ")";
       },
       "opacity": 0
     })
     .call(x_axis);
 
   d3.selectAll(".x_axis")
-    .transition()
+    .transition("appear")
     .duration(1000)
     .attr("opacity", 1);
+
+  d3.selectAll(".x_axis")
+    .transition("remove_text")
+    .attrs({
+      "font-size": function(d) {
+        if (d.text_display) {
+          return 12;
+        }
+        return 0;
+      }
+    });
+
+
 }
 
 function axes_phylo_ix() {
@@ -119,4 +142,4 @@ function unbinarize_axes() {
     .transition()
     .duration(1000)
     .call(y_axis);
-} 
+}
