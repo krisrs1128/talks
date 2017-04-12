@@ -43,9 +43,8 @@
            return [z[0] + left, z[1] + right];
        }
 
-       var phylo_extent = feature_extent("phylo_ix");
-       var counts_extent = feature_extent("phylo_ix");
-       var counts_extent = feature_extent("phylo_ix");
+       var phylo_values = f_combined["phylo_ix"][0]
+           .map(function(d) { return d["phylo_ix"]})
 
        var scales = {
            "taxa_top": d3.scaleBand()
@@ -55,7 +54,7 @@
                         .domain(d3.set(feature_array("subject")).values())
                         .range([height - 50, 0]),
            "phylo_ix": d3.scaleLinear()
-                         .domain(feature_extent("phylo_ix", -15, 0))
+                         .domain(d3.extent(phylo_values))
                          .range([30, width - 5]),
            "counts": d3.scaleLinear()
                        .domain(feature_extent("jittered_count", 0, 0.7)),

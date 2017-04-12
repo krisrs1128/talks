@@ -1,56 +1,88 @@
 
 function axes_taxa() {
-  var facet_rows = scales.subject.domain();
   var x_axis = d3.axisBottom(scales.taxa)
       .tickSize(0);
   d3.select("#vis svg")
-    .selectAll(".x_axis")
-    .data(facet_rows)
-    .enter()
     .append("g")
     .attrs({
-      "id": function(d) { return "x_axis" + d; },
+      "id": "x_axis",
       "class": "x_axis",
-      "transform": function(d) { return "translate(0," + (scales.subject(d) + scales.subject.step()) + ")"; },
+      "transform": "translate(0," + scales.subject.range()[0] + ")",
       "opacity": 0
     })
     .call(x_axis);
 
-  d3.selectAll(".x_axis")
-    .selectAll("text")
-    .attrs({
-      "transform": "rotate(20)translate(0,15)"
-    });
-
-
-  var last_subject = scales.subject.domain()[0];
-  d3.selectAll(".x_axis:not(#x_axis" + last_subject + ") text")
-    .remove();
+  d3.selectAll("#x_axis text")
+    .attrs({"transform": "rotate(20)translate(0,15)"});
 
   var y_axis = d3.axisLeft(scales.counts)
       .tickSize(0)
       .ticks(4);
   d3.select("#vis svg")
     .selectAll(".y_axis")
-    .data(facet_rows)
+    .data(scales.subject.domain())
     .enter()
     .append("g")
     .attrs({
-      "id": function(d) { return "y_axis" + d; },
+      "id": "y_axis",
       "class": "y_axis",
-      "transform": function(d) { return "translate(" + (scales.taxa.range()[0]) + "," + (scales.subject(d)) + ")"; },
+      "transform": function(d) { return "translate(" + (scales.taxa_top.range()[0]) + "," + (scales.subject(d)) + ")"; },
       "opacity": 0
     })
     .call(y_axis);
 
-  d3.selectAll(".x_axis, .y_axis")
-    .transition()
+  var facet_data = [];
+  for (var i = 0; i < scales.subject.domain().length; i++) {
+    var cur_line = [];
+    for (var j = 0; j < 2; j++) {
+      cur_line.push({
+        "x": scales.taxa_top.range()[j],
+        "y": scales.subject(scales.subject.domain()[i])
+      });
+    }
+    facet_data.push(cur_line);
+  }
+
+  facet_data = facet_data.concat([
+    [{"x": scales.taxa_top.range()[0], "y": scales.subject.range()[1]},
+     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[1]}],
+    [{"x": scales.taxa_top.range()[1], "y": scales.subject.range()[1]},
+     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[0]}]
+  ]);
+
+  var facet_line = d3.line()
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; });
+
+  d3.select("#vis svg")
+    .selectAll(".facet_boundary")
+    .data(facet_data)
+    .enter()
+    .append("path")
+    .attrs({
+      "class": "facet_boundary",
+      "d": facet_line,
+      "stroke-width": 0.5,
+      "stroke": "#808080",
+      "opacity": 0
+    });
+
+  d3.selectAll(".facet_boundary")
+    .transition("boundary")
     .duration(1000)
     .attr("opacity", 1);
+  d3.selectAll(".x_axis, .y_axis")
+    .transition("axis")
+    .duration(1000)
+    .attr("opacity", 1);
+
+
+
 }
 
 function axes_relative_day() {
   d3.selectAll(".x_axis").remove();
+  d3.selectAll(".facet_boundary").remove();
   unbinarize_axes();
 
   // Draw new x axis, one per facet panel
@@ -79,7 +111,7 @@ function axes_relative_day() {
     .attr("opacity", 1);
 
   // Draw the faceting boundaries
-  var col_data = [];
+  var facet_cols = [];
   for (var i = 0; i < scales.taxa_top.domain().length; i++) {
     var cur_line = [];
     for (j = 0; j < 2; j++) {
@@ -88,10 +120,10 @@ function axes_relative_day() {
         "y": scales.subject.range()[j]
       });
     }
-    col_data.push(cur_line);
+    facet_cols.push(cur_line);
   }
 
-  var row_data = [];
+  var facet_rows = [];
   for (var i = 0; i < scales.subject.domain().length; i++) {
     var cur_line = [];
     for (j = 0; j < 2; j++) {
@@ -100,15 +132,15 @@ function axes_relative_day() {
         "y": scales.subject(scales.subject.domain()[i])
       });
     }
-    row_data.push(cur_line);
+    facet_rows.push(cur_line);
   }
 
   // top and right most row & column
-  col_data.push([
+  facet_cols.push([
     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[0]},
     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[1]}
   ]);
-  row_data.push([
+  facet_rows.push([
     {"x": scales.taxa_top.range()[0], "x": scales.subject.range()[1]},
     {"y": scales.subject.range()[1], "y": scales.subject.range()[1]}
   ]);
@@ -119,14 +151,14 @@ function axes_relative_day() {
 
   d3.select("#vis svg")
     .selectAll(".facet_boundary")
-    .data(col_data.concat(row_data))
+    .data(facet_cols.concat(facet_rows))
     .enter()
     .append("path")
     .attrs({
-      "d": facet_line,
       "class": "facet_boundary",
-      "stroke": "black",
-      "fill": "none",
+      "d": facet_line,
+      "stroke-width": 0.5,
+      "stroke": "#808080",
       "opacity": 0
     });
 
@@ -139,6 +171,7 @@ function axes_relative_day() {
 
 function axes_phylo_ix() {
   d3.selectAll(".x_axis").remove();
+  d3.selectAll(".facet_boundary").remove();
 
   var x_axis = d3.axisBottom(scales.phylo_ix)
       .tickSize(0)
@@ -155,6 +188,47 @@ function axes_phylo_ix() {
 
   d3.selectAll(".x_axis")
     .transition()
+    .duration(1000)
+    .attr("opacity", 1);
+
+  var facet_data = [];
+  for (var i = 0; i < scales.subject.domain().length; i++) {
+    var cur_line = [];
+    for (var j = 0; j < 2; j++) {
+      cur_line.push({
+        "x": scales.taxa_top.range()[j],
+        "y": scales.subject(scales.subject.domain()[i])
+      });
+    }
+    facet_data.push(cur_line);
+  }
+
+  facet_data = facet_data.concat([
+    [{"x": scales.taxa_top.range()[0], "y": scales.subject.range()[1]},
+     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[1]}],
+    [{"x": scales.taxa_top.range()[1], "y": scales.subject.range()[1]},
+     {"x": scales.taxa_top.range()[1], "y": scales.subject.range()[0]}]
+  ]);
+
+  var facet_line = d3.line()
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; });
+
+  d3.select("#vis svg")
+    .selectAll(".facet_boundary")
+    .data(facet_data)
+    .enter()
+    .append("path")
+    .attrs({
+      "class": "facet_boundary",
+      "d": facet_line,
+      "stroke-width": 0.5,
+      "stroke": "#808080",
+      "opacity": 0
+    });
+
+  d3.selectAll(".facet_boundary")
+    .transition("boundary")
     .duration(1000)
     .attr("opacity", 1);
 }

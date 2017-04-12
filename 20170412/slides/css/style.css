@@ -56,16 +56,11 @@ body {
 }
 
 .x_axis, .y_axis path {
-    stroke-width: 0.2;
+    stroke-width: 0.5;
     stroke: "#808080";
 }
 
 .x_axis, .y_axis text {
     font-size: 10;
     font-family: Hind;
-}
-
-.facet_boundary {
-    stroke-width: 0.2;
-    stroke: "#808080";
 }
