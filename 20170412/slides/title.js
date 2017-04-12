@@ -21,7 +21,7 @@ function title_page()  {
     .text("Abundance Modeling for Exploratory Microbiome Analysis");
 
   d3.select("#content")
-    .style("width", "95%");
+    .style("width", "85%");
 
   d3.select("#content")
     .append("div")
@@ -130,7 +130,7 @@ function slide6() {
 
 function slide7() {
   d3.select("#content")
-    .style("width", "95%");
+    .style("width", "85%");
   slide_text(
     [
       "A straightforwards, but not particularly informative, follow-up technique is to compare test-set performances",
@@ -175,7 +175,7 @@ function slide10() {
     .append("svg")
     .attrs({
       "width": width,
-      "height": height
+      "height": height,
     });
   initialize_samples();
   counts_taxa();
