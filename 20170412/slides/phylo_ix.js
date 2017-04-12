@@ -53,6 +53,16 @@ function binarize_samples() {
 }
 
 function counts_taxa() {
+  d3.select("#vis svg")
+    .append("g")
+    .attr("class", "fill_legend")
+    .attr("transform", "translate(" + (width - 100) + ",20)")
+  var fill_legend = d3.legendColor()
+      .scale(scales.taxa_cols);
+
+  d3.select(".fill_legend")
+    .call(fill_legend);
+
   d3.selectAll(".sample")
     .transition()
     .duration(1000)

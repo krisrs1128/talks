@@ -4,6 +4,7 @@
       <title>Title</title>
       <script src="https://d3js.org/d3.v4.min.js"></script>
       <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full"></script>
       <script src="phylo_ix.js"></script>
       <script src="relative_day.js"></script>
@@ -31,7 +32,7 @@
           <div id="vis"></div>
       </section>
       <script>
-       var width = 550;
+       var width = 630;
        var height = 700;
 
        function feature_array(name) {
@@ -49,13 +50,13 @@
        var scales = {
            "taxa_top": d3.scaleBand()
                          .domain(order_top_levels)
-                         .range([30, width - 5]),
+                         .range([30, width - 110]),
            "subject": d3.scaleBand()
                         .domain(d3.set(feature_array("subject")).values())
                         .range([height - 50, 0]),
            "phylo_ix": d3.scaleLinear()
                          .domain(d3.extent(phylo_values))
-                         .range([30, width - 5]),
+                         .range([30, width - 110]),
            "counts": d3.scaleLinear()
                        .domain(feature_extent("jittered_count", 0, 0.7)),
            "binarized": d3.scaleLinear()
@@ -64,7 +65,7 @@
                              .domain(feature_extent("relative_day", -4, 10)),
            "taxa": d3.scaleBand()
                      .domain(order_levels)
-                     .range([30, width - 5]),
+                     .range([30, width - 110]),
            "taxa_cols": d3.scaleOrdinal()
                           .domain(order_top_levels)
                           .range(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3",
