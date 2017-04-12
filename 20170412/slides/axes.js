@@ -75,9 +75,6 @@ function axes_taxa() {
     .transition("axis")
     .duration(1000)
     .attr("opacity", 1);
-
-
-
 }
 
 function axes_relative_day() {

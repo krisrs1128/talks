@@ -38,7 +38,6 @@ function counts_phylo_ix() {
       "cx": function(d) { return scales.phylo_ix(d.phylo_ix); },
       "cy": function(d) {return scales.subject(d.subject) + scales.counts(d.jittered_count);},
       "fill": function(d) { return scales.taxa_cols(d.order_top); },
-      "r": 1.4
     });
 }
 
@@ -62,6 +61,6 @@ function counts_taxa() {
       "cy": function(d) {
         return scales.subject(d.subject) + scales.counts(d.jittered_count);
       },
-      "r": 0.7
+      "r": 2
     });
 }
