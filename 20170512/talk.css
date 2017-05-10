@@ -1,0 +1,53 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+    font-family: 'Open Sans',serif;
+}
+
+/* latin-ext */
+
+slides > slide.backdrop {
+    background-position: 0 100%;
+    background-repeat: repeat-x;
+}
+
+slides > slide:not(.nobackground):after {
+    color: #ffffff;
+}
+
+aside.gdbar {
+    background: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #3e8ac7), color-stop(100%, #3e8ac7)) no-repeat;
+    background: linear-gradient(left, #3e8ac7, #3e8ac7) no-repeat;
+}
+
+slides > slide:not(.nobackground):before {
+    background-size: 50px 50px;
+    padding-left: 50px;
+    height: 50px;
+    bottom: 5px;
+}
+
+slides > slide > hgroup + article p {
+    font-family: Open Sans;
+    font-weight: 300;
+    color: #ffffff;
+}
+
+.title-slide hgroup h1 {
+    font-family: Open Sans;
+    font-size: 55px;
+}
+
+
+.title-slide hgroup p {
+    font-family: Open Sans;
+    font-weight: 300;
+}
+
+div.notes {
+    color: #000000;
+}
+
+code.r{
+    font-size: 8px;
+}
