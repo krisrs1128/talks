@@ -30,12 +30,12 @@ slides > slide:not(.nobackground):before {
 slides > slide > hgroup + article p {
     font-family: Open Sans;
     font-weight: 300;
-    color: #ffffff;
+    color: #525252;
 }
 
 .title-slide hgroup h1 {
     font-family: Open Sans;
-    font-size: 55px;
+    font-size: 70px;
 }
 
 
@@ -50,4 +50,8 @@ div.notes {
 
 code.r{
     font-size: 8px;
+}
+
+#references {
+    color: blue;
 }
