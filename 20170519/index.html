@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full"></script>
+        <link href="https://fonts.googleapis.com/css?family=Hind" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+        <script src="slides.js"></script>
+        <script src="book.js"></script>
+        <script src="sentiment.js"></script>
+        <script src="content.js"></script>
+        <link href='css/style.css' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+		    <div id="section_title"></div>
+        <section class="container">
+            <div id="content"></div>
+            <div id="vis"></div>
+        </section>
+        <script>
+         var elem = d3.select("#vis")
+           .append("svg")
+           .attrs({
+               "id": "elem",
+               "width": "1500px",
+               "height": "900px",
+               "transform": "translate(10, 100)"
+           });
+
+         var counter = 0;
+         var slides = get_slides();
+
+         function order() {
+             slides[counter]();
+             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+             counter += 1;
+         }
+
+         for (var i = 0; i < 4; i++) {
+             order();
+         }
+
+        document.addEventListener('keydown', (event) => {
+             const keyName = event.key;
+             if (keyName === 'f') {
+                 order()
+             }
+         }, false);
+
+        </script>
+    </body>
+</html>

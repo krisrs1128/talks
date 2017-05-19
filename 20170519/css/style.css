@@ -1,0 +1,49 @@
+body {
+    /*overflow: hidden;*/
+	  background-color:	white;
+    margin: 0;
+    font-size: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    color: white;
+}
+
+.austen_text {
+    font: bold 17px monospace;
+}
+
+#section_title {
+	  text-align: justify;
+    font-family: Hind;
+    font-size: 30px;
+    font-weight: 300;
+    padding-left: 10%;
+}
+
+#content {
+    padding-left: 5%;
+    float: left;
+}
+
+#vis {
+    margin-left: 55%;
+}
+
+.bullet_point {
+    font-size: 25px;
+    font-family: Hind;
+}
+
+.progressButton {
+    width: 4%;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.activeButton {
+    color: #363636;
+    border-color: #363636;
+    cursor: pointer;
+}
