@@ -30,6 +30,7 @@ function get_slides() {
   slide_funs.push(fade_word_list);
   slide_funs.push(remaining_bars);
   slide_funs.push(all_book_bars);
+  slide_funs.push(highlight_worst);
 
   return slide_funs;
 }
@@ -274,4 +275,37 @@ function all_book_bars() {
     .transition()
     .duration(1000)
     .style("fill", "black");
+}
+
+function highlight_worst() {
+  function fade_rest(class_name) {
+    elem.selectAll(class_name)
+      .transition()
+      .duration(1000)
+      .attrs({
+        "fill-opacity": function(d) {
+          if (d.index == 179 & d.book == "Mansfield Park") {
+            return 1;
+          }
+          return 0.1;
+        }
+      });
+  }
+  var classes = [".sentiment_bar0", ".sentiment_bar1", ".sentiment_bar2", ".sentiment_bar"];
+  for (var i = 0; i < classes.length; i++) {
+    fade_rest(classes[i]);
+  }
+
+  elem.selectAll(".book_label")
+    .transition()
+    .duration(1000)
+    .style(
+      "fill",
+      function(d) {
+        if (d == "Mansfield Park") {
+          return "black";
+        }
+        return "#ebebeb";
+      }
+    );
 }
