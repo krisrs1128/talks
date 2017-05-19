@@ -29,6 +29,7 @@ function get_slides() {
   slide_funs.push(next_words(2));
   slide_funs.push(fade_word_list);
   slide_funs.push(remaining_bars);
+  slide_funs.push(all_book_bars);
 
   return slide_funs;
 }
@@ -72,7 +73,7 @@ function opening_sentiments() {
   var scales = {
     "fill": d3.scaleOrdinal()
       .domain(["none", "positive", "negative"])
-      .range(["#ebebeb", "#5fc492", "#c45f5f"])
+      .range(["#ebebeb", "#7fc7c4", "#e36e30"])
   };
 
   d3.selectAll(".austen_text")
@@ -86,13 +87,40 @@ function stack_scales() {
   return {
     "x": d3.scaleOrdinal()
       .domain(["none", "positive", "negative"])
-      .range([-10, 100, 500]),
+      .range([-1000, 0, 150]),
     "y": d3.scaleLinear()
       .domain(d3.extent(sentiment_ix))
       .range([100, 15000]),
     "fill": d3.scaleOrdinal()
       .domain(["none", "positive", "negative"])
-      .range(["white", "#5fc492", "#c45f5f"])
+      .range(["white", "#7fc7c4", "#e36e30"])
+  };
+}
+
+function bar_scales() {
+  var index = sentiment.map(function(d) { return d.index; });
+  var sentiment_val = sentiment.map(function(d) { return d.sentiment; });
+  var book_order = ["Emma", "Persuasion", "Pride & Prejudice", "Mansfield Park",
+                    "Sense & Sensibility", "Northanger Abbey"];
+  return {
+    "height_initial": d3.scaleLinear()
+      .domain(d3.extent(sentiment_val))
+      .range([500, -500]),
+    "height": d3.scaleLinear()
+      .domain(d3.extent(sentiment_val))
+      .range([40, -40]),
+    "x": d3.scaleLinear()
+      .domain(d3.extent(index))
+      .range([350, 1500]),
+    "fill": function(d) {
+      if (d.sentiment > 0) {
+        return "#7fc7c4";
+      }
+      return "#e36e30";
+    },
+    "facet": d3.scaleOrdinal()
+      .domain(book_order)
+      .range(d3.range(100, 700, 100))
   };
 }
 
@@ -111,25 +139,6 @@ function stack_words() {
     );
 }
 
-function bar_scales() {
-  var index = sentiment.map(function(d) { return d.index; });
-  var sentiment_val = sentiment.map(function(d) { return d.sentiment; });
-  return {
-    "height": d3.scaleLinear()
-      .domain(d3.extent(sentiment_val))
-      .range([200, -200]),
-    "x": d3.scaleLinear()
-      .domain(d3.extent(index))
-      .range([100, 900]),
-    "fill": function(d) {
-      if (d.sentiment > 0) {
-        return "#5fc492";
-      } 
-      return "#c45f5f";
-    }
-  };
-}
-
 function first_bar() {
   var scales = bar_scales();
   elem.selectAll(".sentiment_bar")
@@ -137,18 +146,17 @@ function first_bar() {
     .append("rect")
     .attrs({
       "class": function(d) {
-        if (d.index <= 3 & d.book == "Pride & Prejudice") {
-          return "sentiment_bar" + d.index
+        if (d.index < 3 & d.book == "Pride & Prejudice") {
+          return "sentiment_bar" + d.index;
         }
-        return "sentiment_bar"
+        return "sentiment_bar";
       },
-      "x": function(d) { return scales.x(d.index); },
+      "x": function(d) { return scales.x(10 * d.index); },
       "y": 0,
-      "width": scales.x(1) - scales.x(0),
+      "width": scales.x(10) - scales.x(0),
       "height": 0,
       "fill": function(d) { return scales.fill(d); },
-      "fill-opacity": 0,
-      "transform": "translate(0, 600)"
+      "transform": function(d) { return "translate(0, " + scales.facet(d.book) + ")"; }
     });
 
   display_bar(".sentiment_bar0");
@@ -160,11 +168,10 @@ function display_bar(class_name) {
     .transition()
     .duration(1000)
     .attrs({
-      "y": function(d) { return Math.min(0, scales.height(d.sentiment)); },
+      "y": function(d) { return Math.min(0, scales.height_initial(d.sentiment)); },
       "height": function(d) {
-        return Math.abs(scales.height(d.sentiment) - scales.height(0));
-      },
-      "fill-opacity": 1
+        return Math.abs(scales.height_initial(d.sentiment) - scales.height_initial(0));
+      }
     });
 }
 
@@ -194,28 +201,77 @@ function next_words(index) {
         }
       })
       .text(function(d) { return d.word; })
-      .style("fill", "white")
+      .style("fill", "white");
 
     stack_words();
     display_bar(".sentiment_bar" + index);
-  }
+  };
 }
 
 function remaining_bars() {
   var scales = bar_scales();
+
+  function transition_bars(x) {
+    x.transition()
+    .duration(1500)
+    .attrs({
+      "x": function(d) { return scales.x(d.index); },
+      "width": scales.x(1) - scales.x(0),
+      "y": function(d) {
+        if (d.book == "Pride & Prejudice") {
+          return Math.min(0, scales.height(d.sentiment));
+        }
+        return 0;
+      },
+      "height": function(d) {
+        if (d.book == "Pride & Prejudice") {
+          return Math.abs(scales.height(d.sentiment) - scales.height(0));
+        }
+        return 0;
+      }
+    });
+  }
+  transition_bars(elem.selectAll(".sentiment_bar"))
+  transition_bars(elem.selectAll(".sentiment_bar0"))
+  transition_bars(elem.selectAll(".sentiment_bar1"))
+  transition_bars(elem.selectAll(".sentiment_bar2"))
+}
+
+function all_book_bars() {
+  var scales = bar_scales();
+
   elem.selectAll(".sentiment_bar")
-    .transition()
-    .duration(5000)
     .attrs({
       "fill-opacity": function(d) {
         if (d.book == "Pride & Prejudice") {
           return 1;
         }
         return 0;
-      },
-      "y": function(d) { return Math.min(0, scales.height(d.sentiment)); },
-      "height": function(d) {
-        return Math.abs(scales.height(d.sentiment) - scales.height(0));
       }
     });
+
+  elem.selectAll(".sentiment_bar")
+    .transition()
+    .duration(1000)
+    .attrs({
+      "fill-opacity": 1,
+      "y": function(d) { return Math.min(0, scales.height(d.sentiment)); },
+      "height": function(d) { return Math.abs(scales.height(d.sentiment) - scales.height(0)); }
+    });
+
+  elem.selectAll(".book_label")
+    .data(scales.facet.domain()).enter()
+    .append("text")
+    .attrs({
+      "class": "book_label",
+      "x": 100,
+      "y": function(d) { return scales.facet(d); }
+    })
+    .style("fill", "white")
+    .text(function(d) { return d; });
+
+  elem.selectAll(".book_label")
+    .transition()
+    .duration(1000)
+    .style("fill", "black");
 }
