@@ -12,6 +12,11 @@ body {
     font: bold 17px monospace;
 }
 
+.book_label {
+    font-size: 25px;
+    font-family: 'Sofia', cursive;
+}
+
 #section_title {
 	  text-align: justify;
     font-family: Hind;
