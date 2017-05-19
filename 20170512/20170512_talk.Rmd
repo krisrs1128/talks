@@ -88,7 +88,7 @@ include_graphics("figure/differential_dynamics.png")
 	- Full network vs. neighborhood of a node
 	- Full time series vs. short time window
 * These scales can be juxtaposed by "focusing" on a few elements of
-  interest while remaining "context"
+  interest while retaining "context"
 * Interactivity can allow rapid transitions between alternative scales
 
 ## Degree-of-Interest (DOI) Trees ##
@@ -145,7 +145,7 @@ include_graphics("figure/annotated_preterm_csts.png")
 
 ##  Visualization Proposals
 
-* Bacterial Dynamics
+* Differential Dynamics
 	- Timebox Trees: Link timeboxes and tree, with selections over time series
 	- Treeboxes: Link timeboxes and tree, with selections over the tree
 
@@ -169,6 +169,7 @@ include_graphics("figure/voronoi.png")
 
 ## Bacterial Dynamics and Antibiotic Time Courses
 
+* Revisiting the study [@dethlefsen2008pervasive]
 * Study Goal: What is the response of the microbiome following antibiotics,
   in comparison to natural long-term variation? ["Flash Flood" analogy]
 * Data: 3 subjects, across ~ 50 timepoints, with two antibiotic time courses
