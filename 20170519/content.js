@@ -472,11 +472,8 @@ function clear_austen() {
     .remove();
 }
 
-function dtm_slide() {
-  clear_austen();
-
-  var columns = Object.keys(document_term[0]);
-  scales = {
+function matrix_scales(columns) {
+    return {
     "term": d3.scaleOrdinal()
       .domain(columns)
       .range([35, 90].concat(d3.range(290, 900, 50))),
@@ -484,39 +481,40 @@ function dtm_slide() {
       .domain(d3.range(10))
       .range([50, 210])
   };
+}
 
+function build_entries(x, columns) {
   var entries = [];
-  for (var i = 0; i < document_term.length; i++) {
+  for (var i = 0; i < x.length; i++) {
     for (var j = 0; j < columns.length; j++) {
       entries.push(
-        {"index": i, "column": columns[j], "value": document_term[i][columns[j]]}
+        {"index": i, "column": columns[j], "value": x[i][columns[j]]}
       );
     }
   }
+  return entries;
+}
 
-  var dtm_elem = elem.append("g")
-      .attrs({
-        "class": "dtm_g",
-        "transform": "translate(0, 0)"
-      });
-
-  dtm_elem.selectAll(".matrix_entry")
+function draw_matrix(g, entries, scales, class_name) {
+  g.selectAll("." + class_name)
     .data(entries).enter()
     .append("text")
     .attrs({
-      "class": "matrix_entry",
+      "class": class_name,
       "x": function(d) { return scales.term(d.column); },
       "y": function(d) { return scales.document(d.index); },
       "dy": "0.35em"
     })
     .style("opacity", 0)
     .text(function(d) { return d.value; });
+}
 
-  dtm_elem.selectAll(".matrix_header")
+function draw_header(g, columns, scales, class_name) {
+  g.selectAll("." + class_name)
     .data(columns).enter()
     .append("text")
     .attrs({
-      "class": "matrix_header",
+      "class": class_name,
       "x": function(d) {
         if (d == "book") {
           return 70 + scales.term(d);
@@ -528,42 +526,68 @@ function dtm_slide() {
     })
     .style("opacity", 0)
     .text(function(d) { return d; });
+}
 
-  dtm_elem.selectAll(".matrix_entry")
-    .transition()
-    .duration(1000)
-    .style("opacity", 1);
-
-  dtm_elem.selectAll(".matrix_header")
-    .transition()
-    .duration(1000)
-    .style("opacity", 1);
-
-  dtm_elem.selectAll(".document_term_label")
-    .data(["passage", "words"]).enter()
+function label_matrix(g, class_name, labels) {
+  g.selectAll("." + class_name)
+    .data(labels).enter()
     .append("text")
     .attrs({
-      "class": "document_term_label",
+      "class": class_name,
       "x": function(d) {
-        if (d == "passage") {
+        if (d == labels[0]) {
           return 0;
         }
         return 300;
       },
       "y": function(d) {
-        if (d == "passage") {
+        if (d == labels[0]) {
           return 0;
         }
         return 20;
       },
       "transform": function(d) {
-        if (d == "passage") {
+        if (d == labels[0]) {
           return "translate(15, 140)rotate(-90)";
         }
         return "";
       }
     })
     .text(function(d) { return d; });
+}
+
+function dtm_slide() {
+  clear_austen();
+
+  var columns = Object.keys(document_term[0]);
+  var scales = matrix_scales(columns);
+  var entries = build_entries(document_term, columns);
+
+  var dtm_elem = elem.append("g")
+      .attrs({
+        "class": "dtm_g",
+        "transform": "translate(0, 0)"
+      });
+
+  draw_matrix(dtm_elem, entries, scales, "dtm_entry");
+  draw_header(dtm_elem, columns, scales, "dtm_header");
+  label_matrix(dtm_elem, "dtm_label", ["passage", "word"]);
+
+  dtm_elem.selectAll(".dtm_entry")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+
+  dtm_elem.selectAll(".dtm_header")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+
+
+}
+
+function add_bacteria_counts() {
+  
 }
 
 function relate_microbiome() {

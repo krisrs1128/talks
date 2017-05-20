@@ -60,22 +60,22 @@ body {
     font-family: Bitter;
 }
 
-.matrix_entry {
+.dtm_entry {
     font-size: 15px;
     color: black;
     font-family: monospace;
 }
 
-.matrix_header {
+.dtm_header {
     font-size: 15px;
     color: black;
     font-family: monospace;
     font-weight: bold;
 }
 
-.document_term_label {
-    font-size: 20px;
-    color: black;
+.dtm_label {
+    font-size: 18px;
+    color: #707070;
     font-family: Hind;
 }
 
