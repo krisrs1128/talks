@@ -1,5 +1,4 @@
 
-
 function slide_text(bullet_content, title) {
   clear_content();
   d3.select("#section_title")

@@ -1,15 +1,76 @@
 function get_slides() {
   var slide_funs = [];
+
   slide_funs.push(
     function() {
-      slide_text(
-        [
-          "I study ways methods for analyzing text data can be useful for studying bacteria that live all around us"
-        ],
-        "Text Analysis and the Microbiome"
-      );
+      d3.select("#content")
+        .append("div")
+        .attrs({
+          "class": "main_title"
+        })
+        .text("Jane Austen, Gut Microbes, and Exploratory Data Analysis")
+    }
+  );
+
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".main_title")
+        .remove();
+
+      d3.select("#content")
+        .append("div")
+        .attrs({"class": "callout"})
+        .style("opacity", 0)
+        .text(
+          "I study the ways that statistical methods for analyzing text data can be useful for studying the microbiome (The bacteria that live in, on, and around us)."
+        );
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+
       d3.select("#content")
         .append("img");
+    }
+  );
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("fade")
+        .duration(1000)
+        .style("opacity", 0);
+    }
+  );
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .text(
+          "In both problems, we care about finding representations of complex data sets (collections of webpages or bacterial abundances) that facilitate human interpretation (e.g., clusters of similar documents or samples)."
+        );
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("arrive")
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("fade")
+        .duration(1000)
+        .style("opacity", 0);
     }
   );
 
@@ -31,6 +92,8 @@ function get_slides() {
   slide_funs.push(remaining_bars);
   slide_funs.push(all_book_bars);
   slide_funs.push(highlight_worst);
+  slide_funs.push(mansfield_text);
+  slide_funs.push(relate_microbiome);
 
   return slide_funs;
 }
@@ -50,7 +113,6 @@ function pride_prejudice_opening() {
     "x": function(x) { return 10 * x; }
   };
 
-  elem.attr("transform", "translate(-700, 0)");
   elem.selectAll(".austen_text")
     .data(opening).enter()
     .append("text")
@@ -65,7 +127,7 @@ function pride_prejudice_opening() {
 
   elem.selectAll(".austen_text")
     .transition()
-    .duration(1000)
+    .duration(1500)
     .attr("x", function(d) { return scales.x(d.nchar_offset); })
     .style("fill", "black");
 }
@@ -291,6 +353,7 @@ function highlight_worst() {
         }
       });
   }
+
   var classes = [".sentiment_bar0", ".sentiment_bar1", ".sentiment_bar2", ".sentiment_bar"];
   for (var i = 0; i < classes.length; i++) {
     fade_rest(classes[i]);
@@ -308,4 +371,200 @@ function highlight_worst() {
         return "#ebebeb";
       }
     );
+}
+
+function remove_bars() {
+  elem.selectAll(".book_label")
+    .transition("fade_labels")
+    .duration(1000)
+    .attr("y", 100)
+    .style(
+      "opacity",
+      function(d) {
+        if (d == "Mansfield Park") {
+          return 1;
+        }
+        return 0;
+      }
+    );
+
+  function remove_helper(class_name) {
+    elem.selectAll(class_name)
+      .attrs({
+        "fill-opacity": function(d) {
+          if (d.book == "Mansfield Park") {
+            if (d.index == 179) {
+              return 1;
+            } else {
+              return 0.1;
+            }
+          } else {
+            return 0;
+          }
+        }
+      });
+  }
+
+  remove_helper(".sentiment_bar0");
+  remove_helper(".sentiment_bar1");
+  remove_helper(".sentiment_bar2");
+  remove_helper(".sentiment_bar");
+  elem.selectAll(".sentiment_bar")
+    .transition("move_bars")
+    .duration(1000)
+    .attr("transform", "translate(0, 100)");
+}
+
+function mansfield_text() {
+  remove_bars();
+  var mansfield = book.filter(function(d) { return d.book == "Mansfield Park"; });
+  var line_numbers = mansfield.map(function(d) { return d.linenumber; });
+
+  var scales = {
+    "y": d3.scaleLinear()
+      .domain(d3.extent(line_numbers))
+      .range([200, 1200]),
+    "x": function(x) { return 10 * x; },
+    "fill": d3.scaleOrdinal()
+      .domain(["none", "positive", "negative"])
+      .range(["#ebebeb", "#7fc7c4", "#e36e30"])
+  };
+
+  elem.selectAll(".austen_text")
+    .data(mansfield).enter()
+    .append("text")
+    .attrs({
+      "class": "austen_text",
+      "y": function(d) { return scales.y(d.linenumber); },
+      "dy": "0.35em",
+      "x": function(d) { return scales.x(d.nchar_offset); },
+      "fill": function(d) { return scales.fill(d.sentiment); }
+    })
+    .style("opacity", 0)
+    .text(function(d) { return d.word; })
+
+  elem.selectAll(".austen_text")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+}
+
+function clear_austen() {
+  elem.selectAll(".austen_text")
+    .transition("remove_text")
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+
+  elem.selectAll(".sentiment_bar")
+    .transition("fade_bars")
+    .duration(1000)
+    .style("fill-opacity", 0)
+    .remove();
+
+  elem.selectAll(".sentiment_bar0").remove();
+  elem.selectAll(".sentiment_bar1").remove();
+  elem.selectAll(".sentiment_bar2").remove();
+  elem.selectAll(".book_label")
+    .transition("remove_book")
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+}
+
+function dtm_slide() {
+  clear_austen();
+
+  var columns = Object.keys(document_term[0]);
+  scales = {
+    "term": d3.scaleOrdinal()
+      .domain(columns)
+      .range([35, 90].concat(d3.range(290, 900, 50))),
+    "document": d3.scaleBand()
+      .domain(d3.range(10))
+      .range([50, 210])
+  };
+
+  var entries = [];
+  for (var i = 0; i < document_term.length; i++) {
+    for (var j = 0; j < columns.length; j++) {
+      entries.push(
+        {"index": i, "column": columns[j], "value": document_term[i][columns[j]]}
+      );
+    }
+  }
+
+  var dtm_elem = elem.append("g")
+      .attrs({
+        "class": "dtm_g",
+        "transform": "translate(0, 0)"
+      });
+
+  dtm_elem.selectAll(".matrix_entry")
+    .data(entries).enter()
+    .append("text")
+    .attrs({
+      "class": "matrix_entry",
+      "x": function(d) { return scales.term(d.column); },
+      "y": function(d) { return scales.document(d.index); },
+      "dy": "0.35em"
+    })
+    .style("opacity", 0)
+    .text(function(d) { return d.value; });
+
+  dtm_elem.selectAll(".matrix_header")
+    .data(columns).enter()
+    .append("text")
+    .attrs({
+      "class": "matrix_header",
+      "x": function(d) {
+        if (d == "book") {
+          return 70 + scales.term(d);
+        }
+        return scales.term(d);
+      },
+      "y": scales.document(0) - 15,
+      "dy": "0.35em"
+    })
+    .style("opacity", 0)
+    .text(function(d) { return d; });
+
+  dtm_elem.selectAll(".matrix_entry")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+
+  dtm_elem.selectAll(".matrix_header")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+
+  dtm_elem.selectAll(".document_term_label")
+    .data(["passage", "words"]).enter()
+    .append("text")
+    .attrs({
+      "class": "document_term_label",
+      "x": function(d) {
+        if (d == "passage") {
+          return 0;
+        }
+        return 300;
+      },
+      "y": function(d) {
+        if (d == "passage") {
+          return 0;
+        }
+        return 20;
+      },
+      "transform": function(d) {
+        if (d == "passage") {
+          return "translate(15, 140)rotate(-90)";
+        }
+        return "";
+      }
+    })
+    .text(function(d) { return d; });
+}
+
+function relate_microbiome() {
 }
