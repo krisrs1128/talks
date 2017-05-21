@@ -93,6 +93,11 @@ function get_slides() {
   slide_funs.push(all_book_bars);
   slide_funs.push(highlight_worst);
   slide_funs.push(mansfield_text);
+  slide_funs.push(dtm_slide);
+  slide_funs.push(add_bacteria_counts);
+  slide_funs.push(remove_matrices);
+  slide_funs.push(sentiment_sketch);
+  slide_funs.push(microbiome_sketch);
   slide_funs.push(relate_microbiome);
 
   return slide_funs;
@@ -472,11 +477,11 @@ function clear_austen() {
     .remove();
 }
 
-function matrix_scales(columns) {
-    return {
+function matrix_scales(columns, term_range) {
+  return {
     "term": d3.scaleOrdinal()
       .domain(columns)
-      .range([35, 90].concat(d3.range(290, 900, 50))),
+      .range(term_range),
     "document": d3.scaleBand()
       .domain(d3.range(10))
       .range([50, 210])
@@ -560,7 +565,7 @@ function dtm_slide() {
   clear_austen();
 
   var columns = Object.keys(document_term[0]);
-  var scales = matrix_scales(columns);
+  var scales = matrix_scales(columns, [35, 90].concat(d3.range(290, 900, 50)));
   var entries = build_entries(document_term, columns);
 
   var dtm_elem = elem.append("g")
@@ -582,13 +587,133 @@ function dtm_slide() {
     .transition()
     .duration(1000)
     .style("opacity", 1);
-
-
 }
 
 function add_bacteria_counts() {
-  
+  var columns = Object.keys(sample_rsv[0]);
+  var scales = matrix_scales(columns, [35, 85].concat(d3.range(155, 900, 90)));
+  var entries = build_entries(sample_rsv, columns);
+
+  var sample_rsv_elem = elem.append("g")
+      .attrs({
+        "class": "sample_rsv_g",
+        "transform": "translate(0, 220)"
+      });
+
+  draw_matrix(sample_rsv_elem, entries, scales, "sample_rsv_entry");
+  draw_header(sample_rsv_elem, columns, scales, "sample_rsv_header");
+  label_matrix(sample_rsv_elem, "sample_rsv_label", ["sample", "bacteria"]);
+
+  sample_rsv_elem.selectAll(".sample_rsv_entry")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+
+  sample_rsv_elem.selectAll(".sample_rsv_header")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
 }
 
-function relate_microbiome() {
+function remove_matrices() {
+  elem.selectAll(".sample_rsv_g")
+    .transition()
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+
+  elem.selectAll(".dtm_g")
+    .transition()
+    .duration(1000)
+    .style("opacity", 0)
+    .remove();
+}
+
+function update_circles(i, base_elem, array, class_name, scales) {
+  var cur_array = array.slice(0, i);
+  base_elem.selectAll("." + class_name)
+    .data(cur_array).enter()
+    .append("circle")
+    .attrs({
+      "class": class_name,
+      "cy": function(d) { return scales.y(d.y); },
+      "cx": function(d) { return scales.x(d.x); },
+      "fill": function(d) { return scales.fill(d.y); }
+    });
+
+  base_elem.selectAll("." + class_name)
+    .attrs({
+      "r": function(d) { return Math.max(1.5, 20 * Math.exp(-0.05 * Math.abs(i - d.i))); },
+      "fill-opacity": function(d) { return Math.max(0.4, Math.exp(-0.1 * Math.abs(i - d.i))); }
+    });
+}
+
+function animate_circles(elem, class_name, scales) {
+  i = 0;
+  function f() {
+    update_circles(i, elem, sketch_data, class_name, scales);
+    i += 1;
+    if (i > 250) {
+      elem.selectAll("." + class_name)
+        .transition()
+        .duration(1000)
+        .attrs({"r": 1});
+      timer.stop();
+    }
+  }
+
+  var timer = d3.timer(f, 100);
+}
+
+function sentiment_sketch() {
+  var scales = {
+    "x": d3.scaleLinear()
+      .domain([0, 1])
+      .range([50, 50]),
+    "y": d3.scaleLinear()
+      .domain([-1, 1])
+      .range([200, 10]),
+    "fill": d3.scaleLinear()
+      .domain([-1, 1])
+      .range(["#e36e30", "#7fc7c4"])
+  };
+
+  var sentiment_elem = elem.append("g")
+      .attrs({
+        "class": "sentiment_sketch_g",
+        "transform": "translate(100, 10)"
+      });
+  animate_circles(sentiment_elem, "sentiment_circle", scales);
+
+}
+
+function microbiome_sketch() {
+  var scales = {
+    "x": d3.scaleLinear()
+      .domain([-1, 1])
+      .range([200, 10]),
+    "y": d3.scaleLinear()
+      .domain([-1, 1])
+      .range([200, 10]),
+    "fill": d3.scaleLinear()
+      .domain([-1, 1])
+      .range(["#e36e30", "#7fc7c4"])
+  };
+
+  var microbiome_elem = elem.append("g")
+      .attrs({
+        "class": "microbiome_sketch_g",
+        "transform": "translate(600, 10)"
+      });
+  animate_circles(microbiome_elem, "microbiome_circle", scales);
+
+}
+
+function relate_microbiome() {}
+
+function sleep(miliseconds) {
+  var currentTime = new Date().getTime();
+
+  while (currentTime + miliseconds >= new Date().getTime()) {
+  }
 }

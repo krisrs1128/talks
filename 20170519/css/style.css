@@ -79,6 +79,24 @@ body {
     font-family: Hind;
 }
 
+.sample_rsv_entry {
+    font-size: 15px;
+    color: black;
+    font-family: monospace;
+}
+
+.sample_rsv_header {
+    font-size: 15px;
+    color: black;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.sample_rsv_label {
+    font-size: 18px;
+    color: #707070;
+    font-family: Hind;
+}
 .progressButton {
     width: 4%;
     font-size: 14px;
@@ -92,4 +110,3 @@ body {
     border-color: #363636;
     cursor: pointer;
 }
-
