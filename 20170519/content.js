@@ -687,7 +687,6 @@ function sentiment_sketch() {
         "transform": "translate(100, 10)"
       });
   animate_circles(sentiment_elem, "sentiment_circle", scales);
-
 }
 
 function microbiome_sketch() {
@@ -700,15 +699,13 @@ function microbiome_sketch() {
       .range([200, 10]),
     "fill_x": d3.scaleLinear()
       .domain([0.25, 0.75])
-      .range(["#e36e30", "#7fc7c4"]),
+      .range(["#e36e30", "#6d5ad5"]),
     "fill_y": d3.scaleLinear()
       .domain([0.09, 0.62])
       .range(["#e36e30", "#85d55a"])
   };
   scales.fill = function(d) {
-    var value = d3.interpolate(scales.fill_x(d.x), scales.fill_y(d.y))(0.5);
-    console.log(value);
-    return value;
+    return d3.interpolate(scales.fill_x(d.x), scales.fill_y(d.y))(0.5);
   };
 
   var microbiome_elem = elem.append("g")
@@ -716,6 +713,24 @@ function microbiome_sketch() {
         "class": "microbiome_sketch_g",
         "transform": "translate(600, 10)"
       });
+
+  var state_data = [
+    {"x": 0, "y": 0, "label": "state 3"},
+    {"x": 0.5, "y": 1, "label": "state 2"},
+    {"x": 1, "y": 0, "label": "state 1"}
+  ];
+
+  microbiome_elem.selectAll(".sketech_label")
+    .data(state_data).enter()
+    .append("text")
+    .attrs({
+      "class": "sketch_label",
+      "x": function(d) { return scales.x(d.x); },
+      "y": function(d) { return scales.y(d.y); },
+      "fill": scales.fill
+    })
+    .text(function(d) { return d.label; })
+
   animate_circles(microbiome_elem, "microbiome_circle", scales);
 }
 

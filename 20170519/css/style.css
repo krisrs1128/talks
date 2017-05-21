@@ -97,6 +97,12 @@ body {
     color: #707070;
     font-family: Hind;
 }
+
+.sketch_label {
+    font-size: 20px;
+    font-family: Hind;
+}
+
 .progressButton {
     width: 4%;
     font-size: 14px;
