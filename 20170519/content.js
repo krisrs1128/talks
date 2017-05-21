@@ -638,7 +638,7 @@ function update_circles(i, base_elem, array, class_name, scales) {
       "class": class_name,
       "cy": function(d) { return scales.y(d.y); },
       "cx": function(d) { return scales.x(d.x); },
-      "fill": function(d) { return scales.fill(d.y); }
+      "fill": scales.fill
     });
 
   base_elem.selectAll("." + class_name)
@@ -671,11 +671,14 @@ function sentiment_sketch() {
       .domain([0, 1])
       .range([50, 50]),
     "y": d3.scaleLinear()
-      .domain([-1, 1])
+      .domain([0.09, 0.62])
       .range([200, 10]),
-    "fill": d3.scaleLinear()
-      .domain([-1, 1])
+    "fill0": d3.scaleLinear()
+      .domain([0.09, 0.62])
       .range(["#e36e30", "#7fc7c4"])
+  };
+  scales.fill = function(d) {
+    return scales.fill0(d.y);
   };
 
   var sentiment_elem = elem.append("g")
@@ -690,14 +693,22 @@ function sentiment_sketch() {
 function microbiome_sketch() {
   var scales = {
     "x": d3.scaleLinear()
-      .domain([-1, 1])
+      .domain([0, 1])
       .range([200, 10]),
     "y": d3.scaleLinear()
-      .domain([-1, 1])
+      .domain([0, 1])
       .range([200, 10]),
-    "fill": d3.scaleLinear()
-      .domain([-1, 1])
-      .range(["#e36e30", "#7fc7c4"])
+    "fill_x": d3.scaleLinear()
+      .domain([0.25, 0.75])
+      .range(["#e36e30", "#7fc7c4"]),
+    "fill_y": d3.scaleLinear()
+      .domain([0.09, 0.62])
+      .range(["#e36e30", "#85d55a"])
+  };
+  scales.fill = function(d) {
+    var value = d3.interpolate(scales.fill_x(d.x), scales.fill_y(d.y))(0.5);
+    console.log(value);
+    return value;
   };
 
   var microbiome_elem = elem.append("g")
@@ -706,7 +717,6 @@ function microbiome_sketch() {
         "transform": "translate(600, 10)"
       });
   animate_circles(microbiome_elem, "microbiome_circle", scales);
-
 }
 
 function relate_microbiome() {}
