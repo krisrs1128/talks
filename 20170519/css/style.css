@@ -54,6 +54,7 @@ body {
 }
 
 .conclusion {
+    padding: 10px;
     position: absolute;
     max-width: 450px;
     margin: 20px;

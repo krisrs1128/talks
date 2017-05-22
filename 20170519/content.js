@@ -147,7 +147,7 @@ function get_slides() {
         .style("opacity", 0)
         .style("max-width", "750px")
         .html(
-          "To give a flavor of this work, we'll walk through the <i>Pride and Prejudice<\i> example from the blog post: https://juliasilge.com/blog/Life-Changing-Magic"
+          "To give a flavor of this work, we'll walk through the <i>Pride and Prejudice</i> example from the blog post: https://juliasilge.com/blog/Life-Changing-Magic"
         );
 
       d3.select("#content")
@@ -407,6 +407,7 @@ function get_slides() {
   );
   slide_funs.push(conclusion1);
   slide_funs.push(conclusion2);
+  slide_funs.push(conclusion3);
 
   return slide_funs;
 }
@@ -445,7 +446,7 @@ function pride_prejudice_opening() {
     .style("position", "absolute")
     .style("left", "450px")
     .style("top", "70px")
-    .html("Here's the opening passage from <i>Pride and Prejudice<\i>");
+    .html("Here's the opening passage from <i>Pride and Prejudice</i>");
 
   elem.selectAll(".austen_text")
     .transition()
@@ -1161,7 +1162,7 @@ function conclusion1() {
     .append("text")
     .style("opacity", 0)
     .text(
-      "Mathematics and statistics provide useful abstractions for reasoning, whether it's about Jane Austen novels or the microbiome."
+      "So, stepping back for a moment..."
     );
 
   d3.selectAll(".conclusion")
@@ -1172,6 +1173,27 @@ function conclusion1() {
 }
 
 function conclusion2() {
+  d3.selectAll(".conclusion")
+    .selectAll("text")
+    .transition("fade")
+    .duration(1000)
+    .style("opacity", 0);
+
+  d3.selectAll(".conclusion")
+    .selectAll("text")
+    .style("opacity", 0)
+    .text(
+      "Mathematics and statistics provide useful abstractions for reasoning, whether it's about Jane Austen novels or the microbiome."
+    );
+
+  d3.selectAll(".conclusion")
+    .selectAll("text")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+}
+
+function conclusion3() {
   d3.selectAll(".conclusion")
     .selectAll("text")
     .transition("fade")
