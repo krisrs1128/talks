@@ -3,28 +3,166 @@ function get_slides() {
 
   slide_funs.push(
     function() {
+
+      d3.select("#content")
+        .append("g")
+        .style("position", "absolute")
+        .style("left", "50px")
+        .style("top", "70px")
+        .append("img")
+        .attrs({
+          "src": "austen.jpg",
+          "width": "300px"
+        });
+
+      d3.select("#content")
+        .append("g")
+        .style("position", "absolute")
+        .style("left", "450px")
+        .style("top", "110px")
+        .append("img")
+        .attrs({
+          "src": "bacteria.jpg",
+          "width": "600px"
+        });
+
       d3.select("#content")
         .append("div")
         .attrs({
           "class": "main_title"
         })
-        .text("Jane Austen, Gut Microbes, and Exploratory Data Analysis")
+        .html("<span id = 'austen'>Jane Austen</span>, <span id='microbes'>Gut Microbes</span>, and <span id = 'analysis'>Exploratory Data Analysis</span>");
     }
   );
 
-
   slide_funs.push(
     function() {
+      d3.select("body")
+        .style("background-color", "white");
       d3.select("#content")
-        .selectAll(".main_title")
+        .selectAll("*")
+        .transition("fade")
+        .duration(1000)
+        .style("opacity", 0)
         .remove();
+
+      d3.select("#content")
+        .append("img")
+        .attrs({
+          "src": "microbiome_montage.png",
+          "width": "675px"
+        })
+        .style("opacity", 0)
+        .style("position", "absolute")
+        .style("left", "100px")
+        .style("top", "220px");
 
       d3.select("#content")
         .append("div")
         .attrs({"class": "callout"})
         .style("opacity", 0)
-        .text(
-          "I study the ways that statistical methods for analyzing text data can be useful for studying the microbiome (The bacteria that live in, on, and around us)."
+        .html(
+          "I work in a lab that develops methods for studying the <i>microbiome</i>: the bacteria that live in, on, and around us."
+        );
+
+      d3.select("#content")
+        .selectAll("*")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll("*")
+        .remove();
+
+      d3.select("#content")
+        .append("img")
+        .attrs({
+          "src": "book_covers.jpg",
+          "width": "270px"
+        })
+        .style("opacity", 0)
+        .style("position", "absolute")
+        .style("left", "100px")
+        .style("top", "220px");
+
+      d3.select("#content")
+        .append("img")
+        .attrs({
+          "src": "bacteria2.jpg",
+          "width": "340px"
+        })
+        .style("opacity", 0)
+        .style("position", "absolute")
+        .style("left", "450px")
+        .style("top", "220px");
+
+      d3.select("#content")
+        .append("div")
+        .attrs({"class": "callout"})
+        .style("opacity", 0)
+        .html(
+          "A recent project develops an interesting connection between methods used to analyze text and microbiome data."
+        );
+
+      d3.select("#content")
+        .selectAll("*")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
+
+  slide_funs.push(clear_callout);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .style("font-size", "35px")
+        .style("max-width", "700px")
+        .html("(Hence  <span id = 'austen'>Jane Austen</span> & <span id='microbes'>Gut Microbes</span>)");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("fade_in")
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
+
+
+  slide_funs.push(clear_callout);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .html(
+          "In both problems, we care about finding representations of complex data sets (collections of webpages or bacterial abundances) that facilitate human interpretation (e.g., clusters of similar documents or samples)."
+        );
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("appear")
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
+
+  slide_funs.push(clear_callout);
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .append("div")
+        .attrs({"class": "callout"})
+        .style("opacity", 0)
+        .html(
+          "To give a flavor of this work, we'll walk through an example from the blog post <i>The Life-Changing Magic of Tidying Text</i> by Julia Silge"
         );
 
       d3.select("#content")
@@ -38,41 +176,7 @@ function get_slides() {
     }
   );
 
-  slide_funs.push(
-    function() {
-      d3.select("#content")
-        .selectAll(".callout")
-        .transition("fade")
-        .duration(1000)
-        .style("opacity", 0);
-    }
-  );
-
-  slide_funs.push(
-    function() {
-      d3.select("#content")
-        .selectAll(".callout")
-        .text(
-          "In both problems, we care about finding representations of complex data sets (collections of webpages or bacterial abundances) that facilitate human interpretation (e.g., clusters of similar documents or samples)."
-        );
-
-      d3.select("#content")
-        .selectAll(".callout")
-        .transition("arrive")
-        .duration(1000)
-        .style("opacity", 1);
-    }
-  );
-
-  slide_funs.push(
-    function() {
-      d3.select("#content")
-        .selectAll(".callout")
-        .transition("fade")
-        .duration(1000)
-        .style("opacity", 0);
-    }
-  );
+  slide_funs.push(clear_callout);
 
   slide_funs.push(
     function() {
@@ -98,7 +202,9 @@ function get_slides() {
   slide_funs.push(remove_matrices);
   slide_funs.push(sentiment_sketch);
   slide_funs.push(microbiome_sketch);
-  slide_funs.push(relate_microbiome);
+  slide_funs.push(microbiome_application);
+  slide_funs.push(conclusion1);
+  slide_funs.push(conclusion2);
 
   return slide_funs;
 }
@@ -662,17 +768,31 @@ function animate_circles(elem, class_name, scales) {
     }
   }
 
-  var timer = d3.timer(f, 100);
+  var timer = d3.interval(f, 10);
 }
+
+function draw_labels(parent_elem, label_data, scales) {
+  parent_elem.selectAll(".sketch_label")
+    .data(label_data).enter()
+    .append("text")
+    .attrs({
+      "class": "sketch_label",
+      "x": function(d) { return scales.x(d.x); },
+      "y": function(d) { return scales.y(d.y); },
+      "fill": scales.fill
+    })
+    .text(function(d) { return d.label; });
+}
+
 
 function sentiment_sketch() {
   var scales = {
     "x": d3.scaleLinear()
       .domain([0, 1])
-      .range([50, 50]),
+      .range([49.9, 50.1]),
     "y": d3.scaleLinear()
       .domain([0.09, 0.62])
-      .range([200, 10]),
+      .range([200, 15]),
     "fill0": d3.scaleLinear()
       .domain([0.09, 0.62])
       .range(["#e36e30", "#7fc7c4"])
@@ -681,11 +801,18 @@ function sentiment_sketch() {
     return scales.fill0(d.y);
   };
 
+  var label_data = [
+    {"x":-120, "y": 0, "label": "negative"},
+    {"x": -120, "y": 0.65, "label": "positive"}
+  ];
+
   var sentiment_elem = elem.append("g")
       .attrs({
-        "class": "sentiment_sketch_g",
+        "id": "sentiment_sketch_g",
         "transform": "translate(100, 10)"
       });
+
+  draw_labels(sentiment_elem, label_data, scales);
   animate_circles(sentiment_elem, "sentiment_circle", scales);
 }
 
@@ -710,7 +837,7 @@ function microbiome_sketch() {
 
   var microbiome_elem = elem.append("g")
       .attrs({
-        "class": "microbiome_sketch_g",
+        "id": "microbiome_sketch_g",
         "transform": "translate(600, 10)"
       });
 
@@ -720,25 +847,72 @@ function microbiome_sketch() {
     {"x": 1, "y": 0, "label": "state 1"}
   ];
 
-  microbiome_elem.selectAll(".sketech_label")
-    .data(state_data).enter()
-    .append("text")
-    .attrs({
-      "class": "sketch_label",
-      "x": function(d) { return scales.x(d.x); },
-      "y": function(d) { return scales.y(d.y); },
-      "fill": scales.fill
-    })
-    .text(function(d) { return d.label; })
-
+  draw_labels(microbiome_elem, state_data, scales);
   animate_circles(microbiome_elem, "microbiome_circle", scales);
 }
 
-function relate_microbiome() {}
+function microbiome_application() {
+  var img_elem = elem.append("g")
+    .attrs({
+      "id": "application_g",
+      "transform": "translate(0, 0)"
+    });
 
-function sleep(miliseconds) {
-  var currentTime = new Date().getTime();
+  img_elem.append("svg:image")
+    .attrs({
+      "xlink:href": "microbiome_application.png",
+      "width": 600
+    });
+}
 
-  while (currentTime + miliseconds >= new Date().getTime()) {
-  }
+function conclusion1() {
+  elem.selectAll("*")
+    .remove();
+
+  d3.select("#content")
+    .append("g")
+    .attrs({
+      "id": "bacteria_cartoon"
+    })
+    .append("img")
+    .attrs({
+      "src": "bacteria_cartoon.JPG"
+    });
+
+  d3.select("#content")
+    .append("div")
+    .attrs({"class": "conclusion"})
+    .style("background-color", "rgba(248, 248, 248, 0.95)")
+    .append("text")
+    .style("opacity", 0)
+    .text(
+      "Mathematics and statistics provide useful abstractions for reasoning, from Jane Austen novels to the microbiome."
+    );
+
+  d3.selectAll(".conclusion")
+    .selectAll("text")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+}
+
+function conclusion2() {
+  d3.selectAll(".conclusion")
+    .selectAll("text")
+    .transition("fade")
+    .duration(1000)
+    .style("opacity", 0);
+
+  d3.selectAll(".conclusion")
+    .selectAll("text")
+    .style("opacity", 0)
+    .text(
+      "In the end, the basic reason for collecting and studying data is curiosity."
+    );
+
+  d3.selectAll(".conclusion")
+    .selectAll("text")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
 }

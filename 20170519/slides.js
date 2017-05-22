@@ -29,3 +29,11 @@ function clear_content() {
     .selectAll("ul")
     .remove();
 }
+
+function clear_callout() {
+  d3.select("#content")
+    .selectAll(".callout")
+    .transition("fade")
+    .duration(2000)
+    .style("opacity", 0);
+}

@@ -1,6 +1,6 @@
 body {
     /*overflow: hidden;*/
-	  background-color:	white;
+    background-color: #c9d5d8;
     margin: 0;
     font-size: 10px;
     font-family: 'Open Sans', sans-serif;
@@ -41,23 +41,48 @@ body {
 }
 
 .callout {
+    padding: 10px;
     position: absolute;
-    max-width: 400px;
+    max-width: 550px;
+    left: 50px;
+    top: 25px;
+    font-size: 30px;
+    font-weight: 300;
+	  background-color:	white;
+    color: #5E5E5E;
+    font-family: Hind;
+}
+
+.conclusion {
+    position: absolute;
+    max-width: 450px;
+    margin: 20px;
+    dy: 0.35em;
     left: 200px;
     top: 100px;
-    font-size: 20px;
+    font-size: 30px;
     color: black;
     font-family: Hind;
 }
 
 .main_title {
     position: absolute;
-    max-width: 700px;
+    padding: 10px;
+    width: 550px;
     top: 100px;
     left: 400px;
-    font-size: 45px;
+    font-size: 35px;
     color: black;
     font-family: Bitter;
+    background-color: rgba(248, 248, 248, 1);
+}
+
+#austen {
+    font-family: Sofia, cursive;
+}
+
+#microbes {
+    font-family: Fascinate;
 }
 
 .dtm_entry {
