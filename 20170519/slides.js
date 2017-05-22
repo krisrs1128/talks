@@ -34,6 +34,6 @@ function clear_callout() {
   d3.select("#content")
     .selectAll(".callout")
     .transition("fade")
-    .duration(2000)
+    .duration(200)
     .style("opacity", 0);
 }

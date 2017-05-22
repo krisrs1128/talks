@@ -3,7 +3,6 @@ function get_slides() {
 
   slide_funs.push(
     function() {
-
       d3.select("#content")
         .append("g")
         .style("position", "absolute")
@@ -28,9 +27,7 @@ function get_slides() {
 
       d3.select("#content")
         .append("div")
-        .attrs({
-          "class": "main_title"
-        })
+        .attrs({"class": "main_title"})
         .html("<span id = 'austen'>Jane Austen</span>, <span id='microbes'>Gut Microbes</span>, and <span id = 'analysis'>Exploratory Data Analysis</span>");
     }
   );
@@ -117,8 +114,6 @@ function get_slides() {
     }
   );
 
-  slide_funs.push(clear_callout);
-
   slide_funs.push(
     function() {
       d3.select("#content")
@@ -126,38 +121,67 @@ function get_slides() {
         .style("font-size", "35px")
         .style("max-width", "700px")
         .html("(Hence  <span id = 'austen'>Jane Austen</span> & <span id='microbes'>Gut Microbes</span>)");
-
-      d3.select("#content")
-        .selectAll(".callout")
-        .transition("fade_in")
-        .duration(1000)
-        .style("opacity", 1);
     }
   );
 
-  slide_funs.push(clear_callout);
+  slide_funs.push(
+    function() {
+      clear_callout();
+      d3.selectAll("img")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+    });
+
   slide_funs.push(
     function() {
       d3.select("#content")
+        .selectAll("*")
+        .remove();
+
+      d3.select("#content")
         .append("div")
-        .attrs({"class": "callout"})
+        .attr("class", "callout")
         .style("opacity", 0)
+        .style("max-width", "750px")
         .html(
-          "To give a flavor of this work, we'll walk through an example from the blog post <i>The Life-Changing Magic of Tidying Text</i> by Julia Silge"
+          "To give a flavor of this work, we'll walk through the <i>Pride and Prejudice<\i> example from the blog post: https://juliasilge.com/blog/Life-Changing-Magic"
         );
 
       d3.select("#content")
+        .append("img")
+        .attrs({
+          "src": "tidy_text.png",
+          "width": "340px"
+        })
+        .style("opacity", 0)
+        .style("position", "absolute")
+        .style("left", "220px")
+        .style("top", "220px");
+
+      d3.select("#content")
         .selectAll(".callout")
-        .transition()
+        .transition("transition_callout")
         .duration(1000)
         .style("opacity", 1);
 
       d3.select("#content")
-        .append("img");
+        .selectAll("img")
+        .transition("transition_image")
+        .duration(1000)
+        .style("opacity", 1);
     }
   );
 
-  slide_funs.push(clear_callout);
+
+  slide_funs.push(
+    function() {
+      clear_callout();
+      d3.selectAll("img")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+    });
 
   slide_funs.push(
     function() {
@@ -266,7 +290,7 @@ function bar_scales() {
       .range([40, -40]),
     "x": d3.scaleLinear()
       .domain(d3.extent(index))
-      .range([350, 1500]),
+      .range([350, 900]),
     "fill": function(d) {
       if (d.sentiment > 0) {
         return "#7fc7c4";
@@ -867,7 +891,7 @@ function conclusion1() {
     .append("text")
     .style("opacity", 0)
     .text(
-      "Mathematics and statistics provide useful abstractions for reasoning, from Jane Austen novels to the microbiome."
+      "Mathematics and statistics provide useful abstractions for reasoning, whether it's about Jane Austen novels to the microbiome."
     );
 
   d3.selectAll(".conclusion")
@@ -888,7 +912,7 @@ function conclusion2() {
     .selectAll("text")
     .style("opacity", 0)
     .text(
-      "In the end, the basic reason for collecting and studying data is curiosity."
+      "In the end, the basic motivation for collecting and studying data is a curiosity about the world."
     );
 
   d3.selectAll(".conclusion")
