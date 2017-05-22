@@ -57,6 +57,7 @@ function get_slides() {
       d3.select("#content")
         .append("div")
         .attrs({"class": "callout"})
+        .style("max-width", "550px")
         .style("opacity", 0)
         .html(
           "I work in a lab that develops methods for studying the <i>microbiome</i>: the bacteria that live in, on, and around us."
@@ -101,6 +102,7 @@ function get_slides() {
       d3.select("#content")
         .append("div")
         .attrs({"class": "callout"})
+        .style("max-width", "550px")
         .style("opacity", 0)
         .html(
           "A recent project develops an interesting connection between methods used to analyze text and microbiome data."
@@ -194,6 +196,7 @@ function get_slides() {
   slide_funs.push(stack_words);
   slide_funs.push(first_bar);
   slide_funs.push(fade_word_list);
+  slide_funs.push(clear_callout);
   slide_funs.push(next_words(1));
   slide_funs.push(fade_word_list);
   slide_funs.push(next_words(2));
@@ -241,11 +244,24 @@ function pride_prejudice_opening() {
     .style("fill", "white")
     .text(function(d) { return d.word; });
 
+  d3.select("#content")
+    .append("div")
+    .attrs({"class": "callout"})
+    .style("opacity", 0)
+    .style("position", "absolute")
+    .style("left", "450px")
+    .style("top", "70px")
+    .html("Here's the opening passage from <i>Pride and Prejudice<\i>");
+
   elem.selectAll(".austen_text")
     .transition()
     .duration(1500)
     .attr("x", function(d) { return scales.x(d.nchar_offset); })
     .style("fill", "black");
+
+  d3.select("#content")
+    .selectAll(".callout")
+    .style("opacity", 1);
 }
 
 function opening_sentiments() {
@@ -259,6 +275,28 @@ function opening_sentiments() {
     .transition()
     .duration(1000)
     .style("fill", function(d) { return scales.fill(d.sentiment); });
+
+  d3.select("#content")
+    .selectAll(".callout")
+    .style("opacity", 0)
+    .html("Let's highlight the <span id='positive'>positive</span> and <span id='negative'>negative</span> words");
+
+  d3.select("#content")
+    .selectAll(".callout")
+    .transition("callout")
+    .duration(1000)
+    .style("opacity", 1);
+
+  d3.select("#content")
+    .selectAll(".callout")
+    .style("opacity", 0)
+    .html("It seems that the book opens on a positive note");
+
+  d3.select("#content")
+    .selectAll(".callout")
+    .transition("callout")
+    .duration(1000)
+    .style("opacity", 1);
 }
 
 function stack_scales() {
@@ -306,7 +344,7 @@ function bar_scales() {
 function stack_words() {
   var scales = stack_scales();
   elem.selectAll(".austen_text")
-    .transition()
+    .transition("stacking")
     .duration(1000)
     .attrs({
       "x": function(d) { return scales.x(d.sentiment); },
@@ -357,7 +395,7 @@ function display_bar(class_name) {
 function fade_word_list() {
   elem.selectAll(".austen_text")
     .transition()
-    .duration(1000)
+    .duration(800)
     .attrs({
       "y": 0
     })

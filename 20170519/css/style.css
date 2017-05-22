@@ -43,8 +43,8 @@ body {
 .callout {
     padding: 10px;
     position: absolute;
-    max-width: 550px;
-    left: 50px;
+    max-width: 400px;
+    left: 50px
     top: 25px;
     font-size: 30px;
     font-weight: 300;
@@ -140,4 +140,12 @@ body {
     color: #363636;
     border-color: #363636;
     cursor: pointer;
+}
+
+#positive {
+    color: #7fc7c4;
+}
+
+#negative {
+    color: #e46e30;
 }
