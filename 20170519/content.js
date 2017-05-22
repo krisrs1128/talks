@@ -135,25 +135,6 @@ function get_slides() {
     }
   );
 
-
-  slide_funs.push(clear_callout);
-
-  slide_funs.push(
-    function() {
-      d3.select("#content")
-        .selectAll(".callout")
-        .html(
-          "In both problems, we care about finding representations of complex data sets (collections of webpages or bacterial abundances) that facilitate human interpretation (e.g., clusters of similar documents or samples)."
-        );
-
-      d3.select("#content")
-        .selectAll(".callout")
-        .transition("appear")
-        .duration(1000)
-        .style("opacity", 1);
-    }
-  );
-
   slide_funs.push(clear_callout);
   slide_funs.push(
     function() {
