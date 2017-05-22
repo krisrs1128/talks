@@ -196,21 +196,215 @@ function get_slides() {
   slide_funs.push(stack_words);
   slide_funs.push(first_bar);
   slide_funs.push(fade_word_list);
-  slide_funs.push(clear_callout);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("The second passage introduces some conflict...");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("fadein")
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
   slide_funs.push(next_words(1));
   slide_funs.push(fade_word_list);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("The third passage is mixed");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("fadein")
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
+
   slide_funs.push(next_words(2));
   slide_funs.push(fade_word_list);
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("We can do this for the rest of this novel...");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition("fadein")
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
   slide_funs.push(remaining_bars);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("...and for the others too.");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
   slide_funs.push(all_book_bars);
+
+  slide_funs.push(clear_callout);
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("What's the most negative passage overall?");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+    }
+  );
   slide_funs.push(highlight_worst);
   slide_funs.push(mansfield_text);
-  slide_funs.push(dtm_slide);
-  slide_funs.push(add_bacteria_counts);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("How is any of this related to the microbiome?");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+      dtm_slide();
+    }
+  );
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("The essential focus of both analysis are count matrices");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+      add_bacteria_counts();
+    }
+  );
   slide_funs.push(remove_matrices);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .style("left", "350px")
+        .style("font-size", "25px")
+        .html("We've worked through <i>sentiment analysis</i>, which tracks changes in sentiment across a text");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+      sentiment_sketch_setup();
+    }
+  );
   slide_funs.push(sentiment_sketch);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .style("left", "350px")
+        .style("font-size", "25px")
+        .html("In the microbiome, we study evolution across more abstract states");
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+
+      microbiome_sketch_setup();
+    }
+  );
   slide_funs.push(microbiome_sketch);
-  slide_funs.push(microbiome_application);
+
+  slide_funs.push(
+    function() {
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 0);
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .html("(For example, pre vs. post antibiotics)")
+
+      d3.select("#content")
+        .selectAll(".callout")
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
+
+      microbiome_application();
+    }
+  );
   slide_funs.push(conclusion1);
   slide_funs.push(conclusion2);
 
@@ -337,7 +531,7 @@ function bar_scales() {
     },
     "facet": d3.scaleOrdinal()
       .domain(book_order)
-      .range(d3.range(100, 700, 100))
+      .range(d3.range(120, 700, 100))
   };
 }
 
@@ -633,7 +827,7 @@ function matrix_scales(columns, term_range) {
       .range(term_range),
     "document": d3.scaleBand()
       .domain(d3.range(10))
-      .range([50, 210])
+      .range([20, 210])
   };
 }
 
@@ -698,7 +892,7 @@ function label_matrix(g, class_name, labels) {
         if (d == labels[0]) {
           return 0;
         }
-        return 20;
+        return -8;
       },
       "transform": function(d) {
         if (d == labels[0]) {
@@ -714,13 +908,13 @@ function dtm_slide() {
   clear_austen();
 
   var columns = Object.keys(document_term[0]);
-  var scales = matrix_scales(columns, [35, 90].concat(d3.range(290, 900, 50)));
+  var scales = matrix_scales(columns, [35, 90].concat(d3.range(350, 900, 50)));
   var entries = build_entries(document_term, columns);
 
   var dtm_elem = elem.append("g")
       .attrs({
         "class": "dtm_g",
-        "transform": "translate(0, 0)"
+        "transform": "translate(0, 110)"
       });
 
   draw_matrix(dtm_elem, entries, scales, "dtm_entry");
@@ -746,7 +940,7 @@ function add_bacteria_counts() {
   var sample_rsv_elem = elem.append("g")
       .attrs({
         "class": "sample_rsv_g",
-        "transform": "translate(0, 220)"
+        "transform": "translate(0, 350)"
       });
 
   draw_matrix(sample_rsv_elem, entries, scales, "sample_rsv_entry");
@@ -765,6 +959,12 @@ function add_bacteria_counts() {
 }
 
 function remove_matrices() {
+  d3.select("#content")
+    .selectAll(".callout")
+    .transition()
+    .duration(1000)
+    .style("opacity", 0);
+
   elem.selectAll(".sample_rsv_g")
     .transition()
     .duration(1000)
@@ -827,8 +1027,7 @@ function draw_labels(parent_elem, label_data, scales) {
     .text(function(d) { return d.label; });
 }
 
-
-function sentiment_sketch() {
+function sentiment_sketch_scales() {
   var scales = {
     "x": d3.scaleLinear()
       .domain([0, 1])
@@ -844,22 +1043,10 @@ function sentiment_sketch() {
     return scales.fill0(d.y);
   };
 
-  var label_data = [
-    {"x":-120, "y": 0, "label": "negative"},
-    {"x": -120, "y": 0.65, "label": "positive"}
-  ];
-
-  var sentiment_elem = elem.append("g")
-      .attrs({
-        "id": "sentiment_sketch_g",
-        "transform": "translate(100, 10)"
-      });
-
-  draw_labels(sentiment_elem, label_data, scales);
-  animate_circles(sentiment_elem, "sentiment_circle", scales);
+  return scales;
 }
 
-function microbiome_sketch() {
+function microbiome_sketch_scales() {
   var scales = {
     "x": d3.scaleLinear()
       .domain([0, 1])
@@ -877,7 +1064,36 @@ function microbiome_sketch() {
   scales.fill = function(d) {
     return d3.interpolate(scales.fill_x(d.x), scales.fill_y(d.y))(0.5);
   };
+  return scales;
+}
 
+function sentiment_sketch_setup() {
+  var scales = sentiment_sketch_scales();
+  var label_data = [
+    {"x":-120, "y": 0, "label": "negative"},
+    {"x": -120, "y": 0.65, "label": "positive"}
+  ];
+
+  var sentiment_elem = elem.append("g")
+      .attrs({
+        "id": "sentiment_sketch_g",
+        "transform": "translate(100, 10)"
+      });
+
+  draw_labels(sentiment_elem, label_data, scales);
+}
+
+function sentiment_sketch() {
+  var scales = sentiment_sketch_scales();
+  animate_circles(
+    d3.select("#sentiment_sketch_g"),
+    "sentiment_circle",
+    scales
+  );
+}
+
+function microbiome_sketch_setup() {
+  var scales = microbiome_sketch_scales();
   var microbiome_elem = elem.append("g")
       .attrs({
         "id": "microbiome_sketch_g",
@@ -891,14 +1107,27 @@ function microbiome_sketch() {
   ];
 
   draw_labels(microbiome_elem, state_data, scales);
-  animate_circles(microbiome_elem, "microbiome_circle", scales);
+}
+
+function microbiome_sketch() {
+  var scales = microbiome_sketch_scales();
+  animate_circles(
+    d3.select("#microbiome_sketch_g"),
+    "microbiome_circle",
+    scales
+  );
+  
 }
 
 function microbiome_application() {
+  elem.select("#sentiment_sketch_g")
+    .selectAll("*")
+    .remove();
+
   var img_elem = elem.append("g")
     .attrs({
       "id": "application_g",
-      "transform": "translate(0, 0)"
+      "transform": "translate(0, 50)"
     });
 
   img_elem.append("svg:image")
@@ -909,6 +1138,9 @@ function microbiome_application() {
 }
 
 function conclusion1() {
+  d3.select("#content")
+    .selectAll(".callout")
+    .remove();
   elem.selectAll("*")
     .remove();
 
@@ -929,7 +1161,7 @@ function conclusion1() {
     .append("text")
     .style("opacity", 0)
     .text(
-      "Mathematics and statistics provide useful abstractions for reasoning, whether it's about Jane Austen novels to the microbiome."
+      "Mathematics and statistics provide useful abstractions for reasoning, whether it's about Jane Austen novels or the microbiome."
     );
 
   d3.selectAll(".conclusion")
