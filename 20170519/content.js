@@ -408,6 +408,7 @@ function get_slides() {
   slide_funs.push(conclusion1);
   slide_funs.push(conclusion2);
   slide_funs.push(conclusion3);
+  slide_funs.push(acknowledgements);
 
   return slide_funs;
 }
@@ -909,7 +910,7 @@ function dtm_slide() {
   clear_austen();
 
   var columns = Object.keys(document_term[0]);
-  var scales = matrix_scales(columns, [35, 90].concat(d3.range(350, 900, 50)));
+  var scales = matrix_scales(columns, [35, 90].concat(d3.range(305, 700, 50)));
   var entries = build_entries(document_term, columns);
 
   var dtm_elem = elem.append("g")
@@ -1035,7 +1036,7 @@ function sentiment_sketch_scales() {
       .range([49.9, 50.1]),
     "y": d3.scaleLinear()
       .domain([0.09, 0.62])
-      .range([200, 15]),
+      .range([250, 55]),
     "fill0": d3.scaleLinear()
       .domain([0.09, 0.62])
       .range(["#e36e30", "#7fc7c4"])
@@ -1054,7 +1055,7 @@ function microbiome_sketch_scales() {
       .range([200, 10]),
     "y": d3.scaleLinear()
       .domain([0, 1])
-      .range([200, 10]),
+      .range([250, 60]),
     "fill_x": d3.scaleLinear()
       .domain([0.25, 0.75])
       .range(["#e36e30", "#6d5ad5"]),
@@ -1146,6 +1147,9 @@ function conclusion1() {
     .selectAll("*")
     .remove();
 
+  elem.selectAll("*")
+    .remove();
+
   d3.select("#content")
     .append("g")
     .attrs({
@@ -1169,7 +1173,7 @@ function conclusion1() {
   d3.selectAll(".conclusion")
     .selectAll("text")
     .transition()
-    .duration(3000)
+    .duration(1500)
     .style("opacity", 1);
 }
 
@@ -1210,6 +1214,22 @@ function conclusion3() {
 
   d3.selectAll(".conclusion")
     .selectAll("text")
+    .transition()
+    .duration(1000)
+    .style("opacity", 1);
+}
+
+function acknowledgements() {
+  d3.select("#content")
+    .append("text")
+    .attr("class", "acknowledgement")
+    .style("opacity", 0)
+    .text(
+      "(Thanks to my advisor Professor Susan Holmes for the idea of a Jane Austen + Microbiome talk.)"
+    );
+
+  d3.select("#content")
+    .selectAll(".acknowledgement")
     .transition()
     .duration(1000)
     .style("opacity", 1);
