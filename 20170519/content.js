@@ -1205,7 +1205,7 @@ function acknowledgements() {
     .attr("class", "acknowledgement")
     .style("opacity", 0)
     .html(
-      "Credits: <br> - Professor Susan Holmes for the idea of a Jane Austen + Microbiome talk <br> - Julia Silge's tidy text post, for the sentiment analysis R code <br> - Mahendra Nazar's cartoon (on this slide) <br> The articles \"Germs are Us\" and \"How the Western Diet has Derailed our Evolution\" for the images describing the microbiome"
+      "Credits: <br> - Professor Susan Holmes for the idea of a Jane Austen + Microbiome talk <br> - Julia Silge's tidy text post, for the sentiment analysis R code <br> - Mahendra Nazar's cartoon (on this slide) <br> - The articles \"Germs are Us\" and \"How the Western Diet has Derailed our Evolution\" for the images describing the microbiome"
     );
 
   d3.select("#content")
