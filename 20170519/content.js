@@ -225,26 +225,6 @@ function get_slides() {
 
       d3.select("#content")
         .selectAll(".callout")
-        .html("The third passage is mixed");
-
-      d3.select("#content")
-        .selectAll(".callout")
-        .transition("fadein")
-        .duration(1000)
-        .style("opacity", 1);
-    }
-  );
-
-  slide_funs.push(next_words(2));
-  slide_funs.push(fade_word_list);
-  slide_funs.push(
-    function() {
-      d3.select("#content")
-        .selectAll(".callout")
-        .style("opacity", 0);
-
-      d3.select("#content")
-        .selectAll(".callout")
         .html("We can do this for the rest of this novel...");
 
       d3.select("#content")
