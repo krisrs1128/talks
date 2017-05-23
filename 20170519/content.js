@@ -11,18 +11,18 @@ function get_slides() {
         .append("img")
         .attrs({
           "src": "austen.jpg",
-          "width": "300px"
+          "width": "600px"
         });
 
       d3.select("#content")
         .append("g")
         .style("position", "absolute")
-        .style("left", "450px")
-        .style("top", "110px")
+        .style("left", "700px")
+        .style("top", "240px")
         .append("img")
         .attrs({
           "src": "bacteria.jpg",
-          "width": "600px"
+          "width": "990px"
         });
 
       d3.select("#content")
@@ -47,17 +47,16 @@ function get_slides() {
         .append("img")
         .attrs({
           "src": "microbiome_montage.png",
-          "width": "675px"
+          "width": "1000px"
         })
         .style("opacity", 0)
         .style("position", "absolute")
         .style("left", "100px")
-        .style("top", "220px");
+        .style("top", "250px");
 
       d3.select("#content")
         .append("div")
         .attrs({"class": "callout"})
-        .style("max-width", "550px")
         .style("opacity", 0)
         .html(
           "I work in a lab that develops methods for studying the <i>microbiome</i>: the bacteria that live in, on, and around us."
@@ -81,28 +80,27 @@ function get_slides() {
         .append("img")
         .attrs({
           "src": "book_covers.jpg",
-          "width": "270px"
+          "width": "500px"
         })
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("left", "100px")
-        .style("top", "220px");
+        .style("left", "200px")
+        .style("top", "250px");
 
       d3.select("#content")
         .append("img")
         .attrs({
           "src": "bacteria2.jpg",
-          "width": "340px"
+          "width": "500px"
         })
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("left", "450px")
-        .style("top", "220px");
+        .style("left", "800px")
+        .style("top", "250px");
 
       d3.select("#content")
         .append("div")
         .attrs({"class": "callout"})
-        .style("max-width", "550px")
         .style("opacity", 0)
         .html(
           "A recent project develops an interesting connection between methods used to analyze text and microbiome data."
@@ -121,7 +119,6 @@ function get_slides() {
       d3.select("#content")
         .selectAll(".callout")
         .style("font-size", "35px")
-        .style("max-width", "700px")
         .html("(Hence  <span id = 'austen'>Jane Austen</span> & <span id='microbes'>Gut Microbes</span>)");
     }
   );
@@ -145,21 +142,21 @@ function get_slides() {
         .append("div")
         .attr("class", "callout")
         .style("opacity", 0)
-        .style("max-width", "750px")
+        .style("max-width", "770px")
         .html(
           "To give a flavor of this work, we'll walk through the <i>Pride and Prejudice</i> example from the blog post: https://juliasilge.com/blog/Life-Changing-Magic"
         );
 
-      d3.select("#content")
-        .append("img")
-        .attrs({
-          "src": "tidy_text.png",
-          "width": "340px"
-        })
-        .style("opacity", 0)
-        .style("position", "absolute")
-        .style("left", "220px")
-        .style("top", "220px");
+      // d3.select("#content")
+      //   .append("img")
+      //   .attrs({
+      //     "src": "tidy_text.png",
+      //     "width": "600px"
+      //   })
+      //   .style("opacity", 0)
+      //   .style("position", "absolute")
+      //   .style("left", "300px")
+      //   .style("top", "250px");
 
       d3.select("#content")
         .selectAll(".callout")
@@ -309,6 +306,7 @@ function get_slides() {
 
       d3.select("#content")
         .selectAll(".callout")
+        .style("max-width", "940px")
         .html("The essential focus of both analysis are count matrices");
 
       d3.select("#content")
@@ -504,7 +502,7 @@ function bar_scales() {
       .range([40, -40]),
     "x": d3.scaleLinear()
       .domain(d3.extent(index))
-      .range([350, 900]),
+      .range([350, 1600]),
     "fill": function(d) {
       if (d.sentiment > 0) {
         return "#7fc7c4";
@@ -808,8 +806,8 @@ function matrix_scales(columns, term_range) {
       .domain(columns)
       .range(term_range),
     "document": d3.scaleBand()
-      .domain(d3.range(10))
-      .range([20, 210])
+      .domain(d3.range(20))
+      .range([20, 500])
   };
 }
 
@@ -851,7 +849,7 @@ function draw_header(g, columns, scales, class_name) {
         }
         return scales.term(d);
       },
-      "y": scales.document(0) - 15,
+      "y": scales.document(0) - 20,
       "dy": "0.35em"
     })
     .style("opacity", 0)
@@ -874,7 +872,7 @@ function label_matrix(g, class_name, labels) {
         if (d == labels[0]) {
           return 0;
         }
-        return -8;
+        return -10;
       },
       "transform": function(d) {
         if (d == labels[0]) {
@@ -922,7 +920,7 @@ function add_bacteria_counts() {
   var sample_rsv_elem = elem.append("g")
       .attrs({
         "class": "sample_rsv_g",
-        "transform": "translate(0, 350)"
+        "transform": "translate(800, 110)"
       });
 
   draw_matrix(sample_rsv_elem, entries, scales, "sample_rsv_entry");
@@ -1016,7 +1014,7 @@ function sentiment_sketch_scales() {
       .range([49.9, 50.1]),
     "y": d3.scaleLinear()
       .domain([0.09, 0.62])
-      .range([250, 55]),
+      .range([600, 50]),
     "fill0": d3.scaleLinear()
       .domain([0.09, 0.62])
       .range(["#e36e30", "#7fc7c4"])
@@ -1032,10 +1030,10 @@ function microbiome_sketch_scales() {
   var scales = {
     "x": d3.scaleLinear()
       .domain([0, 1])
-      .range([200, 10]),
+      .range([10, 500]),
     "y": d3.scaleLinear()
       .domain([0, 1])
-      .range([250, 60]),
+      .range([700, 50]),
     "fill_x": d3.scaleLinear()
       .domain([0.25, 0.75])
       .range(["#e36e30", "#6d5ad5"]),
@@ -1059,7 +1057,7 @@ function sentiment_sketch_setup() {
   var sentiment_elem = elem.append("g")
       .attrs({
         "id": "sentiment_sketch_g",
-        "transform": "translate(100, 10)"
+        "transform": "translate(0, 50)"
       });
 
   draw_labels(sentiment_elem, label_data, scales);
@@ -1079,7 +1077,7 @@ function microbiome_sketch_setup() {
   var microbiome_elem = elem.append("g")
       .attrs({
         "id": "microbiome_sketch_g",
-        "transform": "translate(600, 10)"
+        "transform": "translate(900, 50)"
       });
 
   var state_data = [
@@ -1115,7 +1113,7 @@ function microbiome_application() {
   img_elem.append("img")
     .attrs({
       "src": "microbiome_application.png",
-      "width": 600
+      "width": 850
     })
     .style("position", "absolute")
     .style("left", "80px")
@@ -1137,7 +1135,8 @@ function conclusion1() {
     })
     .append("img")
     .attrs({
-      "src": "bacteria_cartoon.JPG"
+      "src": "bacteria_cartoon.JPG",
+      "width": "1000px"
     });
 
   d3.select("#content")

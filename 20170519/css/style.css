@@ -43,9 +43,9 @@ body {
 .callout {
     padding: 10px;
     position: absolute;
-    max-width: 400px;
-    left: 50px
-    top: 25px;
+    max-width: 600px;
+    left: 100px;
+    top: 75px;
     font-size: 30px;
     font-weight: 300;
 	  background-color:	white;
@@ -56,7 +56,7 @@ body {
 .acknowledgement {
     padding: 10px;
     position: absolute;
-    max-width: 450px;
+    max-width: 700px;
     margin: 20px;
     dy: 0.35em;
     left: 200px;
@@ -70,12 +70,12 @@ body {
 .conclusion {
     padding: 10px;
     position: absolute;
-    max-width: 450px;
+    max-width: 700px;
     margin: 20px;
     dy: 0.35em;
     left: 200px;
     top: 100px;
-    font-size: 30px;
+    font-size: 35px;
     color: #5E5E5E;
     font-family: Hind;
     background-color: rgba(248, 248, 248, 0.95)
@@ -84,10 +84,10 @@ body {
 .main_title {
     position: absolute;
     padding: 10px;
-    width: 550px;
+    width: 750px;
     top: 100px;
-    left: 400px;
-    font-size: 35px;
+    left: 500px;
+    font-size: 55px;
     color: black;
     font-family: Bitter;
     background-color: rgba(248, 248, 248, 1);
@@ -140,7 +140,7 @@ body {
 }
 
 .sketch_label {
-    font-size: 20px;
+    font-size: 40px;
     font-family: Hind;
 }
 
