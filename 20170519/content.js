@@ -275,7 +275,6 @@ function get_slides() {
   );
   slide_funs.push(all_book_bars);
 
-  slide_funs.push(clear_callout);
   slide_funs.push(
     function() {
       d3.select("#content")
@@ -286,7 +285,8 @@ function get_slides() {
 
       d3.select("#content")
         .selectAll(".callout")
-        .html("What's the most negative passage overall?");
+        // .style("max-width", "775px")
+        .html("What's going on at the end of <i>Mansfield Park</i>?");
 
       d3.select("#content")
         .selectAll(".callout")
@@ -394,7 +394,7 @@ function get_slides() {
 
       d3.select("#content")
         .selectAll(".callout")
-        .html("(For example, pre vs. post antibiotics)")
+        .html("(For example, pre vs. post antibiotics)");
 
       d3.select("#content")
         .selectAll(".callout")
@@ -1117,7 +1117,6 @@ function microbiome_sketch() {
     "microbiome_circle",
     scales
   );
-  
 }
 
 function microbiome_application() {
@@ -1125,24 +1124,26 @@ function microbiome_application() {
     .selectAll("*")
     .remove();
 
-  var img_elem = elem.append("g")
-    .attrs({
-      "id": "application_g",
-      "transform": "translate(0, 50)"
-    });
+  var img_elem = d3.select("#content")
+      .append("g")
+      .attrs({
+        "id": "application_g",
+        "transform": "translate(100, 150)"
+      });
 
-  img_elem.append("svg:image")
+  img_elem.append("img")
     .attrs({
-      "xlink:href": "microbiome_application.png",
+      "src": "microbiome_application.png",
       "width": 600
-    });
+    })
+    .style("position", "absolute")
+    .style("left", "80px")
+    .style("top", "150px");
 }
 
 function conclusion1() {
   d3.select("#content")
-    .selectAll(".callout")
-    .remove();
-  elem.selectAll("*")
+    .selectAll("*")
     .remove();
 
   d3.select("#content")
@@ -1168,7 +1169,7 @@ function conclusion1() {
   d3.selectAll(".conclusion")
     .selectAll("text")
     .transition()
-    .duration(1000)
+    .duration(3000)
     .style("opacity", 1);
 }
 
