@@ -147,16 +147,16 @@ function get_slides() {
           "To give a flavor of this work, we'll walk through the <i>Pride and Prejudice</i> example from the blog post: https://juliasilge.com/blog/Life-Changing-Magic"
         );
 
-      // d3.select("#content")
-      //   .append("img")
-      //   .attrs({
-      //     "src": "tidy_text.png",
-      //     "width": "600px"
-      //   })
-      //   .style("opacity", 0)
-      //   .style("position", "absolute")
-      //   .style("left", "300px")
-      //   .style("top", "250px");
+      d3.select("#content")
+        .append("img")
+        .attrs({
+          "src": "tidy_text.png",
+          "width": "600px"
+        })
+        .style("opacity", 0)
+        .style("position", "absolute")
+        .style("left", "300px")
+        .style("top", "250px");
 
       d3.select("#content")
         .selectAll(".callout")
@@ -866,7 +866,7 @@ function label_matrix(g, class_name, labels) {
         if (d == labels[0]) {
           return 0;
         }
-        return 300;
+        return 350;
       },
       "y": function(d) {
         if (d == labels[0]) {
@@ -876,7 +876,7 @@ function label_matrix(g, class_name, labels) {
       },
       "transform": function(d) {
         if (d == labels[0]) {
-          return "translate(15, 140)rotate(-90)";
+          return "translate(15, 270)rotate(-90)";
         }
         return "";
       }
