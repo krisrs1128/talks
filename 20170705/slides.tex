@@ -132,7 +132,7 @@
 \begin{frame}
   \frametitle{Visualization Motivation}
   \begin{itemize}
-  \item On their own, these visualizations don’t provide much of a reduction of the data
+  \item On their own, these visualizations don't provide much of a reduction of the data
   \item Comparing centroids corresponding to different subtrees is difficult
     \begin{itemize}
     \item Even relating centroids from subtrees obtained by cutting at two heights is complicated
@@ -181,6 +181,121 @@
 \end{itemize}  
 \end{frame}
 
+\begin{frame}
+  \frametitle{Sticky HMMs}
+\begin{itemize}
+\item While not crucial to our problem, it is useful to be aware of approaches
+  to induce ``stickiness''
+\item We can place a prior on the transition probabilities that encourages
+  self-transitions
+  \itme Formally, draw the $k^{th}$ row of the transition probability matrix as
+\begin{align*}
+  \pi_{k} \sim \Dir\left(\alpha_{1}, \dots, \alpha_{k} + \kappa, \dots, \alpha_{K}\right),
+\end{align*}
+where $\kappa$ controls the preference of a state to stay where it is
+\item The EM algorithm is longer tractable, but we can use (blocked) gibbs
+  sampling -- sequentially sample all the $z_{t}^{i}$s, then the emission
+  parameters, then the transition probabilities
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sticky HDP-HMMs}
+ \begin{itemize}
+ \item We might want to introduce many states, since there are many bacteria,
+   but we might only want to have a few states per bacteria
+ \item This can be accomplished heuristically using an HDP-HMM \citep{fox2007sticky}, and more
+   carefully using a beta-process sharing framework {fox2009sharing}
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Switching State Space Models (SSMs)}
+ \begin{itemize}
+ \item A limitation of HMMs is that they assume IID behavior within states
+ \item In the real data however, we observe differences in dynamics
+ \item Switching SSMs provide a framework for modeling this \citep{ghahramani2000variational}
+ \end{itemize} 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figure/ssm-motivation}
+  \caption{The difference in recovery between these two clusters reflects more
+    complex structure than simply switching
+    emissions. \label{fig:ssm-motivation}}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Model description}
+\begin{itemize}
+\item Underlying time series modes switch according to a Markov model
+\item Within a given mode, the observed sequence is drawn according to one of
+  the $K$ state space models
+  \begin{align*}
+    x^{k}_{t} &= A_{k}x_{t - 1}^{k} + w^{k}_{t} \\
+    y_{t} &= C_{z_{t}}x_{t}^{k} + \eps_{t}^{z_{k}}
+    \end{align*}
+  where the noise is distributed according to
+  \begin{align*}
+    w^{k}_{t} &\sim \Gsn\left(0, Q_{k}\right) \\
+    \eps^{k}_{t} &\sim \Gsn\left(0, R_{k}\right)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Model Estimation}
+  \begin{itemize}
+  \item Heuristic, variational, MCMC, and particle filtering estimation
+    techniques have all been studied \citep{harrison1976bayesian, ghahramani2000variational, fruhwirth2001markov, doucet2001particle}
+  \item We will show results from a variational formulation
+  \item We alternately (1) run $K$ weighted EM algorithms for state space
+    estimation (Kalman filtering + M step), according to posterior probabilities
+    for state membership, and (2) run an HMM to infer the underlying state
+    membership
+  \item Annealing and good initialization is necessary to avoid bad local minima
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dynamic Tobit model}
+ \begin{itemize}
+ \item Our emission structure is not really plausible for a number of bacteria
+ \item We could try to work with the untransformed count data, and use a
+   discrete distribution for the emissions
+  \item Alternatively, the Dynamic Tobit model adds an extra layer of censoring
+    on top of the ordinary state space model,
+    \begin{align*}
+      x_{t} &= Ax_{t - 1} + w_{t} \\
+      \tilde{y}_{t} &= Cx_{t} + \eps_{t} \\
+      y_{t} &= \tilde{y}_{t} \indic{\tilde{y}_{t} \geq c},
+    \end{align*}
+    where both $x$ and $\tilde{y}$ are unobserved.
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figure/tobit-motivation}
+  \caption{Many series appear to have brief excursions above 0 \label{fig:label}}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dynamic Tobit model}
+  \begin{itemize}
+  \item Estimation of these models has been studied in \citep{chib1992bayes,
+    manrique1998simulation, andrieu2002particle}
+  \end{itemize}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.45\textwidth]{figure/glasby-nevison}
+   \caption{The essential idea of Dynamic Tobit models is well illustrated by
+     this figure from \citep{glasbey1997rainfall}, which studied precipitation
+     data. \label{fig:glasby-nevison}}
+ \end{figure}
+ 
+\end{frame}
 \bibliographystyle{plainnat}
 \bibliography{refs.bib}
  
