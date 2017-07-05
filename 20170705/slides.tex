@@ -3,6 +3,8 @@
 \usepackage{natbib}
 \usepackage{sidecap}
 \usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{subfig}
 \usepackage{graphicx}
 \input{preamble.tex}
 
@@ -156,7 +158,7 @@
   \frametitle{Hidden Markov Models (HMMs)}
   \begin{itemize}
   \item To incorporate dynamics more explicitly, we can use HMMs
-  \item We suppose that each timepoints belongs to one of K states, that these
+  \item We suppose that each timepoints belongs to one of $K$ states, that these
     states evolve according to a markov model, and that the observed data are iid
     draws from an emission distribution associated with the given state
   \end{itemize}
@@ -182,6 +184,32 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Smoothed States}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[width = 0.37\textwidth]{figure/hmm_mode}
+  \caption{We plot the states with highest smoothing probability
+    $p\left(z_{t}^{i)} \vert \left(y_{t}^{i}\right)\right)$ for each cell.
+    \label{fig:hmm_mode} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimated transitions}
+  \begin{itemize}
+    \item The antibiotic effect is visible in the elevated probabilities of
+      transitioning between the two lowest states
+      \item Columns and rows are sorted from highest to lowest emission mean
+\begin{verbatim} 
+0.910 0.056 0.007 0.027 \\
+0.019 0.810 0.094 0.077 \\
+0.002 0.083 0.527 0.389 \\
+0.003 0.028 0.159 0.810 
+\end{verbatim}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
   \frametitle{Sticky HMMs}
 \begin{itemize}
 \item While not crucial to our problem, it is useful to be aware of approaches
@@ -197,6 +225,58 @@ where $\kappa$ controls the preference of a state to stay where it is
   sampling -- sequentially sample all the $z_{t}^{i}$s, then the emission
   parameters, then the transition probabilities
 \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation}
+  \begin{figure}
+    \centering
+    \subfloat[Truth]{{\includegraphics[width=5cm]{figure/sticky_hmm_truth} }}
+    \qquad
+    \subfloat[Observed]{{\includegraphics[width=5cm]{figure/sticky_hmm_observed} }}
+    \caption{Each row corresponds to a time series. Different colors correspond
+      to different true underlying states.}
+    \label{fig:sticky_hmm_kappas}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation}
+  \begin{figure}
+    \centering
+    \subfloat[$\kappa = 0$]{{\includegraphics[width=5cm]{figure/sticky_hmm_no_kappa} }}%
+    \qquad
+    \subfloat[$\kappa = 3$]{{\includegraphics[width=5cm]{figure/sticky_hmm_large_kappa} }}%
+    \caption{The effect of the $\kappa$ parameter on the sampled $z$'s, at a
+      single gibbs sampling iteration.}
+    \label{fig:sticky_hmm_kappas}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Antibiotics data}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[width = 0.37\textwidth]{figure/bayes_mode}
+  \caption{This is the analog of Figure \ref{fig:hmm_mode}, now for the sticky
+    HMM with $\kappa = 4$. \label{fig:hmm_mode} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimated transitions}
+  \begin{itemize}
+    \item Apparently, even though we have introduced a prior encouraging
+      self-transitions, the fact that we have a prior at all regularizes
+      probabilities away from 0 and 1.
+\begin{verbatim} 
+0.775 (0.004) 0.113 (0.005) 0.044 (0.002) 0.068 (0.004) \\
+0.160 (0.009) 0.414 (0.016) 0.170 (0.010) 0.256 (0.016) \\ 
+0.074 (0.008) 0.300 (0.013) 0.195 (0.029) 0.431 (0.012) \\
+0.025 (0.002) 0.083 (0.006) 0.083 (0.005) 0.809 (0.004) 
+\end{verbatim}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
