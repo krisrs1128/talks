@@ -188,7 +188,7 @@
   to induce ``stickiness''
 \item We can place a prior on the transition probabilities that encourages
   self-transitions
-  \itme Formally, draw the $k^{th}$ row of the transition probability matrix as
+  \item Formally, draw the $k^{th}$ row of the transition probability matrix as
 \begin{align*}
   \pi_{k} \sim \Dir\left(\alpha_{1}, \dots, \alpha_{k} + \kappa, \dots, \alpha_{K}\right),
 \end{align*}
@@ -205,7 +205,7 @@ where $\kappa$ controls the preference of a state to stay where it is
  \item We might want to introduce many states, since there are many bacteria,
    but we might only want to have a few states per bacteria
  \item This can be accomplished heuristically using an HDP-HMM \citep{fox2007sticky}, and more
-   carefully using a beta-process sharing framework {fox2009sharing}
+   carefully using a beta-process sharing framework \citep{fox2009sharing}
  \end{itemize} 
 \end{frame}
 
@@ -243,6 +243,31 @@ where $\kappa$ controls the preference of a state to stay where it is
     \eps^{k}_{t} &\sim \Gsn\left(0, R_{k}\right)
   \end{align*}
 \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation example}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/ssm_truth}
+  \caption{The two halves of this sequence are drawn from two very different
+    dynamic regimes, one with low noise and high autocorrelation, and one with
+    high noise and low autocorrelation. The gray line represents the true
+    underlying $x^{z_{t}}$. \label{fig:ssm_truth} }
+\end{figure}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation example}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/ssm_fit}
+  \caption{The two new lines represent two of the fitted $x_{t}^{k}$ sequences.
+    The color indicates the probability $\Parg{z_{t} = 1 \vert y_{t}}$,
+      according to the variational approximation. The first few points are
+      incorrectly placed in the high-noise regime.\label{fig:ssm_truth} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -294,8 +319,20 @@ where $\kappa$ controls the preference of a state to stay where it is
      this figure from \citep{glasbey1997rainfall}, which studied precipitation
      data. \label{fig:glasby-nevison}}
  \end{figure}
- 
 \end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+ \begin{itemize}
+ \item We surveyed a variety of methods for understanding changes in time series
+   dynamics
+\item Outside of \citep{digiulio2015temporal}, we have rarely provided answers to this
+  set of questions, though there are many tools available
+\item It would be valuable to consolidate, or provide guidelines for choosing
+  between, these different approaches
+
+ \end{itemize} 
+\end{frame} 
 \bibliographystyle{plainnat}
 \bibliography{refs.bib}
  
