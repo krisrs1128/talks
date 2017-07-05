@@ -1,0 +1,187 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usepackage{natbib}
+\usepackage{sidecap}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\input{preamble.tex}
+
+\title{Visualization and Modeling of Switching Dynamics}
+\author{Kris Sankaran}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+\begin{itemize}
+\item \textbf{Problem Description} [5 min]: Can we automatically identify
+  different dynamic regimes among different bacteria?
+\item \textbf{Heuristic approaches} [10 min]: How would we approach this problem
+  using standard techniques?
+\item \textbf{Visualization experiments} [10 min]: How can we leverage linking
+  and focus + context?
+\item \textbf{Review of relevant models} [30 min]: HMMs, HDP-HMMs, Switching
+  LDS, and Dynamic Tobit
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problem Description}
+  \begin{itemize}
+  \item Our goal is a succinct representation of which bacteria have which types
+    of responses to different perturbations
+    \begin{itemize}
+    \item If two types of perturbation lead to similar dynamics, we should be able
+      to identify that
+    \item Similarly, we should be able to see whether different groups of bacteria
+      have similar responses to a perturbation
+    \end{itemize} 
+  \item We will study the problem from several angles, though ultimately the
+    goal is to have a more unified approach (or at least guidelines)
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heuristic Approaches} 
+  \begin{itemize}
+  \item Ignoring temporal structure, a straightforward approach is to simply
+    cluster bacteria
+  \item The centroids at different subtrees can give useful interpretations (what
+    taxonomic groups have which time series shapes?)
+  \item There are a few choices to make,
+    \begin{itemize}
+    \item How should we transform the data?
+    \item What distance should we use?
+    \end{itemize} 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What transformation?}
+ \begin{figure}
+   \centering
+   \includegraphics{figure/heatmap-euclidean}
+   \caption{A first approach is to cluster the asinh transformed data using an
+     ordinary euclidean distance. Here, each row represents an RSV, each column
+     is a timepoint for one of the three subjects (the three facet rows).
+     Columns are sorted according to their position on the hierarchical
+     clustering dendrogram, with neighboring subtrees split into separate
+     facets. \label{fig:heatmap-euclidean}}
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alternatively, cluster the innovations}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics{figure/heatmap-innovations}
+   \caption{To capture one aspect of temporal dynamics, we can cluster the
+     differenced data instead. However, if two series return to different
+     levels, and are steady after that point, we would not be able to
+     distinguish the difference. \label{fig:heatmap-innovations} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Jaccard distance}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics{figure/heatmap-jaccard}
+   \caption{To account for the presence of zeros, we could use a Jaccard
+     distance, though this loses information on the abundance when present.
+     \label{fig:heatmap-jaccard} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Combining distances}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics{figure/heatmap-mix}
+   \caption{As a compromise, we can cluster based on a mixture distance, $d_{ij}
+     = \lambda d^{(1)}_{ij} + \left(1 - \lambda\right)d^{(2)}_{ij}$, though the
+    effect of different choices of $\lambda$ is not entirely clear.
+     \label{fig:heatmap-jaccard} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreting centroids}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{figure/centroid-mix-conditional}
+  \caption{A reduced summary of each cluster is available by inspecting
+    centroids. \label{fig:centroid-mix-conditional} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreting centroids (presence vs. absence)}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{figure/centroid-mix-presence}
+  \caption{We can also look at the fraction of RSVs that have nonzero abundance
+    at each timepoint, within each cluster. \label{fig:centroid-mix-presence} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Visualization Motivation}
+  \begin{itemize}
+  \item On their own, these visualizations don’t provide much of a reduction of the data
+  \item Comparing centroids corresponding to different subtrees is difficult
+    \begin{itemize}
+    \item Even relating centroids from subtrees obtained by cutting at two heights is complicated
+    \item This visual navigation question can be addressed using linking and focus + context
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Visualization Approach}
+  \begin{itemize}
+  \item \href{/Users/krissankaran/Desktop/100_days/july3/hclust.html}{link}
+  \item Link heatmap, tree, and centroids: A box is drawn across bacteria descending from a node, and the centroid for those series is shown at the top right
+  \item Each time series corresponds to an individual
+  \item The breakdown of the subtree into taxonomic families is shown in the bottom right
+  \item Different clusters can be compared side by side
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hidden Markov Models (HMMs)}
+  \begin{itemize}
+  \item To incorporate dynamics more explicitly, we can use HMMs
+  \item We suppose that each timepoints belongs to one of K states, that these
+    states evolve according to a markov model, and that the observed data are iid
+    draws from an emission distribution associated with the given state
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{HMMs}
+\begin{itemize}
+\item Let $\left(y_{t}^{i}\right)$ be a collection of observation sequences
+  (each in $\reals^{p}$) and $\left(z_{t}^{i}\right)$ be the associated states
+  (in $\{1, \dots, K\}$)
+  \begin{itemize}
+  \item Note that multiple bacteria are all being drawn from the same K states
+  \end{itemize}
+\item The complete data likelihood is
+  \begin{align*}
+    p\left(\left(y_{t}^{i}\right), \left(z_{t}^{i}\right)\right) &= \prod_{i = 1}^{n} \left[\prod_{t = 1}^{T} p\left(y_{t}^{i} \vert z_{t}^{i}\right) p\left(z_{0}\right)\prod_{t = 2}^{T} p\left(z_{t} \vert z_{t - 1}\right)\right]
+  \end{align*}
+\item This can be fit using the EM algorithm, where we optimize the expectation
+  of the complete data loglikelihood over (1) the distribution on latent states
+  and (2) parameters of the Markov chain and emission distributions
+\end{itemize}  
+\end{frame}
+
+\bibliographystyle{plainnat}
+\bibliography{refs.bib}
+ 
+\end{document}
