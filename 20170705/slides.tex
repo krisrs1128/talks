@@ -69,8 +69,8 @@
    \includegraphics{figure/heatmap-euclidean}
    \caption{A first approach is to cluster the asinh transformed data using an
      ordinary euclidean distance. Here, each row represents an RSV, each column
-     is a timepoint for one of the three subjects (the three facet rows).
-     Columns are sorted according to their position on the hierarchical
+     is a timepoint for one of the three subjects (the three facet columns).
+     Rows are sorted according to their position on the hierarchical
      clustering dendrogram, with neighboring subtrees split into separate
      facets. \label{fig:heatmap-euclidean}}
  \end{figure}
@@ -84,7 +84,7 @@
    \caption{To capture one aspect of temporal dynamics, we can cluster the
      differenced data instead. However, if two series return to different
      levels, and are steady after that point, we would not be able to
-     distinguish the difference. \label{fig:heatmap-innovations} }
+     distinguish them. \label{fig:heatmap-innovations} }
  \end{figure}
 \end{frame}
 
@@ -94,7 +94,7 @@
    \centering
    \includegraphics{figure/heatmap-jaccard}
    \caption{To account for the presence of zeros, we could use a Jaccard
-     distance, though this loses information on the abundance when present.
+     distance, though this loses information on all nonzero abundances.
      \label{fig:heatmap-jaccard} }
  \end{figure}
 \end{frame}
@@ -212,8 +212,8 @@
 \begin{frame}
   \frametitle{Sticky HMMs}
 \begin{itemize}
-\item While not crucial to our problem, it is useful to be aware of approaches
-  to induce ``stickiness''
+\item While not necessarily relevant to our problem, it is useful to be aware
+of approaches that induce ``stickiness''
 \item We can place a prior on the transition probabilities that encourages
   self-transitions
   \item Formally, draw the $k^{th}$ row of the transition probability matrix as
@@ -257,11 +257,11 @@ where $\kappa$ controls the preference of a state to stay where it is
 \begin{frame}
   \frametitle{Antibiotics data}
   \begin{figure}[ht]
-  \centering
-  \includegraphics[width = 0.37\textwidth]{figure/bayes_mode}
-  \caption{This is the analog of Figure \ref{fig:hmm_mode}, now for the sticky
-    HMM with $\kappa = 4$. \label{fig:hmm_mode} }
-\end{figure}
+    \centering
+    \includegraphics[width = 0.37\textwidth]{figure/bayes_mode}
+    \caption{This is the analog of Figure \ref{fig:hmm_mode}, now for the sticky
+      HMM with $\kappa = 4$. \label{fig:hmm_mode} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -280,13 +280,50 @@ where $\kappa$ controls the preference of a state to stay where it is
 \end{frame}
 
 \begin{frame}
+  \frametitle{Sampled $z$'s}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figure/gibbs_samples}
+  \caption{We can directly inspect samples from the $z$ sequences. Evidently,
+    the states with larger means mix reasonably well, but not the others --
+    this may be a consequence of the presence of many exact
+    zeros. \label{fig:gibbs_samples} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
   \frametitle{Sticky HDP-HMMs}
  \begin{itemize}
  \item We might want to introduce many states, since there are many bacteria,
    but we might only want to have a few states per bacteria
- \item This can be accomplished heuristically using an HDP-HMM \citep{fox2007sticky}, and more
-   carefully using a beta-process sharing framework \citep{fox2009sharing}
+ \item This can be accomplished heuristically using an HDP-HMM
+   \citep{fox2007sticky}, and more carefully using a beta-process sharing
+   framework \citep{fox2009sharing}
  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation}
+  \begin{figure}
+    \centering
+    \subfloat[Sticky HMM]{{\includegraphics[width=5cm]{figure/sticky_hmm_large_kappa} }}%
+    \qquad
+    \subfloat[Sticky HDP-HMM]{{\includegraphics[width=5cm]{figure/sticky_hdp_hmm} }}%
+    \caption{The sticky HDP-HMM introduces more states, but doesn't necessarily
+      use them all in each sequence.}
+    \label{fig:sticky_hdp_hmm}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Antibiotics data}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width = 0.37\textwidth]{figure/hdp_antibiotics_mode}
+    \caption{This is the analog of Figure \ref{fig:hmm_mode}, now for the sticky
+      HDP-HMM. We find mixing behavior to be similar to the original sticky
+      HMM. \label{fig:hdp_mode} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -314,8 +351,9 @@ where $\kappa$ controls the preference of a state to stay where it is
 \item Within a given mode, the observed sequence is drawn according to one of
   the $K$ state space models
   \begin{align*}
-    x^{k}_{t} &= A_{k}x_{t - 1}^{k} + w^{k}_{t} \\
-    y_{t} &= C_{z_{t}}x_{t}^{k} + \eps_{t}^{z_{k}}
+    z_{t} \vert z_{t - 1} &\sim \Mult\left(1, \pi_{z_{t - 1}}\right) \\
+    x^{k}_{t} &= A_{k}x_{t - 1}^{k} + w^{k}_{t} \text{ for }k = 1, \dots, K\\
+    y_{t} &= C_{z_{t}}x_{t}^{k} + \eps_{t}^{z_{t}}
     \end{align*}
   where the noise is distributed according to
   \begin{align*}
@@ -323,31 +361,6 @@ where $\kappa$ controls the preference of a state to stay where it is
     \eps^{k}_{t} &\sim \Gsn\left(0, R_{k}\right)
   \end{align*}
 \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Simulation example}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figure/ssm_truth}
-  \caption{The two halves of this sequence are drawn from two very different
-    dynamic regimes, one with low noise and high autocorrelation, and one with
-    high noise and low autocorrelation. The gray line represents the true
-    underlying $x^{z_{t}}$. \label{fig:ssm_truth} }
-\end{figure}
-  
-\end{frame}
-
-\begin{frame}
-  \frametitle{Simulation example}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figure/ssm_fit}
-  \caption{The two new lines represent two of the fitted $x_{t}^{k}$ sequences.
-    The color indicates the probability $\Parg{z_{t} = 1 \vert y_{t}}$,
-      according to the variational approximation. The first few points are
-      incorrectly placed in the high-noise regime.\label{fig:ssm_truth} }
-\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -362,6 +375,30 @@ where $\kappa$ controls the preference of a state to stay where it is
     membership
   \item Annealing and good initialization is necessary to avoid bad local minima
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation example}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/ssm_truth}
+  \caption{The two halves of this sequence are drawn from two very different
+    dynamic regimes, one with low noise and high autocorrelation, and one with
+    high noise and low autocorrelation. The gray line represents the true
+    underlying $x^{z_{t}}$. \label{fig:ssm_truth} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation example}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/ssm_fit}
+  \caption{The two new lines represent two of the fitted $x_{t}^{k}$ sequences.
+    The color indicates the probability $\Parg{z_{t} = 1 \vert y_{t}}$,
+      according to the variational approximation. The first few points are
+      incorrectly placed in the high-noise regime.\label{fig:ssm_truth} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
