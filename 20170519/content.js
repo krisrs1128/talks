@@ -119,6 +119,7 @@ function get_slides() {
       d3.select("#content")
         .selectAll(".callout")
         .style("font-size", "35px")
+        .style("max-width", "1000px")
         .html("(Hence  <span id = 'austen'>Jane Austen</span> & <span id='microbes'>Gut Microbes</span>)");
     }
   );
