@@ -23,7 +23,7 @@
 \item \textbf{Problem Description} [5 min]: Can we automatically identify
   different dynamic regimes among different bacteria?
 \item \textbf{Heuristic approaches} [10 min]: How would we approach this problem
-  using standard techniques?
+  using elementary techniques?
 \item \textbf{Visualization experiments} [10 min]: How can we leverage linking
   and focus + context?
 \item \textbf{Review of relevant models} [30 min]: HMMs, HDP-HMMs, Switching
@@ -59,6 +59,12 @@
     \item How should we transform the data?
     \item What distance should we use?
     \end{itemize} 
+  \item Some simple variations can account for temporal structure,
+    \begin{itemize}
+      \item Use the ordering resulting from a hierarchical clustering / PCA as a
+        feature in a decision tree on bacteria $\times$ time space
+      \item Cluster moving windows extracted from the original sequences
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -68,7 +74,7 @@
    \centering
    \includegraphics{figure/heatmap-euclidean}
    \caption{A first approach is to cluster the asinh transformed data using an
-     ordinary euclidean distance. Here, each row represents an RSV, each column
+     ordinary Euclidean distance. Here, each row represents an RSV, each column
      is a timepoint for one of the three subjects (the three facet columns).
      Rows are sorted according to their position on the hierarchical
      clustering dendrogram, with neighboring subtrees split into separate
@@ -134,11 +140,14 @@
 \begin{frame}
   \frametitle{Visualization Motivation}
   \begin{itemize}
-  \item On their own, these visualizations don't provide much of a reduction of the data
+  \item On their own, these visualizations don't provide much of a reduction of
+    the data
   \item Comparing centroids corresponding to different subtrees is difficult
     \begin{itemize}
-    \item Even relating centroids from subtrees obtained by cutting at two heights is complicated
-    \item This visual navigation question can be addressed using linking and focus + context
+    \item Even relating centroids from subtrees obtained by cutting at two
+      heights is complicated
+    \item This visual navigation question can be addressed using linking and
+      focus + context
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -146,10 +155,13 @@
 \begin{frame}
   \frametitle{Visualization Approach}
   \begin{itemize}
-  \item \href{/Users/krissankaran/Desktop/100_days/july3/hclust.html}{link}
-  \item Link heatmap, tree, and centroids: A box is drawn across bacteria descending from a node, and the centroid for those series is shown at the top right
+  \item \href{/Users/krissankaran/Desktop/100_days/july3/hclust.html}{visualization}
+  \item Link heatmap, tree, and centroids: A box is drawn across bacteria
+    descending from a node, and the centroid for those series is shown at the
+    top right
   \item Each time series corresponds to an individual
-  \item The breakdown of the subtree into taxonomic families is shown in the bottom right
+  \item The breakdown of the subtree into taxonomic families is shown in the
+    bottom right
   \item Different clusters can be compared side by side
   \end{itemize} 
 \end{frame}
@@ -159,7 +171,7 @@
   \begin{itemize}
   \item To incorporate dynamics more explicitly, we can use HMMs
   \item We suppose that each timepoints belongs to one of $K$ states, that these
-    states evolve according to a markov model, and that the observed data are iid
+    states evolve according to a Markov model, and that the observed data are IID
     draws from an emission distribution associated with the given state
   \end{itemize}
 \end{frame}
@@ -178,7 +190,7 @@
     p\left(\left(y_{t}^{i}\right), \left(z_{t}^{i}\right)\right) &= \prod_{i = 1}^{n} \left[\prod_{t = 1}^{T} p\left(y_{t}^{i} \vert z_{t}^{i}\right) p\left(z_{0}\right)\prod_{t = 2}^{T} p\left(z_{t} \vert z_{t - 1}\right)\right]
   \end{align*}
 \item This can be fit using the EM algorithm, where we optimize the expectation
-  of the complete data loglikelihood over (1) the distribution on latent states
+  of the complete data log-likelihood over (1) the distribution on latent states
   and (2) parameters of the Markov chain and emission distributions
 \end{itemize}  
 \end{frame}
@@ -221,7 +233,7 @@ of approaches that induce ``stickiness''
   \pi_{k} \sim \Dir\left(\alpha_{1}, \dots, \alpha_{k} + \kappa, \dots, \alpha_{K}\right),
 \end{align*}
 where $\kappa$ controls the preference of a state to stay where it is
-\item The EM algorithm is longer tractable, but we can use (blocked) gibbs
+\item The EM algorithm is longer tractable, but we can use (blocked) Gibbs
   sampling -- sequentially sample all the $z_{t}^{i}$s, then the emission
   parameters, then the transition probabilities
 \end{itemize}
@@ -249,7 +261,7 @@ where $\kappa$ controls the preference of a state to stay where it is
     \qquad
     \subfloat[$\kappa = 3$]{{\includegraphics[width=5cm]{figure/sticky_hmm_large_kappa} }}%
     \caption{The effect of the $\kappa$ parameter on the sampled $z$'s, at a
-      single gibbs sampling iteration.}
+      single Gibbs sampling iteration.}
     \label{fig:sticky_hmm_kappas}
   \end{figure}
 \end{frame}
