@@ -11,13 +11,27 @@
 
 \begin{frame}
   \maketitle
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figure/title.jpg}
+  \caption{\label{fig:label} }
+\end{figure}
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Microbiome vs. Text Analysis}
   \begingroup
   \fontsize{10pt}{5pt}\selectfont
+  {\ttfamily
+  \def\arraystretch{1.2}
+  \setlength{\tabcolsep}{0.2em} % for the horizontal padding
+  \begin{table}
     \input{dtm.tex} 
+    \\[12pt]
+    \input{taxa.tex} 
+  \end{table}
+  }
   \endgroup
 \end{frame}
 
