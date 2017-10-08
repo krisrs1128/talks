@@ -12,6 +12,7 @@
 \author{Kris Sankaran}
 
 \begin{document}
+\maketitle
 
 \begin{frame}
   \frametitle{Problems of Interest}
@@ -29,27 +30,143 @@
    \item Compared to usual regression, when there are multiple related
      responses, there are fewer obvious practical approaches
    \end{itemize}
+ \item Philosophy: Distill relevant themes, provide concrete workflows, and
+   systematize data / study specific recommendations
  \end{itemize} 
-\end{frame}
-
-\begin{frame}
-  \frametitle{Goals}
-  \begin{itemize}
-  \item Distill relevant themes across analysis approaches
-  \item Provide concrete workflows for getting started with an analysis
-  \item Ultimately, provide thoughtful recommendations tailored to specific
-    study aims and data characteristics
-  \end{itemize} 
 \end{frame}
 
 \section{Regime Detection}
 \label{sec:regime_detection}
 
 \begin{frame}
-  \frametitle{Antibiotics Study}
+  \frametitle{Recap}
  \begin{itemize}
- \item 
+ \item For this case study, we again use the antibiotics data of
+   \citep{dethlefsen2008pervasive}
+   \begin{itemize}
+   \item 3 subjects at between 52 and 56 timepoints
+   \item Two antibiotic time courses introduced around 12 - 16 and 40 - 44
+   \item Long term effects in Subject F previously observed
+   \end{itemize} 
+ \item Last time we approached the regime detection problem using hierarchical
+   clustering with various distances, HMMs, Sticky HMMs, Infinite HMMs, and
+   Switching Dynamical Systems
+ \item We continue that survey using different approaches
  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{CART}
+  \begin{itemize}
+  \item Order species according to a hierarchical
+    clustering\footnote{Alternatively, use phylogenetic similarity.}, and
+    consider the surface of species abundances across the time by species space
+  \item CART can approximate this surface, providing a partition of timepoints
+    and species in the process.
+  \item Can be extended to binary data
+  \item Limitation: Cannot update the species order (though you could imagine an
+    iterative approach...)
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{CART}
+\begin{itemize}
+\item Structural model: The class of functions $\mathcal{F}$ that can be
+  expressed as
+\begin{align*}
+  f\left(x\right) &= \sum_{m = 1}^{M} c_{m} \indic{x \in R_{m}},
+\end{align*}
+\item Fitting criteria: Minimize the expected generalization squared-error,
+\begin{align*}
+  \frac{1}{n} \sum_{i = 1}^{n} \left(y_{i} - c\left(x_{i}\right)\right)^{2},
+\end{align*}
+\item Estimation strategy: Recursively split rectangles into left ($l$) and
+  right ($r$) subrectangles according to
+\begin{align*}
+  \left(j^{\ast}, t_{j1}^{\ast}\right) &= \arg \min_{\substack{j = 1, \dots, p \\ t_{j1} \in \reals}} \sum_{i \in R_{1, l}} \left(y_{i} - \bar{y}_{l}\right)^{2} + \sum_{i \in R_{1, r}} \left(y_{i} - \bar{y}_{r}\right)^{2}
+\end{align*}
+and prune to prevent overfitting
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CART ($\asinh$ abundance)}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{figure/rpart_complex_2}
+    \caption{Each panel represents a subject, the $x$-axis are individual
+      species, the $y$-axis indexes time, and the color is the predicted
+      abundance according to CART. Note the low abundance predictions during the
+      antibiotic time course. \label{fig:rpart_complex} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CART (Residual)}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{figure/rpart_complex_2_resid}
+    \caption{An advantage of using a regression model is that we can directly
+      inspect the quality of model fit, using
+      residuals. \label{fig:rpart_complex_resid} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adjusting Model Complexity}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{figure/rpart_simple}
+    \caption{By increasing the model complexity, we notice species with
+      increasing abundances during the antibiotic time
+      courses. \label{fig:rpart_simple} }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{CART (Presence / Absence)}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{figure/rpart_binary}
+    \caption{We can use the same method on presence-absence data, to identify
+      whether certain regimes have many more exact zeros than others.
+      \label{fig:rpart_binary} }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Dynamic Tobit Model}
+  \begin{itemize}
+  \item To model sparsity in microbiome abundances, we can adopt a censoring
+    point of view
+  \item For example, the Dynamic Tobit model adds an extra layer of censoring on
+    top of the ordinary state space model,
+    \begin{align*}
+      x_{t} &= Ax_{t - 1} + w_{t} \\
+      \tilde{y}_{t} &= Cx_{t} + \eps_{t} \\
+      y_{t} &= \tilde{y}_{t} \indic{\tilde{y}_{t} \geq c},
+    \end{align*}
+    where both $x$ and $\tilde{y}$ are unobserved.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mixture of GPs}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mixture of GPs}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Changepoint Detection}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Changepoint Detection}
 \end{frame}
 
 \section{Multitable Analysis}
@@ -73,17 +190,39 @@
   \item Can we reproduce findings relating microbiome and BMI / metabolic
     syndrome, but using our richer data on body type?
     \begin{itemize}
-    \item Relevant in light of the fact that people with similar BMI might have
-      very different disease dispositions depending on the distribution of lean
-      and fat mass
+    \item People with similar BMI might have different disease dispositions
+      depending on the distribution of lean and fat mass
     \end{itemize}
   \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{PCA}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{CCA}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sparse CCA}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Probabilistic CCA}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CCA + LDA}
 \end{frame}
 
 \begin{frame}
   \frametitle{Conclusion}
   
 \end{frame}
+\bibliographystyle{plainnat}
+\bibliography{refs.bib}
 
 \section{Testing using Distances}
 \label{sec:testing_distances}
