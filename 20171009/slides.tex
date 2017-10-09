@@ -234,23 +234,32 @@ and prune to prevent overfitting
   \frametitle{Antibiotics Data}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{figure/igp_samples}
+  \includegraphics[width=\textwidth]{figure/abt_fits}
   \caption{Each panel represents displays the posteriors at one
     iteration of the sampler. Posteriors for each process are displayed over the
     full data range, even when the associated timepoints occupy a relatively
-    restricted range. \label{fig:igp_samples}}
+    restricted range. \label{fig:abt_fits}}
 \end{figure}
 
 \begin{frame}
   \frametitle{Antibiotics Data}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{figure/igp_classes}
+  \includegraphics[width=\textwidth]{figure/abt_states}
   \caption{Each row is an iteration of the sampler, each column is a timepoint.
     Tiles are shaded by their class assignments. Note the label switching that
-    occurs periodically. \label{fig:igp_classes} }
+    occurs periodically. \label{fig:abt_states} }
 \end{figure}
 
+\begin{frame}
+  \frametitle{Antibiotics Data}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{figure/abt_cooccurrence}
+  \caption{To bypass the label switching problem, we can count how often two
+    timepoints were placed in the same cluster (this statistic is invariant to
+    switching). We see clear antibiotic regime groups. \label{afig:abt_states}}
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -330,15 +339,52 @@ where $\nu_{k}$ are a prespecified dictionary of densities over $\left[0,
 
 \begin{frame}
   \frametitle{PCA}
-
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figure/pca_scores_total_lm}
+    \includegraphics[options]{figure/pca_loadings}
+    \caption{\label{fig:pca_scores_total_lm}}
+  \end{figure}
+\caption{The simplest approach is to combine multiple tables into one and apply a single
+  table method. Here we use PCA, treating taxa as rows, so that the usual
+  covariance matrix estimator is well defined. \label{fig:pca_multitable}}
 \end{frame}
 
 \begin{frame}
   \frametitle{CCA}
+\begin{itemize}
+\item The PCA approach ignores the fact that different sets of columns come from
+  different tables
+\item On the other hand, CCA directly identifies directions maximizing
+  covariation across tables. The first directions $u$ and $v$ are chosen as
+  optimal values in
+\begin{align}
+  \maximize_{u \in \reals^{p_{1}}, v \in \reals^{p_{2}}}
+  &\Covsubarg{\P^{\X\Y}}{z_{i}^{(1)}\left(u\right),
+    z_{i}^{(2)}\left(v\right)} \label{eq:cancor_optim} \\
+\text{subject to } &\Varsubarg{\P^{\X}}{z_{i}^{(1)}\left(u\right)} = 1 \nonumber \\
+&\Varsubarg{\P^{\Y}}{z_{i}^{(2)}\left(v\right)} = 1. \nonumber
+\end{align}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CCA}
+\begin{itemize}
+\item We subset to 54 species passing a $k$-over-$0$ filter, since otherwise
+  covariance estimation is poorly defined. We use $\texttt{rlog}$-transformed
+  species abundances.
+\end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Sparse CCA}
+  \begin{itemize}
+  \item For high-dimensional situations, many regularized versions of CCA have
+    been developed \citep{zou2006sparse, witten2009penalized, hardoon2011sparse,
+      balakrishnan2012sparse}
+  \item We focus on the formulation of \citep{witten2009penalized}, 
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
