@@ -136,6 +136,18 @@ and prune to prevent overfitting
   \end{figure}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Aside: Sparse Time Series}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figure/abt_zeros}
+  \caption{One species from the antibiotics data set. It appears to have
+    disappeared during the two antibiotics time courses. There is potentially
+    value in modeling sequences of exact zeros in some regimes.
+    \label{fig:abt_zeros} }
+\end{figure}
+
+\end{frame}
 
 \begin{frame}
   \frametitle{Dynamic Tobit Model}
@@ -150,11 +162,28 @@ and prune to prevent overfitting
       y_{t} &= \tilde{y}_{t} \indic{\tilde{y}_{t} \geq c},
     \end{align*}
     where both $x$ and $\tilde{y}$ are unobserved.
+  \item MCMC \citep{de1997scan, brockwell2006long, manrique1998simulation} and
+    particle filtering \citep{andrieu2002particle} approaches are available
+  \item Note this does not share information across species
   \end{itemize}
 \end{frame}
 
+\begin{figure}
+  \frametitle{Antibiotics Example}
+  \centering
+  \includegraphics[width=\textwidth]{figure/abt_scan}
+  \caption{Results of the scan sampler for a single species. Black points are
+    observed data, red points are posterior samples, and the red line is a
+    kernel smooth over samples. Implementation at
+    \url{https://github.com/krisrs1128/readings/} \label{fig:abt_scan}
+  }
+\end{figure}
+
 \begin{frame}
   \frametitle{Mixture of GPs}
+ \begin{itemize}
+ \item 
+ \end{itemize} 
 \end{frame}
 
 \begin{frame}
