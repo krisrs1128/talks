@@ -4,6 +4,11 @@
 *.feather
 *.aux
 *.bbl
+*.blg
+*.log
+*.snm
+*.toc
+*.nav
+*.out
 *cache*
-*figure/
 *_files/
