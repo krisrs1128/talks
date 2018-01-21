@@ -38,6 +38,17 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
   z_{1} z_2 \dots z_n \\
 \end{align*}
 
+\begin{align*}
+  &D_{KL}\left(q\left(z\right) \vert \vert p\left(z \vert x\right)\right) \geq 0 \\
+  \iff &\Esubarg{q\left(z\right)}{\log \frac{q\left(z\right)}{p\left(z \vert x\right)}} \geq 0 \\
+  \iff &\Esubarg{q\left(z\right)}{\log \frac{q\left(z\right)}{p\left(x, z\right)}} + \log p\left(x\right) \geq 0 \\
+  \iff &\log p\left(x\right) \geq \Esubarg{q}{\log p\left(x, z\right)} - H\left(q\right) \\
+  \iff &\log p\left(x\right) \geq \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left(q\left(z\right) \vert \vert p\left(z\right)\right)
+\end{align*}
+
+
+$x= 1$
+
 \end{document}
 
 
