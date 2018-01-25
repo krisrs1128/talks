@@ -104,6 +104,24 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
   f\left(z\right) &= \textcolor[HTML]{536878}{p_{\theta}\left(x \vert z\right)}
 \end{align*}
 
+\begin{align*}
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &= \int \textcolor[HTML]{536878}{f\left(z\right)} \textcolor[HTML]{b66082}{\nabla_{\varphi} q_{\varphi}\left(z \vert x\right)} dz \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &= \int \textcolor[HTML]{536878}{f\left(z\right)} \textcolor[HTML]{b66082}{\nabla_{\varphi} \log q_{\varphi}\left(z \vert x\right) q_{\varphi}\left(z \vert x\right)} dz \\
+ \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\approx \frac{1}{N}\sum_{z \sim \textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}} \textcolor[HTML]{536878}{f\left(z\right)} \textcolor[HTML]{b66082}{\nabla_{\varphi} \log q_{\varphi}\left(z \vert x\right)}
+\end{align*}
+
+\begin{align*}
+  z \sim \textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \implies z \overset{D}{=} &g_{\colarg{b66082}{\varphi}}\left(\textcolor[HTML]{d57630}{\eps}\right) \\
+  &\textcolor[HTML]{d57630}{\eps} \sim \textcolor[HTML]{d57630}{p\left(\eps\right)}
+\end{align*}
+
+\begin{align*}
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \colarg{b66082}{\nabla_{\varphi}}\Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{536878}{f}\left(\colarg{636878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}\right)\right)} \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}\right)\right)} \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\approx \frac{1}{N} \sum_{\colarg{d57630}{\eps \sim p\left(\eps\right)}} \colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}\right)\right) \\
+\end{align*}
+
+
 \end{document}
 
 
