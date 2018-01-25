@@ -61,11 +61,16 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
 \end{align*}
 
 \begin{align*}
-\mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi, \theta}\right) &=\textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\right)}}{p_{\theta}\left(x \vert z\right)}} - \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z\right)} \vert\vert p\left(z\right) \right)}
+   \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi, \theta}\right) &=  \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{p_{\theta}\left(x \vert z\right)}} -  \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)}
 \end{align*}
 
 \begin{align*}
-  \nabla \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi, \theta}\right) &= \nabla \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\right)}}{p_{\theta}\left(x \vert z\right)}} - \nabla \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z\right)} \vert\vert p\left(z\right) \right)}
+  \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi}, \theta\right) &=  \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{p_{\theta}\left(x \vert z\right)}} -  \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)} \\
+  &\approx 
+\end{align*}
+
+\begin{align*}
+  \nabla \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi}, \theta\right) &= \nabla \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{p_{\theta}\left(x \vert z\right)}} - \nabla \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)}
 \end{align*}
 
 \begin{align*}
@@ -73,6 +78,30 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
   \textcolor[HTML]{b66082}{z \xrightarrow{\varphi} x}
   \textcolor[HTML]{b66082}{\varphi} \\
   \textcolor[HTML]{536878}{\theta}
+\end{align*}
+
+\begin{align*}
+  \begin{pmatrix}
+    \theta_{t + 1} \\
+    \textcolor[HTML]{b66082}{\varphi_{t + 1}}
+  \end{pmatrix} \leftarrow
+  \begin{pmatrix}
+    \theta_{t} \\
+    \textcolor[HTML]{b66082}{\varphi_{t}}
+  \end{pmatrix} +
+  \eta
+  \left.\begin{pmatrix}
+    \nabla_{\theta} \mathcal{L}\left(\theta, \varphi\right) \\
+    \textcolor[HTML]{b66082}{\nabla_{\varphi} \mathcal{L}\left(\theta, \varphi\right)}
+  \end{pmatrix}\right\vert_{\theta = \theta_{t}, \textcolor[HTML]{b66082}{\varphi} = \textcolor[HTML]{b66082}{\varphi_{t}}}
+\end{align*}
+
+\begin{align*}
+ \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{f\left(z\right)}
+\end{align*}
+
+\begin{align*}
+  f\left(z\right) &= \textcolor[HTML]{536878}{p_{\theta}\left(x \vert z\right)}
 \end{align*}
 
 \end{document}
