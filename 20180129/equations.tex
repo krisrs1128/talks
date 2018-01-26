@@ -82,18 +82,18 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
 
 \begin{align*}
   \begin{pmatrix}
-    \theta_{t + 1} \\
-    \textcolor[HTML]{b66082}{\varphi_{t + 1}}
+    \colarg{b66082}{\varphi_{t + 1}} \\
+    \colarg{536878}{\theta_{t + 1}}
   \end{pmatrix} \leftarrow
   \begin{pmatrix}
-    \theta_{t} \\
-    \textcolor[HTML]{b66082}{\varphi_{t}}
+    \colarg{b66082}{\varphi_{t}} \\
+    \colarg{536878}{\theta_{t}} 
   \end{pmatrix} +
   \eta
   \left.\begin{pmatrix}
-    \nabla_{\theta} \mathcal{L}\left(\theta, \varphi\right) \\
-    \textcolor[HTML]{b66082}{\nabla_{\varphi} \mathcal{L}\left(\theta, \varphi\right)}
-  \end{pmatrix}\right\vert_{\theta = \theta_{t}, \textcolor[HTML]{b66082}{\varphi} = \textcolor[HTML]{b66082}{\varphi_{t}}}
+    \colarg{b66082}{\nabla_{\varphi}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta} \right) \\
+    \colarg{536878}{\nabla_{\theta}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta}\right) 
+  \end{pmatrix}\right\vert_{\colarg{b66082}{\varphi} = \colarg{b66082}{\varphi_{t}}, \colarg{536878}{\theta} = \colarg{536878}{\theta_{t}}}
 \end{align*}
 
 \begin{align*}
@@ -121,7 +121,36 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
   \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\approx \frac{1}{N} \sum_{\colarg{d57630}{\eps \sim p\left(\eps\right)}} \colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}\right)\right) \\
 \end{align*}
 
+\begin{align*}
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t + 1}} \\
+    \colarg{536878}{\theta_{t + 1}}
+  \end{pmatrix} \leftarrow
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t}} \\
+    \colarg{536878}{\theta_{t}} 
+  \end{pmatrix} +
+  \eta
+  \left.\begin{pmatrix}
+    \widehat{\colarg{b66082}{\nabla_{\varphi}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta} \right)}\left[X^{M}\right] \\
+    \widehat{\colarg{536878}{\nabla_{\theta}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta}\right)}\left[X^{M}\right] 
+  \end{pmatrix}\right\vert_{\colarg{b66082}{\varphi} = \colarg{b66082}{\varphi_{t}}, \colarg{536878}{\theta} = \colarg{536878}{\theta_{t}}}
+\end{align*}
+
+\begin{align*}
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t + 1}} \\
+    \colarg{536878}{\theta_{t + 1}}
+  \end{pmatrix} \leftarrow
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t}} \\
+    \colarg{536878}{\theta_{t}} 
+  \end{pmatrix} +
+  \eta
+  \left.\begin{pmatrix}
+    \widehat{\colarg{b66082}{\nabla_{\varphi}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta} \right)}\left[X^{M}, \colarg{d57630}{\eps}\right] \\
+    \widehat{\colarg{536878}{\nabla_{\theta}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta}\right)}\left[X^{M}, \colarg{d57630}{\eps}\right] 
+  \end{pmatrix}\right\vert_{\colarg{b66082}{\varphi} = \colarg{b66082}{\varphi_{t}}, \colarg{536878}{\theta} = \colarg{536878}{\theta_{t}}}
+\end{align*}
 
 \end{document}
-
-
