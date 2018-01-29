@@ -15,7 +15,7 @@
    viewBox="0 0 5267.7294 1375.7712"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    sodipodi:docname="amortization.svg"
    inkscape:export-filename="/Users/krissankaran/Desktop/lab_meetings/20180129/amortization.png"
    inkscape:export-xdpi="90"
@@ -33,7 +33,7 @@
       <path
          id="path4920"
          d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
-         style="fill:#6a6a6a;fill-opacity:1;fill-rule:evenodd;stroke:#6a6a6a;stroke-width:1pt;stroke-opacity:1"
+         style="fill:#b66082;fill-opacity:1;fill-rule:evenodd;stroke:#b66082;stroke-width:1pt;stroke-opacity:1"
          transform="scale(0.2,0.2)"
          inkscape:connector-curvature="0" />
     </marker>
@@ -48,7 +48,7 @@
        inkscape:collect="always">
       <path
          transform="scale(0.2,0.2)"
-         style="fill:#6a6a6a;fill-opacity:1;fill-rule:evenodd;stroke:#6a6a6a;stroke-width:1pt;stroke-opacity:1"
+         style="fill:#b66082;fill-opacity:1;fill-rule:evenodd;stroke:#b66082;stroke-width:1pt;stroke-opacity:1"
          d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
          id="path4758"
          inkscape:connector-curvature="0" />
@@ -65,7 +65,7 @@
       <path
          id="path4516"
          d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
-         style="fill:#6a6a6a;fill-opacity:1;fill-rule:evenodd;stroke:#6a6a6a;stroke-width:1pt;stroke-opacity:1"
+         style="fill:#b66082;fill-opacity:1;fill-rule:evenodd;stroke:#b66082;stroke-width:1pt;stroke-opacity:1"
          transform="scale(0.2,0.2)"
          inkscape:connector-curvature="0" />
     </marker>
@@ -248,15 +248,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.11006286"
-     inkscape:cx="1808.9259"
+     inkscape:cx="182.58255"
      inkscape:cy="183.82941"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="723"
+     inkscape:window-width="1621"
+     inkscape:window-height="731"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="23"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -270,7 +270,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -370,7 +370,7 @@
        clip-path="url(#clipPath4260)"
        transform="translate(1172.0575,454.28584)" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#6a6a6a;stroke-width:40;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutS)"
+       style="fill:none;fill-rule:evenodd;stroke:#b66082;stroke-width:18.74999974;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutS)"
        d="m 273.57216,285.90463 9.08572,708.6859"
        id="path4362"
        inkscape:connector-curvature="0" />
@@ -378,9 +378,9 @@
        inkscape:connector-curvature="0"
        id="path4754"
        d="m 1957.5718,285.90463 9.0857,708.6859"
-       style="fill:none;fill-rule:evenodd;stroke:#6a6a6a;stroke-width:40;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker4756)" />
+       style="fill:none;fill-rule:evenodd;stroke:#b66082;stroke-width:18.74999974;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker4756)" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#6a6a6a;stroke-width:40;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker4918)"
+       style="fill:none;fill-rule:evenodd;stroke:#b66082;stroke-width:18.74999974;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker4918)"
        d="m 4187.5718,285.90463 9.0857,708.6859"
        id="path4916"
        inkscape:connector-curvature="0" />
