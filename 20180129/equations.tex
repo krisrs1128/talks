@@ -47,21 +47,21 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
 \end{align*}
 
 \begin{align*}
-  \mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &= \Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{p\left(x, z\right)} + H\left(\textcolor[HTML]{b66082}{q}\right) \\
-&=\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{p\left(x \vert z\right)} - D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)
+  \mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &= \Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\colarg{536878}{\log p\left(x, z\right)}} + H\left(\textcolor[HTML]{b66082}{q}\right) \\
+  &=\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\colarg{536878}{\log p\left(x \vert z\right)}} - D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)
 \end{align*}
 
 \begin{align*}
-  \mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &= \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{p\left(x, z\right)}} + \textcolor[HTML]{687853}{H\left(\textcolor[HTML]{b66082}{q}\right)} \\
-&=\textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{p\left(x \vert z\right)}} - \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)}
+  \mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &= \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\log p\left(x, z\right)}} + \textcolor[HTML]{687853}{H\left(\textcolor[HTML]{b66082}{q}\right)} \\
+&=\textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\log p\left(x \vert z\right)}} - \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)}
 \end{align*}
 
 \begin{align*}
-\mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &=\textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{p\left(x \vert z\right)}} - \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)}
+\mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &=\textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\log p\left(x \vert z\right)}} - \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)}
 \end{align*}
 
 \begin{align*}
-   \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi, \theta}\right) &=  \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{p_{\theta}\left(x \vert z\right)}} -  \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)}
+   \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi}, \colarg{536878}{\theta}\right) &=  \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{\log p_{\theta}\left(x \vert z\right)}} -  \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)}
 \end{align*}
 
 \begin{align*}
@@ -78,6 +78,10 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
   \textcolor[HTML]{b66082}{z \xrightarrow{\varphi} x}
   \textcolor[HTML]{b66082}{\varphi} \\
   \textcolor[HTML]{536878}{\theta}
+\end{align*}
+
+\begin{align*}
+  f\left(z\right) &= \colarg{536878}{\log p_{\theta}\left(x \vert z\right)}
 \end{align*}
 
 \begin{align*}
@@ -111,14 +115,14 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
 \end{align*}
 
 \begin{align*}
-  z \sim \textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \implies z \overset{D}{=} &g_{\colarg{b66082}{\varphi}}\left(\textcolor[HTML]{d57630}{\eps}\right) \\
+  z \sim \textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \implies z \overset{D}{=} &g_{\colarg{b66082}{\varphi}}\left(\textcolor[HTML]{d57630}{\eps}, x\right) \\
   &\textcolor[HTML]{d57630}{\eps} \sim \textcolor[HTML]{d57630}{p\left(\eps\right)}
 \end{align*}
 
 \begin{align*}
-  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \colarg{b66082}{\nabla_{\varphi}}\Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{536878}{f}\left(\colarg{636878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}\right)\right)} \\
-  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}\right)\right)} \\
-  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\approx \frac{1}{N} \sum_{\colarg{d57630}{\eps \sim p\left(\eps\right)}} \colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}\right)\right) \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \colarg{b66082}{\nabla_{\varphi}}\Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{536878}{f}\left(\colarg{636878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}, x\right)\right)} \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}, x\right)\right)} \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\approx \frac{1}{N} \sum_{\colarg{d57630}{\eps \sim p\left(\eps\right)}} \colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}, x\right)\right) \\
 \end{align*}
 
 \begin{align*}
@@ -156,6 +160,14 @@ $\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b
 \begin{align*}
   \frac{dx}{dt} &= \alpha x - \beta xy \\
   \frac{dy}{dt} &= \delta xy - \gamma y
+\end{align*}
+
+\begin{align*}
+  \colarg{536878}{\frac{1}{\sigma^{2}_{\theta}\left(z\right)}\left(x - \mu_{\theta}\left(z\right)\right)^2}\colarg{b66082}{\left(z - \mu_{\varphi}\left(x\right)\right)}
+\end{align*}
+
+\begin{align*}
+  \colarg{536878}{\frac{1}{\sigma^2_{\theta}\left(z\right)}}\left(\colarg{b66082}{\mu_{\varphi}\left(x\right)} + \colarg{b66082}{\sigma_{\varphi}\left(x\right)}\colarg{d57630}{\eps} - \colarg{536878}{\mu_{\theta}\left(z\right)}\right)
 \end{align*}
 
 \end{document}
