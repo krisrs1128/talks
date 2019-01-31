@@ -34,7 +34,7 @@
 
 %% begin presentation
 
-\title{\large \bfseries Humanitarian AI Roundtable: Crisis Mapping and Super-Resolution}
+\title{\large \bfseries Humanitarian AI Roundtable \\ Crisis Mapping and Super-Resolution}
 
 \author{Kris Sankaran and Pablo Fonseca\\ (Work with Rifat Arefin, Anthony
   Ortiz, Jason Jo, Vincent Michalski, and Samira Kahou)}
@@ -84,20 +84,21 @@
 \begin{frame}
   \frametitle{Research Problems: Map Annotation}
   \begin{itemize}
-  \item \textbf{Conditional U-Net}: Models robust to a variety of environments
+  \item \textbf{Conditional U-Net}: Models robust across a variety of environments
   \item \textbf{Interactive Corrections}: Leverage human volunteers efficiently
   \item \textbf{Useable Uncertainties}: Streamline validation and correction processes
   \item \textbf{Incremental Annotations}: Learn across a hierarchy of annotations
   \end{itemize}  
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.5\paperwidth]{figure/classical_interactive}
+    \includegraphics[width=0.85\paperwidth]{figures/classical_interactive}
     \caption{One approach to more interactive image segmentation, from ``Deep
       Object Selection.'' \label{fig:label} }
   \end{figure}
 \end{frame}
 
 \begin{frame}
+  \frametitle{Improving Sensing}
   \begin{itemize}
   \item Super-Resolution
     \begin{itemize}
@@ -149,6 +150,13 @@
   \item Multiframedness: Dealing with alignment and using multiple inputs
     (Knowledge Graphs, multichannel, and recurrence)
   \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figures/conditioning_network}
+    \caption{Example of conditioning architecture used for super-resolution. \label{fig:label} }
+\end{figure}
+
+
 \end{frame}
 
 \begin{frame}
