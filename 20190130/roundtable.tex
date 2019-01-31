@@ -1,0 +1,172 @@
+\documentclass[10pt,mathserif]{beamer}
+
+\usepackage{graphicx,amsmath,amssymb}
+\usepackage{subcaption, natbib, hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+\input{preamble}
+
+\mode<presentation>
+{
+\usetheme{default}
+}
+\setbeamertemplate{navigation symbols}{}
+\usecolortheme[rgb={0.13,0.28,0.59}]{structure}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{frametitle} {
+	\begin{center}
+	  {\large\bf \insertframetitle}
+	\end{center}
+}
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+%% begin presentation
+
+\title{\large \bfseries Humanitarian AI Roundtable: Crisis Mapping and Super-Resolution}
+
+\author{Kris Sankaran and Pablo Fonseca\\ (Work with Rifat Arefin, Anthony
+  Ortiz, Jason Jo, Vincent Michalski, and Samira Kahou)}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+%% \begin{frame}
+%%   \frametitle{Maps are Useful}
+%%   Especially if you have a critical mission.
+%%  \begin{figure}[ht]
+%%    \centering
+%%    \includegraphics[width=0.6\paperwidth]{figures/old_map}
+%%    \caption{A mapping of Tyrol, from the Second Military Survey of the Habsburg
+%%      Empire.\label{fig:label} }
+%%  \end{figure}
+%% \end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Maps are Useful}
+%%  \begin{figure}[ht]
+%%    \centering
+%%    \includegraphics[width=0.6\paperwidth]{figures/napoleon_map}
+%%    \caption{This is what false positives look like.}
+%%  \end{figure}
+%% \end{frame}
+
+\begin{frame}
+  \frametitle{Improving Sensing}
+  \begin{itemize}
+  \item Map Annotation
+    \begin{itemize}
+    \item How to augment human volunteers, and scale annotations?
+    \item Use case: Pandemic response planning
+    \end{itemize}
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figures/mapathon}
+    \caption{Exampling crowdsourcing session, from the MissingMaps
+      websie. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Problems: Map Annotation}
+  \begin{itemize}
+  \item \textbf{Conditional U-Net}: Models robust to a variety of environments
+  \item \textbf{Interactive Corrections}: Leverage human volunteers efficiently
+  \item \textbf{Useable Uncertainties}: Streamline validation and correction processes
+  \item \textbf{Incremental Annotations}: Learn across a hierarchy of annotations
+  \end{itemize}  
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\paperwidth]{figure/classical_interactive}
+    \caption{One approach to more interactive image segmentation, from ``Deep
+      Object Selection.'' \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item Super-Resolution
+    \begin{itemize}
+    \item How to end monopolies on high-res maps?
+    \item Use case: Quantifying extent of violence in Darfur
+    \end{itemize}
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\paperwidth]{figures/high_res_khartoum}
+    \caption{A high-resolution image of a street in Khartoum. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item Super-Resolution
+    \begin{itemize}
+    \item How to end monopolies on high-res satellite images?
+    \item Use case: Quantifying extent of violence in Darfur
+    \end{itemize}
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\paperwidth]{figures/multiframe_khartoum}
+    \caption{Corresponding low-res views. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item Super-Resolution
+    \begin{itemize}
+    \item How to end monopolies on high-res satellite images?
+    \item Use case: Quantifying extent of violence in Darfur
+    \end{itemize}
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figures/multliframe_khartoum_2}
+    \caption{Corresponding low-res views. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Research Problems: Super-Resolution}
+  \begin{itemize}
+  \item Conditioning: How to incorporate metadata into super-resolution?
+  \item Multiframedness: Dealing with alignment and using multiple inputs
+    (Knowledge Graphs, multichannel, and recurrence)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Challenges}
+  \begin{itemize}
+  \item Narrowing on problems -- schools or bridges? Myanmar or Uganda?
+  \item Getting data!
+  \item Abstractions vs. applications
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+  \begin{itemize}
+  \item Decide on your own MNIST
+  \item Define intermediate successes
+  \item There are more venues than you think
+  \end{itemize}
+\end{frame}
+
+\end{document}
