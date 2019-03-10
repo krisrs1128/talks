@@ -216,56 +216,100 @@
 
 \begin{frame}
   \frametitle{Training Examples}
-  Most systems in the real world have some sort of automatically generated labels
+  \begin{itemize}
+  \item Most successful systems have automatically generated labels
+  \item These can be hard (or expensive) to acquire in humanitarian applications
+  \end{itemize} 
 \end{frame}
 
 \begin{frame}
   \frametitle{Training Examples}
-  Most systems in the real world have some sort of automatically generated labels
-
-  Netflix
+  \begin{itemize}
+  \item Most successful systems have automatically generated labels
+  \item These can be hard (or expensive) to acquire in humanitarian applications
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/netflix_abstraction}
+    \caption{Netflix obtains labels whenever you rate a movie. \label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Training Examples}
-  Most systems in the real world have some sort of automatically generated labels
+  \frametitle{Training Examples}
+  \begin{itemize}
+  \item Most successful systems have automatically generated labels
+  \item These can be hard (or expensive) to acquire in humanitarian applications
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/flyinglabs.png
+    \caption{Google learns from which search result you click
+      on. \label{fig:label} }
+  \end{figure}
+\end{frame}
 
-  Google search
+\begin{frame}
+  \frametitle{Some Issues: Not enough labels}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/segmentation_labels}
+    \caption{It's often much easier to obtain unlabeled data, compared to
+      labeled data. \label{fig:label} }
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Issues: Lack of representation}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/unrepresentative}
+  \caption{If the model is not given representative labels, it will fail to
+    perform well. \label{fig:label} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Some Issues}
-  Not enough
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/labeling}}
+  \caption{In the real-world, labels may be partial or noisy, and models need to
+    learn to be robust to (and ideally, continue to learn from) this.}
+  \label{fig:label} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Some Issues}
-  Not representative
+  \frametitle{Solutions: Smarter labeling}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/grabcut}
+  \caption{There is work on building better interfaces for labeling data, for
+    use in downstream algorithms. \label{fig:label} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Some Issues}
-  Partial or noisy
+  \frametitle{Solutions: Active Learning}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/active_learning}
+    \caption{Rather than labeling datapoints at random, you could find a smart
+      way of sorting through them. \label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Solutions}
-  Smart ways of labeling things: Grab Cut
-\end{frame}
-
-\begin{frame}
-  \frametitle{Solutions}
-  Smart ways of labeling things: PolyRNN
-\end{frame}
-
-\begin{frame}
-  \frametitle{Solutions}
-  A smart order of labeling things
-\end{frame}
-
-\begin{frame}
-  \frametitle{Solutions}
-  We should leverage existing volunteer infrastructures
+  \frametitle{Solutions: Leverage Existing Infrastructure}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/hotosm}
+    \caption{It is foolish to attempt to fully automate systems with strong
+      existing volunteer infrastructure. \label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \subsection{Generalization}
