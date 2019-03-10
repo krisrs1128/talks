@@ -47,73 +47,152 @@
 \section{Machine Learning Fundamentals}
 \label{sec:label}
 
-\subsection{Cognition and Augmentation}
+\subsection{Sensing and Acting}
 \label{subsec:label}
 
 \begin{frame}[]
-  \frametitle{Sensing and Acting}
-  The ultimate goals of machine learning
+  \frametitle{Reasoning in the World}
+  Two of the major components behind reasoning are
+  \begin{itemize}
+    \item \textbf{Sensing}: Build systems that can comprehend huge amounts of
+      information.
+    \item \textbf{Acting}: Build systems that make good decisions, based on this
+      information.
+  \end{itemize}
+  This is the holy grail of machine learning.
 \end{frame}
 
 \begin{frame}
-  \frametitle{There is no magic in ML}
-  You might hear this and think we're trying to emulate brains
-\end{frame}
-
-\begin{frame}
-  \frametitle{Cognition}
-  Okay, a few of us are.
-\end{frame}
-
-\begin{frame}
-  \frametitle{There is no magic in ML}
-  But arguably, most of the successes have been some form of augmentation.
+  \frametitle{Emulating Cognition}
+  \begin{itemize}
+  \item Cognitive science has inspired many of the field's advances
+  \item This has also led to many misunderstandings from the general public
+  \item Claim: This has also led to many missed opportunities in ML research
+    % pictures of turing and some crazy article (business insider?)
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Augmentation}
-  Help *people* sensing things
-  Help *people* make decisions more effectively
+  \item We are still incredibly far from having systems that can reason about the world
+  \item But we still derive a huge amount of value from machine learning
+  \item How to reconcile these facts?
 \end{frame}
 
 \begin{frame}
-  \frametitle{Examples}
- Sensing: Gaussian Mixture Model 
+  \frametitle{Augmentation}
+  Arguably, most of ML's successes are due to augmentation.
+  \begin{itemize}
+    \item \textbf{Sensing}: Build systems that \textit{help people} comprehend
+      huge amounts of information.
+    \item \textbf{Acting}: Build systems that \textit{help people} make good
+      decisions, based on this information.
+  \end{itemize}
+\end{frame}
+
+\subsection{Examples}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{There is no magic in ML}
+  Behind the scenes, almost everything can be understood in terms of probability
+  and geometry.
+
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/perceptron}
+    \caption{An algorithm that learns to classify between dogs and cats is
+      actually just learning where to put a line in the size $\times$
+      domestication plane. \label{fig:perceptrong} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Examples}
-  Sensing: New York Times
+  \frametitle{Sensing: Gaussian Mixture Model}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.7\textwidth]{figures/gmm}
+   \caption{Example of a model that allows us to comparess lots of datapoints
+     down to just a few representatives. \label{fig:gmm} }
+ \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Examples}
-  Sensing: Traffic in Jakarta
+  \frametitle{Sensing: Information Retrieval}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/topics}
+    \caption{This geometric view can inform many practical applications (like
+      information retrieval, displayed here).\label{fig:topics} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Examples}
-  Sensing: Land Use Maps
+  \frametitle{Sensing: Traffic in Jakarta}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\paperwidth]{figures/jakarta_traffic}
+    \caption{Automatically parsing traffic camera images can help with traffic
+      management. \citep{caldeira2018improving} \label{fig:jakarta} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Examples}
-  Acting: Regression
+  \frametitle{Sensing: Conservation through Land Use Maps}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figures/landcover}
+    \caption{Automatically generated land use maps let conservation
+      organizations manage ecosystems. \label{fig:landcover} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Examples}
-  Acting: Movie recomendations
+  \frametitle{There is no magic in ML}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/galaxy}
+    \caption{An example of regression, where we try to predict one value based
+      on a bunch of related features. \label{fig:astronomy} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Humanitarian AI}
-  Rent inspection
+  \frametitle{Acting: Movie Recommendations}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/netflix_abstraction}
+    \caption{Machine learning guides our decisions about which movies to watch.}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Humanitarian AI}
-  Cassava leaves 
+  \frametitle{Acting: Movie Recommendations}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/netflix_regression}
+    \caption{Machine learning guides our decisions about which movies to watch.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Lead Inspection}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/lead_inspection}
+    \caption{Predictions about what homes will have lead can help guide inspections \citep{potash2015predictive}. \label{fig:potash_predictive} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Agricultural Disease Detection}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/cassava}
+    \caption{A leaf classification system can help agricultural extension
+      workers decide which areas need which treatments. \label{fig:cassava} }
+  \end{figure}
+
 \end{frame}
 
 \section{ML Challenges}
@@ -121,6 +200,10 @@
 
 \begin{frame}
   \frametitle{Challenges}
+
+  I've shown you a few of the success stories... but in practice many things
+  remain challenges, especially in humanitarian applications.
+
   \begin{itemize}
   \item Data Collection
   \item Generalization
@@ -128,7 +211,7 @@
   \end{itemize} 
 \end{frame}
 
-\subsection{Collecting Labels}
+\subsection{Data Collection}
 \label{subsec:label}
 
 \begin{frame}
@@ -241,7 +324,7 @@
   Causality: Gravity works on the moon
 \end{frame}
 
-\subsection{Quantitative Incompleteness}
+\subsection{Incompleteness}
 \label{subsec:label}
 
 \begin{frame}
@@ -251,7 +334,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Model's aren't perfect}
+  \frametitle{Models aren't perfect}
  Cemetaries and cars 
 \end{frame}
 
@@ -328,5 +411,8 @@
   Thank you for listening. I think you are all doing excellent work, and reach
   out if you have ideas about how we may be able to amplify your work.
 \end{frame}
+
+\bibliographystyle{plain}
+\bibliography{refs}
 
 \end{document}
