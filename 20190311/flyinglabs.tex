@@ -1,0 +1,332 @@
+\documentclass[10pt,mathserif]{beamer}
+
+\usepackage{graphicx,amsmath,amssymb}
+\usepackage{subcaption, natbib, hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+\input{preamble}
+
+\mode<presentation>
+{
+\usetheme{default}
+}
+\setbeamertemplate{navigation symbols}{}
+\usecolortheme[rgb={0.13,0.28,0.59}]{structure}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{frametitle} {
+	\begin{center}
+	  {\large\bf \insertframetitle}
+	\end{center}
+}
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+%% begin presentation
+
+\title{\large \bfseries Challenges and Opportunities in \\
+  Humanitarian Machine Learning}
+
+\author{Kris Sankaran}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Machine Learning Fundamentals}
+\label{sec:label}
+
+\subsection{Cognition and Augmentation}
+\label{subsec:label}
+
+\begin{frame}[]
+  \frametitle{Sensing and Acting}
+  The ultimate goals of machine learning
+\end{frame}
+
+\begin{frame}
+  \frametitle{There is no magic in ML}
+  You might hear this and think we're trying to emulate brains
+\end{frame}
+
+\begin{frame}
+  \frametitle{Cognition}
+  Okay, a few of us are.
+\end{frame}
+
+\begin{frame}
+  \frametitle{There is no magic in ML}
+  But arguably, most of the successes have been some form of augmentation.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Augmentation}
+  Help *people* sensing things
+  Help *people* make decisions more effectively
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+ Sensing: Gaussian Mixture Model 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Sensing: New York Times
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Sensing: Traffic in Jakarta
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Sensing: Land Use Maps
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Acting: Regression
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Acting: Movie recomendations
+\end{frame}
+
+\begin{frame}
+  \frametitle{Humanitarian AI}
+  Rent inspection
+\end{frame}
+
+\begin{frame}
+  \frametitle{Humanitarian AI}
+  Cassava leaves 
+\end{frame}
+
+\section{ML Challenges}
+\label{sec:label}
+
+\begin{frame}
+  \frametitle{Challenges}
+  \begin{itemize}
+  \item Data Collection
+  \item Generalization
+  \item Incompleteness
+  \end{itemize} 
+\end{frame}
+
+\subsection{Collecting Labels}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Training Examples}
+  Most systems in the real world have some sort of automatically generated labels
+\end{frame}
+
+\begin{frame}
+  \frametitle{Training Examples}
+  Most systems in the real world have some sort of automatically generated labels
+
+  Netflix
+\end{frame}
+
+\begin{frame}
+  \frametitle{Training Examples}
+  Most systems in the real world have some sort of automatically generated labels
+
+  Google search
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Issues}
+  Not enough
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Issues}
+  Not representative
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Issues}
+  Partial or noisy
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions}
+  Smart ways of labeling things: Grab Cut
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions}
+  Smart ways of labeling things: PolyRNN
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions}
+  A smart order of labeling things
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions}
+  We should leverage existing volunteer infrastructures
+\end{frame}
+
+\subsection{Generalization}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Heterogeneity}
+  Picture with just functions
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heterogeneity}
+  Real world manifestations of this scenario: across place
+
+  Self driving cars: Snow
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heterogeneity}
+  Real world manifestations of this scenario: across time
+
+  Nonstationarity: Airline waiting times have changed over time
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heterogeneity}
+  Real world manifestations of this scenario
+
+  Remote sensing: INRIA
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heterogeneity}
+  Real world manifestations of this scenario
+
+  Open Aerial Maps
+\end{frame}
+
+\begin{frame}[]
+  \frametitle{Solutions}
+  Traditionally: Just collect more data
+\end{frame}
+
+\begin{frame}[]
+  \frametitle{Solutions}
+  Metalearning: Train models that are more robust from the start?
+\end{frame}
+
+\begin{frame}[]
+  \frametitle{Solutions}
+  Active and reinforcement learning
+\end{frame}
+
+\begin{frame}[]
+  \frametitle{Solutions}
+  Causality: Gravity works on the moon
+\end{frame}
+
+\subsection{Quantitative Incompleteness}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Overview}
+  Hard to specify everything into an objective function
+  Need some assurance that we won't encounter unintended consequences
+\end{frame}
+
+\begin{frame}
+  \frametitle{Model's aren't perfect}
+ Cemetaries and cars 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Examples from the Kim paper
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Examples from the Kim paper
+\end{frame}
+
+\begin{frame}
+  \frametitle{Remote Sensing}
+  Would like results to be easily validatable / incorporatable.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpretability}
+  Description of concepts
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpretability}
+  Examples of model distillation
+\end{frame}
+
+\section{Contextual Challenges}
+\label{sec:label}
+
+\begin{frame}
+  \frametitle{Packaged Interventions}
+  We like to think that technology alone will make our lives easier
+  We often overlook the importance of context and intent.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Packaged Interventions}
+  One laptop per child: Much easier to give people laptops than to ensure that
+  teachers are well trained and showing up to the classroom.
+\end{frame}
+
+\begin{frame}]
+  \frametitle{Packaged Interventions}
+  In reality, solutions are very context dependent.
+  Example with fishing villages in India and Uganda.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theory of Amplification}
+  Groups that have problems with existing infrastructure are unlikely to become
+  better just because you give them
+\end{frame}
+
+\section{The Road Ahead}
+\label{sec:label}
+
+\begin{frame}
+  \frametitle{Cognitive Amplification}
+  Connect augmentation and tech amplification.
+  The greatest promise of ML is in augmenting our cognition: Can we sensing
+  better, and guide our decision making, in the most meaningful way possibl.
+  Empower those who are already doing good work, via AI.
+\end{frame}
+
+\begin{frame}
+  \frametitle{As we may Think}
+  Let's take the long view, and keep things in perspective
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  Thank you for listening. I think you are all doing excellent work, and reach
+  out if you have ideas about how we may be able to amplify your work.
+\end{frame}
+
+\end{document}
