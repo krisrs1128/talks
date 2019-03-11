@@ -84,11 +84,16 @@
   \item But we still derive a huge amount of value from machine learning
   \item How to reconcile these facts?
   \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/does_it_work}
+\end{figure}
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Augmentation}
-  Arguably, most of ML's successes are due to human-centric augmentation.
+  Arguably, most of ML's successes revolve around people
   \begin{itemize}
     \item \textbf{Sensing}: Build systems that \textit{help people} comprehend
       huge amounts of information.
@@ -97,7 +102,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/hci}
+    \includegraphics[width=0.4\textwidth]{figures/augmentation}
   \end{figure}
 \end{frame}
 
@@ -110,10 +115,10 @@
   and geometry.
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/perceptron}
+    \includegraphics[width=0.4\textwidth]{figures/perceptron}
     \caption{An algorithm that learns to classify between dogs and cats is
       actually just learning where to put a line in the size $\times$
-      domestication plane. \label{fig:perceptrong} }
+      domestication plane. \label{fig:perceptron} }
   \end{figure}
 \end{frame}
 
@@ -133,7 +138,7 @@
     \centering
     \includegraphics[width=0.7\textwidth]{figures/topics}
     \caption{This geometric view can inform many practical applications (like
-      information retrieval, displayed here).\label{fig:topics} }
+      information retrieval). label{fig:topics} }
   \end{figure}
 \end{frame}
 
@@ -172,7 +177,8 @@
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/netflix_abstraction}
-    \caption{Machine learning guides our decisions about which movies to watch.}
+    \caption{Some of the most common applications of machine learning are
+      invisible.}
   \end{figure}
 \end{frame}
 
@@ -189,8 +195,9 @@
   \frametitle{Acting: Lead Inspection}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/lead_inspection}
-    \caption{Predictions about what homes will have lead can help guide inspections \citep{potash2015predictive}. \label{fig:potash_predictive} }
+    \includegraphics[width=0.4\textwidth]{figures/lead_inspection}
+    \caption{Predictions about what homes will have lead can help guide
+      inspections \citep{potash2015predictive}. \label{fig:potash_predictive} }
   \end{figure}
 \end{frame}
 
@@ -198,7 +205,7 @@
   \frametitle{Acting: Agricultural Disease Detection}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/cassava}
+    \includegraphics[width=0.9\textwidth]{figures/cassava}
     \caption{A leaf classification system can help agricultural extension
       workers decide which areas need which treatments. \label{fig:cassava} }
   \end{figure}
@@ -210,15 +217,14 @@
 
 \begin{frame}
   \frametitle{Challenges}
-
   I've shown you a few of the success stories... but in practice many things
   remain challenges, especially in humanitarian applications.
-
   \begin{itemize}
   \item Data Collection
   \item Heterogeneity
   \item Incompleteness
   \end{itemize} 
+  These challenges present interesting areas for research.
 \end{frame}
 
 \subsection{Data Collection}
@@ -284,7 +290,7 @@
   \frametitle{Some Issues}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/labeling}
+  \includegraphics[width=0.6\textwidth]{figures/labeling}
   \caption{In the real-world, labels may be partial or noisy, and models need to
     learn to be robust to (and ideally, continue to learn from) this.}
 \end{figure}
@@ -380,12 +386,12 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Solutions: Nonparametric Models}
+  \frametitle{Solutions: Hierarchical Models}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/indian_buffet}
     \caption{There are models that learn to appropriately share information
-      across related (but not very distinct) examples. \label{fig:label} }
+      across related examples. \label{fig:label} }
 \end{figure}
 \end{frame}
 
@@ -400,13 +406,19 @@
     \begin{itemize}
     \item Especially in humanitarian applications
     \end{itemize}
+  \item We need to have useful ways to query how our models behave
   \item We need to protect against unintended consequences
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Models aren't perfect}
- Cemetaries and cars 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{figures/cemetaries_cars}
+    \caption{One of our models can't tell the difference between cemetaries and
+      parking lots.\label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -416,7 +428,7 @@
   \begin{itemize}
   \item Scientific understanding
   \item System safety
-  \item Mismatched objectives (e.g., predict engine failures vs. build better
+  \item Mismatched objectives (e.g., predict engine failures $\neq$ build better
     car)
   \end{itemize}
 \end{frame}
@@ -430,20 +442,21 @@
   \item System safety
   \item Mismatched objectives (e.g., predict engine failures vs. build better
     car)
-  \item Remote sensing: Annotations that are easy to incorporate (confidence
-    scores?)
+  \item Crisis response: Automatically generated annotations should be rapidly
+    generated, not overwhelming to validate, usable by people at emergency site,
+    and relevant to crisis.}
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Solutions: Characterize perturbations}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\textwidth]{figures/influence}
-  \caption{\citep{koh2017understanding} show how to describe ways changes in the
-    training data affect downstream model outputs. \label{fig:label} }
-\end{figure}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Solutions: Characterize perturbations}
+%% \begin{figure}[ht]
+%%   \centering
+%%   \includegraphics[width=0.7\textwidth]{figures/influence}
+%%   \caption{\citep{koh2017understanding} show how to describe ways changes in the
+%%     training data affect downstream model outputs. \label{fig:label} }
+%% \end{figure}
+%% \end{frame}
 
 \begin{frame}
   \frametitle{Interpretability: Define concepts}
@@ -468,7 +481,7 @@
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/vaccine}
-    \caption{The classical example of a packaged intervention. \label{fig:label}}
+    \caption{The classic example of a packaged intervention. \label{fig:label}}
   \end{figure}
 \end{frame}
 
@@ -476,13 +489,13 @@
   \frametitle{Packaged Interventions}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/one_laptop}
+  \includegraphics[width=0.35\textwidth]{figures/one_laptop}
   \caption{It's much easier to give children laptops than it is to improve
     ensure teachers show up to class, are properly trained, ... \label{fig:label} }
 \end{figure}
 \end{frame}
 
-\begin{frame}]
+\begin{frame}
   \frametitle{Packaged Interventions}
   \begin{itemize}
   \item In reality, solutions are very context dependent.
@@ -490,7 +503,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/fisherman}
+    \includegraphics[width=0.5\textwidth]{figures/fisherman}
     \caption{Mobile phones were much more helpful for fisherman in Kerala than
       those in Uganda, due to the way markets were set up. \label{fig:label} }
   \end{figure}
@@ -504,6 +517,18 @@
   \item Organizations with strong existing infrastructure benefit the most
   \item Technology alone does not change intent
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Traffic in Jakarta}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\paperwidth]{figures/jakarta_traffic}
+    \caption{This is either a window into potential improvements of traffic
+      infrastructure or a glorified traffic ticket system, depending on
+      organizational intent (I'm sure it's the former in this case).
+       \citep{caldeira2018improving} \label{fig:jakarta} }
+  \end{figure}
 \end{frame}
 
 \section{The Road Ahead}
@@ -523,8 +548,21 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{As we may Think}
-  Let's take the long view, and keep things in perspective
+  \frametitle{As We May Think}
+\begin{itemize}
+\item Let's take the long view, and keep things in perspective
+\item I've brought up limitations of machine learning because that's the only
+  way to make progress
+\end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/as_we_may_think}
+  \caption{A reprint of the article \citep{bush1945we}, one of the first to
+    imagine the possibilities of augmentation using computers. \label{fig:label}
+  }
+\end{figure}
+
+
 \end{frame}
 
 \begin{frame}
