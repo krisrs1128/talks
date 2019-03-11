@@ -1,14 +1,7 @@
 \documentclass[10pt,mathserif]{beamer}
 
-\setbeamertemplate{navigation symbols}{}
 \usepackage{graphicx,amsmath,amssymb}
-\usepackage{subcaption, natbib, hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=cyan,
-}
+\usepackage{natbib, hyperref}
 
 \input{preamble}
 
@@ -53,13 +46,13 @@
 \begin{document}
 \maketitle
 
-\section{Machine Learning Fundamentals}
+\section{Humanitarian ML Fundamentals}
 \label{sec:label}
 
 \subsection{Sensing and Acting}
 \label{subsec:label}
 
-\begin{frame}[]
+\begin{frame}
   \frametitle{Reasoning in the World}
   Two of the major components behind reasoning are
   \begin{itemize}
@@ -77,26 +70,35 @@
   \item Cognitive science has inspired many of the field's advances
   \item This has also led to many misunderstandings from the general public
   \item Claim: This has also led to many missed opportunities in ML research
-    % pictures of turing and some crazy article (business insider?)
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/ml_hype}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Augmentation}
+  \begin{itemize}
+  \item We are very far from having systems that can reason about the world...
+  \item But we still derive a huge amount of value from machine learning
+  \item How to reconcile these facts?
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Augmentation}
-  \item We are still incredibly far from having systems that can reason about the world
-  \item But we still derive a huge amount of value from machine learning
-  \item How to reconcile these facts?
-\end{frame}
-
-\begin{frame}
-  \frametitle{Augmentation}
-  Arguably, most of ML's successes are due to augmentation.
+  Arguably, most of ML's successes are due to human-centric augmentation.
   \begin{itemize}
     \item \textbf{Sensing}: Build systems that \textit{help people} comprehend
       huge amounts of information.
     \item \textbf{Acting}: Build systems that \textit{help people} make good
       decisions, based on this information.
   \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/hci}
+  \end{figure}
 \end{frame}
 
 \subsection{Examples}
@@ -106,7 +108,6 @@
   \frametitle{There is no magic in ML}
   Behind the scenes, almost everything can be understood in terms of probability
   and geometry.
-
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/perceptron}
@@ -204,7 +205,7 @@
 
 \end{frame}
 
-\section{ML Challenges}
+\section{Humanitarian ML Challenges}
 \label{sec:label}
 
 \begin{frame}
@@ -283,10 +284,9 @@
   \frametitle{Some Issues}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/labeling}}
+  \includegraphics[width=0.7\textwidth]{figures/labeling}
   \caption{In the real-world, labels may be partial or noisy, and models need to
     learn to be robust to (and ideally, continue to learn from) this.}
-  \label{fig:label} }
 \end{figure}
 \end{frame}
 
@@ -369,17 +369,17 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}[]
+\begin{frame}
   \frametitle{Solutions: Metalearning}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\textwidth]{figures/path.pdf}
-  \caption{Metalearning models are designed to quickly adapt to new
-    datasets. \label{fig:label} }
-\end{figure}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/metalearning}
+    \caption{Metalearning models are designed to quickly adapt to new
+      datasets. \label{fig:label} }
+  \end{figure}
 \end{frame}
 
-\begin{frame}[]
+\begin{frame}
   \frametitle{Solutions: Nonparametric Models}
   \begin{figure}[ht]
     \centering
@@ -449,7 +449,7 @@
   \frametitle{Interpretability: Define concepts}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/concepts}
+    \includegraphics[width=0.9\textwidth]{figures/concepts}
     \caption{\citep{kim2017interpretability} studied how to query the importance
       of user-defined concepts on model decisions (is ``stripedness'' important
       for classifying ``zebra'')?}
@@ -461,37 +461,65 @@
 
 \begin{frame}
   \frametitle{Packaged Interventions}
-  We like to think that technology alone will make our lives easier
-  We often overlook the importance of context and intent.
+  \begin{itemize}
+  \item We like to think that technology alone will improve the world
+  \item It's too easy to overlook the importance of context and intent
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/vaccine}
+    \caption{The classical example of a packaged intervention. \label{fig:label}}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Packaged Interventions}
-  One laptop per child: Much easier to give people laptops than to ensure that
-  teachers are well trained and showing up to the classroom.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/one_laptop}
+  \caption{It's much easier to give children laptops than it is to improve
+    ensure teachers show up to class, are properly trained, ... \label{fig:label} }
+\end{figure}
 \end{frame}
 
 \begin{frame}]
   \frametitle{Packaged Interventions}
-  In reality, solutions are very context dependent.
-  Example with fishing villages in India and Uganda.
+  \begin{itemize}
+  \item In reality, solutions are very context dependent.
+  \item This complicates the usual story of technology and scalability
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/fisherman}
+    \caption{Mobile phones were much more helpful for fisherman in Kerala than
+      those in Uganda, due to the way markets were set up. \label{fig:label} }
+  \end{figure}
+
 \end{frame}
 
 \begin{frame}
-  \frametitle{Theory of Amplification}
-  Groups that have problems with existing infrastructure are unlikely to become
-  better just because you give them
+  \frametitle{Theory of Amplification \citep{toyama2015geek}}
+  \begin{itemize}
+  \item The effects of technology tend to be multiplicative, not additive
+  \item Organizations with strong existing infrastructure benefit the most
+  \item Technology alone does not change intent
+  \end{itemize}
 \end{frame}
 
 \section{The Road Ahead}
 \label{sec:label}
 
 \begin{frame}
-  \frametitle{Cognitive Amplification}
-  Connect augmentation and tech amplification.
-  The greatest promise of ML is in augmenting our cognition: Can we sensing
-  better, and guide our decision making, in the most meaningful way possibl.
-  Empower those who are already doing good work, via AI.
+  \frametitle{Amplifying Social Efforts}
+  \begin{itemize}
+  \item Augmentation and amplification are dual concepts
+  \item Humanitarian ML efforts should
+    \begin{itemize}
+    \item Complement existing social efforts
+    \item Focus on context, not just scale
+    \item Focus on augmentation, not pure cognition
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -500,12 +528,16 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Conclusion}
-  Thank you for listening. I think you are all doing excellent work, and reach
-  out if you have ideas about how we may be able to amplify your work.
+  \frametitle{Thank you!}
+  \begin{itemize}
+  \item Please ask questions!
+  \item Feel free to reach out: sankaran.kris@gmail.com
+  \end{itemize}
 \end{frame}
 
-\bibliographystyle{plain}
-\bibliography{refs}
+\begin{frame}[allowframebreaks]
+  \bibliographystyle{plain}
+  \bibliography{refs}
+\end{frame}
 
 \end{document}
