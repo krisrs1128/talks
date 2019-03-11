@@ -237,14 +237,13 @@
 
 \begin{frame}
   \frametitle{Training Examples}
-  \frametitle{Training Examples}
   \begin{itemize}
   \item Most successful systems have automatically generated labels
   \item These can be hard (or expensive) to acquire in humanitarian applications
   \end{itemize} 
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/flyinglabs.png
+    \includegraphics[width=0.7\textwidth]{figures/flyinglabs.png}
     \caption{Google learns from which search result you click
       on. \label{fig:label} }
   \end{figure}
@@ -317,64 +316,83 @@
 
 \begin{frame}
   \frametitle{Heterogeneity}
-  Picture with just functions
+  \begin{itemize}
+  \item Even in big data scenarios, the number of relevant points might be small
+  \item Models developed for one time / environment often fail to generalize
+  \end{itemize}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.7\textwidth]{figures/netflix_abstraction}
+   \caption{The number of people relevant to your movie prediction is much
+     smaller than the original dataset. \label{fig:label} }
+ \end{figure}
+ 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Heterogeneity}
-  Real world manifestations of this scenario: across place
-
-  Self driving cars: Snow
+  \frametitle{Manifestations: Cell types}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/heterogeneity}
+    \caption{The same tissue, with the same staining procedure, can yield very
+      different results. \label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Heterogeneity}
-  Real world manifestations of this scenario: across time
-
-  Nonstationarity: Airline waiting times have changed over time
+  \frametitle{Heterogeneity: INRIA Aerial Images}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/inria}
+    \caption{Entire competitions have been constructed around the problem of
+      improving generalization. \label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Heterogeneity}
-  Real world manifestations of this scenario
-
-  Remote sensing: INRIA
-\end{frame}
-
-\begin{frame}
-  \frametitle{Heterogeneity}
-  Real world manifestations of this scenario
-
-  Open Aerial Maps
+  \frametitle{Heterogeneity: OpenAerialMaps}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/openaerialmaps}
+    \caption{Even these competitions are a far cry from what we encounter in the
+      real world.
+      \label{fig:label} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}[]
-  \frametitle{Solutions}
-  Traditionally: Just collect more data
+  \frametitle{Solutions: Metalearning}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/path.pdf}
+  \caption{Metalearning models are designed to quickly adapt to new
+    datasets. \label{fig:label} }
+\end{figure}
 \end{frame}
 
 \begin{frame}[]
-  \frametitle{Solutions}
-  Metalearning: Train models that are more robust from the start?
-\end{frame}
-
-\begin{frame}[]
-  \frametitle{Solutions}
-  Active and reinforcement learning
-\end{frame}
-
-\begin{frame}[]
-  \frametitle{Solutions}
-  Causality: Gravity works on the moon
+  \frametitle{Solutions: Nonparametric Models}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[options]{figures/indian_buffet}
+    \caption{There are models that learn to appropriately share information
+      across related (but not very distinct) examples. \label{fig:label} }
+\end{figure}
 \end{frame}
 
 \subsection{Incompleteness}
 \label{subsec:label}
 
 \begin{frame}
-  \frametitle{Overview}
-  Hard to specify everything into an objective function
-  Need some assurance that we won't encounter unintended consequences
+  \frametitle{Problem}
+  \begin{itemize}
+  \item It's impossible to capture all the nuances of a problem into a single
+    objective function
+    \begin{itemize}
+    \item Especially in humanitarian applications
+    \end{itemize}
+  \item We need to protect against unintended consequences
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
