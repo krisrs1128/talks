@@ -1,5 +1,6 @@
 \documentclass[10pt,mathserif]{beamer}
 
+\setbeamertemplate{navigation symbols}{}
 \usepackage{graphicx,amsmath,amssymb}
 \usepackage{subcaption, natbib, hyperref}
 \hypersetup{
@@ -25,6 +26,14 @@
 }
 
 \AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+\AtBeginSubsection[]
 {
 	\begin{frame}<beamer>
 		\frametitle{Outline}
@@ -206,7 +215,7 @@
 
   \begin{itemize}
   \item Data Collection
-  \item Generalization
+  \item Heterogeneity
   \item Incompleteness
   \end{itemize} 
 \end{frame}
@@ -311,7 +320,7 @@
   \end{figure}
 \end{frame}
 
-\subsection{Generalization}
+\subsection{Heterogeneity}
 \label{subsec:label}
 
 \begin{frame}
@@ -402,27 +411,49 @@
 
 \begin{frame}
   \frametitle{Examples}
-  Examples from the Kim paper
+  Some examples of things that are hard to encode, from
+  \citep{doshi2017towards},
+  \begin{itemize}
+  \item Scientific understanding
+  \item System safety
+  \item Mismatched objectives (e.g., predict engine failures vs. build better
+    car)
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Examples}
-  Examples from the Kim paper
+  Some examples of things that are hard to encode, from
+  \citep{doshi2017towards},
+  \begin{itemize}
+  \item Scientific understanding
+  \item System safety
+  \item Mismatched objectives (e.g., predict engine failures vs. build better
+    car)
+  \item Remote sensing: Annotations that are easy to incorporate (confidence
+    scores?)
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Remote Sensing}
-  Would like results to be easily validatable / incorporatable.
+  \frametitle{Solutions: Characterize perturbations}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/influence}
+  \caption{\citep{koh2017understanding} show how to describe ways changes in the
+    training data affect downstream model outputs. \label{fig:label} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Interpretability}
-  Description of concepts
-\end{frame}
-
-\begin{frame}
-  \frametitle{Interpretability}
-  Examples of model distillation
+  \frametitle{Interpretability: Define concepts}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/concepts}
+    \caption{\citep{kim2017interpretability} studied how to query the importance
+      of user-defined concepts on model decisions (is ``stripedness'' important
+      for classifying ``zebra'')?}
+  \end{figure}
 \end{frame}
 
 \section{Contextual Challenges}
