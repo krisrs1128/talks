@@ -1,0 +1,581 @@
+\documentclass[10pt,mathserif]{beamer}
+
+\usepackage{graphicx,amsmath,amssymb}
+\usepackage{natbib, hyperref}
+
+\input{preamble}
+
+\mode<presentation>
+{
+\usetheme{default}
+}
+\setbeamertemplate{navigation symbols}{}
+\usecolortheme[rgb={0.13,0.28,0.59}]{structure}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{frametitle} {
+	\begin{center}
+	  {\large\bf \insertframetitle}
+	\end{center}
+}
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+\AtBeginSubsection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+%% begin presentation
+
+\title{\large \bfseries Challenges and Opportunities in \\
+  Humanitarian Machine Learning}
+
+\author{Kris Sankaran}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Humanitarian ML Fundamentals}
+\label{sec:label}
+
+\subsection{Sensing and Acting}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Reasoning in the World}
+  Two of the major components behind reasoning are
+  \begin{itemize}
+    \item \textbf{Sensing}: Build systems that can comprehend huge amounts of
+      information.
+    \item \textbf{Acting}: Build systems that make good decisions, based on this
+      information.
+  \end{itemize}
+  This is the holy grail of machine learning.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Emulating Cognition}
+  \begin{itemize}
+  \item Cognitive science has inspired many of the field's advances
+  \item This has also led to many misunderstandings from the general public
+  \item Claim: This has also led to many missed opportunities in ML research
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/ml_hype}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Augmentation}
+  \begin{itemize}
+  \item We are very far from having systems that can reason about the world...
+  \item But we still derive a huge amount of value from machine learning
+  \item How to reconcile these facts?
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/does_it_work}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Augmentation}
+  Arguably, most of ML's successes revolve around people
+  \begin{itemize}
+    \item \textbf{Sensing}: Build systems that \textit{help people} comprehend
+      huge amounts of information.
+    \item \textbf{Acting}: Build systems that \textit{help people} make good
+      decisions, based on this information.
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/augmentation}
+  \end{figure}
+\end{frame}
+
+\subsection{Examples}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{There is no magic in ML}
+  Behind the scenes, almost everything can be understood in terms of probability
+  and geometry.
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/perceptron}
+    \caption{An algorithm that learns to classify between dogs and cats is
+      actually just learning where to put a line in the size $\times$
+      domestication plane. \label{fig:perceptron} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing: Gaussian Mixture Model}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.7\textwidth]{figures/gmm}
+   \caption{Example of a model that allows us to comparess lots of datapoints
+     down to just a few representatives. \label{fig:gmm} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing: Information Retrieval}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/topics}
+    \caption{This geometric view can inform many practical applications (like
+      information retrieval). label{fig:topics} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing: Traffic in Jakarta}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\paperwidth]{figures/jakarta_traffic}
+    \caption{Automatically parsing traffic camera images can help with traffic
+      management. \citep{caldeira2018improving} \label{fig:jakarta} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing: Conservation through Land Use Maps}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figures/landcover}
+    \caption{Automatically generated land use maps let conservation
+      organizations manage ecosystems. \label{fig:landcover} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{There is no magic in ML}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/galaxy}
+    \caption{An example of regression, where we try to predict one value based
+      on a bunch of related features. \label{fig:astronomy} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Movie Recommendations}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/netflix_abstraction}
+    \caption{Some of the most common applications of machine learning are
+      invisible.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Movie Recommendations}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/netflix_regression}
+    \caption{Machine learning guides our decisions about which movies to watch.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Lead Inspection}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/lead_inspection}
+    \caption{Predictions about what homes will have lead can help guide
+      inspections \citep{potash2015predictive}. \label{fig:potash_predictive} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Agricultural Disease Detection}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/cassava}
+    \caption{A leaf classification system can help agricultural extension
+      workers decide which areas need which treatments. \label{fig:cassava} }
+  \end{figure}
+
+\end{frame}
+
+\section{Humanitarian ML Challenges}
+\label{sec:label}
+
+\begin{frame}
+  \frametitle{Challenges}
+  I've shown you a few of the success stories... but in practice many things
+  remain challenges, especially in humanitarian applications.
+  \begin{itemize}
+  \item Data Collection
+  \item Heterogeneity
+  \item Incompleteness
+  \end{itemize} 
+  These challenges present interesting areas for research.
+\end{frame}
+
+\subsection{Data Collection}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Training Examples}
+  \begin{itemize}
+  \item Most successful systems have automatically generated labels
+  \item These can be hard (or expensive) to acquire in humanitarian applications
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Training Examples}
+  \begin{itemize}
+  \item Most successful systems have automatically generated labels
+  \item These can be hard (or expensive) to acquire in humanitarian applications
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/netflix_abstraction}
+    \caption{Netflix obtains labels whenever you rate a movie. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Training Examples}
+  \begin{itemize}
+  \item Most successful systems have automatically generated labels
+  \item These can be hard (or expensive) to acquire in humanitarian applications
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/flyinglabs.png}
+    \caption{Google learns from which search result you click
+      on. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Issues: Not enough labels}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/segmentation_labels}
+    \caption{It's often much easier to obtain unlabeled data, compared to
+      labeled data. \label{fig:label} }
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Issues: Lack of representation}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/unrepresentative}
+  \caption{If the model is not given representative labels, it will fail to
+    perform well. \label{fig:label} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Issues}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/labeling}
+  \caption{In the real-world, labels may be partial or noisy, and models need to
+    learn to be robust to (and ideally, continue to learn from) this.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions: Smarter labeling}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/grabcut}
+  \caption{There is work on building better interfaces for labeling data, for
+    use in downstream algorithms. \label{fig:label} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions: Active Learning}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/active_learning}
+    \caption{Rather than labeling datapoints at random, you could find a smart
+      way of sorting through them. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions: Leverage Existing Infrastructure}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/hotosm}
+    \caption{It is foolish to attempt to fully automate systems with strong
+      existing volunteer infrastructure. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\subsection{Heterogeneity}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Heterogeneity}
+  \begin{itemize}
+  \item Even in big data scenarios, the number of relevant points might be small
+  \item Models developed for one time / environment often fail to generalize
+  \end{itemize}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.7\textwidth]{figures/netflix_abstraction}
+   \caption{The number of people relevant to your movie prediction is much
+     smaller than the original dataset. \label{fig:label} }
+ \end{figure}
+ 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Manifestations: Cell types}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/heterogeneity}
+    \caption{The same tissue, with the same staining procedure, can yield very
+      different results. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heterogeneity: INRIA Aerial Images}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/inria}
+    \caption{Entire competitions have been constructed around the problem of
+      improving generalization. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heterogeneity: OpenAerialMaps}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/openaerialmaps}
+    \caption{Even these competitions are a far cry from what we encounter in the
+      real world.
+      \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions: Metalearning}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/metalearning}
+    \caption{Metalearning models are designed to quickly adapt to new
+      datasets. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solutions: Hierarchical Models}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/indian_buffet}
+    \caption{There are models that learn to appropriately share information
+      across related examples. \label{fig:label} }
+\end{figure}
+\end{frame}
+
+\subsection{Incompleteness}
+\label{subsec:label}
+
+\begin{frame}
+  \frametitle{Problem}
+  \begin{itemize}
+  \item It's impossible to capture all the nuances of a problem into a single
+    objective function
+    \begin{itemize}
+    \item Especially in humanitarian applications
+    \end{itemize}
+  \item We need to have useful ways to query how our models behave
+  \item We need to protect against unintended consequences
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Models aren't perfect}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{figures/cemetaries_cars}
+    \caption{One of our models can't tell the difference between cemetaries and
+      parking lots.\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Some examples of things that are hard to encode, from
+  \citep{doshi2017towards},
+  \begin{itemize}
+  \item Scientific understanding
+  \item System safety
+  \item Mismatched objectives (e.g., predict engine failures $\neq$ build better
+    car)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+  Some examples of things that are hard to encode, from
+  \citep{doshi2017towards},
+  \begin{itemize}
+  \item Scientific understanding
+  \item System safety
+  \item Mismatched objectives (e.g., predict engine failures vs. build better
+    car)
+  \item Crisis response: Automatically generated annotations should be rapidly
+    generated, not overwhelming to validate, usable by people at emergency site,
+    and relevant to crisis.}
+  \end{itemize}
+\end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Solutions: Characterize perturbations}
+%% \begin{figure}[ht]
+%%   \centering
+%%   \includegraphics[width=0.7\textwidth]{figures/influence}
+%%   \caption{\citep{koh2017understanding} show how to describe ways changes in the
+%%     training data affect downstream model outputs. \label{fig:label} }
+%% \end{figure}
+%% \end{frame}
+
+\begin{frame}
+  \frametitle{Interpretability: Define concepts}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/concepts}
+    \caption{\citep{kim2017interpretability} studied how to query the importance
+      of user-defined concepts on model decisions (is ``stripedness'' important
+      for classifying ``zebra'')?}
+  \end{figure}
+\end{frame}
+
+\section{Contextual Challenges}
+\label{sec:label}
+
+\begin{frame}
+  \frametitle{Packaged Interventions}
+  \begin{itemize}
+  \item We like to think that technology alone will improve the world
+  \item It's too easy to overlook the importance of context and intent
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/vaccine}
+    \caption{The classic example of a packaged intervention. \label{fig:label}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Packaged Interventions}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.35\textwidth]{figures/one_laptop}
+  \caption{It's much easier to give children laptops than it is to improve
+    ensure teachers show up to class, are properly trained, ... \label{fig:label} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Packaged Interventions}
+  \begin{itemize}
+  \item In reality, solutions are very context dependent.
+  \item This complicates the usual story of technology and scalability
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/fisherman}
+    \caption{Mobile phones were much more helpful for fisherman in Kerala than
+      those in Uganda, due to the way markets were set up. \label{fig:label} }
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Theory of Amplification \citep{toyama2015geek}}
+  \begin{itemize}
+  \item The effects of technology tend to be multiplicative, not additive
+  \item Organizations with strong existing infrastructure benefit the most
+  \item Technology alone does not change intent
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Traffic in Jakarta}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\paperwidth]{figures/jakarta_traffic}
+    \caption{This is either a window into potential improvements of traffic
+      infrastructure or a glorified traffic ticket system, depending on
+      organizational intent (I'm sure it's the former in this case).
+       \citep{caldeira2018improving} \label{fig:jakarta} }
+  \end{figure}
+\end{frame}
+
+\section{The Road Ahead}
+\label{sec:label}
+
+\begin{frame}
+  \frametitle{Amplifying Social Efforts}
+  \begin{itemize}
+  \item Augmentation and amplification are dual concepts
+  \item Humanitarian ML efforts should
+    \begin{itemize}
+    \item Complement existing social efforts
+    \item Focus on context, not just scale
+    \item Focus on augmentation, not pure cognition
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{As We May Think}
+\begin{itemize}
+\item Let's take the long view, and keep things in perspective
+\item I've brought up limitations of machine learning because that's the only
+  way to make progress
+\end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/as_we_may_think}
+  \caption{A reprint of the article \citep{bush1945we}, one of the first to
+    imagine the possibilities of augmentation using computers. \label{fig:label}
+  }
+\end{figure}
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Thank you!}
+  \begin{itemize}
+  \item Please ask questions!
+  \item Feel free to reach out: sankaran.kris@gmail.com
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \bibliographystyle{plain}
+  \bibliography{refs}
+\end{frame}
+
+\end{document}
