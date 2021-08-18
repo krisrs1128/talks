@@ -120,9 +120,9 @@
   \end{align*}
   where the columns $\beta_{k}$ of $B \in \simplex^{D}$ lie in the $D$
   dimensional simplex and are themselves drawn independently from,
-  \begin{align}
+  \begin{align*}
   \beta_{k} \sim \Dir\left(\lambda_{\beta} 1_{D}\right).
-  \end{align}
+\end{align*}
   We will vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix
   $\Gamma$.
 \end{frame}
@@ -139,35 +139,189 @@ estimated parameters have the following interpretation,
 
 \begin{frame}
   \frametitle{Alignment as a Graph}
-
-  We view an alignment as a graph across the model ensemble.
+  We view an alignment as a graph across the ensemble. Index models by $m$ and
+  topics by $k$. Then,
 
   \begin{itemize}
-    $\{\beta^m_{k}, \gamma^m_{ik}\}$
+    \item Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k},
+    \gamma^m_{ik}\}$.
+    \item Edges $E$ are placed between topics from neighboring models ($K$ vs.
+    $K + 1$ topics)
+    \item Weights $W$ encode the similarity between topics.
   \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Notation}
+  This graph-based view provides a convenient notation,
+  \begin{itemize}
+  \item $m\left(v\right)$ is the model for node $v$
+  \item $k\left(v\right)$ is the topic for node $v$
+  \item $\Gamma\left(v\right) := \left(\gamma_{i
+  v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
+  mixed memberships for topic $v$
+  \item $\beta\left(v\right) := \beta_{k}^m \in \simplex^{D}$ is the
+  corresponding topic distribution
+  \item $e = \left(v, v'\right)$ is an edge linking topics $v$ and $v'$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{$W$ via the product method}
+How should we estimate the weights? One idea is to use
+\begin{align*}
+w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
+\end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{$W$ via the transport method}
+  Let $V_p$ and $V_q$ be two subsets of topics within the graph.
+  \begin{itemize}
+    \item Let the total ``mass'' of $V_p$ be $p =
+    \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$. Define $q$ similarly.
+    \item Define the transport cost $C\left(v, v^\prime\right) :=
+    JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the
+    Jensen-Shannon divergence between the pair of topic distributions.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{$W$ via the transport method}
+The weights $W$ can than be estimated by solving the optimal transport problem,
+\begin{align*}
+&\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right> \\
+\mathcal{U}\left(p, q\right) := &\{W\in \reals^{\absarg{p} \times \absarg{q}}_{+} : W 1_{\absarg{q}} = p \text{ and } W^{T} 1_{\absarg{p}^\prime} = q\}.
+\end{align*}
 \end{frame}
 
 \begin{frame}
   \frametitle{Summaries}
+  \begin{itemize}
+    \item Representing the models by an alignment suggests a few summary measures
+    \item These summaries help measure topic quality
+    \item They can also be used to diagnose model mis-specification
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Key Topics}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Coherence}
+  For each $v$, identify the incoming edge with the highest normalized weight,
+  \begin{align*}
+    e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+  \end{align*}
+  \begin{itemize}
+    \item Any node that is a source node for one such edge is called a key topic
+    \item This filters away nodes that don't have definitive descendants
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Refinement}
+  Suppose there are actually $K_0$ topics in the data. If we fit a model with
+  $K$ topics, then
+  \begin{itemize}
+    \item $K < K_0$: True topics are merged together into ``compromise'' topics
+    \item $K > K_0$: True topics are arbitrarily split
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Refinement}
+  A consequence is that the parent specificity differs between these
+  regimes,
+  \begin{itemize}
+    \item $K < K_0$: Each topic receives most mass from a unique parent,
+    corresponding to a true or ``compromise'' topic
+    \item $K > K_0$: Each topic receives substantial mass from several parents,
+    each corresponding to an arbitrary split of a true topic
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Coherence}
+  The coherence of a topic is defined as its average connectedness to other
+  topics along the same branch,
+  \begin{align*}
+    c(v) = \frac{1}{|M'|} \sum_{m' \in M'} \sum_{v' \in V_{m'}} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+  \end{align*}
+  \begin{itemize}
+    \item Topics that are transient (appearing at one $K$ and disappearing at
+    another) have low coherence scores
+    \item Topics that are consistently recovered across choices of $K$ have high
+    coherence
+  \end{itemize}
+
 \end{frame}
 
 \subsection{Simulation}
+\begin{frame}
+  \frametitle{True LDA Model}
+  A sanity check is compute the alignment of data that are in fact generated by an
+  LDA model (true $K = 5$).
+  \begin{itemize}
+  \item $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
+  \end{itemize}
+\end{frame}
 
 \begin{frame}
+  \frametitle{Summaries}
+  Each of the summary measures suggest that the true $K$ is 5.
+\end{frame}
+
+\begin{frame}
+  \frametitle{LDA with background variation}
+  What happens when the LDA model is mis-specified? Consider the following
+  generative mechanism,
+  \begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(x_{i} ; N_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}
+where $\*B$ stacks the $\beta_k$ rowwise.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Result}
+  The alignment structure is sensitive to changes in $\alpha$ and fragments when
+  LDA structure is not present.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summaries}
+  This structure is consistent across simulation runs, and the summary measures
+  quantify the deterioration of topics.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Strain switching}
+  Our final simulation mimics the strain switching problem.
+  \begin{itemize}
+    \item Small subsets of species switch between two otherwise similar topics
+    \item Multiple resolutions are required to detect the difference
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Mechanism}
+We first construct a set of ``perturbed'' topics. Then, for each sample $i$, we draw
+\begin{align*}
+\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
+\end{align*}
+stack the results into a $K$ column matrix $B^{i}$, and then draw,
+\begin{align}
+x_{i} &\sim \Mult\left(n_{i}, B^{i}\gamma_{i}\right)
+\end{align}
+as in standard LDA.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results}
+  \begin{itemize}
+    \item At smaller $K$, we recognize the main community structure, but don't see strain switching
+    \item At larger $K$, we are able to recognize instances of switching
+  \end{itemize}
 \end{frame}
 
 \subsection{Data Analysis}
