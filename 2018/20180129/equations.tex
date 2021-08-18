@@ -1,0 +1,173 @@
+\documentclass{article}
+\usepackage{natbib}
+\usepackage{graphicx}
+\input{preamble.tex}
+
+\title{}
+\author{Kris Sankaran}
+
+\begin{document}
+
+These are just some formulas I've been using for the google slides, via latexit.
+
+$\textcolor[HTML]{6960b6}{p\left(z\vert x\right) = }\frac{\textcolor[HTML]{6082b6}{p_{\theta}\left(x \vert z\right)}\textcolor[HTML]{60b694}{p\left(z\right)}}{\int \textcolor[HTML]{6082b6}{p_{\theta}\left(x \vert z\right)} \textcolor[HTML]{60b694}{p\left(z\right)}}$
+
+
+\begin{align*}
+  \textcolor[HTML]{b66082}{q^{\ast}\left(z\right)} &= \arg\min_{q \in \mathcal{Q}} D_{KL}\left(q\left(z\right), \textcolor[HTML]{6960b6}{p\left(z \vert x\right)}\right)
+\end{align*}
+
+\begin{align*}
+   \textcolor[HTML]{b66082}{q^{\ast}\left(z\right)} \\
+   \textcolor[HTML]{6960b6}{p\left(z \vert x\right)}
+\end{align*}
+
+\begin{align*}
+  &\textcolor[HTML]{b66082}{\prod_{i = 1}^{n} q_{i}\left(z_{i}\right)} \\
+  &\textcolor[HTML]{b66082}{\prod_{i = 1}^{n_{G}} q_{g}\left(z_{G\left(i\right)}\right)} \\
+  &\textcolor[HTML]{b66082}{q\left(z_{\text{global}}\right)\prod_{i = 1}^{n}q_{i}\left(z_{i}\right)}
+\end{align*}
+
+\begin{align*}
+  \textcolor[HTML]{b66082}{q_{i}^{\ast}\left(z_{i}\right)} &\propto \exp{\Esubarg{\textcolor[HTML]{b66082}{q_{-i}\left(z_{-i}\right)}}{\log \textcolor[HTML]{6960b6}{p\left(z_{i} \vert x, z_{-i}\right)}}}
+\end{align*}
+
+\begin{align*}
+  x_{1} x_2 \dots x_n \\
+  \textcolor[HTML]{b66082}{q_{1}\left(z_{1} \vert x_{1}\right)}  \textcolor[HTML]{b66082}{q_{2}\left(z_{2} \vert x_{2}\right)} \textcolor[HTML]{b66082}{q_{n}\left(z_{n} \vert x_{n}\right)} \\
+  z_{1} z_2 \dots z_n \\
+\end{align*}
+
+\begin{align*}
+  &D_{KL}\left(q\left(z\right) \vert \vert p\left(z \vert x\right)\right) \geq 0 \\
+  \iff &\Esubarg{q\left(z\right)}{\log \frac{q\left(z\right)}{p\left(z \vert x\right)}} \geq 0 \\
+  \iff &\Esubarg{q\left(z\right)}{\log \frac{q\left(z\right)}{p\left(x, z\right)}} + \log p\left(x\right) \geq 0 \\
+  \iff &\log p\left(x\right) \geq \Esubarg{q}{\log p\left(x, z\right)} + H\left(q\right) \\
+  \iff &\log p\left(x\right) \geq \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left(q\left(z\right) \vert \vert p\left(z\right)\right)
+\end{align*}
+
+\begin{align*}
+  \mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &= \Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\colarg{536878}{\log p\left(x, z\right)}} + H\left(\textcolor[HTML]{b66082}{q}\right) \\
+  &=\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\colarg{536878}{\log p\left(x \vert z\right)}} - D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)
+\end{align*}
+
+\begin{align*}
+  \mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &= \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\log p\left(x, z\right)}} + \textcolor[HTML]{687853}{H\left(\textcolor[HTML]{b66082}{q}\right)} \\
+&=\textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\log p\left(x \vert z\right)}} - \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)}
+\end{align*}
+
+\begin{align*}
+\mathcal{L}\left(\textcolor[HTML]{b66082}{q}\right) &=\textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q\left(z\right)}}{\log p\left(x \vert z\right)}} - \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q\left(z\right)} \vert\vert p\left(z\right) \right)}
+\end{align*}
+
+\begin{align*}
+   \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi}, \colarg{536878}{\theta}\right) &=  \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{\log p_{\theta}\left(x \vert z\right)}} -  \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)}
+\end{align*}
+
+\begin{align*}
+  \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi}, \theta\right) &=  \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{p_{\theta}\left(x \vert z\right)}} -  \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)} \\
+  &\approx 
+\end{align*}
+
+\begin{align*}
+  \nabla \mathcal{L}\left(\textcolor[HTML]{b66082}{\varphi}, \theta\right) &= \nabla \textcolor[HTML]{536878}{\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}}{p_{\theta}\left(x \vert z\right)}} - \nabla \textcolor[HTML]{687853}{D_{KL}\left(\textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \vert\vert p\left(z\right) \right)}
+\end{align*}
+
+\begin{align*}
+  \textcolor[HTML]{536878}{x \xrightarrow{\theta} z} \\
+  \textcolor[HTML]{b66082}{z \xrightarrow{\varphi} x}
+  \textcolor[HTML]{b66082}{\varphi} \\
+  \textcolor[HTML]{536878}{\theta}
+\end{align*}
+
+\begin{align*}
+  f\left(z\right) &= \colarg{536878}{\log p_{\theta}\left(x \vert z\right)}
+\end{align*}
+
+\begin{align*}
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t + 1}} \\
+    \colarg{536878}{\theta_{t + 1}}
+  \end{pmatrix} \leftarrow
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t}} \\
+    \colarg{536878}{\theta_{t}} 
+  \end{pmatrix} +
+  \eta
+  \left.\begin{pmatrix}
+    \colarg{b66082}{\nabla_{\varphi}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta} \right) \\
+    \colarg{536878}{\nabla_{\theta}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta}\right) 
+  \end{pmatrix}\right\vert_{\colarg{b66082}{\varphi} = \colarg{b66082}{\varphi_{t}}, \colarg{536878}{\theta} = \colarg{536878}{\theta_{t}}}
+\end{align*}
+
+\begin{align*}
+ \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{f\left(z\right)}
+\end{align*}
+
+\begin{align*}
+  f\left(z\right) &= \textcolor[HTML]{536878}{p_{\theta}\left(x \vert z\right)}
+\end{align*}
+
+\begin{align*}
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &= \int \textcolor[HTML]{536878}{f\left(z\right)} \textcolor[HTML]{b66082}{\nabla_{\varphi} q_{\varphi}\left(z \vert x\right)} dz \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &= \int \textcolor[HTML]{536878}{f\left(z\right)} \textcolor[HTML]{b66082}{\nabla_{\varphi} \log q_{\varphi}\left(z \vert x\right) q_{\varphi}\left(z \vert x\right)} dz \\
+ \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\approx \frac{1}{N}\sum_{z \sim \textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)}} \textcolor[HTML]{536878}{f\left(z\right)} \textcolor[HTML]{b66082}{\nabla_{\varphi} \log q_{\varphi}\left(z \vert x\right)}
+\end{align*}
+
+\begin{align*}
+  z \sim \textcolor[HTML]{b66082}{q_{\varphi}\left(z \vert x\right)} \implies z \overset{D}{=} &g_{\colarg{b66082}{\varphi}}\left(\textcolor[HTML]{d57630}{\eps}, x\right) \\
+  &\textcolor[HTML]{d57630}{\eps} \sim \textcolor[HTML]{d57630}{p\left(\eps\right)}
+\end{align*}
+
+\begin{align*}
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \colarg{b66082}{\nabla_{\varphi}}\Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{536878}{f}\left(\colarg{636878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}, x\right)\right)} \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\overset{D}{=} \Esubarg{\colarg{d57630}{p\left(\eps\right)}}{\colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}, x\right)\right)} \\
+  \textcolor[HTML]{b66082}{\nabla_{\varphi}}\Esubarg{\textcolor[HTML]{b66082}{q_{\varphi}\left(z\vert x\right)}}{\textcolor[HTML]{536878}{f\left(z\right)}} &\approx \frac{1}{N} \sum_{\colarg{d57630}{\eps \sim p\left(\eps\right)}} \colarg{b66082}{\nabla_{\varphi}} \colarg{536878}{f}\left(\colarg{536878}{g}_{\colarg{b66082}{\varphi}}\left(\colarg{d57630}{\eps}, x\right)\right) \\
+\end{align*}
+
+\begin{align*}
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t + 1}} \\
+    \colarg{536878}{\theta_{t + 1}}
+  \end{pmatrix} \leftarrow
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t}} \\
+    \colarg{536878}{\theta_{t}} 
+  \end{pmatrix} +
+  \eta
+  \left.\begin{pmatrix}
+    \widehat{\colarg{b66082}{\nabla_{\varphi}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta} \right)}\left[X^{M}\right] \\
+    \widehat{\colarg{536878}{\nabla_{\theta}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta}\right)}\left[X^{M}\right] 
+  \end{pmatrix}\right\vert_{\colarg{b66082}{\varphi} = \colarg{b66082}{\varphi_{t}}, \colarg{536878}{\theta} = \colarg{536878}{\theta_{t}}}
+\end{align*}
+
+\begin{align*}
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t + 1}} \\
+    \colarg{536878}{\theta_{t + 1}}
+  \end{pmatrix} \leftarrow
+  \begin{pmatrix}
+    \colarg{b66082}{\varphi_{t}} \\
+    \colarg{536878}{\theta_{t}} 
+  \end{pmatrix} +
+  \eta
+  \left.\begin{pmatrix}
+    \widehat{\colarg{b66082}{\nabla_{\varphi}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta} \right)}\left[X^{M}, \colarg{d57630}{\eps}\right] \\
+    \widehat{\colarg{536878}{\nabla_{\theta}} \mathcal{L}\left(\colarg{b66082}{\varphi}, \colarg{536878}{\theta}\right)}\left[X^{M}, \colarg{d57630}{\eps}\right] 
+  \end{pmatrix}\right\vert_{\colarg{b66082}{\varphi} = \colarg{b66082}{\varphi_{t}}, \colarg{536878}{\theta} = \colarg{536878}{\theta_{t}}}
+\end{align*}
+
+\begin{align*}
+  \frac{dx}{dt} &= \alpha x - \beta xy \\
+  \frac{dy}{dt} &= \delta xy - \gamma y
+\end{align*}
+
+\begin{align*}
+  \colarg{536878}{\frac{1}{\sigma^{2}_{\theta}\left(z\right)}\left(x - \mu_{\theta}\left(z\right)\right)^2}\colarg{b66082}{\left(z - \mu_{\varphi}\left(x\right)\right)}
+\end{align*}
+
+\begin{align*}
+  \colarg{536878}{\frac{1}{\sigma^2_{\theta}\left(z\right)}}\left(\colarg{b66082}{\mu_{\varphi}\left(x\right)} + \colarg{b66082}{\sigma_{\varphi}\left(x\right)}\colarg{d57630}{\eps} - \colarg{536878}{\mu_{\theta}\left(z\right)}\right)
+\end{align*}
+
+\end{document}

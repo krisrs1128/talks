@@ -1,0 +1,140 @@
+\documentclass{beamer}
+\usetheme{Warsaw}
+\usepackage{natbib}
+\usepackage{graphicx}
+\input{preamble.tex}
+\setbeamersize{text margin left=5pt,text margin right=5pt}
+
+\setbeamerfont{institute}{size=\fontsize{7pt}{8pt}}
+\setbeamerfont{date}{size=\fontsize{0pt}{0pt}}
+
+\title{Text Modeling meets the Microbiome}
+\author{Kris Sankaran and Susan P. Holmes}
+\institute{Department of Statistics, Stanford University}
+\date{}
+\begin{document}
+
+\begin{frame}
+  \maketitle
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{figure/title.jpg}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Microbiome vs. Text Analysis}
+  \begingroup
+  \fontsize{10pt}{10pt}\selectfont
+  {\ttfamily
+  \def\arraystretch{1.2}
+  \setlength{\tabcolsep}{0.2em} % for the horizontal padding
+  \begin{table}
+    \input{dtm.tex} 
+    \\[12pt]
+    \input{taxa.tex} 
+  \end{table}
+  }
+  \endgroup
+\end{frame}
+
+\begin{frame}
+  \frametitle{Microbiome vs. Text Analysis}
+ \begin{itemize}
+ \item Each field could benefit by recognizing tools developed in the other
+ \item Text analysis methods have been used successfully in the microbiome
+   literature before \citep{cai2017learning, shafiei2015biomico,
+     chen2012estimating, yan2017metatopics}
+ \item Similarities
+   \begin{itemize}
+   \item Form: High-dimensional, sparse, count matrices, with supplemental
+     information (``metadata'')
+   \item Goals: Information-dense data compression
+   \end{itemize}
+ \item Differences
+   \begin{itemize}
+   \item Form: Sentences vs. networks
+   \item Goals: Predictive black-boxes vs. scientific inference
+   \end{itemize}
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Microbiome vs. Text Analysis}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figure/text_vs_microbiome}
+  \caption{A translation, to help develop the analogy. \label{fig:label} }
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example: Latent Dirichlet Allocation (LDA)}
+\begin{itemize}
+  \item Introduced in \citep{blei2003latent}
+  \item Mixed-membership: Middle-ground between clustering (well-separated
+    types) and ordination (continuous gradient)
+  \item Predictive checks: Probabilistic formalism allows incorporation of
+    study-specific structure and model assessment
+\end{itemize}  
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.37\textwidth]{figure/simplex}
+  \caption{A toy representation of the mixed-membership idea.\label{fig:label} }
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example: LDA}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.9\textwidth]{figure/visualize_lda_theta_boxplot-F}\\
+   \caption{The positions of points in the data of
+     \citep{dethlefsen2011incomplete}. \label{fig:label} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example: LDA}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.86\textwidth]{figure/visualize_lda_beta-F}
+   \caption{An interpretation of the corners for the data of \citep{dethlefsen2011incomplete}. \label{fig:label} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Model Assessment}
+\begin{itemize}
+\item Simulation and assessment allows iterative improvement
+\item Poor fit can be used to identify interesting outliers
+\end{itemize}
+  \begin{figure}[!p]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figure/posterior_check_ts-F}
+    \caption{Posterior simulated trajectories for a subset of species, according
+      to two models.}
+  \end{figure} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+ \begin{itemize}
+ \item Distillation $>$ Addition: We have studied applications of common text
+   analysis algorithms to the study microbiome-specific questions
+ \item Reproducibility: All of our data and code is public
+   \url{https://github.com/krisrs1128/microbiome_plvm/}
+ \item Preprint: ``Latent Variable Modeling for the Microbiome''
+   \url{https://arxiv.org/abs/1706.04969}
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+\bibliographystyle{plainnat}
+\bibliography{refs.bib}
+\end{frame}
+
+\end{document}

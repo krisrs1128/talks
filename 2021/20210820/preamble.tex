@@ -1,0 +1,36 @@
+\usepackage{graphicx}
+\usepackage{libertine}
+\usepackage{natbib}
+\usepackage{bm}
+\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential
+\def\reals{\mathbb{R}} % Real number symbol
+\def\naturals{\mathbb{N}} % Natural number symbol
+\def\simplex{\mathcal{S}} % Simplex
+\def\indic#1{\mbb{I}\left({#1}\right)} % Indicator function
+\def\Gsn{\mathcal{N}}
+\def\Bern{\text{Bern}}
+\def\Dir{\text{Dir}}
+\def\Mult{\text{Mult}}
+%\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+\newcommand{\tabitem}{\textbullet~~}
+
+% shortcuts
+\def\*#1{\mathbf{#1}}
+\def\m#1{\boldsymbol{#1}}
+\def\absarg#1{\left|#1\right|}
+
+\usepackage{tabularx,ragged2e,booktabs,babel}
+\newcolumntype{s}{>{\RaggedRight\hsize=.5\hsize}X}
+\usepackage{csquotes}
+
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}

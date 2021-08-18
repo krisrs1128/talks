@@ -1,0 +1,468 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usepackage{natbib}
+\usepackage{sidecap}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{subfig}
+\usepackage{graphicx}
+\input{preamble.tex}
+
+\title{Visualization and Modeling of Switching Dynamics}
+\author{Kris Sankaran}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+\begin{itemize}
+\item \textbf{Problem Description} [5 min]: Can we automatically identify
+  different dynamic regimes among different bacteria?
+\item \textbf{Heuristic approaches} [10 min]: How would we approach this problem
+  using elementary techniques?
+\item \textbf{Visualization experiments} [10 min]: How can we leverage linking
+  and focus + context?
+\item \textbf{Review of relevant models} [30 min]: HMMs, HDP-HMMs, Switching
+  LDS, and Dynamic Tobit
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problem Description}
+  \begin{itemize}
+  \item Our goal is a succinct representation of which bacteria have which types
+    of responses to different perturbations
+    \begin{itemize}
+    \item If two types of perturbation lead to similar dynamics, we should be able
+      to identify that
+    \item Similarly, we should be able to see whether different groups of bacteria
+      have similar responses to a perturbation
+    \end{itemize} 
+  \item We will study the problem from several angles, though ultimately the
+    goal is to have a more unified approach (or at least guidelines)
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Heuristic Approaches} 
+  \begin{itemize}
+  \item Ignoring temporal structure, a straightforward approach is to simply
+    cluster bacteria
+  \item The centroids at different subtrees can give useful interpretations (what
+    taxonomic groups have which time series shapes?)
+  \item There are a few choices to make,
+    \begin{itemize}
+    \item How should we transform the data?
+    \item What distance should we use?
+    \end{itemize} 
+  \item Some simple variations can account for temporal structure,
+    \begin{itemize}
+      \item Use the ordering resulting from a hierarchical clustering / PCA as a
+        feature in a decision tree on bacteria $\times$ time space
+      \item Cluster moving windows extracted from the original sequences
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What transformation?}
+ \begin{figure}
+   \centering
+   \includegraphics{figure/heatmap-euclidean}
+   \caption{A first approach is to cluster the asinh transformed data using an
+     ordinary Euclidean distance. Here, each row represents an RSV, each column
+     is a timepoint for one of the three subjects (the three facet columns).
+     Rows are sorted according to their position on the hierarchical
+     clustering dendrogram, with neighboring subtrees split into separate
+     facets. \label{fig:heatmap-euclidean}}
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alternatively, cluster the innovations}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics{figure/heatmap-innovations}
+   \caption{To capture one aspect of temporal dynamics, we can cluster the
+     differenced data instead. However, if two series return to different
+     levels, and are steady after that point, we would not be able to
+     distinguish them. \label{fig:heatmap-innovations} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Jaccard distance}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics{figure/heatmap-jaccard}
+   \caption{To account for the presence of zeros, we could use a Jaccard
+     distance, though this loses information on all nonzero abundances.
+     \label{fig:heatmap-jaccard} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Combining distances}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics{figure/heatmap-mix}
+   \caption{As a compromise, we can cluster based on a mixture distance, $d_{ij}
+     = \lambda d^{(1)}_{ij} + \left(1 - \lambda\right)d^{(2)}_{ij}$, though the
+    effect of different choices of $\lambda$ is not entirely clear.
+     \label{fig:heatmap-jaccard} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreting centroids}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{figure/centroid-mix-conditional}
+  \caption{A reduced summary of each cluster is available by inspecting
+    centroids. \label{fig:centroid-mix-conditional} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpreting centroids (presence vs. absence)}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{figure/centroid-mix-presence}
+  \caption{We can also look at the fraction of RSVs that have nonzero abundance
+    at each timepoint, within each cluster. \label{fig:centroid-mix-presence} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Visualization Motivation}
+  \begin{itemize}
+  \item On their own, these visualizations don't provide much of a reduction of
+    the data
+  \item Comparing centroids corresponding to different subtrees is difficult
+    \begin{itemize}
+    \item Even relating centroids from subtrees obtained by cutting at two
+      heights is complicated
+    \item This visual navigation question can be addressed using linking and
+      focus + context
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Visualization Approach}
+  \begin{itemize}
+  \item \href{/Users/krissankaran/Desktop/100_days/july3/hclust.html}{visualization}
+  \item Link heatmap, tree, and centroids: A box is drawn across bacteria
+    descending from a node, and the centroid for those series is shown at the
+    top right
+  \item Each time series corresponds to an individual
+  \item The breakdown of the subtree into taxonomic families is shown in the
+    bottom right
+  \item Different clusters can be compared side by side
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hidden Markov Models (HMMs)}
+  \begin{itemize}
+  \item To incorporate dynamics more explicitly, we can use HMMs
+  \item We suppose that each timepoints belongs to one of $K$ states, that these
+    states evolve according to a Markov model, and that the observed data are IID
+    draws from an emission distribution associated with the given state
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{HMMs}
+\begin{itemize}
+\item Let $\left(y_{t}^{i}\right)$ be a collection of observation sequences
+  (each in $\reals^{p}$) and $\left(z_{t}^{i}\right)$ be the associated states
+  (in $\{1, \dots, K\}$)
+  \begin{itemize}
+  \item Note that multiple bacteria are all being drawn from the same K states
+  \end{itemize}
+\item The complete data likelihood is
+  \begin{align*}
+    p\left(\left(y_{t}^{i}\right), \left(z_{t}^{i}\right)\right) &= \prod_{i = 1}^{n} \left[\prod_{t = 1}^{T} p\left(y_{t}^{i} \vert z_{t}^{i}\right) p\left(z_{0}\right)\prod_{t = 2}^{T} p\left(z_{t} \vert z_{t - 1}\right)\right]
+  \end{align*}
+\item This can be fit using the EM algorithm, where we optimize the expectation
+  of the complete data log-likelihood over (1) the distribution on latent states
+  and (2) parameters of the Markov chain and emission distributions
+\end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Smoothed States}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[width = 0.37\textwidth]{figure/hmm_mode}
+  \caption{We plot the states with highest smoothing probability
+    $p\left(z_{t}^{i)} \vert \left(y_{t}^{i}\right)\right)$ for each cell.
+    \label{fig:hmm_mode} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimated transitions}
+  \begin{itemize}
+    \item The antibiotic effect is visible in the elevated probabilities of
+      transitioning between the two lowest states
+      \item Columns and rows are sorted from highest to lowest emission mean
+\begin{verbatim} 
+0.910 0.056 0.007 0.027 \\
+0.019 0.810 0.094 0.077 \\
+0.002 0.083 0.527 0.389 \\
+0.003 0.028 0.159 0.810 
+\end{verbatim}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sticky HMMs}
+\begin{itemize}
+\item While not necessarily relevant to our problem, it is useful to be aware
+of approaches that induce ``stickiness''
+\item We can place a prior on the transition probabilities that encourages
+  self-transitions
+  \item Formally, draw the $k^{th}$ row of the transition probability matrix as
+\begin{align*}
+  \pi_{k} \sim \Dir\left(\alpha_{1}, \dots, \alpha_{k} + \kappa, \dots, \alpha_{K}\right),
+\end{align*}
+where $\kappa$ controls the preference of a state to stay where it is
+\item The EM algorithm is longer tractable, but we can use (blocked) Gibbs
+  sampling -- sequentially sample all the $z_{t}^{i}$s, then the emission
+  parameters, then the transition probabilities
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation}
+  \begin{figure}
+    \centering
+    \subfloat[Truth]{{\includegraphics[width=5cm]{figure/sticky_hmm_truth} }}
+    \qquad
+    \subfloat[Observed]{{\includegraphics[width=5cm]{figure/sticky_hmm_observed} }}
+    \caption{Each row corresponds to a time series. Different colors correspond
+      to different true underlying states.}
+    \label{fig:sticky_hmm_kappas}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation}
+  \begin{figure}
+    \centering
+    \subfloat[$\kappa = 0$]{{\includegraphics[width=5cm]{figure/sticky_hmm_no_kappa} }}%
+    \qquad
+    \subfloat[$\kappa = 3$]{{\includegraphics[width=5cm]{figure/sticky_hmm_large_kappa} }}%
+    \caption{The effect of the $\kappa$ parameter on the sampled $z$'s, at a
+      single Gibbs sampling iteration.}
+    \label{fig:sticky_hmm_kappas}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Antibiotics data}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width = 0.37\textwidth]{figure/bayes_mode}
+    \caption{This is the analog of Figure \ref{fig:hmm_mode}, now for the sticky
+      HMM with $\kappa = 4$. \label{fig:hmm_mode} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimated transitions}
+  \begin{itemize}
+    \item Apparently, even though we have introduced a prior encouraging
+      self-transitions, the fact that we have a prior at all regularizes
+      probabilities away from 0 and 1.
+\begin{verbatim} 
+0.775 (0.004) 0.113 (0.005) 0.044 (0.002) 0.068 (0.004) \\
+0.160 (0.009) 0.414 (0.016) 0.170 (0.010) 0.256 (0.016) \\ 
+0.074 (0.008) 0.300 (0.013) 0.195 (0.029) 0.431 (0.012) \\
+0.025 (0.002) 0.083 (0.006) 0.083 (0.005) 0.809 (0.004) 
+\end{verbatim}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sampled $z$'s}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figure/gibbs_samples}
+  \caption{We can directly inspect samples from the $z$ sequences. Evidently,
+    the states with larger means mix reasonably well, but not the others --
+    this may be a consequence of the presence of many exact
+    zeros. \label{fig:gibbs_samples} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sticky HDP-HMMs}
+ \begin{itemize}
+ \item We might want to introduce many states, since there are many bacteria,
+   but we might only want to have a few states per bacteria
+ \item This can be accomplished heuristically using an HDP-HMM
+   \citep{fox2007sticky}, and more carefully using a beta-process sharing
+   framework \citep{fox2009sharing}
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation}
+  \begin{figure}
+    \centering
+    \subfloat[Sticky HMM]{{\includegraphics[width=5cm]{figure/sticky_hmm_large_kappa} }}%
+    \qquad
+    \subfloat[Sticky HDP-HMM]{{\includegraphics[width=5cm]{figure/sticky_hdp_hmm} }}%
+    \caption{The sticky HDP-HMM introduces more states, but doesn't necessarily
+      use them all in each sequence.}
+    \label{fig:sticky_hdp_hmm}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Antibiotics data}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width = 0.37\textwidth]{figure/hdp_antibiotics_mode}
+    \caption{This is the analog of Figure \ref{fig:hmm_mode}, now for the sticky
+      HDP-HMM. We find mixing behavior to be similar to the original sticky
+      HMM. \label{fig:hdp_mode} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Switching State Space Models (SSMs)}
+ \begin{itemize}
+ \item A limitation of HMMs is that they assume IID behavior within states
+ \item In the real data however, we observe differences in dynamics
+ \item Switching SSMs provide a framework for modeling this \citep{ghahramani2000variational}
+ \end{itemize} 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figure/ssm-motivation}
+  \caption{The difference in recovery between these two clusters reflects more
+    complex structure than simply switching
+    emissions. \label{fig:ssm-motivation}}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Model description}
+\begin{itemize}
+\item Underlying time series modes switch according to a Markov model
+\item Within a given mode, the observed sequence is drawn according to one of
+  the $K$ state space models
+  \begin{align*}
+    z_{t} \vert z_{t - 1} &\sim \Mult\left(1, \pi_{z_{t - 1}}\right) \\
+    x^{k}_{t} &= A_{k}x_{t - 1}^{k} + w^{k}_{t} \text{ for }k = 1, \dots, K\\
+    y_{t} &= C_{z_{t}}x_{t}^{k} + \eps_{t}^{z_{t}}
+    \end{align*}
+  where the noise is distributed according to
+  \begin{align*}
+    w^{k}_{t} &\sim \Gsn\left(0, Q_{k}\right) \\
+    \eps^{k}_{t} &\sim \Gsn\left(0, R_{k}\right)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Model Estimation}
+  \begin{itemize}
+  \item Heuristic, variational, MCMC, and particle filtering estimation
+    techniques have all been studied \citep{harrison1976bayesian, ghahramani2000variational, fruhwirth2001markov, doucet2001particle}
+  \item We will show results from a variational formulation
+  \item We alternately (1) run $K$ weighted EM algorithms for state space
+    estimation (Kalman filtering + M step), according to posterior probabilities
+    for state membership, and (2) run an HMM to infer the underlying state
+    membership
+  \item Annealing and good initialization is necessary to avoid bad local minima
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation example}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/ssm_truth}
+  \caption{The two halves of this sequence are drawn from two very different
+    dynamic regimes, one with low noise and high autocorrelation, and one with
+    high noise and low autocorrelation. The gray line represents the true
+    underlying $x^{z_{t}}$. \label{fig:ssm_truth} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation example}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figure/ssm_fit}
+  \caption{The two new lines represent two of the fitted $x_{t}^{k}$ sequences.
+    The color indicates the probability $\Parg{z_{t} = 1 \vert y_{t}}$,
+      according to the variational approximation. The first few points are
+      incorrectly placed in the high-noise regime.\label{fig:ssm_truth} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dynamic Tobit model}
+ \begin{itemize}
+ \item Our emission structure is not really plausible for a number of bacteria
+ \item We could try to work with the untransformed count data, and use a
+   discrete distribution for the emissions
+  \item Alternatively, the Dynamic Tobit model adds an extra layer of censoring
+    on top of the ordinary state space model,
+    \begin{align*}
+      x_{t} &= Ax_{t - 1} + w_{t} \\
+      \tilde{y}_{t} &= Cx_{t} + \eps_{t} \\
+      y_{t} &= \tilde{y}_{t} \indic{\tilde{y}_{t} \geq c},
+    \end{align*}
+    where both $x$ and $\tilde{y}$ are unobserved.
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figure/tobit-motivation}
+  \caption{Many series appear to have brief excursions above 0 \label{fig:label}}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dynamic Tobit model}
+  \begin{itemize}
+  \item Estimation of these models has been studied in \citep{chib1992bayes,
+    manrique1998simulation, andrieu2002particle}
+  \end{itemize}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.45\textwidth]{figure/glasby-nevison}
+   \caption{The essential idea of Dynamic Tobit models is well illustrated by
+     this figure from \citep{glasbey1997rainfall}, which studied precipitation
+     data. \label{fig:glasby-nevison}}
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+ \begin{itemize}
+ \item We surveyed a variety of methods for understanding changes in time series
+   dynamics
+\item Outside of \citep{digiulio2015temporal}, we have rarely provided answers to this
+  set of questions, though there are many tools available
+\item It would be valuable to consolidate, or provide guidelines for choosing
+  between, these different approaches
+
+ \end{itemize} 
+\end{frame} 
+\bibliographystyle{plainnat}
+\bibliography{refs.bib}
+ 
+\end{document}

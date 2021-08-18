@@ -1,0 +1,306 @@
+---
+title: "Parametric Modeling of the Microbiome"
+author: "Kris Sankaran"
+output:
+  beamer_presentation:
+    includes:
+      in_header: preamble.tex
+    slide_level: 2
+  ioslides_presentation: default
+bibliography: bibliography.bib
+---
+
+```{r, echo = FALSE}
+library("knitr")
+opts_chunk$set(echo = FALSE, message = FALSE, cache = TRUE, fig.height = 2.3,
+               fig.width = 4.5, warning = FALSE, fig.align = "center")
+read_chunk("slides.R")
+```
+
+## Outline ##
+* Short update on treelapse and intro (5 min).
+* Example applications of topic models (25 min),
+    - LDA
+    - Dynamic unigrams
+    - Dynamic Topic Models
+* Assessing inference in topic models (10 min).
+* A small experiment with (zero-inflated) gamma-poisson factor models (20 min).
+
+## `treelapse` update ##
+* Not the focus of this talk, but...
+* We've prepared more examples: [https://github.com/krisrs1128/treelapse](https://github.com/krisrs1128/treelapse)
+    - [General Overview](http://statweb.stanford.edu/~kriss1/treelapse_intro.html)
+    - Microbiome data ([antibiotics](http://statweb.stanford.edu/~kriss1/antibiotic.html), [pregnancy](http://statweb.stanford.edu/~kriss1/pregnancy.html))
+    - [Regression trees](statweb.stanford.edu/~kriss1/bikesharing.html)
+    - [Spatial data](http://statweb.stanford.edu/~kriss1/zillow.html)
+    - [Hierarchical clustering](http://statweb.stanford.edu/~kriss1/iris.html)
+    - [Combining](https://krisrs1128.shinyapps.io/treelapse_cc/) with Shiny
+- Any requests?
+
+## High-level Goal ##
+* We already have a large repertoire of methods, which we can assemble in
+  useful, creative ways,
+    - Data preparation: `dada2`, `phyloseq`, variance stabilization
+    - Visualization: `phyloseq`, dimensionality reduction
+    - Modeling: Any (sparse) prediction methods
+    - Inference: GLMs, bootstrap, FDR
+* But we rarely use probabilistic representations.
+
+## High-level Goal ##
+
+* Likely reason: It can be hard to articulate appropriate structure, and time
+  consuming to implement.
+* On the other hand, these approaches can be adapted to very complex settings.
+* Here, we'll describe practical experiments in expanding our repertoire of
+  methods we can apply when analyzing microbiome data.
+    - Won't cover how to estimate these models.
+    - Won't cover any technical / research developments related to them.
+
+## Topic Modeling ##
+* We can build an analog of the treelapse views using clustering or mixed
+  membership modeling.
+* We imagine a few "essential" trajectories (Bacteroidetes, Ruminococcus), and
+  all observed series belong to (or are mixtures of) those.
+* Analogy with topic modeling,
+    - Words $\iff$ Microbes
+    - Documents $\iff$ Samples
+    - Gives microbe data analysis access to wider literature.
+
+## Latent Dirichlet Allocation (LDA) ##
+ * A mixed-membership version of multinomial mixture modeling [@blei2003latent]
+ * For the $n^{th}$ word in document $d$,
+ \begin{align*}
+ w_{dn} \vert \beta, z_{dn} &\sim \Cat\left(\beta_{\cdot z_{dn}}\right) \\
+ z_{dn} \vert \theta_{d} &\sim \Cat\left(\theta_{d}\right) \\
+ \theta_{d} \vert \alpha &\sim \Dir\left(\alpha\right)
+ \end{align*}
+ * Mnemonics:
+     - $w_{dn} \in \{1, \dots, V\}$ is the $n^{th}$ word in document $d$
+     - $z_{dn} \in \{1, \dots, K\}$ is the topic associated with the
+       $n^{th}$ word in document $d$
+     - $\theta_{d} \in \mathcal{S}^{K - 1}$ are the topic mixture
+       proportions for document $d$
+     - $\beta_{\cdot k} \in \mathcal{S}^{V - 1}$ are the term mixture
+       proportions for topic $k$
+
+## Plate Diagram ##
+```{r, out.height = "115px", echo = FALSE, fig.cap = "LDA is a combination of local and global parameters"}
+knitr::include_graphics("figure/plate_latent_dirichlet_allocation.pdf")
+```
+ * $w$ are observed data
+ * $\alpha, \beta$ are fixed, global parameters
+ * $\theta, z$ are random, local parameters
+
+## Geometric Interpretation ##
+
+ * Each topic is a point on the simplex, and the $K$ topics determine a
+   topics simplex
+ * The multinomial mixture model gives each document a corner of the
+   topics simplex
+ * LDA estimates a smooth density over the topics simplex
+
+```{r, out.width = "120px", fig.asp = 1, echo = FALSE, fig.align = "center", fig.cap = "In LDA, samples are mixtures of topics on the simplex."}
+knitr::include_graphics("figure/geometric_interpretation.png")
+```
+
+## Antibiotics Application ##
+
+```{r setup}
+```
+
+```{r lda_data}
+```
+
+```{r lda_figures, fig.height = 4, fig.width = 4.5, messages = FALSE, fig.cap = "LDA readily picks up on the differences induced by antibiotic treatments."}
+```
+
+## Dynamic Unigrams ##
+* We can smooth the counts over time using a Dynamic Unigram Model
+  [@blei2006dynamic]
+* Here, there is only one "cluster," but the topic probabilities
+  evolve along the simplex,
+\begin{align*}
+\mu_{0} &\sim \Gsn\left(0, \sigma^{2}I_{V}\right) \\
+\mu_{t} \vert \mu_{t - 1} &\sim \Gsn\left(\mu_{t - 1}, \sigma^{2}I_{V}\right) \\
+w_{dn} &\sim \Cat\left(S\left(\mu_{t\left(d\right)}\right)\right)
+\end{align*}
+where
+\begin{align*}
+S\left(\mu\right) &:= \frac{\exp{\mu_{v}}}{\sum_{v^{\prime} = 1}^{V}\exp{\mu_{v^{\prime}}}}
+\end{align*}
+
+## Antibiotics Application ##
+
+```{r unigram_data, echo = FALSE}
+```
+```{r unigram_histograms, fig.height = 2.3, fig.width = 4.5, fig.cap = "During the antibiotic treatments, the unigram probabilities concentrate on a narrower set of species. We could inspect these estimates using treelapse."}
+```
+
+## Dynamic Topic Models ##
+
+* Combing LDA and the Dynamic Unigram Model leads to the Dynamic Topic
+  Model [@blei2006dynamic]
+* Here, each sample is a mixture of topics, and the topics and mixture
+  proportions evolve over time,
+\begin{align*}
+w_{dn} \vert \mu_{t}, z_{dn} &\sim \Cat\left(S\left(\mu_{z_{dn}t\left(d\right)}\right)\right) \\
+z_{dn} \vert \alpha_{t\left(d\right)} &\sim \Cat\left(S\left(\alpha_{t\left(d\right)}\right)\right) \\
+\mu_{kt} &\sim \Gsn\left(\mu_{k\left(t - 1\right)}, \sigma^{2}I_{V}\right) \\
+\alpha_{t} &\sim \Gsn\left(\alpha_{t - 1}, \delta^{2}I_{k}\right)
+\end{align*}
+* Trading off $\sigma$ and $\delta$ modulates between LDA and Dynamic Ungirams
+
+## Antibiotics Application ##
+
+```{r dtm_data, echo = FALSE}
+```
+```{r dtm_figures, fig.height = 2.7, fig.width = 4.5, fig.cap = "The DTM fits mixture proportions and cluster compositions that evolve over time."}
+```
+## Inference in Topic Models? ##
+
+* Even assuming that these topic models do approximate the truth, how
+  reliable are our estimates?
+* By construction, the variational approximation underestimates the variance of
+  the true posterior.
+    - How bad is it in practice?
+* Alternatives
+    - Gibbs sampling: Can be computationally intensive, but does sample from the
+      true posterior (eventually).
+    - Bootstrap: Still intensive, but can be easily parallelized, and is related
+      to the true posterior [@efron2012bayesian].
+
+## LDA Simulation ##
+
+ * Complexities
+     - High-dimensionality: Ideally we would report confidence sets, rather than intervals for each coordinates
+     - Label-switching: Cluster labels can switch between bootstrap replicates, so we
+       heuristically align the recovered $\beta_{k}$'s in the results below
+* Simulation Setup
+    - Two true clusters
+    - 100 samples across 10 terms
+    - One run with 20 words per document, another with 100 (we're only including figures for $N = 20$)
+
+```{r read-bootstrap-sim}
+```
+
+## Comparing $\beta_{v}$'s##
+
+```{r compare-beta-plot, fig.width = 6, fig.height = 3}
+```
+
+## Comparing $\theta_{i}$'s ##
+
+```{r compare-theta-plot}
+```
+
+# Other Topics #
+
+## Gamma-Poisson Factor Model ##
+
+* Just a small experiment, based on [@kucukelbir2015automatic]
+* In the spirit of Exponential Family PCA, we can write down a simple gamma-poisson factor model [@canny2004gap]
+* Consider $K$ factors $\beta_{\cdot k} \in \reals^{V}_{+}$ and $N$ sample scores $\theta_{i} \in \reals_{+}^{K}$,
+  and write a model
+\begin{align*}
+\theta_{ik} &\sim \Gamma\left(a, b\right) \\
+\beta_{jk} &\sim \Gamma\left(c, d\right) \\
+y_{ij} \vert \theta_{i}, \beta_{j\cdot} &\sim \Poi\left(\theta_{i}^{T}\beta_{j\cdot}\right)
+\end{align*}
+
+## Simulated Data ##
+
+```{r nmf-setup}
+```
+Here, $N = 100, P = 75, a = b = c = d = 1$
+
+```{r nmf-heatmap, fig.cap = "A simulated count matrix, with rows sorted according to the underlying scores and factors.", fig.height = 1.9}
+```
+
+## Overdispersion ##
+
+```{r nmf-overdispersion, fig.cap = "Overdispersion is clear when plotting against a poisson with the same mean."}
+```
+
+## PCA Results ##
+
+```{r nmf-pca, fig.cap = "Ordinary PCA does reasonably well capturing variation in the thetas."}
+```
+
+## Posterior $\theta_{i}$ (Gibbs) ##
+```{r theta-gibbs}
+```
+
+## Posterior $\theta_{i}$ (VB) ##
+
+```{r theta-vb}
+```
+
+## Posterior $\beta_{j}$ (Gibbs) ##
+
+```{r beta-gibbs}
+```
+
+## Posterior $\beta_{j}$ (VB) ##
+
+```{r beta-vb}
+```
+
+## Zero Inflation ##
+
+* What happens when we include zero inflation?
+* This is a more challenging problem, but how quickly does estimation break
+  down?
+* We can repeat the previous study under this regime.
+* We will assume the probability $p_{0}$ of sending an entry to 0 is known.
+
+## Simulated Data ##
+
+```{r nmf-zero-setup}
+```
+
+Here $N = 100, P = 75, a = b = c = d = 1, p_{0} = 0.8$.
+
+```{r nmf-zeros-heatmap, fig.height = 1.9, fig.cap = "Analogous counts matrix, with zero-inflation."}
+```
+
+## Overdispersion ##
+
+```{r zeros-overdispersion, fig.cap = "The spike at zero is a result of zero inflation."}
+```
+
+## PCA Results ##
+
+```{r nmf-zeros-pca, fig.cap = "Aagain, ordinary PCA does reasonably well, but we wonder if we can do better."}
+```
+
+## Posterior $\theta_{i}$ (Gibbs) ##
+```{r zero-theta-gibbs}
+```
+
+## 2osterior $\theta_{i}$ (1B) ##
+
+```{r zero-theta-vb}
+```
+
+## Posterior $\beta_{j}$ (Gibbs) ##
+
+```{r zero-beta-gibbs}
+```
+
+## Posterior $\beta_{j}$ (VB) ##
+
+```{r zero-beta-vb}
+```
+
+## Conclusion ##
+
+* We saw a few basic probabilistic models for count data, and how starting with
+  simple models, we can progressively introduce complexity (and sometimes
+  succeed in estimation).
+* Caution: There are some basic diagnostics I haven't analyzed, which would be
+  important for more serious analysis.
+* None of the methods described here are novel (barely even research worthy),
+  but I hope I've convinced everyone that they're worth keeping in mind in our
+  collaborative work.
+
+## References ##

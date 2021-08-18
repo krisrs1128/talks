@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jane Austen, Gut Microbes, and Exploratory Data Analysis</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full"></script>
+        <link href="https://fonts.googleapis.com/css?family=Hind" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Sofia" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Fascinate" rel="stylesheet">
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        <script src="slides.js"></script>
+        <script src="book.js"></script>
+        <script src="sentiment.js"></script>
+        <script src="document_term.js"></script>
+        <script src="sample_rsv.js"></script>
+        <script src="sketch_data.js"></script>
+        <script src="content.js"></script>
+        <link href='css/style.css' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+		    <div id="section_title"></div>
+        <section class="container">
+            <div id="content"></div>
+            <div id="vis"></div>
+        </section>
+        <script>
+         var elem = d3.select("#vis")
+           .append("svg")
+           .attrs({
+               "id": "elem",
+               "width": "2500px",
+               "height": "1500px",
+               "transform": "translate(100, 100)"
+           });
+
+         var counter = 0;
+         var slides = get_slides();
+
+         function order() {
+             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+             slides[counter]();
+             counter += 1;
+         }
+
+         order();
+
+        document.addEventListener('keydown', (event) => {
+             const keyName = event.key;
+             if (keyName === 'f') {
+                 order()
+             }
+         }, false);
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,177 @@
+\documentclass{beamer}
+\input{preamble}
+%Information to be included in the title page:
+\title{Multi-resolution Analysis of Count Data using Topic Alignment}
+\author{Kris Sankaran}
+\date{August 20, 2021}
+%\graphicspath{{figure}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+  \frametitle{Preface}
+
+  45 minutes: Topic Alignment
+  \begin{itemize}
+    \item How to turn this into a more widely-shareable talk?
+    \item Which types of audiences to have in mind?
+  \end{itemize}
+
+  15 minutes: Soil microbiome study
+  \begin{itemize}
+  \item Data analysis suggestions?
+  \end{itemize}
+\end{frame}
+
+\section{Topic Alignment}
+
+\begin{frame}
+  \frametitle{Scientific Problem}
+  \begin{itemize}
+  \item We are interested in what constitutes a healthy vaginal microbiome
+  \item We want to understand risk factors that can be determined by analyzing
+  \item To this end, a study has collected longitudinal microbiome data on X
+  women over Y - Z weeks using 16S sequencing
+  the microbiome
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Data Analysis Problem}
+\begin{itemize}
+  \item We can assume that the raw sequencing reads have been passed through a
+  pipeline that results in an $N$ samples by $D$ Amplicon Sequence Variant (ASV)
+  count matrix
+  \item We have a variety of characteristics about each mother, including
+  whether or not they had a preterm birth
+  \item The main sources of complexity are,
+  \begin{itemize}
+    \item Not all the known relevant bacterial species are known in advance
+    \item There might be interaction effects that lead to improved / worsened
+    outcomes
+    \item $D$ is large
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Standard Approaches}
+  \begin{itemize}
+    \item Multiple Testing: Return a list of species that are strongly
+    associated with preterm birth
+    \item Hierarchical Clustering: Return a tree describing groups of species
+    that tend to have similar abundance levels across samples
+    \item Principal Component Analysis: Return a projection that shows how
+    changes in species signature relates to variation in sample characteristics
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Why are these methods useful?}
+    These outputs are cognitive artifacts that support scientific reasoning.
+    Human working memory is limited, and these methods provide,
+    \begin{itemize}
+      \item A compressed representation that is easier to reason about
+      (Clustering and PCA)
+      \item Guidance of attention to details of interest (Multiple testing)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Tasks}
+  To solve problems like those that the VMRC cares about, it's necessary to
+  assemble subtle clues into coherent, high-level theories. This requires both,
+  \begin{itemize}
+    \item Critical evaluation: What assumptions are actually being made about
+    the data? It helps to have an explicit model.
+    \item Navigation: We have a range of both simple and complex models easily
+    available, but navigating the complexity-interpretability trade-offs between
+    them is difficult
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Relevant Literature}
+  \begin{itemize}
+    \item Cluster comparison:
+    \item Hierarchical Topic Models:
+    \item Factored Topic Models:
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Main Idea}
+  We will fit an ensemble of generative models, of varying levels of complexity,
+  and each of which can be critically evaluated. Then, we will build a compact
+  representation that streamlines navigation across them.
+  (Provide a figure)
+\end{frame}
+
+\subsection{Methodology}
+
+\begin{frame}
+  \frametitle{Topic Models}
+  On popular topic model is Latent Dirichlet Allocation (LDA), which supposes
+  that each $x_{i}$ is drawn independently according to,
+  \begin{align*}
+  x_i \vert \gamma_i &\sim \Mult\left(n_{i}, B\gamma_{i}\right) \\
+  \gamma_{i} &\sim \Dir\left(\lambda_{\gamma} 1_{K}\right)
+  \end{align*}
+  where the columns $\beta_{k}$ of $B \in \simplex^{D}$ lie in the $D$
+  dimensional simplex and are themselves drawn independently from,
+  \begin{align}
+  \beta_{k} \sim \Dir\left(\lambda_{\beta} 1_{D}\right).
+  \end{align}
+  We will vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix
+  $\Gamma$.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interpretation}
+Topic models are well-suited to dimensionality reduction of count data. The
+estimated parameters have the following interpretation,
+\begin{itemize}
+  \item $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
+  \item $B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alignment as a Graph}
+
+  We view an alignment as a graph across the model ensemble.
+
+  \begin{itemize}
+    $\{\beta^m_{k}, \gamma^m_{ik}\}$
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summaries}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Topics}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Coherence}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Refinement}
+\end{frame}
+
+\subsection{Simulation}
+
+\begin{frame}
+\end{frame}
+
+\subsection{Data Analysis}
+
+\section{Analyzing THOR (The Hitchhikers of the Rhizosphere)}
+
+\end{document}

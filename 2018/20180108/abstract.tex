@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{natbib}
+\usepackage{graphicx}
+\input{preamble.tex}
+
+\title{Discovery and Visualization of Latent Structure in the Microbiome}
+\author{Kris Sankaran}
+
+\begin{document}
+
+Human microbiomes -- the collections of bacteria living around and within the
+human body -- are complex ecological systems, and describing their structure and
+function in different contexts is important from both basic scientific and
+medical perspectives. Viewed through a statistical lens, many microbiome
+analysis goals can framed in terms of discovering and describing latent
+structure. For example, this structure might reflect sudden environmental shocks
+that affect certain subsets of species, or may illuminate gradual shifts in
+community composition. We will survey ideas from the data visualization and
+probabilistic modeling literatures that we have found useful in identifying and
+characterizing such structure in the microbiome. On the data visualization
+front, we will describe the focus-plus-context and linking principles, and
+introduce a new R package that uses these ideas to facilitate visualization of
+hierarchies of time series. Then, motivated by the fact that microbiome species
+abundance data often have effectively low-dimensional evolutionary, temporal,
+and count structure, we explore the application of basic probabilistic latent
+variable models, focusing on mixed-membership and matrix factorization
+techniques. We illustrate and compare both visualization and modeling techniques
+on a study of the effects of antibiotics on the human gut microbiome. Code and
+data for all experiments is available publicly online.
+
+\end{document}
