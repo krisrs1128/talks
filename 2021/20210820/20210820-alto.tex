@@ -4,7 +4,7 @@
 \title{Multi-resolution Analysis of Count Data using Topic Alignment}
 \author{Kris Sankaran}
 \date{August 20, 2021}
-%\graphicspath{{figure}}
+\graphicspath{{figure}}
 
 \begin{document}
 
@@ -32,8 +32,8 @@
   \begin{itemize}
   \item We are interested in what constitutes a healthy vaginal microbiome
   \item We want to understand risk factors that can be determined by analyzing
-  \item To this end, a study has collected longitudinal microbiome data on X
-  women over Y - Z weeks using 16S sequencing
+  \item To this end, a study has collected longitudinal microbiome data on 135
+  individuals over the course of pregnancy using 16S sequencing
   the microbiome
 \end{itemize}
 \end{frame}
@@ -105,7 +105,12 @@
   We will fit an ensemble of generative models, of varying levels of complexity,
   and each of which can be critically evaluated. Then, we will build a compact
   representation that streamlines navigation across them.
-  (Provide a figure)
+
+\begin{figure}
+    \centering
+    \subfloat[]{\includegraphics[width=0.35\textwidth]{transport-true-lda}}
+    \subfloat[]{\includegraphics[width=0.63\textwidth]{transport-true-lda-betas}}
+\end{figure}
 \end{frame}
 
 \subsection{Methodology}
@@ -135,13 +140,17 @@ estimated parameters have the following interpretation,
   \item $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
   \item $B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
 \end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{lda_overview}
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Alignment as a Graph}
   We view an alignment as a graph across the ensemble. Index models by $m$ and
   topics by $k$. Then,
-
   \begin{itemize}
     \item Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k},
     \gamma^m_{ik}\}$.
@@ -172,6 +181,9 @@ How should we estimate the weights? One idea is to use
 \begin{align*}
 w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 \end{align*}
+\begin{figure}
+\includegraphics[width=0.6\textwidth]{product_alignment}
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -184,6 +196,9 @@ w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
     JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the
     Jensen-Shannon divergence between the pair of topic distributions.
   \end{itemize}
+\begin{figure}
+\includegraphics[width=0.7\textwidth]{transport_alignment}
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -193,6 +208,9 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
 &\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right> \\
 \mathcal{U}\left(p, q\right) := &\{W\in \reals^{\absarg{p} \times \absarg{q}}_{+} : W 1_{\absarg{q}} = p \text{ and } W^{T} 1_{\absarg{p}^\prime} = q\}.
 \end{align*}
+\begin{figure}
+\includegraphics[width=0.7\textwidth]{transport_alignment}
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -262,11 +280,21 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
   \begin{itemize}
   \item $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
   \end{itemize}
+
+  \begin{figure}
+    \subfloat[]{\includegraphics[width=0.4\textwidth]{transport-true-lda}}
+    \subfloat[]{\includegraphics[width=0.4\textwidth]{product-true-lda}}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Summaries}
-  Each of the summary measures suggest that the true $K$ is 5.
+  The summary measures suggest that the true $K$ is 5.
+  \begin{figure}
+    \subfloat[]{\includegraphics[width=0.65\textwidth]{key_topics-lda}}
+    \hfil
+    \subfloat[]{\includegraphics[width=0.65\textwidth]{refinement_lda}}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -286,12 +314,42 @@ where $\*B$ stacks the $\beta_k$ rowwise.
   \frametitle{Result}
   The alignment structure is sensitive to changes in $\alpha$ and fragments when
   LDA structure is not present.
+
+\begin{figure}
+    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-1}}
+    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-2}}
+    \hfil
+    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-3}}
+    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-4}}
+\end{figure}
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Summaries}
   This structure is consistent across simulation runs, and the summary measures
   quantify the deterioration of topics.
+\begin{figure}
+    \includegraphics[width=\textwidth]{gradient_key_topics}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summaries}
+  This structure is consistent across simulation runs, and the summary measures
+  quantify the deterioration of topics.
+\begin{figure}
+    \includegraphics[width=\textwidth]{gradient_refinement_full}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Summaries}
+  This structure is consistent across simulation runs, and the summary measures
+  quantify the deterioration of topics.
+\begin{figure}
+    \includegraphics[width=\textwidth]{gradient_stability}
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -322,10 +380,63 @@ as in standard LDA.
     \item At smaller $K$, we recognize the main community structure, but don't see strain switching
     \item At larger $K$, we are able to recognize instances of switching
   \end{itemize}
+
+\begin{figure}
+  \subfloat[]{\includegraphics[width=0.35\textwidth]{equivalence_flow}}
+  \subfloat[]{\includegraphics[width=0.63\textwidth]{equivalence_betas}}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results}
+  \begin{itemize}
+    \item At smaller $K$, we recognize the main community structure, but don't see strain switching
+    \item At larger $K$, we are able to recognize instances of switching
+  \end{itemize}
+\begin{figure}
+  \includegraphics[width=\textwidth]{equivalence_similarity_hm}
+\end{figure}
 \end{frame}
 
 \subsection{Data Analysis}
+\begin{frame}
+  \frametitle{Known structures}
+  \begin{itemize}
+    \item Historically, the vaginal microbiome has been split into 5 separate
+    community state types (CSTs).
+    \begin{itemize}
+      \item Four are considered healthy, and are each dominated by a Lactobacillus strain
+      \item One dysbiotic CST is characterized by lack of a dominant Lactobacillus
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \begin{itemize}
+  \item We recover the 4 Lactobacillus Community State Types that have been
+  previously documented
+  \item Within the dysbiotic CST, we detect 2 consistently different community
+  structures
+  \end{itemize}
+\begin{figure}
+  \includegraphics[width=0.7\textwidth]{microbiome_coherence}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item We recover the 4 Lactobacillus Community State Types that have been
+  previously documented
+  \item Within the dysbiotic CST, we detect 2 consistently different community
+  structures
+  \end{itemize}
+\begin{figure}
+  \subfloat[]{\includegraphics[width=0.35\textwidth]{microbiome_flow}}
+  \subfloat[]{\includegraphics[width=0.63\textwidth]{microbiome_betas}}
+\end{figure}
+\end{frame}
 
 \section{Analyzing THOR (The Hitchhikers of the Rhizosphere)}
-
 \end{document}
