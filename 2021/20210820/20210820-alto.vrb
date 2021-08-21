@@ -1,0 +1,17 @@
+\frametitle{Software}
+    Topic alignment is implemented in the R package
+    \href{lasy.github.io/alto}{\texttt{alto}}.
+
+    \begin{lstlisting}
+    # simulate data and fit models
+    x = rmultinom(20, 5000, rep(0.1, 500))
+    lda_params = setNames(map(1:10, ~ list(k = .)), 1:10)
+    lda_models = run_lda_models(x, lda_params)
+
+    # perform alignment and plot
+    result = align_topics(lda_models)
+    plot(result)
+    \end{lstlisting}
+
+    All the simulations discussed today are vignettes in the package. (We will
+    create a binder link for people to try)

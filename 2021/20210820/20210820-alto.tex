@@ -1,104 +1,53 @@
-\documentclass{beamer}
+\documentclass[hyperref={colorlinks=true, linkcolor=violet, citecolor=SeaGreen}]{beamer}
 \input{preamble}
-%Information to be included in the title page:
-\title{Multi-resolution Analysis of Count Data using Topic Alignment}
+\title{Multiresolution Analysis of Count Data through Topic Alignment}
 \author{Kris Sankaran}
-\date{August 20, 2021}
+\date{August 20, 2021 \\ \small{Joint work with Laura Symul and Julia Fukuyama}}
 \graphicspath{{figure}}
 
 \begin{document}
-
 \frame{\titlepage}
 
 \begin{frame}
   \frametitle{Preface}
 
-  45 minutes: Topic Alignment
+  50 minutes: Topic Alignment
   \begin{itemize}
     \item How to turn this into a more widely-shareable talk?
     \item Which types of audiences to have in mind?
   \end{itemize}
 
-  15 minutes: Soil microbiome study
+  10 minutes: Soil microbiome study
   \begin{itemize}
   \item Data analysis suggestions?
   \end{itemize}
 \end{frame}
 
-\section{Topic Alignment}
+\begin{frame}
+  \frametitle{Topic modeling vs. hierarchical clustering}
+  \begin{tabularx}{.9\textwidth}{|l|X|X|X|r}
+  \hline
+  & Topic Modeling & Hierarchical Clustering \\ \hline
+  Multiresolution?    &   & X  \\ \hline
+  Generative?        & X   &   \\ \hline
+  Partial Membership? & X  &    \\ \hline
+  Reliable software? & X & X  \\ \hline
+  Useful for unclustered data? & X & X \\ \hline
+  \end{tabularx}
+\end{frame}
 
 \begin{frame}
-  \frametitle{Scientific Problem}
+  Having these properties would support,
   \begin{itemize}
-  \item We are interested in what constitutes a healthy vaginal microbiome
-  \item We want to understand risk factors that can be determined by analyzing
-  \item To this end, a study has collected longitudinal microbiome data on 135
-  individuals over the course of pregnancy using 16S sequencing
-  the microbiome
+  \item Navigation: Multiresolution methods help the analyst navigate
+  richness-interpretability trade-offs between views
+  \item Parsimony: Support for partial membership can limit the proliferation of
+  new topics
+  \item Critical evaluation: What assumptions are actually being made about
+  the data? It helps to have an explicit, generative model.
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Data Analysis Problem}
-\begin{itemize}
-  \item We can assume that the raw sequencing reads have been passed through a
-  pipeline that results in an $N$ samples by $D$ Amplicon Sequence Variant (ASV)
-  count matrix
-  \item We have a variety of characteristics about each mother, including
-  whether or not they had a preterm birth
-  \item The main sources of complexity are,
-  \begin{itemize}
-    \item Not all the known relevant bacterial species are known in advance
-    \item There might be interaction effects that lead to improved / worsened
-    outcomes
-    \item $D$ is large
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\begin{frame}
-  \frametitle{Standard Approaches}
-  \begin{itemize}
-    \item Multiple Testing: Return a list of species that are strongly
-    associated with preterm birth
-    \item Hierarchical Clustering: Return a tree describing groups of species
-    that tend to have similar abundance levels across samples
-    \item Principal Component Analysis: Return a projection that shows how
-    changes in species signature relates to variation in sample characteristics
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Why are these methods useful?}
-    These outputs are cognitive artifacts that support scientific reasoning.
-    Human working memory is limited, and these methods provide,
-    \begin{itemize}
-      \item A compressed representation that is easier to reason about
-      (Clustering and PCA)
-      \item Guidance of attention to details of interest (Multiple testing)
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Key Tasks}
-  To solve problems like those that the VMRC cares about, it's necessary to
-  assemble subtle clues into coherent, high-level theories. This requires both,
-  \begin{itemize}
-    \item Critical evaluation: What assumptions are actually being made about
-    the data? It helps to have an explicit model.
-    \item Navigation: We have a range of both simple and complex models easily
-    available, but navigating the complexity-interpretability trade-offs between
-    them is difficult
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Relevant Literature}
-  \begin{itemize}
-    \item Cluster comparison:
-    \item Hierarchical Topic Models:
-    \item Factored Topic Models:
-  \end{itemize}
-\end{frame}
 
 \begin{frame}
   \frametitle{Main Idea}
@@ -108,12 +57,12 @@
 
 \begin{figure}
     \centering
-    \subfloat[]{\includegraphics[width=0.35\textwidth]{transport-true-lda}}
-    \subfloat[]{\includegraphics[width=0.63\textwidth]{transport-true-lda-betas}}
+    \subfloat{\includegraphics[width=0.35\textwidth]{transport-true-lda}}
+    \subfloat{\includegraphics[width=0.63\textwidth]{transport-true-lda-betas}}
 \end{figure}
 \end{frame}
 
-\subsection{Methodology}
+\section{Methodology}
 
 \begin{frame}
   \frametitle{Topic Models}
@@ -229,10 +178,89 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
     e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
   \end{align*}
   \begin{itemize}
-    \item Any node that is a source node for one such edge is called a key topic
-    \item This filters away nodes that don't have definitive descendants
+    \item Iterate this process from large to small $l$ to construct a set of
+    distinct  paths along the alignment
+    \item We call the number of unique paths is called the number \emph{key topics}
   \end{itemize}
+
+\begin{figure}
+\includegraphics[width=0.4\textwidth]{branch_construction-1}
+\end{figure}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Key Topics}
+  For each $v$, identify the incoming edge with the highest normalized weight,
+  \begin{align*}
+    e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+  \end{align*}
+  \begin{itemize}
+    \item Iterate this process from large to small $l$ to construct a set of
+    distinct paths along the alignment
+    \item We call the number of unique paths is called the number \emph{key
+    topics}
+  \end{itemize}
+
+\begin{figure}
+\includegraphics[width=0.4\textwidth]{branch_construction-3}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Topics}
+  For each $v$, identify the incoming edge with the highest normalized weight,
+  \begin{align*}
+    e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+  \end{align*}
+  \begin{itemize}
+    \item Iterate this process from large to small $l$ to construct a set of
+    distinct paths along the alignment
+    \item We call the number of unique paths is called the number \emph{key
+    topics}
+  \end{itemize}
+
+\begin{figure}
+\includegraphics[width=0.4\textwidth]{branch_construction-2}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Topics}
+  For each $v$, identify the incoming edge with the highest normalized weight,
+  \begin{align*}
+    e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+  \end{align*}
+  \begin{itemize}
+    \item Iterate this process from large to small $l$ to construct a set of
+    distinct paths along the alignment
+    \item We call the number of unique paths is called the number \emph{key
+    topics}
+  \end{itemize}
+
+\begin{figure}
+\includegraphics[width=0.4\textwidth]{branch_construction-4}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Key Topics}
+  For each $v$, identify the incoming edge with the highest normalized weight,
+  \begin{align*}
+    e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+  \end{align*}
+  \begin{itemize}
+    \item Iterate this process from large to small $l$ to construct a set of
+    distinct paths along the alignment
+    \item We call the number of unique paths is called the number \emph{key
+    topics}
+  \end{itemize}
+
+\begin{figure}
+\includegraphics[width=0.4\textwidth]{branch_construction-5}
+\end{figure}
+\end{frame}
+
 
 \begin{frame}
   \frametitle{Refinement}
@@ -254,6 +282,12 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
     \item $K > K_0$: Each topic receives substantial mass from several parents,
     each corresponding to an arbitrary split of a true topic
   \end{itemize}
+
+  \begin{figure}
+\subfloat{\includegraphics[width=0.3\textwidth]{refinement-branches-2}}$\medspace\medspace\medspace$
+\subfloat{\includegraphics[width=0.3\textwidth]{refinement-branches}}
+  \end{figure}
+
 \end{frame}
 
 \begin{frame}
@@ -261,7 +295,7 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
   The coherence of a topic is defined as its average connectedness to other
   topics along the same branch,
   \begin{align*}
-    c(v) = \frac{1}{|M'|} \sum_{m' \in M'} \sum_{v' \in V_{m'}} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+    c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
   \end{align*}
   \begin{itemize}
     \item Topics that are transient (appearing at one $K$ and disappearing at
@@ -272,7 +306,8 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
 
 \end{frame}
 
-\subsection{Simulation}
+\section{Simulations}
+
 \begin{frame}
   \frametitle{True LDA Model}
   A sanity check is compute the alignment of data that are in fact generated by an
@@ -282,8 +317,8 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
   \end{itemize}
 
   \begin{figure}
-    \subfloat[]{\includegraphics[width=0.4\textwidth]{transport-true-lda}}
-    \subfloat[]{\includegraphics[width=0.4\textwidth]{product-true-lda}}
+    \subfloat{\includegraphics[width=0.4\textwidth]{transport-true-lda}}
+    \subfloat{\includegraphics[width=0.4\textwidth]{product-true-lda}}
   \end{figure}
 \end{frame}
 
@@ -291,9 +326,9 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
   \frametitle{Summaries}
   The summary measures suggest that the true $K$ is 5.
   \begin{figure}
-    \subfloat[]{\includegraphics[width=0.65\textwidth]{key_topics-lda}}
+    \subfloat{\includegraphics[width=0.65\textwidth]{key_topics-lda}}
     \hfil
-    \subfloat[]{\includegraphics[width=0.65\textwidth]{refinement_lda}}
+    \subfloat{\includegraphics[width=0.65\textwidth]{refinement_lda}}
   \end{figure}
 \end{frame}
 
@@ -316,11 +351,11 @@ where $\*B$ stacks the $\beta_k$ rowwise.
   LDA structure is not present.
 
 \begin{figure}
-    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-1}}
-    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-2}}
+    \subfloat{\includegraphics[width=0.4\textwidth]{gradient_flow-1}}
+    \subfloat{\includegraphics[width=0.4\textwidth]{gradient_flow-2}}
     \hfil
-    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-3}}
-    \subfloat[]{\includegraphics[width=0.4\textwidth]{gradient_flow-4}}
+    \subfloat{\includegraphics[width=0.4\textwidth]{gradient_flow-3}}
+    \subfloat{\includegraphics[width=0.4\textwidth]{gradient_flow-4}}
 \end{figure}
 
 \end{frame}
@@ -363,11 +398,12 @@ where $\*B$ stacks the $\beta_k$ rowwise.
 
 \begin{frame}
 \frametitle{Mechanism}
-We first construct a set of ``perturbed'' topics. Then, for each sample $i$, we draw
+We first construct equivalence classes of similar topics $\tilde{\beta}_k^r$.
+Then, for each sample $i$ and each $k$, we draw one member from the class
 \begin{align*}
 \beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
 \end{align*}
-stack the results into a $K$ column matrix $B^{i}$, and then draw,
+stack the results into $B^{i}$, and then draw,
 \begin{align}
 x_{i} &\sim \Mult\left(n_{i}, B^{i}\gamma_{i}\right)
 \end{align}
@@ -377,13 +413,14 @@ as in standard LDA.
 \begin{frame}
   \frametitle{Results}
   \begin{itemize}
-    \item At smaller $K$, we recognize the main community structure, but don't see strain switching
-    \item At larger $K$, we are able to recognize instances of switching
+    \item There are five topics, the first two of which exhibit strain switching
+    \item At smaller $K$, we recognize the five main topics
+    \item At larger $K$, we are able to recognize switching within the first two topics
   \end{itemize}
 
 \begin{figure}
-  \subfloat[]{\includegraphics[width=0.35\textwidth]{equivalence_flow}}
-  \subfloat[]{\includegraphics[width=0.63\textwidth]{equivalence_betas}}
+  \subfloat{\includegraphics[width=0.35\textwidth]{equivalence_flow}}
+  \subfloat{\includegraphics[width=0.63\textwidth]{equivalence_betas}}
 \end{figure}
 
 \end{frame}
@@ -399,7 +436,8 @@ as in standard LDA.
 \end{figure}
 \end{frame}
 
-\subsection{Data Analysis}
+\section{Data Analysis}
+
 \begin{frame}
   \frametitle{Known structures}
   \begin{itemize}
@@ -415,28 +453,243 @@ as in standard LDA.
 
 \begin{frame}
   \begin{itemize}
-  \item We recover the 4 Lactobacillus Community State Types that have been
-  previously documented
-  \item Within the dysbiotic CST, we detect 2 consistently different community
-  structures
+    \item We recover the 4 Lactobacillus Community State Types that have been
+    previously documented
+    \item Within the dysbiotic CST, we detect 2 consistently different community
+    structures
   \end{itemize}
-\begin{figure}
-  \includegraphics[width=0.7\textwidth]{microbiome_coherence}
-\end{figure}
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{microbiome_coherence}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
+  \frametitle{Interpretations}
   \begin{itemize}
-  \item We recover the 4 Lactobacillus Community State Types that have been
-  previously documented
-  \item Within the dysbiotic CST, we detect 2 consistently different community
-  structures
+    \item We recover the 4 Lactobacillus Community State Types that have been
+    previously documented
+    \item Within the dysbiotic CST, we detect 2 consistently different community
+    structures
   \end{itemize}
-\begin{figure}
-  \subfloat[]{\includegraphics[width=0.35\textwidth]{microbiome_flow}}
-  \subfloat[]{\includegraphics[width=0.63\textwidth]{microbiome_betas}}
-\end{figure}
+  \begin{figure}
+    \subfloat{\includegraphics[width=0.35\textwidth]{microbiome_flow}}
+    \subfloat{\includegraphics[width=0.63\textwidth]{microbiome_betas}}
+  \end{figure}
 \end{frame}
 
-\section{Analyzing THOR (The Hitchhikers of the Rhizosphere)}
+\section{Discussion}
+
+\begin{frame}[fragile]
+  \frametitle{Software}
+    Topic alignment is implemented in the R package
+    \href{lasy.github.io/alto}{\texttt{alto}}.
+
+    \begin{lstlisting}
+    # simulate data and fit models
+    x = rmultinom(20, 5000, rep(0.1, 500))
+    lda_params = setNames(map(1:10, ~ list(k = .)), 1:10)
+    lda_models = run_lda_models(x, lda_params)
+
+    # perform alignment and plot
+    result = align_topics(lda_models)
+    plot(result)
+    \end{lstlisting}
+
+    All the simulations discussed today are vignettes in the package. (We will
+    create a binder link for people to try)
+\end{frame}
+
+\section{Topic Alignment}
+
+\begin{frame}
+\frametitle{Cognitive Artifacts}
+  Why are clustering and dimensionality reduction methods used?
+
+ Human working memory is limited, and these methods provide,
+  \begin{itemize}
+    \item A compressed representation that is easier to reason about
+    \item Guidance of attention to details of interest
+\end{itemize}
+
+Both methods create cognitive artifacts that support scientific thinking when
+the available data are too much to understand at a glance.
+\end{frame}
+
+
+
+\section{Analyzing The Hitchhikers of the Rhizosphere (THOR)}
+
+\begin{frame}
+  \frametitle{Context}
+  THOR is a model microbiome designed by the Handelsman Lab at UW Madison. It
+  includes,
+  \begin{itemize}
+  \item \textit{Pseudomonas koreensis} (a Protobacteria, call this $K$)
+  \item \textit{Bacillus cereus} (a Firmicute, call this $F$)
+  \item \textit{Flavobacterium johnsoniae} (a Bacteroidetes, call this $B$)
+  \end{itemize}
+  along with their ``hitchhikers.'' The goal is to understand interactions and
+  emergent properties within this controlled system.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Known Structure}
+  The most salient property is that,
+  \begin{itemize}
+    \item If $K$ and $F$ are left together, then $F$ will die
+    \item If $B$ is added to $K$ and $F$ are left together, then $F$ will
+    survive
+  \end{itemize}
+
+  \begin{figure}
+    \includegraphics[width=0.4\textwidth]{thor}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mechanisms}
+\begin{itemize}
+  \item The first property is caused by $K$'s production of the antibiotic
+  koreenceine
+  \begin{itemize}
+    \item They made a variant of $K$ that couldn't make koreenceine, and $F$ was
+    able to survive with this variant present
+  \end{itemize}
+  \item It's unknown how $B$ protects $F$
+  \item The antibiotic also ``hurts'' $K$, even though it's being produced by it
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Metabolomics}
+  The lab has run LC-MS experiments on the system,
+  \begin{itemize}
+    \item 3882 metabolites
+    \item $2^3$ design (pure media, just $F$, just $FK$, ...)
+  \end{itemize}
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{configurations}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+    If there were only a couple of metabolites, we would use classical
+    (nonparametric?) ANOVA
+
+  \begin{figure}
+    \includegraphics[width=0.4\textwidth]{compound-1}
+  \end{figure}
+
+    But since there are many, we should try to (a) guide our search and (b)
+    share across sources, somehow.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+    If there were only a couple of metabolites, we would use classical
+    (nonparametric?) ANOVA
+  \begin{figure}
+    \includegraphics[width=0.4\textwidth]{compound-2}
+  \end{figure}
+
+    But since there are many, we should try to (a) guide our search and (b)
+    share across sources, somehow.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+    If there were only a couple of metabolites, we would use classical
+    (nonparametric?) ANOVA
+  \begin{figure}
+    \includegraphics[width=0.4\textwidth]{compound-3}
+  \end{figure}
+
+    But since there are many, we should try to (a) guide our search and (b)
+    share across sources, somehow.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+    If there were only a couple of metabolites, we would use classical
+    (nonparametric?) ANOVA
+  \begin{figure}
+    \includegraphics[width=0.4\textwidth]{compound-4}
+  \end{figure}
+
+    But since there are many, we should try to (a) guide our search and (b)
+    share across sources, somehow.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples}
+    If there were only a couple of metabolites, we would use classical
+    (nonparametric?) ANOVA
+  \begin{figure}
+    \includegraphics[width=0.4\textwidth]{compound-5}
+  \end{figure}
+
+    But since there are many, we should try to (a) guide our search and (b)
+    share across sources, somehow.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ideas}
+  Two overarching data analysis approaches come to mind,
+  \begin{itemize}
+    \item Summarize and then estimate effects: Learn main patterns among
+    metabolites and then see how they differ across conditions
+    \item Estimate effects and then summarize: Fit an ensemble of ANOVA models
+    and then select / cluster metabolites
+  \end{itemize}
+  These are analogous to \texttt{diffTop} (or MANOVA) and multiple testing,
+  respectively.
+\end{frame}
+
+%   lm(log(value) ~ (B + F + K) ^ 2, data = .))
+\begin{frame}
+  \frametitle{Coefficients}
+
+  These are $t$-statistics of marginal effects from the model,
+  \begin{align*}
+    \log\left(\text{Compound}\right) &= \beta_0 + \sum_{j \in B, F, K} \beta_{j}x_{j} + \sum_{j, j^\prime \in \{\text{All Pairs}\}} \beta_{jj'}x_{j}x_{j'}
+  \end{align*}
+
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{marginal-coefficients}
+  \end{figure}
+  Note the varying $x$-scales. The long-tails are significant effects.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Relationships}
+  One of the benefits of simultaneous inference is that we can look the
+  relationships between coefficients.
+
+  \begin{figure}
+  \includegraphics[width=0.8\textwidth]{bk-scatter}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Relationships}
+  One of the benefits of simultaneous inference is that we can look the
+  relationships between coefficients.
+
+  \begin{figure}
+  \includegraphics[width=0.8\textwidth]{bbk-scatter}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  The hope is that the extremes in these scatterplots suggest interesting
+  metabolites for follow-up work. (Ideally, can help people search using
+  characteristics of metabolites, too).
+  \begin{figure}
+    \subfloat{\includegraphics[width=0.4\textwidth]{compound-586}}
+    \subfloat{\includegraphics[width=0.4\textwidth]{compound-1051}}
+  \end{figure}
+\end{frame}
+
 \end{document}
