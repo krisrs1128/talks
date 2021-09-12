@@ -12,3 +12,4 @@
 *.out
 *cache*
 *_files/
+.Rproj.user
