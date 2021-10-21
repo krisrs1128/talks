@@ -1,0 +1,280 @@
+---
+title: "Understanding ML Algorithms (DSN)"
+author: "Kris Sankaran"
+date: "October 28, 2021"
+output: 
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+    seal: false
+---
+
+$$\def\*#1{\mathbf{#1}}$$
+$$\def\m#1{\boldsymbol{#1}}$$
+$$\def\reals{\mathbb{R}} % Real number symbol$$
+$$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential$$
+
+---
+
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE, fig.align = "center", cache = TRUE)
+```
+
+## Understanding Machine Learnign Algorithms
+
+### Data Science Nigeria AI Bootcamp
+
+ Kris Sankaran | UW Madison | October 28, 2021
+
+---
+
+### Difficulties
+
+* Machine learning has become important in a wide range of applications
+* But studying ML is still a challenge. Why?
+  - Uses vocabulary from many different areas
+  - Is not centrally-organized around anything specific
+  - Flashy results can make it seem like magic
+
+---
+
+### Learning Techniques
+
+* To learn something well requires returning to the basics
+* Recognizing gaps in understanding is critical
+  - What is the "muddiest" point?
+* Developing hands-on experience is more valuable than trusting experts
+
+---
+
+### Learning Techniques
+
+We will illustrate these techniques over the course of the lecture.
+
+* Translate complicated notation into simpler visuals
+ - This supports both memory and brainstorming
+* Design simulation experiments that require minimal effort
+ - They will nonetheless shed light on the algorithm
+* Develop original applications for an idea
+
+---
+
+# Warm-Up: Logistic Regression
+
+---
+
+### Logistic Regression Setup
+
+* $\*x_{n} \in \reals^{D}$: Features describing sample $n$
+* $y_{n} \in \{0, 1\}$: The class label of sample $n$
+* $N$: The total number of training samples.
+
+The goal is to use the training data to learn a predictor that correctly gives
+the class label $y^\ast$ for future examples $\*x^\ast$.
+  * Past shopping behavior $\to$ will purchase the advertised product
+  * Medical histories for many patients $\to$ diagnosis for current patient
+  * Features in satellite image $\to$ contains a river or not
+
+---
+
+### Textbook Definition
+
+This is from section 5.7 in *Deep Learning* by Goodfellow, Courville, and
+Bengio.
+
+> To solve this problem... use the logistic sigmoid function to squash the output
+of the linear function into the interval $\left(0, 1\right)$ and interpret that
+value as a probability,
+
+\begin{align*}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
+\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+\end{align*}
+
+Simply reading (or re-reading) this definition is unlikely to deepen our
+understanding of logistic regression.
+
+---
+
+### Simplification: One Dimension
+
+Let's consider the equation when $\*x$ is one-dimensional. Call this version $x$.
+
+\begin{align*}
+p\left(y = 1\vert x; \theta\right) &= \sigma\left(\*\theta x\right) \\
+\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+\end{align*}
+
+Substituting the formula for $\sigma$ into the first equation gives,
+\begin{align*}
+p\left(y = 1\vert x; \theta\right) &= \frac{1}{1 + \exp{-\theta x}}
+\end{align*}
+a function of $x$ with parameter $\theta$.
+
+---
+
+### Visuals (1)
+
+We can try visualizing this function for a few different values of $\theta$.
+
+\begin{align*}
+p\left(y = 1\vert x; \theta\right) &= \frac{1}{1 + \exp{-\theta x}}
+\end{align*}
+
+.pull-left[
+We can just plug in a few values of $x$ and interpolate.
+- What happens at $x = 0$?
+- What happens when $x \to \infty$? When $x \to -\infty$?
+]
+
+
+.pull-right[
+$\theta = 1$,
+]
+
+---
+
+### Visuals (1)
+
+We can try visualizing this function for a few different values of $\theta$.
+
+\begin{align*}
+p\left(y = 1\vert x; \theta\right) &= \frac{1}{1 + \exp{-\theta x}}
+\end{align*}
+
+.pull-left[
+We can just plug in a few values of $x$ and interpolate.
+- What happens at $x = 0$?
+- What happens when $x \to \infty$? When $x \to -\infty$?
+]
+
+
+.pull-right[
+$\theta = -1$,
+]
+
+---
+
+### Visuals (2)
+
+If the $y = 1$ class tends to be on one side of the $x$-axis, we should be able
+to find a $\theta$ so that the probability is different for the two classes.
+
+---
+
+### Higher Dimensions
+
+The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
+
+\begin{align*}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
+\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+\end{align*}
+
+.pull-left[
+* $\*\theta^T \*x$ is high when the angle between
+$\*\theta$ and $\*x$ is small.
+* It is constant in the directions at 90 degree angles to $\theta$
+* It reduces the $D$-dimensional $\*x$ into one-dimensional $\*\theta^T \*x$
+]
+
+---
+
+### Higher Dimensions
+
+
+The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
+
+\begin{align*}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
+\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+\end{align*}
+
+.pull-left[
+Putting these facts together, we find that logistic regression looks for a
+direction $\*\theta$ that defines a line (or plane) to separate the classes.
+]
+
+---
+
+### Simulation Experiment
+
+```{r}
+library(ggplot2)
+x <- matrix(rnorm(100 * 2), 100, 2)
+simulation <- data.frame(x = x)
+
+ggplot(simulation) +
+  geom_point(aes(x.1, x.2))
+```
+
+---
+
+### Simulation Experiment
+
+```{r}
+library(ggplot2)
+x <- matrix(rnorm(100 * 2), 100, 2)
+x[1:50, ] <- x[1:50, ] + c(2, 2)
+simulation <- data.frame(x = x)
+
+ggplot(simulation) +
+  geom_point(aes(x.1, x.2))
+```
+
+---
+
+### Simulation Experiment
+
+```{r}
+library(ggplot2)
+x <- matrix(rnorm(100 * 2), 100, 2)
+x[1:50, ] <- x[1:50, ] + c(2, 2)
+y <- c(rep("A", 50), rep("B", 50))
+simulation <- data.frame(x = x, y = y)
+
+ggplot(simulation) +
+  geom_point(aes(x.1, x.2))
+```
+
+---
+
+### Implementation
+
+```{r}
+fit <- train(y ~ ., simulation, method = "glm")
+coef(fit$finalModel)
+```
+
+---
+
+```{r}
+x_star <- seq(-5, 5, length.out = 100)
+grid <- data.frame(expand.grid(x.1 = x_star, x.2 = x_star))
+grid$y_hat <- predict(fit, grid, type = "prob")[, 1]
+
+ggplot(grid, aes(x.1, x.2)) +
+  geom_tile(aes(fill = y_hat)) +
+  geom_point(data = simulation, aes(col = y))
+```
+
+---
+
+# Fully-Connected Multi-Layer Network
+
+
+
+
+---
+
+# Influence Functions
+
+---
