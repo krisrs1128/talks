@@ -18,6 +18,8 @@ output:
 $$\def\*#1{\mathbf{#1}}$$
 $$\def\m#1{\boldsymbol{#1}}$$
 $$\def\reals{\mathbb{R}} % Real number symbol$$
+$$\def\data{\mathcal{D}} % Real number symbol$$
+$$\def\Parg#1{\P\left({#1}\right)}$$
 $$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential$$
 
 ---
@@ -25,10 +27,22 @@ $$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential$$
 
 ```{r, echo = FALSE}
 library(knitr)
+set.seed(102821)
 opts_chunk$set(echo = TRUE, fig.align = "center", cache = TRUE)
+library(ggplot2)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
 ```
 
-## Understanding Machine Learnign Algorithms
+## Understanding Machine Learning Algorithms
 
 ### Data Science Nigeria AI Bootcamp
 
@@ -208,8 +222,13 @@ direction $\*\theta$ that defines a line (or plane) to separate the classes.
 ### Simulation Experiment
 
 ```{r}
+N <- 150
+B <- 200
+```
+
+```{r}
 library(ggplot2)
-x <- matrix(rnorm(100 * 2), 100, 2)
+x <- matrix(rt(N * 2, 8), N, 2)
 simulation <- data.frame(x = x)
 
 ggplot(simulation) +
@@ -222,8 +241,8 @@ ggplot(simulation) +
 
 ```{r}
 library(ggplot2)
-x <- matrix(rnorm(100 * 2), 100, 2)
-x[1:50, ] <- x[1:50, ] + c(2, 2)
+x <- matrix(rnorm(N * 2), N, 2)
+x[1:(N / 2), ] <- x[1:(N / 2), ] + c(2, 2)
 simulation <- data.frame(x = x)
 
 ggplot(simulation) +
@@ -236,13 +255,14 @@ ggplot(simulation) +
 
 ```{r}
 library(ggplot2)
-x <- matrix(rnorm(100 * 2), 100, 2)
-x[1:50, ] <- x[1:50, ] + c(2, 2)
-y <- c(rep("A", 50), rep("B", 50))
+x <- matrix(rnorm(N * 2), N, 2)
+x[1:(N / 2), ] <- x[1:(N / 2), ] + c(2, 2)
+y <- c(rep("A", N / 2), rep("B", N / 2))
 simulation <- data.frame(x = x, y = y)
 
 ggplot(simulation) +
-  geom_point(aes(x.1, x.2))
+  geom_point(aes(x.1, x.2, col = y)) +
+  scale_color_brewer(palette = "Set2")
 ```
 
 ---
@@ -250,6 +270,7 @@ ggplot(simulation) +
 ### Implementation
 
 ```{r}
+library(caret)
 fit <- train(y ~ ., simulation, method = "glm")
 coef(fit$finalModel)
 ```
@@ -257,24 +278,356 @@ coef(fit$finalModel)
 ---
 
 ```{r}
-x_star <- seq(-5, 5, length.out = 100)
+x_star <- seq(-3, 5, length.out = N)
 grid <- data.frame(expand.grid(x.1 = x_star, x.2 = x_star))
 grid$y_hat <- predict(fit, grid, type = "prob")[, 1]
 
+library(scico)
 ggplot(grid, aes(x.1, x.2)) +
   geom_tile(aes(fill = y_hat)) +
-  geom_point(data = simulation, aes(col = y))
+  geom_point(data = simulation, aes(col = y)) +
+  scale_fill_scico(palette = "lapaz", direction = -1) +
+  scale_color_brewer(palette = "Set2") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
 ```
 
 ---
 
 # Fully-Connected Multi-Layer Network
 
+Section 6.4 of
 
+> Most neural networks are organized into groups of units called layers... In this structure, the first layer is given by
+
+\begin{align*}
+\*h^{1} &= g^1\left(\*W^{1 T}\*x + \*b^{1}\right) \\
+\begin{align*}
+the second layer by
+\end{align*}
+\*h^{2} &= g^2\left(\*W^{2 T}\*h^1 + \*b^{2}\right) \\
+\end{align*}
+and so on.
+
+* $g^k$: Nonlinearity for layer $k$
+* $\*W^k, \*b^k$: Weights and biases for layer $k$
+* $\*h^k$: Hidden units at layer $k$
+
+---
+
+### One-Dimension
+
+* Let's consider the equation when $\*x$ is one-dimensional. Call this version
+$x$. 
+* Suppose all nonlinearities $g^k$ are logistic units, $\sigma$.
+
+Then, 
+\begin{align*}
+\*h_{1} &= g^1\left(\*W^{T}_1\*x + \*b_{1}\right) \\
+\end{align*}
+
+simplifies into
+
+\begin{align*}
+\sigma\left(\begin{pmatrix} w^{1}_{1} \\ \vdots \\ w^1_{K} \end{pmatrix} x + \begin{pmatrix} b^1_{1} \\ \vdots  \\ b^1_{K} \end{pmatrix}\right)
+= \begin{pmatrix} \sigma\left(w^1_1 x + b^1_1\right) \\ \vdots \\ \sigma\left(w^1_{K} x + b^1_{K}\right) \end{pmatrix}
+\end{align*}
+which is a collection of sigmoids. (draw matrix dimensionalities)
+
+---
+
+### Visualization
 
 
 ---
 
-# Influence Functions
+### Layer 2
+
+.pull-left[
+There are two differences for the second layer,
+* The input $\*h_1$ is multidimensional 
+* The input is not the original $x$
+]
+
+.pull-right[
+\begin{align*}
+\*h_{2} &= \sigma\left(\*W^{T}_2\*h_1 + \*b_{2}\right) \\
+\end{align*}
+]
+
+(Draw pictures for the matrix multiplications for $h$)
 
 ---
+
+### Layer 2: First Coordinate
+
+What goes in the first coordinate of layer 2?
+
+\begin{align*}
+\sigma\left(\sum_{k} w^{2}_{1k} h_{k}^{1}\right)
+\end{align*}
+
+and since the $h_k$'s are themselves sigmoids, the inner summation is like
+
+\begin{align*}
+\sum_{k} w^{(2)}_{1k} \sigma\left(w_{k}^{1}x + b^{1}\right)
+\end{align*}
+which is a weighted mixture of sigmoids from the previous part.
+
+---
+
+### Visualization
+
+---
+
+### Visualization - 2D
+
+---
+
+### Simulation
+
+```{r}
+x <- matrix(rnorm(N * 2), N, 2)
+y <- rowSums(x ^ 2) < .8
+flip_ix <- sample(N, N / 20)
+y[flip_ix] <- !y[flip_ix]
+simulation <- data.frame(x = x, y = y)
+
+ggplot(simulation) +
+  geom_point(aes(x.1, x.2, col = y)) +
+  scale_fill_scico(palette = "lapaz") +
+  scale_color_brewer(palette = "Set2") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_size(range = c(0, 2))
+```
+
+---
+
+### Defining a Model
+
+* We can define a simple model with one hidden layer (second line)
+* The last line mixes hidden representations to get the class prediction
+* Instead of $\sigma$, we use ReLu, but the mixture interpretation still holds
+
+```{r}
+library(keras)
+library(dplyr)
+model <- keras_model_sequential() %>% 
+  layer_dense(units = 50, activation = "relu", input_shape = c(2)) %>% 
+  layer_dense(2, activation = "softmax")
+```
+
+---
+
+### Network Training Parameters
+
+.pull-left[
+Before we can train the model, we have to define an optimizer and the loss.
+]
+
+.pull-right[
+```{r}
+model %>% 
+  compile(
+    optimizer = "adam", 
+    loss = "categorical_crossentropy"
+  )
+```
+]
+
+---
+
+### Network Training
+
+.pull-left[
+* We have to convert the simulation data into the
+correct formats 
+  - A matrix for the $\*x_i$ and one-hot encodings for $\*y_i$.
+* We can then train the model. 
+]
+
+.pull-right[
+```{r}
+model %>% 
+  fit(
+    x = simulation %>% select(starts_with("x")) %>% as.matrix(),
+    y = to_categorical(simulation$y),
+    metric = "accuracy",
+    epochs = 60,
+    verbose = 0
+  )
+```
+]
+
+---
+
+### Visualize Predictions
+
+.pull-left[
+* As before, we can visualize predictions along a grid.
+* By mixing many linear hyperplanes, we can make a circular decision boundary
+]
+
+.pull-right[
+```{r}
+x_star <- seq(-3, 3, length.out = N)
+grid <- data.frame(expand.grid(x.1 = x_star, x.2 = x_star))
+grid$y_hat <- predict(model, x = as.matrix(grid[, 1:2]))[, 2]
+
+ggplot(grid, aes(x.1, x.2)) +
+  geom_tile(aes(fill = y_hat)) +
+  geom_point(data = simulation, aes(col = y)) +
+  scale_fill_scico(palette = "lapaz") +
+  scale_color_brewer(palette = "Set2") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+```
+]
+
+---
+
+# Influence Estimation
+
+---
+
+### Studying Real Papers
+
+* Even though these are textbook examples, similar strategies are useful for
+understanding research
+  - Drawing guiding pictures
+  - Designing simple simulations
+* Focus on what the authors claim to know and how they know it
+
+----
+
+### Paper
+
+Let's consider this approach for the paper,
+
+Feldman, V., & Zhang, C. (2020). What neural networks memorize and why:
+Discovering the long tail via influence estimation.
+
+---
+
+### Memorization
+
+* How much does an algorithm $\mathcal{A}$ memorize about sample $i$ in dataset $\data$?
+* $h$ is the prediction function learned by the algorithm $\mathcal{A}$
+* They introduce the definition,
+
+\begin{align*}
+\text{mem}(\mathcal{A}, \data, i):=\underset{h \leftarrow \mathcal{A}(\data)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}-\underset{h \leftarrow \mathcal{A}\left(\data^{\backslash i}\right)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}}
+\end{align*}
+
+---
+
+### Visualization
+
+---
+
+### How to Estimate Memorization
+
+* Sample $S$ subsets $\data_{s}$ of size $m$ from $\data$
+* For each subset $s$, train the predictor $h_{s} = \mathcal{A}\left(\data_{s}\right)$
+* For each example $i$, estimate the change in probability when that example is
+held out,
+
+\begin{align*}
+\hat{\text{mem}}\left(\mathcal{A}, \data, i\right) &= \Parg{h_{s}\left(\*x_{i}\right) = y_{i} \vert i \in \data_{s}} - \Parg{h_{s}\left(\*x_{i}\right) = y_{i} \vert i \notin \data_{s}}
+\end{align*}
+
+where the probabilities are averages over algorithms run with / without that
+sample.
+
+---
+
+### Visualization
+
+---
+
+### Simulation Setup
+
+* What do the memorization estimates look like for the simulation data from the
+previous example?
+* We will subsample it 10 times, train 10 models, and compute this statistic
+
+---
+
+```{r}
+library(purrr)
+indices <- rerun(B, sample(1:N, N / 2))
+```
+
+---
+```{r}
+init_model <- function() {
+  keras_model_sequential() %>% 
+    layer_dense(units = 50, activation = "relu", input_shape = c(2)) %>% 
+    layer_dense(2, activation = "softmax") %>%
+    compile(
+      optimizer = "adam", 
+      loss = "categorical_crossentropy"
+    )
+}
+
+fit_model <- function(model, df) {
+  model %>%
+    fit(
+      x = df %>% select(starts_with("x")) %>% as.matrix(),
+      y = to_categorical(df$y),
+      epochs = 60,
+      verbose = 0
+    )
+}
+```
+
+```{r}
+models <- rerun(B, init_model())
+map(indices, ~ simulation[., ]) %>%
+  map2(models, ~ fit_model(.y, .x))
+```
+
+---
+
+### get predictions on each sample, from each model
+
+```{r}
+probs <- map_dfc(models, ~ predict(., as.matrix(simulation[, 1:2]))[, 2]) %>%
+  as.matrix()
+```
+
+
+
+
+```{r}
+indicator <- matrix(FALSE, nrow(probs), ncol(probs))
+for (i in seq_along(indices)) {
+  indicator[indices[[i]], i] <- TRUE
+}
+
+memorization <- function(probs, indicator, y) {
+  result <- vector(length = length(y))
+  for (i in seq_along(y)) {
+      result[i] <- mean(probs[i, indicator[i, ]]) - mean(probs[i, !indicator[i, ]])
+      if (!y[i]) {
+        result[i] <- -result[i]
+      }
+  }
+
+  result
+}
+```
+
+---
+
+```{r}
+simulation$mem <- memorization(probs, indicator, y)
+ggplot(simulation, aes(x.1, x.2)) +
+  geom_point(aes(col = y, size = mem)) +
+  scale_fill_scico(palette = "lapaz") +
+  scale_color_brewer(palette = "Set2") +
+  scale_size_binned(breaks = c(0, 0.02, 0.05), range = c(0.00001, 2))
+```
+
+
