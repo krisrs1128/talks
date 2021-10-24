@@ -19,16 +19,15 @@ $$\def\*#1{\mathbf{#1}}$$
 $$\def\m#1{\boldsymbol{#1}}$$
 $$\def\reals{\mathbb{R}} % Real number symbol$$
 $$\def\data{\mathcal{D}} % Real number symbol$$
+$$\def\P{\mathbb{P}} % Probability symbol$$
+
 $$\def\Parg#1{\P\left({#1}\right)}$$
 $$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential$$
-
----
-
 
 ```{r, echo = FALSE}
 library(knitr)
 set.seed(102821)
-opts_chunk$set(echo = TRUE, fig.align = "center", cache = TRUE)
+opts_chunk$set(echo = TRUE, fig.align = "center", cache = TRUE, fig.width = 5, fig.height = 5)
 library(ggplot2)
 min_theme <- theme_minimal() + 
   theme(
@@ -40,6 +39,13 @@ min_theme <- theme_minimal() +
     legend.position = "bottom"
   )
 theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+library(scico)
+scale_fill_continuous <- function(...) scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_color_discrete <- function(...) scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 ```
 
 ## Understanding Machine Learning Algorithms
@@ -93,7 +99,7 @@ We will illustrate these techniques over the course of the lecture.
 
 The goal is to use the training data to learn a predictor that correctly gives
 the class label $y^\ast$ for future examples $\*x^\ast$.
-  * Past shopping behavior $\to$ will purchase the advertised product
+  * Past shopping behavior $\to$ future purchases
   * Medical histories for many patients $\to$ diagnosis for current patient
   * Features in satellite image $\to$ contains a river or not
 
@@ -113,8 +119,8 @@ p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
 \sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
 \end{align*}
 
-Simply reading (or re-reading) this definition is unlikely to deepen our
-understanding of logistic regression.
+Simply reading this definition is unlikely to deepen our understanding of
+logistic regression.
 
 ---
 
@@ -152,6 +158,10 @@ We can just plug in a few values of $x$ and interpolate.
 
 .pull-right[
 $\theta = 1$,
+```{r, echo = FALSE, fig.cap = "Label the axes and limits!"}
+include_graphics("sketches/logistic_positive.png")
+```
+
 ]
 
 ---
@@ -173,6 +183,9 @@ We can just plug in a few values of $x$ and interpolate.
 
 .pull-right[
 $\theta = -1$,
+```{r, echo = FALSE, fig.cap = "Label the axes and limits!"}
+include_graphics("sketches/logistic_negative.png")
+```
 ]
 
 ---
@@ -181,6 +194,10 @@ $\theta = -1$,
 
 If the $y = 1$ class tends to be on one side of the $x$-axis, we should be able
 to find a $\theta$ so that the probability is different for the two classes.
+
+```{r, echo = FALSE, fig.cap = "What would be a bad choice of logistic function?"}
+include_graphics("sketches/logistic_oned_ys.png")
+```
 
 ---
 
@@ -200,10 +217,63 @@ $\*\theta$ and $\*x$ is small.
 * It reduces the $D$-dimensional $\*x$ into one-dimensional $\*\theta^T \*x$
 ]
 
+.pull-right[
+```{r, out.width = 200, echo = FALSE}
+include_graphics("sketches/inner_product.png")
+```
+]
+
 ---
 
 ### Higher Dimensions
 
+The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
+
+\begin{align*}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
+\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+\end{align*}
+
+.pull-left[
+* $\*\theta^T \*x$ is high when the angle between
+$\*\theta$ and $\*x$ is small.
+* It is constant in the directions at 90 degree angles to $\theta$
+* It reduces the $D$-dimensional $\*x$ into one-dimensional $\*\theta^T \*x$
+]
+
+.pull-right[
+```{r, out.width = 200, echo = FALSE}
+include_graphics("sketches/inner_product-2.png")
+```
+]
+
+---
+
+### Higher Dimensions
+
+The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
+
+\begin{align*}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
+\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+\end{align*}
+
+.pull-left[
+* $\*\theta^T \*x$ is high when the angle between
+$\*\theta$ and $\*x$ is small.
+* It is constant in the directions at 90 degree angles to $\theta$
+* It reduces the $D$-dimensional $\*x$ into one-dimensional $\*\theta^T \*x$
+]
+
+.pull-right[
+```{r, out.width = 320, echo = FALSE}
+include_graphics("sketches/inner_product_3.png")
+```
+]
+
+---
+
+### Higher Dimensions
 
 The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
 
@@ -217,16 +287,25 @@ Putting these facts together, we find that logistic regression looks for a
 direction $\*\theta$ that defines a line (or plane) to separate the classes.
 ]
 
+.pull-right[
+```{r, echo = FALSE, out.width = 350}
+include_graphics("sketches/logistic_two_d_ys_projection.png")
+```
+]
+
 ---
 
 ### Simulation Experiment
 
-```{r}
-N <- 150
-B <- 200
-```
+.pull-left[
+We'll create a simple dataset to get more hands-on experience with logistic
+regression. The code here makes a dataset of $\*x_{i} \in \reals^{2}$ from a
+$t$-distribution.
+]
 
-```{r}
+.pull-right[
+```{r, out.width = 240}
+N <- 150
 library(ggplot2)
 x <- matrix(rt(N * 2, 8), N, 2)
 simulation <- data.frame(x = x)
@@ -234,40 +313,65 @@ simulation <- data.frame(x = x)
 ggplot(simulation) +
   geom_point(aes(x.1, x.2))
 ```
+]
 
 ---
 
 ### Simulation Experiment
 
-```{r}
+.pull-left[
+Next, we create two classes by shifting half of the points over to the top
+right.
+]
+
+.pull-right[
+```{r, out.width = 220}
+N <- 150
 library(ggplot2)
-x <- matrix(rnorm(N * 2), N, 2)
+x <- matrix(rt(N * 2, 8), N, 2)
 x[1:(N / 2), ] <- x[1:(N / 2), ] + c(2, 2)
 simulation <- data.frame(x = x)
 
 ggplot(simulation) +
   geom_point(aes(x.1, x.2))
 ```
+]
 
 ---
 
 ### Simulation Experiment
 
-```{r}
+.pull-left[
+We save this information into a data.frame so that we can plot the two classes
+against one another.
+]
+
+.pull-right[
+```{r, out.width = 220}
+N <- 150
 library(ggplot2)
-x <- matrix(rnorm(N * 2), N, 2)
+x <- matrix(rt(N * 2, 8), N, 2)
 x[1:(N / 2), ] <- x[1:(N / 2), ] + c(2, 2)
 y <- c(rep("A", N / 2), rep("B", N / 2))
 simulation <- data.frame(x = x, y = y)
 
 ggplot(simulation) +
   geom_point(aes(x.1, x.2, col = y)) +
-  scale_color_brewer(palette = "Set2")
+  theme(legend.position = "none")
 ```
+]
 
 ---
 
-### Implementation
+### Fitting Logistic Regression
+
+```{r, echo = FALSE}
+options(width = 500)
+```
+
+* The code block below fits a logistic regression model in R.
+* Notice that the learned $\*\theta$ is nearly parallel to the offset used to
+define the second class.
 
 ```{r}
 library(caret)
@@ -282,19 +386,14 @@ x_star <- seq(-3, 5, length.out = N)
 grid <- data.frame(expand.grid(x.1 = x_star, x.2 = x_star))
 grid$y_hat <- predict(fit, grid, type = "prob")[, 1]
 
-library(scico)
 ggplot(grid, aes(x.1, x.2)) +
   geom_tile(aes(fill = y_hat)) +
-  geom_point(data = simulation, aes(col = y)) +
-  scale_fill_scico(palette = "lapaz", direction = -1) +
-  scale_color_brewer(palette = "Set2") +
-  scale_x_continuous(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0))
+  geom_point(data = simulation, aes(col = y))
 ```
 
 ---
 
-# Fully-Connected Multi-Layer Network
+### Fully-Connected Multi-Layer Network
 
 Section 6.4 of
 
@@ -302,16 +401,15 @@ Section 6.4 of
 
 \begin{align*}
 \*h^{1} &= g^1\left(\*W^{1 T}\*x + \*b^{1}\right) \\
-\begin{align*}
-the second layer by
 \end{align*}
+the second layer by
+\begin{align*}
 \*h^{2} &= g^2\left(\*W^{2 T}\*h^1 + \*b^{2}\right) \\
 \end{align*}
 and so on.
 
-* $g^k$: Nonlinearity for layer $k$
 * $\*W^k, \*b^k$: Weights and biases for layer $k$
-* $\*h^k$: Hidden units at layer $k$
+* $g^k, \*h^k$: Nonlinearity and hidden units for layer $k$
 
 ---
 
@@ -321,23 +419,46 @@ and so on.
 $x$. 
 * Suppose all nonlinearities $g^k$ are logistic units, $\sigma$.
 
+.pull-left[
 Then, 
 \begin{align*}
 \*h_{1} &= g^1\left(\*W^{T}_1\*x + \*b_{1}\right) \\
 \end{align*}
-
-simplifies into
-
+simplifies to
 \begin{align*}
-\sigma\left(\begin{pmatrix} w^{1}_{1} \\ \vdots \\ w^1_{K} \end{pmatrix} x + \begin{pmatrix} b^1_{1} \\ \vdots  \\ b^1_{K} \end{pmatrix}\right)
-= \begin{pmatrix} \sigma\left(w^1_1 x + b^1_1\right) \\ \vdots \\ \sigma\left(w^1_{K} x + b^1_{K}\right) \end{pmatrix}
+\begin{pmatrix} \sigma\left(w^1_1 x + b^1_1\right) \\ \vdots \\ \sigma\left(w^1_{K} x + b^1_{K}\right) \end{pmatrix}
 \end{align*}
-which is a collection of sigmoids. (draw matrix dimensionalities)
+which is a collection of sigmoids.
+]
+
+.pull-right[
+```{r, out.width = 220, echo = FALSE}
+include_graphics("sketches/hidden_layer_general.png")
+```
+
+```{r, out.width = 200, echo = FALSE}
+include_graphics("sketches/hidden_layer_general_specific.png")
+```
+]
+
 
 ---
 
-### Visualization
+### Collection of Sigmoids
 
+Each coordinate $w_{k}^1$ defines a logistic function.
+
+.pull-left[
+\begin{align*}
+\begin{pmatrix} \sigma\left(w^1_1 x + b^1_1\right) \\ \vdots \\ \sigma\left(w^1_{K} x + b^1_{K}\right) \end{pmatrix}
+\end{align*}
+]
+
+.pull-right[
+```{r, echo = FALSE, out.width = 400}
+include_graphics("sketches/logistic_collection.png")
+```
+]
 
 ---
 
@@ -353,9 +474,10 @@ There are two differences for the second layer,
 \begin{align*}
 \*h_{2} &= \sigma\left(\*W^{T}_2\*h_1 + \*b_{2}\right) \\
 \end{align*}
+```{r, echo = FALSE, out.width = 400}
+include_graphics("sketches/hidden_layer_general-2.png")
+```
 ]
-
-(Draw pictures for the matrix multiplications for $h$)
 
 ---
 
@@ -364,13 +486,13 @@ There are two differences for the second layer,
 What goes in the first coordinate of layer 2?
 
 \begin{align*}
-\sigma\left(\sum_{k} w^{2}_{1k} h_{k}^{1}\right)
+\sigma\left(\sum_{k} w^{2}_{1k} h_{k}^{1} + b_{1}^2\right)
 \end{align*}
 
 and since the $h_k$'s are themselves sigmoids, the inner summation is like
 
 \begin{align*}
-\sum_{k} w^{(2)}_{1k} \sigma\left(w_{k}^{1}x + b^{1}\right)
+\sum_{k} w^{(2)}_{1k} \sigma\left(w_{k}^{1}x + b_{k}^{1}\right)
 \end{align*}
 which is a weighted mixture of sigmoids from the previous part.
 
@@ -387,19 +509,14 @@ which is a weighted mixture of sigmoids from the previous part.
 ### Simulation
 
 ```{r}
-x <- matrix(rnorm(N * 2), N, 2)
-y <- rowSums(x ^ 2) < .8
+x <- matrix(rt(N * 2, 8), N, 2)
+y <- rowSums(x ^ 2) < 1
 flip_ix <- sample(N, N / 20)
 y[flip_ix] <- !y[flip_ix]
 simulation <- data.frame(x = x, y = y)
 
 ggplot(simulation) +
-  geom_point(aes(x.1, x.2, col = y)) +
-  scale_fill_scico(palette = "lapaz") +
-  scale_color_brewer(palette = "Set2") +
-  scale_x_continuous(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0)) +
-  scale_size(range = c(0, 2))
+  geom_point(aes(x.1, x.2, col = y))
 ```
 
 ---
@@ -414,7 +531,9 @@ ggplot(simulation) +
 library(keras)
 library(dplyr)
 model <- keras_model_sequential() %>% 
-  layer_dense(units = 50, activation = "relu", input_shape = c(2)) %>% 
+  layer_dense(units = 20, activation = "relu", input_shape = c(2)) %>% 
+  layer_dense(units = 20, activation = "relu", input_shape = c(20)) %>% 
+  layer_dense(units = 20, activation = "relu", input_shape = c(20)) %>% 
   layer_dense(2, activation = "softmax")
 ```
 
@@ -477,11 +596,7 @@ grid$y_hat <- predict(model, x = as.matrix(grid[, 1:2]))[, 2]
 
 ggplot(grid, aes(x.1, x.2)) +
   geom_tile(aes(fill = y_hat)) +
-  geom_point(data = simulation, aes(col = y)) +
-  scale_fill_scico(palette = "lapaz") +
-  scale_color_brewer(palette = "Set2") +
-  scale_x_continuous(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0))
+  geom_point(data = simulation, aes(col = y))
 ```
 ]
 
@@ -499,7 +614,7 @@ understanding research
   - Designing simple simulations
 * Focus on what the authors claim to know and how they know it
 
-----
+---
 
 ### Paper
 
@@ -517,7 +632,7 @@ Discovering the long tail via influence estimation.
 * They introduce the definition,
 
 \begin{align*}
-\text{mem}(\mathcal{A}, \data, i):=\underset{h \leftarrow \mathcal{A}(\data)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}-\underset{h \leftarrow \mathcal{A}\left(\data^{\backslash i}\right)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}}
+\text{mem}(\mathcal{A}, \data, i):=\underset{h \leftarrow \mathcal{A}(\data)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}}-\underset{h \leftarrow \mathcal{A}\left(\data^{\backslash i}\right)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}}
 \end{align*}
 
 ---
@@ -556,6 +671,7 @@ previous example?
 
 ```{r}
 library(purrr)
+B <- 10 # originally was 200
 indices <- rerun(B, sample(1:N, N / 2))
 ```
 
@@ -563,7 +679,9 @@ indices <- rerun(B, sample(1:N, N / 2))
 ```{r}
 init_model <- function() {
   keras_model_sequential() %>% 
-    layer_dense(units = 50, activation = "relu", input_shape = c(2)) %>% 
+    layer_dense(units = 20, activation = "relu", input_shape = c(2)) %>% 
+    layer_dense(units = 20, activation = "relu", input_shape = c(20)) %>% 
+    layer_dense(units = 20, activation = "relu", input_shape = c(20)) %>% 
     layer_dense(2, activation = "softmax") %>%
     compile(
       optimizer = "adam", 
@@ -582,6 +700,8 @@ fit_model <- function(model, df) {
 }
 ```
 
+---
+
 ```{r}
 models <- rerun(B, init_model())
 map(indices, ~ simulation[., ]) %>%
@@ -597,6 +717,7 @@ probs <- map_dfc(models, ~ predict(., as.matrix(simulation[, 1:2]))[, 2]) %>%
   as.matrix()
 ```
 
+---
 
 
 
@@ -625,8 +746,6 @@ memorization <- function(probs, indicator, y) {
 simulation$mem <- memorization(probs, indicator, y)
 ggplot(simulation, aes(x.1, x.2)) +
   geom_point(aes(col = y, size = mem)) +
-  scale_fill_scico(palette = "lapaz") +
-  scale_color_brewer(palette = "Set2") +
   scale_size_binned(breaks = c(0, 0.02, 0.05), range = c(0.00001, 2))
 ```
 
