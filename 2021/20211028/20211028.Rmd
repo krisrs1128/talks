@@ -22,12 +22,15 @@ $$\def\data{\mathcal{D}} % Real number symbol$$
 $$\def\P{\mathbb{P}} % Probability symbol$$
 
 $$\def\Parg#1{\P\left({#1}\right)}$$
+
+$$\def\Psubarg#1#2{\P_{#1}\left[{#2}\right]}$$
+
 $$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential$$
 
 ```{r, echo = FALSE}
 library(knitr)
-set.seed(102821)
-opts_chunk$set(echo = TRUE, fig.align = "center", cache = TRUE, fig.width = 5, fig.height = 5)
+set.seed(202110)
+opts_chunk$set(echo = TRUE, fig.align = "left", cache = FALSE, fig.width = 5, fig.height = 5, warning = FALSE, message = FALSE, dpi = 300)
 library(ggplot2)
 min_theme <- theme_minimal() + 
   theme(
@@ -41,9 +44,8 @@ min_theme <- theme_minimal() +
 theme_set(min_theme)
 
 # overwrite some default scales in ggplot2
-library(scico)
-scale_fill_continuous <- function(...) scale_fill_scico(..., palette = "lapaz", direction = -1)
-scale_color_discrete <- function(...) scale_color_brewer(..., palette = "Set2")
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
 scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
 scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 ```
@@ -53,6 +55,11 @@ scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(
 ### Data Science Nigeria AI Bootcamp
 
  Kris Sankaran | UW Madison | October 28, 2021
+ 
+```{r, out.width = 300, fig.show = "hold", echo = FALSE}
+include_graphics("sketches/uw-logo-flush-web.png")
+include_graphics("sketches/dsn_logo.png")
+```
 
 ---
 
@@ -195,7 +202,7 @@ include_graphics("sketches/logistic_negative.png")
 If the $y = 1$ class tends to be on one side of the $x$-axis, we should be able
 to find a $\theta$ so that the probability is different for the two classes.
 
-```{r, echo = FALSE, fig.cap = "What would be a bad choice of logistic function?"}
+```{r, echo = FALSE, out.width = 750, fig.cap = "What would be a bad choice of logistic function?"}
 include_graphics("sketches/logistic_oned_ys.png")
 ```
 
@@ -206,8 +213,7 @@ include_graphics("sketches/logistic_oned_ys.png")
 The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
 
 \begin{align*}
-p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
-\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) =  \frac{1}{1 + \exp{-\*\theta^T \*x}}
 \end{align*}
 
 .pull-left[
@@ -218,7 +224,7 @@ $\*\theta$ and $\*x$ is small.
 ]
 
 .pull-right[
-```{r, out.width = 200, echo = FALSE}
+```{r, out.width = 200, echo = FALSE, fig.cap = "Closely aligned vectors have large inner products with one another."}
 include_graphics("sketches/inner_product.png")
 ```
 ]
@@ -230,8 +236,7 @@ include_graphics("sketches/inner_product.png")
 The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
 
 \begin{align*}
-p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
-\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) =  \frac{1}{1 + \exp{-\*\theta^T \*x}}
 \end{align*}
 
 .pull-left[
@@ -242,7 +247,7 @@ $\*\theta$ and $\*x$ is small.
 ]
 
 .pull-right[
-```{r, out.width = 200, echo = FALSE}
+```{r, out.width = 200, echo = FALSE, fig.cap = "Perpendicular vectors have inner product equal to 0."}
 include_graphics("sketches/inner_product-2.png")
 ```
 ]
@@ -254,8 +259,7 @@ include_graphics("sketches/inner_product-2.png")
 The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
 
 \begin{align*}
-p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
-\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) =  \frac{1}{1 + \exp{-\*\theta^T \*x}}
 \end{align*}
 
 .pull-left[
@@ -266,7 +270,7 @@ $\*\theta$ and $\*x$ is small.
 ]
 
 .pull-right[
-```{r, out.width = 320, echo = FALSE}
+```{r, out.width = 200, echo = FALSE, fig.cap = "When the vectors are at obtuse angles, their inner product is negative."}
 include_graphics("sketches/inner_product_3.png")
 ```
 ]
@@ -278,8 +282,7 @@ include_graphics("sketches/inner_product_3.png")
 The actual logistic regression formula refers to a vector $\*x \in \reals^{D}$.
 
 \begin{align*}
-p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) \\
-\sigma\left(z\right) &= \frac{1}{1 + \exp{-z}}
+p\left(y = 1\vert \*x; \*\theta\right) &= \sigma\left(\*\theta^T \*x\right) =  \frac{1}{1 + \exp{-\*\theta^T \*x}}
 \end{align*}
 
 .pull-left[
@@ -288,7 +291,7 @@ direction $\*\theta$ that defines a line (or plane) to separate the classes.
 ]
 
 .pull-right[
-```{r, echo = FALSE, out.width = 350}
+```{r, echo = FALSE, out.width = 350, fig.cap = "In higher-dimensions, logistic regression finds a direction that separates the classes (in the projection)."}
 include_graphics("sketches/logistic_two_d_ys_projection.png")
 ```
 ]
@@ -307,7 +310,7 @@ $t$-distribution.
 ```{r, out.width = 240}
 N <- 150
 library(ggplot2)
-x <- matrix(rt(N * 2, 8), N, 2)
+x <- matrix(rt(N * 2, 12), N, 2)
 simulation <- data.frame(x = x)
 
 ggplot(simulation) +
@@ -328,7 +331,7 @@ right.
 ```{r, out.width = 220}
 N <- 150
 library(ggplot2)
-x <- matrix(rt(N * 2, 8), N, 2)
+x <- matrix(rt(N * 2, 12), N, 2)
 x[1:(N / 2), ] <- x[1:(N / 2), ] + c(2, 2)
 simulation <- data.frame(x = x)
 
@@ -350,7 +353,7 @@ against one another.
 ```{r, out.width = 220}
 N <- 150
 library(ggplot2)
-x <- matrix(rt(N * 2, 8), N, 2)
+x <- matrix(rt(N * 2, 12), N, 2)
 x[1:(N / 2), ] <- x[1:(N / 2), ] + c(2, 2)
 y <- c(rep("A", N / 2), rep("B", N / 2))
 simulation <- data.frame(x = x, y = y)
@@ -381,7 +384,7 @@ coef(fit$finalModel)
 
 ---
 
-```{r}
+```{r, out.width = 400, fig.cap = "The decision boundary nicely separates the two classes."}
 x_star <- seq(-3, 5, length.out = N)
 grid <- data.frame(expand.grid(x.1 = x_star, x.2 = x_star))
 grid$y_hat <- predict(fit, grid, type = "prob")[, 1]
@@ -395,21 +398,20 @@ ggplot(grid, aes(x.1, x.2)) +
 
 ### Fully-Connected Multi-Layer Network
 
-Section 6.4 of
+Section 6.4 of the same book,
 
 > Most neural networks are organized into groups of units called layers... In this structure, the first layer is given by
 
 \begin{align*}
-\*h^{1} &= g^1\left(\*W^{1 T}\*x + \*b^{1}\right) \\
+\*h_{1} &= g_1\left(\*W_{1}^{T}\*x + \*b_{1}\right) \\
 \end{align*}
-the second layer by
+> the second layer by
 \begin{align*}
-\*h^{2} &= g^2\left(\*W^{2 T}\*h^1 + \*b^{2}\right) \\
+\*h_{2} &= g_2\left(\*W_{2}^{T}\*h^1 + \*b_{2}\right) \\
 \end{align*}
-and so on.
 
-* $\*W^k, \*b^k$: Weights and biases for layer $k$
-* $g^k, \*h^k$: Nonlinearity and hidden units for layer $k$
+* $\*W_k, \*b_k$: Weights and biases for layer $k$
+* $g_k, \*h_k$: Nonlinearity and hidden units for layer $k$
 
 ---
 
@@ -441,7 +443,6 @@ include_graphics("sketches/hidden_layer_general_specific.png")
 ```
 ]
 
-
 ---
 
 ### Collection of Sigmoids
@@ -455,7 +456,7 @@ Each coordinate $w_{k}^1$ defines a logistic function.
 ]
 
 .pull-right[
-```{r, echo = FALSE, out.width = 400}
+```{r, echo = FALSE, out.width = 400, fig.cap = "Each coordinate k is a different logistic function, centered around a different x coordinate and with varying degrees of steepness."}
 include_graphics("sketches/logistic_collection.png")
 ```
 ]
@@ -486,13 +487,13 @@ include_graphics("sketches/hidden_layer_general-2.png")
 What goes in the first coordinate of layer 2?
 
 \begin{align*}
-\sigma\left(\sum_{k} w^{2}_{1k} h_{k}^{1} + b_{1}^2\right)
+\sigma\left(\sum_{k} w^{2}_{k} h_{k}^{1} + b_{k}^2\right)
 \end{align*}
 
 and since the $h_k$'s are themselves sigmoids, the inner summation is like
 
 \begin{align*}
-\sum_{k} w^{(2)}_{1k} \sigma\left(w_{k}^{1}x + b_{k}^{1}\right)
+\sum_{k} w^{2}_{k} \sigma\left(w_{k}^{1}x + b_{k}^{1}\right) + b_k^2
 \end{align*}
 which is a weighted mixture of sigmoids from the previous part.
 
@@ -500,24 +501,41 @@ which is a weighted mixture of sigmoids from the previous part.
 
 ### Visualization
 
----
+* By mixing simple sigmoids, we can arrive at more complicated functions.
+* The same idea holds for other activations (e.g., ReLU)
 
-### Visualization - 2D
+\begin{align*}
+\sum_{k} w^{2}_{k} \sigma\left(w_{k}^{1}x + b_{k}^{1}\right) + b_k^2
+\end{align*}
+
+```{r, echo = FALSE, out.width = 800}
+include_graphics("sketches/logistic_mixture.png")
+```
+
+What do you think is the analogous visualization for $\mathbf{x}\in \reals^{2}$?
 
 ---
 
 ### Simulation
 
+We generate a dataset where the decision boundary is not linear.
+
+.pull-left[
 ```{r}
-x <- matrix(rt(N * 2, 8), N, 2)
+x <- matrix(rt(N * 2, 12), N, 2)
 y <- rowSums(x ^ 2) < 1
-flip_ix <- sample(N, N / 20)
+flip_ix <- sample(N, N / 20) # 5% unavoidable error
 y[flip_ix] <- !y[flip_ix]
 simulation <- data.frame(x = x, y = y)
+```
+]
 
+.pull-right[
+```{r, out.width = 300}
 ggplot(simulation) +
   geom_point(aes(x.1, x.2, col = y))
 ```
+]
 
 ---
 
@@ -525,7 +543,7 @@ ggplot(simulation) +
 
 * We can define a simple model with one hidden layer (second line)
 * The last line mixes hidden representations to get the class prediction
-* Instead of $\sigma$, we use ReLu, but the mixture interpretation still holds
+* Instead of $\sigma$, we use ReLU, but the mixture interpretation still holds
 
 ```{r}
 library(keras)
@@ -585,12 +603,14 @@ model %>%
 
 .pull-left[
 * As before, we can visualize predictions along a grid.
-* By mixing many linear hyperplanes, we can make a circular decision boundary
+* By mixing many linear hyperplanes, we can make a nonlinear decision boundary
+* Notice the model overfits to some of the wrong points (which is why the
+boundary isn't circular)
 ]
 
 .pull-right[
-```{r}
-x_star <- seq(-3, 3, length.out = N)
+```{r, out.width = 300}
+x_star <- seq(-4.8, 4.8, length.out = N)
 grid <- data.frame(expand.grid(x.1 = x_star, x.2 = x_star))
 grid$y_hat <- predict(model, x = as.matrix(grid[, 1:2]))[, 2]
 
@@ -632,7 +652,7 @@ Discovering the long tail via influence estimation.
 * They introduce the definition,
 
 \begin{align*}
-\text{mem}(\mathcal{A}, \data, i):=\underset{h \leftarrow \mathcal{A}(\data)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}}-\underset{h \leftarrow \mathcal{A}\left(\data^{\backslash i}\right)}{\Parg{h\left(\*x_{i}\right)=\*y_{i}}}
+\widehat{\text{mem}}(\mathcal{A}, \data, i):= \Psubarg{h \leftarrow \mathcal{A}(\data)}{h\left(\*x_{i}\right)=\*y_{i}}-\Psubarg{h \leftarrow \mathcal{A}\left(\data^{\backslash i}\right)}{h\left(\*x_{i}\right)=\*y_{i}}
 \end{align*}
 
 ---
@@ -649,7 +669,7 @@ Discovering the long tail via influence estimation.
 held out,
 
 \begin{align*}
-\hat{\text{mem}}\left(\mathcal{A}, \data, i\right) &= \Parg{h_{s}\left(\*x_{i}\right) = y_{i} \vert i \in \data_{s}} - \Parg{h_{s}\left(\*x_{i}\right) = y_{i} \vert i \notin \data_{s}}
+\widehat{\text{mem}}\left(\mathcal{A}, \data, i\right) &= \Parg{h_{s}\left(\*x_{i}\right) = y_{i} \vert i \in \data_{s}} - \Parg{h_{s}\left(\*x_{i}\right) = y_{i} \vert i \notin \data_{s}}
 \end{align*}
 
 where the probabilities are averages over algorithms run with / without that
@@ -657,25 +677,25 @@ sample.
 
 ---
 
-### Visualization
-
----
-
 ### Simulation Setup
 
 * What do the memorization estimates look like for the simulation data from the
 previous example?
-* We will subsample it 10 times, train 10 models, and compute this statistic
-
----
+* We will subsample it 100 times, train 100 models, and compute the
+$\widehat{\text{mem}}\left(\mathcal{A}, \data, i\right)$ statistic
 
 ```{r}
 library(purrr)
-B <- 10 # originally was 200
+B <- 10
 indices <- rerun(B, sample(1:N, N / 2))
+indices[1:2] # indices of first two subsampled datasets
 ```
 
 ---
+
+This is some helper code. It wraps the model building and fitting from before
+into functions, but otherwise does nothing new.
+
 ```{r}
 init_model <- function() {
   keras_model_sequential() %>% 
@@ -702,51 +722,101 @@ fit_model <- function(model, df) {
 
 ---
 
+### Fitting Models
+
+* In the block below, we fit 100 models to each of the different subsamples.
+* The difference in predicted probabilities for these models will be used to
+estimate memorization
+
 ```{r}
-models <- rerun(B, init_model())
-map(indices, ~ simulation[., ]) %>%
-  map2(models, ~ fit_model(.y, .x))
+models <- rerun(B, init_model()) # initialize models
+map(indices, ~ simulation[., ]) %>% # get subsamples
+  map2(models, ~ fit_model(.y, .x)) # fit model to subsample
 ```
 
 ---
 
-### get predictions on each sample, from each model
+### Predicted Probabilities
+
+* We now get predicted probabilities from each of these models, across the
+entire dataset
+* Each row in `probs` is a different sample
+* Each column is a different model
+* Samples with very different predicted probabilities across models are
+potentially being "memorized"
 
 ```{r}
 probs <- map_dfc(models, ~ predict(., as.matrix(simulation[, 1:2]))[, 2]) %>%
   as.matrix()
+
+probs[1:6, 1:10]
 ```
 
 ---
 
+### Indicator Matrix
 
+.pull-left[
+* For computing the memorization statistic, we want to know which models used which samples.
+* This matrix has a 1 in row $i$ and column $j$ if model $j$ used sample $i$
+]
 
+.pull-right[
 ```{r}
 indicator <- matrix(FALSE, nrow(probs), ncol(probs))
 for (i in seq_along(indices)) {
   indicator[indices[[i]], i] <- TRUE
 }
 
+indicator[1:10, 1:5]
+```
+]
+
+---
+
+### Memorization Function
+
+The function below computes the formula for $\widehat{\text{mem}}(\mathcal{A}, \data, i)$ given the variables discussed above. The line within the for-loop is
+the key one.
+
+```{r}
 memorization <- function(probs, indicator, y) {
   result <- vector(length = length(y))
   for (i in seq_along(y)) {
       result[i] <- mean(probs[i, indicator[i, ]]) - mean(probs[i, !indicator[i, ]])
-      if (!y[i]) {
-        result[i] <- -result[i]
-      }
   }
 
+  result[!y] <- -result[!y]
   result
 }
 ```
 
 ---
 
-```{r}
+### Visualization
+
+.pull-left[
+The memorized samples tend to be,
+* Nearer to the decision boundary
+* Points that would be otherwise misclassified
+
+This is consistent with the findings of the paper, even though the dataset we've
+worked with is much simpler.
+]
+
+.pull-right[
+```{r, out.width = 350}
 simulation$mem <- memorization(probs, indicator, y)
 ggplot(simulation, aes(x.1, x.2)) +
   geom_point(aes(col = y, size = mem)) +
-  scale_size_binned(breaks = c(0, 0.02, 0.05), range = c(0.00001, 2))
+  scale_size_binned(breaks = c(0, 0.02, 0.05), range = c(0, 2))
 ```
+]
 
+---
 
+### Conclusion
+
+* To deeply understand an idea, it helps to view it from several perspectives
+* Try illustrating abstract ideas and constructing hands-on examples
+* The goal is to make something that appears complex as simple as possible

@@ -33,23 +33,26 @@ h1, h2, h3 {
 }
 .remark-slide-content {
   /*background-color: #F7F7F7;*/
-  font-size: 26px;
+  font-size: 24px;
   padding: 1em 4em 1em 4em;
 }
 .remark-slide-content h1 {
-    font-size: 55px;
+    font-size: 45;
 }
 .remark-slide-content h2 {
-    font-size: 45px;
+    font-size: 35;
 }
 .remark-slide-content h3 {
-    font-size: 35px;
+    font-size: 26;
 }
 .remark-code, .remark-inline-code {
   font-family: 'Lucida Console', Monaco, monospace;
-  font-style: 24px;
+  font-style: 20px;
 }
 .remark-code {
+}
+.figure {
+  font-size: 18px;
 }
 .remark-inline-code {
   color: #09017F;
