@@ -6,6 +6,7 @@ output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
     lib_dir: libs
+    self_contained: false
     nature:
       highlightStyle: github
       highlightLines: true
@@ -17,6 +18,8 @@ output:
 $$\def\*#1{\mathbf{#1}}$$
 $$\def\m#1{\boldsymbol{#1}}$$
 $$\def\reals{\mathbb{R}} % Real number symbol$$
+
+---
 
 
 ```{r, echo = FALSE}
@@ -210,7 +213,7 @@ cells across 3 stages of development (E5.5, E6.5, and E7.5)
 ]
 
 .pull-right[
-```{r, out.width = 440, echo = FALSE}
+```{r, out.width = 410, echo = FALSE}
 include_graphics("figures/factor1-interp.png")
 ```
 ]
@@ -254,7 +257,7 @@ at only a subset of the data
 * The Stochastic Variational Inference algorithm can be used without any
 modification
 
-```{r}
+```{r, out.width = 600}
 include_graphics("sketches/svi.png")
 ```
 
@@ -302,7 +305,7 @@ When we concatenate several datasets (with the same features) and make a UMAP,
 the main difference is across datasets.
   * This is in spite of the fact that the same cell type is present across all the datasets
   
-```{r, echo = FALSE, out.width = 300}
+```{r, echo = FALSE, out.width = 500}
 include_graphics("figures/harmony-motivation.png")
 ```
 
@@ -335,6 +338,11 @@ Ordinary (hard) clustering finds centroids $M$ optimizing,
 \min_{M} \sum_{i = 1}^{N} \|x_i - m_{k\left(i\right)}\|_{2}^{2}
 \end{align*}
 
+```{r, out.width = 500}
+include_graphics("sketches/hard_clustering.png")
+```
+
+
 ---
 
 ### Soft Clustering
@@ -344,14 +352,18 @@ sample across $K$ clusters.
 
 Regularized soft clustering looks for both centroids and responsibilities,
 
+.pull-left[
 \begin{align*}
 &\min_{M \in \reals^{K \times D}, R \in \Delta_{D}^{N}} \sum_{i = 1}^{N}\sum_{k = 1}^{K} \|x_i - m_{k}\|_{2}^{2} - \lambda r_{ik}\log r_{ik} \\
 \equiv &\min_{M \in \reals^{K \times D}, R \in \Delta_{D}^{N}} \sum_{i = 1}^{N} \left[\sum_{k = 1}^{K}\|x_i - m_{k}\|_{2}^{2} + \lambda H\left(r_{i\cdot}\right) \right]
 \end{align*}
+]
 
-```{r}
+.pull-right[
+```{r, out.width = 500}
 include_graphics("sketches/soft_clustering-2.png")
 ```
+]
 
 ---
 
@@ -382,13 +394,13 @@ In the diversity promoting version, we add a penalty that encourages each
 cluster to contain a mix of batches. 
 
 .pull-left[
-* The penalty is a $\chi^2$ statistic,
+The penalty is a $\chi^2$ statistic,
 \begin{align*}
-\Omega\left(O, E\right) = \sum_{b = 1}^{B}\sum_{k = 1}^{K} O_{kb} \log\left(\frac{O_{kb}}{E_{kb}}\right),
+\Omega\left(O, E\right) = \sum_{b = 1}^{B}\sum_{k = 1}^{K} O_{kb} \log\left(\frac{O_{kb}}{E_{kb}}\right)
 \end{align*}
 ]
 
-pull-right[
+.pull-right[
 ```{r, echo = FALSE, out.width = 300}
 include_graphics("sketches/harmony-regularization.png")
 ```
@@ -444,31 +456,67 @@ They analyze pancreas islet measurements made across 36 donors and 5 technologie
   to remove this effect
   - They benchmark against a few other integration techniques
 
+.pull-left[
+```{r, echo = FALSE, out.width = 350}
+include_graphics("figures/harmony-technologies-1.png")
+```
+]
+
+.pull-right[
+```{r, echo = FALSE, out.width = 300}
+include_graphics("figures/harmony-technologies-2.png")
+```
+]
+
 ---
 
 ### Example: Spatial + scSeq Integration
 
+.pull-left[
 There is a tension between gathering data about more genes or data about spatial information for a few genes
   - In the example, they measure spatial expression for 155 genes (MERFISH)
   - They measure plain single cell expression for 21,913 genes (10X)
+]
+
+.pull-right[
+```{r, echo = FALSE, out.width = 400}
+include_graphics("figures/harmony-spatial-setup.png")
+```
+]
 
 ---
 
 ### Example: Spatial + scSeq Integration
 
+.pull-left[
 An idea is to match gene expression patterns across the datasets. If a group of
 cells has very similar gene expression patterns, and if one of them has spatial
 information, then it's possible to extrapolate.
   - A naive application fails, because the two datasets don't overlap anywhere
+]
+
+.pull-right[
+```{r, echo = FALSE, out.width = 300}
+include_graphics("figures/harmony-spatial-problem.png")
+```
+]
 
 ---
 
 ### Example: Spatial + scSeq Integration
 
+.pull-left[
 To successfully implement spatial imputation, the datasets need to be made to
 overlap.
   * This is exactly the scenario that the algorithm above had been designed for
-  * The two modalities are viewed as differnet batches
+  * The two modalities are viewed as different batches
+]
+
+.pull-right[
+```{r, echo = FALSE, out.width = 400}
+include_graphics("figures/harmony-spatial-result.png")
+```
+]
 
 ---
 
@@ -571,10 +619,143 @@ Greenacre, M. J. (1984). Theory and applications of correspondence analysis.
 
 ---
 
-## Reflections
+### Notation
+
+* $X$: An $I \times J$ counts matrix - think $J$ species at $I$ sites.
+* $P$: The matrix $X$ divide by its total count (joint distribution).
+* $r, c$: The induced marginal distributions, $P1$ and $P^T 1$,
+* $D_{r}, D_{c}$: Diagonal matrices made from $r, c$. Induces a metric.
+* $R, C$: The row and column "profiles," $D_{r}^{-1}P$ and $D_{c}^{-1}P^T$.
+  - Conditional distributions within each row / column.
+  
+```{r, echo = FALSE, out.width = 200}
+include_graphics("sketches/correspondence-analysis-notation.png")
+```
 
 ---
 
-"Improve a new formulation with an old one"
+### Notation
+
+* $X$: An $I \times J$ counts matrix - think $J$ species at $I$ sites.
+* $P$: The matrix $X$ divide by its total count (joint distribution).
+* $r, c$: The induced marginal distributions, $P1$ and $P^T 1$,
+* $D_{r}, D_{c}$: Diagonal matrices made from $r, c$. Induces a metric.
+* $R, C$: The row and column "profiles," $D_{r}^{-1}P$ and $D_{c}^{-1}P^T$.
+  - Conditional distributions within each row / column.
+
+.pull-left[
+```{r, echo = FALSE, width = 300}
+include_graphics("sketches/correspondence_analysis_profiles_r.png")
+```
+]
+
+.pull-right[
+```{r, echo = FALSE, width = 300}
+include_graphics("sketches/correspondence_analysis_profiles_c.png")
+```
+]
 
 ---
+
+
+### Decomposition
+
+Correspondence analysis takes a generalized SVD of the residual-from-independence,
+\begin{align*}
+P - rc^{T} &= UD_{\sigma}V^{T} \\
+U^T D_{r}^{-1} U = &I = V^T D_{c}^{-1} V
+\end{align*}
+and defines row and column scores $F$ and $G$ after pre and post multiplying
+according to the metric-inducing matrices,
+
+\begin{align*}
+D_{r}^{-1}\left(P - rc^{T}\right) = D_{r}^{-1}UD_{\sigma}V^{T} := FV^T \\
+\left(P - rc^{T}\right)D_{c}^{-1} = UD_{\sigma}V^{T}D_{c}^{-1} := UG^T
+\end{align*}
+
+The $K$ columns of $V$ and $U$ define principal axes for which $F$ and $G$ are coordinates
+
+---
+
+### Decomposition
+
+```{r, echo = FALSE, out.width = 700}
+include_graphics("sketches/correspondence_scores_axes.png")
+```
+
+
+---
+
+### Transition Formulas
+
+The idea of duality is that the scores $F$ and $G$ can be recovered from each other. For example,
+
+\begin{align*}
+G D_{\sigma} &= C F
+\end{align*}
+Recalling the conditional probability interpretation of $C$, this means that column (species) scores are weighted averages of column (site) scores,
+\begin{align*}
+\sigma_1 g_{jk} &= \sum_{i} p_{i \vert j} f_{ik}
+\end{align*}
+
+There are analogous formulas for the reverse direction.
+
+---
+
+### Inertia (Variance Decomposition)
+
+The diagonal elements of $D_{\sigma}$ define proportions of variance in the sense,
+\begin{align}
+\sum_{i} r_{i} f_{ik}^2 = \sigma_{k}^2 = \sum_{j} c_{j}g_{jk}^2.
+\end{align}
+
+.pull-left[
+* The elements $r_{i}f_{ik}$ can be thought of as the inertia for a single row /
+site with respect to the $k^{th}$ axes.
+* The total inertia is a scaled version of the $chi^2$ statistic
+]
+
+.pull-right[
+```{r, echo = FALSE, out.width = 400}
+include_graphics("sketches/correspondence_inertia_rows.png")
+```
+]
+
+---
+
+### Re-Weighting
+
+* Re-weight groups of samples or rows so that they have a desired inertia
+* E.g., you could make the inertia proportional to the number of square miles in
+each of the sampling sites
+
+```{r, echo = FALSE, out.width = 500}
+include_graphics("sketches/correspondence_inertia_reweight.png")
+```
+
+---
+
+### Focusing
+
+* If we are curious about the differences between particular groups, we
+append new rows with those group centroids
+* Upweighting these rows will make the between-group differences dominate the
+  first axis
+* Studying axes $2$ through $K$ highlights residual structure
+  - It is similar to subtracting batch effects
+  - But it can be modulated
+
+```{r, echo = FALSE, out.width = 500}
+include_graphics("sketches/correspondence_inertia_rows_focus.png")
+```
+
+---
+
+## Questions
+
+- The MOFA factors are not encouraged to find high cross-table correlation.
+- The clustering step in HARMONY is perhaps artificial. What if there is a gradient of cells? Can we extend the "local" batch correction idea?
+- In MOFA, the "row profiles" $z_i$ apply to all assays simultaneously. This seems limiting.
+- Using standard preprocessing methods, what is the "inertia" across assays in a joint analysis?
+- What would a more interactive integration workflow look like?
+- The uncertainties in MOFA are never used, and HARMONY doesn't produce any

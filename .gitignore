@@ -10,6 +10,8 @@
 *.toc
 *.nav
 *.out
+*.png
+*.html
 *cache*
 *_files/
 .Rproj.user
