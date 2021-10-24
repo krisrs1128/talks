@@ -20,11 +20,8 @@ $$\def\m#1{\boldsymbol{#1}}$$
 $$\def\reals{\mathbb{R}} % Real number symbol$$
 $$\def\data{\mathcal{D}} % Real number symbol$$
 $$\def\P{\mathbb{P}} % Probability symbol$$
-
 $$\def\Parg#1{\P\left({#1}\right)}$$
-
 $$\def\Psubarg#1#2{\P_{#1}\left[{#2}\right]}$$
-
 $$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential$$
 
 ```{r, echo = FALSE}
@@ -50,16 +47,26 @@ scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(
 scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 ```
 
+---
+
 ## Understanding Machine Learning Algorithms
 
-### Data Science Nigeria AI Bootcamp
+```{r, echo = FALSE, out.width = 420, fig.align = "left"}
+include_graphics("sketches/logistic_two_d_ys_projection.png")
+```
 
- Kris Sankaran | UW Madison | October 28, 2021
+ [Kris Sankaran](https://krisrs1128.github.io/LSLab/) | [UW Madison](https://stat.wisc.edu) | October 28, 2021 | [Code](https://github.com/krisrs1128/talks/blob/master/2021/20211028/20211028.Rmd)
  
-```{r, out.width = 300, fig.show = "hold", echo = FALSE}
+.pull-left[
+```{r, out.width = 230, fig.show = "hold", echo = FALSE}
 include_graphics("sketches/uw-logo-flush-web.png")
+```
+]
+.pull-right[
+```{r, out.width = 220, fig.show = "hold", echo = FALSE}
 include_graphics("sketches/dsn_logo.png")
 ```
+]
 
 ---
 
@@ -68,7 +75,7 @@ include_graphics("sketches/dsn_logo.png")
 * Machine learning has become important in a wide range of applications
 * But studying ML is still a challenge. Why?
   - Uses vocabulary from many different areas
-  - Is not centrally-organized around anything specific
+  - Is not centrally-organized around anything physical system
   - Flashy results can make it seem like magic
 
 ---
@@ -247,7 +254,7 @@ $\*\theta$ and $\*x$ is small.
 ]
 
 .pull-right[
-```{r, out.width = 200, echo = FALSE, fig.cap = "Perpendicular vectors have inner product equal to 0."}
+```{r, out.width = 150, echo = FALSE, fig.cap = "Perpendicular vectors have inner product equal to 0."}
 include_graphics("sketches/inner_product-2.png")
 ```
 ]
@@ -270,7 +277,7 @@ $\*\theta$ and $\*x$ is small.
 ]
 
 .pull-right[
-```{r, out.width = 200, echo = FALSE, fig.cap = "When the vectors are at obtuse angles, their inner product is negative."}
+```{r, out.width = 150, echo = FALSE, fig.cap = "When the vectors are at obtuse angles, their inner product is negative."}
 include_graphics("sketches/inner_product_3.png")
 ```
 ]
@@ -393,6 +400,10 @@ ggplot(grid, aes(x.1, x.2)) +
   geom_tile(aes(fill = y_hat)) +
   geom_point(data = simulation, aes(col = y))
 ```
+
+---
+
+# Case Study: Deep Learning
 
 ---
 
@@ -520,6 +531,11 @@ What do you think is the analogous visualization for $\mathbf{x}\in \reals^{2}$?
 
 We generate a dataset where the decision boundary is not linear.
 
+```{r, echo = FALSE}
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = 1)
+```
+
+
 .pull-left[
 ```{r}
 x <- matrix(rt(N * 2, 12), N, 2)
@@ -622,7 +638,7 @@ ggplot(grid, aes(x.1, x.2)) +
 
 ---
 
-# Influence Estimation
+# Case Study: Influence Estimation
 
 ---
 
@@ -659,6 +675,14 @@ Discovering the long tail via influence estimation.
 
 ### Visualization
 
+\begin{align*}
+\widehat{\text{mem}}(\mathcal{A}, \data, i):= \Psubarg{h \leftarrow \mathcal{A}(\data)}{h\left(\*x_{i}\right)=\*y_{i}}-\Psubarg{h \leftarrow \mathcal{A}\left(\data^{\backslash i}\right)}{h\left(\*x_{i}\right)=\*y_{i}}
+\end{align*}
+
+```{r, echo = FALSE, fig.cap = "The memorization statistic captures how much the predicted probabilities change when a point is removed.", out.width = 650}
+include_graphics("sketches/memorization_picture.png")
+```
+
 ---
 
 ### How to Estimate Memorization
@@ -686,7 +710,7 @@ $\widehat{\text{mem}}\left(\mathcal{A}, \data, i\right)$ statistic
 
 ```{r}
 library(purrr)
-B <- 10
+B <- 100
 indices <- rerun(B, sample(1:N, N / 2))
 indices[1:2] # indices of first two subsampled datasets
 ```
@@ -749,7 +773,7 @@ potentially being "memorized"
 probs <- map_dfc(models, ~ predict(., as.matrix(simulation[, 1:2]))[, 2]) %>%
   as.matrix()
 
-probs[1:6, 1:10]
+probs[1:4, 1:8]
 ```
 
 ---
