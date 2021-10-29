@@ -338,10 +338,9 @@ Ordinary (hard) clustering finds centroids $M$ optimizing,
 \min_{M} \sum_{i = 1}^{N} \|x_i - m_{k\left(i\right)}\|_{2}^{2}
 \end{align*}
 
-```{r, out.width = 500}
+```{r, out.width = 400}
 include_graphics("sketches/hard_clustering.png")
 ```
-
 
 ---
 
@@ -558,7 +557,7 @@ eigenvalue problem with solution $\Sigma^{-\frac{1}{2}}\left(\mu_1 - \mu_2\right
 ]
 
 .pull-right[
-```{r, echo = FALSE, out.width = 320}
+```{r, echo = FALSE, out.width = 250}
 include_graphics("sketches/lda.png")
 ```
 ]
@@ -578,8 +577,9 @@ include_graphics("sketches/lda.png")
 .pull-left[
 Proof: The identity for the JSD reduces to $\frac{1}{2}\left[\frac{\alpha^{T}\Sigma\alpha}{\|\alpha\|_{2}^{2}} + \frac{\|\alpha\|_{2}^{2}}{\alpha^{T}\Sigma\alpha}\right] - 1$. If you let $\alpha$ be the $k^{th}$ eigenvector of $\Sigma$, the formula gives $\frac{1}{2}\left[\lambda_{k} + \frac{1}{\lambda_{k}}\right]$. This is largest when $\lambda_{k}$ is either $\lambda_{\text{max}}$ or $\lambda_{\text{min}}$.
 ]
+
 .pull-right[
-```{r, echo = FALSE, out.width = 320}
+```{r, echo = FALSE, out.width = 250}
 include_graphics("sketches/pca.png")
 ```
 ]
@@ -628,7 +628,7 @@ Greenacre, M. J. (1984). Theory and applications of correspondence analysis.
 * $R, C$: The row and column "profiles," $D_{r}^{-1}P$ and $D_{c}^{-1}P^T$.
   - Conditional distributions within each row / column.
   
-```{r, echo = FALSE, out.width = 200}
+```{r, echo = FALSE, out.width = 150}
 include_graphics("sketches/correspondence-analysis-notation.png")
 ```
 
@@ -745,7 +745,7 @@ append new rows with those group centroids
   - It is similar to subtracting batch effects
   - But it can be modulated
 
-```{r, echo = FALSE, out.width = 500}
+```{r, echo = FALSE, out.width = 450}
 include_graphics("sketches/correspondence_inertia_rows_focus.png")
 ```
 
