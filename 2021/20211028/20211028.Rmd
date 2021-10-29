@@ -841,6 +841,20 @@ ggplot(simulation, aes(x.1, x.2)) +
 
 ### Conclusion
 
+.pull-left[
+We've worked through three case studies that emphasize,
+
 * To deeply understand an idea, it helps to view it from several perspectives
 * Try illustrating abstract ideas and constructing hands-on examples
 * The goal is to make something that appears complex as simple as possible
+
+Everyone has their own way of learning, but I think that the more creative (and
+less routine) the process, the better.
+]
+
+.pull-right[
+Feel free to connect on linkedin or email me at
+[ksankaran@wisc.edu](mailto:ksankaran@wisc.edu).
+]
+
+Enjoy the journey!

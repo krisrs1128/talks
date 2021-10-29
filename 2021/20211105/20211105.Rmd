@@ -2,38 +2,178 @@
 title: "Multiscale Analysis of Count Data"
 author: "Kris Sankaran"
 date: "November 5, 2021"
-output: xaringan::moon_reader
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+$\def\Dir{\text{Dir}}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\newcommand{\wout}{\tilde w_{\text{out}}}$
+
 ---
 
-```{r}
+```{r, echo = FALSE}
 library(knitr)
-opts_chunk$set(echo = FALSE, fig.align = "center")
+opts_chunk$set(echo = FALSE, fig.align = "center", warning = FALSE, message = FALSE, fig.width = 6, fig.height = 3, cache = TRUE)
+library(ggplot2)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 ```
 
-## Multiscale Analysis of Count Data through Topic alignment
+## Multiscale Analysis of Count Data through Topic Alignment
+
+
+```{r, out.width = 400}
+include_graphics("figure/transport-true-lda.png")
+```
 
 .pull-left[
-   Kris Sankaran
-   UW Madison
-   November 5, 2021
+Kris Sankaran
+
+[ksankaran@wisc.edu](ksankaran@wisc.edu)
  ]
+ 
+.pull-right[
+```{r, out.width = 230, fig.show = "hold", echo = FALSE}
+include_graphics("figure/uw-logo-flush-web.png")
+```
+]
 
 ---
 
-### Come up with a better introduction
-### Some comparison with hierarchical clustering
+### Motivation: Microbiome Data Analysis
+
+.pull-left[
+* How should we describe the bacterial ecosystems that surround (and
+inhabit) us?
+* An improved understanding would support human and environmental health
+]
+
+.pull-right[
+<img src="https://uwmadison.box.com/shared/static/20mf8omlcj4dvs8nmh0lvqtdlvoz28rq.jpeg"/>
+]
 
 ---
 
-Having these properties would support,
+### Motivation: Microbiome Data Analysis
+
+* Technologies like 16S and metagenomic sequencing have given us a novel, detailed view of the microbiome
+* Microbe abundances are recorded in a high-dimensional count matrix
+  - We often have supplemental data associated with each row (sample) and column
+  (microbe)
+
+---
+
+### Two Useful Methods
+
+(show screenshots from a few different papers on this topic)
+
+* Hierarchical clustering and Latent Dirichlet Allocation have both been
+fruitfully applied in microbiome data analysis
+* They provide useful visual artifacts from what would otherwise be overwhelming datasetse
+
+---
+
+### Hierarchical Clustering
+
+.pull-left[
+* Agglomorative hierarchical clustering sequentially merges pairs of clusters
+that are "closest" to one another
+  - E.g., those having smallest pairwise distances to one another
+]
+
+.pull-right[
+```{r, fig.height = 5, fig.width = 9}
+example(hclust) # maybe provide a more microbiome-oriented version of this
+```
+]
+
+---
+
+### Limitations Hierarchical Clustering
+
+If the data in fact lie along a gradient, then it is artificial to use a
+clustering procedure.
+
+---
+
+### Latent Dirichlet Allocation
+
+Latent Dirichlet Allocation (LDA) is a popular topic model that supposes samples
+$x_i \in \mathbb{R}^{D}$ are drawn independently from,
+
+\begin{align*}
+x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, B\gamma_{i}\right) \\
+\gamma_{i} &\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
+\end{align*}
+where the columns $\beta_{k}$ of $B \in \Delta^{D}$ lie in the $D$
+dimensional simplex and are themselves drawn independently from,
+\begin{align*}
+\beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
+\end{align*}
+
+We vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix $\Gamma$.
+
+---
+
+### Latent Dirichlet Allocation
+
+Topic models are well-suited to count data dimensionality reduction. The
+estimated parameters can be interpreted as,
+* $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
+* $B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
+
+```{r, out.width = 600}
+include_graphics("figure/lda_overview.png")
+```
+
+---
+
+
+### Limitations of Latent Dirichlet Allocation
+
+* LDA does not support navigation across scales.
+* It can give a useful overview, but it doesn't support "focusing in" onto
+specific patterns of interest
+
+---
+
+### The Best of Both Worlds
+
+Our ideal method would a type of blend between hierarchical clustering and LDA.
+It would support,
 * Navigation: Multiscale methods help the analyst navigate
  richness-interpretability trade-offs between views
 * Parsimony: Support for partial membership can reduce the number of prototypes
  needed
-* Critical Evaluation: What are the assumptions used in data analysis? It helps
- to have an explicit, generative model.
 
---
+---
 
 ### Main Idea
 
@@ -54,34 +194,10 @@ Having these properties would support,
 ---
 
 ### Topic Models
-
-Latent Dirichlet Allocation (LDA) is a popular topic model that supposes samples
-$x_i \in \mathbb{R}^{D}$ are drawn independently from,
-
-\begin{align*}
-x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, B\gamma_{i}\right) \\
-\gamma_{i} &\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
-\end{align*}
-where the columns $\beta_{k}$ of $B \in \Delta^{D}$ lie in the $D$
-dimensional simplex and are themselves drawn independently from,
-\begin{align*}
-\beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
-\end{align*}
-
-We vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix $\Gamma$.
-
 ---
 
 ### Interpretation
 
-Topic models are well-suited to count data dimensionality reduction. The
-estimated parameters can be interpreted as,
-* $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
-* $B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
-
-<img src="figure/lda_overview.png"/>
-
----
 
 (Need to introduce some sort of transitional idea at this point)
 
@@ -91,10 +207,8 @@ estimated parameters can be interpreted as,
 
 We view an alignment as a graph across the ensemble. Index models by $m$ and
 topics by $k$. Then,
-* Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k},
-\gamma^m_{ik}\}$.
-* Edges $E$ are placed between topics from neighboring models ($K$ vs.
-$K + 1$ topics)
+* Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{ik}\}$.
+* Edges $E$ are placed between topics from neighboring models ($K$ vs. $K + 1$ topics)
 * Weights $W$ encode the similarity between topics.
 
 ---
@@ -105,8 +219,7 @@ This graph-based view provides a convenient notation,
 
 * $m\left(v\right)$ is the model for node $v$
 * $k\left(v\right)$ is the topic for node $v$
-* $\Gamma\left(v\right) := \left(\gamma_{i
-v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
+* $\Gamma\left(v\right) := \left(\gamma_{i v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
 mixed memberships for topic $v$
 * $\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}$ is the
 corresponding topic distribution
@@ -121,7 +234,7 @@ To compute weights, we can use,
 w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 \end{align*}
 
-```{r out.width = 375}
+```{r out.width = 420}
 include_graphics("figure/product_alignment.png")
 ```
 
@@ -173,7 +286,7 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 * Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
 * The number of unique paths is a useful property of an alignment
 
-```{r}
+```{r, out.width=270}
 include_graphics("figure/branch_construction-1.png")
 ```
 
@@ -189,7 +302,7 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 * Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
 * The number of unique paths is a useful property of an alignment
 
-```{r}
+```{r, out.width=270}
 include_graphics("figure/branch_construction-3.png")
 ```
 
@@ -205,7 +318,7 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 * Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
 * The number of unique paths is a useful property of an alignment
 
-```{r}
+```{r, out.width=270}
 include_graphics("figure/branch_construction-2.png")
 ```
 
@@ -230,13 +343,13 @@ A consequence is that parent specificity differs between these regimes,
  corresponding to an arbitrary split of a true topic
 
 .pull-left[
-```{r}
+```{r, out.width=350}
 include_graphics("figure/refinement-branches-2.png")
 ```
 ]
 
 .pull-right[
-```{r}
+```{r, out.width=350}
 include_graphics("figure/refinement-branches.png")
 ```
 ]
@@ -248,4 +361,260 @@ include_graphics("figure/refinement-branches.png")
 The coherence of a topic is defined as its average connectedness to other topics
 along the same branch,
 
+\begin{align*}
+ c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+\end{align*}
+  
+ * Topics that are transient (appearing at one $K$ and disappearing at
+ another) have low coherence scores
+ * Topics that are consistently recovered across choices of $K$ have high
+ coherence
+
 ---
+
+### True LDA Model
+
+A sanity check is compute the alignment of data that are in fact generated by an LDA model (true $K = 5$).
+* $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
+
+```{r, out.width = 480}
+include_graphics("figure/transport-true-lda.png")
+```
+
+---
+
+### Summaries
+
+.pull-left[
+The summary measures suggest that the true $K$ is 5.
+]
+
+
+.pull-right[
+```{r}
+include_graphics("figure/key_topics-lda.png")
+include_graphics("figure/refinement_lda.png")
+```
+]
+
+---
+
+# ## LDA with background variation
+
+What happens when the LDA model is mis-specified? Consider the following
+generative mechanism,
+
+\begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(x_{i} ; N_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}
+
+where $\*B$ stacks the $\beta_k$ rowwise.
+
+---
+
+### Result
+
+The alignment structure is sensitive to changes in $\alpha$ and fragments when
+LDA structure is not present.
+
+.pull-left[
+```{r, out.width = 300}
+include_graphics("figure/gradient_flow-1.png")
+include_graphics("figure/gradient_flow-2.png")
+```
+]
+
+.pull-right[
+```{r, out.width = 300}
+include_graphics("figure/gradient_flow-3.png")
+include_graphics("figure/gradient_flow-4.png")
+```
+]
+
+---
+
+### Summaries
+
+This structure is consistent across simulation runs, and the summary measures
+quantify the deterioration of topics.
+  
+```{r}
+include_graphics("figure/gradient_key_topics.png")
+```
+
+---
+
+### Summaries
+
+This structure is consistent across simulation runs, and the summary measures
+quantify the deterioration of topics.
+  
+```{r, out.width=760}
+include_graphics("figure/gradient_refinement_full.png")
+```
+  
+---
+
+### Summaries
+This structure is consistent across simulation runs, and the summary measures
+quantify the deterioration of topics.
+
+```{r, out.width=850}
+include_graphics("figure/gradient_stability.png")
+```
+
+---
+
+### Strain switching
+
+Our final simulation mimics the strain switching problem.
+* Small subsets of species switch between two otherwise similar topics
+* Multiple resolutions are required to detect the difference
+
+---
+
+###  Mechanism
+
+We first construct equivalence classes of similar topics $\tilde{\beta}_k^r$.
+Then, for each sample $i$ and each $k$, we draw one member from the class
+
+\begin{align*}
+\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
+\end{align*}
+
+stack the results into $B^{i}$, and then draw,
+
+\begin{align}
+x_{i} &\sim \Mult\left(n_{i}, B^{i}\gamma_{i}\right)
+\end{align}
+as in standard LDA.
+
+---
+
+### Results
+* There are five topics, the first two of which exhibit strain switching
+* At smaller $K$, we recognize the five main topics
+* At larger $K$, we are able to recognize switching within the first two topics
+
+.pull-left[
+```{r}
+include_graphics("figure/equivalence_flow.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/equivalence_betas.png")
+```
+]
+
+---
+
+### Results
+* At smaller $K$, we recognize the main community structure, but don't see strain switching
+* At larger $K$, we are able to recognize instances of switching
+
+```{r out.width=650}
+include_graphics("figure/equivalence_similarity_hm.png")
+```
+
+---
+
+# Data Analysis
+
+---
+
+### Known structures
+
+* Historically, the vaginal microbiome has been split into 5 separate
+community state types (CSTs).
+   - Four are considered healthy, and are each dominated by a Lactobacillus strain
+   - One dysbiotic CST is characterized by lack of a dominant Lactobacillus
+
+---
+
+.pull-left[
+* We recover the 4 Lactobacillus Community State Types that have been previously documented
+* Within the dysbiotic CST, we detect 2 consistently different community structures
+]
+
+.pull-right[
+```{r out.width=800}
+include_graphics("figure/microbiome_coherence.png")
+```
+]
+
+---
+
+### Interpretations
+
+ * We recover the 4 Lactobacillus Community State Types that have been previously documented
+ * Within the dysbiotic CST, we find 2 persistent community structures
+ 
+.pull-left[
+```{r out.width=280}
+include_graphics("figure/microbiome_flow.png")
+```
+]
+
+.pull-right[
+```{r, out.width=410}
+include_graphics("figure/microbiome_betas.png")
+```
+]
+ 
+---
+
+# Discussion
+
+```{r, echo = FALSE}
+opts_chunk$set(echo = TRUE)
+```
+
+---
+
+### Software
+
+ Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
+ 
+.pull-left[
+```{r, echo = TRUE}
+library(purrr)
+library(alto)
+
+# simulate data and fit models
+x <- rmultinom(20, 5000, rep(0.1, 500))
+lda_params <- setNames(map(1:10, ~ list(k = .)), 1:10)
+lda_models <- run_lda_models(x, lda_params)
+
+# perform alignment
+result <- align_topics(lda_models)
+```
+]
+
+.pull-right[
+```{r, echo = TRUE}
+plot(result)
+```
+]
+
+All the simulations discussed today are vignettes in the package. (We will
+create a binder link for people to try)
+
+---
+
+### Takeaways
+
+
+
+---
+
+
+### True LDA Model [Product Estimate]
+
+```{r}
+include_graphics("figure/product-true-lda.png")
+```
