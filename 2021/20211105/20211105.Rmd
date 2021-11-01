@@ -34,6 +34,7 @@ min_theme <- theme_minimal() +
     panel.background = element_rect(fill = "#f7f7f7"),
     panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
     axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
     axis.title = element_text(size = 16),
     legend.position = "bottom"
   )
@@ -103,23 +104,84 @@ fruitfully applied in microbiome data analysis
 ### Hierarchical Clustering
 
 .pull-left[
+* Hierarchical clustering creates a nested sequence of clusters
+* By cutting the tree at different heights, we can recover either overviews or
+details
+* It's possible to either zoom in to or out from an observed pattern
+]
+
+.pull-right[
+```{r, fig.cap = "A clustering result from the phyloseq documentation."}
+include_graphics("figure/hclust_example.png")
+```
+]
+
+---
+
+### Hierarchical Clustering
+
+.pull-left[
 * Agglomorative hierarchical clustering sequentially merges pairs of clusters
 that are "closest" to one another
   - E.g., those having smallest pairwise distances to one another
 ]
 
 .pull-right[
-```{r, fig.height = 5, fig.width = 9}
-example(hclust) # maybe provide a more microbiome-oriented version of this
+```{r, out.width = 200}
+include_graphics("figure/hclust_linkage_1.png")
 ```
+Two types of inter-cluster distance. Figure from Modern Statistics for Modern
+Biology (Holmes and Huber).
+]
+
+---
+
+### Hierarchical Clustering
+
+.pull-left[
+* Agglomorative hierarchical clustering sequentially merges pairs of clusters
+that are "closest" to one another
+  - E.g., those having smallest pairwise distances to one another
+]
+
+.pull-right[
+```{r, out.width = 200}
+include_graphics("figure/hclust_linkage_2.png")
+```
+Two types of inter-cluster distance. Figure from Modern Statistics for Modern
+Biology (Holmes and Huber).
 ]
 
 ---
 
 ### Limitations Hierarchical Clustering
 
-If the data in fact lie along a gradient, then it is artificial to use a
-clustering procedure.
+* If the data in fact lie along a gradient, then clustering is somewhat artificial
+* The data can be more parsimoniously described
+  - Projection onto 1D subspace
+  - Mixture between two extremes
+
+```{r, echo = FALSE, fig.height = 3.5, fig.width = 8}
+library(MASS)
+library(purrr)
+library(dplyr)
+mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
+x <- (mu + mvrnorm(nrow(mu), rep(0, 2), diag(2))) %>%
+  as.data.frame()
+
+cluster_res <- hclust(dist(x))
+scales <- seq(2, 8, 2)
+x_clusters <- map_dfr(scales, ~ cbind(x, cluster = cutree(cluster_res, .)), .id = "scale") %>%
+  mutate(
+    cluster = as.factor(cluster),
+    scale = scales[as.integer(scale)]
+  )
+
+ggplot(x_clusters) +
+  geom_point(aes(V1, V2, col = cluster)) +
+  facet_grid(. ~ scale) +
+  labs(x = "x", y = "y")
+```
 
 ---
 
@@ -159,7 +221,7 @@ include_graphics("figure/lda_overview.png")
 ### Limitations of Latent Dirichlet Allocation
 
 * LDA does not support navigation across scales.
-* It can give a useful overview, but it doesn't support "focusing in" onto
+* It can give a useful overview, but it doesn't support zooming into
 specific patterns of interest
 
 ---
@@ -177,29 +239,17 @@ It would support,
 
 ### Main Idea
 
-* We will fit an ensemble of generative models of varying levels of complexity (Parsimony, Evaluation)
-* We will build a compact representation of the result (Navigation)
-
 .pull-left[
-<img src="figure/transport-true-lda.png"/>
+* We will fit an ensemble of LDA models of varying levels of complexity (Parsimony, Evaluation)
+* We will build a compact representation of the result (Navigation)
+* In the Sankey diagram, columns are models and rectangles are topics
+* In the plot below, panels are models and columns are topics
+
 ]
 .pull-right[
+<img src="figure/transport-true-lda.png" width=400/>
 <img src="figure/transport-true-lda-betas.png"/>
 ]
-
----
-
-# Methodology
-
----
-
-### Topic Models
----
-
-### Interpretation
-
-
-(Need to introduce some sort of transitional idea at this point)
 
 ---
 
@@ -287,7 +337,7 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 * The number of unique paths is a useful property of an alignment
 
 ```{r, out.width=270}
-include_graphics("figure/branch_construction-1.png")
+include_graphics("figure/refinement-branches-1.png")
 ```
 
 ---
@@ -303,7 +353,7 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 * The number of unique paths is a useful property of an alignment
 
 ```{r, out.width=270}
-include_graphics("figure/branch_construction-3.png")
+include_graphics("figure/refinement-branches-2.png")
 ```
 
 ---
@@ -319,10 +369,43 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 * The number of unique paths is a useful property of an alignment
 
 ```{r, out.width=270}
-include_graphics("figure/branch_construction-2.png")
+include_graphics("figure/refinement-branches-3.png")
 ```
 
 ---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-4.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-5.png")
+```
+
+---
+
 
 ### Refinement
 
