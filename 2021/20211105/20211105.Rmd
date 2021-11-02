@@ -24,7 +24,7 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
 ```{r, echo = FALSE}
 library(knitr)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 library(ggplot2)
 min_theme <- theme_minimal() + 
   theme(
@@ -55,7 +55,9 @@ class: bottom, my_title
 .pull-left[
 November 5, 2021
 
-McMaster Department of Mathematics and Statistics
+Department of Mathematics and Statistics
+
+McMaster University
  ]
  
 .pull-right[
@@ -77,7 +79,9 @@ inhabit) us?
 ]
 
 .pull-right[
-<img src="https://uwmadison.box.com/shared/static/20mf8omlcj4dvs8nmh0lvqtdlvoz28rq.jpeg"/>
+```{r, fig.cap = "A 'photo' of the microbiome, from Earle et al. 2015.", fig.align = "left"}
+include_graphics("https://whatislife.stanford.edu/images/spatial.png")
+```
 ]
 
 ---
@@ -89,15 +93,31 @@ inhabit) us?
   - We often have supplemental data associated with each row (sample) and column
   (microbe)
 
+```{r, out.width = 800}
+include_graphics("figure/species-matrix.png")
+```
+
 ---
 
 ### Two Useful Methods
 
-(show screenshots from a few different papers on this topic)
+* **Hierarchical clustering** and dimensionality reduction are useful in
+microbiome data analysis
+  - They are supported by standard analysis pipelines
+* Among the latter methods, we'll focus on **Latent Dirichlet Allocation**
+* They provide useful visual artifacts from what would otherwise be overwhelming datasets
 
-* Hierarchical clustering and Latent Dirichlet Allocation have both been
-fruitfully applied in microbiome data analysis
-* They provide useful visual artifacts from what would otherwise be overwhelming datasetse
+.pull-left[
+```{r, out.width = 180}
+include_graphics("https://joey711.github.io/phyloseq/phyloseq.png")
+```
+]
+
+.pull-right[
+```{r, out.width = 240}
+include_graphics("figure/q2docs.png")
+```
+]
 
 ---
 
@@ -211,8 +231,8 @@ estimated parameters can be interpreted as,
 * $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
 * $B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
 
-```{r, out.width = 600}
-include_graphics("figure/lda_overview.png")
+```{r, out.width = 450}
+include_graphics("figure/latent_dirichlet_v2.png")
 ```
 
 ---
@@ -220,26 +240,41 @@ include_graphics("figure/lda_overview.png")
 
 ### Limitations of Latent Dirichlet Allocation
 
-* LDA does not support navigation across scales.
-* It can give a useful overview, but it doesn't support zooming into
-specific patterns of interest
+* LDA does not support navigation across scales
+* It can give a useful overviews...
+  - But it's impossible to "zoom" into patterns of interest
+  
+```{r, out.width = 450}
+include_graphics("figure/latent_dirichlet_v2.png")
+```
 
 ---
 
 ### The Best of Both Worlds
 
-Our ideal method would a type of blend between hierarchical clustering and LDA.
+Our ideal method would a blend between hierarchical clustering and LDA.
 It would support,
 * Navigation: Multiscale methods help the analyst navigate
  richness-interpretability trade-offs between views
-* Parsimony: Support for partial membership can reduce the number of prototypes
- needed
+* Parsimony: Partial membership $\to$ fewer needed prototypes
+ 
+.pull-left[
+```{r, out.width = 320}
+include_graphics("figure/hclust_example.png")
+```
+]
+
+.pull-right[
+```{r, out.width = 360}
+include_graphics("figure/latent_dirichlet_v2.png")
+```
+]
 
 ---
 
 ### Main Idea
 
-* We will fit an ensemble of LDA models of varying levels of complexity (Parsimony, Evaluation)
+* We will fit an ensemble of LDA models of varying levels of complexity (Parsimony)
 * We will build a compact representation of the result (Navigation)
 * In the Sankey diagram, columns are models and rectangles are topics
 * In the plot below, panels are models and columns are topics
@@ -255,8 +290,12 @@ include_graphics("figure/alto_sketches_annotated alignment.png")
 We view an alignment as a graph across the ensemble. Index models by $m$ and
 topics by $k$. Then,
 * Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{ik}\}$.
-* Edges $E$ are placed between topics from neighboring models ($K$ vs. $K + 1$ topics)
+* Edges $E$ are placed between topics from neighboring models, $K$ vs. $K + 1$ topics
 * Weights $W$ encode the similarity between topics.
+
+```{r, out.width = 560}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
 
 ---
 
@@ -272,18 +311,26 @@ mixed memberships for topic $v$
 corresponding topic distribution
 * $e = \left(v, v'\right)$ is an edge linking topics $v$ and $v'$.
 
+```{r, out.width = 560}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
+
 ---
 
 ### Estimating Weights: Product approach
 
+.pull-left[
 To compute weights, we can use,
 \begin{align*}
 w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 \end{align*}
+]
 
-```{r out.width = 420}
+.pull-right[
+```{r out.width = 500}
 include_graphics("figure/product_alignment_conceptual.png")
 ```
+]
 
 ---
 
@@ -294,7 +341,7 @@ Let $V_p$ and $V_q$ be two subsets of topics within the graph.
 * Let the total "mass" of $V_p$ be $p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$. Define $q$ similarly.
 * Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between the pair of topic distributions.
 
-```{r out.width = 400}
+```{r out.width = 420}
 include_graphics("figure/transport_alignment_conceptual.png")
 ```
 
@@ -303,15 +350,34 @@ include_graphics("figure/transport_alignment_conceptual.png")
 ### Estimating Weights: Transport approach
 
 
-The weights $W$ can than be estimated by solving the optimal transport problem,
+The weights $W$ can be estimated by solving the optimal transport problem,
 \begin{align*}
 &\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right> \\
 \mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|p\right| \times \left|q\right|}_{+} : W 1_{\left|q\right|} = p \text{ and } W^{T} 1_{\left|p\right|^\prime} = q\}.
 \end{align*}
 
-```{r, out.width = 400}
+```{r, out.width = 420}
 include_graphics("figure/transport_alignment_conceptual.png")
 ```
+
+---
+
+### Alignment and Duality
+
+* These two alignment approaches can be viewed as dual to one another
+* One operates on the space of samples, the other on the space of features
+
+.pull-left[
+```{r}
+include_graphics("figure/correspondence_analysis_profiles_r.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/correspondence_analysis_profiles_c.png")
+```
+]
 
 ---
 
@@ -320,7 +386,7 @@ include_graphics("figure/transport_alignment_conceptual.png")
 * Representing the models by an alignment suggests a few diagnostic measures
 * These both help measure topic quality and highlight model mis-specification
 
-```{r, out.width = 650}
+```{r}
 include_graphics("figure/alto_sketches_diagnotics.png")
 ```
 
@@ -415,6 +481,10 @@ $K$ topics, then
 * $K < K_0$: True topics are merged together into "compromise" topics
 * $K > K_0$: True topics are arbitrarily split
 
+```{r, out.width=350}
+include_graphics("figure/refinement_diagnostic_example.png")
+```
+
 ---
 
 ### Refinement
@@ -458,10 +528,10 @@ include_graphics("figure/transport-true-lda.png")
 
 ---
 
-### Summaries
+### Diagnostics
 
 .pull-left[
-The summary measures suggest that the true $K$ is 5.
+The diagnostics suggest that the true $K$ is 5.
 ]
 
 
@@ -511,23 +581,23 @@ include_graphics("figure/gradient_flow-4.png")
 
 ---
 
-### Summaries
+### Diagnostics
 
 This structure is consistent across simulation runs, and the summary measures
 quantify the deterioration of topics.
   
-```{r}
+```{r, out.width=850}
 include_graphics("figure/gradient_key_topics.png")
 ```
 
 ---
 
-### Summaries
+### Diagnostics
 
 This structure is consistent across simulation runs, and the summary measures
 quantify the deterioration of topics.
   
-```{r, out.width=760}
+```{r, out.width=850}
 include_graphics("figure/gradient_refinement_full.png")
 ```
   
@@ -609,8 +679,6 @@ include_graphics("figure/equivalence_similarity_hm.png")
 * Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
   - Four healthy CSTs are dominated by variants of Lactobacillus species
   - A fifth dysbiotic CST is more compositionally diverse
-* This dysbiotic state has also been associated with increased susceptibility to
-sexually transmitted disease and painful menstruation
 ]
 
 .pull-right[
@@ -632,11 +700,21 @@ on this question
 
 ### Dataset
 
+.pull-left[
 * We will only consider a subsample of the full VMRC dataset
 * 135 individuals followed through pregnancy
 * 1279 samples and 2699 species
+]
 
----
+.pull-right[
+```{r, echo = TRUE}
+library(alto)
+library(purrr)
+data(vm_data)
+map(vm_data, dim)
+```
+]
+
 ---
 
 ### Interpretations
@@ -652,7 +730,7 @@ include_graphics("figure/microbiome_flow.png")
 ]
 
 .pull-right[
-```{r, out.width=410}
+```{r, out.width=800}
 include_graphics("figure/microbiome_betas.png")
 ```
 ]
@@ -660,20 +738,18 @@ include_graphics("figure/microbiome_betas.png")
 ---
 ### Coherence Measures
 
-* Of these three dysbiotic sub-topics, two seem especially coherent
+.pull-left[
+* Two dysbiotic sub-topics seem especially coherent
   - Gardnerella + Atopobium
   - Gardnerella + Megasphera
 * These two subtypes were targeted for further study
   - They are related to the 5 subtypes discovered by France et al. (2020)
-  - Hypothesize that only 3 topics are needed due to mixed-membership, rather
-  than hard clustering, approach
+  - Hypothesize that only 3 topics are needed due to mixed-membership approach
+]
 
-.pull-left[
+.pull-right[
 ```{r out.width=800}
 include_graphics("figure/microbiome_coherence.png")
-```
-```{r, out.width = 410}
-include_graphics("figure/microbiome_betas.png")
 ```
 ]
 
@@ -707,12 +783,36 @@ result <- align_topics(lda_models)
 ]
 
 .pull-right[
-```{r, echo = TRUE, fig.align = "left", fig.height = 2.8}
+```{r, eval = FALSE, echo = TRUE}
 plot(result)
+```
+
+```{r, echo = FALSE, fig.align = "left", fig.height = 2.8}
+alto::plot(result)
 ```
 ]
 
 All the simulations discussed today are vignettes in the package. 
+
+---
+
+### Customized Visualizations
+
+
+.pull-left[
+* The package returns visualizations as ggplot2 objects
+* This makes customized style and annotation straightforward
+```{r}
+include_graphics("figure/customized-1.png")
+```
+]
+
+.pull-right[
+```{r, out.width = 480}
+include_graphics("figure/customized-2.png")
+```
+]
+
 
 ---
 
@@ -739,19 +839,20 @@ include_graphics("figure/github.png")
 
 ### Takeaways
 
----
-
-```{r}
-include_graphics("https://uwmadison.box.com/shared/static/ebncvy25z4q6livvmzy9b10a1th5zt33.jpeg")
-```
-
+ * Read the details in our preprint, [Multiscale Analysis of Count Data Through Topic Alignment](https://tinyurl.com/8jyvp4pd)) 
 
 ---
+
 class: background-rivers
+
+# Thank You!
 
 ---
 
 ### References
+
+Earle K.A., Billings G., Sigal M., Lichtman J.S., Hansson G.C., Elias J.E., Amieva M.R., Huang K.C., Sonnenburg J.L.
+Cell Host Microbe. 2015 Oct 14;18(4):478-88. doi: 10.1016/j.chom.2015.09.002. Epub 2015 Oct 1.
 
 France, M. T., Ma, B., Gajer, P., Brown, S., Humphrys, M. S., Holm, J. B. & Ravel, J. (2020). VALENCIA: a nearest centroid classification method for vaginal microbial communities based on composition. Microbiome, 8(1), 1-15.
 
@@ -762,6 +863,6 @@ Ravel, J., Gajer, P., Abdo, Z., Schneider, G. M., Koenig, S. S., McCulle, S. L. 
 
 ### True LDA Model [Product Estimate]
 
-```{r}
+```{r, out.width = 650}
 include_graphics("figure/product-true-lda.png")
 ```
