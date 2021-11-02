@@ -22,11 +22,9 @@ $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
 $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
----
-
 ```{r, echo = FALSE}
 library(knitr)
-opts_chunk$set(echo = FALSE, fig.align = "center", warning = FALSE, message = FALSE, fig.width = 6, fig.height = 3, cache = TRUE)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 library(ggplot2)
 min_theme <- theme_minimal() + 
   theme(
@@ -47,23 +45,25 @@ scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(
 scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 ```
 
+---
+
+class: bottom, my_title
+
 ## Multiscale Analysis of Count Data through Topic Alignment
 
 
-```{r, out.width = 400}
-include_graphics("figure/transport-true-lda.png")
-```
-
 .pull-left[
-Kris Sankaran
+November 5, 2021
 
-[ksankaran@wisc.edu](ksankaran@wisc.edu)
+McMaster Department of Mathematics and Statistics
  ]
  
 .pull-right[
-```{r, out.width = 230, fig.show = "hold", echo = FALSE}
-include_graphics("figure/uw-logo-flush-web.png")
-```
+Kris Sankaran
+
+UW Madison
+
+[ksankaran@wisc.edu](ksankaran@wisc.edu)
 ]
 
 ---
@@ -161,7 +161,7 @@ Biology (Holmes and Huber).
   - Projection onto 1D subspace
   - Mixture between two extremes
 
-```{r, echo = FALSE, fig.height = 3.5, fig.width = 8}
+```{r, echo = FALSE, fig.height = 3.3, fig.width = 8}
 library(MASS)
 library(purrr)
 library(dplyr)
@@ -239,17 +239,14 @@ It would support,
 
 ### Main Idea
 
-.pull-left[
 * We will fit an ensemble of LDA models of varying levels of complexity (Parsimony, Evaluation)
 * We will build a compact representation of the result (Navigation)
 * In the Sankey diagram, columns are models and rectangles are topics
 * In the plot below, panels are models and columns are topics
 
-]
-.pull-right[
-<img src="figure/transport-true-lda.png" width=400/>
-<img src="figure/transport-true-lda-betas.png"/>
-]
+```{r, out.width = 750}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
 
 ---
 
@@ -285,7 +282,7 @@ w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 \end{align*}
 
 ```{r out.width = 420}
-include_graphics("figure/product_alignment.png")
+include_graphics("figure/product_alignment_conceptual.png")
 ```
 
 ---
@@ -298,7 +295,7 @@ Let $V_p$ and $V_q$ be two subsets of topics within the graph.
 * Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between the pair of topic distributions.
 
 ```{r out.width = 400}
-include_graphics("figure/transport_alignment.png")
+include_graphics("figure/transport_alignment_conceptual.png")
 ```
 
 ---
@@ -313,16 +310,19 @@ The weights $W$ can than be estimated by solving the optimal transport problem,
 \end{align*}
 
 ```{r, out.width = 400}
-include_graphics("figure/transport_alignment.png")
+include_graphics("figure/transport_alignment_conceptual.png")
 ```
 
 ---
 
-### Summaries
+### Diagnostics
 
-* Representing the models by an alignment suggests a few summary measures
-* These summaries help measure topic quality
-* They can also be used to diagnose model mis-specification
+* Representing the models by an alignment suggests a few diagnostic measures
+* These both help measure topic quality and highlight model mis-specification
+
+```{r, out.width = 650}
+include_graphics("figure/alto_sketches_diagnotics.png")
+```
 
 ---
 
@@ -425,17 +425,9 @@ A consequence is that parent specificity differs between these regimes,
 * $K > K_0$: Each topic receives substantial mass from several parents, each
  corresponding to an arbitrary split of a true topic
 
-.pull-left[
 ```{r, out.width=350}
-include_graphics("figure/refinement-branches-2.png")
+include_graphics("figure/refinement_diagnostic_example.png")
 ```
-]
-
-.pull-right[
-```{r, out.width=350}
-include_graphics("figure/refinement-branches.png")
-```
-]
 
 ---
 
@@ -482,7 +474,7 @@ include_graphics("figure/refinement_lda.png")
 
 ---
 
-# ## LDA with background variation
+### LDA with background variation
 
 What happens when the LDA model is mis-specified? Consider the following
 generative mechanism,
@@ -610,32 +602,48 @@ include_graphics("figure/equivalence_similarity_hm.png")
 
 ---
 
-### Known structures
-
-* Historically, the vaginal microbiome has been split into 5 separate
-community state types (CSTs).
-   - Four are considered healthy, and are each dominated by a Lactobacillus strain
-   - One dysbiotic CST is characterized by lack of a dominant Lactobacillus
-
----
+### Scientific Context
 
 .pull-left[
-* We recover the 4 Lactobacillus Community State Types that have been previously documented
-* Within the dysbiotic CST, we detect 2 consistently different community structures
+* What role does the microbiome play in preterm births?
+* Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
+  - Four healthy CSTs are dominated by variants of Lactobacillus species
+  - A fifth dysbiotic CST is more compositionally diverse
+* This dysbiotic state has also been associated with increased susceptibility to
+sexually transmitted disease and painful menstruation
 ]
 
 .pull-right[
-```{r out.width=800}
-include_graphics("figure/microbiome_coherence.png")
+```{r}
+include_graphics("figure/community_state_types.jpg")
 ```
 ]
 
 ---
 
+### Vaginal Microbiome Research Consortium
+
+* What mechanisms drive the development of community state types?
+* The Vaginal Microbiome Research Consortium (VMRC) collected data to shed light
+on this question
+  * Long-term goal: Design interventions to restore Lactobacillus dominance
+  
+---
+
+### Dataset
+
+* We will only consider a subsample of the full VMRC dataset
+* 135 individuals followed through pregnancy
+* 1279 samples and 2699 species
+
+---
+---
+
 ### Interpretations
 
- * We recover the 4 Lactobacillus Community State Types that have been previously documented
- * Within the dysbiotic CST, we find 2 persistent community structures
+* At $K = 7$, the four Lactobacillus CSTs are already present
+* The remaining three topics correspond to the dysbiotic CST dysbiotic CST
+(green, brown, and pink)
  
 .pull-left[
 ```{r out.width=280}
@@ -649,6 +657,26 @@ include_graphics("figure/microbiome_betas.png")
 ```
 ]
  
+---
+### Coherence Measures
+
+* Of these three dysbiotic sub-topics, two seem especially coherent
+  - Gardnerella + Atopobium
+  - Gardnerella + Megasphera
+* These two subtypes were targeted for further study
+  - They are related to the 5 subtypes discovered by France et al. (2020)
+  - Hypothesize that only 3 topics are needed due to mixed-membership, rather
+  than hard clustering, approach
+
+.pull-left[
+```{r out.width=800}
+include_graphics("figure/microbiome_coherence.png")
+```
+```{r, out.width = 410}
+include_graphics("figure/microbiome_betas.png")
+```
+]
+
 ---
 
 # Discussion
@@ -679,19 +707,55 @@ result <- align_topics(lda_models)
 ]
 
 .pull-right[
-```{r, echo = TRUE}
+```{r, echo = TRUE, fig.align = "left", fig.height = 2.8}
 plot(result)
 ```
 ]
 
-All the simulations discussed today are vignettes in the package. (We will
-create a binder link for people to try)
+All the simulations discussed today are vignettes in the package. 
+
+---
+
+### Package Details
+
+* Can rerun scripts at the binder link: [https://tinyurl.com/59k67sde](https://tinyurl.com/59k67sde)
+  - No installation necessary
+* All source code available on github
+* Don't hesitate to contact us if you have any questions!
+
+.pull-left[
+```{r}
+include_graphics("figure/docs.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/github.png")
+```
+]
 
 ---
 
 ### Takeaways
 
+---
 
+```{r}
+include_graphics("https://uwmadison.box.com/shared/static/ebncvy25z4q6livvmzy9b10a1th5zt33.jpeg")
+```
+
+
+---
+class: background-rivers
+
+---
+
+### References
+
+France, M. T., Ma, B., Gajer, P., Brown, S., Humphrys, M. S., Holm, J. B. & Ravel, J. (2020). VALENCIA: a nearest centroid classification method for vaginal microbial communities based on composition. Microbiome, 8(1), 1-15.
+
+Ravel, J., Gajer, P., Abdo, Z., Schneider, G. M., Koenig, S. S., McCulle, S. L. & Forney, L. J. (2011). Vaginal microbiome of reproductive-age women. Proceedings of the National Academy of Sciences, 108(Supplement 1), 4680-4687.
 
 ---
 
