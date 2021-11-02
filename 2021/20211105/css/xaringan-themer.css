@@ -196,6 +196,20 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   z-index: 1;
 }
 
+.my_title p {
+  margin: 0;
+}
+
+.my_title .pull-left {
+  float: left;
+  width: 60%;
+}
+
+.my_title .pull-right {
+  float: right;
+  width: 27%;
+}
+
 .my_title::before {    
       content: "";
       background-image: url("https://uwmadison.box.com/shared/static/ebncvy25z4q6livvmzy9b10a1th5zt33.png");
@@ -205,10 +219,29 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
       right: 0px;
       bottom: 0px;
       left: 0px;
-      opacity: 0.2;
+      opacity: 0.1;
       z-index: -1;
 }
 
 .background-rivers {
-  background-imate: url("https://uwmadison.box.com/shared/static/arknmgopwjq2y4x5h8oeduzlbkvjyybn.jpg");
+  position: relative;
+  z-index: 1;
+}
+
+.background-rivers h1 {
+  background-color: #F7F7F7;
+  width: 30%;
+}
+
+.background-rivers::before {
+  content: "";
+  background-image: url("https://uwmadison.box.com/shared/static/arknmgopwjq2y4x5h8oeduzlbkvjyybn.jpg");
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 1;
+  z-index: -1;
 }
