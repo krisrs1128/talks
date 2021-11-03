@@ -839,7 +839,9 @@ include_graphics("figure/github.png")
 
 ### Takeaways
 
- * Read the details in our preprint, [Multiscale Analysis of Count Data Through Topic Alignment](https://tinyurl.com/8jyvp4pd)) 
+* The topic alignment meta-algorithm can provide more information about a dataset than any single topic model fit
+* Next steps: Interactive visualization, extensions to multi-modality
+* Read the details in our preprint, [Multiscale Analysis of Count Data Through Topic Alignment](https://tinyurl.com/8jyvp4pd)) 
 
 ---
 
