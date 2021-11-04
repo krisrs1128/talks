@@ -22,7 +22,7 @@ $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
 $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
-```{r, echo = FALSE}
+```{r}
 library(knitr)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 library(ggplot2)
@@ -70,6 +70,33 @@ UW Madison
 
 ---
 
+### Project Team
+
+This project is joint work with Laura Symul (Stanford University) and Julia Fukuyama (Indiana University).
+
+.pull-left[
+```{r, out.width = 220}
+include_graphics("https://profiles.stanford.edu/proxy/api/cap/profiles/192342/resources/profilephoto/350x350.1545327663087.jpg")
+```
+]
+
+.pull-right[
+```{r, out.width = 220}
+include_graphics("https://jfukuyama.github.io/photo_small.png")
+```
+]
+
+It has also benefited from many suggestions from Susan Holmes and Pratheepa
+Jeganathan.
+
+---
+
+class: center, middle, section
+
+# Background
+
+---
+
 ### Motivation: Microbiome Data Analysis
 
 .pull-left[
@@ -79,7 +106,7 @@ inhabit) us?
 ]
 
 .pull-right[
-```{r, fig.cap = "A 'photo' of the microbiome, from Earle et al. 2015.", fig.align = "left"}
+```{r, fig.cap = "A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -88,7 +115,8 @@ include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 
 ### Motivation: Microbiome Data Analysis
 
-* Technologies like 16S and metagenomic sequencing have given us a novel, detailed view of the microbiome
+* Technologies like 16S and metagenomic sequencing have given us a detailed view
+of the microbiome
 * Microbe abundances are recorded in a high-dimensional count matrix
   - We often have supplemental data associated with each row (sample) and column
   (microbe)
@@ -105,7 +133,7 @@ include_graphics("figure/species-matrix.png")
 microbiome data analysis
   - They are supported by standard analysis pipelines
 * Among the latter methods, we'll focus on **Latent Dirichlet Allocation**
-* They provide useful visual artifacts from what would otherwise be overwhelming datasets
+* They provide useful visual artifacts for navigating large datasets
 
 .pull-left[
 ```{r, out.width = 180}
@@ -127,7 +155,7 @@ include_graphics("figure/q2docs.png")
 * Hierarchical clustering creates a nested sequence of clusters
 * By cutting the tree at different heights, we can recover either overviews or
 details
-* It's possible to either zoom in to or out from an observed pattern
+* It's possible zoom in and out across observed patterns
 ]
 
 .pull-right[
@@ -150,8 +178,7 @@ that are "closest" to one another
 ```{r, out.width = 200}
 include_graphics("figure/hclust_linkage_1.png")
 ```
-Two types of inter-cluster distance. Figure from Modern Statistics for Modern
-Biology (Holmes and Huber).
+Two types of inter-cluster distance. Figure from (Holmes and Huber 2019).
 ]
 
 ---
@@ -168,20 +195,19 @@ that are "closest" to one another
 ```{r, out.width = 200}
 include_graphics("figure/hclust_linkage_2.png")
 ```
-Two types of inter-cluster distance. Figure from Modern Statistics for Modern
-Biology (Holmes and Huber).
+Two types of inter-cluster distance. Figure from (Holmes and Huber 2019).
 ]
 
 ---
 
 ### Limitations Hierarchical Clustering
 
-* If the data in fact lie along a gradient, then clustering is somewhat artificial
+* If the data in fact lie along a gradient, then clustering is artificial
 * The data can be more parsimoniously described
   - Projection onto 1D subspace
   - Mixture between two extremes
 
-```{r, echo = FALSE, fig.height = 3.3, fig.width = 8}
+```{r, fig.height = 3.5, fig.width = 12}
 library(MASS)
 library(purrr)
 library(dplyr)
@@ -207,7 +233,7 @@ ggplot(x_clusters) +
 
 ### Latent Dirichlet Allocation
 
-Latent Dirichlet Allocation (LDA) is a popular topic model that supposes samples
+Latent Dirichlet Allocation (LDA) is a model that supposes samples
 $x_i \in \mathbb{R}^{D}$ are drawn independently from,
 
 \begin{align*}
@@ -232,7 +258,7 @@ estimated parameters can be interpreted as,
 * $B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
 
 ```{r, out.width = 450}
-include_graphics("figure/latent_dirichlet_v2.png")
+include_graphics("figure/latent_dirichlet_v3.png")
 ```
 
 ---
@@ -242,10 +268,10 @@ include_graphics("figure/latent_dirichlet_v2.png")
 
 * LDA does not support navigation across scales
 * It can give a useful overviews...
-  - But it's impossible to "zoom" into patterns of interest
+  - But it's impossible to zoom in and out across patterns of interest
   
 ```{r, out.width = 450}
-include_graphics("figure/latent_dirichlet_v2.png")
+include_graphics("figure/latent_dirichlet_v3.png")
 ```
 
 ---
@@ -254,9 +280,9 @@ include_graphics("figure/latent_dirichlet_v2.png")
 
 Our ideal method would a blend between hierarchical clustering and LDA.
 It would support,
-* Navigation: Multiscale methods help the analyst navigate
+* Navigation: Multiscale methods help navigate
  richness-interpretability trade-offs between views
-* Parsimony: Partial membership $\to$ fewer needed prototypes
+* Parsimony: Partial membership $\to$ fewer prototypes
  
 .pull-left[
 ```{r, out.width = 320}
@@ -266,18 +292,22 @@ include_graphics("figure/hclust_example.png")
 
 .pull-right[
 ```{r, out.width = 360}
-include_graphics("figure/latent_dirichlet_v2.png")
+include_graphics("figure/latent_dirichlet_v3.png")
 ```
 ]
+
+---
+class: center, middle, section
+
+# Approach
 
 ---
 
 ### Main Idea
 
-* We will fit an ensemble of LDA models of varying levels of complexity (Parsimony)
+* We will fit an ensemble of LDA models of varying complexities (Parsimony)
 * We will build a compact representation of the result (Navigation)
 * In the Sankey diagram, columns are models and rectangles are topics
-* In the plot below, panels are models and columns are topics
 
 ```{r, out.width = 750}
 include_graphics("figure/alto_sketches_annotated alignment.png")
@@ -289,7 +319,7 @@ include_graphics("figure/alto_sketches_annotated alignment.png")
 
 We view an alignment as a graph across the ensemble. Index models by $m$ and
 topics by $k$. Then,
-* Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{ik}\}$.
+* Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{k}\}$.
 * Edges $E$ are placed between topics from neighboring models, $K$ vs. $K + 1$ topics
 * Weights $W$ encode the similarity between topics.
 
@@ -305,7 +335,7 @@ This graph-based view provides a convenient notation,
 
 * $m\left(v\right)$ is the model for node $v$
 * $k\left(v\right)$ is the topic for node $v$
-* $\Gamma\left(v\right) := \left(\gamma_{i v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
+* $\Gamma\left(v\right) := \left(\gamma_{ v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
 mixed memberships for topic $v$
 * $\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}$ is the
 corresponding topic distribution
@@ -400,7 +430,7 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 \end{align*}
 
 * Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
+* The number of identified paths is a useful property of an alignment
 
 ```{r, out.width=270}
 include_graphics("figure/refinement-branches-1.png")
@@ -504,7 +534,7 @@ include_graphics("figure/refinement_diagnostic_example.png")
 ### Coherence
 
 The coherence of a topic is defined as its average connectedness to other topics
-along the same branch,
+along the same path,
 
 \begin{align*}
  c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
@@ -514,6 +544,11 @@ along the same branch,
  another) have low coherence scores
  * Topics that are consistently recovered across choices of $K$ have high
  coherence
+
+---
+class: center, middle, section
+
+# Simulation
 
 ---
 
@@ -583,7 +618,7 @@ include_graphics("figure/gradient_flow-4.png")
 
 ### Diagnostics
 
-This structure is consistent across simulation runs, and the summary measures
+This structure is consistent across simulation runs, and the diagnostic measures
 quantify the deterioration of topics.
   
 ```{r, out.width=850}
@@ -615,7 +650,7 @@ include_graphics("figure/gradient_stability.png")
 
 ### Strain switching
 
-Our final simulation mimics the strain switching problem.
+The last simulation mimics the strain switching problem.
 * Small subsets of species switch between two otherwise similar topics
 * Multiple resolutions are required to detect the difference
 
@@ -630,19 +665,19 @@ Then, for each sample $i$ and each $k$, we draw one member from the class
 \beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
 \end{align*}
 
-stack the results into $B^{i}$, and then draw,
+stack the results into $\*B^{i}$, and then draw,
 
 \begin{align}
-x_{i} &\sim \Mult\left(n_{i}, B^{i}\gamma_{i}\right)
+x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
 \end{align}
 as in standard LDA.
 
 ---
 
 ### Results
-* There are five topics, the first two of which exhibit strain switching
+* There are five topics, two of which exhibit strain switching
 * At smaller $K$, we recognize the five main topics
-* At larger $K$, we are able to recognize switching within the first two topics
+* At larger $K$, we are able to distinguish perturbed variants
 
 .pull-left[
 ```{r}
@@ -667,6 +702,7 @@ include_graphics("figure/equivalence_similarity_hm.png")
 ```
 
 ---
+class: center, middle, section
 
 # Data Analysis
 
@@ -675,9 +711,9 @@ include_graphics("figure/equivalence_similarity_hm.png")
 ### Scientific Context
 
 .pull-left[
-* What role does the microbiome play in preterm births?
+* What role does the microbiome play in preterm birth?
 * Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
-  - Four healthy CSTs are dominated by variants of Lactobacillus species
+  - Four healthy CSTs are dominated by Lactobacillus variants
   - A fifth dysbiotic CST is more compositionally diverse
 ]
 
@@ -701,9 +737,9 @@ on this question
 ### Dataset
 
 .pull-left[
-* We will only consider a subsample of the full VMRC dataset
+* We will only consider one modality from the full VMRC study
 * 135 individuals followed through pregnancy
-* 1279 samples and 2699 species
+* 2179 samples and 2699 species
 ]
 
 .pull-right[
@@ -720,7 +756,7 @@ map(vm_data, dim)
 ### Interpretations
 
 * At $K = 7$, the four Lactobacillus CSTs are already present
-* The remaining three topics correspond to the dysbiotic CST dysbiotic CST
+* The remaining three topics correspond to the dysbiotic CST
 (green, brown, and pink)
  
 .pull-left[
@@ -754,12 +790,9 @@ include_graphics("figure/microbiome_coherence.png")
 ]
 
 ---
+class: center, middle, section
 
 # Discussion
-
-```{r, echo = FALSE}
-opts_chunk$set(echo = TRUE)
-```
 
 ---
 
@@ -801,7 +834,7 @@ All the simulations discussed today are vignettes in the package.
 
 .pull-left[
 * The package returns visualizations as ggplot2 objects
-* This makes customized style and annotation straightforward
+* This makes customized styling and annotation straightforward
 ```{r}
 include_graphics("figure/customized-1.png")
 ```
@@ -840,14 +873,16 @@ include_graphics("figure/github.png")
 ### Takeaways
 
 * The topic alignment meta-algorithm can provide more information about a dataset than any single topic model fit
-* Next steps: Interactive visualization, extensions to multi-modality
-* Read the details in our preprint, [Multiscale Analysis of Count Data Through Topic Alignment](https://tinyurl.com/8jyvp4pd)) 
+* It is easier to incorporate into existing workflows than a brand new model
+* Interactive computing makes it easy to explore large ensembles
+* Future Study: Interactive visualization, extensions to multi-modality
+* Read the details in our preprint, [Multiscale Analysis of Count Data Through Topic Alignment](https://tinyurl.com/8jyvp4pd)
 
 ---
 
 class: background-rivers
 
-# Thank You!
+# Thank You! <br> Questions?
 
 ---
 
@@ -858,13 +893,6 @@ Cell Host Microbe. 2015 Oct 14;18(4):478-88. doi: 10.1016/j.chom.2015.09.002. Ep
 
 France, M. T., Ma, B., Gajer, P., Brown, S., Humphrys, M. S., Holm, J. B. & Ravel, J. (2020). VALENCIA: a nearest centroid classification method for vaginal microbial communities based on composition. Microbiome, 8(1), 1-15.
 
+Holmes, S. P., & Huber, W. (2018). Modern statistics for modern biology. Cambridge University Press.
+
 Ravel, J., Gajer, P., Abdo, Z., Schneider, G. M., Koenig, S. S., McCulle, S. L. & Forney, L. J. (2011). Vaginal microbiome of reproductive-age women. Proceedings of the National Academy of Sciences, 108(Supplement 1), 4680-4687.
-
----
-
-
-### True LDA Model [Product Estimate]
-
-```{r, out.width = 650}
-include_graphics("figure/product-true-lda.png")
-```
