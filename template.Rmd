@@ -1,0 +1,85 @@
+---
+title: "Your Title"
+author: "Kris Sankaran"
+date: "November 2021"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+$\def\Dir{\text{Dir}}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\newcommand{\wout}{\tilde w_{\text{out}}}$
+
+```{r}
+library(knitr)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+library(ggplot2)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+```
+
+---
+
+
+class: bottom, my_title
+
+(Edit the css to use different background images)
+
+## Your Title
+
+
+.pull-left[
+November 2021
+
+Seminar Name
+]
+ 
+.pull-right[
+Kris Sankaran
+
+Department of Statistics
+
+[ksankaran@wisc.edu](ksankaran@wisc.edu)
+]
+
+---
+
+---
+
+class: background-rivers
+
+(Edit the css to use different background images)
+
+# Thank You! <br> Questions?
+
+---
+
+### References
