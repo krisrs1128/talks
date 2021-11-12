@@ -1,0 +1,330 @@
+---
+title: "Multiscale Analysis of Count Data"
+author: "Kris Sankaran"
+date: "November 5, 2021"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+$\def\Dir{\text{Dir}}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\newcommand{\wout}{\tilde w_{\text{out}}}$
+
+```{r}
+library(knitr)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+library(ggplot2)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+```
+
+---
+
+class: bottom, my_title
+
+## Multiscale Topic Visualization in the Microbiome
+
+
+.pull-left[
+November 9, 2021
+
+ML + X Talks
+
+Data Science Hub
+ ]
+ 
+.pull-right[
+Kris Sankaran
+
+Department of Statistics
+
+[ksankaran@wisc.edu](ksankaran@wisc.edu)
+]
+
+---
+
+### Project Team
+
+This project is joint work with Laura Symul (Stanford) and Julia Fukuyama
+(Indiana University).
+
+.pull-left[
+```{r, out.width = 220}
+include_graphics("https://profiles.stanford.edu/proxy/api/cap/profiles/192342/resources/profilephoto/350x350.1545327663087.jpg")
+```
+]
+
+.pull-right[
+```{r, out.width = 220}
+include_graphics("https://jfukuyama.github.io/photo_small.png")
+```
+]
+
+It has also benefited from many suggestions from Susan Holmes (Stanford) and
+Pratheepa Jeganathan (McMaster).
+
+---
+
+class: center, middle, section
+
+# Problem and Data
+
+---
+
+### Long-Term Objective
+
+It is known that the microbiome is related to preterm birth.
+
+.pull-left[
+* Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
+  - Four healthy CSTs are dominated by Lactobacillus variants
+  - A fifth dysbiotic CST is more compositionally diverse
+]
+
+.pull-right[
+* What mechanisms drive the development of CSTs?
+* How do CSTs evolve over time?
+* How does host and microbial chemistry affect species composition?
+]
+
+> Goal: Design interventions to restore Lactobacillus dominance.
+
+
+---
+
+### Dataset
+
+The Vaginal Microbiome Research Consortium (VMRC) collected data to bring us
+closer to this goal.
+
+.pull-left[
+* Longitudinal aspect: Same people sampled throughout pregnancy
+* Multi-omic: 16S (microbiome), transcriptomic, and metabolomic data
+* Cautionary tale: Multisite batch effects
+]
+
+.pull-right[
+For now, we will focus on 16S data,
+* 135 pregnant individuals
+* 2179 samples and 2699 species
+]
+
+---
+
+### Multiscale Analysis Problem
+
+Can we zoom into the dysbiotic CST without getting lost in irrelevant details?
+
+.pull-left[
+We are guided by the principle of of Iterative Data Structuration (Tukey 1977,
+Holmes and Huber 2018).
+```{r, out.width = 300}
+include_graphics("figure/structuralescal.png")
+```
+]
+
+.pull-right[
+My favorite multiscale method, hierarchical clustering, does not work well with
+gradients.
+```{r, fig.height = 8, fig.width = 8, out.width = 300}
+library(MASS)
+library(purrr)
+library(dplyr)
+mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
+x <- (mu + mvrnorm(nrow(mu), rep(0, 2), diag(2))) %>%
+  as.data.frame()
+
+cluster_res <- hclust(dist(x))
+scales <- seq(2, 12, 4)
+x_clusters <- map_dfr(scales, ~ cbind(x, cluster = cutree(cluster_res, .)), .id = "scale") %>%
+  mutate(
+    cluster = as.factor(cluster),
+    scale = scales[as.integer(scale)]
+  )
+
+ggplot(x_clusters) +
+  geom_point(aes(V1, V2, col = cluster)) +
+  facet_grid(scale ~ .) +
+  labs(x = "x", y = "y")
+```
+]
+
+---
+
+class: center, middle, section
+
+# Approach and Methods
+
+---
+
+### Main Idea
+
+* Parsimony: We will fit an ensemble of Latent Dirichlet Allocation (LDA) models
+of varying complexities
+* Navigation: We will build a hierarchical representation of the results
+* In the Sankey diagram, columns are models and rectangles are topics
+
+```{r, out.width = 750}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
+
+---
+
+### Methods Intuition: Studying the Simplex
+
+* A species community can be thought of as a point on the simplex
+* A single LDA model finds a set of prototypical communities
+  - Observed data are mixtures of prototypes
+* We use optimal transport to relate prototypes found across scales
+
+.pull-left[
+```{r}
+include_graphics("figure/correspondence_analysis_profiles_r.png")
+```
+]
+
+.pull-right[
+```{r out.width = 420}
+include_graphics("figure/transport_alignment_conceptual.png")
+```
+]
+
+---
+
+### Simulation Studies
+
+* The structure of the learned alignment distinguishes between data generation
+mechanisms
+* We have designed a suite of diagnostic measures based on this
+  
+.pull-left[
+```{r, out.width = 300}
+include_graphics("figure/gradient_flow-1.png")
+include_graphics("figure/gradient_flow-2.png")
+```
+]
+
+.pull-right[
+```{r, out.width = 300}
+include_graphics("figure/gradient_flow-3.png")
+include_graphics("figure/gradient_flow-4.png")
+```
+]
+
+---
+class: center, middle, section
+
+# Results and Software
+
+---
+
+* At $K = 7$, the four Lactobacillus CSTs are already present
+* The remaining three topics correspond to the dysbiotic CST
+(green, brown, and pink)
+* Our diagnostic measures give us some confidence in the result
+ 
+.pull-left[
+```{r out.width=280}
+include_graphics("figure/microbiome_flow.png")
+```
+]
+
+.pull-right[
+```{r, out.width=800}
+include_graphics("figure/microbiome_betas.png")
+```
+]
+ 
+---
+
+### Package Details
+
+* Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
+* Can rerun scripts at the binder link: [https://tinyurl.com/59k67sde](https://tinyurl.com/59k67sde)
+    - No installation necessary
+ 
+.pull-left[
+```{r, echo = TRUE}
+library(purrr)
+library(alto)
+
+# simulate data and fit models
+x <- rmultinom(20, 5000, rep(0.1, 500))
+lda_params <- setNames(map(1:10, ~ list(k = .)), 1:10)
+lda_models <- run_lda_models(x, lda_params)
+
+# perform alignment
+result <- align_topics(lda_models)
+```
+]
+
+.pull-right[
+```{r, eval = FALSE, echo = TRUE}
+plot(result)
+```
+
+```{r, echo = FALSE, fig.align = "left", fig.height = 2.8}
+alto::plot(result)
+```
+]
+
+---
+
+### Takeaways
+
+.pull-left[
+* Topic alignment can provide more information about a dataset than any single
+topic model
+* It is easier to incorporate into existing workflows than a brand new model
+* Visualization makes it easy to explore large model ensembles
+]
+
+.pull-right[
+* Future Study: Interactive visualization, extensions to multi-modality
+* Read more in [Multiscale Analysis of Count Data Through Topic
+Alignment](https://tinyurl.com/8jyvp4pd) and a forthcoming bioarxiv preprint
+]
+
+---
+
+class: background-rivers
+
+# Thank You! <br> Questions?
+
+---
+
+### References
+
+Holmes, S. P., & Huber, W. (2018). Modern statistics for modern biology. Cambridge University Press.
+
+Ravel, J., Gajer, P., Abdo, Z., Schneider, G. M., Koenig, S. S., McCulle, S. L. & Forney, L. J. (2011). Vaginal microbiome of reproductive-age women. Proceedings of the National Academy of Sciences, 108(Supplement 1), 4680-4687.
+
+Tukey, J. W. (1977). Exploratory data analysis (Vol. 2, pp. 131-160).
