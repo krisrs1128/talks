@@ -1,0 +1,134 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(DESeq2)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(stringr)
+library(tidyr)
+set.seed(1234)
+```
+
+```{r}
+parameters <- list(
+  data = list(D = 2000, K1 = 4, K2 = 1, rate_theta = 1, rate_beta = 1, rate_theta_tilde = 1, rate_beta_tilde = .5, active_prop = 0.1), # rate 2 gives higher abundances
+  experiment = list(N1 = 20, N2 = 20)
+)
+
+```
+
+```{r}
+gamma_mat <- function(N, D, shape, rate) {
+  matrix(rgamma(N * D, shape, rate), nrow = N, ncol = D)
+}
+
+generate_samples <- function(p, group = 1) {
+  # extract parameters
+  D <- p$data$D 
+  K1 <- p$data$K1
+  K2 <- p$data$K2
+  rate_theta <- p$data$rate_theta
+  rate_beta <- p$data$rate_beta
+  rate_theta_tilde <- p$data$rate_theta_tilde
+  rate_beta_tilde <- p$data$rate_beta_tilde
+  active_prop <- p$data$active_prop
+  N1 <- p$experiment$N1
+  N2 <- p$experiment$N2
+  
+  # simulate latent factors
+  theta <- gamma_mat(N1 + N2, K1, 1, rate_theta)
+  beta <- gamma_mat(D, K1, 1, rate_beta)
+  theta_tilde <- gamma_mat(2, K2, 1, rate_theta_tilde)
+  theta_tilde <- theta_tilde[c(rep(1, N1), rep(2, N2)), , drop=F]
+  beta_tilde <- gamma_mat(D, K2, 1, rate_beta_tilde)
+  differential_asvs <- rbinom(D, 1, active_prop)
+  beta_tilde[differential_asvs == 0, ] <- 0
+  
+  # simulate data based on factors
+  rate_matrix <- theta %*% t(beta) +  theta_tilde %*% t(beta_tilde)
+  samples <- matrix(nrow = N1 + N2, ncol = D)
+  for (i in seq_len(nrow(rate_matrix))) {
+    samples[i, ] <- rpois(D, rate_matrix[i, ])
+  }
+  
+  reshape_result(samples, N1, N2, differential_asvs)
+}
+
+reshape_result <- function(samples, N1, N2, differential_asvs) {
+  samples <- data.frame(samples) %>%
+    mutate(
+      group = c(rep(1, N1), rep(2, N2)), 
+      id = 1:(N1 + N2),
+      group = as.factor(group),
+      id = as.factor(id)
+    ) %>%
+    pivot_longer(-group:-id, names_to = "asv")
+  
+  differential_df <- data.frame(
+    asv = str_c("X", seq_along(differential_asvs)),
+    differential = as.factor(differential_asvs)
+  )
+  
+  samples %>%
+    left_join(differential_df)
+}
+
+
+samples <- generate_samples(parameters)
+```
+
+For most species (top row), there is no difference between term and preterm. But
+for the preterm (bottom row), a subset of the species are differentially
+abundant.
+
+```{r}
+ggplot(samples) +
+  geom_histogram(aes(value, fill = group),binwidth = 2, position = "identity", alpha = 0.8) + 
+  facet_grid(differential ~ ., scale = "free_y")
+```
+
+```{r, fig.width = 8, fig.height = 4}
+samples %>%
+  filter(differential == "1") %>%
+  filter(asv %in% sample(unique(asv), 8)) %>%
+  ggplot() +
+  geom_histogram(aes(value, fill = group), binwidth = 1, position = "identity", alpha = 0.8) +
+  facet_wrap(~ asv , scale = "free_y", ncol = 4)
+
+samples %>%
+  filter(differential == "0") %>%
+  filter(asv %in% sample(unique(asv), 8)) %>%
+  ggplot() +
+  geom_histogram(aes(value, fill = group), binwidth = 1, position = "identity", alpha = 0.8) +
+  facet_wrap(~ asv , scale = "free_y", ncol = 4)
+```
+
+
+```{r}
+samples_wide <- samples %>%
+  select(id, group, asv, value) %>%
+  pivot_wider(asv, id)
+dds <- DESeqDataSetFromMatrix(countData = samples_wide %>% select(-asv),
+                              colData = samples %>% filter(asv == "X1") %>% select(group, id),
+                              design = ~ group)
+mdata <- samples %>% filter(id == "1") %>% select(asv, differential)
+mcols(dds) <- DataFrame(mcols(dds), mdata)
+```
+
+```{r}
+dds <- dds %>%
+  estimateSizeFactors(type = "poscounts") %>%
+  DESeq(fitType = "local")
+res <- results(dds)
+res <- bind_cols(as.data.frame(mcols(dds)), as.data.frame(res))
+```
+
+```{r}
+ggplot(res) +
+  geom_histogram(aes(WaldStatistic_group_2_vs_1, fill = differential), alpha = 0.9, position = "identity")
+```
+
