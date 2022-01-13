@@ -4,17 +4,18 @@ output: html_notebook
 ---
 
 ```{r}
-library(ggplot2)
+library(DESeq2)
 library(dplyr)
-library(stringr)
+library(ggplot2)
 library(purrr)
+library(stringr)
 library(tidyr)
 ```
 
 ```{r}
 parameters <- list(
-  data = list(D = 100, rate1 = 1, rate2 = 0.5, active_prop = 0.1), # rate 2 gives higher abundances
-  experiment = list(N1 = 200, N2 = 200)
+  data = list(D = 2000, rate1 = 1, rate2 = 0.5, active_prop = 0.1), # rate 2 gives higher abundances
+  experiment = list(N1 = 20, N2 = 20)
 )
 
 ```
@@ -25,7 +26,7 @@ generate_sample <- function(p, differential_asvs, group = 1) {
   rate1 <- parameters$data$rate1
   rate2 <- parameters$data$rate2
   
-  rates <- list(g1 = rgamma(D, 1, rate1), g2 = rgamma(D, 1, rate2))
+  rates <- list(g1 = rgamma(D, 5, rate1), g2 = rgamma(D, 5, rate2))
   result <- rpois(D, rates$g1)  
   if (group == 2) {
     result[differential_asvs == 1] <- rpois(sum(differential_asvs), rates$g2)
@@ -78,17 +79,43 @@ ggplot(samples) +
 samples %>%
   filter(differential == "1") %>%
   filter(asv %in% sample(unique(asv), 8)) %>%
-  count(asv, group, differential, value) %>%
   ggplot() +
-  geom_bar(aes(value, n, fill = group), stat = "identity", position = position_dodge2(width = 1, preserve = "single")) +
+  geom_histogram(aes(value, fill = group), binwidth = 1, position = "identity", alpha = 0.8) +
   facet_wrap(~ asv , scale = "free_y", ncol = 4)
 
 samples %>%
   filter(differential == "0") %>%
   filter(asv %in% sample(unique(asv), 8)) %>%
-  count(asv, group, differential, value) %>%
   ggplot() +
-  geom_bar(aes(value, n, fill = group), stat = "identity", position = position_dodge2(width = 1, preserve = "single")) +
+  geom_histogram(aes(value, fill = group), binwidth = 1, position = "identity", alpha = 0.8) +
   facet_wrap(~ asv , scale = "free_y", ncol = 4)
+```
+
+
+```{r}
+samples_wide <- samples %>%
+  select(id, group, asv, value) %>%
+  pivot_wider(asv, id)
+dds <- DESeqDataSetFromMatrix(countData = samples_wide %>% select(-asv),
+                              colData = samples %>% filter(asv == "X1") %>% select(group, id),
+                              design = ~ group)
+mdata <- samples %>% filter(id == "1") %>% select(asv, differential)
+mcols(dds) <- DataFrame(mcols(dds), mdata)
+```
+
+```{r}
+dds <- dds %>%
+  estimateSizeFactors(type = "poscounts") %>%
+  DESeq(fitType = "local")
+res <- results(dds)
+```
+
+```{r}
+res <- bind_cols(as.data.frame(mcols(dds)), as.data.frame(res))
+```
+
+```{r}
+ggplot(res) +
+  geom_histogram(aes(WaldStatistic_group_2_vs_1, fill = differential), alpha = 0.9, position = "identity")
 ```
 
