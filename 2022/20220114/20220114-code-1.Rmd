@@ -8,7 +8,20 @@ library(ggplot2)
 library(dplyr)
 library(stringr)
 library(purrr)
+set.seed(1234)
+
+theme_min <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(theme_min)
 ```
+
 ```{r}
 normal_generator <- function(p) {
   list(
@@ -39,7 +52,7 @@ for (delta in seq(0, 1, length.out = 8)) {
   }
 }
 
-test_results <- rerun(100, {
+test_results <- rerun(1000, {
   map_dfr(parameters, ~ {
     x <- normal_generator(.)
     data.frame(.$data, .$experiment, reject = t.test(x$g1, x$g2)$p.value < .05)
@@ -52,14 +65,16 @@ test_results <- rerun(100, {
 ggplot(test_results, aes(mu2, reject, col = n1)) +
   geom_point(
     position = position_jitter(w = 0.01),
-    size = 0.1, alpha = 0.2
+    size = 0.1, alpha = 0.1
   ) +
   stat_smooth(aes(group = n1), method = "loess") +
   scale_color_viridis_c()
+ggsave("figures/power_curves_normal.png")
 ```
 
 ```{r}
 hist(rgamma(500, 50, 50))
+hist(rgamma(500, 50, 57))
 ```
 
 ```{r}
@@ -75,7 +90,7 @@ for (delta in seq(50, 57, length.out = 8)) {
   }
 }
 
-test_results <- rerun(100, {
+test_results <- rerun(1000, {
   map_dfr(parameters, ~ {
     x <- gamma_generator(.)
     data.frame(.$data, .$experiment, reject = t.test(x$g1, x$g2)$p.value < 0.05)
@@ -94,4 +109,5 @@ ggplot(test_results, aes(rate1, reject, col = n1)) +
   ) +
   stat_smooth(aes(group = n1), method = "loess") +
   scale_color_viridis_c()
+ggsave("figures/power_curves_gamma.png")
 ```
