@@ -1,0 +1,97 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(purrr)
+```
+```{r}
+normal_generator <- function(p) {
+  list(
+    g1 = rnorm(p$experiment$n1, p$data$mu1, p$data$sigma),
+    g2 = rnorm(p$experiment$n2, p$data$mu2, p$data$sigma)
+  )
+}
+
+gamma_generator <- function(p) {
+  list(
+    g1 = rgamma(p$experiment$n1, p$data$shape1, p$data$rate1),
+    g2 = rgamma(p$experiment$n2, p$data$shape2, p$data$rate2)
+  )
+}
+```
+
+
+```{r}
+parameters <- list()
+i <- 1
+for (delta in seq(0, 1, length.out = 8)) {
+  for (N in seq(5, 100, length.out = 8)) {
+    parameters[[i]] <- list(
+      data = list(mu1 = 0, mu2 = delta, sigma = 1),
+      experiment = list(n1 = N, n2 = N)
+    )
+    i <- i + 1
+  }
+}
+
+test_results <- rerun(100, {
+  map_dfr(parameters, ~ {
+    x <- normal_generator(.)
+    data.frame(.$data, .$experiment, reject = t.test(x$g1, x$g2)$p.value < .05)
+  })
+}) %>%
+  bind_rows()
+```
+
+```{r}
+ggplot(test_results, aes(mu2, reject, col = n1)) +
+  geom_point(
+    position = position_jitter(w = 0.01),
+    size = 0.1, alpha = 0.2
+  ) +
+  stat_smooth(aes(group = n1), method = "loess") +
+  scale_color_viridis_c()
+```
+
+```{r}
+hist(rgamma(500, 50, 50))
+```
+
+```{r}
+parameters <- list()
+i <- 1
+for (delta in seq(50, 57, length.out = 8)) {
+  for (N in seq(5, 100, length.out = 8)) {
+    parameters[[i]] <- list(
+      data = list(shape1 = 50, rate1 = delta, shape2 = 50, rate2 = 50),
+      experiment = list(n1 = N, n2 = N)
+    )
+    i <- i + 1
+  }
+}
+
+test_results <- rerun(100, {
+  map_dfr(parameters, ~ {
+    x <- gamma_generator(.)
+    data.frame(.$data, .$experiment, reject = t.test(x$g1, x$g2)$p.value < 0.05)
+  })
+}) %>%
+  bind_rows()
+
+```
+
+
+```{r}
+ggplot(test_results, aes(rate1, reject, col = n1)) +
+  geom_point(
+    position = position_jitter(w = 0.1),
+    size = 0.1, alpha = 0.2
+  ) +
+  stat_smooth(aes(group = n1), method = "loess") +
+  scale_color_viridis_c()
+```

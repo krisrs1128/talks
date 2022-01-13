@@ -1,0 +1,94 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(purrr)
+library(tidyr)
+```
+
+```{r}
+parameters <- list(
+  data = list(D = 100, rate1 = 1, rate2 = 0.5, active_prop = 0.1), # rate 2 gives higher abundances
+  experiment = list(N1 = 200, N2 = 200)
+)
+
+```
+
+```{r}
+generate_sample <- function(p, differential_asvs, group = 1) {
+  D <- parameters$data$D 
+  rate1 <- parameters$data$rate1
+  rate2 <- parameters$data$rate2
+  
+  rates <- list(g1 = rgamma(D, 1, rate1), g2 = rgamma(D, 1, rate2))
+  result <- rpois(D, rates$g1)  
+  if (group == 2) {
+    result[differential_asvs == 1] <- rpois(sum(differential_asvs), rates$g2)
+  }
+  
+  data.frame(t(result))
+}
+
+generate_samples <- function(parameters) {
+  D <- parameters$data$D 
+  N1 <- parameters$experiment$N1
+  N2 <- parameters$experiment$N2
+  
+  differential_asvs <- rbinom(D, 1, parameters$data$active_prop)
+  samples <- bind_rows(
+    map_dfr(1:N1, ~ generate_sample(parameters, differential_asvs)),
+    map_dfr(1:N2, ~ generate_sample(parameters, differential_asvs, 2))
+  ) %>%
+    mutate(
+      group = c(rep(1, N1), rep(2, N2)), 
+      id = 1:(N1 + N2),
+      group = as.factor(group),
+      id = as.factor(id)
+    ) %>%
+    pivot_longer(-group:-id, names_to = "asv")
+  
+  differential_df <- data.frame(
+    asv = str_c("X", seq_along(differential_asvs)),
+    differential = as.factor(differential_asvs)
+  )
+  
+  samples %>%
+    left_join(differential_df)
+}
+
+samples <- generate_samples(parameters)
+```
+
+For most species (top row), there is no difference between term and preterm. But
+for the preterm (bottom row), a subset of the species are differentially
+abundant.
+
+```{r}
+ggplot(samples) +
+  geom_histogram(aes(value, fill = group)) + 
+  facet_grid(differential ~ group, scale = "free_y")
+```
+
+```{r, fig.width = 8, fig.height = 4}
+samples %>%
+  filter(differential == "1") %>%
+  filter(asv %in% sample(unique(asv), 8)) %>%
+  count(asv, group, differential, value) %>%
+  ggplot() +
+  geom_bar(aes(value, n, fill = group), stat = "identity", position = position_dodge2(width = 1, preserve = "single")) +
+  facet_wrap(~ asv , scale = "free_y", ncol = 4)
+
+samples %>%
+  filter(differential == "0") %>%
+  filter(asv %in% sample(unique(asv), 8)) %>%
+  count(asv, group, differential, value) %>%
+  ggplot() +
+  geom_bar(aes(value, n, fill = group), stat = "identity", position = position_dodge2(width = 1, preserve = "single")) +
+  facet_wrap(~ asv , scale = "free_y", ncol = 4)
+```
+
