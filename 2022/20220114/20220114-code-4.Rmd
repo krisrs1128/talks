@@ -141,5 +141,7 @@ res <- bind_cols(as.data.frame(mcols(dds)), as.data.frame(res))
 
 ```{r}
 ggplot(res) +
-  geom_histogram(aes(WaldStatistic_group_2_vs_1, fill = differential), alpha = 0.9, position = "identity")
+  geom_histogram(aes(WaldStatistic_group_2_vs_1, fill = differential), alpha = 0.9, position = "identity") +
+  scale_fill_brewer(palette = "Set2")
+#ggsave("figures/deseq_results_topics.png")
 ```

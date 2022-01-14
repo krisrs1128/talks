@@ -93,6 +93,7 @@ samples %>%
   ggplot() +
   geom_histogram(aes(value, fill = group), binwidth = 1, position = "identity", alpha = 0.8) +
   facet_wrap(~ asv , scale = "free_y", ncol = 4)
+#ggsave("figures/independent_histograms_diff.png")
 
 samples %>%
   filter(differential == "0") %>%
@@ -100,6 +101,7 @@ samples %>%
   ggplot() +
   geom_histogram(aes(value, fill = group), binwidth = 1, position = "identity", alpha = 0.8) +
   facet_wrap(~ asv , scale = "free_y", ncol = 4)
+#ggsave("figures/independent_histograms_normal.png")
 ```
 
 
@@ -124,6 +126,8 @@ res <- bind_cols(as.data.frame(mcols(dds)), as.data.frame(res))
 
 ```{r}
 ggplot(res) +
-  geom_histogram(aes(WaldStatistic_group_2_vs_1, fill = differential), alpha = 0.9, position = "identity")
+  geom_histogram(aes(WaldStatistic_group_2_vs_1, fill = differential), alpha = 0.9, position = "identity") +
+  scale_fill_brewer(palette = "Set2")
+ggsave("~/Desktop/deseq_results_indep_asvs.png")
 ```
 

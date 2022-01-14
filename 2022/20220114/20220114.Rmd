@@ -25,7 +25,7 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
 ```{r, echo = FALSE}
 library(knitr)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", out.width = 650)
 library(ggplot2)
 min_theme <- theme_minimal() + 
   theme(
@@ -48,7 +48,7 @@ scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(
 
 ---
 
-class: bottom, my_title
+class: bottom
 
 ## Generative Models and Experimental Design
 
@@ -85,11 +85,9 @@ January 14, 2022
 ---
 
 ## Classical Example 1
-* In the simplest possible clinical trial, we compare a drug with a placebo, randomizing who receives which treatment.
-* Interest lies in average difference in treatments across population
 
----
-### Generative Mechanism
+In the simplest possible clinical trial, we compare a drug with a placebo,
+randomizing who receives which treatment.
 
 \begin{align*}
 x^{1}_{i} \sim \mathcal{N}\left(\mu_1, \sigma^2\right), i = 1, \dots, n_1 \\
@@ -106,13 +104,13 @@ It’s worth distinguishing between two types of parameters,
 
 If we use a two-sample $t$-test, we can compute the probability of true / false positives as a function of these parameters.
 
-```{r}
+```{r, out.width = 550}
 include_graphics("figures/noncentral_t_wikipedia.png")
 ```
 
 ---
 
-### Analytical Solution
+### Equivalent Simulation
 
 If we use a two-sample $t$-test, we can compute the probability of true / false positives as a function of these parameters.
 
@@ -123,7 +121,8 @@ include_graphics("figures/power_curves_normal.png")
 ---
 ### Approximation Quality
 * There is always a trade-off between a more accurate generative model and its practical consequence on design decisions
-* Below, I draw power curves from when $x_{i}^1, x_{i}^2$ are drawn from gamma distributions instead
+* The power curves for $x_{i}^1, x_{i}^2$ from gamma distributions is similar
+ - Consequence of central limit theorem
 
 ```{r}
 include_graphics("figures/power_curves_gamma.png")
@@ -134,29 +133,65 @@ include_graphics("figures/power_curves_gamma.png")
 ### Classical Example 2
 
 * We want to estimate the (assumed linear) effect of a continuous variable on a response
-* We have a budget of 8 samples
+* We have a budget of 4 samples
 * Where should we place them?
 
----
+```{r, out.width = 500}
+include_graphics("figures/candidates_linear.png")
+```
 
 ---
+
+### Classical Examples 2
+
+* We want to estimate the (assumed linear) effect of a continuous variable on a response
+* We have a budget of 4 samples
+* Where should we place them?
+
+```{r}
+include_graphics("figures/candidates_animation.gif")
+```
+
+---
+
+### Classical Example 2
+
+* According to a few different optimality criteria, the measure that places samples at the extremes is the best
+* This is a justification for $2^K$ designs
+  - Main downside is that it can't detect nonlinearities
+
+.pull-left[
+```{r}
+include_graphics("figures/candidates_eval_v.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/candidates_eval_2.png")
+```
+]
+
+---
+
 ### Modern Challenges: Scientific Goals
+
 * Complex systems: Modern biology studies systems with many interacting components, and we want to attribute differences in phenotypes to variation across these.
-- Units of interest at multiple scales (genes, gene pathways, gene - species interactions)
- - Population parameters are much more difficult to describe
-* Complex experiments: Experiments have many knobs we can adjust. For each study participant, we can run several assays at different timepoints.
-- Experimental parameters are more difficult to describe
-* Complex analysis: Our statistical analysis is not encapsulated by a single parameter estimate.
-- We run complementary tests, generate several visualizations
-- Notions of “power” might be different across analyses types
+  - Units of interest at multiple scales (genes, gene pathways, gene - species interactions)
+   - Population parameters are much more difficult to describe
+* Flexible experiments: Experiments have many knobs we can adjust. For each study participant, we can run several assays at different timepoints.
+  - Experimental parameters are more difficult to describe
+* Multi-faceted analysis: Our statistical analysis is not encapsulated by a single parameter estimate.
+  - We run complementary tests, generate several visualizations
+  - Notions of “power” might be different across analyses types
 
 ---
 
 ### Modern Challenges: Properties of the Data
-* High-dimensionality: Interested in variation across many elements
+* High-dimensionality: We are interested in variation across many features
 * Non-Gaussianity: Data are not just characterized by mean and variance
 * Dependence structure: Data are not i.i.d., and might be associated with temporal or network structures
-* Multimodality: Have several views of the same sample
+* Multimodality: We often have several views of the same sample, coming from different assays
 
 ---
 
@@ -185,14 +220,19 @@ Imagine that we were being asked how to design the VMRC study. Some of the desig
 We would like to have high power with respect to different types of tasks,
 * Identification of significant units: Which species, metabolites, genes, or cytokines are related to preterm birth risk?
 * Identification of significant interactions / profiles: How do combinations of units lead to elevated risk?
-* Construction of predictive empirical / conceptual model: How might certain interventions increase / decrease risk?
+* Construction of predictive empirical / conceptual model: How might certain interventions affect risk?
 
 ---
 
 ### Design Approach
 * Create a sequence of increasingly complex generative mechanisms
 * Conduct the analysis on each of the simulated datasets
-* Evaluate the relationship between controllable parameters with results of interest
+* Evaluate the relationship between both controllable and uncontrollable
+parameters with results of interest
+
+```{r, out.width = 560}
+include_graphics("figures/dag-sequence.png")
+```
 
 ---
 
@@ -202,68 +242,256 @@ We would like to have high power with respect to different types of tasks,
 * Background gamma distribution for rate parameters of non-varying species
 * Alternative gamma distribution for rate parameters for varying species
 
+```
+for j in 1:D
+  differential ~ Bern(p)
+  for i in 1:N
+    if y[i] is "term" and differential == 1
+      lambda[i, j] ~ Exp(nu[2])
+    else
+      lambda[i, j] ~ Exp(nu[1])
+
+  x[i, j] ~ Poi(Lambda[i, j])
+```
+
+---
+
+### Model 1: Independent ASVs
+
+* For a subset of species, abundance depends on term status
+* Background gamma distribution for rate parameters of non-varying species
+* Alternative gamma distribution for rate parameters for varying species
+
+```{r}
+include_graphics("figures/independent_histograms_diff.png")
+```
+
+---
+
+### Model 1: Independent ASVs
+
+* For a subset of species, abundance depends on term status
+* Background gamma distribution for rate parameters of non-varying species
+* Alternative gamma distribution for rate parameters for varying species
+
+```{r}
+include_graphics("figures/independent_histograms_normal.png")
+```
+
+---
+
+### Model 1: Independent ASVs
+
+Example DESeq2 results across all ASVs,
+* 20 samples per group
+* 1.05x increase in means for differential species (on average)
+* 10% of species are differentially abundant (on average)
+
+```{r, out.width = 550}
+include_graphics("figures/deseq_results_indep_asvs_2.png")
+```
+
+---
+
+### Model 1: Independent ASVs
+
+Example DESeq2 results across all ASVs,
+* 20 samples per group
+* 2x increase in means for differential species (on average)
+* 10% of species are differentially abundant (on average)
+
+
+```{r, out.width = 550}
+include_graphics("figures/deseq_results_indep_asvs.png")
+```
+
+---
+### Model 1: Independent ASVs
+
+Example DESeq2 results across all ASVs,
+* 20 samples per group
+* 2x increase in means for differential species (on average)
+* 10% of species are differentially abundant (on average)
+
+.pull-left[
+```{r, out.width = 550}
+include_graphics("figures/deseq_results_indep_asvs.png")
+```
+]
+.pull-right[
+(null not centered at 0 ??)
+]
+
+---
+
+### Navigating Combinations
+Interpretation is challenging because,
+- There are many combinations of experimental / population parameters
+- There are many properties of interest in the analysis
+
+Need ways for,
+- Interactively examining relationships between hypothetical designs
+- Automatically ranking parameters that are most influential / properties that are most sensitive
+
+---
+
+### Model 2: ASV Factor Model
+
+Deficiency of previous model is that it treats all ASVs as independent. Consider instead,
+
+.pull-left[
+\begin{align*}
+\Lambda &= \Theta B^T + Y \tilde{\Theta}\tilde{B}^T \\
+X &\sim \text{Poi}\left(\Lambda\right)
+\end{align*}
+]
+
+.pull-right[
+* Exponential priors on $\Theta, B, \tilde{\Theta}$
+* "Point-exponential" for $\tilde{B}$
+]
+
+---
+
+### Model 2: ASV Factor Model
+
+Deficiency of previous model is that it treats all ASVs as independent. Consider instead,
+.pull-left[
+\begin{align*}
+\Lambda &= \Theta B^T + Y \tilde{\Theta}\tilde{B}^T \\
+X &\sim \text{Poi}\left(\Lambda\right)
+\end{align*}
+]
+
+.pull-right[
+* Low-rank model serves as the background
+* Differential abundance comes from zero pattern in rows of $\tilde{B}$
+]
+
+---
+
+### Example ASVs
+
+For differentially abundant ASVs, the red group has larger mean.
+
+.pull-left[
+```{r}
+include_graphics("figures/factor_histograms_null.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/factor_histograms_diff.png")
+```
+]
+
+---
+
+### Example ASVs
+
+The rows correspond to ASVs that are vs. are not differentially abundant.
+
+```{r}
+include_graphics("figures/factor_asv_histogram_global.png")
+```
+
 ---
 
 ### DESeq2 Results
 
----
+* The same analysis as before can be run on these new input data.
+* The experimental parameters are identical, only the population parameters are
+different
 
-### Power vs. Sample Size
-
----
-### False Positives vs. Sample Size
-
----
-### Power vs. Mixture Differences
+```{r}
+include_graphics("figures/deseq_results_factor.png")
+```
 
 ---
-### Navigating Combinations
-* Interpretation is challenging because,
-- There are many combinations of experimental / population parameters
-- There are many properties of interest in the analysis
-* Need ways for,
-- Automatically ranking parameters that are most influential / properties that are most sensitive
-- Interactively examining relationships between hypothetical designs and analyses
 
----
-### Model 2: ASV Factor Model
-
-* Low-rank model serves as the background
-* Depending on pattern of $\tilde{\beta}$, abundance of some ASVs differs by term status
-
----
 ### Model 3: ASV Topic Model
 
-* Some topics are more / less prominent depending on term status
+An alternative low rank model: Put more / less weights on some topics depending
+on term status.
+
+.pull-left[
+\begin{align*}
+x_{i} \vert \theta_i, B &\sim \text{Mult}\left(N_i, B\theta_i\right) \\
+\theta_i &\sim \Dir\left(\lambda_{\theta} + \delta\mathbf{1}\left\{y_i = \text{term}\right\} \right)
+\end{align*}
+]
+
+.pull-right[
+* $\delta$ changes the mean topic weight according to term status
+* Dirichlet prior on first $K_1$ columns of $B$
+* Dirichlet prior on differential subset of ASVs for last $K_2$ columns of $B$
+]
 
 ---
+
+### Example Results
+
+It would be interesting to see how power curves vary depending on the generative
+mechanism.
+ - If similar, then can use either to make decisions
+ - If different, evaluate which looks more like previous studies
+
+```{r, out.width = 550}
+include_graphics("figures/deseq_results_topics.png")
+```
+
+---
+
 ### Other Possibilities
-* Could study influence of temporal correlations
-* Could create a multi-omic example
 
----
-
-### Bigger Questions
+* Temporal model
+ - Evaluate power as effective sample size decreases
+ - Would be interesting to allow interactive placement of sampling times
+* Multi-omic example
+ - Can no longer use DESeq2
+ - Need to define summaries for whichever models / tests are used
 
 ---
 
 ### When to stop designing?
 
-* Any power analysis in the way I’ve described is much more effort than what most people think of for power analysis
-* Is there a way to estimate whether changes in the generative mechanism are no longer having an effect on the design decisions?
+* Any power analysis in the way I’ve described is much more effort than what
+most people think of for power analysis
+* Is there a way to estimate whether changes in the generative mechanism are no
+longer having an effect on the design decisions?
 * How to practically build this into the timelines of large projects?
 
 ---
-### Design based on available databases
+
+### Design based on available datasets
+
+.pull-left[
+* There are now enough public datasets that we could plausibly evaluate
+generative mechanisms using results from previous studies
+* Could imagine a "semiparametric" approach: Artificially introduce signal into
+existing datasets
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/hmpdata.png")
+```
+]
 
 ---
 
-### Imagination
+### Visual Inference / Imagination
 
-* There is a relationship between this approach and visual inference
+* There is a relationship between this approach to experimental design and
+visual inference
 * We need to be able to imagine a variety of hypothetical experiments, and then encode that computationally
-* This is almost the opposite of the “data driven” perspective!
+* Instead of using visual comparison in the analysis / inference stage, we can
+use it during design
 
+```{r}
+include_graphics("figures/lineup.png")
+```
 
 ---
 
