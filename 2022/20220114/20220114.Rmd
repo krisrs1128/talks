@@ -5,11 +5,9 @@ date: "January 14, 2021"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
-    lib_dir: libs
     self_contained: false
+    lib_dir: libs
     nature:
-      highlightStyle: github
-      highlightLines: true
       ratio: "16:9"
     seal: false
 ---
@@ -114,7 +112,7 @@ include_graphics("figures/noncentral_t_wikipedia.png")
 
 If we use a two-sample $t$-test, we can compute the probability of true / false positives as a function of these parameters.
 
-```{r}
+```{r, out.width = 550}
 include_graphics("figures/power_curves_normal.png")
 ```
 
@@ -124,7 +122,7 @@ include_graphics("figures/power_curves_normal.png")
 * The power curves for $x_{i}^1, x_{i}^2$ from gamma distributions is similar
  - Consequence of central limit theorem
 
-```{r}
+```{r, out.width = 550}
 include_graphics("figures/power_curves_gamma.png")
 ```
 
@@ -148,7 +146,7 @@ include_graphics("figures/candidates_linear.png")
 * We have a budget of 4 samples
 * Where should we place them?
 
-```{r}
+```{r, out.width = 400}
 include_graphics("figures/candidates_animation.gif")
 ```
 
@@ -161,13 +159,13 @@ include_graphics("figures/candidates_animation.gif")
   - Main downside is that it can't detect nonlinearities
 
 .pull-left[
-```{r}
+```{r, out.width = 370}
 include_graphics("figures/candidates_eval_v.png")
 ```
 ]
 
 .pull-right[
-```{r}
+```{r, out.width = 400}
 include_graphics("figures/candidates_eval_2.png")
 ```
 ]
@@ -214,6 +212,11 @@ Imagine that we were being asked how to design the VMRC study. Some of the desig
 * Assays to run per sample
 * Sequencing depth per assay
 
+```{r}
+include_graphics("figures/VMRC.png")
+```
+
+
 ---
 
 ### Notions of Power
@@ -230,7 +233,7 @@ We would like to have high power with respect to different types of tasks,
 * Evaluate the relationship between both controllable and uncontrollable
 parameters with results of interest
 
-```{r, out.width = 560}
+```{r, out.width = 550}
 include_graphics("figures/dag-sequence.png")
 ```
 
@@ -242,17 +245,26 @@ include_graphics("figures/dag-sequence.png")
 * Background gamma distribution for rate parameters of non-varying species
 * Alternative gamma distribution for rate parameters for varying species
 
+.pull-left[
 ```
 for j in 1:D
   differential ~ Bern(p)
   for i in 1:N
     if y[i] is "term" and differential == 1
-      lambda[i, j] ~ Exp(nu[2])
+      lambda[i, j] ~ Exp(alpha[2])
     else
-      lambda[i, j] ~ Exp(nu[1])
+      lambda[i, j] ~ Exp(alpha[1])
 
   x[i, j] ~ Poi(Lambda[i, j])
 ```
+]
+
+.pull-right[
+```{r, out.width = 450}
+include_graphics("figures/dag_indep.png")
+```
+
+]
 
 ---
 
@@ -287,7 +299,7 @@ Example DESeq2 results across all ASVs,
 * 1.05x increase in means for differential species (on average)
 * 10% of species are differentially abundant (on average)
 
-```{r, out.width = 550}
+```{r, out.width = 500}
 include_graphics("figures/deseq_results_indep_asvs_2.png")
 ```
 
@@ -301,7 +313,7 @@ Example DESeq2 results across all ASVs,
 * 10% of species are differentially abundant (on average)
 
 
-```{r, out.width = 550}
+```{r, out.width = 500}
 include_graphics("figures/deseq_results_indep_asvs.png")
 ```
 
@@ -330,7 +342,7 @@ Interpretation is challenging because,
 - There are many properties of interest in the analysis
 
 Need ways for,
-- Interactively examining relationships between hypothetical designs
+- Interactively examining relationships between hypothetical designs (like in CyTOFpower)
 - Automatically ranking parameters that are most influential / properties that are most sensitive
 
 ---
@@ -341,7 +353,7 @@ Deficiency of previous model is that it treats all ASVs as independent. Consider
 
 .pull-left[
 \begin{align*}
-\Lambda &= \Theta B^T + Y \tilde{\Theta}\tilde{B}^T \\
+\Lambda &= \Theta B^T + y \tilde{\Theta}\tilde{B}^T \\
 X &\sim \text{Poi}\left(\Lambda\right)
 \end{align*}
 ]
@@ -351,6 +363,10 @@ X &\sim \text{Poi}\left(\Lambda\right)
 * "Point-exponential" for $\tilde{B}$
 ]
 
+```{r}
+include_graphics("figures/factor_rectangles.png")
+```
+
 ---
 
 ### Model 2: ASV Factor Model
@@ -358,7 +374,7 @@ X &\sim \text{Poi}\left(\Lambda\right)
 Deficiency of previous model is that it treats all ASVs as independent. Consider instead,
 .pull-left[
 \begin{align*}
-\Lambda &= \Theta B^T + Y \tilde{\Theta}\tilde{B}^T \\
+\Lambda &= \Theta B^T + y \tilde{\Theta}\tilde{B}^T \\
 X &\sim \text{Poi}\left(\Lambda\right)
 \end{align*}
 ]
@@ -367,6 +383,49 @@ X &\sim \text{Poi}\left(\Lambda\right)
 * Low-rank model serves as the background
 * Differential abundance comes from zero pattern in rows of $\tilde{B}$
 ]
+
+```{r}
+include_graphics("figures/factor_rectangles.png")
+```
+
+---
+
+### Model 2: ASV Factor Model
+
+Geometrically, $B$ defines a subspace for the term samples, and $\tilde{B}$
+defines directions in which preterm samples are moved.
+
+.pull-left[
+```{r}
+include_graphics("figures/factor_geometry.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/factor_rectangles_shaded.png")
+```
+]
+
+---
+
+### Model 2: ASV Factor Model
+
+Geometrically, $B$ defines a subspace for the term samples, and $\tilde{B}$
+defines directions in which preterm samples are moved.
+
+.pull-left[
+```{r}
+include_graphics("figures/factor_geometry.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/dag_factor.png")
+```
+]
+
 
 ---
 
@@ -404,7 +463,7 @@ include_graphics("figures/factor_asv_histogram_global.png")
 * The experimental parameters are identical, only the population parameters are
 different
 
-```{r}
+```{r, out.width = 500}
 include_graphics("figures/deseq_results_factor.png")
 ```
 
@@ -425,8 +484,34 @@ x_{i} \vert \theta_i, B &\sim \text{Mult}\left(N_i, B\theta_i\right) \\
 .pull-right[
 * $\delta$ changes the mean topic weight according to term status
 * Dirichlet prior on first $K_1$ columns of $B$
-* Dirichlet prior on differential subset of ASVs for last $K_2$ columns of $B$
+* Dirichlet prior on subset of ASVs for last $K_2$ columns of $B$ (rest are
+zeros)
 ]
+
+---
+
+### Model 3: ASV Topic Model
+
+An alternative low rank model: Put more / less weights on some topics depending
+on term status.
+
+\begin{align*}
+x_{i} \vert \theta_i, B &\sim \text{Mult}\left(N_i, B\theta_i\right) \\
+\theta_i &\sim \Dir\left(\lambda_{\theta} + \delta\mathbf{1}\left\{y_i = \text{term}\right\} \right)
+\end{align*}
+
+.pull-left[
+```{r}
+include_graphics("figures/differential_topic_asv.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/differential_topic_asv_group2.png")
+```
+]
+
 
 ---
 
@@ -437,9 +522,39 @@ mechanism.
  - If similar, then can use either to make decisions
  - If different, evaluate which looks more like previous studies
 
-```{r, out.width = 550}
+.pull-left[
+```{r, out.width = 450}
 include_graphics("figures/deseq_results_topics.png")
 ```
+]
+
+.pull-right[
+```{r, out.width = 450}
+include_graphics("figures/deseq_results_topics_weak.png")
+```
+]
+
+---
+
+### Example Results
+
+We could also measure the distance between plots, e.g., using Procrustes.
+
+* Pairs of panels are when $\delta$ is large and small, respectively
+* Within each group, left and right are differentially vs. non-differentially
+abundant ASVs
+
+.pull-left[
+```{r, out.width = 550}
+include_graphics("figures/correspondence_analysis_strong.png")
+```
+]
+
+.pull-right[
+```{r, out.width = 550}
+include_graphics("figures/correspondence_analysis_weak.png")
+```
+]
 
 ---
 
@@ -449,8 +564,8 @@ include_graphics("figures/deseq_results_topics.png")
  - Evaluate power as effective sample size decreases
  - Would be interesting to allow interactive placement of sampling times
 * Multi-omic example
- - Can no longer use DESeq2
  - Need to define summaries for whichever models / tests are used
+ - Could specify budget as a function of assays used
 
 ---
 
@@ -462,6 +577,10 @@ most people think of for power analysis
 longer having an effect on the design decisions?
 * How to practically build this into the timelines of large projects?
 
+```{r, out.width = 500}
+include_graphics("figures/convergence_designs.png")
+```
+
 ---
 
 ### Design based on available datasets
@@ -469,7 +588,7 @@ longer having an effect on the design decisions?
 .pull-left[
 * There are now enough public datasets that we could plausibly evaluate
 generative mechanisms using results from previous studies
-* Could imagine a "semiparametric" approach: Artificially introduce signal into
+* Could imagine a semiparametric approach: Artificially introduce signal into
 existing datasets
 ]
 
@@ -495,16 +614,12 @@ include_graphics("figures/lineup.png")
 
 ---
 
-class: background-rivers
+# Conclusion
 
-# Thank You! <br> Questions?
+* Experimental design has always relied on analysis of alternative generative
+mechanisms
+* It can be enriched by leveraging the modern generative model toolbox
+* Questions,
+  - Any other examples that you would like to see? 
+  - Any themes that would be worth discussing more deeply?
 
----
-
-### References
-
-Holmes, S. P., & Huber, W. (2018). Modern statistics for modern biology. Cambridge University Press.
-
-Ravel, J., Gajer, P., Abdo, Z., Schneider, G. M., Koenig, S. S., McCulle, S. L. & Forney, L. J. (2011). Vaginal microbiome of reproductive-age women. Proceedings of the National Academy of Sciences, 108(Supplement 1), 4680-4687.
-
-Tukey, J. W. (1977). Exploratory data analysis (Vol. 2, pp. 131-160).

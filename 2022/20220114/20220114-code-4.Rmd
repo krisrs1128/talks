@@ -27,7 +27,7 @@ theme_set(theme_min)
 
 ```{r}
 parameters <- list(
-  data = list(D = 2000, K1 = 4, K2 = 2, lambda_theta = 1, lambda_beta = 0.5, delta = 0.5, active_prop = 0.1),
+  data = list(D = 2000, K1 = 4, K2 = 2, lambda_theta = 1, lambda_beta = 0.5, delta = 0.05, active_prop = 0.1),
   experiment = list(N1 = 20, N2 = 20, depth = 10000)
 )
 
@@ -143,5 +143,19 @@ res <- bind_cols(as.data.frame(mcols(dds)), as.data.frame(res))
 ggplot(res) +
   geom_histogram(aes(WaldStatistic_group_2_vs_1, fill = differential), alpha = 0.9, position = "identity") +
   scale_fill_brewer(palette = "Set2")
-#ggsave("figures/deseq_results_topics.png")
+ggsave("figures/deseq_results_topics_weak.png")
 ```
+
+```{r}
+library(FactoMineR)
+ca_res <- CA(t(counts(dds)))
+factors <- data.frame(ca_res$col$coord, mdata)
+loadings <- data.frame(ca_res$row$coord, colData(dds))
+
+ggplot(loadings, aes(Dim.1, Dim.2)) +
+  geom_segment(data = factors, aes(xend = 0, yend = 0), size = 0.1, alpha = 0.2) +
+  geom_point(aes(col = group)) +
+  facet_wrap(~ differential)
+ggsave("~/Desktop/correspondence_analysis_weak.png")
+```
+
