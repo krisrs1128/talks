@@ -1,0 +1,224 @@
+---
+title: "Reticulate Examples"
+author: "Kris Sankaran"
+date: "January 14, 2021"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    self_contained: false
+    lib_dir: libs
+    nature:
+      ratio: "16:9"
+    seal: false
+---
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", out.width = 650)
+library(ggplot2)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+```
+
+---
+
+class: bottom
+
+## Reticulate Examples
+
+
+.pull-left[
+January 24, 2022
+]
+ 
+---
+
+Available environments...
+
+```{r}
+library(reticulate)
+conda_list()
+```
+
+---
+
+```{r}
+use_condaenv("r-reticulate")
+```
+
+
+---
+
+Running python code in Rstudio.
+
+```{python, echo = TRUE}
+from sklearn import datasets, linear_model
+
+X, y = datasets.load_diabetes(return_X_y=True)
+X[:4, :5] # first five predictors
+y[:4] # example response
+```
+
+---
+
+Accessing python objects in R using `py$`.
+
+.pull-left[
+```{r}
+df <- data.frame(X = py$X, y = py$y)
+head(df)
+```
+]
+
+.pull-right[
+```{r}
+library(ggplot2)
+ggplot(df, aes(X.1, y)) +
+  geom_point()
+```
+
+]
+
+---
+
+More back and forth...
+
+.pull-left[
+```{python}
+model = linear_model.LinearRegression()
+model.fit(X, y)
+model.coef_ # fitted b coefficients
+y_hat = model.predict(X)
+```
+]
+
+.pull-right[
+```{r}
+preds <- data.frame(y = py$y, y_hat = py$y_hat)
+ggplot(preds, aes(y, y_hat)) +
+  geom_point()
+```
+
+]
+
+---
+
+We'll practice configuring a new environment,
+* `conda_create` to make a new conda environment
+* `conda_install` to install packages into it
+
+You could also create / install these in the terminal and refer to them from
+within R.
+
+---
+
+```{r}
+conda_create("test")
+conda_install("test", c("keras", "matplotlib"))
+```
+
+---
+
+Here is a somewhat more involved example visualizing prediction probabilities
+from a keras network.
+
+```{python}
+import matplotlib
+from tensorflow import keras
+from tensorflow.keras import layers
+```
+---
+
+This MNIST training code is taken directly out of the keras documentation.
+
+```{python}
+import numpy as np
+num_classes = 10
+input_shape = (28, 28, 1)
+
+# the data, split between train and test sets
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+# Scale images to the [0, 1] range
+x_train = x_train.astype("float32") / 255
+x_test = x_test.astype("float32") / 255
+# Make sure images have shape (28, 28, 1)
+x_train = np.expand_dims(x_train, -1)
+x_test = np.expand_dims(x_test, -1)
+
+# convert class vectors to binary class matrices
+y_train = keras.utils.to_categorical(y_train, num_classes)
+y_test = keras.utils.to_categorical(y_test, num_classes)
+```
+
+---
+
+```{python}
+model = keras.Sequential([
+        keras.Input(shape=input_shape),
+        layers.Conv2D(32, kernel_size=(3, 3), activation="relu"),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
+        layers.MaxPooling2D(pool_size=(2, 2)),
+        layers.Flatten(),
+        layers.Dropout(0.5),
+        layers.Dense(num_classes, activation="softmax"),
+    ])
+```
+
+
+---
+
+This does the training and creates the objects we'll visualize in a moment.
+
+```{python}
+model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+model.fit(x_train, y_train, batch_size=128, epochs=1, validation_split=0.1)
+y_hat = model.predict(x_train[:1000, :])
+y = y_train[:1000, :]
+```
+
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+y <- data.frame(
+    y_hat = py$y_hat, 
+    y_true = apply(py$y, 1, function(z) which(z == 1))
+  ) %>%
+  mutate(i = row_number()) %>%
+  pivot_longer(-i:-y_true) %>%
+  mutate(
+    y_true = as.factor(y_true),
+    name = as.factor(name)
+  )
+```
+
+---
+
+```{r, fig.height = 5, fig.width = 6}
+ggplot(y) +
+  geom_histogram(aes(value, fill = name), alpha = 0.8, bins = 100, position = "identity") +
+  facet_grid(y_true ~ .) +
+  theme(strip.text.y = element_text(angle = 0)) +
+  scale_fill_brewer(palette = "Set3")
+```
+
+---
+
+```{r}
+par(mfrow = c(2, 5))
+for (i in 1:10) {
+  image(py$x_train[i,,,], asp = 1)
+}
+```
