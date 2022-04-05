@@ -20,6 +20,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=BIZ+UDPMincho&display=swap');
+
 
 body {
   font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
@@ -186,6 +188,11 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   width: 100%;
 }
 
+.section_header h2 {
+  font-family: 'BIZ UDPMincho', serif;
+  font-size: 70px;
+}
+
 .my_title h1 h2 {
   font-family: 'Raleway';
 }
@@ -243,4 +250,14 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   left: 0px;
   opacity: 1;
   z-index: -1;
+}
+
+.pull-left-small {
+  float: left;
+  width: 30%;
+}
+
+.pull-right-large {
+  float: right;
+  width: 70%;
 }
