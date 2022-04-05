@@ -261,3 +261,8 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   float: right;
   width: 70%;
 }
+
+.custom_study_population h3 {
+  font-family: 'BIZ UDPMincho', serif;
+  font-size: 80px;
+}

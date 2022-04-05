@@ -28,6 +28,7 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(MASS)
 library(knitr)
+library(RefManageR)
 library(tidyverse)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 min_theme <- theme_minimal() + 
@@ -47,6 +48,16 @@ scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "l
 scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
 scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
 scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+
+BibOptions(
+  check.entries = FALSE, 
+  bib.style = "authoryear", 
+  cite.style = "authoryear", 
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE
+)
+bib <- ReadBib("20220407.bib")
 ```
 
 
@@ -506,13 +517,8 @@ include_graphics("figure/equivalence_similarity_hm.png")
 ```
 
 ---
-class: center, middle, section
 
-# Data Analysis
-
----
-
-### Scientific Context
+### Data Analysis
 
 .pull-left[
 * What role does the microbiome play in preterm birth?
@@ -577,8 +583,7 @@ include_graphics("figure/microbiome_betas.png")
  
 ---
 
-Our approach was used by collaborators in the study, ``Sub-communities of the
-vaginal ecosystem in pregnant and non-pregnant women.''
+Our approach was used by collaborators in the study, _Sub-communities of the vaginal ecosystem in pregnant and non-pregnant women_.
 
 ```{r}
 include_graphics("figure/example_study.png")
@@ -588,7 +593,7 @@ include_graphics("figure/example_study.png")
 
 ### Software
 
- Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
+Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
  
 .pull-left[
 ```{r, echo = TRUE, warning = FALSE}
@@ -640,6 +645,200 @@ include_graphics("figure/github.png")
 ]
 
 ---
+
+class: section_header, middle
+
+## Iterative Structuration - Further Examples
+
+---
+
+* Count data dimensionality reduction is an admittedly narrow problem… perhaps not your area?
+* Iterative data structuration is a general problem solving device, though
+* Let’s look at a few examples from _Generative Models: An Interdisciplinary Review_ (preprint available on request)
+- Many more examples there: Experimental design, longitudinal data, likelihood-free inference, …
+
+---
+
+### Mixture Modeling
+
+Suppose we wanted to fit a model to this (simulated) data
+
+```{r, out.width = 500}
+include_graphics("figure/true_mixture.png")
+```
+
+
+---
+
+* A natural enough starting point is to begin with a Gaussian mixture model. I
+set $K = 4$.
+* We can simulate from the fit. Visually, it is quite far off.
+
+.pull-left[
+_Simulated_
+```{r}
+include_graphics("figure/Gaussian (Shared Covarince).png")
+```
+]
+.pull-right[
+_Truth_
+```{r}
+include_graphics("figure/true_mixture.png")
+```
+]
+
+---
+
+We can make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
+
+We use a GBM discriminator, and it has an out-of-sample prediction accuracy of
+about 65%.
+
+.pull-left[
+_Simulated_
+```{r, out.width = 430}
+include_graphics("figure/Gaussian (Shared Covarince)-prob.png")
+```
+]
+
+.pull-right[
+_Truth_
+```{r, out.width = 430}
+include_graphics("figure/true_mixture.png")
+```
+]
+
+
+---
+
+As a next step,
+  * Increase number of components to $K = 5$.
+  * Fit different variances per component
+  
+We still over sample the gap between the two bottom-left clusters.
+
+.pull-left[
+_Simulated_
+```{r, out.width = 410}
+include_graphics("figure/Gaussian (Individual Covariance)-prob.png")
+```
+]
+
+.pull-right[
+_Truth_
+```{r, out.width = 410}
+include_graphics("figure/true_mixture.png")
+```
+]
+
+---
+
+* We use a mixture of $t$ distributions next
+* GBM accuracy is now 50.5%
+  - Unsurprisingly, this is the true mechanism that generated the data
+
+.pull-left[
+```{r}
+include_graphics("figure/Student's t (Individual Covariance)-prob.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/true_mixture.png")
+```
+]
+
+---
+
+The discrimination probabilities become closer to 0.5 the more accurate the simulation becomes
+
+```{r, out.width = 800}
+include_graphics("figure/modeling_iteration.png")
+```
+
+---
+
+### Simulation Modeling
+
+* We are used to thinking in terms of probabilistic generative models…
+	- but some of the most influential generative models around today are non-probabilistic simulators
+* At the start of the COVID-19 pandemic, there was no data! 
+  - Decisions were made using simulation
+
+---
+
+### Role of Structuration
+
+There are two levels of approximation that regularly appear when working with simulations,
+  * Approximations to reality (simulators)
+  * Approximations to simulation (emulators)
+
+Together, realistic simulators and efficient emulators help support hypothetical
+reasoning -- this is much more valuable than prediction alone.
+
+---
+
+### Example: COVID-19 Interventions
+
+* We experimented with the Covasim Agent Based Model `r Citep(bib, "kerr2021covasim")`.
+* Simulates contagion spread through contact networks
+  - Can vary disease characteristics
+  - Can vary intervention characteristics
+
+```{r, out.width = 450, fig.cap = "Simulation setup from (Kerr et al. 2021)."}
+include_graphics("figure/covasim_conceptual.png")
+```
+
+---
+
+### Example: COVID-19 Interventions
+
+* We experimented with the Covasim Agent Based Model `r Citep(bib, "kerr2021covasim")`.
+* Simulates contagion spread through contact networks
+- Can vary disease characteristics
+  - Can vary intervention characteristics
+
+```{r, out.width = 520}
+include_graphics("figure/covid_trajectories.png")
+```
+
+---
+
+### Example Emulator
+
+* We fit a GP, $\text{cases} \sim f(\text{parameters}, \text{time})$
+- Adding different parameters leads to richer simulations
+* We can query the model across new simulation parameters easily
+
+```{r}
+include_graphics("figure/emulator_trajectories.png")
+```
+
+---
+
+### Takeaways
+
+* Iterative data structuration is a versatile problem solving device
+* In the topic modeling context, it can be worthwhile to compare $K$
+	- Model comparison deserves attention, not just model selection
+* Some relevant links,
+	- `alto` documentation: [lasy.github.io/alto](https://lasy.github.io/alto/)
+	- `alto` paper: [arXiv:2109.05541](https://arxiv.org/abs/2109.05541)
+
+.pull-left[
+```{r, out.width = 200}
+include_graphics("figure/structuration.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
+
+]
+
 
 ---
 
@@ -776,3 +975,4 @@ each corresponding to an arbitrary split of a true topic
 ```{r, out.width=350}
 include_graphics("figure/refinement_diagnostic_example.png")
 ```
+
