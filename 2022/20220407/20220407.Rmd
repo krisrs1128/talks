@@ -150,6 +150,30 @@ class: section_header
 
 ---
 
+### Project Team
+
+This project is joint work with Laura Symul (Stanford University) and Julia Fukuyama (Indiana University).
+
+.pull-left[
+```{r, out.width = 220}
+include_graphics("https://profiles.stanford.edu/proxy/api/cap/profiles/192342/resources/profilephoto/350x350.1545327663087.jpg")
+```
+]
+
+.pull-right[
+```{r, out.width = 220}
+include_graphics("https://jfukuyama.github.io/photo_small.png")
+```
+]
+
+It has also benefited from many suggestions from Susan Holmes (Stanford
+University) and Pratheepa Jeganathan (McMaster University).
+
+---
+
+
+---
+
 ### Setting
 
 * Imagine we are getting an initial overview of the data, without referring to any supplemental variables (subject ID, time, …)
@@ -374,7 +398,7 @@ It is possible to have high coherence but low refinement, and vice versa.
 
 .pull-left[
 refinement $\uparrow$ but coherence $\downarrow$
-```{r}
+```{r, out.width = 440}
 include_graphics("figure/cr2.png")
 ```
 ]
@@ -633,7 +657,7 @@ All the simulations discussed today are vignettes in the package.
 * Write if you have any questions!
 
 .pull-left[
-```{r}
+```{r, out.width = 440}
 include_graphics("figure/docs.png")
 ```
 ]
@@ -652,16 +676,19 @@ class: section_header, middle
 
 ---
 
-* Count data dimensionality reduction is an admittedly narrow problem… perhaps not your area?
+### Stepping Back
+
+* Count data dimensionality reduction is an admittedly narrow problem
 * Iterative data structuration is a general problem solving device, though
-* Let’s look at a few examples from _Generative Models: An Interdisciplinary Review_ (preprint available on request)
-- Many more examples there: Experimental design, longitudinal data, likelihood-free inference, …
+* We will look at examples from _Generative Models: An Interdisciplinary Review_
+(preprint available on request) 
+  - Many more examples there: Experimental design, longitudinal data, likelihood-free inference, …
 
 ---
 
 ### Mixture Modeling
 
-Suppose we wanted to fit a model to this (simulated) data
+Suppose we wanted to fit a model to these (simulated) data
 
 ```{r, out.width = 500}
 include_graphics("figure/true_mixture.png")
@@ -672,7 +699,7 @@ include_graphics("figure/true_mixture.png")
 
 * A natural enough starting point is to begin with a Gaussian mixture model. I
 set $K = 4$.
-* We can simulate from the fit. Visually, it is quite far off.
+* We can simulate from the fit, but it seems quite far off.
 
 .pull-left[
 _Simulated_
