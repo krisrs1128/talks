@@ -1,7 +1,7 @@
 ---
-title: "Multiscale Analysis of Count Data"
+title: "Revisiting Iterative Data Structuration"
 author: "Kris Sankaran"
-date: "November 5, 2021"
+date: "April 7, 2022"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -14,6 +14,8 @@ output:
     seal: false
 ---
 
+class: bottom, my_title
+
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
 $\def\*#1{\mathbf{#1}}$
@@ -23,10 +25,11 @@ $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
 $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
-```{r}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
 library(knitr)
+library(tidyverse)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
-library(ggplot2)
 min_theme <- theme_minimal() + 
   theme(
     panel.grid.minor = element_blank(),
@@ -46,55 +49,20 @@ scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(
 scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 ```
 
----
 
-class: bottom, my_title
-
-## Multiscale Analysis of Count Data through Topic Alignment
-
+## Revisiting Iterative Data Structuration: Alignment, Refinement, and Simulation
 
 .pull-left[
-November 5, 2021
-
-Department of Mathematics and Statistics
-
-McMaster University
+April 7, 2022 <br>
+Department of Statistics <br>
+University of Pittsburgh
  ]
  
 .pull-right[
-Kris Sankaran
-
-UW Madison
-
+Kris Sankaran <br>
+UW Madison <br>
 [ksankaran@wisc.edu](ksankaran@wisc.edu)
 ]
-
----
-
-### Project Team
-
-This project is joint work with Laura Symul (Stanford University) and Julia Fukuyama (Indiana University).
-
-.pull-left[
-```{r, out.width = 220}
-include_graphics("https://profiles.stanford.edu/proxy/api/cap/profiles/192342/resources/profilephoto/350x350.1545327663087.jpg")
-```
-]
-
-.pull-right[
-```{r, out.width = 220}
-include_graphics("https://jfukuyama.github.io/photo_small.png")
-```
-]
-
-It has also benefited from many suggestions from Susan Holmes and Pratheepa
-Jeganathan.
-
----
-
-class: center, middle, section
-
-# Background
 
 ---
 
@@ -104,6 +72,8 @@ class: center, middle, section
 * How should we describe the bacterial ecosystems that surround (and
 inhabit) us?
 * An improved understanding would support human and environmental health
+* New technologies are giving a clearer view
+* 16S, metagenomics, metatranscriptomics, cytokine panels, glycomics, LC-MS
 ]
 
 .pull-right[
@@ -114,104 +84,76 @@ include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 
 ---
 
-### Motivation: Microbiome Data Analysis
+### Challenges
 
-* Technologies like 16S and metagenomic sequencing have given us a detailed view
-of the microbiome
-* Microbe abundances are recorded in a high-dimensional count matrix
-  - We often have supplemental data associated with each row (sample) and column
-  (microbe)
+* Real variation
+  - Variation across subjects
+  - Changes over time
+  - Differences across technologies
 
-```{r, out.width = 800}
-include_graphics("figure/species-matrix.png")
-```
+* Nuisance variation
+  - Sequencing protocol (batch effects)
+  - Sequencing depth
 
 ---
 
-### Two Useful Methods
-
-* **Hierarchical clustering** and dimensionality reduction are useful in
-microbiome data analysis
-  - They are supported by standard analysis pipelines
-* Among the latter methods, we'll focus on **Latent Dirichlet Allocation**
-* They provide useful visual artifacts for navigating large datasets
+### Iterative Data Structuration
 
 .pull-left[
-```{r, out.width = 180}
-include_graphics("https://joey711.github.io/phyloseq/phyloseq.png")
-```
+* Iterative data structuration is the idea of forming sequence of increasingly
+realistic models 
+* It bridges low and high-complexity descriptions
+* Statistical analog of the Focus-plus-Context principle in data visualization
 ]
 
 .pull-right[
-```{r, out.width = 240}
-include_graphics("figure/q2docs.png")
+```{r}
+include_graphics("figure/structuration.png")
 ```
 ]
 
 ---
 
-### Hierarchical Clustering
+### Iterative Data Structuration
 
 .pull-left[
-* Hierarchical clustering creates a nested sequence of clusters
-* By cutting the tree at different heights, we can recover either overviews or
-details
-* It's possible zoom in and out across observed patterns
+* Breaks larger microbiome data analysis problem into more manageable components
+  - Begin with the overview
+  - Then focus-in and explain residual variation
+* An alternative to one-size-fits-all modeling packages
+* Approach is common in regression, but is oddly absent from ‘omics
+  - Requires complex generative mechanisms
 ]
 
 .pull-right[
-```{r, fig.cap = "A clustering result from the phyloseq documentation."}
-include_graphics("figure/hclust_example.png")
+```{r}
+include_graphics("figure/structuration.png")
 ```
 ]
 
 ---
 
-### Hierarchical Clustering
+class: section_header
 
-.pull-left[
-* Agglomorative hierarchical clustering sequentially merges pairs of clusters
-that are "closest" to one another
-  - E.g., those having smallest pairwise distances to one another
-]
-
-.pull-right[
-```{r, out.width = 200}
-include_graphics("figure/hclust_linkage_1.png")
-```
-Two types of inter-cluster distance. Figure from (Holmes and Huber 2019).
-]
+## Aligning topics with `alto`
 
 ---
 
-### Hierarchical Clustering
+### Setting
 
-.pull-left[
-* Agglomorative hierarchical clustering sequentially merges pairs of clusters
-that are "closest" to one another
-  - E.g., those having smallest pairwise distances to one another
-]
-
-.pull-right[
-```{r, out.width = 200}
-include_graphics("figure/hclust_linkage_2.png")
-```
-Two types of inter-cluster distance. Figure from (Holmes and Huber 2019).
-]
-
+* Imagine we are getting an initial overview of the data, without referring to any supplemental variables (subject ID, time, …)
+* At this point in the microbiome workflow, clustering is popular
+  - Cluster profiles are easy to explain
+  
 ---
 
-### Limitations Hierarchical Clustering
-
-* If the data in fact lie along a gradient, then clustering is artificial
-* The data can be more parsimoniously described
+### Setting
+  
+* If the data actually follow a gradient, the clustering is artificial. A more parsimonious description uses either
   - Projection onto 1D subspace
   - Mixture between two extremes
 
 ```{r, fig.height = 3.5, fig.width = 12}
-library(MASS)
-library(purrr)
-library(dplyr)
 mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
 x <- (mu + mvrnorm(nrow(mu), rep(0, 2), diag(2))) %>%
   as.data.frame()
@@ -227,6 +169,7 @@ x_clusters <- map_dfr(scales, ~ cbind(x, cluster = cutree(cluster_res, .)), .id 
 ggplot(x_clusters) +
   geom_point(aes(V1, V2, col = cluster)) +
   facet_grid(. ~ scale) +
+  guides(col = guide_legend(override.aes = list(size = 5))) +
   labs(x = "x", y = "y")
 ```
 
@@ -234,8 +177,10 @@ ggplot(x_clusters) +
 
 ### Latent Dirichlet Allocation
 
-Latent Dirichlet Allocation (LDA) is a model that supposes samples
+A natural alternative is Latent Dirichlet Allocation (LDA)
+LDA supposes that samples
 $x_i \in \mathbb{R}^{D}$ are drawn independently from,
+
 
 \begin{align*}
 x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
@@ -257,50 +202,46 @@ Topic models are well-suited to count data dimensionality reduction. The
 estimated parameters can be interpreted as,
 * $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
 * $\*B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
+* $K$ = Number of topics = Number of extreme points
 
-```{r, out.width = 450}
-#include_graphics("figure/latent_dirichlet_v3.png")
+```{r, out.width = 430}
+include_graphics("figure/latent_dirichlet_v2.png")
 ```
 
 ---
 
+### Managing Large $K$
 
-### Limitations of Latent Dirichlet Allocation
+* It is often difficult to interpret these models when $K$ is large
+* Distressing when cross-validated likelihood says that $K$ should be large
+* Heuristic: Look at smaller $K$ first, just to build intuition about topics
+  - This is is guided by iterative data structuration
 
-* LDA does not support navigation across scales
-* It can give a useful overviews...
-  - But it's impossible to zoom in and out across patterns of interest
+```{r, out.width = 430}
+include_graphics("figure/latent_dirichlet_v2.png")
+```
+
+---
+
+### Ideal Approach
+
+How can we formalize this heuristic? Our ideal approach would support,
+  * Navigation: Different $K$ allow us to trade off between richness and
+  interpretability
+  * Parsimony: Partial membership $\to$ fewer prototypes
   
-```{r, out.width = 450}
-#include_graphics("figure/latent_dirichlet_v3.png")
-```
-
----
-
-### The Best of Both Worlds
-
-Our ideal method would a blend between hierarchical clustering and LDA.
-It would support,
-* Navigation: Multiscale methods help navigate
- richness-interpretability trade-offs between views
-* Parsimony: Partial membership $\to$ fewer prototypes
  
 .pull-left[
-```{r, out.width = 320}
+```{r, out.width = 340}
 include_graphics("figure/hclust_example.png")
 ```
 ]
 
 .pull-right[
-```{r, out.width = 360}
-#include_graphics("figure/latent_dirichlet_v3.png")
+```{r, out.width = 400}
+include_graphics("figure/latent_dirichlet_v2.png")
 ```
 ]
-
----
-class: center, middle, section
-
-# Approach
 
 ---
 
@@ -393,25 +334,6 @@ include_graphics("figure/transport_alignment_conceptual.png")
 
 ---
 
-### Alignment and Duality
-
-* These two alignment approaches can be viewed as dual to one another
-* One operates on the space of samples, the other on the space of features
-
-.pull-left[
-```{r}
-include_graphics("figure/correspondence_analysis_profiles_r.png")
-```
-]
-
-.pull-right[
-```{r}
-include_graphics("figure/correspondence_analysis_profiles_c.png")
-```
-]
-
----
-
 ### Diagnostics
 
 * Representing the models by an alignment suggests a few diagnostic measures
@@ -423,127 +345,35 @@ include_graphics("figure/alto_sketches_diagnotics.png")
 
 ---
 
-### Paths
+### Diagnostics
 
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
+* Paths: Partitions diagram into connected sets of topics
+* Coherence: Measures transience of a topic along its path
+* Refinement: Reflects number of strong ancestors
 
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of identified paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-1.png")
+```{r}
+include_graphics("figure/alto_sketches_diagnotics.png")
 ```
 
 ---
 
-### Paths
+### Diagnostics
 
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
+It is possible to have high coherence but low refinement, and vice versa.
 
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-2.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-3.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-4.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-5.png")
-```
-
----
-
-### Coherence
-
-The coherence of a topic is defined as its average connectedness to other topics
-along the same path,
-
-\begin{align*}
- c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
-\end{align*}
-  
 .pull-left[
-* Topics that are transient (appearing at one $K$ and disappearing at
- another) have low coherence scores
-* Topics that are consistently recovered across choices of $K$ have high
- coherence
+refinement $\uparrow$ but coherence $\downarrow$
+```{r}
+include_graphics("figure/cr2.png")
+```
 ]
- 
+
 .pull-right[
-```{r, out.width=250}
-#include_graphics("figure/coherence-sketch.png")
+coherence $\uparrow$ but refinement $\downarrow$
+```{r}
+include_graphics("figure/cr1.png")
 ```
 ]
-
----
-
-### Refinement
-
-Parent specificity distinguishes two qualitatively different regimes,
-
-* High Refinement: Each topic receives most mass from a unique parent,
-corresponding to a true or "compromise" topic
-* Low Refinement: Each topic receives substantial mass from several parents,
-each corresponding to an arbitrary split of a true topic
-
-```{r, out.width=350}
-include_graphics("figure/refinement_diagnostic_example.png")
-```
-
----
-class: center, middle, section
-
-# Simulation
 
 ---
 
@@ -562,17 +392,11 @@ include_graphics("figure/transport-true-lda.png")
 
 ### Diagnostics
 
-.pull-left[
 The diagnostics suggest that the true $K$ is 5.
-]
 
-
-.pull-right[
 ```{r}
-include_graphics("figure/key_topics-lda.png")
-include_graphics("figure/refinement_lda.png")
+include_graphics("figure/lda-combined.png")
 ```
-]
 
 ---
 
@@ -615,41 +439,24 @@ include_graphics("figure/gradient_flow-4.png")
 
 ### Diagnostics
 
+.pull-left-small[
 This structure is consistent across simulation runs, and the diagnostic measures
 quantify the deterioration of topics.
+]
   
-```{r, out.width=850}
-include_graphics("figure/gradient_key_topics.png")
+.pull-right-large[
+```{r}
+include_graphics("figure/gradient-combined.png")
 ```
-
----
-
-### Diagnostics
-
-This structure is consistent across simulation runs, and the summary measures
-quantify the deterioration of topics.
-  
-```{r, out.width=850}
-include_graphics("figure/gradient_refinement_full.png")
-```
-  
----
-
-### Summaries
-This structure is consistent across simulation runs, and the summary measures
-quantify the deterioration of topics.
-
-```{r, out.width=850}
-include_graphics("figure/gradient_stability.png")
-```
+]
 
 ---
 
 ### Strain switching
 
 The last simulation mimics the strain switching problem.
-* Small subsets of species switch between two otherwise similar topics
-* Multiple resolutions are required to detect the difference
+  * Small subsets of species switch between two otherwise similar topics
+  * Multiple resolutions are required to detect the difference
 
 ---
 
@@ -769,27 +576,13 @@ include_graphics("figure/microbiome_betas.png")
 ]
  
 ---
-### Coherence Measures
 
-.pull-left[
-* Two dysbiotic sub-topics seem especially coherent
-  - Gardnerella + Atopobium
-  - Gardnerella + Megasphera
-* These two subtypes were targeted for further study
-  - They are related to the 5 subtypes discovered by France et al. (2020)
-  - Hypothesize that only 3 topics are needed due to mixed-membership approach
-]
+Our approach was used by collaborators in the study, ``Sub-communities of the
+vaginal ecosystem in pregnant and non-pregnant women.''
 
-.pull-right[
-```{r out.width=800}
-include_graphics("figure/microbiome_coherence.png")
+```{r}
+include_graphics("figure/example_study.png")
 ```
-]
-
----
-class: center, middle, section
-
-# Discussion
 
 ---
 
@@ -827,32 +620,12 @@ All the simulations discussed today are vignettes in the package.
 
 ---
 
-### Customized Visualizations
-
-
-.pull-left[
-* The package returns visualizations as ggplot2 objects
-* This makes customized styling and annotation straightforward
-```{r}
-include_graphics("figure/customized-1.png")
-```
-]
-
-.pull-right[
-```{r, out.width = 480}
-include_graphics("figure/customized-2.png")
-```
-]
-
-
----
-
 ### Package Details
 
 * Can rerun scripts at the binder link: [https://tinyurl.com/59k67sde](https://tinyurl.com/59k67sde)
   - No installation necessary
 * All source code available on github
-* Don't hesitate to contact us if you have any questions!
+* Write if you have any questions!
 
 .pull-left[
 ```{r}
@@ -868,22 +641,7 @@ include_graphics("figure/github.png")
 
 ---
 
-### Takeaways
-
-.pull-left[
-* The topic alignment meta-algorithm can provide more information about a dataset than any single topic model fit
-* It is easier to incorporate into existing workflows than a brand new model
-* Interactive computing makes it easy to explore large ensembles
-]
-
-.pull-right[
-* Future Study: Interactive visualization, extensions to multi-modality
-* Read the details in our preprint, [Multiscale Analysis of Count Data Through Topic Alignment](https://tinyurl.com/8jyvp4pd)
-]
-
 ---
-
-class: background-rivers
 
 # Thank You! <br> Questions?
 
@@ -899,3 +657,122 @@ France, M. T., Ma, B., Gajer, P., Brown, S., Humphrys, M. S., Holm, J. B. & Rave
 Holmes, S. P., & Huber, W. (2018). Modern statistics for modern biology. Cambridge University Press.
 
 Ravel, J., Gajer, P., Abdo, Z., Schneider, G. M., Koenig, S. S., McCulle, S. L. & Forney, L. J. (2011). Vaginal microbiome of reproductive-age women. Proceedings of the National Academy of Sciences, 108(Supplement 1), 4680-4687.
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of identified paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-1.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-2.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-3.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-4.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-5.png")
+```
+
+---
+
+### Coherence
+
+The coherence of a topic is defined as its average connectedness to other topics
+along the same path,
+
+\begin{align*}
+ c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+\end{align*}
+  
+.pull-left[
+* Topics that are transient (appearing at one $K$ and disappearing at
+ another) have low coherence scores
+* Topics that are consistently recovered across choices of $K$ have high
+ coherence
+]
+ 
+.pull-right[
+```{r, out.width=250}
+#include_graphics("figure/coherence-sketch.png")
+```
+]
+
+---
+
+### Refinement
+
+Parent specificity distinguishes two qualitatively different regimes,
+
+* High Refinement: Each topic receives most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+```{r, out.width=350}
+include_graphics("figure/refinement_diagnostic_example.png")
+```
