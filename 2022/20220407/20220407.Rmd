@@ -1,7 +1,7 @@
 ---
 title: "Revisiting Iterative Data Structuration"
 author: "Kris Sankaran"
-date: "April 7, 2022"
+date: "April 6, 2022"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -64,7 +64,7 @@ bib <- ReadBib("20220407.bib")
 ## Revisiting Iterative Data Structuration: _Alignment, Refinement, and Simulation_
 
 .pull-left[
-April 7, 2022 <br>
+April 6, 2022 <br>
 Department of Statistics <br>
 University of Pittsburgh
  ]
@@ -145,7 +145,7 @@ include_graphics("figure/structuration.png")
 
 ---
 
-class: section_header
+class: section_header, middle
 
 ## Aligning topics with `alto`
 
@@ -174,9 +174,10 @@ University) and Pratheepa Jeganathan (McMaster University).
 
 ### Setting
 
-* Imagine we are getting an initial overview of the data, without referring to any supplemental variables (subject ID, time, ...)
-* At this point in the microbiome workflow, clustering is often used
-  - Cluster profiles are easy to explain
+* Imagine we want an initial overview of the data, without referring to any
+supplemental variables (subject ID, time, ...)
+* Clustering is often used at this point in the microbiome analysis workflow
+  - The resulting cluster profiles are easy to explain
   
 ```{r, out.width = 580}
 include_graphics("figure/microbiome_clustering_conceptual.png")
@@ -187,9 +188,10 @@ include_graphics("figure/microbiome_clustering_conceptual.png")
 
 ### Setting
   
-* If the data follow a gradient, the clustering is artificial. A more parsimonious description uses either
-  - Projection onto a 1D subspace
-  - Mixture between two extremes
+If the data follow a gradient, then clustering is artificial. A more
+parsimonious description uses either
+  - A projection onto a 1D subspace
+  - A mixture between two extremes
 
 ```{r, fig.height = 3.5, fig.width = 12}
 mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
@@ -215,10 +217,8 @@ ggplot(x_clusters) +
 
 ### Latent Dirichlet Allocation
 
-A natural alternative is Latent Dirichlet Allocation (LDA)
-LDA supposes that samples
-$x_i \in \mathbb{R}^{D}$ are drawn independently from,
-
+A natural alternative is Latent Dirichlet Allocation (LDA), which supposes that
+samples $x_i \in \mathbb{R}^{D}$ are drawn independently from,
 
 \begin{align*}
 x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
@@ -239,7 +239,7 @@ We vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix $\Gamma$.
 Topic models are well-suited to count data dimensionality reduction. The
 estimated parameters can be interpreted as,
 * $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
-* $\*B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
+* $\*B \in \Delta_{D}^{K}$: Per topic distributions over $D$ words.
 * $K$ = Number of topics = Number of extreme points
 
 ```{r, out.width = 430}
@@ -251,9 +251,9 @@ include_graphics("figure/latent_dirichlet_v2.png")
 ### Managing Large $K$
 
 * It is often difficult to interpret these models when $K$ is large
-* Distressing when cross-validated likelihood says that $K$ should be large
-* Heuristic: Look at smaller $K$ first, just to build intuition about topics
-  - This is is guided by iterative data structuration
+* Heuristic: Look at smaller $K$ to build intuition about topics
+  - Then analyze deviations between topics at coarse and fine scales
+  - This is guided by iterative data structuration
 
 ```{r, out.width = 430}
 include_graphics("figure/latent_dirichlet_v2.png")
@@ -264,9 +264,9 @@ include_graphics("figure/latent_dirichlet_v2.png")
 ### Ideal Approach
 
 How can we formalize this heuristic? Our ideal approach would support,
-  * Navigation: Different $K$ allow us to trade between richness and
+  * Navigation: Varying $K$ allows us to trade between richness and
   interpretability
-  * Parsimony: Partial membership $\to$ fewer prototypes
+  * Parsimony: Mixed-membership $\to$ fewer prototypes
   
  
 .pull-left[
@@ -285,7 +285,7 @@ include_graphics("figure/latent_dirichlet_v2.png")
 
 ### Main Idea
 
-* We will fit an ensemble of LDA models of varying complexities (Parsimony)
+* We will fit an ensemble of models of varying complexities (Parsimony)
 * We will build a compact representation of the result (Navigation)
 * In the Sankey diagram, columns are models and rectangles are topics
 
@@ -299,9 +299,9 @@ include_graphics("figure/alto_sketches_annotated alignment.png")
 
 We view an alignment as a graph across the ensemble. Index models by $m$ and
 topics by $k$. Then,
-* Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{k}\}$.
-* Edges $E$ are placed between topics from neighboring models, $K$ vs. $K + 1$ topics
-* Weights $W$ encode the similarity between topics.
+* Nodes $V$ correspond to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{k}\}$
+* Edges $E$ are placed between topics from neighboring models, i.e. $K$ to $K + 1$
+* Weights $W$ encode the similarity between topics
 
 ```{r, out.width = 560}
 include_graphics("figure/alto_sketches_annotated alignment.png")
@@ -363,7 +363,7 @@ include_graphics("figure/transport_alignment_conceptual.png")
 The weights $W$ can be estimated by solving the optimal transport problem,
 \begin{align*}
 &\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right> \\
-\mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|p\right| \times \left|q\right|}_{+} : W 1_{\left|q\right|} = p \text{ and } W^{T} 1_{\left|p\right|^\prime} = q\}.
+\mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
 \end{align*}
 
 ```{r, out.width = 420}
@@ -374,18 +374,7 @@ include_graphics("figure/transport_alignment_conceptual.png")
 
 ### Diagnostics
 
-* Representing the models by an alignment suggests a few diagnostic measures
-* These both help measure topic quality and highlight model misspecification
-
-```{r}
-include_graphics("figure/alto_sketches_diagnotics.png")
-```
-
----
-
-### Diagnostics
-
-* Paths: Partitions diagram into connected sets of topics
+* Paths: Partitions the Sankey diagram into connected sets of topics
 * Coherence: Measures transience of a topic along its path
 * Refinement: Reflects degree of mixing between descendant topics
 
@@ -438,6 +427,15 @@ include_graphics("figure/lda-combined.png")
 
 ---
 
+The diagnostics become more reliable as the sample size increases.
+
+```{r, out.width = 1000}
+include_graphics("figure/summary_alto_asymptotic_behavior.png")
+```
+
+---
+
+
 ### LDA with background variation
 
 What happens when the LDA model is mis-specified? Consider the following
@@ -479,11 +477,11 @@ include_graphics("figure/gradient_flow-4.png")
 
 .pull-left-small[
 This structure is consistent across simulation runs, and the diagnostic measures
-quantify the deterioration of topics.
+quantify topic deterioration
 ]
   
 .pull-right-large[
-```{r}
+```{r, out.width = 635}
 include_graphics("figure/gradient-combined.png")
 ```
 ]
@@ -498,7 +496,7 @@ The last simulation mimics the strain switching problem.
 
 ---
 
-###  Mechanism
+### Mechanism
 
 We first construct equivalence classes of similar topics $\tilde{\beta}_k^r$.
 Then, for each sample $i$ and each $k$, we draw one member from the class
@@ -555,7 +553,7 @@ include_graphics("figure/equivalence_similarity_hm.png")
 ]
 
 .pull-right[
-```{r}
+```{r, out.width = 420, fig.cap = "CSTs as found by Ravel et al. (2011)."}
 include_graphics("figure/community_state_types.jpg")
 ```
 ]
@@ -620,7 +618,7 @@ include_graphics("figure/example_study.png")
 
 ### Software
 
-Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
+Topic alignment is implemented in the R package [alto](lasy.github.io/alto) (lasy.github.io/alto).
  
 .pull-left[
 ```{r, echo = TRUE, warning = FALSE}
@@ -682,7 +680,7 @@ class: section_header, middle
 ### Stepping Back
 
 * Count data dimensionality reduction is an admittedly narrow problem
-* Iterative data structuration is a general problem-solving device, though
+* However, iterative data structuration is a general problem-solving device
 * We will look at examples from _Generative Models: An Interdisciplinary Review_
 (preprint available on request) 
   - There are many more examples: Experimental design, longitudinal data,
@@ -701,7 +699,7 @@ include_graphics("figure/true_mixture.png")
 
 ---
 
-* A natural enough starting point is a Gaussian mixture model. I set $K = 4$.
+* A natural enough starting point is a Gaussian mixture model with $K = 4$.
 * We can simulate from the fit, but it seems quite far off.
 
 .pull-left[
@@ -721,8 +719,8 @@ include_graphics("figure/true_mixture.png")
 
 We can make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
 
-We use a GBM discriminator, and it has an out-of-sample prediction accuracy of
-about 65%.
+The prediction probabilies below come from a GBM discriminator, which has an
+out-of-sample prediction accuracy of 65.5%.
 
 .pull-left[
 _Simulated_
@@ -734,7 +732,7 @@ include_graphics("figure/Gaussian (Shared Covarince)-prob.png")
 .pull-right[
 _Truth_
 ```{r, out.width = 430}
-include_graphics("figure/true_mixture.png")
+include_graphics("figure/true-Gaussian (Shared Covariance)-prob.png")
 ```
 ]
 
@@ -743,45 +741,48 @@ include_graphics("figure/true_mixture.png")
 
 As a next step,
   * Increase number of components to $K = 5$.
-  * Fit different variances per component
+  * Fit different variances per component.
   
-We still over-sample the gap between the two bottom-left clusters.
+We still over-sample the gap between the two bottom-left clusters, but the GBM
+accuracy has dropped down to 55.5%.
 
 .pull-left[
 _Simulated_
-```{r, out.width = 410}
+```{r, out.width = 350}
 include_graphics("figure/Gaussian (Individual Covariance)-prob.png")
 ```
 ]
 
 .pull-right[
 _Truth_
-```{r, out.width = 410}
-include_graphics("figure/true_mixture.png")
+```{r, out.width = 350}
+include_graphics("figure/true-Gaussian (Individual Covariance)-prob.png")
 ```
 ]
 
 ---
 
-* We use a mixture of $t$ distributions next
-* GBM accuracy is now 50.5%
-  - Unsurprisingly, this is the true mechanism that generated the data
+* We use a mixture of $t$ distributions next.
+* GBM accuracy is now 50.6%
+  - Unsurprisingly, this is the true mechanism that generated the data.
 
 .pull-left[
+_Simulated_
 ```{r}
 include_graphics("figure/Student's t (Individual Covariance)-prob.png")
 ```
 ]
 
 .pull-right[
+_Truth_
 ```{r}
-include_graphics("figure/true_mixture.png")
+include_graphics("figure/true-Student's t (Individual Covariance)-prob.png")
 ```
 ]
 
 ---
 
-The discrimination probabilities become closer to 0.5 the more accurate the simulation becomes
+The discrimination probabilities become closer to 0.5 the more accurate the simulation becomes.
 
 ```{r, out.width = 800}
 include_graphics("figure/modeling_iteration.png")
@@ -795,6 +796,11 @@ include_graphics("figure/modeling_iteration.png")
 	- but some of the most influential generative models around today are non-probabilistic simulators
 * At the start of the COVID-19 pandemic, there was no data! 
   - Decisions were made using simulation
+
+```{r, out.width = 500}
+include_graphics("figure/quanta.png")
+```
+
 
 ---
 
@@ -812,11 +818,10 @@ reasoning -- this is much more valuable than prediction alone.
 ### Example: COVID-19 Interventions
 
 * We experimented with the Covasim Agent-Based Model `r Citep(bib, "kerr2021covasim")`.
-* Simulates contagion spread through contact networks
-  - Can vary disease characteristics
-  - Can vary intervention characteristics
+* This model simulates contagion spread through contact networks. The user can
+vary disease characteristics and intervention strength.
 
-```{r, out.width = 450, fig.cap = "Simulation setup from (Kerr et al. 2021)."}
+```{r, out.width = 450, fig.cap = "Simulation setup from (Kerr, Stuart, Mistry, et al. 2021)."}
 include_graphics("figure/covasim_conceptual.png")
 ```
 
@@ -825,9 +830,8 @@ include_graphics("figure/covasim_conceptual.png")
 ### Example: COVID-19 Interventions
 
 * We experimented with the Covasim Agent-Based Model `r Citep(bib, "kerr2021covasim")`.
-* Simulates contagion spread through contact networks
-- Can vary disease characteristics
-  - Can vary intervention characteristics
+* This model simulates contagion spread through contact networks. The user can
+vary disease characteristics and intervention strength.
 
 ```{r, out.width = 520}
 include_graphics("figure/covid_trajectories.png")
@@ -837,11 +841,14 @@ include_graphics("figure/covid_trajectories.png")
 
 ### Example Emulator
 
-* We fit a GP, $\text{cases} \sim f(\text{parameters}, \text{time})$
-- Adding different parameters leads to richer simulations
+* We fit,
+\begin{align*}
+  \text{cases} \sim f(\text{parameters}, \text{time})
+\end{align*}
+  with a gaussian process prior for $f$
 * We can query the model across new simulation parameters easily
 
-```{r}
+```{r, out.width = 800}
 include_graphics("figure/emulator_trajectories.png")
 ```
 
@@ -849,7 +856,7 @@ include_graphics("figure/emulator_trajectories.png")
 
 ### Takeaways
 
-* Iterative data structuration is a versatile problem solving device
+* Iterative data structuration is a versatile problem-solving device
 * In the topic modeling context, it can be worthwhile to compare $K$
 	- Model comparison deserves attention, not just model selection
 * Some relevant links,
@@ -1005,3 +1012,20 @@ each corresponding to an arbitrary split of a true topic
 include_graphics("figure/refinement_diagnostic_example.png")
 ```
 
+---
+
+### Refinement
+
+Parent specificity distinguishes two qualitatively different regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+
+\begin{align*}
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} w_{\mathrm{out}}\left(v, v_{m^{\prime}}^{\prime}\right) w_{\text {in }}\left(v, v_{m^{\prime}}^{\prime}\right)
+\end{align*}
+
+---
