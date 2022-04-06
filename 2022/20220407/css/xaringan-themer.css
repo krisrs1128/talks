@@ -24,7 +24,7 @@
 
 
 body {
-  font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
+  font-family: 'Poppins';
   font-weight: ;
   color: #0c0c0c;
 }
@@ -36,6 +36,7 @@ h1, h2, h3 {
 .remark-slide-content {
   font-size: 26px;
   padding: 1em 4em 1em 4em;
+  background-color: #fffff;
 }
 
 .remark-slide-content h1 {
@@ -92,13 +93,11 @@ a, a > code {
   color: #FFFFFF;
 }
 .title-slide, .title-slide h1, .title-slide h2, .title-slide h3 {
+  font-family: 'Raleway', serif;
   color: #FFFFFF;
 }
 .title-slide {
   background-color: #09017F;
-  
-  
-  
 }
 .title-slide .remark-slide-number {
   display: none;
@@ -145,10 +144,10 @@ blockquote {
 }
 .remark-slide table thead th { border-bottom: 1px solid #ddd; }
 th, td { padding: 5px; }
-.remark-slide thead, .remark-slide tfoot, .remark-slide tr:nth-child(even) { background: #B5B2D8 }
+.remark-slide thead, .remark-slide tfoot, .remark-slide tr:nth-child(even) { background: #FFFFFF }
 table.dataTable tbody {
   background-color: #FFFFFF;
-  color: #272822;
+  color: #FFFFFF;
 }
 table.dataTable.display tbody tr.odd {
   background-color: #FFFFFF;
@@ -189,12 +188,12 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 }
 
 .section_header h2 {
-  font-family: 'BIZ UDPMincho', serif;
-  font-size: 70px;
+  font-family: 'Raleway', serif;
+  font-size: 50px;
 }
 
 .my_title h1 h2 {
-  font-family: 'Raleway';
+  font-family: 'Raleway', serif;
 }
 
 .my_title {

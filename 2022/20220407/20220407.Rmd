@@ -61,7 +61,7 @@ bib <- ReadBib("20220407.bib")
 ```
 
 
-## Revisiting Iterative Data Structuration: Alignment, Refinement, and Simulation
+## Revisiting Iterative Data Structuration: _Alignment, Refinement, and Simulation_
 
 .pull-left[
 April 7, 2022 <br>
@@ -82,13 +82,13 @@ UW Madison <br>
 .pull-left[
 * How should we describe the bacterial ecosystems that surround (and
 inhabit) us?
-* An improved understanding would support human and environmental health
-* New technologies are giving a clearer view
-* 16S, metagenomics, metatranscriptomics, cytokine panels, glycomics, LC-MS
+* A clearer view would support human and environmental health
+* New technologies shaping our understanding
+  - 16S, metagenomics, metatranscriptomics, cytokine panels, glycomics, LC-MS
 ]
 
 .pull-right[
-```{r, fig.cap = "A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
+```{r, fig.cap = "Bacteria along the gut lining, from Earle et al. 2015.", fig.align = "left"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -97,28 +97,30 @@ include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 
 ### Challenges
 
-* Real variation
-  - Variation across subjects
-  - Changes over time
-  - Differences across technologies
+Scientists are curious about sources of biological variation but are aware of a
+range of potential technical artifacts.
 
-* Nuisance variation
-  - Sequencing protocol (batch effects)
-  - Sequencing depth
+| Real | Nuisance |
+|--|---|
+| Variation across treatments | Sequencing protocol (batch effects) |
+| Variation across subjects | Sequencing depth |
+| Changes over time | Amplification biases
+| Complementary technologies| |
 
 ---
 
 ### Iterative Data Structuration
 
 .pull-left[
-* Iterative data structuration is the idea of forming sequence of increasingly
-realistic models 
+* Iterative data structuration is the idea of forming a sequence of increasingly
+realistic models `r Citep(bib, c("holmes1993comment", "mallows1982overview"))`
 * It bridges low and high-complexity descriptions
-* Statistical analog of the Focus-plus-Context principle in data visualization
+* It is the statistical analog of the Focus-plus-Context principle in data
+visualization `r Citep(bib, c("hauser2004interactive"))`
 ]
 
 .pull-right[
-```{r}
+```{r, out.width = 300, fig.cap = "A metaphor for structuration, from (Holmes, 1993).", fig.align = "left"}
 include_graphics("figure/structuration.png")
 ```
 ]
@@ -132,12 +134,10 @@ include_graphics("figure/structuration.png")
   - Begin with the overview
   - Then focus-in and explain residual variation
 * An alternative to one-size-fits-all modeling packages
-* Approach is common in regression, but is oddly absent from ‘omics
-  - Requires complex generative mechanisms
 ]
 
 .pull-right[
-```{r}
+```{r, out.width = 300, fig.cap = "A metaphor for structuration, from (Holmes, 1993).", fig.align = "left"}
 include_graphics("figure/structuration.png")
 ```
 ]
@@ -171,14 +171,16 @@ University) and Pratheepa Jeganathan (McMaster University).
 
 ---
 
-
----
-
 ### Setting
 
-* Imagine we are getting an initial overview of the data, without referring to any supplemental variables (subject ID, time, …)
-* At this point in the microbiome workflow, clustering is popular
+* Imagine we are getting an initial overview of the data, without referring to any supplemental variables (subject ID, time, ...)
+* At this point in the microbiome workflow, clustering is often used
   - Cluster profiles are easy to explain
+  
+```{r, out.width = 580}
+include_graphics("figure/microbiome_clustering_conceptual.png")
+```
+
   
 ---
 
@@ -384,7 +386,7 @@ include_graphics("figure/alto_sketches_diagnotics.png")
 
 * Paths: Partitions diagram into connected sets of topics
 * Coherence: Measures transience of a topic along its path
-* Refinement: Reflects number of strong ancestors
+* Refinement: Reflects degree of mixing between descendant topics
 
 ```{r}
 include_graphics("figure/alto_sketches_diagnotics.png")
@@ -397,14 +399,14 @@ include_graphics("figure/alto_sketches_diagnotics.png")
 It is possible to have high coherence but low refinement, and vice versa.
 
 .pull-left[
-refinement $\uparrow$ but coherence $\downarrow$
+high refinement but low coherence
 ```{r, out.width = 440}
 include_graphics("figure/cr2.png")
 ```
 ]
 
 .pull-right[
-coherence $\uparrow$ but refinement $\downarrow$
+high coherence but low refinement
 ```{r}
 include_graphics("figure/cr1.png")
 ```
@@ -441,7 +443,7 @@ What happens when the LDA model is mis-specified? Consider the following
 generative mechanism,
 
 \begin{align*}
-x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(x_{i} ; N_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
 \nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
 \gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
 \beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
