@@ -180,6 +180,21 @@ supplemental variables (subject ID, time, ...)
   - The resulting cluster profiles are easy to explain
   
 ```{r, out.width = 580}
+include_graphics("figure/species-matrix.png")
+```
+
+  
+---
+
+
+### Setting
+
+* Imagine we want an initial overview of the data, without referring to any
+supplemental variables (subject ID, time, ...)
+* Clustering is often used at this point in the microbiome analysis workflow
+  - The resulting cluster profiles are easy to explain
+  
+```{r, out.width = 580}
 include_graphics("figure/microbiome_clustering_conceptual.png")
 ```
 
