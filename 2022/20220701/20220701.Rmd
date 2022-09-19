@@ -1,0 +1,644 @@
+---
+title: "Generative Approaches to Microbiome Mediation Analysis"
+author: "Xinran Miao, Hanying Jiang, Kris Sankaran"
+date: "July 1, 2022"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+    includes:
+      before_body: preamble.html
+params:
+  path: "../data_analysis/temp"
+---
+
+---
+
+class: top, my_title
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(tidyverse)
+library(RefManageR)
+opts_chunk$set(echo = FALSE, cache = TRUE)
+
+BibOptions(
+  check.entries = FALSE, 
+  bib.style = "numeric", 
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE
+)
+bib <- ReadBib("20220701.bib")
+```
+
+## Generative Approaches to Microbiome Mediation Analysis
+
+.pull-left[
+Holmes Lab Meeting
+
+July 1, 2022
+]
+
+<div style="position: absolute;top: 500px">
+Work by: 
+<br/>
+Xinran Miao
+<br/>
+Hanying Jiang 
+<br/>
+Kris Sankaran
+</div>
+
+---
+
+### Motivation
+
+This is an update on microbiome + meditation collaboration that we presented at the last group meeting,
+* Study Goals
+  - Overall: Describe the physiological mechanisms underlying mindfulness
+  - Specific: Do mindfulness and the microbiome influence one another?
+* Why is this important?
+  - More precisely integrate mindfulness training into medical practices
+  - Could tailor mindfulness interventions based on microbiome signature
+
+---
+
+### Study Design `r Citep(bib, c("grupe2021impact"))`
+
+```{r echo = FALSE}
+load(str_c(params$path, "/real_data.RData")) # created by data_prep.Rmd
+n_trt <- sample_info %>%
+  group_by(subject) %>%
+  filter(timepoint == 2) %>%
+  ungroup() %>%
+  count(trt) %>%
+  pull(n)
+```
+.pull-left[
+- `r n_trt[1]` participants in treatment, `r n_trt[2]` participants in control
+- Each participant tracked for three timepoints, each four months apart
+- Treatment group participates in a mindfulness course that finishes before
+second timepoint
+]
+  
+.pull-right[
+```{r}
+include_graphics("../../data/visualizations/sketches/design.svg")
+```
+]
+
+---
+
+### Multiple measurements per timepoint
+
+- 16S: Typically 2 - 4 technical replicates per timepoint
+- Dried Blood Spot: Used to measure cortisol levels and immune response
+- Surveys: Mental health (PROMIS), sleep quality, and diet (NCI) questionnaires
+
+```{r, out.width = 700, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/data_sources.svg")
+```
+
+---
+
+### Opportunities for Improvement
+
+Previously, we presented mixed-effects and multinomial regression models of the form,
+
+```
+(transformed) microbiome counts ~ treatment + random subject effect + anxiety score
+```
+
+This gave a few species that seem to vary with treatment, controlling for
+subject ID and anxiety score. Today, we further develop,
+
+* _Data sources_: We gained access to more survey and lab results
+* _Goodness-of-fit_: We failed to capture overdispersion or zero-inflation
+  - Draw from literature on count data modeling
+* _Mechanisms_: What mechanisms drive observed shifts? (e.g., diet?)
+  - Draw from literature on mediation analysis
+
+---
+
+class: section_header, center
+
+## Literature Review
+
+---
+
+### Logistic Normal Multinomial Model
+
+ The Logistic Normal Multinomial (LNM) transforms Gaussian means onto the
+ simplex for underlying multinomial probabilities.
+\begin{align*}
+y_{i} \vert \mu_{i} &\sim \Mult\left(\text{Depth}_{i}, \varphi^{-1}\left(\mu_{i}\right)\right) \\
+\mu_{i} &\sim \Gsn\left(B^{T}x_{i}, \Sigma\right)
+\end{align*}
+where
+\begin{align*}
+  \varphi^{-1}\left(\mu_{i}\right) = \left(\frac{\exp{\mu_{i1}}}{1 + \sum_{k}\exp{\mu_{ik}}}, \dots, \frac{\exp{\mu_{i\left(K - 1\right)}}}{1 + \sum_{k}\exp{\mu_{ik}}}, \frac{1}{1 + \sum_{k}\exp{\mu_{ik}}} \right)
+\end{align*}
+
+---
+
+### Logistic Normal Multinomial Model
+
+* The $\varphi^{-1}$ transformation resolves the nonidentifiability that arises
+in the more naive $p_{i} \propto \left(\exp{\mu_{i1}}, \dots, \exp{\mu_{iK}}\right)$ approach.
+* Many variations exist: penalized, semiparametric, zero-inflated, tree-structured,... `r Citep(bib, c("xia2013logistic", "mimno2008topic", "zhang2019scalable", "wang2021microbiome", "zeng2022zero", "silverman2022bayesian"))`
+
+```{r, out.width = 760, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/lnm-paper.svg")
+```
+
+---
+
+### Mediation Analysis
+
+Mediation models are a graphical model where a treatment $T$ can influence a
+response $Y$ either directly or indirectly through a mediator variable $M$ `r Citep(bib, c("imai2010general"))`. This is formalized through a series of
+chained regression models,
+
+\begin{align*}
+m_{i} &= \alpha_{0} + \alpha_{T}t_{i} + \alpha_{X}^{T}x_{i} + \varepsilon_{i}^{m} \text{ (mediation model)}\\
+y_{i} &= \beta_{0} + \beta_{T}t_{i} + \beta_{X}^{T}x_{i} + \beta_{M}^{T}m_{i} + \varepsilon_{i}^{y} \text{ (outcome model) }.
+\end{align*}
+
+```{r, out.width = 300, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/mediation-dag.svg")
+```
+
+---
+
+### Counterfactual Perspective
+
+* Typically the direct and indirect effects are read off $\alpha_{T}$ and
+$\beta_{T}$.
+* A more general approach considers the counterfactual difference in potential outcome `r Citep(bib, c("imai2010general"))`,
+\begin{align}
+\tau_{i} &= y_{i}\left(x_i, 1, m\left(x_{i}, t_i\right)\right) - y_{i}\left(x_i,0, m\left(x_{i}, t_i\right)\right),\\
+\delta_{i} &= y_{i}\left(x_i, t_{i}, m\left(x_{i}, 1\right)\right) - y_{i}\left(x_i, t_{i}, m\left(x_{i}, 0\right)\right),
+\end{align}
+  and estimate $\Earg{\tau_{i}}$ and $\Earg{\delta_{i}}$ over the population.
+* This is viewed as intervening on the treatment and mediator, respectively
+
+---
+### Counterfactual Perspective
+
+For example, if there is no mediation effect, the $m_i$ are unaffected by the
+treatment. Nonetheless, there can still be a large direct effect.
+
+```{r, out.width = 540, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/counterfactual-mediation2.svg")
+```
+
+---
+### Counterfactual Perspective
+
+Alternatively, the treatment can influence the response entirely by changing the
+typical value of the mediator.
+
+```{r, out.width = 600, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/counterfactual-mediation3.svg")
+```
+
+---
+### Counterfactual Perspective
+
+Both types of effects can exist simultaneously.
+
+```{r, out.width = 700, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/counterfactual-mediation4.svg")
+```
+
+---
+
+### Sensitivity Analysis
+
+* The graphical model above assumes the errors in the mediation and outcome models are independent.
+* We can correlate the errors and see how the estimate of $\Earg{\delta_{i}}$ changes in response. If a strong correlation is needed before the estimated effect disappears, then we think of our findings as being more robust.
+
+```{r, out.width = 450, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/sensitivity.svg")
+```
+
+---
+
+class: section_header, center
+
+## Model Design
+
+---
+### Subject-level Design
+* We incorporate the mediator path to the LNM model. The goal is to study how treatment directly and indirectly affects the microbiome 
+  - We focus on 4 mediator variables
+* For biological samples $i=1,\cdots, N$ with replicates $i_1, \cdots, i_{r}$, we have
+
+.pull-left[
+\begin{align*}
+y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\mu_{i_r}\right)\right) \\
+\mu_{i_r} &= \eta_{i}+ \varepsilon_{i_r}^{\mu}\\
+\eta _{i}&= \beta_0 + \beta_Tt_i + \beta_X^Tx_i + \beta_M^T m_{i}\\ 
+m_{i} &= \alpha_0 + \alpha_Tt_i + \alpha_X^Tx_i + \varepsilon_{i}^m\\
+\end{align*}
+]
+
+.pull-right[
+\begin{align*}
+\varepsilon_{i_r}^\mu &\sim \Gsn\left(0, \text{diag}\left(\sigma_{k}^2\right)\right)\\
+\varepsilon_{i}^m &\sim \Gsn\left(0, \text{diag}\left(\sigma_{m}^2\right)\right)
+\end{align*}
+]
+
+where $x_i$ indicates the subject that sample $i$ belongs to, i.e., we have subject-level random effects for $m$ and $\mu$.
+
+---
+
+.pull-left[
+\begin{align*}
+y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\mu_{i_r}\right)\right) \\
+\mu_{i_r} &= \eta_{i}+ \varepsilon_{i_r}^{\mu}\\
+\eta _{i}&= \beta_0 + \beta_Tt_i + \beta_X^Tx_i + \beta_M^T m_{i}\\ 
+m_{i} &= \alpha_0 + \alpha_Tt_i + \alpha_X^Tx_i + \varepsilon_{i}^m\\
+\end{align*}
+]
+
+.pull-right[
+\begin{align*}
+\varepsilon_{i_r}^\mu &\sim \Gsn\left(0, \text{diag}\left(\sigma_{k}^2\right)\right)\\
+\varepsilon_{i}^m &\sim \Gsn\left(0, \text{diag}\left(\sigma_{m}^2\right)\right)
+\end{align*}
+]
+
+<br>
+
+```{r, fig.align = "center", out.width = 800}
+include_graphics("../../data/visualizations/sketches/design-dimensions.svg")
+```
+
+
+
+---
+The treatment effect is defined in the space of $\mu_{i_{r}}$'s, and $\varphi^{-1}$
+maps the effect onto the simplex for sampling the observed counts $y_{i_r}$.
+
+```{r, out.width=800, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/lnm.svg")
+```
+
+---
+
+The treatment effect is defined in the space of $\mu_{i_{r}}$'s, and $\varphi^{-1}$
+maps the effect onto the simplex for sampling the observed counts $y_{i_r}$.
+
+```{r, out.width = 800, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/lnm-treatment.svg")
+```
+---
+class: one_third
+
+### Model performance
+* We estimate parameters using variational inference in Stan.
+* Changes are visible during treatment, but since these differences must be
+shared across all subjects, they are small.
+
+.pull-left[
+
+```{r, out.width = 300, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/fitted.svg")
+```
+]
+.pull-right[
+```{r, out.width = 620, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm/subject/GOF_fitted.png")
+```
+]
+
+---
+### Model performance
+* To further understand how our model calibrates uncertainty, we consider $\widetilde{\mu}_{i_r}$ simulated from either posterior predictive $\widetilde{\eta}(m_i, x_i, t_i)$ or upstream simulated samples $\widetilde\eta(\widetilde{m}_i, x_i, t_i)$.
+
+.pull-left[
+```{r, out.width = 400, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/posterior_predictive.svg")
+```
+]
+.pull-right[
+
+```{r, out.width = 400, echo = FALSE, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/simulated.svg")
+```
+
+]
+
+---
+* The posterior predictive underestimates variability across replicates
+* The upstream simulated samples show much more variability across samples than is appropriate
+* These results are consistent with effective point estimates, but poor
+uncertainty estimation, in variational inference
+
+
+```{r, out.width = 600, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm/subject/GOF_simulated.png")
+```
+
+
+
+
+---
+
+* Our model does not capture large residual variation across either timepoints or replicates.
+* This results in large estimated $\sigma_k^2$ across taxa.
+
+```{r, out.width =550, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm/subject/sigmas_mu.png")
+```
+
+---
+### Sample-level Design
+To characterize variation across timepoints, we change the design matrix to allow for sample-level (instead of subject-level) random effects.
+
+```{r, out.width = 1000, echo = FALSE, fig.align = "left"}
+include_graphics("../..//data/visualizations/sketches/design_matrix.svg")
+```
+
+
+---
+
+The fitted values now have somewhat larger variation across timepoints.
+
+```{r, out.width = 800, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm/GOF_fitted_compare_design.png")
+```
+
+---
+
+The upstream-simulated samples have somewhat reduced variability, but there
+still seems to be substantial room for improvement.
+
+```{r, out.width = 800, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm/timepoint/GOF_simulated.png")
+```
+
+---
+
+class: two_thirds
+
+Though the $\sigma_{k}^2$ have been reduced, they are still large for some species. This appears to be a consequence of zero inflation.
+
+.pull-left[
+```{r, out.width = 500, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm/timepoint/sigmas_mu.png")
+```
+]
+
+.pull-right[
+```{r echo=FALSE,warning=FALSE, fig.width=8,fig.height=7,message=FALSE}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm/timepoint/sparse_hist.png")
+```
+]
+
+---
+
+### Managing Zero-Inflation
+
+There are many proposals for dealing with zero inflation in the microbiome `r Citep(bib, c("tang2019zero", "zhao2020variational", "zeng2022zero"))`. However,
+they typically use binary masking variables, and Stan (and more generally,
+hamiltonian monte carlo) requires a continuous parameter space.
+
+How can we handle zero-inflation with a continuous parameter space?
+
+---
+
+We introduce a second mixture component to account for zeros,
+\begin{align*}
+\mu_{i_{r}} \sim &\left(1 - \pi\right) \odot \Gsn\left(-5, \sigma_{0}^{2}I_{k}\right) + 
+\pi \odot \Gsn\left(\eta\left(m_{i}, t_{i}, x_{i}\right), \text{diag}\left(\sigma_{k}^2\right)\right)
+\end{align*}
+Here, $1 - \pi$ is like a zero-inflation probability. The choice of -5 is arbitrary.
+
+```{r out.width = 800, fig.align = "center"}
+include_graphics("../../data/visualizations/sketches/mixture_1.svg")
+```
+
+---
+
+To support this interpretation, the species with the lowest prevalence often (but don't always) have lower values of $\pi_{k}$.
+
+```{r, out.width = 650, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm_mix/timepoint/lambda_sparsity.png")
+```
+
+---
+
+The resulting simulated samples are harder to distinguish from real observations (and without simply “memorizing” the data).
+
+```{r, out.width = 900, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm_mix/timepoint/GOF_subject_simulated.png")
+```
+
+---
+
+class: section_header, center
+
+## Interpretation
+
+---
+### Reminder: causal paths
+
+```{r, out.width = 300, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations//sketches/interpretation.svg")
+```
+
+
+.left-1third[
+Effects on mediators
+```{r,out.width = 200, echo = FALSE}
+include_graphics("../../data/visualizations/sketches/mediation-dag-tm.svg")
+```
+]
+
+
+.right-2thirds[
+.pull-left[
+Indirect effects
+```{r,out.width = 200, echo = FALSE}
+include_graphics("../../data/visualizations/sketches/mediation-dag-y-indirect.png")
+```
+]
+
+.pull-right[
+Direct effects
+```{r,out.width = 200, echo = FALSE}
+include_graphics("../../data/visualizations/sketches/mediation-dag-y-direct.png")
+```
+]
+]
+---
+### Effects on mediators
+
+Post-intervention, we find changes in diet, sleep quality and fatigue level.
+
+.main-left[
+```{r, out.width = 450, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm_mix/timepoint/c.png")
+```
+]
+
+.right-icon[
+```{r, echo = FALSE}
+include_graphics("../../data/visualizations/sketches/mediation-dag-tm.svg")
+```
+]
+
+
+---
+### Counterfactual simulation
+
+.pull-left[
+\begin{align*}
+y_{i_r} &\sim \Mult(\text{Depth}_{i_r}, \underbrace{\varphi^{-1}\left(\mu_{i_r}\right)}_{p_{i_r}}  )  \\
+\end{align*}
+* To quantify the direct / indirect effects in a counterfactual perspective, we have simulated $p\left(x_{i}, m\left(x_i, t\right), t^\prime\right)$ for all four combinations of $t, t^\prime$ through upstream posterior.
+* Due to varying sequencing depths, we analyze relative abundance $p$ instead of counts $y$
+]
+.pull-right[
+```{r, out.width = 800, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/sketches/p_counterfactual.svg")
+```
+]
+---
+* This allows us to estimate:
+    - Indirect treatment effects: $\Earg{p\left(x, m\left(x, 1\right), t\right) - p\left(x, m\left(x, 0\right), t\right)}$ 
+    - Direct treatment effects: $\Earg{p\left(x, m\left(x, t\right), 1\right) - p\left(x, m\left(x, t\right), 0\right)}$
+    
+.pull-left[
+
+
+```{r, out.width = 400, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/sketches/indirect_effect.svg")
+```
+]
+
+.pull-right[
+
+```{r, out.width = 400, echo = FALSE, fig.align = "center"}
+include_graphics("../..//data/visualizations/sketches/direct_effect.svg")
+```
+]
+
+---
+
+
+.left-icon-small[
+```{r, echo = FALSE}
+include_graphics("../../data/visualizations/sketches/mediation-dag-y-indirect.png")
+```
+]
+
+.right-icon-small[
+```{r, echo = FALSE}
+include_graphics("../../data/visualizations/sketches/mediation-dag-y-direct.png")
+```
+]
+
+.treatment-effects[
+```{r, echo = FALSE, fig.align = "center",out.width=1000}
+include_graphics("../..//data/visualizations/real_data_analysis/lnm_med_rep_postm_mix/timepoint/matched_effect_seed.png")
+```
+]
+
+
+---
+
+### Remaining challenges
+
+* Our analysis considered 4 mediators chosen by hand. However, the study had 18
+self-report surveys, as well as immunological and cortisol lab test results.
+ - We have access to $> 1000$ variables
+ - How can we adapt factor analysis or variable selection to support mediation
+ analysis to accommodate measurements that weren’t chosen manually?
+- Can we modify the design to also capture the long-term effects of mindfulness training?
+- Can we conduct a sensitivity analysis to check how unmeasured counfounders may affect biological findings?
+---
+
+### Summary of Main Ideas
+
+1. A generative perspective aligns well with a counterfactual approach to mediation analysis.
+2. The inclusion of sample-level random effects within the logistic normal multinomial makes a big difference.
+3. A full simulator provides more discriminating goodness-of-fit evaluation than the posterior predictive alone.
+4. Zero-inflation can be easily incorporated into automatic inference through continuous mixtures.
+---
+class: small
+### References
+
+
+```{r, results = "asis", echo = FALSE}
+PrintBibliography(bib)
+```
+
+---
+
+
+Attributions:
+
+Microbiome by Stefanie Peschel from NounProject.com
+Blood by Dmitry Vasiliev from NounProject.com
+Survey by Vectors Market from NounProject.com
+
+---
+
+class: small
+
+### Microbiome Counts
+
+* Logistic Normal
+  - Scalable estimation and regularization for the logistic normal multinomial model
+  - A Logistic Normal Multinomial Regression Model for Microbiome Compositional Data Analysis
+  - MIMIX: A Bayesian Mixed-Effects Model for Microbiome Data From Designed Experiments
+  - Bayesian Multinomial Logistic Normal Models through Marginally Latent Matrix-T Processes
+  - Microbiome compositional analysis with logistic-tree normal models
+  - Topic models conditioned on arbitrary features with Dirichlet-multinomial regression
+* Negative Binomial
+  - Bayesian gamma-negative binomial modeling of single-cell RNA sequencing data
+  - Overdispersion: Models and estimation
+  - Variational Autoencoders for Sparse and Overdispersed Discrete Data
+* Zero Inflation
+  - Bayesian mixed effect models for zero-inflated compositions in microbiome data analysis
+  - mbDenoise: microbiome data denoising using zero-inflated probabilistic principal components analysis
+  - A Zero-Inflated Logistic Normal Multinomial Model for Extracting Microbial Compositions 
+* Other
+  - A novel normalization and differential abundance test framework for microbiome data
+  - A latent allocation model for the analysis of microbial composition and disease
+
+---
+
+class: small
+
+### Mediation Models
+
+* Graphical Chain Models
+  - Causal Effects in Mediation Modeling: An Introduction with Applications to Latent Variables
+  - On Substantive Research Hypotheses, Conditional Independence Graphs and Graphical Chain Models 
+* Counterfactual reasoning
+  - Misunderstandings between experimentalists and observationalists about causal inference
+  - A general approach to causal mediation analysis
+* Longitudinal Structure
+  - Marginal Structural Models and Causal Inference in Epidemiology
+* Nonparametric estimation
+  - Estimating Heterogeneous Treatment Effects and the Effects of Heterogeneous Treatments with Ensemble Methods
+  - Nonparametric estimation of average treatment effects under exogeneity: A review.
+* Microbiome
+  - Compositional mediation analysis for microbiome studies
+  - An Information-Based Approach for Mediation Analysis on High-Dimensional Metagenomic Data
+  - A randomization-based causal inference framework for uncovering environmental exposure effects on human gut microbiota
+  - Causal effects in microbiomes using interventional calculus
+

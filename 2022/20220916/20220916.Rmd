@@ -1,0 +1,160 @@
+---
+title: "Lightning Talk: 2022-09-16"
+author: "Kris Sankaran"
+date: "September 16, 2022"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+```
+
+.center[
+# Latent Structure Laboratory
+]
+
+.pull-left[
+.pull-right[
+<img src="figures/microbiome.png"/ width=400>
+]
+]
+
+.pull-right[
+Bacteria may not build cities or have interesting social lives, but they will
+be here when the Sun explodes. 
+
+-- Bill Bryson in _A Short History of Nearly Everything_ 
+]
+
+.center[
+### UW Madison Statistics Lightning Talks
+.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 16 September 2021]
+]
+
+---
+
+### Problem Solving in Multi-Omics
+
+Our lab focuses on statistical methods for analyzing multi-omics, and especially
+microbiome, data:
+
+.pull-left[
+* We are motivated by interdisciplinary projects with microbiologists,
+ecologists, and psychologists
+* We synthesize and benchmark statistical approaches to solve data
+analysis problems within these collaborations
+]
+
+.pull-right[
+<img src="figures/spatial_microbiome.png" width = "400"/>
+]
+
+---
+
+### Project 1: Multiscale Topic Alignment 
+
+* We were motivated by a project about bacterial vaginosis
+* The literature collapses microbiomes into 5 “community state types,” but we
+noticed subtle transitions in participants with the disease
+* To addressed this, we developed meta-algorithms for visualizing ensembles of
+topic models trained across several scales
+
+.center[
+<img src="https://github.com/krisrs1128/LSLab/raw/main/assets/img/alto.png" width = 750/>
+]
+
+---
+
+### Project 1: Multiscale Topic Alignment
+
+* We found that properties of the alignment graph are useful for count data analysis more generally
+  - Can help quantify the degree of mixing across clusters
+  - Can help highlight mutually exclusive species
+* We wrapped our algorithms in the R package [`alto`](lasy.github.io/alto)
+
+.center[
+<img src="https://github.com/krisrs1128/talks/blob/master/2022/20220407/figure/refinement_lda.png?raw=true" width="550"/>
+]
+
+---
+
+### Project 2: Meditation and the Microbiome
+
+* The Center for Healthy Minds at UW - Madison has had a long history of studying the effects of meditation on well-being
+* Motivated by increasing evidence of a gut-brain axis, they now also collect microbiome samples
+
+.center[
+<img src="figures/brain-scan-image-monk-WEB.jpeg" width="500"/>
+]
+
+
+---
+
+### Project 2: Meditation and the Microbiome
+
+.pull-left[
+* We are supporting a longitudinal RCT that is gathering data from 3000
+participants (for reference, my PhD thesis analyzed three subjects...)
+* We have adapted concepts from causal mediation analysis to relate sequencing with psychological survey data
+]
+
+.pull-right[
+<img src="figures/counterfactual-mediation1.svg" width="550"/>
+
+An approach to microbiome mediation analysis designed by Xinran Miao and Hanying
+Jiang.
+]
+
+
+---
+
+### Techniques
+
+A few ideas recur throughout our research,
+
+  * Generative models: These allow us to encode latent structure and integrate
+  across data sources and scales
+  * Data visualization: Good representations enable hypothesis generation, model
+  criticism, and communication
+  * Reusable software: We release our methods as accessible R
+  packages
+
+.center[
+<img src="figures/combined_example.png" width="650"/>
+
+Visualizations and code by Zhuoyan Xu and Tinghui Xu in [2 - 4].
+]
+
+---
+
+### Reaching Out
+
+* You can learn more at [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab).
+
+* I encourage you to reach out for any reason -- I'm always happy to talk about
+statistics.
+
+* Email: ksankaran@wisc.edu
+
+---
+
+### References
+
+[1] Julia Fukuyama, Kris Sankaran, Laura Symul, Multiscale analysis of count data through topic alignment, Biostatistics, 2022;, kxac018, (https://doi.org/10.1093/biostatistics/kxac018)
+
+[2] Kris Sankaran and Susan P. Holmes. Generative Models: An Interdisciplinary Perspective. To appear in Annual Review of Statistics and its Applications, 2022. (https://doi.org/10.48550/arXiv.2208.06011)
+
+
+[3] Tinghui Xu and Kris Sankaran. Interactive visualization of spatial omics neighborhoods [version 1; peer review: awaiting peer review]. F1000Research, 2022, 11:799 (https://doi.org/10.12688/f1000research.122113.1)
+
+[4] Zhuoyan Xu and Kris Sankaran. Spatial transcriptomics dimensionality reduction using wavelet bases [version 1; peer review: awaiting peer review]. F1000Research 2022, 11:1033 (https://doi.org/10.12688/f1000research.122775.1)
