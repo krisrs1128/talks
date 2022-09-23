@@ -1,0 +1,212 @@
+---
+title: "Reasoning about Interventions: A Statistical Tour"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(knitr)
+library(RefManageR)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+bib <- ReadBib("references.bib", check = FALSE)
+```
+
+# Reasoning about Interventions: <br> A Statistical Tour
+
+.center[
+### Wisconsin Institute for Discovery Seminar
+.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 28 September 2021]
+]
+
+---
+
+### Reflection
+
+1. It is one thing to *understand* robustness / resilience / adaptability in a system.
+
+2. It is another thing to *engineer* these properties into a system.
+
+3. In general, both problems can be complex, but for different reasons. I’ll share some statistical ideas that can help.
+
+---
+
+### Two Perspectives
+
+Why do we make mathematical models?
+
+1. Distillation: A few parameters in a model can reduce a large dataset to its essence. It is like data compression for humans.
+2. Manipulation: A good model helps us make predictions about the consequences of specific interventions. It can help us plan for the future.
+
+Both activities are central to the process of discovery.
+
+---
+
+### Two Perspectives
+
+(Show picture for denoising, then for manipulation, both based on regression)
+
+---
+
+## Vignette 1: Antibiotics and the Microbiome
+
+---
+
+### Context and Data
+
+1. Our collaborators applied ecological thinking to the microbiome (flash flood and wildfire analogies)
+2. In `r Citep(bib, "sankaran2019latent")`, we reanalyzed data from `r Citep(bib, "dethlefsen2011incomplete")`, which took longitudinal species count data from 3 subjects (X subjects, Y timepoints each)
+  1. Each went through two antibiotics time courses
+
+```{r, echo = FALSE}
+include_graphics("figures/Sewall-Wrights-six-frame-Adaptive-Landscape-diagram-Each-frame-represents-different.png")
+```
+
+
+---
+
+### Initial Visualization
+
+It was helpful to explore the raw data, and we built a small interactive visualization package to help query which species were and were not strongly influenced by the perturbations.
+
+[iframe of the treelapse visualization]
+
+---
+
+### Topic Models
+
+* We were inspired by an analogy between text and microbiome data []
+* Samples are like documents, and taxa are like words.
+* We took models for summarizing evolving themes across text corpora and applied them to the microbiome
+
+[Figure from the dynamic topic models paper]
+
+---
+
+### Topic Models
+
+* We were inspired by an analogy between text and microbiome data []
+* Samples are like documents, and taxa are like words.
+* We took models for summarizing evolving themes across text corpora and applied them to the microbiome
+
+[Analogies figure of evolving topics from our paper]
+---
+
+### Topic Models
+
+This helped reduce the full community data into a few “themes,”
+
+* Vulnerable taxa: Those that were knocked out the full duration of the perturbation
+* Resilient taxa: Those that recovered even while the perturbations were ongoing
+* Robust taxa: Some seemed to thrive when the other community members disappeared
+
+[Figure of the topic descriptions]
+
+---
+
+### Aside: Box and Tiao 1975
+
+1. I would be curious to see whether we can improve sensitivity by incorporating intervention information
+2. One of my favorite models for this is the transfer function model. It was motivated by a study of the effects of environmental legislation on air pollution in LA.
+
+---
+
+## Vignette 2: Meditation and the Microbiome
+
+---
+
+### Hypothetical Reasoning
+
+2. Data alone are not enough — statistics is rooted in hypothetical reasoning
+3. We design experiments so that we can make effective predictions about the consequences of hypothetical actions
+4. For this, we need to switch from the compression to the manipulation perspective
+
+---
+
+### Context and Data
+
+For concreteness, consider an ongoing study of mindfulness interventions from the Center for Healthy Minds.
+
+1. Half of participants have been randomly assigned to a mindfulness intervention group
+2. We track participants over three timepoints, with the mindfulness intervention just before the second
+
+---
+
+### Psychometric & Genomic Integration
+
+1. We are gathering psychometric, behavioral, and microbiome compositional data
+2. Changes in one might be associated with effects across all — how can we reason about the possibilities?
+
+---
+
+### Graphical Modeling
+
+1. Graphical models provide a language for clarifying the dependence relationships across measurements
+2. Linked variables are dependent, even after controlling the influence from all others
+
+---
+
+### A Grammar for Modeling
+
+Different graphical structures can be composed with one another to express complex hypothesized structures.
+
+Mediation Model: Does meditation change diet, which changes the microbiome?
+
+---
+
+### A Grammar for Modeling
+
+Different graphical structures can be composed with one another to express complex hypothesized structures.
+
+Heterogeneous Effect Model: Do people who respond strongly to meditation have a particular microbiome profile?
+
+---
+
+### Interventions and Counterfactuals
+
+1. Graphical models allow us to “intervene” on specific variables and evaluate their downstream effects
+2. By positing a specific model structure, we can estimate quantities related to these counterfactuals
+	1. E.g., we can compute counterfactual direct vs. indirect effects
+
+---
+
+### Semisynthetic Simulation
+
+1. These models will learn relationships between each linked variable. How can we gauge the quality of these estimates?
+2. One idea is to simulate semisynthetic data. These are data that respect the assumed graphical structure, but whose distributions are drawn from the real data
+3. It offers a compromise between completely synthetic data (which may be unrealistic) and actually real data (for which we don’t have a ground truth).
+
+---
+
+### Semisynthetic Power Analysis
+
+This is an example power analysis done with semisynthetic from the meditation study shown above. We simulated new data using a collection of quantile regressions to real data.
+
+---
+
+### Closing
+
+1. In the data science age, it’s easy to begin thinking that models are some monolith that transforms raw data into discoveries.
+2. In contrast, I feel that the most powerful models are those that promote scientific thinking,
+	1. Compression: Remove noise to reveal essential structure.
+	2. Manipulation: Allow us to reason flexibly about alternatives.
+
+To learn more,
+[1] Latent variable modeling for the microbiome
+[2] Interactive visualization of hierarchically structured data
+[3] Generative models: An Interdisciplinary Review
+
+---
+
+## References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib)
+```
