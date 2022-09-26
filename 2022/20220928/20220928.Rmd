@@ -31,11 +31,11 @@ BibOptions(cite.style = "numeric")
 
 ### Reflection
 
-1. It is one thing to *understand* robustness / resilience / adaptability in a system.
+1. It is one thing to *understand* robustness, resilience, and adaptability in a complex system.
 
-2. It is another thing to *engineer* these properties into a system.
+2. It is another thing to *engineer* these properties into one.
 
-3. In general, both problems can be complex, but for different reasons. I’ll share some statistical ideas that can help.
+3. In general, both problems are complex, but for different reasons. This talk will share statistical ideas that can help.
 
 ---
 
@@ -73,8 +73,8 @@ ggsave("figures/motivation_distillation.svg", width = 5, height = 5)
 ```
 
 
-1. Distillation: A few parameters in a model can reduce a large dataset to its essence. It is like data compression for humans.
-2. Manipulation: A good model helps us make predictions about the consequences of specific interventions. It can help us plan for the future.
+1. **Distillation**: A few parameters in a model can reduce a large dataset to its essence. It is like data compression for humans.
+2. **Manipulation**: A good model helps us make predictions about the consequences of specific interventions. It can help us plan for the future.
 
 Both activities are central to the process of discovery.
 
@@ -109,8 +109,8 @@ microbiome perturbations (antibiotics $\approx$ a flash flood or wildfire)
 `r Citep(bib, "dethlefsen2011incomplete")`, which took longitudinal species count
 from 3 subjects (52 - 56 timepoints)
 
-1. We drew inspiration from our collaborator's ecological metaphors for
-microbiome perturbations (antibiotics $\approx$ a flash flood or wildfire)
+1. This study had been motivated by ecological metaphors for microbiome
+perturbations (antibiotics $\approx$ a flash flood or wildfire)
 
 .center[
 <img src="figures/adaptive-landscape-scenario-2.svg" width=700/>
@@ -120,11 +120,22 @@ microbiome perturbations (antibiotics $\approx$ a flash flood or wildfire)
 
 ### Initial Visualization
 
-It was helpful to explore the raw data, and we built a small interactive
-visualization package to help query which species were and were not strongly
+It was helpful to explore the raw data, and we built a small visualization
+package, `treelapse`, to help query which species were and were not strongly
 influenced by the perturbations.
 
-<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html"/ width=800 height = 300>
+```{r, echo = FALSE}
+time_data <- read_csv("figures/time_data.csv")
+edges <- read_csv("figures/edges.csv")
+display_opts <- list(
+  "margin" = list("ts_right" = 30, "ts_left" = 35, "tree_right" = 15, "tree_left" = 15),
+  "size_min" = 1,
+  "size_max" = 10
+)
+```
+```{r}
+timebox_tree(time_data, edges, width = 900, height = 350, display_opts = display_opts)
+```
 
 ---
 
@@ -166,6 +177,24 @@ This helped reduce the full community data into a few “themes,”
 
 ---
 
+### Aside: Resilience and Diversity
+
+How can we quantify the effect of diversity on resilience?
+
+1. More diverse gut microbiota are less perturbed by interventions
+1. Conversely, vaginal microbiota with Lactobacillus dominance are less prone to
+instability or dysbiosis
+
+.pull-left[
+<img src="figures/stable_diverse.svg"/>
+]
+
+.pull-right[
+<img src="figures/stable_lactobacillus.svg"/>
+]
+
+---
+
 ### Aside: Box and Tiao 1975
 
 .pull-left[
@@ -190,7 +219,7 @@ This helped reduce the full community data into a few “themes,”
 1. We need to switch from the compression to the manipulation perspective
 
 .center[
-<img src="figures/hypothetical_curve.svg" width=700/>
+<img src="figures/hypothetical_curve.svg" width=650/>
 ]
 
 ---
@@ -286,13 +315,33 @@ Indirect Effect
 hard to apply in more complex designs or for power analysis
 1. An alternative is to simulate from DAG-guided quantile regressions 
 
+.center[
+<img src="figures/mediation-assumptions2.svg" width=550/>
+]
+
+---
+
+### Semisynthetic Simulation
+
+1. Can we build realistic simulations for gauging estimating quality?
+1. We could avoid strong model assumptions by using a bootstrap, but this is
+hard to apply in more complex designs or for power analysis
+1. An alternative is to simulate from DAG-guided quantile regressions 
+
+.center[
+<img src="figures/mediation-assumptions.svg" width=550/>
+]
+
 ---
 
 ### Semisynthetic Power Analysis
 
-This is an example power analysis done with semisynthetic from the meditation
-study shown above. We simulated new data using a collection of quantile
-regressions to real data.
+By modifying the simulation parameters, we can even carry out a power analysis
+using these semisynthetic data.
+
+.center[
+<img src="figures/mediation-assumptions-power.svg" width=650/>
+]
 
 ---
 
