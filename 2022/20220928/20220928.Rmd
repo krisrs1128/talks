@@ -237,11 +237,12 @@ others
 .pull-left[
 Different graphical structures can be composed with one another to express complex hypothesized structures.
 
-Mediation Model: Does meditation change diet, which changes the microbiome?
+Heterogeneous Effect Model: Is the treatment effect modulated by microbiome
+profile?
 ]
 
 .pull-right[
-<img src="figures/mediation-dag.svg" width=500/>
+<img src="figures/precision-dag.svg"/>
 ]
 
 ---
@@ -250,10 +251,12 @@ Mediation Model: Does meditation change diet, which changes the microbiome?
 
 .pull-left[
 Different graphical structures can be composed with one another to express complex hypothesized structures.
+
+Mediation Model: Does meditation change diet, which changes the microbiome?
 ]
 
 .pull-right[
-Heterogeneous Effect Model: Do people who respond strongly to meditation have a particular microbiome profile?
+<img src="figures/mediation-dag-revised.svg"/>
 ]
 
 ---
@@ -261,16 +264,27 @@ Heterogeneous Effect Model: Do people who respond strongly to meditation have a 
 ### Interventions and Counterfactuals
 
 1. Graphical models allow us to “intervene” on specific variables and evaluate their downstream effects
-2. By positing a specific model structure, we can estimate quantities related to these counterfactuals
-	1. E.g., we can compute counterfactual direct vs. indirect effects
+
+1. For example, we can compute counterfactual direct vs. indirect effects
+
+.pull-left[
+Direct Effect
+<img src="figures/mediation-dag-intervene2.svg"/>
+]
+	
+.pull-right[
+Indirect Effect
+<img src="figures/mediation-dag-intervene1.svg"/>
+]	
 
 ---
 
 ### Semisynthetic Simulation
 
-1. These models will learn relationships between each linked variable. How can we gauge the quality of these estimates?
-2. One idea is to simulate semisynthetic data. These are data that respect the assumed graphical structure, but whose distributions are drawn from the real data
-3. It offers a compromise between completely synthetic data (which may be unrealistic) and actually real data (for which we don’t have a ground truth).
+1. Can we build realistic simulations for gauging estimating quality?
+1. We could avoid strong model assumptions by using a bootstrap, but this is
+hard to apply in more complex designs or for power analysis
+1. An alternative is to simulate from DAG-guided quantile regressions 
 
 ---
 
@@ -287,6 +301,7 @@ regressions to real data.
 1. The most powerful models are those that promote scientific thinking,
 	1. Compression: Remove noise to reveal essential structure.
 	1. Manipulation: Allow us to reason flexibly about alternatives.
+	
 1. Reasoning about the generative mechanism is key for integrative
 analysis
   1. Graphical models can support modeling and evaluation
