@@ -15,7 +15,7 @@ output:
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
 library(knitr)
 library(RefManageR)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 bib <- ReadBib("references.bib", check = FALSE)
 BibOptions(cite.style = "numeric")
 ```
@@ -197,19 +197,6 @@ instability or dysbiosis
 
 ---
 
-### Aside: Box and Tiao 1975
-
-.pull-left[
-1. I would be curious to see whether we can improve sensitivity by incorporating intervention information
-2. One of my favorite models for this is the transfer function model `r Citep(bib, "box1975intervention")`. It was motivated by a study of the effects of environmental legislation on air pollution in LA. 
-]
-
-.pull-right[
-<img src="figures/box_tiao.png"/ width=650>
-]
-
----
-
 class: middle
 
 ## Vignette 2: Meditation and the Microbiome
@@ -230,11 +217,12 @@ class: middle
 
 ### Context and Data
 
-For concreteness, consider an ongoing study of mindfulness interventions at the Center for Healthy Minds.
+For concreteness, consider an ongoing study of the BeWell study at the Center
+for Healthy Minds.
 
 .pull-left[
-1. Half of participants have been randomly assigned to a mindfulness intervention group
-2. We will track them over three timepoints, with a mindfulness intervention just before the second
+1. Participants are being randomly assigned between a mindfulness intervention (the Healthy Minds App) and several types of control.
+2. Complementary data will be generated pre-intervention and four months later
 ]
 
 .pull-right[
@@ -258,6 +246,8 @@ For concreteness, consider an ongoing study of mindfulness interventions at the 
 relationships across measurements
 2. Linked variables are dependent after controlling the influence from 
 others
+3. See `r Citep(bib, "sankaran2022generative2")` for examples across a variety of
+biological contexts
 
 .center[
 <img src="figures/dags.png" width = 550/>
@@ -364,5 +354,5 @@ analysis
 ## References
 
 ```{r, results='asis', echo=FALSE}
-PrintBibliography(bib)
+PrintBibliography(bib, start = 1, end = 4)
 ```
