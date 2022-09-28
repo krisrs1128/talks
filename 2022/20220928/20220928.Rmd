@@ -84,6 +84,8 @@ Both activities are central to the process of discovery.
 
 ---
 
+class: middle
+
 ## Vignette 1: Antibiotics and the Microbiome
 
 ---
@@ -208,6 +210,8 @@ instability or dysbiosis
 
 ---
 
+class: middle
+
 ## Vignette 2: Meditation and the Microbiome
 
 ---
@@ -215,8 +219,8 @@ instability or dysbiosis
 ### Hypothetical Reasoning
 
 1. Data alone are not enough — it is valuable to reason hypothetically
-1. We design experiments so that we can make effective predictions about the consequences of potential actions
-1. We need to switch from the compression to the manipulation perspective
+1. We use experiments in order to predict consequences of potential actions
+1. For this, we should switch from compression to manipulation 
 
 .center[
 <img src="figures/hypothetical_curve.svg" width=650/>
@@ -226,11 +230,11 @@ instability or dysbiosis
 
 ### Context and Data
 
-For concreteness, consider an ongoing study of mindfulness interventions from the Center for Healthy Minds.
+For concreteness, consider an ongoing study of mindfulness interventions at the Center for Healthy Minds.
 
 .pull-left[
 1. Half of participants have been randomly assigned to a mindfulness intervention group
-2. We will track participants over three timepoints, with a mindfulness intervention just before the second
+2. We will track them over three timepoints, with a mindfulness intervention just before the second
 ]
 
 .pull-right[
@@ -252,7 +256,7 @@ For concreteness, consider an ongoing study of mindfulness interventions from th
 
 1. Generative graphical models provide a language for clarifying the dependence
 relationships across measurements
-2. Linked variables are dependent, even after controlling the influence from all
+2. Linked variables are dependent after controlling the influence from 
 others
 
 .center[
