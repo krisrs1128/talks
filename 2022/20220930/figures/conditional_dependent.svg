@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 561.1 401.6" style="enable-background:new 0 0 561.1 401.6;" xml:space="preserve">
+<style type="text/css">
+	._x005B_Default_x005D_{fill:#FFFFFF;stroke:#000000;stroke-miterlimit:10;}
+	.st0{fill:#FFFFFF;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st1{fill:#6D76A6;stroke:#000000;stroke-miterlimit:10;}
+	.st2{fill:#F2D16D;stroke:#000000;stroke-miterlimit:10;}
+	.st3{fill:none;}
+	.st4{font-family:'ArialMT';}
+	.st5{font-size:48px;}
+</style>
+<line class="st0" x1="13.3" y1="10.3" x2="13.3" y2="389.9"/>
+<line class="st0" x1="13.4" y1="389.9" x2="449.2" y2="389.9"/>
+<circle class="st1" cx="74.4" cy="308.4" r="10"/>
+<circle class="st2" cx="262.4" cy="182.9" r="10"/>
+<circle class="st1" cx="204.4" cy="306.9" r="10"/>
+<circle class="st2" cx="257.7" cy="125.9" r="10"/>
+<circle class="st2" cx="426.1" cy="123.8" r="10"/>
+<circle class="st2" cx="221" cy="164.9" r="10"/>
+<circle class="st1" cx="174.4" cy="202" r="10"/>
+<circle class="st1" cx="246.2" cy="262.9" r="10"/>
+<circle class="st1" cx="426.1" cy="174.8" r="10"/>
+<circle class="st2" cx="177.8" cy="96.4" r="10"/>
+<circle class="st1" cx="152.4" cy="266.9" r="10"/>
+<circle class="st1" cx="217.8" cy="214.4" r="10"/>
+<circle class="st1" cx="84.4" cy="358.4" r="10"/>
+<circle class="st1" cx="158.1" cy="328.4" r="10"/>
+<circle class="st2" cx="168.1" cy="182.9" r="10"/>
+<circle class="st2" cx="221" cy="122" r="10"/>
+<circle class="st2" cx="184.4" cy="142" r="10"/>
+<circle class="st1" cx="207.8" cy="252.9" r="10"/>
+<circle class="st1" cx="217.8" cy="214.4" r="10"/>
+<circle class="st1" cx="123.3" cy="318.4" r="10"/>
+<rect x="419.3" y="344.3" class="st3" width="72.4" height="36.7"/>
+<text transform="matrix(1 0 0 1 419.3025 378.6374)" class="st4 st5">X</text>
+<rect x="28.1" y="8.2" class="st3" width="72.4" height="36.7"/>
+<text transform="matrix(1 0 0 1 28.0861 42.5749)" class="st4 st5">Z</text>
+<rect x="452.8" y="103.3" class="st3" width="128.7" height="127"/>
+<text transform="matrix(1 0 0 1 452.7816 137.6606)"><tspan x="0" y="0" class="st4 st5">Y ≥ t</tspan><tspan x="0" y="57.6" class="st4 st5">Y &lt; t</tspan></text>
+</svg>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 561.1 401.6" style="enable-background:new 0 0 561.1 401.6;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st1{fill:#6D76A6;stroke:#000000;stroke-miterlimit:10;}
+	.st2{fill:#F2D16D;stroke:#000000;stroke-miterlimit:10;}
+	.st3{fill:none;}
+	.st4{font-family:'ArialMT';}
+	.st5{font-size:48px;}
+	.st6{font-size:16px;}
+	.st7{fill:#FFFFFF;}
+	.st8{fill:none;stroke:#8A0000;stroke-miterlimit:10;}
+	.st9{fill:none;stroke:#8A0000;stroke-miterlimit:10;stroke-dasharray:3.1761,3.1761;}
+	.st10{fill:none;stroke:#8A0000;stroke-miterlimit:10;stroke-dasharray:2.4266,2.4266;}
+	.st11{fill:none;stroke:#8A0000;stroke-miterlimit:10;stroke-dasharray:1;}
+	.st12{font-size:14px;}
+</style>
+<line class="st0" x1="13.3" y1="10.3" x2="13.3" y2="389.9"/>
+<line class="st0" x1="13.4" y1="389.9" x2="449.2" y2="389.9"/>
+<circle class="st1" cx="74.4" cy="308.4" r="10"/>
+<circle class="st2" cx="262.4" cy="182.9" r="10"/>
+<circle class="st1" cx="204.4" cy="306.9" r="10"/>
+<circle class="st2" cx="257.7" cy="125.9" r="10"/>
+<circle class="st2" cx="426.1" cy="123.8" r="10"/>
+<circle class="st2" cx="221" cy="164.9" r="10"/>
+<circle class="st1" cx="174.4" cy="202" r="10"/>
+<ellipse transform="matrix(0.1602 -0.9871 0.9871 0.1602 -52.7421 463.809)" class="st1" cx="246.2" cy="262.9" rx="10" ry="10"/>
+<circle class="st1" cx="426.1" cy="174.8" r="10"/>
+<circle class="st2" cx="177.8" cy="96.4" r="10"/>
+<circle class="st1" cx="152.4" cy="266.9" r="10"/>
+<circle class="st1" cx="217.8" cy="214.4" r="10"/>
+<circle class="st1" cx="84.4" cy="358.4" r="10"/>
+<circle class="st1" cx="158.1" cy="328.4" r="10"/>
+<circle class="st2" cx="168.1" cy="182.9" r="10"/>
+<circle class="st2" cx="221" cy="122" r="10"/>
+<circle class="st2" cx="184.4" cy="142" r="10"/>
+<circle class="st1" cx="207.8" cy="252.9" r="10"/>
+<circle class="st1" cx="217.8" cy="214.4" r="10"/>
+<circle class="st1" cx="123.3" cy="318.4" r="10"/>
+<rect x="419.3" y="344.3" class="st3" width="72.4" height="36.7"/>
+<text transform="matrix(1 0 0 1 419.3025 378.6374)" class="st4 st5">X</text>
+<rect x="28.1" y="8.2" class="st3" width="72.4" height="36.7"/>
+<text transform="matrix(1 0 0 1 28.0861 42.5749)" class="st4 st5">Z</text>
+<rect x="452.8" y="103.3" class="st3" width="128.7" height="127"/>
+<text transform="matrix(1 0 0 1 452.7816 137.6606)" class="st4 st5">Y ≥ t</text>
+<text transform="matrix(1 0 0 1 452.7816 195.2606)" class="st4 st5">Y &lt; t</text>
+<rect x="253.2" y="120.6" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 253.2109 132.0396)" class="st4 st6">1</text>
+<rect x="203.7" y="247.3" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 203.6837 258.7199)" class="st7 st4 st6">8</text>
+<rect x="213.9" y="209.1" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 213.9234 220.513)" class="st7 st4 st6">9</text>
+<rect x="143.2" y="261.4" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 143.2109 272.8469)" class="st7 st4 st6">11</text>
+<rect x="148.1" y="322.3" class="st3" width="25.1" height="22.9"/>
+<text transform="matrix(1 0 0 1 148.1 333.7525)" class="st7 st4 st6">12</text>
+<rect x="236.2" y="257.5" class="st3" width="24" height="22.9"/>
+<text transform="matrix(1 0 0 1 236.2 268.9164)" class="st7 st4 st6">13</text>
+<rect x="64" y="302.8" class="st3" width="24" height="22.9"/>
+<text transform="matrix(1 0 0 1 64.0199 314.2503)" class="st7 st4 st6">16</text>
+<rect x="113.3" y="313" class="st3" width="24" height="22.9"/>
+<text transform="matrix(1 0 0 1 113.3 324.4483)" class="st7 st4 st6">14</text>
+<rect x="74.4" y="352.6" class="st3" width="24" height="22.9"/>
+<text transform="matrix(1 0 0 1 74.4 364.0616)" class="st7 st4 st6">15</text>
+<rect x="194.4" y="301.8" class="st3" width="24" height="22.9"/>
+<text transform="matrix(1 0 0 1 194.4 313.2886)" class="st7 st4 st6">17</text>
+<rect x="164.4" y="197.1" class="st3" width="24" height="22.9"/>
+<text transform="matrix(1 0 0 1 164.4 208.5213)" class="st7 st4 st6">10</text>
+<rect x="163.9" y="177.7" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 163.9406 189.1579)" class="st4 st6">7</text>
+<rect x="172.7" y="90" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 172.7409 101.4727)" class="st4 st6">6</text>
+<rect x="216.2" y="158.6" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 216.1609 170.0199)" class="st4 st6">5</text>
+<rect x="258.2" y="176.7" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 258.171 188.1671)" class="st4 st6">4</text>
+<rect x="180.5" y="135.8" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 180.462 147.3056)" class="st4 st6">3</text>
+<rect x="216.8" y="116.3" class="st3" width="21" height="22.9"/>
+<text transform="matrix(1 0 0 1 216.8364 127.7199)" class="st4 st6">2</text>
+<g>
+	<g>
+		<line class="st8" x1="184.4" y1="152" x2="184.4" y2="153.5"/>
+		<line class="st9" x1="184.4" y1="156.7" x2="184" y2="199.6"/>
+		<polyline class="st8" points="184,201.1 183.9,202.6 182.5,202.6 		"/>
+		<line class="st10" x1="180" y1="202.5" x2="176.4" y2="202.4"/>
+		<line class="st8" x1="175.2" y1="202.4" x2="173.7" y2="202.4"/>
+	</g>
+</g>
+<line class="st11" x1="193" y1="136.3" x2="212.2" y2="127.7"/>
+<rect x="153.4" y="123.4" class="st3" width="29.3" height="18.5"/>
+<text transform="matrix(1 0 0 1 153.4386 133.3934)" class="st4 st12">R[i]</text>
+<rect x="220.3" y="97.1" class="st3" width="51.7" height="18.5"/>
+<text transform="matrix(1 0 0 1 220.3443 107.1552)" class="st4 st12">R[M[i]]</text>
+<rect x="125" y="210.7" class="st3" width="46.2" height="18.5"/>
+<text transform="matrix(1 0 0 1 124.9845 220.7143)" class="st4 st12">R[N[i]]</text>
+</svg>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 369 347" style="enable-background:new 0 0 369 347;" xml:space="preserve">
+<style type="text/css">
+	.Ombre_x0020_portée{fill:none;}
+	.Lueur_x0020_externe_x0020_5 pt{fill:none;}
+	.Néon_x0020_bleu{fill:none;stroke:#8AACDA;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;}
+	.Ton_x0020_clair_x0020_chrome{fill:url(#SVGID_1_);stroke:#FFFFFF;stroke-width:0.3629;stroke-miterlimit:1;}
+	.Swing_GS{fill:#FFDD00;}
+	.Alysse_GS{fill:#A6D0E4;}
+	.st0{opacity:0.4;}
+	.st1{fill:#795F9E;}
+	.st2{fill:#FFFFFF;}
+	.st3{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+	.st4{fill:none;}
+	.st5{font-family:'ArialMT';}
+	.st6{font-size:30px;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-100" y1="-234" x2="-100" y2="-235">
+	<stop  offset="0" style="stop-color:#656565"/>
+	<stop  offset="0.618" style="stop-color:#1B1B1B"/>
+	<stop  offset="0.6292" style="stop-color:#545454"/>
+	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
+</linearGradient>
+<g class="st0">
+	
+		<rect x="10.5" y="133.7" transform="matrix(0.7533 -0.6576 0.6576 0.7533 -88.3048 154.6512)" class="st1" width="303" height="122.7"/>
+	<path d="M235.8,49.9l80,91.7L88.3,340.2l-80-91.7L235.8,49.9 M235.9,48.5L6.8,248.4l81.3,93.2l229-199.9L235.9,48.5L235.9,48.5z"/>
+</g>
+<g>
+	<line class="st2" x1="146.5" y1="188.5" x2="187.5" y2="45.5"/>
+	<g>
+		<line class="st3" x1="146.5" y1="188.5" x2="183.5" y2="59.3"/>
+		<g>
+			<polygon points="192.3,64.8 187.5,45.5 173.2,59.4 			"/>
+		</g>
+	</g>
+</g>
+<g>
+	<line class="st2" x1="146.5" y1="188.5" x2="219.5" y2="127.5"/>
+	<g>
+		<line class="st3" x1="146.5" y1="188.5" x2="208.5" y2="136.7"/>
+		<g>
+			<polygon points="212.6,146.2 219.5,127.5 199.9,130.9 			"/>
+		</g>
+	</g>
+</g>
+<rect x="303.6" y="161.4" class="st4" width="65.4" height="33.6"/>
+<text transform="matrix(1 0 0 1 303.5542 182.8584)" class="st5 st6">σ(Z)</text>
+<rect x="225.1" y="104.3" class="st4" width="139.9" height="33.7"/>
+<text transform="matrix(1 0 0 1 225.1201 125.752)" class="st5 st6">E[Y[t]|Z,X]</text>
+<text transform="matrix(1 0 0 1 187.0893 35.7151)" class="st5 st6">Y[t]</text>
+</svg>
