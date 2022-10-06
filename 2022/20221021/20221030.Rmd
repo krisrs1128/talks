@@ -1,0 +1,36 @@
+---
+title: "Reasoning about Interventions: A Statistical Tour"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(knitr)
+library(RefManageR)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+bib <- ReadBib("references.bib", check = FALSE)
+BibOptions(cite.style = "numeric")
+```
+
+.center[
+# Visualization and Simulation in Microbial Community Analysis
+### Indiana University Department of Statistics
+.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 30 October 2021]
+]
+
+---
+
+###
+
+---
+
+###
+---

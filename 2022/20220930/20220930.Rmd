@@ -42,13 +42,18 @@ opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi
 
 ### Motivation
 
-1. Molecular interaction networks are useful for both interpretation and integration
+.pull-left[
+1. Molecular interaction networks are useful for integration
 2. Correlation-based molecular networks are arguably the most common, but they can lead to unnecessarily dense networks
 3. More parsimonious, interpretable networks can be found using partial
 correlation, and for this we need measures of conditional dependence
+]
 
+.pull-right[
+<img src="figures/fgene-10-00535-g002.jpeg" width=400/>
+Correlation vs. partial correlation, from Hawe, Theis, and Heinig (2019).
+]
 
-Correlation vs. partial correlation, from Hawe et al. 2021.
 
 ---
 
@@ -59,7 +64,8 @@ Two common approaches to network estimation in ‘omics are,
 1. Graphical Lasso: Estimates conditional dependence, but assumes joint Gaussianity
 1. Tree-Based Methods: No model assumptions, but does not have a conditional dependence interpretation
 
-Azadkia and Chatterjee seek to develop a conditional dependence estimator that is provably consistent without assuming any model structure.
+Azadkia and Chatterjee (2021) seek to develop a conditional dependence estimator
+that is provably consistent without assuming any model structure.
 
 ---
 
@@ -83,15 +89,15 @@ $\mu\left(t\right) = \Parg{Y \leq t}$. The top and bottom expectations average o
 \end{align}
 
 * This has a kind of $R^{2}$ interpretation
-* How much does knowing $\*Z$ help predict $Y_{t}$, even after we
+* How much does $\*Z$ help predict $Y_{t}$, even after we
 already know $\*X$?
 
 .pull-left[
-<img src="figures/conditional_independent.svg" width=440/>
+<img src="figures/conditional_independent.svg" width=420/>
 ]
 
 .pull-right[
-<img src="figures/conditional_dependent.svg" width=430/>
+<img src="figures/conditional_dependent.svg" width=420/>
 ]
 
 ---
@@ -162,8 +168,8 @@ requirng any model assumptions.
 <img src="figures/rankings.svg" width = 700/>
 ]
 
----
 
+---
 
 ### FOCI
 
@@ -194,8 +200,28 @@ slight drop in performance, but can support large savings in computation.
 
 ---
 
-### Follow-Up / Discussion Questions
+*Follow-Up Work*
 
-1. Recently, Azadkia and Buhlmann used this conditional dependence measure as the basis for a causal discovery algorithm.
-2. How does this approach compare to the graphical lasso and random forest methods for multi-omics network construction described at the start?
-3. With many zeros, we will have many ties in the ranks $R_i$. In what ways should we modify the measure? If we truncate the ranks, is there any theoretical justification?
+1. Recently, Azadkia, Taeb, and Buhlmann used this conditional dependence
+measure as the basis for a causal structure learning algorithm.
+1. Several papers propose variants that improve the power of the test.
+
+*Discussion Questions*
+1. How does this approach compare to the graphical lasso and random forest
+methods for multi-omics network construction described at the start?
+1. With many zeros, we will have many ties in the ranks $R_i$. In what ways
+should we modify the measure? If we truncate the ranks, is there any theoretical
+justification?
+
+---
+
+### Convergence Heuristic
+
+This is an informal argument from Shi, Drton, and Han (2022),
+
+\begin{aligned}
+\Earg{n^{-1}\left\{R_1-R_1 \wedge R_{N(1)}\right\}} & \approx \Earg{F_Y\left(Y_1\right)-F_Y\left(Y_1\right) \wedge F_Y\left(Y_{N(1)}\right)} \\
+&=\Earg{\int\left\{\mathbb{1}\left(Y_1 \geq t\right)-\mathbb{1}\left(Y_1 \geq t\right) \mathbb{1}\left(Y_{N(1)} \geq t\right)\right\} \mathrm{d}\mu(t)} \\
+& \approx \Earg{\frac{1}{2} \int\left\{\mathbb{1}\left(Y_1 \geq t\right)-\mathbb{1}\left(Y_{N(1)} \geq t\right)\right\}^2 \mathrm{d\mu}(t)} \\
+&\approx 2 \Earg{\Vararg{\mathbf{1}\{Y_{1} \geq t\} \vert X_{1}}}
+\end{aligned}
