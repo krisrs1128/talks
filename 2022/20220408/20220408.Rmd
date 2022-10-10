@@ -1,7 +1,7 @@
 ---
-title: "Multiscale Analysis of Count Data"
-author: "Kris Sankaran"
-date: "November 5, 2021"
+title: "Meditation and the Microbiome"
+author: "Xinran Miao, Hanying Jiang, Kris Sankaran"
+date: "April 7, 2022"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -14,7 +14,10 @@ output:
     seal: false
 ---
 
+class: top, my_title
+
 $\def\Dir{\text{Dir}}$
+$\def\Gsn{\mathcal{N}}$
 $\def\Mult{\text{Mult}}$
 $\def\*#1{\mathbf{#1}}$
 $\def\m#1{\boldsymbol{#1}}$
@@ -22,11 +25,14 @@ $\def\Unif{\text{Unif}}$
 $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
 $\newcommand{\wout}{\tilde w_{\text{out}}}$
+$\def\naturals{\mathbb{N}} % Natural numbers$
+$\def\Ber{\text{Bernoulli}}$
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(knitr)
+library(tidyverse)
+library(RefManageR)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
-library(ggplot2)
 min_theme <- theme_minimal() + 
   theme(
     panel.grid.minor = element_blank(),
@@ -38,864 +44,488 @@ min_theme <- theme_minimal() +
     legend.position = "bottom"
   )
 theme_set(min_theme)
-
-# overwrite some default scales in ggplot2
-scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
-scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
-scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
-scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+BibOptions(
+  check.entries = FALSE, 
+  bib.style = "numeric", 
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE
+)
+bib <- ReadBib("20220408.bib")
 ```
 
----
 
-class: bottom, my_title
-
-## Multiscale Analysis of Count Data through Topic Alignment
-
+## Meditation and the Microbiome
 
 .pull-left[
-November 5, 2021
-
-Department of Mathematics and Statistics
-
-McMaster University
- ]
- 
-.pull-right[
-Kris Sankaran
-
+Xinran Miao, Hanying Jiang, and Kris Sankaran <br>
 UW Madison
-
-[ksankaran@wisc.edu](ksankaran@wisc.edu)
-]
-
----
-
-### Project Team
-
-This project is joint work with Laura Symul (Stanford University) and Julia Fukuyama (Indiana University).
-
-.pull-left[
-```{r, out.width = 220}
-include_graphics("https://profiles.stanford.edu/proxy/api/cap/profiles/192342/resources/profilephoto/350x350.1545327663087.jpg")
-```
 ]
 
 .pull-right[
-```{r, out.width = 220}
-include_graphics("https://jfukuyama.github.io/photo_small.png")
-```
+Holmes Lab <br>
+April 7, 2022
 ]
 
-It has also benefited from many suggestions from Susan Holmes and Pratheepa
-Jeganathan.
-
 ---
 
-class: center, middle, section
-
-# Background
-
----
-
-### Motivation: Microbiome Data Analysis
+### Setting
 
 .pull-left[
-* How should we describe the bacterial ecosystems that surround (and
-inhabit) us?
-* An improved understanding would support human and environmental health
+* There was a time when many academics did not consider meditation a “serious” topic for research
+* UW-Madison was one of the few institutions willing to support this work
+* Richie Davidson’s lab here has helped change the discourse on this topic
 ]
 
 .pull-right[
-```{r, fig.cap = "A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
-include_graphics("https://whatislife.stanford.edu/images/spatial.png")
+```{r, echo = FALSE, out.width = 400}
+include_graphics("figure/fmri.png")
 ```
 ]
 
 ---
 
-### Motivation: Microbiome Data Analysis
+### Meditation meets Genomics
 
-* Technologies like 16S and metagenomic sequencing have given us a detailed view
-of the microbiome
-* Microbe abundances are recorded in a high-dimensional count matrix
-  - We often have supplemental data associated with each row (sample) and column
-  (microbe)
+Given all the changes that meditation induces on physiological processes, it is natural to ask whether there is a relationship with the microbiome.
 
-```{r, out.width = 800}
-include_graphics("figure/species-matrix.png")
-```
+This is not so far fetched,
+* There are documented relationships with anxiety and depression `r Citep(bib, c("winter2018gut", "peirce2019role", "dash2015gut"))`
+* The mechanisms may be related to the Gut-Brain Axis `r Citep(bib, c("foster2013gut", "carabotti2015gut", "mayer2015gut"))`
 
 ---
 
-### Two Useful Methods
+### Study Population and Design
 
-* **Hierarchical clustering** and dimensionality reduction are useful in
-microbiome data analysis
-  - They are supported by standard analysis pipelines
-* Among the latter methods, we'll focus on **Latent Dirichlet Allocation**
-* They provide useful visual artifacts for navigating large datasets
-
-.pull-left[
-```{r, out.width = 180}
-include_graphics("https://joey711.github.io/phyloseq/phyloseq.png")
+```{r, echo = FALSE}
+sample_data <- read_csv("../../analysis/data/derived_data/metadata/cleaned_data.csv") %>%
+  mutate(subject = as.factor(subject))
 ```
-]
 
-.pull-right[
-```{r, out.width = 240}
-include_graphics("figure/q2docs.png")
-```
-]
 
----
+The Center for Healthy Minds (CHM) recruited police officers into the study,
+since they have high stress jobs. The treatment group received meditation
+training just before the second timepoint.
 
-### Hierarchical Clustering
-
-.pull-left[
-* Hierarchical clustering creates a nested sequence of clusters
-* By cutting the tree at different heights, we can recover either overviews or
-details
-* It's possible zoom in and out across observed patterns
-]
-
-.pull-right[
-```{r, fig.cap = "A clustering result from the phyloseq documentation."}
-include_graphics("figure/hclust_example.png")
-```
-]
-
----
-
-### Hierarchical Clustering
-
-.pull-left[
-* Agglomorative hierarchical clustering sequentially merges pairs of clusters
-that are "closest" to one another
-  - E.g., those having smallest pairwise distances to one another
-]
-
-.pull-right[
-```{r, out.width = 200}
-include_graphics("figure/hclust_linkage_1.png")
-```
-Two types of inter-cluster distance. Figure from (Holmes and Huber 2019).
-]
-
----
-
-### Hierarchical Clustering
-
-.pull-left[
-* Agglomorative hierarchical clustering sequentially merges pairs of clusters
-that are "closest" to one another
-  - E.g., those having smallest pairwise distances to one another
-]
-
-.pull-right[
-```{r, out.width = 200}
-include_graphics("figure/hclust_linkage_2.png")
-```
-Two types of inter-cluster distance. Figure from (Holmes and Huber 2019).
-]
-
----
-
-### Limitations Hierarchical Clustering
-
-* If the data in fact lie along a gradient, then clustering is artificial
-* The data can be more parsimoniously described
-  - Projection onto 1D subspace
-  - Mixture between two extremes
-
-```{r, fig.height = 3.5, fig.width = 12}
-library(MASS)
-library(purrr)
-library(dplyr)
-mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
-x <- (mu + mvrnorm(nrow(mu), rep(0, 2), diag(2))) %>%
-  as.data.frame()
-
-cluster_res <- hclust(dist(x))
-scales <- seq(2, 8, 2)
-x_clusters <- map_dfr(scales, ~ cbind(x, cluster = cutree(cluster_res, .)), .id = "scale") %>%
-  mutate(
-    cluster = as.factor(cluster),
-    scale = scales[as.integer(scale)]
+```{r, echo = FALSE, fig.width = 8, fig.height = 6, out.width = 520}
+sample_data %>%
+  mutate(intervention = case_when(
+      group == "WLC" ~ "Control",
+      group == "MBRT" & timepoint == 1 ~ "Pre-Intervention",
+      group == "MBRT" & timepoint == 2 ~ "Intervention",
+      group == "MBRT" & timepoint == 3 ~ "Post-Intervention",
+    ),
+    intervention = factor(intervention, levels = c("Control", "Pre-Intervention", "Intervention", "Post-Intervention"))
+  ) %>%
+  ggplot() +
+  geom_point(aes(technical.replicate, subject, col = intervention), size = 2) +
+  facet_grid(group ~ timepoint, scales = "free") +
+  scale_color_manual(values = c("#D99152", "#F2C572", "#423F8C", "#BF4B75")) +
+  theme(
+    legend.text = element_text(size = 14),
+    axis.text.y = element_text(size = 9), 
+    legend.title = element_blank()
   )
-
-ggplot(x_clusters) +
-  geom_point(aes(V1, V2, col = cluster)) +
-  facet_grid(. ~ scale) +
-  labs(x = "x", y = "y")
 ```
 
 ---
 
-### Latent Dirichlet Allocation
+### Available Data
 
-Latent Dirichlet Allocation (LDA) is a model that supposes samples
-$x_i \in \mathbb{R}^{D}$ are drawn independently from,
-
-\begin{align*}
-x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
-\gamma_{i} &\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
-\end{align*}
-where the columns $\beta_{k}$ of $\*B \in \Delta^{D}$ lie in the $D$
-dimensional simplex and are themselves drawn independently from,
-\begin{align*}
-\beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
-\end{align*}
-
-We vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix $\Gamma$.
+* 16S sequencing, up to 4 technical replicates for each sample
+* Static demographic + time-varying diet and physical health data
+* Time-varying mental health survey responses
+* Consistency of meditation practice following treatment
 
 ---
 
-### Latent Dirichlet Allocation
+### Preliminary Views
 
-Topic models are well-suited to count data dimensionality reduction. The
-estimated parameters can be interpreted as,
-* $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
-* $\*B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
+The 16S data are very high-quality.
 
-```{r, out.width = 450}
-#include_graphics("figure/latent_dirichlet_v3.png")
+```{r}
+include_graphics("figure/dada_preprocess.png")
 ```
 
 ---
 
+### Preliminary Views
 
-### Limitations of Latent Dirichlet Allocation
+Sequencing depth is not consistent across the three timepoints.
+  - Working with absolute abundances leads to spurious treatment effect
+  - We transform to relative abundances in Model 1
 
-* LDA does not support navigation across scales
-* It can give a useful overviews...
-  - But it's impossible to zoom in and out across patterns of interest
-  
-```{r, out.width = 450}
-#include_graphics("figure/latent_dirichlet_v3.png")
+```{r}
+metadata <- read.csv("../data/derived_data/metadata/cleaned_data.csv") %>%
+  mutate(replicate = technical.replicate)
+totals <- read.csv("../data/derived_data/taxa_level/joined_data_Genus.csv") %>%
+  dplyr::filter(!is.na(group)) %>%
+  dplyr::mutate(subject = as.numeric(subject))  %>%
+  dplyr::select(filename, group, timepoint, Blautia:Anaerotruncus) %>%
+  pivot_longer(Blautia:Anaerotruncus, names_to = "taxa") %>%
+  group_by(filename, group, timepoint) %>%
+  summarise(total = sum(value)) %>%
+  dplyr::mutate(intervention = case_when(
+      group == "WLC" ~ "Control",
+      group == "MBRT" & timepoint == 1 ~ "Pre-Intervention",
+      group == "MBRT" & timepoint == 2 ~ "Intervention",
+      group == "MBRT" & timepoint == 3 ~ "Post-Intervention",
+    ),
+    intervention = factor(intervention, levels = c("Control", "Pre-Intervention", "Intervention", "Post-Intervention"))
+  )
+```
+
+
+```{r, fig.width = 8, fig.height = 4, out.width = 750}
+ggplot(totals) +
+  geom_histogram(
+    aes(total, fill = as.factor(intervention)),
+    position = "identity", alpha = 0.8
+    ) +
+  scale_fill_manual(values = c("#D99152", "#F2C572", "#423F8C", "#BF4B75")) +
+  scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+  facet_grid(timepoint ~ group) +
+  theme(
+   legend.text = element_text(size = 14),
+   axis.text.y = element_text(size = 10), 
+   legend.title = element_blank()
+  ) +
+  labs(x = "Sequencing Depth")
 ```
 
 ---
 
-### The Best of Both Worlds
+### Approach
 
-Our ideal method would a blend between hierarchical clustering and LDA.
-It would support,
-* Navigation: Multiscale methods help navigate
- richness-interpretability trade-offs between views
-* Parsimony: Partial membership $\to$ fewer prototypes
- 
-.pull-left[
-```{r, out.width = 320}
-include_graphics("figure/hclust_example.png")
-```
-]
-
-.pull-right[
-```{r, out.width = 360}
-#include_graphics("figure/latent_dirichlet_v3.png")
-```
-]
+* For each taxonomic level,
+	- Model 1: Mixed-effect model on transformed responses
+	- Model 2: Multinomial regression model on raw counts
+* Compare model similarities / differences, evaluate goodness-of-fit, and refine
+accordingly
 
 ---
-class: center, middle, section
 
-# Approach
+# Model 1: Linear Mixed-Effects Model
 
 ---
 
 ### Main Idea
 
-* We will fit an ensemble of LDA models of varying complexities (Parsimony)
-* We will build a compact representation of the result (Navigation)
-* In the Sankey diagram, columns are models and rectangles are topics
+* Treatment: We view the short-term effect of meditation as a fixed treatment effect
+* Variation: We add subject-specific random effects
+* Response: Log transformed relative abundances
+  - Transformation will not be needed in model 2
+* We fit a separate model for each taxa at genus level,
+  - No pooling: We ignore possible correlations across taxa.
 
-```{r, out.width = 750}
-include_graphics("figure/alto_sketches_annotated alignment.png")
+
+
+---
+### Notation
+
+* $i, j, k$ index subjects, replicates, and timepoints, respectively
+* $y_{ijk}$: log-transformed relative abundance
+* $x_{ijk}$: scaled and centered anxiety scores
+* Short-term meditation-effect indicators,
+
+\begin{align*}
+    t_{ijk} = \begin{cases}
+    1, & \mathrm{if\ }k=2\ \mathrm{and\ sample\ }i\ \mathrm{in \ the\ treatment\ group}\\
+    0, & \mathrm{otherwise}
+    \end{cases}
+\end{align*}
+
+---
+
+### Model (Math)
+
+For each species, we fit,
+
+\begin{align}
+y_{ijk} =  \beta_0 + \beta_1 x_{ijk} + \beta_2 t_{ijk} + e_i +\varepsilon_{ijk}
+\end{align}
+
+with different subject-to-subject effects,
+
+\begin{align}
+\varepsilon_{ijk} \sim \Gsn(0, \sigma^2) \\
+e_{i} \sim \Gsn\left(0, \sigma_i^2\right)
+\end{align}
+
+In code, this is the model,
+
+```{r, eval = FALSE, echo = TRUE}
+stan_glmer( y ~ (1 | subject) + trt + promis_anx, data = dat)
 ```
 
 ---
 
-### Alignment as a Graph
+### Model (Interpretation)
 
-We view an alignment as a graph across the ensemble. Index models by $m$ and
-topics by $k$. Then,
-* Nodes $V$ corresponds to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{k}\}$.
-* Edges $E$ are placed between topics from neighboring models, $K$ vs. $K + 1$ topics
-* Weights $W$ encode the similarity between topics.
+| Notation | Interpretation |
+|---|------|
+| $\beta_0$ | The overall fixed intercept |
+| $\beta_1$ |  If we increase anxiety score by one unit, how will the log-transformed relative abundance change, all else held equal?|
+| $\beta_2$ |  Treatment effect: If we apply the intervention, i.e. $t_{ijk}$ changed from $0$ to $1$, how will the log-transformed relative abundance change, all else held equal? |
+| $\sigma^2$ |  The variation of relative abundance in all samples. Represents noise resulting from unmeasured factors across all subjects. |
+| $\sigma_i^2$ |  A subject $i$ specific variance parameter, used to account for differential noise levels across subjects.
 
-```{r, out.width = 560}
-include_graphics("figure/alto_sketches_annotated alignment.png")
+---
+
+### Filtering
+
+* We only fit to taxa that appeared in at least 20% of the samples
+  - $134 \to 55$ genera total
+* Examining residuals, it seems necessary to screen for outliers
+  - We remove samples whose residuals lie outside the 1.5 IQR for each taxa
+  - In each model, numer of outliers is usually fewer than 3.
+
+```{r, out.width = 680}
+include_graphics("figure/diag_original.png")
 ```
+---
+
+### Evaluation
+
+* Removing outliers helps, but some residuals are still skewed.
+
+```{r, out.width = 800}
+include_graphics("figure/remove_outlier.png")
+```
+---
+### Evaluation
+
+* Subject-to-subject effects can have very different distributions across taxa
+```{r, out.width = 800}
+include_graphics("figure/random_effects.png")
+```
+---
+### Evaluation
+
+By fitting models taxon-by-taxon, we are able to preserve relative abundance profiles.
+
+```{r, out.width = 600}
+include_graphics("figure/sig_prob_mixed.png")
+```
+
+---
+
+### Evaluation
+We cannot capture the dispersion well, expecially when data are highly skewed by zero / non-zeros.
+```{r, out.width = 680}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/mixed_effects/figures/Genus/Genus_violin_sig_taxa.png?token=GHSAT0AAAAAABRPZ7UIOBOPK2GHUCIRZDXGYSXSAMA")
+```
+
+
+
+
+
+---
+
+### Interpretation
+
+
+CI’s for $\beta_{2}$ can guide our search for taxa that are impacted by meditation.
+
+```{r, out.width = 600}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/mixed_effects/figures/Genus/Genus_coef.png?token=GHSAT0AAAAAABRPZ7UIHZZWEABVL7JVZKB4YSXROUQ")
+```
+
+---
+### Possible next step
+* The above model cannot address excessive zeros.
+* We can introduce a parameter $p$ as the probability of having zero count, and fit a hurdle model:
+
+\begin{align*}
+ &z_{ijk}\sim\Ber{(p)}\\
+    &y_{ijk} = \begin{cases}
+    \beta_0 + \beta_1 x_{ijk} + \beta_2 t_{ijk} + e_i +\varepsilon_{ijk}, & z_{ijk}=0\\
+    0, & z_{ijk}=1
+    \end{cases}
+\end{align*}
+
+---
+
+# Model 2: Multinomial Model
+
+---
+
+### Motivation
+
+We can potentially improve on mixed-effects by directly modeling count profiles
+- Avoids relative abundance transformation
+- Partial pooling across related taxa
 
 ---
 
 ### Notation
 
-This graph-based view provides a convenient notation,
+* $N_{i}$: Total number of reads in sample $i$
+* $y_{i} \in \naturals^{D}$: Taxa count profile for sample $i$
+* $x_{i} \in \naturals^{K}$: Covariates for sample $i$, including
+    + the anxiety scores
+    + a short-term meditation-effect indicator
+    + the one-hot encoding of subject
+---
 
-* $m\left(v\right)$ is the model for node $v$
-* $k\left(v\right)$ is the topic for node $v$
-* $\Gamma\left(v\right) := \left(\gamma_{ v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
-mixed memberships for topic $v$
-* $\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}$ is the
-corresponding topic distribution
-* $e = \left(v, v'\right)$ is an edge linking topics $v$ and $v'$.
+### Model (Math)
 
-```{r, out.width = 560}
-include_graphics("figure/alto_sketches_annotated alignment.png")
-```
+\begin{align*}
+y_{i} &\sim \Mult\left(N_{i}, p_{i}\right) \\
+\theta_{i} &=  \alpha + x_{i}^T \beta\\
+p_{i} &= \text{Softmax}\left(\theta_{i}\right) \\
+\beta_{i,j} &\overset{\mathrm{iid}}{\sim} \Gsn\left(0, \sigma^2 \right) \\
+\alpha_{j} &\overset{\mathrm{iid}}{\sim} \Gsn\left(0, \sigma^2 \right)
+\end{align*}
+
+Notice that effects $\beta$ are $K\times D$ matrix, with one column per taxa.
 
 ---
 
-### Estimating Weights: Product approach
+### Model (Code)
 
+```{r, echo = TRUE, eval = FALSE}
+model {
+  to_vector(alpha) ~ normal(0, sigma_beta);
+  to_vector(beta) ~ normal(0, sigma_beta);
+  for (i in 1:n){
+      vector[K] theta = alpha + (X[i] * beta)';
+      vector[K] P = softmax(theta);
+      Y[i] ~ multinomial(P);
+  }
+}
+```
+---
+### Informative vs. Uninformative Prior
+We consider two types of prior.
 .pull-left[
-To compute weights, we can use,
-\begin{align*}
-w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
-\end{align*}
+Informative prior:
+```{r}
+include_graphics("figure/simulated_distribution_smallprior.png")
+```
 ]
-
 .pull-right[
-```{r out.width = 500}
-include_graphics("figure/product_alignment_conceptual.png")
+Uninformative prior:
+```{r}
+include_graphics("figure/simulated_distribution_largeprior.png")
 ```
 ]
-
 ---
-
-### Estimating Weights: Transport approach
-
-Let $V_p$ and $V_q$ be two subsets of topics within the graph.
-
-* Let the total "mass" of $V_p$ be $p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$. Define $q$ similarly.
-* Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between the pair of topic distributions.
-
-```{r out.width = 420}
-include_graphics("figure/transport_alignment_conceptual.png")
+### Informative vs. Uninformative Prior
+With the informative prior, the sampling is more robust and converges quickly.
+.pull-left[
+Informative prior:
+```{r}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/notes/figure/sampling_trace_informative.png?token=GHSAT0AAAAAABQKHWMBVG3B56433MIUNEAKYSXQQ5A")
 ```
-
+]
+.pull-right[
+Uninformative prior:
+```{r}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/notes/figure/sampling_trace_uninformative.png?token=GHSAT0AAAAAABQKHWMBSQ56OIAB7ORRKSO4YSXQRNA")
+```
+]
 ---
-
-### Estimating Weights: Transport approach
-
-
-The weights $W$ can be estimated by solving the optimal transport problem,
+### Evaluation
+Relative abundances are captured well.
+```{r, out.width = 700}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/softmax_regression/analysis/figures/Genus/informative/P_vs_true_abundance_aggregated/figure1.png?token=GHSAT0AAAAAABQKHWMB6XGTASTJJU7SDL5CYSXSOCQ")
+```
+---
+### Evaluation
+* While the model captures relative abundance levels well, it struggles with skewness / overdispersion.
+* This results in simulated treatment effects that look artificially strong.
+```{r, out.width = 1000}
+include_graphics("figure/fitted_Phylum.png")
+```
+---
+### Evaluation
+Correlation between taxa is captured surprisingly well across taxa
+- Likely due to variation in $p_i$ across samples
+.pull-left[
+Real:
+```{r}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/softmax_regression/analysis/figures/Genus/informative/correlation/true_correlation.png?token=GHSAT0AAAAAABQKHWMAUFBRF2NZBFMAXKR2YSXSPUA")
+```
+]
+.pull-right[
+Simulated:
+```{r}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/softmax_regression/analysis/figures/Genus/informative/correlation/simulated_correlation.png?token=GHSAT0AAAAAABQKHWMASA4HTD7FK5JXAFTEYSXSQAA")
+```
+]
+---
+# Interpretation
+We can also define p-value here.
 \begin{align*}
-&\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right> \\
-\mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|p\right| \times \left|q\right|}_{+} : W 1_{\left|q\right|} = p \text{ and } W^{T} 1_{\left|p\right|^\prime} = q\}.
+z &= \frac{\hat{\beta}}{\hat{\sigma}_{\beta}}\\
+p &= 2 \times\Phi(-\left\lvert z \right\rvert)
 \end{align*}
-
-```{r, out.width = 420}
-include_graphics("figure/transport_alignment_conceptual.png")
-```
-
 ---
-
-### Alignment and Duality
-
-* These two alignment approaches can be viewed as dual to one another
-* One operates on the space of samples, the other on the space of features
-
+# Interpretation
+Use the defined p-value to find the taxa significantly influenced by treatment: 
 .pull-left[
 ```{r}
-include_graphics("figure/correspondence_analysis_profiles_r.png")
+include_graphics("figure/example_of_sig.png")
 ```
 ]
-
 .pull-right[
 ```{r}
-include_graphics("figure/correspondence_analysis_profiles_c.png")
+include_graphics("figure/example2_of_sig.png")
 ```
 ]
-
 ---
-
-### Diagnostics
-
-* Representing the models by an alignment suggests a few diagnostic measures
-* These both help measure topic quality and highlight model mis-specification
-
-```{r}
-include_graphics("figure/alto_sketches_diagnotics.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of identified paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-1.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-2.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-3.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-4.png")
-```
-
----
-
-### Paths
-
-For each $v$, identify the incoming edge with the highest normalized weight,
-\begin{align*}
-  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
-\end{align*}
-
-* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of unique paths is a useful property of an alignment
-
-```{r, out.width=270}
-include_graphics("figure/refinement-branches-5.png")
-```
-
----
-
-### Coherence
-
-The coherence of a topic is defined as its average connectedness to other topics
-along the same path,
-
-\begin{align*}
- c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
-\end{align*}
-  
-.pull-left[
-* Topics that are transient (appearing at one $K$ and disappearing at
- another) have low coherence scores
-* Topics that are consistently recovered across choices of $K$ have high
- coherence
-]
- 
-.pull-right[
-```{r, out.width=250}
-#include_graphics("figure/coherence-sketch.png")
-```
-]
-
----
-
-### Refinement
-
-Parent specificity distinguishes two qualitatively different regimes,
-
-* High Refinement: Each topic receives most mass from a unique parent,
-corresponding to a true or "compromise" topic
-* Low Refinement: Each topic receives substantial mass from several parents,
-each corresponding to an arbitrary split of a true topic
-
-```{r, out.width=350}
-include_graphics("figure/refinement_diagnostic_example.png")
-```
-
----
-class: center, middle, section
-
-# Simulation
-
----
-
-### True LDA Model
-
-A sanity check is compute the alignment of data that are in fact generated by an
-LDA model. Can you guess the true $K$?
-
-* $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
-
-```{r, out.width = 480}
-include_graphics("figure/transport-true-lda.png")
-```
-
----
-
-### Diagnostics
-
-.pull-left[
-The diagnostics suggest that the true $K$ is 5.
-]
-
-
-.pull-right[
-```{r}
-include_graphics("figure/key_topics-lda.png")
-include_graphics("figure/refinement_lda.png")
-```
-]
-
----
-
-### LDA with background variation
-
-What happens when the LDA model is mis-specified? Consider the following
-generative mechanism,
-
-\begin{align*}
-x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(x_{i} ; N_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
-\nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
-\gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
-\beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
-\end{align*}
-
-where $\*B$ stacks the $\beta_k$ rowwise.
-
----
-
-### Result
-
-The alignment structure is sensitive to changes in $\alpha$ and fragments when
-LDA structure is not present.
-
-.pull-left[
-```{r, out.width = 300}
-include_graphics("figure/gradient_flow-1.png")
-include_graphics("figure/gradient_flow-2.png")
-```
-]
-
-.pull-right[
-```{r, out.width = 300}
-include_graphics("figure/gradient_flow-3.png")
-include_graphics("figure/gradient_flow-4.png")
-```
-]
-
----
-
-### Diagnostics
-
-This structure is consistent across simulation runs, and the diagnostic measures
-quantify the deterioration of topics.
-  
-```{r, out.width=850}
-include_graphics("figure/gradient_key_topics.png")
-```
-
----
-
-### Diagnostics
-
-This structure is consistent across simulation runs, and the summary measures
-quantify the deterioration of topics.
-  
-```{r, out.width=850}
-include_graphics("figure/gradient_refinement_full.png")
-```
-  
----
-
-### Summaries
-This structure is consistent across simulation runs, and the summary measures
-quantify the deterioration of topics.
-
-```{r, out.width=850}
-include_graphics("figure/gradient_stability.png")
-```
-
----
-
-### Strain switching
-
-The last simulation mimics the strain switching problem.
-* Small subsets of species switch between two otherwise similar topics
-* Multiple resolutions are required to detect the difference
-
----
-
-###  Mechanism
-
-We first construct equivalence classes of similar topics $\tilde{\beta}_k^r$.
-Then, for each sample $i$ and each $k$, we draw one member from the class
-
-\begin{align*}
-\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
-\end{align*}
-
-stack the results into $\*B^{i}$, and then draw,
-
-\begin{align}
-x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
-\end{align}
-as in standard LDA.
-
----
-
-### Results
-* There are five topics, two of which exhibit strain switching
-* At smaller $K$, we recognize the five main topics
-* At larger $K$, we are able to distinguish perturbed variants
-
-.pull-left[
-```{r}
-include_graphics("figure/equivalence_flow.png")
-```
-]
-
-.pull-right[
-```{r}
-include_graphics("figure/equivalence_betas.png")
-```
-]
-
----
-
-### Results
-* At smaller $K$, we recognize the main community structure, but don't see strain switching
-* At larger $K$, we are able to recognize instances of switching
-
-```{r out.width=650}
-include_graphics("figure/equivalence_similarity_hm.png")
-```
-
----
-class: center, middle, section
-
-# Data Analysis
-
----
-
-### Scientific Context
-
-.pull-left[
-* What role does the microbiome play in preterm birth?
-* Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
-  - Four healthy CSTs are dominated by Lactobacillus variants
-  - A fifth dysbiotic CST is more compositionally diverse
-]
-
-.pull-right[
-```{r}
-include_graphics("figure/community_state_types.jpg")
-```
-]
-
----
-
-### Vaginal Microbiome Research Consortium
-
-* What mechanisms drive the development of community state types?
-* The Vaginal Microbiome Research Consortium (VMRC) collected data to shed light
-on this question
-  * Long-term goal: Design interventions to restore Lactobacillus dominance
-  
----
-
-### Dataset
-
-.pull-left[
-* We will only consider one modality from the full VMRC study
-* 135 individuals followed through pregnancy
-* 2179 samples and 2699 species
-]
-
-.pull-right[
-```{r, echo = TRUE}
-library(alto)
-library(purrr)
-data(vm_data)
-map(vm_data, dim)
-```
-]
-
----
-
-### Interpretations
-
-* At $K = 7$, the four Lactobacillus CSTs are already present
-* The remaining three topics correspond to the dysbiotic CST
-(green, brown, and pink)
- 
-.pull-left[
-```{r out.width=280}
-include_graphics("figure/microbiome_flow.png")
-```
-]
-
-.pull-right[
-```{r, out.width=800}
-include_graphics("figure/microbiome_betas.png")
-```
-]
- 
----
-### Coherence Measures
-
-.pull-left[
-* Two dysbiotic sub-topics seem especially coherent
-  - Gardnerella + Atopobium
-  - Gardnerella + Megasphera
-* These two subtypes were targeted for further study
-  - They are related to the 5 subtypes discovered by France et al. (2020)
-  - Hypothesize that only 3 topics are needed due to mixed-membership approach
-]
-
-.pull-right[
-```{r out.width=800}
-include_graphics("figure/microbiome_coherence.png")
-```
-]
-
----
-class: center, middle, section
-
 # Discussion
-
+* This model can capture both structural and sampling zeros.
+* Even though convergence speed differs, the fitted model is robust to the choice prior.
+* Effectively models relative abundance of taxa.
+* Better testing is of further interest.
 ---
-
-### Software
-
- Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
- 
-.pull-left[
-```{r, echo = TRUE, warning = FALSE}
-library(purrr)
-library(alto)
-
-# simulate data and fit models
-x <- rmultinom(20, 500, rep(0.1, 50))
-colnames(x) <- seq_len(ncol(x))
-lda_params <- setNames(map(1:10, ~ list(k = .)), 1:10)
-lda_models <- run_lda_models(x, lda_params)
-
-# perform alignment
-result <- align_topics(lda_models)
-```
-]
-
-.pull-right[
-```{r, eval = FALSE, echo = TRUE}
-plot(result)
-```
-
-```{r, echo = FALSE, fig.align = "left", fig.height = 2.8}
-alto::plot(result)
-```
-]
-
-All the simulations discussed today are vignettes in the package. 
-
+### Comparing Models
+* We can study which effects are shared / specific for the two models
+* Discrepancies could be explained by...
+  - Outlier preprocessing was different across the models
+  - Log transformation could place greater emphasis on samples with lower
+  total read counts
+* Limited interpretation of multinomial model
+  
 ---
-
-### Customized Visualizations
-
-
-.pull-left[
-* The package returns visualizations as ggplot2 objects
-* This makes customized styling and annotation straightforward
-```{r}
-include_graphics("figure/customized-1.png")
+### Model-Specific, Significant Positive Effects
+```{r, out.width=810}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/softmax_regression/diagnostic/comparison/Genus/violin_pos_all.png?token=GHSAT0AAAAAABMZE4BKXNCFIDRO52INAQVOYSU6WBQ")
 ```
-]
-
-.pull-right[
-```{r, out.width = 480}
-include_graphics("figure/customized-2.png")
+---
+### Model-Specific, Significant Negative Effects
+```{r, out.width=810}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/softmax_regression/diagnostic/comparison/Genus/violin_neg_all.png?token=GHSAT0AAAAAABMZE4BK45OQSDVQ742XCUJ6YSU66UA")
 ```
-]
-
-
 ---
-
-### Package Details
-
-* Can rerun scripts at the binder link: [https://tinyurl.com/59k67sde](https://tinyurl.com/59k67sde)
-  - No installation necessary
-* All source code available on github
-* Don't hesitate to contact us if you have any questions!
-
-.pull-left[
-```{r}
-include_graphics("figure/docs.png")
+### Shared, Significant Negative Effects
+```{r, out.width = 800}
+include_graphics("https://raw.githubusercontent.com/krisrs1128/CHMMicrobiome/main/analysis/taxa_level_analysis/softmax_regression/diagnostic/comparison/Genus/violin_neg_Both.png?token=GHSAT0AAAAAABMZE4BL7C3TJB5WSZ5YJ7Q6YSU63JA")
 ```
-]
-
-.pull-right[
-```{r}
-include_graphics("figure/github.png")
+---
+### Potential problem with the p-value in multinomial model
+$0$ probably cannot be the criterion to determine whether effect exists/whether the effect is positive or negative.
+```{r, out.height= 400, out.width=600}
+include_graphics("figure/limitation_p.png")
 ```
-]
-
 ---
-
-### Takeaways
-
-.pull-left[
-* The topic alignment meta-algorithm can provide more information about a dataset than any single topic model fit
-* It is easier to incorporate into existing workflows than a brand new model
-* Interactive computing makes it easy to explore large ensembles
-]
-
-.pull-right[
-* Future Study: Interactive visualization, extensions to multi-modality
-* Read the details in our preprint, [Multiscale Analysis of Count Data Through Topic Alignment](https://tinyurl.com/8jyvp4pd)
-]
-
+### Tentative Conclusions
+* Among the species we find significant, a few have been previously documented in the literature around the microbiome and mental health.
+* It would be interesting if meditation is having the same effect on the microbiome as anti-depressants.
+* But we haven’t shared this with our collaborators yet, so there might be other interpretations.
 ---
-
-class: background-rivers
-
-# Thank You! <br> Questions?
-
+### Potential Next Steps
+* Better capturing skewness / overdispersion
+* Incorporating additional survey information
+  - Can control for within-subject differences other than anxiety
+* Estimating false discovery rates
+  - We haven’t accounted for multiple testing
+* Interactively comparing species estimates
 ---
-
 ### References
-
-Earle K.A., Billings G., Sigal M., Lichtman J.S., Hansson G.C., Elias J.E., Amieva M.R., Huang K.C., Sonnenburg J.L.
-Cell Host Microbe. 2015 Oct 14;18(4):478-88. doi: 10.1016/j.chom.2015.09.002. Epub 2015 Oct 1.
-
-France, M. T., Ma, B., Gajer, P., Brown, S., Humphrys, M. S., Holm, J. B. & Ravel, J. (2020). VALENCIA: a nearest centroid classification method for vaginal microbial communities based on composition. Microbiome, 8(1), 1-15.
-
-Holmes, S. P., & Huber, W. (2018). Modern statistics for modern biology. Cambridge University Press.
-
-Ravel, J., Gajer, P., Abdo, Z., Schneider, G. M., Koenig, S. S., McCulle, S. L. & Forney, L. J. (2011). Vaginal microbiome of reproductive-age women. Proceedings of the National Academy of Sciences, 108(Supplement 1), 4680-4687.
+```{r, results = "asis"}
+PrintBibliography(bib)
+```
