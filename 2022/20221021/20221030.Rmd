@@ -33,6 +33,9 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
 library(knitr)
 library(RefManageR)
+library(MASS)
+library(tidyverse)
+theme_set(theme_bw())
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 bib <- ReadBib("references.bib", check = FALSE)
 BibOptions(cite.style = "numeric")
@@ -57,11 +60,13 @@ health
 ]
 
 .pull-right[
-```{r, fig.cap = "An image of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
+```{r, fig.cap = "An image of the microbiome along the gut lining, from [4].", fig.align = "left"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
 ---
+
+class: center, section_header
 
 ## Visualization in Microbial Community Analysis
 
@@ -152,8 +157,6 @@ estimated parameters can be interpreted as,
 2. In this case, the data are more parsimoniously described as a mixture between "prototypical" extreme points
 
 ```{r, fig.height = 3.5, fig.width = 12, echo = FALSE}
-library(MASS)
-library(tidyverse)
 mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
 x <- (mu + mvrnorm(nrow(mu), rep(0, 2), diag(2))) %>%
   as.data.frame()
@@ -332,6 +335,7 @@ include_graphics("figures/gradient_refinement_full.png")
 
 ---
 
+class: center, section_header
 # Simulation in Microbial Community Analysis
 
 <!-- (verbal transition: so far our work has been mostly descriptive and visual. Now we want to transition to the value of simulation). -->
@@ -577,6 +581,8 @@ This model generates quite realistic data.
 
 ### Takeaways
 
+Together, visualization and simulation allow us to describe reality accurately and imagine underlying mechanisms creatively.
+
 *Visualization*
 
 Data visualization is like cartography — by reducing what is shown in a display,
@@ -584,12 +590,29 @@ we can make essential structure clear And like a map, good visualization
 supports navigation across unfamiliar territory
 
 *Simulation*
-1. Hypothetical reasoning is a central part of statistics, and generative models can make alternative scenarios concrete
-2. Generative modeling is useful for more than data analysis — it is a powerful device for experimental design and model evaluation
 
-Together, visualization and simulation allow us to describe reality accurately and imagine underlying mechanisms creatively.
+Hypothetical reasoning is a central part of statistics, and generative models
+can make alternative scenarios concrete. This reasoning is useful for more than
+data analysis — it is a powerful device for experimental design and model
+evaluation
 
 ---
 
 ### Acknowledgments
+
+---
+
+### References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib, start = 1, end = 4)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib, start = 5, end = 8)
+```
 

@@ -244,3 +244,8 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   opacity: 1;
   z-index: -1;
 }
+
+
+.section_header {
+  vertical-align: middle;
+}
