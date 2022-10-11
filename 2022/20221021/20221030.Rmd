@@ -12,6 +12,24 @@ output:
     seal: false
 ---
 
+$\def\Gsn{\mathcal{N}}$
+$\def\Dir{\text{Dir}}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\Scal{\mathcal{S}}$
+$\def\logit#1{\text{logit}\left(#1\right)}$
+$\def\absarg#1{\left|#1\right|}$
+$\def\E{\mathbb{E}} % Expectation symbol$
+$\def\Earg#1{\E\left[{#1}\right]}$
+$\def\P{\mathbb{P}} % Expectation symbol$
+$\def\Parg#1{\P\left[{#1}\right]}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\newcommand{\wout}{\tilde w_{\text{out}}}$
+
+
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
 library(knitr)
 library(RefManageR)
@@ -22,9 +40,9 @@ BibOptions(cite.style = "numeric")
 
 
 .center[
-# Visualization and Simulation in Microbial Community Analysis
+# Visualization and Simulation in <br> Microbial Community Analysis
 ### Indiana University Department of Statistics
-.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 30 October 2021]
+.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 21 October 2022]
 ]
 
 ---
@@ -34,18 +52,18 @@ BibOptions(cite.style = "numeric")
 .pull-left[
 * How should we describe the bacterial ecosystems that surround (and inhabit) us?
 - What are their population profiles, how do they respond to external change, and how do species interact?
-* Technologies like 16S and metagenomic sequencing have given us a detailed view into these systems
-* An improved understanding of the microbiome has implications for human and environmental health
+* Better answers to these questions has implications for human and environmental
+health
 ]
 
 .pull-right[
-`{r, fig.cap = "A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
+```{r, fig.cap = "An image of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
-`
+```
 ]
 ---
 
-## Part 1: Visualization in Microbial Community Analysis
+## Visualization in Microbial Community Analysis
 
 ---
 
@@ -70,15 +88,21 @@ We drew inspiration from our collaborator's ecological metaphors for microbiome 
 
 It was helpful to explore the raw data, and we built a small visualization package, `treelapse`, to help query which species were and were not strongly influenced by the perturbations.
 
-time_data <- read_csv("figures/time_data.csv")
-edges <- read_csv("figures/edges.csv")
+```{r, echo = FALSE}
+time_data <- read_csv("../20220928/figures/time_data.csv")
+edges <- read_csv("../20220928/figures/edges.csv")
 display_opts <- list(
   "margin" = list("ts_right" = 30, "ts_left" = 35, "tree_right" = 15, "tree_left" = 15),
   "size_min" = 1,
   "size_max" = 10
 )
+```
 
+
+```{r}
+library(treelapse)
 timebox_tree(time_data, edges, width = 900, height = 350, display_opts = display_opts)
+```
 
 ---
 
@@ -120,19 +144,16 @@ estimated parameters can be interpreted as,
 * $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
 * $\*B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
 
-
-
 ---
 
 ### Model Description
 
 1. Mixed membership is especially useful when data lie along gradients.
-2. In this case, the data are more parsimoniously described as a mixture between ``prototypical’’ extreme points
+2. In this case, the data are more parsimoniously described as a mixture between "prototypical" extreme points
 
-```{r, fig.height = 3.5, fig.width = 12}
+```{r, fig.height = 3.5, fig.width = 12, echo = FALSE}
 library(MASS)
-library(purrr)
-library(dplyr)
+library(tidyverse)
 mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
 x <- (mu + mvrnorm(nrow(mu), rep(0, 2), diag(2))) %>%
   as.data.frame()
@@ -149,6 +170,7 @@ ggplot(x_clusters) +
   geom_point(aes(V1, V2, col = cluster)) +
   facet_grid(. ~ scale) +
   labs(x = "x", y = "y")
+```
 
 ---
 
@@ -161,7 +183,7 @@ This model helped reduce the full community data into a few “themes,”
 * Robust taxa: Seem to thrive when other community members disappear
 
 .center[
-<img src="figures/antibiotics_topics.png" width=650/>
+<img src="figures/antibiotics_topics.png" width=600 />
 ]
 
 ---
@@ -215,8 +237,13 @@ Instead of defining a new type of hierarchical topic model, we wondered whether 
 
 ### Topic Alignment Visualization
 
-* In the Sankey diagram below, columns are models and rectangles are topics. 
+* In the diagram below, columns are models and rectangles are topics. 
 * The similarity between topics fitted at different resolutions is represented by the width of the connecting branch.
+
+```{r, out.width = 900}
+include_graphics("figures/alto_sketches_annotated alignment.png")
+```
+
 
 ---
 
@@ -227,8 +254,9 @@ We view an alignment as a graph across the ensemble. Index models by $m$ and top
 * Edges $E$ are placed between topics from neighboring models, $K$ vs. $K + 1$ topics
 * Weights $W$ encode the similarity between topics.
 
-{r, out.width = 560}
-include_graphics("figure/alto_sketches_annotated alignment.png")
+```{r, out.width = 560}
+include_graphics("figures/alto_sketches_annotated alignment.png")
+```
 
 ---
 
@@ -239,9 +267,9 @@ Let $V_p$ and $V_q$ be two subsets of topics within the graph.
 * Let the total "mass" of $V_p$ be $p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$. Define $q$ similarly.
 * Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between the pair of topic distributions.
 
-`{r out.width = 420}
-include_graphics("figure/transport_alignment_conceptual.png")
-`
+```{r out.width = 420}
+include_graphics("figures/transport_alignment_conceptual.png")
+```
 
 ---
 
@@ -253,6 +281,10 @@ The weights $W$ can be estimated by solving the optimal transport problem,
 \mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|p\right| \times \left|q\right|}_{+} : W 1_{\left|q\right|} = p \text{ and } W^{T} 1_{\left|p\right|^\prime} = q\}.
 \end{align*}
 
+```{r out.width = 440}
+include_graphics("figures/transport_alignment_conceptual.png")
+```
+
 
 ---
 
@@ -262,7 +294,7 @@ The weights $W$ can be estimated by solving the optimal transport problem,
 * These both help measure topic quality and highlight model mis-specification
 
 ```{r}
-include_graphics("figure/alto_sketches_diagnotics.png")
+include_graphics("figures/alto_sketches_diagnotics.png")
 ```
 
 ---
@@ -276,9 +308,9 @@ corresponding to a true or "compromise" topic
 * Low Refinement: Each topic receives substantial mass from several parents,
 each corresponding to an arbitrary split of a true topic
 
-`{r, out.width=350}
-include_graphics("figure/refinement_diagnostic_example.png")
-`
+```{r, out.width=350}
+include_graphics("figures/refinement_diagnostic_example.png")
+```
 
 ---
 
@@ -287,9 +319,9 @@ include_graphics("figure/refinement_diagnostic_example.png")
 1. When a topic model is well-specified, this measure can be used to identify the number of topics.
 2. When the model is mis-specified, the refinement scores drop off noticeably.
 
-`{r, out.width=850}
-include_graphics("figure/gradient_refinement_full.png")
-`
+```{r, out.width=780}
+include_graphics("figures/gradient_refinement_full.png")
+```
 
 ---
 
@@ -300,8 +332,9 @@ include_graphics("figure/gradient_refinement_full.png")
 
 ---
 
-# Part 2: Simulation in Microbial Community Analysis
-(verbal transition: so far our work has been mostly descriptive and visual. Now we want to transition to the value of simulation).
+# Simulation in Microbial Community Analysis
+
+<!-- (verbal transition: so far our work has been mostly descriptive and visual. Now we want to transition to the value of simulation). -->
 
 ---
 
@@ -319,29 +352,31 @@ include_graphics("figure/gradient_refinement_full.png")
 2. To judge between statistical efficiency and participant burden, we can use a simulation.
 3. We use a variation of the logistic normal model.
 
-\begin{align}
-\label{eq:blocking_model}
-\begin{split}
+\begin{align*}
 x_{i} \vert p_{i} &\sim \Mult\left(N_{i}, p_{i}\right) \\
 p_{i} &\sim \Scal\left(\beta_{t_{i}} + \tau_{s_{i}}\right) \\
 \beta_{t, A} &\sim \Gsn\left(0, \sigma^2_{\beta}\begin{pmatrix} I_{\absarg{A}} & 0 \\ 0 & 0_{\absarg{A^C}} \end{pmatrix}\right) \\
 \tau_{s} &\sim \Gsn\left(0, \sigma^2_{\tau}I_{D}\right)
-\end{split}
-\end{align}
+\end{align*}
 
 ---
 
 ### Blocking Simulation Results
 
-1. When `$N = 60, \sigma_{\beta}^2 = 0.5$` and `$\sigma^2_{\tau} = 2$`, the unblocked model’s 95\% credible intervals are about 1.3 times larger than the blocked model’s
-2. The unblocked model also makes spurious associations, since subjects in some treatment groups might have large abundance of a certain bacteria (regardless of treatment assignment)
+1. When $N = 60, \sigma_{\beta}^2 = 0.5$ and $\sigma^2_{\tau} = 2$, the unblocked model’s 95% credible intervals are about 1.3 times larger than the blocked model’s
+2. The unblocked model also makes spurious associations, since subjects might
+have large abundances (regardless of treatment assignment)
+
+.center[
+<img src="figures/blocking_counts.png" width=600/>
+]
 
 ---
 
 ### Blocking Simulation Results
 
 1. The simulation will depend on parameter choices, but this generated data provide specific material for comparison
-2. We include several other experimental design-related examples in the review paper `r Citep('sankaran2022')`.
+2. We include several other experimental design-related examples in the review paper `r Citep(bib)`.
 
 ---
 
@@ -359,51 +394,39 @@ This is not so far fetched,
 
 The Center for Healthy Minds (CHM) recruited police officers into the study, since they have high stress jobs. The treatment group received meditation training just before the second timepoint.
 
-`{r, echo = FALSE}
-sample_data <- read_csv("../../analysis/data/derived_data/metadata/cleaned_data.csv") %>%
-  mutate(subject = as.factor(subject))
-`
-
-`{r, echo = FALSE, fig.width = 8, fig.height = 6, out.width = 520}
-sample_data %>%
-  mutate(intervention = case_when(
-      group == "WLC" ~ "Control",
-      group == "MBRT" & timepoint == 1 ~ "Pre-Intervention",
-      group == "MBRT" & timepoint == 2 ~ "Intervention",
-      group == "MBRT" & timepoint == 3 ~ "Post-Intervention",
+```{r, out.width=800}
+theme_set(theme_bw())
+load("figures/data_prep.RData")
+info %>%
+  unique() %>%
+  group_by(subject) %>%
+  mutate(
+    group = case_when(
+      group == "WLC" ~ "Waitlisted Control",
+      group == "MBRT" ~ "Treatment"
     ),
-    intervention = factor(intervention, levels = c("Control", "Pre-Intervention", "Intervention", "Post-Intervention"))
+    trt = as.factor(ifelse(trt, "Yes", "no")),
+    total = n()
   ) %>%
   ggplot() +
-  geom_point(aes(technical.replicate, subject, col = intervention), size = 2) +
-  facet_grid(group ~ timepoint, scales = "free") +
-  scale_color_manual(values = c("#D99152", "#F2C572", "#423F8C", "#BF4B75")) +
-  theme(
-    legend.text = element_text(size = 14),
-    axis.text.y = element_text(size = 9), 
-    legend.title = element_blank()
-  )
-`
+  geom_tile(aes(timepoint, reorder(subject, total), fill = as.factor(trt))) +
+  scale_x_continuous(expand = c(0, 0), breaks = 1:3) +
+  scale_fill_manual(values = c( "#F2C572", "#BF4B75")) +  facet_grid(group ~ ., scale = "free_y", space = "free_y") +
+labs(x = "Timepoint", y = "Subject", fill = "Intervention?") +
+theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+    )
+```
 
 ---
 
 ### Psychometric & Genomic Integration
 
 1. Our pilot study has psychometric and microbiome compositional data, and ongoing collection is gathering additional immunological and behavioral data
-2. Changes in one might be associated with effects across all — how can we reason about the possibilities?
+2. Changes in one might be associated with effects across all. To approach this, we use the language of graphical modeling.
 
 <img src="figures/integration.svg"/>
-
----
-
-### Graphical Modeling
-
-1. Generative graphical models provide a language for clarifying the dependence relationships across measurements
-2. Linked variables are dependent after controlling the influence from others
-3. 
-.center[
-<img src="figures/dags.png" width = 550/>
-]
 
 ---
 
@@ -418,9 +441,9 @@ m_{i} &= \alpha_{0} + \alpha_{T}t_{i} + \alpha_{X}^{T}x_{i} + \varepsilon_{i}^{m
 y_{i} &= \beta_{0} + \beta_{T}t_{i} + \beta_{X}^{T}x_{i} + \beta_{M}^{T}m_{i} + \varepsilon_{i}^{y} \text{ (outcome model) }.
 \end{align*}
 
-`{r, out.width = 300, echo = FALSE, fig.align = "center"}
+```{r, out.width = 300, echo = FALSE, fig.align = "center"}
 include_graphics("figures/mediation-dag.svg")
-`
+```
 
 ---
 
@@ -442,9 +465,9 @@ $\beta_{T}$.
 For example, if there is no mediation effect, the $m_i$ are unaffected by the
 treatment. Nonetheless, there can still be a large direct effect.
 
-`{r, out.width = 540, echo = FALSE, fig.align = "center"}
-include_graphics("../../data/visualizations/sketches/counterfactual-mediation2.svg")
-`
+```{r, out.width = 540, echo = FALSE, fig.align = "center"}
+include_graphics("figures/counterfactual-mediation2.svg")
+```
 
 ---
 ### Counterfactual Perspective
@@ -452,18 +475,18 @@ include_graphics("../../data/visualizations/sketches/counterfactual-mediation2.s
 Alternatively, the treatment can influence the response entirely by changing the
 typical value of the mediator.
 
-`{r, out.width = 600, echo = FALSE, fig.align = "center"}
-include_graphics("../../data/visualizations/sketches/counterfactual-mediation3.svg")
-`
+```{r, out.width = 600, echo = FALSE, fig.align = "center"}
+include_graphics("figures/counterfactual-mediation3.svg")
+```
 
 ---
 ### Counterfactual Perspective
 
 Both types of effects can exist simultaneously.
 
-`{r, out.width = 700, echo = FALSE, fig.align = "center"}
-include_graphics("../../data/visualizations/sketches/counterfactual-mediation4.svg")
-`
+```{r, out.width = 700, echo = FALSE, fig.align = "center"}
+include_graphics("figures/counterfactual-mediation4.svg")
+```
 
 ---
 
@@ -484,47 +507,61 @@ These can also be recombined (e.g., zero inflation with latent topic components)
 
 Rather than describing individual models, I would like to describe how we approach model comparison. The difficulty is that standard evaluation approaches are not sufficient,
 
-1. Prediction performance: Good prediction of future composition doesn’t guarantee effective inference of direct or indirect effects.
-2. Traditional Simulation: Simulating from one of the assumed model structures gives it an unfair advantage.
+1. Prediction performance: Good prediction of future composition doesn’t
+guarantee effective inference of direct or indirect effects.
+2. Traditional Simulation: Simulating from one of the assumed model structures
+gives it an unfair advantage.
 
 ---
 
 ### Zero-Inflated Quantiles (ZINQ)
 
-1. We resolve these difficulties by defining a semisynthetic simulator, following the ZINQ approach of `r Citep("zhao")`.
+1. We resolve these difficulties by defining a semisynthetic simulator, following the ZINQ approach of `r Citep(bib, "zhao")`.
 2. This approach estimates a CDF for each species using a hurdle-like decomposition,
 
 \begin{align*}
-\logit \Parg{y_{i} > 0 \vert x_{i}} = \gamma^{T}x_{i} \\
+\logit{\Parg{y_{i} > 0 \vert x_{i}}} = \gamma^{T}x_{i} \\
 Q_{y}\left(\tau \vert x_{i}, y_{i} > 0\right) = \beta\left(\tau\right)^{T}x_{i}
 \end{align*}
 
-where `Q_{y}\left(\tau\right)` is the conditional `$\tau^{th}$` quantile of a nonzero count.
+where $Q_{y}\left(\tau\right)$ is the conditional $\tau^{th}$ quantile of a nonzero count.
 
 ---
 
 ### Model Fidelity
 
-This model generates more realistic data than any parametric model that I know of.
+This model generates quite realistic data.
 
 ---
 
 ### Graphical ZINQ
 
 1. We can adapt this to the graphical model setting by estimating nonparametric relationships across edges.
-2. We can estimate ground truth direct and indirect effects by simulating from known `$\gamma$` and `$beta\left(\tau\right)$`.
+2. We can estimate ground truth direct and indirect effects by simulating from known $\gamma$ and $\beta\left(\tau\right)$.
+
+.center[
+<img src="figures/mediation-assumptions2.svg" width=570/>
+]
+
+---
+
+### Graphical ZINQ
+
+1. We can adapt this to the graphical model setting by estimating nonparametric relationships across edges.
+2. We can estimate ground truth direct and indirect effects by simulating from known $\gamma$ and $\beta\left(\tau\right)$.
+
+.center[
+<img src="figures/mediation-assumptions.svg" width=570/>
+]
 
 ---
 
 ### Semisynthetic Simulation Recipe
 
-1. Estimate `\hat{\gamma}, \hat{\beta}\left(\tau\right)` from real data. 
-	1. This defines `$\hat{F}_{y \vert x, t, m}$` from which to simulate community profiles.
-2. Rank species according to []. 
-	1. To define true positives and negatives, we set true effects for all but the top 25% to 0.
-3. Simulate data alternative configurations
-	1. We vary the sample size and rescale coefficients $\hat{\beta}\left(\tau\right)$
-4. Estimate models across configurations and compute power curves
+1. Estimate $\hat{\gamma}, \hat{\beta}\left(\tau\right)$ from real data.  This defines $\hat{F}_{y \vert x, t, m}$ from which to simulate community profiles.
+2. Rank species according to true effects. To define true positives and negatives, we set true effects for all but the top 25% to 0.
+3. Simulate data alternative configurations. We vary the sample size and rescale coefficients $\hat{\beta}\left(\tau\right)$
+4. Estimate models across settings and compute error rates.
 
 ---
 
@@ -541,8 +578,10 @@ This model generates more realistic data than any parametric model that I know o
 ### Takeaways
 
 *Visualization*
-1. Data visualization is like cartography — by reducing what is shown in a display, we can make essential structure clear
-2. Like a map, a good visualization can support navigation across unfamiliar territory
+
+Data visualization is like cartography — by reducing what is shown in a display,
+we can make essential structure clear And like a map, good visualization
+supports navigation across unfamiliar territory
 
 *Simulation*
 1. Hypothetical reasoning is a central part of statistics, and generative models can make alternative scenarios concrete
@@ -551,4 +590,6 @@ This model generates more realistic data than any parametric model that I know o
 Together, visualization and simulation allow us to describe reality accurately and imagine underlying mechanisms creatively.
 
 ---
+
+### Acknowledgments
 
