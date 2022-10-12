@@ -227,6 +227,11 @@ This model helped reduce the full community data into a few “themes,”
   - A fifth, more compositionally diverse CST is associated with preterm birth
 ]
 
+.pull-right[
+* CST 1 (Healthy)
+* CST 2 (Healthy)
+]
+
 ---
 
 ### Vaginal Microbiome Research Consortium
@@ -390,6 +395,13 @@ background-size: cover
 2. It is widely understood that composition varies substantially from person-to-person
 3. Therefore, blocking seems natural — we should ask each participant to take all three treatments.
 
+.pull-left[
+<img src="figures/blocking_simplex_contrast.png"/>
+]
+
+.pull-right[
+<img src="figures/blocking_simplex.png"/>
+]
 ---
 
 ### Navigating Tradeoffs
