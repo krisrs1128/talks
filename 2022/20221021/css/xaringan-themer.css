@@ -94,10 +94,8 @@ a, a > code {
 }
 .title-slide {
   background-color: #09017F;
-  
-  
-  
 }
+
 .title-slide .remark-slide-number {
   display: none;
 }
@@ -232,9 +230,9 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   width: 30%;
 }
 
-.background-rivers::before {
+.alto_background::before {
   content: "";
-  background-image: url("https://uwmadison.box.com/shared/static/arknmgopwjq2y4x5h8oeduzlbkvjyybn.jpg");
+  background-image: url("https://github.com/krisrs1128/talks/raw/master/2022/20221021/figures/alto_background.png");
   background-size: cover;
   position: absolute;
   top: 0px;
@@ -247,5 +245,5 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 
 
 .section_header {
-  vertical-align: middle;
+  vertical-align: top;
 }

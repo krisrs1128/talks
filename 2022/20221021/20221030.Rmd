@@ -41,11 +41,12 @@ bib <- ReadBib("references.bib", check = FALSE)
 BibOptions(cite.style = "numeric")
 ```
 
-
 .center[
-# Visualization and Simulation in <br> Microbial Community Analysis
-### Indiana University Department of Statistics
-.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 21 October 2022]
+# Visualization and Simulation in Microbial Community Analysis
+<img src="figures/blocking_counts_crop.png" width=550/>
+### Department of Statistics Indiana University 
+.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 21 October 2022 | <img src="figures/indiana_logo.png" width=25/>
+]
 ]
 
 ---
@@ -67,6 +68,8 @@ include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ---
 
 class: center, section_header
+background-image: url("figures/alto_background.png")
+background-size: cover
 
 ## Visualization in Microbial Community Analysis
 
@@ -74,8 +77,14 @@ class: center, section_header
 
 ### Motivating Study (1 of 3)
 
-1. In `r Citep(bib, "sankaran2019latent")`, we reanalyzed data from `r Citep(bib, "dethlefsen2011incomplete")`, which took longitudinal species count from 3 subjects (52 - 56 timepoints)
+.pull-left[
+1. In `r Citep(bib, "sankaran2019latent")`, we reanalyzed data from `r Citep(bib, "dethlefsen2011incomplete")`, which took longitudinal species count from 3 subjects (52 - 56 timepoints) who took time courses of antibiotics
 2. Question: How does the microbiome respond to large scale environmental perturbations?
+]
+
+.pull-right[
+<img src="figures/antibiotics_design.svg" width=600/>
+]
 
 ---
 
@@ -149,6 +158,10 @@ estimated parameters can be interpreted as,
 * $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
 * $\*B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
 
+.center[
+<img src="figures/lda_summary.png" width=600/>
+]
+
 ---
 
 ### Model Description
@@ -218,10 +231,16 @@ This model helped reduce the full community data into a few “themes,”
 
 ### Vaginal Microbiome Research Consortium
 
+.pull-left[
 * What mechanisms drive the development of community state types?
 * The Vaginal Microbiome Research Consortium (VMRC) collected data to shed light
 on this question
   * Long-term goal: Design interventions to restore Lactobacillus dominance
+]
+
+.pull-right[
+<img src="figures/vmrc-logo.svg"/>
+]
 
 ---
 
@@ -230,11 +249,32 @@ on this question
 1. Our collaborators suspected that finer-grained variations in community structure might be responsible for changes in patient health
 2. This suggests using a more hierarchical approach, but traditional hierarchical topic models operate on words, not word counts
 
+.center[
+<img src="figures/hierarchical_intuition.svg" width=600/>
+]
+
 ---
 
 ### Topic Alignment Idea
 
 Instead of defining a new type of hierarchical topic model, we wondered whether we could define a meta-algorithm to navigate an ensemble of models fitted at different resolutions.
+
+.center[
+<img src="figures/hierarchical_intuition2.svg" width=600/>
+]
+
+---
+
+### Topic Alignment Idea
+
+Instead of defining a new type of hierarchical topic model, we wondered whether we could define a meta-algorithm to navigate an ensemble of models fitted at different resolutions.
+<br>
+<br>
+<br>
+<br>
+.center[
+<img src="figures/hierarchical_intuition3.svg" width=600/>
+]
 
 ---
 
@@ -246,7 +286,6 @@ Instead of defining a new type of hierarchical topic model, we wondered whether 
 ```{r, out.width = 900}
 include_graphics("figures/alto_sketches_annotated alignment.png")
 ```
-
 
 ---
 
@@ -336,6 +375,9 @@ include_graphics("figures/gradient_refinement_full.png")
 ---
 
 class: center, section_header
+background-image: url("figures/simulation_background.png")
+background-size: cover
+
 # Simulation in Microbial Community Analysis
 
 <!-- (verbal transition: so far our work has been mostly descriptive and visual. Now we want to transition to the value of simulation). -->
