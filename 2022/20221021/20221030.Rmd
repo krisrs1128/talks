@@ -332,7 +332,6 @@ The weights $W$ can be estimated by solving the optimal transport problem,
 include_graphics("figures/transport_alignment_conceptual.png")
 ```
 
-
 ---
 
 ### Diagnostics
@@ -463,17 +462,20 @@ info %>%
       group == "WLC" ~ "Waitlisted Control",
       group == "MBRT" ~ "Treatment"
     ),
-    trt = as.factor(ifelse(trt, "Yes", "no")),
+    trt = as.factor(ifelse(trt, "Yes", "No")),
     total = n()
   ) %>%
   ggplot() +
-  geom_tile(aes(timepoint, reorder(subject, total), fill = as.factor(trt))) +
+  geom_tile(aes(timepoint, reorder(subject, total), color = as.factor(trt), fill = as.factor(trt)), size = .5) +
   scale_x_continuous(expand = c(0, 0), breaks = 1:3) +
-  scale_fill_manual(values = c( "#F2C572", "#BF4B75")) +  facet_grid(group ~ ., scale = "free_y", space = "free_y") +
-labs(x = "Timepoint", y = "Subject", fill = "Intervention?") +
+  scale_fill_manual(values = c( "#4bbf95", "#BF4B75")) + 
+  scale_color_manual(values = c("#328c6b", "#8c3252")) +
+  facet_grid(group ~ ., scale = "free_y", space = "free_y") +
+labs(x = "Timepoint", y = "Subject", fill = "Intervention?", col = "Intervention?") +
 theme(
-    axis.ticks.y = element_blank(),
-    axis.text.y = element_blank()
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid = element_blank()
     )
 ```
 
