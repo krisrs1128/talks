@@ -567,33 +567,58 @@ These can also be recombined (e.g., zero inflation with latent topic components)
 ### Model Comparison
 
 Rather than describing individual models, I would like to focus on model
-comparison. The difficulty is that standard evaluation approaches are not
-sufficient,
+comparison. The usual evaluation approaches are not sufficient,
 
-1. Prediction performance: Good prediction of future composition doesn’t
-guarantee effective inference of direct or indirect effects.
-2. Traditional Simulation: Simulating from one of the assumed model structures
+.pull-left[
+Prediction performance: Good prediction of future composition doesn’t
+guarantee accurate inference of mediation effects.
+<img src="figures/prediction_forecasting.png"/>
+]
+
+.pull-right[
+Traditional Simulation: Simulating from one of the assumed model structures
 gives it an unfair advantage.
+<img src="figures/basic_simulation.png"/>
+]
 
 ---
 
 ### Zero-Inflated Quantiles (ZINQ)
 
 1. We resolve these difficulties by defining a semisynthetic simulator, following the ZINQ approach of `r Citep(bib, "ling2021powerful")`.
-2. This approach estimates a CDF for each species using a hurdle-like decomposition,
-    \begin{align*}
-     \logit{\Parg{y_{i} > 0 \vert x_{i}}} = \gamma^{T}x_{i} \\
-     Q_{y}\left(\tau \vert x_{i}, y_{i} > 0\right) = \beta\left(\tau\right)^{T}x_{i}
-    \end{align*}
-    where $Q_{y}\left(\tau\right)$ is the conditional $\tau^{th}$ quantile of a nonzero count.
+2. This approach estimates a CDF for each species using,
+\begin{align*}
+ \logit{\Parg{y_{i} > 0 \vert x_{i}}} = \gamma^{T}x_{i} \\
+ Q_{y}\left(\tau \vert x_{i}, y_{i} > 0\right) = \beta\left(\tau\right)^{T}x_{i}
+\end{align*}
+    where $Q_{y}\left(\tau \vert x, y > 0\right)$ is the conditional $\tau^{th}$ quantile of a nonzero count.
+
+.center[
+<img src="figures/zinq.png" width=400/>
+]
 
 ---
 
 ### Model Fidelity
 
-This model generates quite realistic data.
+This model generates fairly realistic data.
+
+.center[
+<img src="figures/comparison.png" width=700/>
+]
 
 ---
+
+### Model Fidelity
+
+This version removes the spike at 0.
+
+.center[
+<img src="figures/comparison_no_zeros.png" width=700/>
+]
+
+---
+
 
 ### Toy Experiment
 
@@ -695,14 +720,30 @@ Notice that we can use our simulation strategy to calibrate our inferences,
   2. Use simulation to estimate the FSR across thresholds
   3. Use most powerful threshold that controls estimated FSR
 
+This strategy helps us choose between competing models.
 ---
 
-### Comparison of Mediation Models
+### Power against Direct Effects
 
-* This strategy helps us choose between competing models
-* For FSR $\leq$ 10%, we find that time-aware LNM variant has the highest power
+* For FSR $\leq$ 25%, we find that the LNM variants have the highest power
 * Across all models, we are better powered to detect direct rather than indirect
 effects
+
+.center[
+<img src="figures/power_direct_direct.png" width=790/>
+]
+
+---
+
+### Power against Indirect Effects
+
+* For FSR $\leq$ 25%, we find that the LNM variants have the highest power
+* Across all models, we are better powered to detect direct rather than indirect
+effects
+
+.center[
+<img src="figures/power_indirect_indirect.png" width=790/>
+]
 
 ---
 
