@@ -535,6 +535,39 @@ These can also be recombined (e.g., zero inflation with latent topic components)
 
 ---
 
+### Logistic Normal Multinomial
+
+All of these models are variants of the Logistic Normal Multinomial (LNM) Model,
+
+\begin{align*}
+y_{i} \sim \Mult\left(N_{i}, \varphi^{-1}\left(x_{i}^{T}\beta\right)\right) \\
+\beta \sim \Gsn\left(0, \diag\left(\sigma_{k}^{2}\right)\right)
+\end{align*}
+where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$.
+
+```{r, fig.align = "center"}
+include_graphics("figures/lnm.svg")
+```
+
+---
+
+### Logistic Normal Multinomial Mediation
+
+We incorporate the mediator path in an LNM model. For biological samples $i = 1,
+\dots, N$ and replicates $i_{1}, \dots, i_{r}$, this looks like,
+
+\begin{align*}
+y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\eta_{i}\right)\right) \\
+\eta_{i}&= \beta_0 + \beta_T t_i + \beta_X^T x_i + \beta_M^T m_{i}\\ 
+m_{i} &= \alpha_0 + \alpha_Tt_i + \alpha_X^T x_i + \varepsilon_{i}^m\\
+\end{align*}
+
+```{r, fig.align = "center"}
+include_graphics("figures/design-dimensions.png")
+```
+
+---
+
 ### Model Comparison
 
 Rather than describing individual models, I would like to focus on model
@@ -595,12 +628,7 @@ This is the same plot, but without the spike at 0.
 
 * Before getting to the meditation study, let's see how these simulation
 strategies compare on a simple setup.
-* Consider the problem of evaluating a logistic normal multinomial (LNM) model,
-
-\begin{align*}
-y_{i} \sim \Mult\left(N_{i}, \varphi^{-1}\left(\beta_{0} + \beta_{T}x_{i}\right)\right)
-\end{align*}
-where $\varphi^{-1}\left(x\right) \propto\left(\exp{x_{1}}, \dots, \exp{x_{K-1}}, 1\right)$.
+* Consider the problem of evaluating an LNM model,
 
 ---
 
@@ -626,7 +654,7 @@ In the second, we use the exact same $\beta_{T}$, but this is used to
 exponentially tilt samples from treatment,
 
 \begin{align*}
-y_{i} \sim \Mult\left(N_{i}, \exp{\beta_{T}x_{i}}\hat{p}_{i}^{\ast}\right)
+y_{i} \sim \Mult\left(N_{i}, \exp{\beta_{T}x_{i}}\cdot \hat{p}_{i}^{\ast}\right)
 \end{align*}
 where $\hat{p}_{i}^{\ast}$ is drawn randomly with replacement from compositions
 in an observed pilot dataset (the meditation study data, in this case).
@@ -756,7 +784,9 @@ evaluation
 
 ### Acknowledgments
 
-Thank you to all co-authors,
+Thank you for listening!
+
+This talk reflects the effort of many co-authors,
 
 * Hanying Jiang (UW-Madison)
 * Xinran Miao (UW-Madison)
@@ -764,7 +794,7 @@ Thank you to all co-authors,
 * Julia Fukuyama (Indiana University - Bloomington)
 * Susan Holmes (Stanford University)
 
-and all the Latent Structure Lab team members.
+Thank you also to all Latent Structure Lab team members for valuable discussion.
 
 Funds from the Wisconsin Alumni Research Fund are gratefully acknowledged.
 
