@@ -12,6 +12,9 @@ output:
     seal: false
 ---
 
+background-image: url("figures/power_background.png")
+background-size: cover
+
 $\def\Gsn{\mathcal{N}}$
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
@@ -44,8 +47,13 @@ BibOptions(cite.style = "numeric")
 
 .center[
 # Visualization and Simulation in Microbial Community Analysis
-<img src="figures/blocking_counts_crop.png" width=550/>
-### Department of Statistics Indiana University 
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+### Department of Statistics Indiana University Bloomington
 .large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 21 October 2022 | <img src="figures/indiana_logo.png" width=25/>
 ]
 ]
@@ -224,13 +232,17 @@ This model helped reduce the full community data into a few “themes,”
 .pull-left[
 * What role does the microbiome play in preterm birth?
 * Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
-  - Four healthy CSTs are dominated by Lactobacillus variants
-  - A fifth, more compositionally diverse CST is associated with preterm birth
+  - Four  <span style="color: #3F83BF;">healthy CSTs</span> are dominated by Lactobacillus variants
+  - A fifth, <span style="color: #F27C38;">dysbiotic CST</span> has been associated with preterm
+  birth
 ]
 
 .pull-right[
-* CST 1 (Healthy)
-* CST 2 (Healthy)
+* <span style="color: #3F83BF;">CST I</span>  - _L. crispatus_
+* <span style="color: #3F83BF;">CST II</span>  - _L. gasseri_
+* <span style="color: #3F83BF;">CST III</span>  - _L. iners_
+* <span style="color: #F27C38;">CST IV</span> - No Lactobaccilius
+* <span style="color: #3F83BF;">CST V</span>  - _L. jensenii_
 ]
 
 ---
@@ -374,8 +386,16 @@ include_graphics("figures/gradient_refinement_full.png")
 
 ### VMRC Application
 
+.pull-left[
 1. When applied to the VMRC dataset, this alignment procedure finds several sub-CSTs that are well-defined.
 2. It also highlights that there is more background variation than can be explained by topic models alone.
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/vmrc_alto.png")
+```
+]
 
 ---
 
@@ -386,55 +406,6 @@ background-size: cover
 # Simulation in Microbial Community Analysis
 
 <!-- (verbal transition: so far our work has been mostly descriptive and visual. Now we want to transition to the value of simulation). -->
-
----
-
-### Thought Experiment: Blocking in Generative Count Models
-
-1. Imagine that we are helping design a study to evaluate the effectiveness of three treatments on the microbiome (e.g., different diet interventions)
-2. It is widely understood that composition varies substantially from person-to-person
-3. Therefore, blocking seems natural — we should ask each participant to take all three treatments.
-
-.pull-left[
-<img src="figures/blocking_simplex_contrast.png"/>
-]
-
-.pull-right[
-<img src="figures/blocking_simplex.png"/>
-]
----
-
-### Navigating Tradeoffs
-
-1. There is a big difference between asking a subject to go through one vs. three interventions. 
-2. To judge between statistical efficiency and participant burden, we can use a simulation.
-3. We use a variation of the logistic normal model.
-
-\begin{align*}
-x_{i} \vert p_{i} &\sim \Mult\left(N_{i}, p_{i}\right) \\
-p_{i} &\sim \Scal\left(\beta_{t_{i}} + \tau_{s_{i}}\right) \\
-\beta_{t, A} &\sim \Gsn\left(0, \sigma^2_{\beta}\begin{pmatrix} I_{\absarg{A}} & 0 \\ 0 & 0_{\absarg{A^C}} \end{pmatrix}\right) \\
-\tau_{s} &\sim \Gsn\left(0, \sigma^2_{\tau}I_{D}\right)
-\end{align*}
-
----
-
-### Blocking Simulation Results
-
-1. When $N = 60, \sigma_{\beta}^2 = 0.5$ and $\sigma^2_{\tau} = 2$, the unblocked model’s 95% credible intervals are about 1.3 times larger than the blocked model’s
-2. The unblocked model also makes spurious associations, since subjects might
-have large abundances (regardless of treatment assignment)
-
-.center[
-<img src="figures/blocking_counts.png" width=600/>
-]
-
----
-
-### Blocking Simulation Results
-
-1. The simulation will depend on parameter choices, but this generated data provide specific material for comparison
-2. We include several other experimental design-related examples in the review paper `r Citep(bib)`.
 
 ---
 
@@ -611,7 +582,7 @@ This model generates fairly realistic data.
 
 ### Model Fidelity
 
-This version removes the spike at 0.
+This is the same plot, but without the spike at 0.
 
 .center[
 <img src="figures/comparison_no_zeros.png" width=700/>
@@ -667,6 +638,22 @@ in an observed pilot dataset (the meditation study data, in this case).
 To compare strategies, we compute the false sign rate (FSR) and power across
 species with increasingly large estimated effect sizes, analogous to an ROC
 curve.
+
+.center[
+<img src="figures/threshold_ci.png" width=500/>
+]
+
+---
+
+### Simulation Comparison
+
+To compare strategies, we compute the false sign rate (FSR) and power across
+species with increasingly large estimated effect sizes, analogous to an ROC
+curve.
+
+.center[
+<img src="figures/threshold_ci-2.png" width=500/>
+]
 
 ---
 
@@ -749,7 +736,8 @@ effects
 
 ### Takeaways
 
-Together, visualization and simulation allow us to describe reality accurately and imagine underlying mechanisms creatively.
+Together, visualization and simulation provide powerful and complementary
+problem solving strategies for analysis of complex communities.
 
 *Visualization*
 
@@ -768,6 +756,18 @@ evaluation
 
 ### Acknowledgments
 
+Thank you to all co-authors,
+
+* Hanying Jiang (UW-Madison)
+* Xinran Miao (UW-Madison)
+* Laura Symul (Stanford University)
+* Julia Fukuyama (Indiana University - Bloomington)
+* Susan Holmes (Stanford University)
+
+and all the Latent Structure Lab team members.
+
+Funds from the Wisconsin Alumni Research Fund are gratefully acknowledged.
+
 ---
 
 ### References
@@ -783,4 +783,53 @@ PrintBibliography(bib, start = 1, end = 4)
 ```{r, results='asis', echo=FALSE}
 PrintBibliography(bib, start = 5, end = 8)
 ```
+
+---
+
+### Thought Experiment: Blocking in Generative Count Models
+
+1. Imagine that we are helping design a study to evaluate the effectiveness of three treatments on the microbiome (e.g., different diet interventions)
+2. It is widely understood that composition varies substantially from person-to-person
+3. Therefore, blocking seems natural — we should ask each participant to take all three treatments.
+
+.pull-left[
+<img src="figures/blocking_simplex_contrast.png"/>
+]
+
+.pull-right[
+<img src="figures/blocking_simplex.png"/>
+]
+---
+
+### Navigating Tradeoffs
+
+1. There is a big difference between asking a subject to go through one vs. three interventions. 
+2. To judge between statistical efficiency and participant burden, we can use a simulation.
+3. We use a variation of the logistic normal model.
+
+\begin{align*}
+x_{i} \vert p_{i} &\sim \Mult\left(N_{i}, p_{i}\right) \\
+p_{i} &\sim \Scal\left(\beta_{t_{i}} + \tau_{s_{i}}\right) \\
+\beta_{t, A} &\sim \Gsn\left(0, \sigma^2_{\beta}\begin{pmatrix} I_{\absarg{A}} & 0 \\ 0 & 0_{\absarg{A^C}} \end{pmatrix}\right) \\
+\tau_{s} &\sim \Gsn\left(0, \sigma^2_{\tau}I_{D}\right)
+\end{align*}
+
+---
+
+### Blocking Simulation Results
+
+1. When $N = 60, \sigma_{\beta}^2 = 0.5$ and $\sigma^2_{\tau} = 2$, the unblocked model’s 95% credible intervals are about 1.3 times larger than the blocked model’s
+2. The unblocked model also makes spurious associations, since subjects might
+have large abundances (regardless of treatment assignment)
+
+.center[
+<img src="figures/blocking_counts.png" width=600/>
+]
+
+---
+
+### Blocking Simulation Results
+
+1. The simulation will depend on parameter choices, but this generated data provide specific material for comparison
+2. We include several other experimental design-related examples in the review paper `r Citep(bib)`.
 
