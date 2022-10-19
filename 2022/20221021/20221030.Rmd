@@ -18,6 +18,7 @@ background-size: cover
 $\def\Gsn{\mathcal{N}}$
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
+$\def\diag{\text{diag}}$
 $\def\*#1{\mathbf{#1}}$
 $\def\Scal{\mathcal{S}}$
 $\def\exp#1{\text{exp}\left(#1\right)}$
@@ -531,38 +532,43 @@ Equipped with this graphical and counterfactual perspective, we used a probabili
 3. Model Change from Baseline
 4. Latent Topic Component
 
-These can also be recombined (e.g., zero inflation with latent topic components). I have supplementary slides in case you are curious about details.
+These can also be recombined (e.g., zero inflation with latent topic
+components).
 
 ---
 
 ### Logistic Normal Multinomial
 
-All of these models are variants of the Logistic Normal Multinomial (LNM) Model,
+All our models are variants of the Logistic Normal Multinomial (LNM),
 
+.pull-left[
 \begin{align*}
 y_{i} \sim \Mult\left(N_{i}, \varphi^{-1}\left(x_{i}^{T}\beta\right)\right) \\
 \beta \sim \Gsn\left(0, \diag\left(\sigma_{k}^{2}\right)\right)
 \end{align*}
-where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$.
+where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots,
+\exp{z_{K-1}}, 1\right)$. I've included details in supplementary slides.
+]
 
+.pull-right[
 ```{r, fig.align = "center"}
 include_graphics("figures/lnm.svg")
 ```
+]
 
 ---
 
 ### Logistic Normal Multinomial Mediation
 
-We incorporate the mediator path in an LNM model. For biological samples $i = 1,
-\dots, N$ and replicates $i_{1}, \dots, i_{r}$, this looks like,
+We incorporate the mediator path in an LNM model. For biological samples $i = 1, \dots, N$ and replicates $i_{1}, \dots, i_{r}$, this looks like,
 
 \begin{align*}
 y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\eta_{i}\right)\right) \\
-\eta_{i}&= \beta_0 + \beta_T t_i + \beta_X^T x_i + \beta_M^T m_{i}\\ 
+\eta_{i}&= \beta_0 + \beta_T t_i + \beta_X^T x_i + \beta_M^T m_{i} + \varepsilon_{i}^{\eta} \\ 
 m_{i} &= \alpha_0 + \alpha_Tt_i + \alpha_X^T x_i + \varepsilon_{i}^m\\
 \end{align*}
 
-```{r, fig.align = "center"}
+```{r, fig.align = "center", out.width = 700}
 include_graphics("figures/design-dimensions.png")
 ```
 
@@ -615,7 +621,7 @@ This model generates fairly realistic data.
 
 ### Model Fidelity
 
-This is the same plot, but without the spike at 0.
+This is the same plot, but restricting to nonnegative counts.
 
 .center[
 <img src="figures/comparison_no_zeros.png" width=700/>
@@ -624,11 +630,14 @@ This is the same plot, but without the spike at 0.
 ---
 
 
-### Toy Experiment
+### Warm-Up Experiment
 
-* Before getting to the meditation study, let's see how these simulation
-strategies compare on a simple setup.
-* Consider the problem of evaluating an LNM model,
+* Before getting to the meditation study, let's see how simulation strategies
+compare on a simple setup.
+* Consider the problem of evaluating an LNM model. We will estimation quality
+when we simulate from,
+ - The LNM itself
+ - A simulator based on a pilot dataset
 
 ---
 
@@ -654,7 +663,7 @@ In the second, we use the exact same $\beta_{T}$, but this is used to
 exponentially tilt samples from treatment,
 
 \begin{align*}
-y_{i} \sim \Mult\left(N_{i}, \exp{\beta_{T}x_{i}}\cdot \hat{p}_{i}^{\ast}\right)
+y_{i} \sim \Mult\left(N_{i}, \exp{\beta_{T}x_{i}}\odot \hat{p}_{i}^{\ast}\right)
 \end{align*}
 where $\hat{p}_{i}^{\ast}$ is drawn randomly with replacement from compositions
 in an observed pilot dataset (the meditation study data, in this case).
@@ -863,3 +872,52 @@ have large abundances (regardless of treatment assignment)
 1. The simulation will depend on parameter choices, but this generated data provide specific material for comparison
 2. We include several other experimental design-related examples in the review paper `r Citep(bib)`.
 
+---
+
+### Zero-Inflation via Mixtures
+
+To account for zeros, we can introduce a second mixture component that
+encourages small probabilities,
+\begin{align*}
+y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\tilde{eta}_{i}\right)\right) \\
+\tilde{\eta}_{i} \sim &\left(1 - \pi\right) \odot \Gsn\left(-5, \sigma_{0}^{2}I_{k}\right) + 
+\pi \odot \Gsn\left(\eta\left(m_{i}, t_{i}, x_{i}\right), \text{diag}\left(\sigma_{k}^2\right)\right)
+\end{align*}
+Here, $1 - \pi$ is like a zero-inflation probability. The choice of -5 is arbitrary.
+
+.center[
+<img src="figures/mixture_1.svg" width=700/>
+]
+
+---
+
+### Modeling Change from Baseline
+
+Instead of learning a subject-level effect, we can assume that the baseline
+composition $p_{i_{0}}$ is given. We model treatment effect as a deviation from
+that baseline.
+
+\begin{align*}
+y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\eta_{i}\right)\right) \\
+\eta_{i} &= \beta_{0} + \varphi\left(p_{i_{0}}\right) + \beta_{T}t_{i} + \beta^{T}_{M}m_{i} + \varepsilon_{i}^{\eta}
+\end{align*}
+
+.center[
+<img src="figures/lnm_baseline.png" width=680/>
+]
+
+---
+
+### Accounting for Latent Topics
+
+Instead of modeling a subject-level effect, we can learn low-dimensional scores.
+We might imagine that this reduces the risk of overfitting.
+
+\begin{align*}
+y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\eta_{i}\right)\right) \\
+\eta_{i} &= \beta_{0} + \beta_{T}t_{i} + \beta^{T}_{M}m_{i} + L^{T}\theta_{i} + \varepsilon_{i}^{\eta}
+\end{align*}
+
+.center[
+<img src="figures/lnm_topic.png" width=750/>
+]
