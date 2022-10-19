@@ -54,7 +54,7 @@ BibOptions(cite.style = "numeric")
 <br/>
 <br/>
 <br/>
-### Department of Statistics Indiana University Bloomington
+### Colloquium Series - Indiana University Bloomington
 .large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 21 October 2022 | <img src="figures/indiana_logo.png" width=25/>
 ]
 ]
@@ -88,7 +88,9 @@ background-size: cover
 ### Motivating Study (1 of 3)
 
 .pull-left[
-1. In `r Citep(bib, "sankaran2019latent")`, we reanalyzed data from `r Citep(bib, "dethlefsen2011incomplete")`, which took longitudinal species count from 3 subjects (52 - 56 timepoints) who took time courses of antibiotics
+1. In `r Citep(bib, "sankaran2019latent")`, we reanalyzed data from `r
+Citep(bib, "dethlefsen2011incomplete")`, which took species counts from 3
+subjects (52 - 56 timepoints) before and after two courses of antibiotics
 2. Question: How does the microbiome respond to large scale environmental perturbations?
 ]
 
@@ -105,6 +107,17 @@ We drew inspiration from our collaborator's ecological metaphors for microbiome 
 .center[
 <img src="figures/adaptive-landscape-scenario-1.svg" width=720/>
 ]
+
+---
+
+### Wildfire Metaphor
+
+We drew inspiration from our collaborator's ecological metaphors for microbiome perturbations (antibiotics $\approx$ a flash flood or wildfire)
+
+.center[
+<img src="figures/adaptive-landscape-scenario-2.svg" width=720/>
+]
+
 
 ---
 
@@ -163,8 +176,7 @@ We vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix $\Gamma$.
 
 ### Model Description
 
-The
-estimated parameters can be interpreted as,
+The model's parameters can be interpreted as,
 * $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
 * $\*B \in \Delta_{V}^{K}$: Per topic distributions over $V$ words.
 
@@ -400,6 +412,41 @@ include_graphics("figures/vmrc_alto.png")
 
 ---
 
+### Software
+
+Topic alignment is implemented in the R package [alto](lasy.github.io/alto) (lasy.github.io/alto).
+ 
+.pull-left[
+```{r, echo = TRUE, warning = FALSE}
+library(purrr)
+library(alto)
+
+# simulate data and fit models
+x <- rmultinom(20, 500, rep(0.1, 50))
+colnames(x) <- seq_len(ncol(x))
+lda_params <- setNames(map(1:10, ~ list(k = .)), 1:10)
+lda_models <- run_lda_models(x, lda_params)
+
+# perform alignment
+result <- align_topics(lda_models)
+```
+]
+
+.pull-right[
+```{r, eval = FALSE, echo = TRUE}
+plot(result)
+```
+
+```{r, echo = FALSE, fig.align = "left", fig.height = 2.8}
+alto::plot(result)
+```
+]
+
+All the simulations discussed today are vignettes in the package. 
+
+---
+
+
 class: center, section_header
 background-image: url("figures/simulation_background.png")
 background-size: cover
@@ -414,9 +461,15 @@ background-size: cover
 
 Meditation is known to induce change on a variety of physiological processes, so it is natural to ask whether there is a relationship with the microbiome.
 
+.pull-left[
 This is not so far fetched,
 * There are documented relationships with anxiety and depression `r Citep(bib, c("winter2018gut", "peirce2019role", "dash2015gut"))`
-* The mechanisms may be related to the Gut-Brain Axis `r Citep(bib, c("foster2013gut", "carabotti2015gut", "mayer2015gut"))`
+* Meditation may influence the Gut-Brain Axis `r Citep(bib, c("foster2013gut", "carabotti2015gut", "mayer2015gut"))`
+]
+
+.pull-right[
+<img src="figures/microbe-mind.svg"/>
+]
 
 ---
 
@@ -484,7 +537,7 @@ include_graphics("figures/mediation-dag.svg")
 
 * Typically the direct and indirect effects are read off $\alpha_{T}$ and
 $\beta_{T}$.
-* A more general approach considers the counterfactual difference in potential outcome `r Citep(bib, c("imai2010general"))`,
+* A more general approach considers the counterfactual difference in potential outcomes `r Citep(bib, c("imai2010general"))`,
 \begin{align}
 \tau_{i} &= y_{i}\left(x_i, 1, m\left(x_{i}, t_i\right)\right) - y_{i}\left(x_i,0, m\left(x_{i}, t_i\right)\right),\\
 \delta_{i} &= y_{i}\left(x_i, t_{i}, m\left(x_{i}, 1\right)\right) - y_{i}\left(x_i, t_{i}, m\left(x_{i}, 0\right)\right),
@@ -546,8 +599,7 @@ All our models are variants of the Logistic Normal Multinomial (LNM),
 y_{i} \sim \Mult\left(N_{i}, \varphi^{-1}\left(x_{i}^{T}\beta\right)\right) \\
 \beta \sim \Gsn\left(0, \diag\left(\sigma_{k}^{2}\right)\right)
 \end{align*}
-where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots,
-\exp{z_{K-1}}, 1\right)$. I've included details in supplementary slides.
+where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$. I've included details in supplementary slides.
 ]
 
 .pull-right[
