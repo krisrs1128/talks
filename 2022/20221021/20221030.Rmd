@@ -599,7 +599,7 @@ All our models are variants of the Logistic Normal Multinomial (LNM),
 y_{i} \sim \Mult\left(N_{i}, \varphi^{-1}\left(x_{i}^{T}\beta\right)\right) \\
 \beta \sim \Gsn\left(0, \diag\left(\sigma_{k}^{2}\right)\right)
 \end{align*}
-where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$. I've included details in supplementary slides.
+where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$ I've included details in supplementary slides.
 ]
 
 .pull-right[
@@ -629,7 +629,7 @@ include_graphics("figures/design-dimensions.png")
 ### Model Comparison
 
 Rather than describing individual models, I would like to focus on model
-comparison. The usual evaluation approaches are not sufficient,
+comparison, because standard approaches are not satisfactory,
 
 .pull-left[
 Prediction performance: Good prediction of future composition doesn’t
