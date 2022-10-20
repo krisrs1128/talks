@@ -41,9 +41,9 @@ library(RefManageR)
 library(MASS)
 library(tidyverse)
 theme_set(theme_bw())
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 bib <- ReadBib("references.bib", check = FALSE)
-BibOptions(cite.style = "authoryear", bib.style = "alphabetic")
+BibOptions(cite.style = "authoryear", bib.style = "alphabetic", max.names = 3)
 ```
 
 .center[
@@ -88,8 +88,7 @@ background-size: cover
 ### Motivating Study (1 of 3)
 
 .pull-left[
-1. In `r Citep(bib, "sankaran2019latent")`, we reanalyzed data from `r
-Citep(bib, "dethlefsen2011incomplete")`, which took species counts from 3
+1. In `r Citep(bib, "sankaran2019latent")`, we reanalyzed data from `r Citep(bib, "dethlefsen2011incomplete")`, which took species counts from 3
 subjects (52 - 56 timepoints) before and after two courses of antibiotics
 2. Question: How does the microbiome respond to large scale environmental perturbations?
 ]
@@ -459,16 +458,13 @@ background-size: cover
 
 ### Motivating Study (3 of 3)
 
-Meditation is known to induce change on a variety of physiological processes, so it is natural to ask whether there is a relationship with the microbiome.
+Meditation is known to induce a variety of physiological changes, so it is natural to ask whether there is a relationship with the microbiome.
 
-.pull-left[
-This is not so far fetched,
-* There are documented relationships with anxiety and depression `r Citep(bib, c("winter2018gut", "peirce2019role", "dash2015gut"))`
-* Meditation may influence the Gut-Brain Axis `r Citep(bib, c("foster2013gut", "carabotti2015gut", "mayer2015gut"))`
-]
+* There are known relationships with anxiety and depression `r Citep(bib, c("winter2018gut", "dash2015gut"), .opts = list(max.names = 3))`
+* Meditation may influence the Gut-Brain Axis `r Citep(bib, c("foster2013gut", "carabotti2015gut", "mayer2015gut"), .opts = list(max.names = 3))`
 
-.pull-right[
-<img src="figures/microbe-mind.svg"/>
+.center[
+<img src="figures/microbe-mind.svg" width=420/>
 ]
 
 ---
@@ -519,8 +515,9 @@ theme(
 
 ### Mediation Analysis
 
-Mediation models are a type of graphical model where a treatment $T$ can influence a response $Y$ either directly or indirectly through a mediator variable $M$ `r Citep(bib, c("imai2010general"))`. This is formalized through a series of
-chained regression models,
+Mediation models are a type of graphical model where a treatment $T$ can
+influence a response $Y$ either directly or indirectly through a mediator
+variable $M$. This is formalized through a series of chained regression models,
 
 \begin{align*}
 m_{i} &= \alpha_{0} + \alpha_{T}t_{i} + \alpha_{X}^{T}x_{i} + \varepsilon_{i}^{m} \text{ (mediation model)}\\
@@ -647,7 +644,7 @@ gives it an unfair advantage.
 
 ### Zero-Inflated Quantiles (ZINQ)
 
-1. We resolve these difficulties by defining a semisynthetic simulator, following the ZINQ approach of `r Citep(bib, "ling2021powerful")`.
+1. We resolve these difficulties by defining a semisynthetic simulator, following `r Citep(bib, "ling2021powerful")`.
 2. This approach estimates a CDF for each species using,
 \begin{align*}
  \logit{\Parg{y_{i} > 0 \vert x_{i}}} = \gamma^{T}x_{i} \\
