@@ -41,9 +41,9 @@ library(RefManageR)
 library(MASS)
 library(tidyverse)
 theme_set(theme_bw())
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 bib <- ReadBib("references.bib", check = FALSE)
-BibOptions(cite.style = "numeric")
+BibOptions(cite.style = "authoryear", bib.style = "alphabetic")
 ```
 
 .center[
@@ -71,7 +71,7 @@ health
 ]
 
 .pull-right[
-```{r, fig.cap = "An image of the microbiome along the gut lining, from [4].", fig.align = "left"}
+```{r, fig.cap = "An image of the microbiome along the gut lining, from (Earle et al. 2015).", fig.align = "left"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -145,7 +145,7 @@ timebox_tree(time_data, edges, width = 900, height = 350, display_opts = display
 
 ### Topic Models
 
-* We were inspired by an analogy between text and microbiome data `r Citep(bib, "schloss2007last", .opts = list(cite.style = "numeric"))`
+* We were inspired by an analogy between text and microbiome data `r Citep(bib, "schloss2007last")`
 * Samples are like documents, and taxa are like words.
 * We took models for summarizing evolving themes across text corpora and applied them to the microbiome
 
@@ -244,7 +244,7 @@ This model helped reduce the full community data into a few “themes,”
 
 .pull-left[
 * What role does the microbiome play in preterm birth?
-* Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
+* `r Citep(bib, "ravel2011vaginal")` use clustering to identify 5 Community State Types (CSTs)
   - Four  <span style="color: #3F83BF;">healthy CSTs</span> are dominated by Lactobacillus variants
   - A fifth, <span style="color: #F27C38;">dysbiotic CST</span> has been associated with preterm
   birth
@@ -414,7 +414,7 @@ include_graphics("figures/vmrc_alto.png")
 
 ### Software
 
-Topic alignment is implemented in the R package [alto](lasy.github.io/alto) (lasy.github.io/alto).
+Topic alignment is implemented in the R package [alto](lasy.github.io/alto) (lasy.github.io/alto). You can read more in our paper `r Citep(bib, "fukuyamamultiscale")`.
  
 .pull-left[
 ```{r, echo = TRUE, warning = FALSE}
@@ -537,7 +537,7 @@ include_graphics("figures/mediation-dag.svg")
 
 * Typically the direct and indirect effects are read off $\alpha_{T}$ and
 $\beta_{T}$.
-* A more general approach considers the counterfactual difference in potential outcomes `r Citep(bib, c("imai2010general"))`,
+* A more general approach considers the counterfactual difference in potential outcomes `r Citep(bib, c("imai2010general", "sohn2019compositional"))`,
 \begin{align}
 \tau_{i} &= y_{i}\left(x_i, 1, m\left(x_{i}, t_i\right)\right) - y_{i}\left(x_i,0, m\left(x_{i}, t_i\right)\right),\\
 \delta_{i} &= y_{i}\left(x_i, t_{i}, m\left(x_{i}, 1\right)\right) - y_{i}\left(x_i, t_{i}, m\left(x_{i}, 0\right)\right),
@@ -578,7 +578,7 @@ include_graphics("figures/counterfactual-mediation4.svg")
 
 ### Models under Consideration
 
-Equipped with this graphical and counterfactual perspective, we used a probabilistic programming language to implemented a variety of microbiome mediation modeling components,
+Equipped with this graphical and counterfactual perspective, we used a probabilistic programming language to implement a variety of microbiome mediation modeling components,
 
 1. Logistic Normal Multinomial
 2. Zero-Inflation via Mixtures
@@ -586,7 +586,7 @@ Equipped with this graphical and counterfactual perspective, we used a probabili
 4. Latent Topic Component
 
 These can also be recombined (e.g., zero inflation with latent topic
-components).
+components). I've included details in supplementary slides.
 
 ---
 
@@ -599,7 +599,7 @@ All our models are variants of the Logistic Normal Multinomial (LNM),
 y_{i} \sim \Mult\left(N_{i}, \varphi^{-1}\left(x_{i}^{T}\beta\right)\right) \\
 \beta \sim \Gsn\left(0, \diag\left(\sigma_{k}^{2}\right)\right)
 \end{align*}
-where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$ I've included details in supplementary slides.
+where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$
 ]
 
 .pull-right[
@@ -686,8 +686,8 @@ This is the same plot, but restricting to nonnegative counts.
 
 * Before getting to the meditation study, let's see how simulation strategies
 compare on a simple setup.
-* Consider the problem of evaluating an LNM model. We will estimation quality
-when we simulate from,
+* Consider the problem of evaluating an LNM model. We will compare estimation
+quality when we simulate from,
  - The LNM itself
  - A simulator based on a pilot dataset
 
@@ -695,11 +695,11 @@ when we simulate from,
 
 ### Synthetic Setup
 
-In the first simulation, we simulate from a version of the LNM itself,
+In the first simulation, we simulate from a version of the LNM,
 
 \begin{align*}
 y_{i} &\sim \Mult\left(N_{i}, \varphi^{-1}\left(\beta_{0} + \beta_{T}x_{i}\right)\right) \\
-\beta_{T} &:= \text{Threshold}\left(\tilde{\beta}_{T}, 0.75\right) \\
+\beta_{T} &:= \text{HardThreshold}\left(\tilde{\beta}_{T}, \text{keep 25%}\right) \\
 \beta_{0}, \tilde{\beta}_{T} &\sim \Gsn\left(0, I_{K}\right) \\
 \end{align*}
 
@@ -711,13 +711,13 @@ y_{i} &\sim \Mult\left(N_{i}, \varphi^{-1}\left(\beta_{0} + \beta_{T}x_{i}\right
 
 ### Semisynthetic Setup
 
-In the second, we use the exact same $\beta_{T}$, but this is used to
-exponentially tilt samples from treatment,
+In the second, we use the exact same $\beta_{T}$, but now to exponentially tilt
+samples from treatment,
 
 \begin{align*}
 y_{i} \sim \Mult\left(N_{i}, \exp{\beta_{T}x_{i}}\odot \hat{p}_{i}^{\ast}\right)
 \end{align*}
-where $\hat{p}_{i}^{\ast}$ is drawn randomly with replacement from compositions
+Here, $\hat{p}_{i}^{\ast}$ is drawn randomly with replacement from compositions
 in an observed pilot dataset (the meditation study data, in this case).
 
 ---
@@ -781,10 +781,12 @@ estimates, compared to the semisynthetic setup.
 
 ### Semisynthetic Simulation Recipe
 
-1. Estimate $\hat{\gamma}, \hat{\beta}\left(\tau\right)$ from real data.  This defines $\hat{F}_{y \vert x, t, m}$ from which to simulate community profiles.
-2. Rank species according to true effects. To define true positives and negatives, we set true effects for all but the top 25% to 0.
-3. Simulate data alternative configurations. We vary the sample size and rescale coefficients $\hat{\beta}\left(\tau\right)$
-4. Estimate models across settings and compute error rates.
+1. **Estimate $\hat{\gamma}, \hat{\beta}\left(\tau\right)$ from real data**.  This defines $\hat{F}_{y \vert x, t, m}$ from which to simulate community profiles.
+2. **Define true positives and negatives**. We rank species according to their
+estimated effects and set simulation $\beta\left(\tau\right), \gamma$ for all
+but the top 25% to 0.
+3. **Simulate data from alternative configurations**. We vary the sample size and rescale coefficients $\hat{\beta}\left(\tau\right)$.
+4. Estimate models across settings and **compute error rates**.
 
 ---
 
@@ -792,9 +794,8 @@ estimates, compared to the semisynthetic setup.
 
 Notice that we can use our simulation strategy to calibrate our inferences,
 
-  1. Rank direct and indirect effects
-  2. Use simulation to estimate the FSR across thresholds
-  3. Use most powerful threshold that controls estimated FSR
+  1. Use the simulation study to estimate the FSR across thresholds
+  1. Use the most powerful threshold that controls estimated FSR
 
 This strategy helps us choose between competing models.
 ---
@@ -831,15 +832,13 @@ problem solving strategies for analysis of complex communities.
 *Visualization*
 
 Data visualization is like cartography — by reducing what is shown in a display,
-we can make essential structure clear And like a map, good visualization
-supports navigation across unfamiliar territory
+we can make essential structure clear.
 
 *Simulation*
 
 Hypothetical reasoning is a central part of statistics, and generative models
-can make alternative scenarios concrete. This reasoning is useful for more than
-data analysis — it is a powerful device for experimental design and model
-evaluation
+can make alternative scenarios concrete. This can guide more than
+data analysis — it is useful in experimental design and model evaluation
 
 ---
 
@@ -855,9 +854,7 @@ This talk reflects the effort of many co-authors,
 * Julia Fukuyama (Indiana University - Bloomington)
 * Susan Holmes (Stanford University)
 
-Thank you also to all Latent Structure Lab team members for valuable discussion.
-
-Funds from the Wisconsin Alumni Research Fund are gratefully acknowledged.
+Thank you also to all Latent Structure Lab team members for valuable discussion. Funds from the Wisconsin Alumni Research Fund are gratefully acknowledged.
 
 ---
 
@@ -872,7 +869,23 @@ PrintBibliography(bib, start = 1, end = 4)
 ### References
 
 ```{r, results='asis', echo=FALSE}
-PrintBibliography(bib, start = 5, end = 8)
+PrintBibliography(bib, start = 5, end = 7)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib, start = 8, end = 11)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib, start = 12, end = 16)
 ```
 
 ---
@@ -922,7 +935,7 @@ have large abundances (regardless of treatment assignment)
 ### Blocking Simulation Results
 
 1. The simulation will depend on parameter choices, but this generated data provide specific material for comparison
-2. We include several other experimental design-related examples in the review paper `r Citep(bib)`.
+2. We include several other experimental design-related examples in the review paper `r Citep(bib, "sankaran2022generative2")`.
 
 ---
 
@@ -931,7 +944,7 @@ have large abundances (regardless of treatment assignment)
 To account for zeros, we can introduce a second mixture component that
 encourages small probabilities,
 \begin{align*}
-y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\tilde{eta}_{i}\right)\right) \\
+y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\tilde{\eta}_{i}\right)\right) \\
 \tilde{\eta}_{i} \sim &\left(1 - \pi\right) \odot \Gsn\left(-5, \sigma_{0}^{2}I_{k}\right) + 
 \pi \odot \Gsn\left(\eta\left(m_{i}, t_{i}, x_{i}\right), \text{diag}\left(\sigma_{k}^2\right)\right)
 \end{align*}
