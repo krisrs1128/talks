@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lightning Talk: 2022-09-16</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <meta name="date" content="2022-09-16" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+.center[
+# Latent Structure Laboratory
+]
+
+.pull-left[
+.pull-right[
+&lt;img src="figures/microbiome.png"/ width=400&gt;
+]
+]
+
+.pull-right[
+Bacteria may not build cities or have interesting social lives, but they will
+be here when the Sun explodes. 
+
+-- Bill Bryson in _A Short History of Nearly Everything_ 
+]
+
+.center[
+### UW Madison Statistics Lightning Talks
+.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 16 September 2021]
+]
+
+---
+
+### Problem Solving in Multi-Omics
+
+Our lab focuses on statistical methods for analyzing multi-omics, and especially
+microbiome, data:
+
+.pull-left[
+* We are motivated by interdisciplinary projects with microbiologists,
+ecologists, and psychologists
+* We synthesize and benchmark statistical approaches to solve data
+analysis problems within these collaborations
+]
+
+.pull-right[
+&lt;img src="figures/spatial_microbiome.png" width = "400"/&gt;
+]
+
+---
+
+### Project 1: Multiscale Topic Alignment 
+
+* We were motivated by a project about bacterial vaginosis
+* The literature collapses microbiomes into 5 “community state types,” but we
+noticed subtle transitions in participants with the disease
+* To addressed this, we developed meta-algorithms for visualizing ensembles of
+topic models trained across several scales
+
+.center[
+&lt;img src="https://github.com/krisrs1128/LSLab/raw/main/assets/img/alto.png" width = 750/&gt;
+]
+
+---
+
+### Project 1: Multiscale Topic Alignment
+
+* We found that properties of the alignment graph are useful for count data analysis more generally
+  - Can help quantify the degree of mixing across clusters
+  - Can help highlight mutually exclusive species
+* We wrapped our algorithms in the R package [`alto`](lasy.github.io/alto)
+
+.center[
+&lt;img src="https://github.com/krisrs1128/talks/blob/master/2022/20220407/figure/refinement_lda.png?raw=true" width="550"/&gt;
+]
+
+---
+
+### Project 2: Meditation and the Microbiome
+
+* The Center for Healthy Minds at UW - Madison has had a long history of studying the effects of meditation on well-being
+* Motivated by increasing evidence of a gut-brain axis, they now also collect microbiome samples
+
+.center[
+&lt;img src="figures/brain-scan-image-monk-WEB.jpeg" width="500"/&gt;
+]
+
+
+---
+
+### Project 2: Meditation and the Microbiome
+
+.pull-left[
+* We are supporting a longitudinal RCT that is gathering data from 3000
+participants (for reference, my PhD thesis analyzed three subjects...)
+* We have adapted concepts from causal mediation analysis to relate sequencing with psychological survey data
+]
+
+.pull-right[
+&lt;img src="figures/counterfactual-mediation1.svg" width="550"/&gt;
+
+An approach to microbiome mediation analysis designed by Xinran Miao and Hanying
+Jiang.
+]
+
+
+---
+
+### Techniques
+
+A few ideas recur throughout our research,
+
+  * Generative models: These allow us to encode latent structure and integrate
+  across data sources and scales
+  * Data visualization: Good representations enable hypothesis generation, model
+  criticism, and communication
+  * Reusable software: We release our methods as accessible R
+  packages
+
+.center[
+&lt;img src="figures/combined_example.png" width="650"/&gt;
+
+Visualizations and code by Zhuoyan Xu and Tinghui Xu in [2 - 4].
+]
+
+---
+
+### Reaching Out
+
+* You can learn more at [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab).
+
+* I encourage you to reach out for any reason -- I'm always happy to talk about
+statistics.
+
+* Email: ksankaran@wisc.edu
+
+---
+
+### References
+
+[1] Julia Fukuyama, Kris Sankaran, Laura Symul, Multiscale analysis of count data through topic alignment, Biostatistics, 2022;, kxac018, (https://doi.org/10.1093/biostatistics/kxac018)
+
+[2] Kris Sankaran and Susan P. Holmes. Generative Models: An Interdisciplinary Perspective. To appear in Annual Review of Statistics and its Applications, 2022. (https://doi.org/10.48550/arXiv.2208.06011)
+
+
+[3] Tinghui Xu and Kris Sankaran. Interactive visualization of spatial omics neighborhoods [version 1; peer review: awaiting peer review]. F1000Research, 2022, 11:799 (https://doi.org/10.12688/f1000research.122113.1)
+
+[4] Zhuoyan Xu and Kris Sankaran. Spatial transcriptomics dimensionality reduction using wavelet bases [version 1; peer review: awaiting peer review]. F1000Research 2022, 11:1033 (https://doi.org/10.12688/f1000research.122775.1)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

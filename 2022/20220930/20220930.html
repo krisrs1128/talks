@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Notes - A Simple Measure of Conditional Independence</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+$$
+\def\E{\mathbb{E}}
+\def\Earg#1{\E\left[{#1}\right]}
+\def\P{\mathbb{P}} % Probability symbol
+\def\Parg#1{\P\left({#1}\right)}
+\def\Var{\mathrm{Var}}
+\def\Vararg#1{\Var\left(#1\right)}
+\def\\*#1{\mathbf{#1}}
+\def\indic#1{\mathbf{1}\left\{{#1}\right\}}
+$$
+
+
+.center[
+# Notes - A Simple Measure of Conditional Independence
+### Azadkia and Chatterjee, AOAS 49(6)
+.large[30 September 2022]
+
+&lt;img src="figures/rankings.svg" width = 400/&gt;
+
+]
+
+---
+
+### Motivation
+
+.pull-left[
+1. Molecular interaction networks are useful for integration
+2. Correlation-based molecular networks are arguably the most common, but they can lead to unnecessarily dense networks
+3. More parsimonious, interpretable networks can be found using partial
+correlation, and for this we need measures of conditional dependence
+]
+
+.pull-right[
+&lt;img src="figures/fgene-10-00535-g002.jpeg" width=400/&gt;
+Correlation vs. partial correlation, from Hawe, Theis, and Heinig (2019).
+]
+
+
+---
+
+### Two Baselines
+
+Two common approaches to network estimation in ‘omics are,
+
+1. Graphical Lasso: Estimates conditional dependence, but assumes joint Gaussianity
+1. Tree-Based Methods: No model assumptions, but does not have a conditional dependence interpretation
+
+Azadkia and Chatterjee (2021) seek to develop a conditional dependence estimator
+that is provably consistent without assuming any model structure.
+
+---
+
+### Definition (Version 1)
+
+Measure the dependence between `\(Y\)` and `\(\*Z\)` conditional on `\(\*X\)` using
+
+`\begin{align*}
+T\left(Y, \*Z \vert \*X\right) &amp;= 1 - \frac{\int \Earg{\Vararg{Y_{t} \vert \*Z, \*X}}d\mu\left(t\right)}{\int \Earg{\Vararg{Y_{t} \vert \*X}} d\mu\left(t\right)},
+\end{align*}`
+
+where we defined `\(Y_{t} = \mathbf{1}\left\{Y \geq t\right\}\)` and
+`\(\mu\left(t\right) = \Parg{Y \leq t}\)`. The top and bottom expectations average over `\(\left(\*Z, \*X\right)\)` and `\(\*X\)`, respectively.
+
+---
+
+### Interpretation
+
+`\begin{align}
+\Vararg{Y_{t} \vert \*Z, \*X} vs. \Vararg{Y_{t} \vert \*X}
+\end{align}`
+
+* This has a kind of `\(R^{2}\)` interpretation
+* How much does `\(\*Z\)` help predict `\(Y_{t}\)`, even after we
+already know `\(\*X\)`?
+
+.pull-left[
+&lt;img src="figures/conditional_independent.svg" width=420/&gt;
+]
+
+.pull-right[
+&lt;img src="figures/conditional_dependent.svg" width=420/&gt;
+]
+
+---
+
+### Definition (Version 2)
+
+An alternative definition has a somewhat more mysterious form,
+
+$$
+`\begin{align*}
+T\left(Y, \*Z \vert \*X\right) &amp;= \frac{\int \Earg{\Vararg{\Earg{Y_{t} \vert \*Z, \*X} \vert \*X}}d\mu\left(t\right)}{\int \Earg{\Vararg{Y_{t} \vert \*X}}d\mu\left(t\right)}
+\end{align*}`
+$$
+
+---
+
+### Interpretation
+
+$$
+`\begin{align*}
+\Earg{\Vararg{\Earg{Y_{t} \vert \*Z, \*X} \vert \*X}} vs. \Earg{\Vararg{Y_{t} \vert \*X}}
+\end{align*}`
+$$
+
+1. Think about conditional expectation as projection and variance as length
+1. If the projection has length 0, then the information in `\(\*Z\)` was irrelevant
+1. If the projection has the same length as the original vector, then it could
+be perfectly predicted from `\(\*Z\)`, even after removing information from `\(\*X\)`
+
+.pull-left[
+&lt;img src="figures/projection_2.svg" width=250/&gt;
+]
+.pull-left[
+&lt;img src="figures/projection_1.svg" width=250/&gt;
+]
+
+---
+
+### Estimation
+
+There is a practical estimator of this theoretical measure. First, define,
+1. `\(R_{i}\)`: The rank of `\(Y_{i}\)`, so that the largest is `\(N\)` and smallest is 1.
+2. `\(N_{i}\)`: The index of the sample closest to `\(X_{i}\)` in the `\(X\)`-space
+3. `\(M_{i}\)`: The index of the sample closest to `\(\left(X_{i}, Z_{i}\right)\)` in the `\(\left(X, Z\right)\)`-space
+
+`\begin{align*}
+\frac{\sum_{i} R_{i} \wedge R_{M_{i}} - R_{i} \wedge R_{N\left(i\right)}}{\sum_{i} R_{i} - R_{i} \wedge R_{N_{i}}}
+\end{align*}`
+
+
+This can be proven to converge to `\(T\left(Y, \*Z \vert \*X\right)\)` without
+requirng any model assumptions.
+
+---
+
+### Estimation
+
+.pull-left[
+`\begin{align*}
+\frac{\sum_{i} R_{i} \wedge R_{M\left(i\right)} - R_{i} \wedge R_{N\left(i\right)}}{\sum_{i} R_{i} - R_{i} \wedge R_{N\left(i\right)}}
+\end{align*}`
+1. This estimator asks whether `\(R_{i}\)` is consistently closer to `\(R_{M\left(i\right)}\)` than `\(R_{N\left(i\right)}\)`
+2. If so, then `\(Z\)` helps in predicting the rank of `\(Y_{i}\)`, on top of just using `\(X\)`
+3. To see this explicitly, use the identity `\(2 a \wedge b = a + b - \left|a - b\right|\)`
+]
+
+.pull-right[
+&lt;img src="figures/rankings.svg" width = 700/&gt;
+]
+
+
+---
+
+### FOCI
+
+This measure of conditional dependence leads to a natural variable selection algorithm.
+
+* Compute the feature with the largest unconditional dependence on `\(Y\)`
+
+`\begin{align*}
+j_{1} = \arg \max_{j = 1, \dots, J} T\left(Y, Z_{j}\right)
+\end{align*}`
+
+* Compute the next most correlated feature, conditional on `\(Z_{j_{1}}\)`,
+
+`\begin{align*}
+j_{2} = \arg\max_{j \neq j_{1}} T\left(Y, Z_{j} \vert Z_{j_{1}}\right)
+\end{align*}`
+
+* Continue until `\(T \approx 0\)`.
+
+---
+
+### Numerical Examples
+
+1. A few examples are given where `\(Y\)` and `\(X\)` are unconditionally independent, but dependent conditionally on `\(Z\)`.
+1. In some nonlinear functions, the approach is clearly more effective than partial correlation / the lasso
+1. It can also be used to prescreen features in random forests. This causes a
+slight drop in performance, but can support large savings in computation.
+
+---
+
+*Follow-Up Work*
+
+1. Recently, Azadkia, Taeb, and Buhlmann used this conditional dependence
+measure as the basis for a causal structure learning algorithm.
+1. Several papers propose variants that improve the power of the test.
+
+*Discussion Questions*
+1. How does this approach compare to the graphical lasso and random forest
+methods for multi-omics network construction described at the start?
+1. With many zeros, we will have many ties in the ranks `\(R_i\)`. In what ways
+should we modify the measure? If we truncate the ranks, is there any theoretical
+justification?
+
+---
+
+### Convergence Heuristic
+
+This is an informal argument from Shi, Drton, and Han (2022),
+
+`\begin{aligned}
+\Earg{n^{-1}\left\{R_1-R_1 \wedge R_{N(1)}\right\}} &amp; \approx \Earg{F_Y\left(Y_1\right)-F_Y\left(Y_1\right) \wedge F_Y\left(Y_{N(1)}\right)} \\
+&amp;=\Earg{\int\left\{\mathbb{1}\left(Y_1 \geq t\right)-\mathbb{1}\left(Y_1 \geq t\right) \mathbb{1}\left(Y_{N(1)} \geq t\right)\right\} \mathrm{d}\mu(t)} \\
+&amp; \approx \Earg{\frac{1}{2} \int\left\{\mathbb{1}\left(Y_1 \geq t\right)-\mathbb{1}\left(Y_{N(1)} \geq t\right)\right\}^2 \mathrm{d\mu}(t)} \\
+&amp;\approx 2 \Earg{\Vararg{\mathbf{1}\{Y_{1} \geq t\} \vert X_{1}}}
+\end{aligned}`
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
