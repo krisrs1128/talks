@@ -370,21 +370,6 @@ include_graphics("figures/alto_sketches_diagnotics.png")
 
 ---
 
-### Example Diagnostic: Refinement
-
-Parent specificity distinguishes two qualitatively different regimes,
-
-* High Refinement: Each topic receives most mass from a unique parent,
-corresponding to a true or "compromise" topic
-* Low Refinement: Each topic receives substantial mass from several parents,
-each corresponding to an arbitrary split of a true topic
-
-```{r, out.width=350}
-include_graphics("figures/refinement_diagnostic_example.png")
-```
-
----
-
 ### Simulation Example
 
 1. When a topic model is well-specified, this measure can be used to identify the number of topics.
@@ -787,16 +772,6 @@ but the top 25% to 0.
 
 ---
 
-### Calibration
-
-Notice that we can use our simulation strategy to calibrate our inferences,
-
-  1. Use the simulation study to estimate the FSR across thresholds
-  1. Use the most powerful threshold that controls estimated FSR
-
-This strategy helps us choose between competing models.
----
-
 ### Power against Direct Effects
 
 * For FSR $\leq$ 25%, we find that the LNM variants have the highest power
@@ -983,3 +958,29 @@ y_{i_r} &\sim \Mult\left(\text{Depth}_{i_r}, \varphi^{-1}\left(\eta_{i}\right)\r
 .center[
 <img src="figures/lnm_topic.png" width=750/>
 ]
+
+---
+
+### Example Diagnostic: Refinement
+
+Parent specificity distinguishes two qualitatively different regimes,
+
+* High Refinement: Each topic receives most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+```{r, out.width=350}
+include_graphics("figures/refinement_diagnostic_example.png")
+```
+
+---
+
+### Calibration
+
+Notice that we can use our simulation strategy to calibrate our inferences,
+
+  1. Use the simulation study to estimate the FSR across thresholds
+  1. Use the most powerful threshold that controls estimated FSR
+
+This strategy helps us choose between competing models.
