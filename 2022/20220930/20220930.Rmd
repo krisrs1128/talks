@@ -22,7 +22,7 @@ $$
 \def\Var{\mathrm{Var}}
 \def\Vararg#1{\Var\left(#1\right)}
 \def\\*#1{\mathbf{#1}}
-\def\indic#1{\mathbf{1}\left\{{#1}\right\}}
+\def\indic#1{\mathbf{1}\left\{#1\right\}}
 $$
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
 library(knitr)
