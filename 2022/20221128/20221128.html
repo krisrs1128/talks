@@ -19,6 +19,10 @@ background-size: cover
 .center[
 # Microbiome Studies: Design, Infrastructure, and Inference
 ### MSTP M2 Journal Club
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
 .large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 28 November 2022 | &lt;img src="figure/mstp.png" width=150/&gt;
 ]
 ]
@@ -44,7 +48,7 @@ class: middle
 
 ### Microbiome and Obesity
 
-.pull-left[Transplanting the microbiomes of obese individuals into germ-free mice causes dramatic weight gain in those mice [1; 2; 3].]
+.pull-left[Transplanting the microbiomes of obese individuals into germ-free mice causes dramatic weight gain [1; 2; 3].]
 
 .pull-right[
 &lt;div class="figure" style="text-align: center"&gt;
@@ -59,13 +63,13 @@ class: middle
 
 .pull-left[
 A dysbiotic microbiome has been implicated in IBD, and microbiome-based
-interventions are actively being studied [4; 5].
+interventions are actively being studied [5; 6].
 ]
 
 .pull-right[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="figure/ibd.jpeg" alt="Figure from [5]." width="374" /&gt;
-&lt;p class="caption"&gt;Figure from [5].&lt;/p&gt;
+&lt;img src="figure/ibd.jpeg" alt="Figure from [6]." width="374" /&gt;
+&lt;p class="caption"&gt;Figure from [6].&lt;/p&gt;
 &lt;/div&gt;
 ]
 
@@ -74,15 +78,15 @@ interventions are actively being studied [4; 5].
 ### Infant Microbiome Development
 
 .pull-left[
-1. An infant's microbiome is seeded during birth, and it goes through major reorganization during the first few years of life [6; 7].
-1. The structure of this microbiome is known to influence early growth and
+1. An infant's microbiome is seeded during birth, and it goes through major reorganization during the first few years of life [7; 8].
+1. The structure of this microbiome is known to influence  
 immune system development (this is the essence of the "Hygiene Hypothesis").
 ]
 
 .pull-right[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="figure/infant-microbiome.jpeg" alt="Figure from [6]." width="600" /&gt;
-&lt;p class="caption"&gt;Figure from [6].&lt;/p&gt;
+&lt;img src="figure/infant-microbiome.jpeg" alt="Figure from [7]." width="600" /&gt;
+&lt;p class="caption"&gt;Figure from [7].&lt;/p&gt;
 &lt;/div&gt;
 ]
 
@@ -91,17 +95,17 @@ immune system development (this is the essence of the "Hygiene Hypothesis").
 ### Gut-Brain Axis
 
 .pull-left[
-1. Animal models have given strong evidence of an association between the microbiome and the mind [8; 9].
+1. Animal models have given evidence of an association between the microbiome and the brain [9; 10].
 1. In humans, the microbiome has been linked to autism and Parkinson's Disease,
 though the direction of causality is unknown.
 1. There are indications that biochemical products from microbes can penetrate
-the blood-brain barrier, potentially influencing behavior.
+the blood-brain barrier.
 ]
 
 .pull-right[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="figure/zebrafish.svg" alt="Figure from [9]." width="400" /&gt;
-&lt;p class="caption"&gt;Figure from [9].&lt;/p&gt;
+&lt;img src="figure/zebrafish.svg" alt="Figure from [10]." width="400" /&gt;
+&lt;p class="caption"&gt;Figure from [10].&lt;/p&gt;
 &lt;/div&gt;
 ]
 
@@ -120,7 +124,7 @@ class: middle
 1. The 16S rRNA region is conserved across Bacteria, but variable enough to be
 used to distinguish between closely related strains.
 1. By selectively sequencing this region, we can investigate the taxonomic composition of a microbiome.
-1. Since it doesn't require full genome sequencing, it is cheaper both in terms
+1. Since it doesn't require full genome sequencing, it is cheap both in terms
 of cost and computation.
 
 &lt;img src="figure/16s-workflow.png" width="750" style="display: block; margin: auto;" /&gt;
@@ -130,7 +134,7 @@ of cost and computation.
 ### Metagenomics
 
 1. Instead of sequencing just one gene, we can sequence _all_ microbial genes present in a sample.
-1. Genes more directly inform function, and variation in taxa might obfuscate unity in function. 
+1. Genes more directly inform function, and variation in taxa might obfuscate functional unity. 
 1. We typically align reads to a reference database, but it is also possible to
 assemble reads into metagenomes de novo.
 
@@ -143,7 +147,7 @@ assemble reads into metagenomes de novo.
 1. A gene may be present without being expressed. For this level of detail, it
 is necessary to use metatranscriptomic sequencing.
 1. We may see large expression changes in response to environmental stimuli even
-if taxonomic compositions remains stable.
+if taxonomic compositions remain stable.
 
 &lt;img src="figure/metagenome-workflow.png" width="750" style="display: block; margin: auto;" /&gt;
 
@@ -154,7 +158,7 @@ if taxonomic compositions remains stable.
 
 1. We can study the small molecules present in a sample using metabolomics. These are potential microbial inputs / products.
 1. Spectroscopy creates quantitative signatures of the molecules present in a
-sample. Each peak in the signature corresponds to one molecule subcomponent.
+sample. Each peak in the signature corresponds to one molecular subcomponent.
 
 &lt;img src="figure/metabolome-workflow.png" width="750" style="display: block; margin: auto;" /&gt;
 
@@ -173,8 +177,8 @@ class: middle
 1. Before starting analysis, it is worthwhile to create a data structure that can be easily inspected and manipulated.
 1. This interactive data structure bridges raw sequencing outputs and more
 formal statistical analysis.
-1. `phyloseq` is a powerful container for microbiome data [10], and
-`MultiAssayExperiment` can encapsulate several omics simultaneously [11].
+1. `phyloseq` is a powerful container for microbiome data [11], and
+`MultiAssayExperiment` can encapsulate several omics simultaneously [12].
 
 
 ```r
@@ -235,9 +239,10 @@ miniACC
 
 ### Annotation
 
-1. We don't have to limit our data to the raw sequencing outputs -- we can draw useful taxonomic, gene, or metabolite annotations from public databases.
+1. We don't have to limit our data to raw sequencing outputs -- we can draw
+useful taxonomic, genomic, or metabolomic annotation from public databases.
 1. Commonly used databases include,
-  - Taxonomic: `greengenes`, `MGRast`
+  - Bacterial Taxonomy: `greengenes`, `MGRast`
   - Gene and Gene Pathways: `ReactomePA`, `rbioapi`
   - Metabolites: `GNPS`, `biodbHmdb`
 
@@ -249,7 +254,9 @@ miniACC
 text. Reports written in this way emphasize that code is written for people --
 not machines -- and support study reproducibility.
 
-1. Sharing these documents is a better guard for scientific replicability than any specific statistical test.
+1. Special emphasis should be placed on being able to rerun and understand
+analysis scripts. Statistical corrections are important, but secondary to
+ensuring exact reproducibility.
 
 1. It is worth sharing both raw and preprocessed study data, as well as the code used to generate them.
   - Raw reads, deposited in the NCBI's sequencing read archive
@@ -304,8 +311,7 @@ class: middle
 and environmental features (e.g., treatment vs. control, deliberately perturbed
 timepoints).
 1. The measurements for any one taxon can be quite skewed and sparse, so
-classical normal approximations are often quite poor. A number of packages are
-available for testing taxon-level associations.
+classical normal approximations are often quite poor. A number of tests that are designed specifically for the microbiome context [13; 14]
 1. It is often worth trying
 several testing strategies and ensuring they give relatively consistent results.
 
@@ -332,7 +338,8 @@ mouse.time.mpse %&gt;%
 
 ### Latent Structure
 
-1. In contrast to taxon-level inference, it can be helpful to global structure across entire microbiota profiles.
+1. In contrast to taxon-level inference, we may be interested in variation
+across entire microbiota profiles.
 1. Dimensionality reduction methods build a "map" across samples, where samples
 that have similar omic profiles are placed closer to one another.
 1. This is useful because features are correlated. For example, though there may
@@ -375,28 +382,28 @@ make_network(gp_subset, type = "taxa", max.dist = 0.6) %&gt;%
 ### Longitudinal Analysis
 
 1. Like the epigenome, the microbiome is dynamic, constantly changing in response to environmental shifts.
-1. In studies where we have several measurements per host, we should model the
+1. In studies where we have several measurements per host, we should model
 change across neighboring timepoints, rather than assuming all samples are
 independent.
-1. Some useful packages are [12; 13; 14].
+1. Some useful packages are [15; 16; 17; 18].
 
 ---
 
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="figure/timeomics-overview.jpeg" alt="Figure from [10]." width="800" /&gt;
-&lt;p class="caption"&gt;Figure from [10].&lt;/p&gt;
+&lt;img src="figure/timeomics-overview.jpeg" alt="Figure from [18]." width="800" /&gt;
+&lt;p class="caption"&gt;Figure from [18].&lt;/p&gt;
 &lt;/div&gt;
 
 ---
 
 ### Questions for Discussion
 
-1. Do you know of any ways in which the microbiome may influence a system in
-which you are already interest? If not, can you imagine any hypothetical role?
+1. Can you imagine any ways in which the microbiome may influence a system in
+which you are already interested?
 
-1. Brainstorm a grant aim that investigates the role of the microbiome in your
-system of interest. What data sources or analysis strategies might be most
-important to your study, and why?
+1. Brainstorm a specific aim for a grant that investigates the role of the
+microbiome in your system of interest. What data sources or analysis strategies
+might be most important to your study, and why?
 
 ---
 
@@ -414,44 +421,78 @@ microbiome in obese and lean twins". In: _nature_ 457.7228 (2009), pp.
 twins discordant for obesity modulate metabolism in mice". In:
 _Science_ 341.6150 (2013), p. 1241214.
 
-[4] K. L. Glassner, B. P. Abraham, and E. M. Quigley. "The microbiome
+[4] A. W. Walker and J. Parkhill. "Fighting obesity with bacteria". In:
+_Science_ 341.6150 (2013), pp. 1069-1070.
+
+---
+
+### References
+
+[5] K. L. Glassner, B. P. Abraham, and E. M. Quigley. "The microbiome
 and inflammatory bowel disease". In: _Journal of Allergy and Clinical
 Immunology_ 145.1 (2020), pp. 16-27.
 
+[6] M. Lee and E. B. Chang. "Inflammatory Bowel Diseases (IBD) and the
+microbiome—Searching the crime scene for clues". In: _Gastroenterology_
+160.2 (2021), pp. 524-537.
+
+[7] M. R. Olm, D. Dahan, M. M. Carter, et al. "Robust variation in
+infant gut microbiome assembly across a spectrum of lifestyles". In:
+_Science_ 376.6598 (2022), pp. 1220-1223.
+
+[8] P. Ferretti, E. Pasolli, A. Tett, et al. "Mother-to-infant
+microbial transmission from different body sites shapes the developing
+infant gut microbiome". In: _Cell host &amp; microbe_ 24.1 (2018), pp.
+133-145.
 ---
 
 ### References
 
-NULL
----
+[9] J. F. Cryan and S. K. Mazmanian. "Microbiota-brain axis: Context
+and causality". In: _Science_ 376.6596 (2022), pp. 938-939.
 
-### References
+[10] J. J. Bruckner, S. J. Stednitz, M. Z. Grice, et al. "The
+microbiota promotes social behavior by modulating microglial remodeling
+of forebrain neurons". In: _PLoS biology_ 20.11 (2022), p. e3001838.
 
-[9] J. J. Bruckner, S. J. Stednitz, M. Z. Grice, et al. "The microbiota
-promotes social behavior by modulating microglial remodeling of
-forebrain neurons". In: _PLoS biology_ 20.11 (2022), p. e3001838.
-
-[10] P. J. McMurdie and S. Holmes. "phyloseq: an R package for
+[11] P. J. McMurdie and S. Holmes. "phyloseq: an R package for
 reproducible interactive analysis and graphics of microbiome census
 data". In: _PloS one_ 8.4 (2013), p. e61217.
 
-[11] M. Ramos, L. Schiffer, A. Re, et al. "Software for the integration
+[12] M. Ramos, L. Schiffer, A. Re, et al. "Software for the integration
 of multiomics experiments in bioconductor". In: _Cancer research_ 77.21
 (2017), pp. e39-e42.
-
-[12] J. D. Silverman, H. K. Durand, R. J. Bloom, et al. "Dynamic linear
-models guide design and analysis of microbiota studies within
-artificial human guts". In: _Microbiome_ 6.1 (2018), pp. 1-20.
 
 ---
 
 ### References
 
-[13] V. Bucci, B. Tzen, N. Li, et al. "MDSINE: Microbial Dynamical
+[13] N. Zhao, J. Chen, I. M. Carroll, et al. "Testing in
+microbiome-profiling studies with MiRKAT, the microbiome
+regression-based kernel association test". In: _The American Journal of
+Human Genetics_ 96.5 (2015), pp. 797-807.
+
+[14] S. Wang, T. T. Cai, and H. Li. "Hypothesis testing for
+phylogenetic composition: a minimum-cost flow perspective". In:
+_Biometrika_ 108.1 (2021), pp. 17-36.
+
+[15] J. D. Silverman, H. K. Durand, R. J. Bloom, et al. "Dynamic linear
+models guide design and analysis of microbiota studies within
+artificial human guts". In: _Microbiome_ 6.1 (2018), pp. 1-20.
+
+[16] V. Bucci, B. Tzen, N. Li, et al. "MDSINE: Microbial Dynamical
 Systems INference Engine for microbiome time-series analyses". In:
 _Genome biology_ 17.1 (2016), pp. 1-17.
 
-[14] A. Bodein, M. Scott-Boyer, O. Perin, et al. "timeOmics: an R
+---
+
+### References
+
+[17] D. Ruiz-Perez, J. Lugo-Martinez, N. Bourguignon, et al. "Dynamic
+bayesian networks for integrating multi-omics time series microbiome
+data". In: _Msystems_ 6.2 (2021), pp. e01105-20.
+
+[18] A. Bodein, M. Scott-Boyer, O. Perin, et al. "timeOmics: an R
 package for longitudinal multi-omics data integration". In:
 _Bioinformatics_ 38.2 (2022), pp. 577-579.
     </textarea>

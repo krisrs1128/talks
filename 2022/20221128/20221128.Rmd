@@ -22,7 +22,7 @@ library(RefManageR)
 library(tidyverse)
 library(glue)
 theme_set(theme_bw())
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 opts_knit$set(eval.after = "fig.cap")
 
 BibOptions(cite.style = "numeric")
@@ -32,6 +32,10 @@ bib <- ReadBib("references.bib")
 .center[
 # Microbiome Studies: Design, Infrastructure, and Inference
 ### MSTP M2 Journal Club
+<br/>
+<br/>
+<br/>
+<br/>
 .large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 28 November 2022 | <img src="figure/mstp.png" width=150/>
 ]
 ]
@@ -57,7 +61,7 @@ class: middle
 
 ### Microbiome and Obesity
 
-.pull-left[Transplanting the microbiomes of obese individuals into germ-free mice causes dramatic weight gain in those mice `r Citep(bib, c('turnbaugh2009core', 'turnbaugh2009core2', 'ridaura2013gut'))`.]
+.pull-left[Transplanting the microbiomes of obese individuals into germ-free mice causes dramatic weight gain `r Citep(bib, c('turnbaugh2009core', 'turnbaugh2009core2', 'ridaura2013gut'))`.]
 
 .pull-right[
 ```{r, echo = FALSE, fig.cap = glue("Figure from {Citep(bib, c('walker2013fighting'))}.")}
@@ -86,7 +90,7 @@ include_graphics("figure/ibd.jpeg")
 
 .pull-left[
 1. An infant's microbiome is seeded during birth, and it goes through major reorganization during the first few years of life `r Citep(bib, c('olm2022robust', 'ferretti2018mother'))`.
-1. The structure of this microbiome is known to influence early growth and
+1. The structure of this microbiome is known to influence  
 immune system development (this is the essence of the "Hygiene Hypothesis").
 ]
 
@@ -101,11 +105,11 @@ include_graphics("figure/infant-microbiome.jpeg")
 ### Gut-Brain Axis
 
 .pull-left[
-1. Animal models have given strong evidence of an association between the microbiome and the mind `r Citep(bib, c('cryan2022microbiota', 'bruckner2022microbiota'))`.
+1. Animal models have given evidence of an association between the microbiome and the brain `r Citep(bib, c('cryan2022microbiota', 'bruckner2022microbiota'))`.
 1. In humans, the microbiome has been linked to autism and Parkinson's Disease,
 though the direction of causality is unknown.
 1. There are indications that biochemical products from microbes can penetrate
-the blood-brain barrier, potentially influencing behavior.
+the blood-brain barrier.
 ]
 
 .pull-right[
@@ -129,7 +133,7 @@ class: middle
 1. The 16S rRNA region is conserved across Bacteria, but variable enough to be
 used to distinguish between closely related strains.
 1. By selectively sequencing this region, we can investigate the taxonomic composition of a microbiome.
-1. Since it doesn't require full genome sequencing, it is cheaper both in terms
+1. Since it doesn't require full genome sequencing, it is cheap both in terms
 of cost and computation.
 
 ```{r, echo = FALSE, out.width = 750}
@@ -141,7 +145,7 @@ include_graphics("figure/16s-workflow.png")
 ### Metagenomics
 
 1. Instead of sequencing just one gene, we can sequence _all_ microbial genes present in a sample.
-1. Genes more directly inform function, and variation in taxa might obfuscate unity in function. 
+1. Genes more directly inform function, and variation in taxa might obfuscate functional unity. 
 1. We typically align reads to a reference database, but it is also possible to
 assemble reads into metagenomes de novo.
 
@@ -156,7 +160,7 @@ include_graphics("figure/metagenome-workflow.png")
 1. A gene may be present without being expressed. For this level of detail, it
 is necessary to use metatranscriptomic sequencing.
 1. We may see large expression changes in response to environmental stimuli even
-if taxonomic compositions remains stable.
+if taxonomic compositions remain stable.
 
 ```{r, echo = FALSE, out.width = 750}
 include_graphics("figure/metagenome-workflow.png")
@@ -169,7 +173,7 @@ include_graphics("figure/metagenome-workflow.png")
 
 1. We can study the small molecules present in a sample using metabolomics. These are potential microbial inputs / products.
 1. Spectroscopy creates quantitative signatures of the molecules present in a
-sample. Each peak in the signature corresponds to one molecule subcomponent.
+sample. Each peak in the signature corresponds to one molecular subcomponent.
 
 ```{r, echo = FALSE, out.width = 750}
 include_graphics("figure/metabolome-workflow.png")
@@ -220,9 +224,10 @@ miniACC
 
 ### Annotation
 
-1. We don't have to limit our data to the raw sequencing outputs -- we can draw useful taxonomic, gene, or metabolite annotations from public databases.
+1. We don't have to limit our data to raw sequencing outputs -- we can draw
+useful taxonomic, genomic, or metabolomic annotation from public databases.
 1. Commonly used databases include,
-  - Taxonomic: `greengenes`, `MGRast`
+  - Bacterial Taxonomy: `greengenes`, `MGRast`
   - Gene and Gene Pathways: `ReactomePA`, `rbioapi`
   - Metabolites: `GNPS`, `biodbHmdb`
 
@@ -234,7 +239,9 @@ miniACC
 text. Reports written in this way emphasize that code is written for people --
 not machines -- and support study reproducibility.
 
-1. Sharing these documents is a better guard for scientific replicability than any specific statistical test.
+1. Special emphasis should be placed on being able to rerun and understand
+analysis scripts. Statistical corrections are important, but secondary to
+ensuring exact reproducibility.
 
 1. It is worth sharing both raw and preprocessed study data, as well as the code used to generate them.
   - Raw reads, deposited in the NCBI's sequencing read archive
@@ -263,8 +270,7 @@ class: middle
 and environmental features (e.g., treatment vs. control, deliberately perturbed
 timepoints).
 1. The measurements for any one taxon can be quite skewed and sparse, so
-classical normal approximations are often quite poor. A number of packages are
-available for testing taxon-level associations.
+classical normal approximations are often quite poor. A number of tests that are designed specifically for the microbiome context `r Citep(bib, c('zhao2015testing', 'wang2021hypothesis'))`
 1. It is often worth trying
 several testing strategies and ensuring they give relatively consistent results.
 
@@ -298,7 +304,8 @@ mouse.time.mpse %>%
 
 ### Latent Structure
 
-1. In contrast to taxon-level inference, it can be helpful to global structure across entire microbiota profiles.
+1. In contrast to taxon-level inference, we may be interested in variation
+across entire microbiota profiles.
 1. Dimensionality reduction methods build a "map" across samples, where samples
 that have similar omic profiles are placed closer to one another.
 1. This is useful because features are correlated. For example, though there may
@@ -335,10 +342,10 @@ make_network(gp_subset, type = "taxa", max.dist = 0.6) %>%
 ### Longitudinal Analysis
 
 1. Like the epigenome, the microbiome is dynamic, constantly changing in response to environmental shifts.
-1. In studies where we have several measurements per host, we should model the
+1. In studies where we have several measurements per host, we should model
 change across neighboring timepoints, rather than assuming all samples are
 independent.
-1. Some useful packages are `r Citep(bib, c('silverman2018dynamic', 'bucci2016mdsine', 'bodein2022timeomics'))`.
+1. Some useful packages are `r Citep(bib, c('silverman2018dynamic', 'bucci2016mdsine', 'ruiz2021dynamic', 'bodein2022timeomics'))`.
 
 ---
 
@@ -350,12 +357,12 @@ include_graphics("figure/timeomics-overview.jpeg")
 
 ### Questions for Discussion
 
-1. Do you know of any ways in which the microbiome may influence a system in
-which you are already interest? If not, can you imagine any hypothetical role?
+1. Can you imagine any ways in which the microbiome may influence a system in
+which you are already interested?
 
-1. Brainstorm a grant aim that investigates the role of the microbiome in your
-system of interest. What data sources or analysis strategies might be most
-important to your study, and why?
+1. Brainstorm a specific aim for a grant that investigates the role of the
+microbiome in your system of interest. What data sources or analysis strategies
+might be most important to your study, and why?
 
 ---
 
@@ -386,4 +393,12 @@ PrintBibliography(bib, start = 9, end = 12)
 
 ```{r, results='asis', echo=FALSE}
 PrintBibliography(bib, start = 13, end = 16)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib, start = 17, end = 20)
 ```
