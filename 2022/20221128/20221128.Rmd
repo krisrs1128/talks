@@ -5,6 +5,7 @@ output:
     css: ["default", "css/xaringan-themer.css"]
     lib_dir: libs
     self_contained: false
+    fig_caption: true
     nature:
       highlightStyle: github
       highlightLines: true
@@ -19,10 +20,13 @@ background-size: cover
 library(knitr)
 library(RefManageR)
 library(tidyverse)
+library(glue)
 theme_set(theme_bw())
 opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
-bib <- ReadBib("references.bib", check = FALSE)
-BibOptions(cite.style = "authoryear", bib.style = "alphabetic", max.names = 3)
+opts_knit$set(eval.after = "fig.cap")
+
+BibOptions(cite.style = "numeric")
+bib <- ReadBib("references.bib")
 ```
 
 .center[
@@ -53,13 +57,13 @@ class: middle
 
 ### Microbiome and Obesity
 
-Transplanting the microbiomes of obese individuals into germ-free mice causes
-dramatic weight gain in those mice.
+.pull-left[Transplanting the microbiomes of obese individuals into germ-free mice causes dramatic weight gain in those mice `r Citep(bib, c('turnbaugh2009core', 'turnbaugh2009core2', 'ridaura2013gut'))`.]
 
-```{r, echo = FALSE}
+.pull-right[
+```{r, echo = FALSE, fig.cap = glue("Figure from {Citep(bib, c('walker2013fighting'))}.")}
 include_graphics("figure/mice-obesity.png")
 ```
-
+]
 
 ---
 
@@ -67,11 +71,11 @@ include_graphics("figure/mice-obesity.png")
 
 .pull-left[
 A dysbiotic microbiome has been implicated in IBD, and microbiome-based
-interventions are actively being studied.
+interventions are actively being studied `r Citep(bib, c('glassner2020microbiome', 'lee2021inflammatory'))`.
 ]
 
 .pull-right[
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap = glue("Figure from {Citep(bib, 'lee2021inflammatory')}.")}
 include_graphics("figure/ibd.jpeg")
 ```
 ]
@@ -81,13 +85,13 @@ include_graphics("figure/ibd.jpeg")
 ### Infant Microbiome Development
 
 .pull-left[
-1. An infant's microbiome is seeded during birth, and it goes through major reorganization during the first few years of life.
+1. An infant's microbiome is seeded during birth, and it goes through major reorganization during the first few years of life `r Citep(bib, c('olm2022robust', 'ferretti2018mother'))`.
 1. The structure of this microbiome is known to influence early growth and
 immune system development (this is the essence of the "Hygiene Hypothesis").
 ]
 
 .pull-right[
-```{r, echo = FALSE, out.width = 600}
+```{r, echo = FALSE, out.width = 600, fig.cap = glue("Figure from {Citep(bib, 'olm2022robust')}.")}
 include_graphics("figure/infant-microbiome.jpeg")
 ```
 ]
@@ -97,7 +101,7 @@ include_graphics("figure/infant-microbiome.jpeg")
 ### Gut-Brain Axis
 
 .pull-left[
-1. Animal models have given strong evidence of an association between the microbiome and the mind.
+1. Animal models have given strong evidence of an association between the microbiome and the mind `r Citep(bib, c('cryan2022microbiota', 'bruckner2022microbiota'))`.
 1. In humans, the microbiome has been linked to autism and Parkinson's Disease,
 though the direction of causality is unknown.
 1. There are indications that biochemical products from microbes can penetrate
@@ -105,7 +109,7 @@ the blood-brain barrier, potentially influencing behavior.
 ]
 
 .pull-right[
-```{r, echo = FALSE, out.width = 600}
+```{r, echo = FALSE, out.width = 400, fig.cap = glue("Figure from {Citep(bib, 'bruckner2022microbiota')}.")}
 include_graphics("figure/zebrafish.svg")
 ```
 ]
@@ -186,8 +190,8 @@ class: middle
 1. Before starting analysis, it is worthwhile to create a data structure that can be easily inspected and manipulated.
 1. This interactive data structure bridges raw sequencing outputs and more
 formal statistical analysis.
-1. `phyloseq` is a powerful container for microbiome data, and
-`MultiAssayExperiment` can encapsulate several omics simultaneously
+1. `phyloseq` is a powerful container for microbiome data `r Citep(bib, 'mcmurdie2013phyloseq')`, and
+`MultiAssayExperiment` can encapsulate several omics simultaneously `r Citep(bib, 'ramos2017software')`.
 
 ```{r}
 library(phyloseq)
@@ -239,6 +243,7 @@ not machines -- and support study reproducibility.
 ---
 
 ```{r}
+library(curatedMetagenomicData)
 curatedMetagenomicData("AsnicarF_2017.relative_abundance", dryrun = FALSE)
 ```
 
@@ -333,11 +338,11 @@ make_network(gp_subset, type = "taxa", max.dist = 0.6) %>%
 1. In studies where we have several measurements per host, we should model the
 change across neighboring timepoints, rather than assuming all samples are
 independent.
-1. Some useful packages are: `MALLARD`, `MDSINE`, `timeOmics`.
+1. Some useful packages are `r Citep(bib, c('silverman2018dynamic', 'bucci2016mdsine', 'bodein2022timeomics'))`.
 
 ---
 
-```{r, echo = FALSE, out.width = 800}
+```{r, echo = FALSE, out.width = 800, fig.cap = glue("Figure from {Citep(bib, 'bodein2022timeomics')}.")}
 include_graphics("figure/timeomics-overview.jpeg")
 ```
 
@@ -366,4 +371,19 @@ PrintBibliography(bib, start = 1, end = 4)
 
 ```{r, results='asis', echo=FALSE}
 PrintBibliography(bib, start = 5, end = 8)
+```
+---
+
+### References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib, start = 9, end = 12)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo=FALSE}
+PrintBibliography(bib, start = 13, end = 16)
 ```
