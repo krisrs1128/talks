@@ -28,7 +28,7 @@ BibOptions(cite.style = "authoryear", bib.style = "alphabetic", max.names = 3)
 .center[
 # Microbiome Studies: Design, Infrastructure, and Inference
 ### MSTP M2 Journal Club
-.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 28 November 2022 | <img src="figures/mstp.png" width=25/>
+.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 28 November 2022 | <img src="figure/mstp.png" width=150/>
 ]
 ]
 
@@ -214,13 +214,6 @@ miniACC
 
 ---
 
-```{r}
-library(curatedMetagenomicData)
-data()
-```
-
----
-
 ### Annotation
 
 1. We don't have to limit our data to the raw sequencing outputs -- we can draw useful taxonomic, gene, or metabolite annotations from public databases.
@@ -285,7 +278,7 @@ mouse.time.mpse %>%
 ]
 
 .pull-right[
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height = 8, fig.width = 6}
 library(MicrobiotaProcess)
 data(mouse.time.mpse)
 
@@ -344,7 +337,7 @@ independent.
 
 ---
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, out.width = 800}
 include_graphics("figure/timeomics-overview.jpeg")
 ```
 
