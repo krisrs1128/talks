@@ -206,9 +206,18 @@ plot_heatmap(gp_subset)
 
 ---
 
+```{r}
+library(MultiAssayExperiment)
+data(miniACC)
+miniACC
+```
 
+---
 
-
+```{r}
+library(curatedMetagenomicData)
+data()
+```
 
 ---
 
@@ -216,9 +225,9 @@ plot_heatmap(gp_subset)
 
 1. We don't have to limit our data to the raw sequencing outputs -- we can draw useful taxonomic, gene, or metabolite annotations from public databases.
 1. Commonly used databases include,
-  - Taxonomic: Green Genes, MGRast
-  - Gene and Gene Pathway: GO, Kegg
-  - Metabolite: Reactome, [UCSD one?]
+  - Taxonomic: `greengenes`, `MGRast`
+  - Gene and Gene Pathways: `ReactomePA`, `rbioapi`
+  - Metabolites: `GNPS`, `biodbHmdb`
 
 ---
 
@@ -232,8 +241,13 @@ not machines -- and support study reproducibility.
 
 1. It is worth sharing both raw and preprocessed study data, as well as the code used to generate them.
   - Raw reads, deposited in the NCBI's sequencing read archive
-  - Integrated phyloseq or `MultiAssayExperiment` objects, deposited in the
-  `curatedMetagenomicData` database
+  - Integrated `phyloseq` or `MultiAssayExperiment` objects
+
+---
+
+```{r}
+curatedMetagenomicData("AsnicarF_2017.relative_abundance", dryrun = FALSE)
+```
 
 ---
 
@@ -255,6 +269,32 @@ classical normal approximations are often quite poor. A number of packages are
 available for testing taxon-level associations.
 1. It is often worth trying
 several testing strategies and ensuring they give relatively consistent results.
+
+---
+
+.pull-left[
+```{r, eval = FALSE}
+library(MicrobiotaProcess)
+data(mouse.time.mpse)
+
+mouse.time.mpse %>%
+  mp_rrarefy() %>% 
+  mp_diff_analysis(.abundance=RareAbundance, .group=time, first.test.alpha = 0.01) %>%
+  mp_plot_diff_boxplot()
+```
+]
+
+.pull-right[
+```{r, echo = FALSE}
+library(MicrobiotaProcess)
+data(mouse.time.mpse)
+
+mouse.time.mpse %>%
+  mp_rrarefy() %>% 
+  mp_diff_analysis(.abundance=RareAbundance, .group=time, first.test.alpha = 0.01) %>%
+  mp_plot_diff_boxplot()
+```
+]
 
 ---
 
@@ -300,7 +340,13 @@ make_network(gp_subset, type = "taxa", max.dist = 0.6) %>%
 1. In studies where we have several measurements per host, we should model the
 change across neighboring timepoints, rather than assuming all samples are
 independent.
-1. Some useful packages are: `MALLARD`, `MDSINE`.
+1. Some useful packages are: `MALLARD`, `MDSINE`, `timeOmics`.
+
+---
+
+```{r, echo = FALSE}
+include_graphics("figure/timeomics-overview.jpeg")
+```
 
 ---
 
