@@ -56,15 +56,28 @@ bib <- ReadBib("references.bib")
 
 ---
 
-### Microbiome and Meditation
+### Goals of Microbiome Analysis
 
+.pull-left[
 1. A microbiome is a microbe-scale ecosystem. It can be described by taxonomic
 composition, genomic function, and biochemical environment.
  
-1. There are known relationships with anxiety and depression `r Citep(bib, c("winter2018gut", "dash2015gut"), .opts = list(max.names = 3))` which seem to work through the Gut-Brain Axis `r Citep(bib, c("foster2013gut", "carabotti2015gut", "mayer2015gut"), .opts = list(max.names = 3))`.
+1. The medical community is realizing that the human microbiome has a deeper
+effect on health and disease than anyone ever suspected.
+]
 
-1. Meditation is known to induce a variety of physiological changes, so it is
-natural to ask whether there is a relationship with the microbiome.
+.pull-right[
+<img src="figures/zebrafish.svg" height=480/>
+]
+
+---
+
+### Motivating Study
+
+Meditation is known to induce a variety of physiological changes, so it is natural to ask whether there is a relationship with the microbiome.
+
+* There are known relationships with anxiety and depression `r Citep(bib, c("winter2018gut", "dash2015gut"), .opts = list(max.names = 3))`
+* Meditation may influence the Gut-Brain Axis `r Citep(bib, c("foster2013gut", "carabotti2015gut", "mayer2015gut"), .opts = list(max.names = 3))`
 
 .center[
 <img src="figures/microbe-mind.svg" width=420/>
@@ -72,12 +85,19 @@ natural to ask whether there is a relationship with the microbiome.
 
 ---
 
+### Study Population and Design
+
+The Center for Healthy Minds (CHM) recruited police officers into the study, since they have high stress jobs. The treatment group received meditation training just before the second timepoint.
+
+```{r, fig.align = "center", out.width = 800}
+include_graphics("figures/study_design.png")
+```
+
+---
+
 ### Psychometric & Genomic Integration
 
-1. The Center for Healthy Minds designed a longitudinal study to evaluate the
-relationship. The treatment group received meditation training.
-1. The study generated psychometric and microbiome data, and
-ongoing collection is gathering additional immunological and behavioral data
+1. Our pilot study has psychometric and microbiome compositional data, and ongoing collection is gathering additional immunological and behavioral data
 2. Changes in one might be associated with effects across all. To approach this, we use the language of graphical modeling.
 
 <img src="figures/integration.svg"/>
@@ -272,6 +292,30 @@ in an observed pilot dataset (the meditation study data, in this case).
 
 ### Simulation Comparison
 
+To compare strategies, we compute the false sign rate (FSR) and power across
+species with increasingly large estimated effect sizes, analogous to an ROC
+curve.
+
+.center[
+<img src="figures/threshold_ci.png" width=500/>
+]
+
+---
+
+### Simulation Comparison
+
+To compare strategies, we compute the false sign rate (FSR) and power across
+species with increasingly large estimated effect sizes, analogous to an ROC
+curve.
+
+.center[
+<img src="figures/threshold_ci-2.png" width=500/>
+]
+
+---
+
+### Simulation Comparison
+
 The purely synthetic simulation setup leads to overoptimistic power and FSR
 estimates, compared to the semisynthetic setup.
 
@@ -348,6 +392,14 @@ We use the results from this simulation to provide FSR guarantees for estimated 
 
 ---
 
+### Comparison across (a subset of ) Models
+
+.center[
+<img src="figures/realdata_conclusion_direct.png" width=850/>
+]
+
+---
+
 ### Interactive Visualization
 
 <iframe src="https://data-viz.it.wisc.edu/content/b9ce3966-fbba-47c1-8494-69417aadb005/" width=1000 height=500></iframe>
@@ -397,26 +449,10 @@ PrintBibliography(bib, start = 8, end = 11)
 
 ---
 
-### Simulation Comparison
-
-To compare strategies, we compute the false sign rate (FSR) and power across
-species with increasingly large estimated effect sizes, analogous to an ROC
-curve.
+### LNM Goodness-of-Fit
 
 .center[
-<img src="figures/threshold_ci.png" width=500/>
-]
-
----
-
-### Simulation Comparison
-
-To compare strategies, we compute the false sign rate (FSR) and power across
-species with increasingly large estimated effect sizes, analogous to an ROC
-curve.
-
-.center[
-<img src="figures/threshold_ci-2.png" width=500/>
+<img src="figures/lnm_bar.png" width=700/>
 ]
 
 ---
@@ -441,26 +477,10 @@ This is the same plot, but restricting to nonnegative counts.
 
 ---
 
-### LNM Goodness-of-Fit
-
-.center[
-<img src="figures/lnm_bar.png" width=700/>
-]
-
----
-
-### Comparison across Models
-
-.center[
-<img src="figures/realdata_conclusion_direct.png" width=850/>
-]
-
----
-
-
-
 ### Comparison across Models
 
 .center[
 <img src="figures/realdata_conclusion_direct-2.png" width=850/>
 ]
+
+
