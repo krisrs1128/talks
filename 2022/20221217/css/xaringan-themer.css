@@ -20,6 +20,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Open+Sans&family=Rubik+Gemstones&display=swap');
 
 body {
   font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
@@ -177,73 +178,27 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-size: 90px;
   font-family: 'Indie Flower';
 }
-}
 
 .remark-slide-content.full-slide-fig{
   padding: 0px 0px 0px 0px;
   width: 100%;
 }
 
-.my_title h1 h2 {
-  font-family: 'Raleway';
-}
-
-.my_title {
-  position: relative;
-  z-index: 1;
-}
-
-.my_title p {
-  margin: 0;
-}
-
-.my_title .pull-left {
-  float: left;
-  width: 60%;
-}
-
-.my_title .pull-right {
-  float: right;
-  width: 27%;
-}
-
-.my_title::before {    
-      content: "";
-      background-image: url("https://uwmadison.box.com/shared/static/ebncvy25z4q6livvmzy9b10a1th5zt33.png");
-      background-size: cover;
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
-      opacity: 0.1;
-      z-index: -1;
-}
-
-.background-rivers {
-  position: relative;
-  z-index: 1;
-}
-
-.background-rivers h1 {
-  background-color: #F7F7F7;
-  width: 30%;
-}
-
-.alto_background::before {
-  content: "";
-  background-image: url("https://github.com/krisrs1128/talks/raw/master/2022/20221021/figures/alto_background.png");
-  background-size: cover;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  opacity: 1;
-  z-index: -1;
-}
-
-
 .section_header {
   vertical-align: top;
+}
+
+.title h1 {
+  color: #595959;
+  font-family: 'Montserrat';
+}
+
+.title h4 {
+  color: #595959;
+  font-family: 'Montserrat';
+}
+
+.title .large {
+  color: #595959;
+  font-family: 'Montserrat';
 }
