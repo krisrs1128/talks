@@ -194,7 +194,7 @@ M &= \alpha_0 + \alpha_T T + \alpha_X^T X + \varepsilon^m\\
 \end{align*}
 
 ```{r, fig.align = "center", out.width = 700}
-include_graphics("figures/design-dimensions.png")
+include_graphics("figures/lnm_med_model_causal.pdf")
 ```
 
 ---
@@ -223,8 +223,8 @@ gives it an unfair advantage.
 1. We resolve these difficulties by defining a semisynthetic simulator, following `r Citep(bib, "ling2021powerful")`.
 2. This approach estimates a CDF for each species using,
 \begin{align*}
- \logit{\Parg{Y > 0 \vert X}} = \gamma^{T}X \\
- Q_{Y}\left(\tau \vert X, Y > 0\right) = \xi\left(\tau\right)^{T}X
+ \logit{\Parg{Y > 0 \vert X}} = \gamma_{0} + \gamma^{T}X \\
+ Q_{Y}\left(\tau \vert X, Y > 0\right) =\xi_{0}\left(\tau\right) + \xi\left(\tau\right)^{T}X
 \end{align*}
     where $Q_{Y}\left(\tau \vert X, Y > 0\right)$ is the conditional $\tau^{th}$ quantile of a nonzero count.
 
@@ -371,13 +371,11 @@ var_names <- colnames(sample_data(mindfulness))
 mediator_ix <- grepl("mediator", var_names)
 id_vars <- c("subject", "timepoint")
 data_list <- phyloseq_mediators(mindfulness, var_names[mediator_ix], id_vars)
-fit <- lnm_mediation(model_conf(), data_list)
 ```
 
 ---
 
 ```{r, echo = TRUE, fig.height = 6, fig.width = 12}
-data_list <- phyloseq_mediators(mindfulness, var_names[mediator_ix], id_vars)
 fit <- lnm_mediation(model_conf(), data_list)
 plot_interval(fit, "direct")
 ```
