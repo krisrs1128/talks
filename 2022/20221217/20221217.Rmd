@@ -35,7 +35,7 @@ library(RefManageR)
 library(knitr)
 library(tidyverse)
 library(glue)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 opts_knit$set(eval.after = "fig.cap")
 
 BibOptions(cite.style = "numeric")
@@ -49,11 +49,14 @@ bib <- ReadBib("references.bib")
 <br/>
 <br/>
 <br/>
-<br/>
 ]
 
 #### CMStatistics 2022
-.large[Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 17 December 2022
+
+.large[
+Joint work with Xinran Miao and Hanying Jiang <br/>
+Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 17 December 2022
+<br/>
 ]
 
 ---
@@ -109,8 +112,8 @@ include_graphics("figures/mediation-dag.svg")
 $\beta_{T}$.
 * A more general approach considers the counterfactual difference in potential outcomes `r Citep(bib, c("imai2010general", "sohn2019compositional"))`,
 \begin{align}
-\bar{\tau} &= \Earg{Y\left(X, 1, M\left(X, T\right)\right) - Y\left(X,0, M\left(X, T\right)\right)},\\
-\bar{\delta} &= \Earg{Y\left(X, T, M\left(X, 1\right)\right) - Y\left(X,T, M\left(X, 0\right)\right)},
+\bar{\tau} &= \Earg{Y\left(X, 1, M\left(X, t'\right)\right) - Y\left(X,0, M\left(X, t'\right)\right)},\\
+\bar{\delta} &= \Earg{Y\left(X, t', M\left(X, 1\right)\right) - Y\left(X, t', M\left(X, 0\right)\right)},
 \end{align}
   where the expectation is over draws $X$, $\varepsilon^{M}$, and
   $\varepsilon^{Y}$ from the population.
@@ -151,7 +154,7 @@ include_graphics("figures/counterfactual-mediation4.svg")
 ### Modeling Components
 
 1. We used the Stan probabilistic programming language to implement a variety of
-modeling components:  
+microbiome-specific mediation model components:
 
   * Logistic normal multinomial
   * Zero-inflation via mixtures
@@ -194,7 +197,7 @@ M &= \alpha_0 + \alpha_T T + \alpha_X^T X + \varepsilon^m\\
 \end{align*}
 
 ```{r, fig.align = "center", out.width = 700}
-include_graphics("figures/lnm_med_model_causal.pdf")
+include_graphics("figures/lnm_med_model_causal.png")
 ```
 
 ---
@@ -351,12 +354,6 @@ We use the results from this simulation to provide FSR guarantees for estimated 
 
 ---
 
-### Interactive Visualization
-
-<iframe src="https://data-viz.it.wisc.edu/content/b9ce3966-fbba-47c1-8494-69417aadb005/" width=1000 height=500></iframe>
-
----
-
 ### R Package
 
 We have written an R package that to support these modeling and evaluation
@@ -375,12 +372,19 @@ data_list <- phyloseq_mediators(mindfulness, var_names[mediator_ix], id_vars)
 
 ---
 
-```{r, echo = TRUE, fig.height = 6, fig.width = 12}
+```{r, echo = TRUE, fig.height = 6, fig.width = 12, out.width = 850}
 fit <- lnm_mediation(model_conf(), data_list)
 plot_interval(fit, "direct")
 ```
 
 ---
+
+### Interactive Visualization
+
+<iframe src="https://data-viz.it.wisc.edu/content/b9ce3966-fbba-47c1-8494-69417aadb005/" width=1000 height=500></iframe>
+
+---
+
 
 ### References
 
@@ -473,3 +477,9 @@ This is the same plot, but restricting to nonnegative counts.
 .center[
 <img src="figures/realdata_conclusion_direct-2.png" width=850/>
 ]
+
+---
+
+### Interactive Visualization (Mediators)
+
+<iframe src="https://data-viz.it.wisc.edu/content/8914ab6c-973f-4268-b38f-cce19f6674ff/" width=1000 height=500></iframe>
