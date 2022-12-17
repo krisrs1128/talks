@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Generative Models for Microbiome Mediation Analysis</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.18/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+background-image: url("figures/interactive-screenshot.png")
+background-size: cover
+
+`\(\def\Gsn{\mathcal{N}}\)`
+`\(\def\Mult{\text{Mult}}\)`
+`\(\def\diag{\text{diag}}\)`
+`\(\def\*#1{\mathbf{#1}}\)`
+`\(\def\Scal{\mathcal{S}}\)`
+`\(\def\exp#1{\text{exp}\left(#1\right)}\)`
+`\(\def\logit#1{\text{logit}\left(#1\right)}\)`
+`\(\def\absarg#1{\left|#1\right|}\)`
+`\(\def\E{\mathbb{E}} % Expectation symbol\)`
+`\(\def\Earg#1{\E\left[{#1}\right]}\)`
+`\(\def\P{\mathbb{P}} % Expectation symbol\)`
+`\(\def\Parg#1{\P\left[{#1}\right]}\)`
+
+
+
+.center[
+&lt;br/&gt;
+# Generative Models for Microbiome &lt;br/&gt; Mediation Analysis
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+]
+
+#### CMStatistics 2022
+
+.large[
+Joint work with Xinran Miao and Hanying Jiang &lt;br/&gt;
+Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 17 December 2022
+&lt;br/&gt;
+]
+
+---
+
+### Microbiome and Meditation
+
+1. A microbiome is a microbe-scale ecosystem. It can be described by taxonomic
+composition, genomic function, and biochemical environment.
+ 
+1. There are known relationships with anxiety and depression [1; 2] which seem to work through the Gut-Brain Axis [3; 4; 5].
+
+1. Meditation is known to induce a variety of physiological changes, so it is
+natural to ask whether there is a relationship with the microbiome.
+
+.center[
+&lt;img src="figures/microbe-mind.svg" width=420/&gt;
+]
+
+---
+
+### Psychometric &amp; Genomic Integration
+
+1. The Center for Healthy Minds designed a longitudinal study to evaluate the
+relationship. The treatment group received meditation training.
+1. The study generated psychometric and microbiome data, and
+ongoing collection is gathering additional immunological and behavioral data
+2. Changes in one might be associated with effects across all. To approach this, we use the language of graphical modeling.
+
+&lt;img src="figures/integration.svg"/&gt;
+
+---
+
+### Mediation Analysis
+
+Mediation models are a type of graphical model where a treatment `\(T\)` can
+influence a response `\(Y\)` either directly or indirectly through a mediator
+variable `\(M\)`. This is formalized through a series of chained regression models,
+
+`\begin{align*}
+M &amp;= \alpha_{0} + \alpha_{T}T + \alpha_{X}^{T}X + \varepsilon^{M} \text{ (mediation model)}\\
+Y &amp;= \beta_{0} + \beta_{T}T + \beta_{X}^{T}X + \beta_{M}^{T}M + \varepsilon^{Y} \text{ (outcome model) }.
+\end{align*}`
+
+&lt;img src="figures/mediation-dag.svg" width="300" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Counterfactual Perspective
+
+* Typically the direct and indirect effects are read off `\(\alpha_{T}\)` and
+`\(\beta_{T}\)`.
+* A more general approach considers the counterfactual difference in potential outcomes [6; 7],
+`\begin{align}
+\tau\left(t'\right) &amp;= \Earg{Y\left(X, 1, M\left(X, t'\right)\right) - Y\left(X,0, M\left(X, t'\right)\right)},\\
+\delta\left(t'\right) &amp;= \Earg{Y\left(X, t', M\left(X, 1\right)\right) - Y\left(X, t', M\left(X, 0\right)\right)},
+\end{align}`
+  where the expectation is over draws `\(X\)`, `\(\varepsilon^{M}\)`, and
+  `\(\varepsilon^{Y}\)` from the population.
+* `\(\tau\)` and `\(\delta\)` are viewed as intervening on the treatment and mediator,
+respectively
+
+---
+### Counterfactual Perspective
+
+For example, if there is no mediation effect, `\(M\)` is unaffected by the
+treatment. Nonetheless, there can still be a large direct effect.
+
+&lt;img src="figures/counterfactual-mediation2.svg" width="540" style="display: block; margin: auto;" /&gt;
+
+---
+### Counterfactual Perspective
+
+Alternatively, the treatment can influence the response entirely by changing the
+typical value of the mediator.
+
+&lt;img src="figures/counterfactual-mediation3.svg" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+### Counterfactual Perspective
+
+Both types of effects can exist simultaneously.
+
+&lt;img src="figures/counterfactual-mediation4.svg" width="700" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Modeling Components
+
+1. We used the Stan probabilistic programming language to implement a variety of
+microbiome-specific mediation model components:
+
+  * Logistic normal multinomial
+  * Zero-inflation via mixtures
+  * Change from baseline
+  * Latent factors
+
+1. These can be easily recombined (e.g., LNM-Mixture-Factor) because the code is
+dynamically generated.
+
+---
+
+### Logistic Normal Multinomial
+
+All our models are variants of the Logistic Normal Multinomial (LNM),
+
+.pull-left[
+`\begin{align*}
+Y &amp;\sim \Mult\left(\text{Depth}, \varphi^{-1}\left(X^{T}\beta\right)\right) \\
+\beta &amp;\sim \Gsn\left(0, \diag\left(\sigma_{k}^{2}\right)\right)
+\end{align*}`
+where `\(\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)\)` and Depth denotes sequencing depth.
+]
+
+.pull-right[
+&lt;img src="figures/lnm.svg" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Logistic Normal Multinomial Mediation
+
+We incorporate the mediator path in an LNM model.
+
+`\begin{align*}
+Y &amp;\sim \Mult\left(\text{Depth}, \varphi^{-1}\left(\mu\right)\right) \\
+\mu &amp;= \beta_0 + \beta_T T + \beta_X^T X + \beta_M^T M + \varepsilon^{\eta} \\ 
+M &amp;= \alpha_0 + \alpha_T T + \alpha_X^T X + \varepsilon^m\\
+\end{align*}`
+
+&lt;img src="figures/lnm_med_model_causal.png" width="700" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Model Comparison
+
+Rather than describing individual models, I would like to focus on model
+comparison, because standard approaches are not satisfactory,
+
+.pull-left[
+Prediction performance: Good prediction of future composition doesn’t
+guarantee accurate inference of mediation effects.
+&lt;img src="figures/prediction_forecasting.png"/&gt;
+]
+
+.pull-right[
+Traditional Simulation: Simulating from one of the assumed model structures
+gives it an unfair advantage.
+&lt;img src="figures/basic_simulation.png"/&gt;
+]
+
+---
+
+### Zero-Inflated Quantiles (ZINQ)
+
+1. We resolve these difficulties by defining a semisynthetic simulator, following [8].
+2. This approach estimates a CDF for each species using,
+`\begin{align*}
+ \logit{\Parg{Y &gt; 0 \vert X}} = \gamma_{0} + \gamma^{T}X \\
+ Q_{Y}\left(\tau \vert X, Y &gt; 0\right) =\xi_{0}\left(\tau\right) + \xi\left(\tau\right)^{T}X
+\end{align*}`
+    where `\(Q_{Y}\left(\tau \vert X, Y &gt; 0\right)\)` is the conditional `\(\tau^{th}\)` quantile of a nonzero count.
+
+.center[
+&lt;img src="figures/zinq.png" width=400/&gt;
+]
+
+---
+
+### Simplified Setting
+
+* Before getting to the meditation study, let's see how simulation strategies
+compare on a simple setup.
+* Consider the problem of evaluating an LNM model. We will compare estimation
+quality when we simulate from,
+ - The LNM itself
+ - A simulator based on a pilot dataset
+
+---
+
+### Synthetic Setup
+
+In the first simulation, we simulate from a version of the LNM,
+
+`\begin{align*}
+Y &amp;\sim \Mult\left(N_{i}, \varphi^{-1}\left(\xi_{0} + \xi_{T}T\right)\right) \\
+\xi_{T} &amp;:= \text{HardThreshold}\left(\tilde{\xi}_{T}, \text{keep 25%}\right) \\
+\xi_{0}, \tilde{\xi}_{T} &amp;\sim \Gsn\left(0, I_{K}\right) \\
+\end{align*}`
+
+.center[
+&lt;img src="figures/lnm-spherical.png" width=500/&gt;
+]
+
+---
+
+### Semisynthetic Setup
+
+In the second, we use the exact same `\(\xi_{T}\)`, but now to exponentially tilt
+samples from treatment,
+
+`\begin{align*}
+Y \sim \Mult\left(N_{i}, \exp{\xi_{T}T}\odot \hat{p}^{\ast}\right)
+\end{align*}`
+Here, `\(\hat{p}^{\ast}\)` is drawn randomly with replacement from compositions
+in an observed pilot dataset (the meditation study data, in this case).
+
+---
+
+### Simulation Comparison
+
+The purely synthetic simulation setup leads to overoptimistic power and FSR
+estimates, compared to the semisynthetic setup.
+
+.center[
+&lt;img src="figures/semisynthetic_comparison.png" width=950/&gt;
+]
+
+---
+
+### Graphical ZINQ
+
+1. We can adapt this to the graphical model setting by estimating nonparametric relationships across edges.
+2. We can estimate ground truth direct and indirect effects by simulating from known `\(\gamma\)` and `\(\xi\left(\tau\right)\)`.
+
+.center[
+&lt;img src="figures/mediation-assumptions2.svg" width=570/&gt;
+]
+
+---
+
+### Graphical ZINQ
+
+1. We can adapt this to the graphical model setting by estimating nonparametric relationships across edges.
+2. We can estimate ground truth direct and indirect effects by simulating from known `\(\gamma\)` and `\(\xi\left(\tau\right)\)`.
+
+.center[
+&lt;img src="figures/mediation-assumptions.svg" width=570/&gt;
+]
+
+---
+
+### Semisynthetic Simulation Recipe
+  
+1. **Estimate `\(\hat{\gamma}, \hat{\xi}\left(\tau\right)\)` from real data**.  This defines `\(\hat{F}_{y \vert x, t, m}\)` from which to simulate community profiles.
+2. **Define true positives and negatives**. We rank species according to their
+estimated effects and set simulation `\(\xi\left(\tau\right), \gamma\)` for all
+but the top 25% to 0.
+3. **Simulate data from alternative configurations**. We vary the sample size and rescale coefficients `\(\hat{\xi}\left(\tau\right)\)` while constraining relative abundances for negative taxa
+4. Estimate models across settings and **compute error rates**.
+
+---
+
+### FSR and Power against Direct Effects
+
+* For FSR `\(\leq\)` 25%, we find that the LNM-mediation model has the highest power
+* Across all models, we are better powered to detect direct rather than indirect effects
+
+.center[
+&lt;img src="figures/direct_direct.png" width=900/&gt;
+]
+
+---
+
+### FSR and Power against Indirect Effects
+
+* For FSR `\(\leq\)` 25%, we find that the LNM variants have the highest power
+* Across all models, we are better powered to detect direct rather than indirect
+effects
+
+.center[
+&lt;img src="figures/indirect_indirect.png" width=900/&gt;
+]
+
+---
+
+### Estimated Direct Effects
+
+We use the results from this simulation to provide FSR guarantees for estimated effects on the real data.
+
+.center[
+&lt;img src="figures/lnm_effect_decision_fsr.png" width = 750/&gt;
+]
+
+---
+
+### R Package
+
+We have written an R package that to support these modeling and evaluation
+techniques.
+
+
+```r
+library(LNMmediation)
+library(phyloseq)
+data(mindfulness)
+
+var_names &lt;- colnames(sample_data(mindfulness))
+mediator_ix &lt;- grepl("mediator", var_names)
+id_vars &lt;- c("subject", "timepoint")
+data_list &lt;- phyloseq_mediators(mindfulness, var_names[mediator_ix], id_vars)
+```
+
+---
+
+
+```r
+fit &lt;- lnm_mediation(model_conf(), data_list)
+```
+
+```
+## Finished in  87.2 seconds.
+```
+
+```r
+plot_interval(fit, "direct")
+```
+
+&lt;img src="20221217_files/figure-html/unnamed-chunk-9-1.png" width="850" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Interactive Visualization
+
+&lt;iframe src="https://data-viz.it.wisc.edu/content/b9ce3966-fbba-47c1-8494-69417aadb005/" width=1000 height=500&gt;&lt;/iframe&gt;
+
+---
+
+
+### References
+
+[1] G. Winter, R. A. Hart, R. P. Charlesworth, et al. "Gut microbiome
+and depression: what we know and what we need to know". In: _Reviews in
+the Neurosciences_ 29.6 (2018), pp. 629-643.
+
+[2] S. Dash, G. Clarke, M. Berk, et al. "The gut microbiome and diet in
+psychiatry: focus on depression". In: _Current opinion in psychiatry_
+28.1 (2015), pp. 1-6.
+
+[3] J. A. Foster and K. M. Neufeld. "Gut-brain axis: how the microbiome
+influences anxiety and depression". In: _Trends in neurosciences_ 36.5
+(2013), pp. 305-312.
+
+---
+
+### References
+
+[4] M. Carabotti, A. Scirocco, M. A. Maselli, et al. "The gut-brain
+axis: interactions between enteric microbiota, central and enteric
+nervous systems". In: _Annals of gastroenterology: quarterly
+publication of the Hellenic Society of Gastroenterology_ 28.2 (2015),
+p. 203.
+
+[5] E. A. Mayer, K. Tillisch, A. Gupta, et al. "Gut/brain axis and the
+microbiota". In: _The Journal of clinical investigation_ 125.3 (2015),
+pp. 926-938.
+
+[6] K. Imai, L. Keele, and D. Tingley. "A general approach to causal
+mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+
+[7] M. B. Sohn and H. Li. "Compositional mediation analysis for
+microbiome studies". In: _The Annals of Applied Statistics_ 13.1
+(2019), pp. 661-681.
+
+---
+
+### References
+
+[8] W. Ling, N. Zhao, A. M. Plantinga, et al. "Powerful and robust
+non-parametric association testing for microbiome data via a
+zero-inflated quantile approach (ZINQ)". In: _Microbiome_ 9.1 (2021),
+pp. 1-19.
+
+---
+
+### Simulation Comparison
+
+To compare strategies, we compute the false sign rate (FSR) and power across
+species with increasingly large estimated effect sizes, analogous to an ROC
+curve.
+
+.center[
+&lt;img src="figures/threshold_ci.png" width=500/&gt;
+]
+
+---
+
+### Simulation Comparison
+
+To compare strategies, we compute the false sign rate (FSR) and power across
+species with increasingly large estimated effect sizes, analogous to an ROC
+curve.
+
+.center[
+&lt;img src="figures/threshold_ci-2.png" width=500/&gt;
+]
+
+---
+
+### ZINQ Simulation Fidelity
+
+This model generates fairly realistic data.
+
+.center[
+&lt;img src="figures/comparison.png" width=700/&gt;
+]
+
+---
+
+### ZINQ Simulation Fidelity
+
+This is the same plot, but restricting to nonnegative counts.
+
+.center[
+&lt;img src="figures/comparison_no_zeros.png" width=700/&gt;
+]
+
+---
+
+### LNM Goodness-of-Fit
+
+.center[
+&lt;img src="figures/lnm_bar.png" width=700/&gt;
+]
+
+---
+
+### Comparison across Models
+
+.center[
+&lt;img src="figures/realdata_conclusion_direct.png" width=850/&gt;
+]
+
+---
+
+
+
+### Comparison across Models
+
+.center[
+&lt;img src="figures/realdata_conclusion_direct-2.png" width=850/&gt;
+]
+
+---
+
+### Interactive Visualization (Mediators)
+
+&lt;iframe src="https://data-viz.it.wisc.edu/content/8914ab6c-973f-4268-b38f-cce19f6674ff/" width=1000 height=500&gt;&lt;/iframe&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
