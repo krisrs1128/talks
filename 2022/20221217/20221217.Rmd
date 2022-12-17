@@ -37,6 +37,7 @@ library(tidyverse)
 library(glue)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 opts_knit$set(eval.after = "fig.cap")
+set.seed(123)
 
 BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
@@ -112,8 +113,8 @@ include_graphics("figures/mediation-dag.svg")
 $\beta_{T}$.
 * A more general approach considers the counterfactual difference in potential outcomes `r Citep(bib, c("imai2010general", "sohn2019compositional"))`,
 \begin{align}
-\bar{\tau} &= \Earg{Y\left(X, 1, M\left(X, t'\right)\right) - Y\left(X,0, M\left(X, t'\right)\right)},\\
-\bar{\delta} &= \Earg{Y\left(X, t', M\left(X, 1\right)\right) - Y\left(X, t', M\left(X, 0\right)\right)},
+\tau\left(t'\right) &= \Earg{Y\left(X, 1, M\left(X, t'\right)\right) - Y\left(X,0, M\left(X, t'\right)\right)},\\
+\delta\left(t'\right) &= \Earg{Y\left(X, t', M\left(X, 1\right)\right) - Y\left(X, t', M\left(X, 0\right)\right)},
 \end{align}
   where the expectation is over draws $X$, $\varepsilon^{M}$, and
   $\varepsilon^{Y}$ from the population.
