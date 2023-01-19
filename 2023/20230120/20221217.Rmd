@@ -35,7 +35,7 @@ library(RefManageR)
 library(knitr)
 library(tidyverse)
 library(glue)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = FALSE)
 opts_knit$set(eval.after = "fig.cap")
 set.seed(123)
 
@@ -69,31 +69,54 @@ Joint work with Xinran Miao and Hanying Jiang <br/>
 3. Review the more general literature on causal inference model evaluation.
 
 ---
+class: middle
 
+.center[
 # Part 1: Meditation Study Update
+]
 
 ---
 
 ### Mindfulness Interventions
 
-1. There is growing evidence for a relationship between the microbiome and psychiatric conditions, both in mouse models and in observational human studies.
-2. Mindfulness interventions (e.g., meditation training) are known to alleviate symptoms associated with depression and anxiety.
-3. During one of its mindfulness training programs, the Center for Healthy Minds gathered pre-post 16S data for both program participants and a waitlisted control.
+1. There is growing evidence for a relationship between the microbiome and
+psychiatric conditions, both in mouse models and in observational human studies.
+2. Mindfulness interventions (e.g., meditation training) are known to alleviate
+symptoms associated with depression and anxiety.
+3. During one of its mindfulness training programs, the Center for Healthy Minds
+gathered pre-post 16S data for both program participants and a waitlisted
+control.
 
 ---
 
 ### Mediation Analysis
 
-1. We were concerned that the mindfulness intervention might be affect behavioral factors that in turn influences microbiota composition.
-2. To address this, we developed a suite of mediation analysis approaches, all based on [Imai and Sohn].
+1. We were concerned that the mindfulness intervention might be affect
+behavioral factors that in turn influences microbiota composition.
+2. To address this, we developed a suite of mediation analysis approaches,
+following work that generalizes mediation analysis to nonlinear settings.
 
 ---
 
 ### R Package
 
-We have an R package that supports this analysis. It’s possible to specify a variety of different model configurations, and new Stan code is prepared for each combination.
+We now have an R package that supports this analysis. It’s possible to specify a
+variety of different model configurations, and new Stan code is prepared for
+each combination.
 
-(show an example of fitting)
+```{r}
+library(LNMmediation)
+library(phyloseq)
+data(mindfulness)
+
+var_names <- colnames(sample_data(mindfulness))
+mediator_ix <- grepl("mediator", var_names)
+
+id_vars <- c("subject", "timepoint")
+data_list <- phyloseq_mediators(mindfulness, var_names[mediator_ix], id_vars)
+fit <- lnm_mediation(model_conf(pretreatment = TRUE), data_list)
+fit
+```
 
 ---
 
@@ -101,33 +124,57 @@ We have an R package that supports this analysis. It’s possible to specify a v
 
 We can easily summarize and visualize the results, both statically and interactively.
 
-(show static view)
+.pull-left[
+```{r}
+summary(fit)
+```
+]
+
+.pull-right[
+```{r, fig.height = 6, fig.width = 5, out.width = 320}
+plot_interval(fit, "direct")
+```
+]
 
 ---
 
 ### R package
 
+.pull-left[
 We can easily summarize and visualize the results, both statically and interactively.
+]
 
-(show interactive view)
+.pull-right[
+```{r}
+plot_interactive(fit)
+```
+]
 
 ---
+class: middle
 
+.center[
 # Part 2: Comparing Models for the Meditation Study
+]
 
 ---
 
 ### Challenge
 
-1. By far, our team spent more time attempting to choose between possible models than we did with either processing the data or implementing the LNM models in the first place.
-2. Prediction performance: Good prediction of future composition doesn’t guarantee accurate inference of mediation effects.
-3. Simulations: Developing simulation benchmarks is also challenging. If we knew a good mechanism, we would just use that model.
+1. By far, our team spent more time attempting to choose between possible models
+than we did with either processing the data or implementing the LNM models in
+the first place.
+2. Prediction performance: Good prediction of future composition doesn’t
+guarantee accurate inference of mediation effects.
+3. Simulations: Developing simulation benchmarks is also challenging. If we knew
+a good mechanism, we would just use that model.
 
 ---
 
 ### Benchmark Optimism
 
-1. To illustrate the second issue, consider a simulation study for evaluating a simple (non-mediation) LNM.
+1. To illustrate the second issue, consider a simulation study for evaluating a
+simple (non-mediation) LNM.
 2. We will compare estimation quality when we simulate from,
  - The LNM itself
  - A simulator based on a pilot dataset
@@ -158,7 +205,9 @@ Y \sim \Mult\left(N_{i}, \exp{\xi_{T}T}\odot \hat{p}^{\ast}\right)
 \end{align*}
 Here, $\hat{p}^{\ast}$ is drawn randomly with replacement from compositions
 in an observed pilot dataset (the meditation study data, in this case).
+
 ---
+
 ### Simulation Comparison
 
 The purely synthetic simulation setup leads to overoptimistic power and FSR
@@ -178,7 +227,8 @@ estimates, compared to the semisynthetic setup.
  \logit{\Parg{Y > 0 \vert X}} = \gamma_{0} + \gamma^{T}X \\
  Q_{Y}\left(\tau \vert X, Y > 0\right) =\xi_{0}\left(\tau\right) + \xi\left(\tau\right)^{T}X
 \end{align*}
-    where $Q_{Y}\left(\tau \vert X, Y > 0\right)$ is the conditional $\tau^{th}$ quantile of a nonzero count.
+    where $Q_{Y}\left(\tau \vert X, Y > 0\right)$ is the conditional $\tau^{th}$
+    quantile of a nonzero count.
 .center[
 <img src="figures/zinq.png" width=400/>
 ]
@@ -187,9 +237,14 @@ estimates, compared to the semisynthetic setup.
 
 ### Semisynthetic Simulation Recipe
   
-1. **Estimate $\hat{\gamma}, \hat{\xi}\left(\tau\right)$ from real data**.  This defines $\hat{F}_{y \vert x, t, m}$ from which to simulate community profiles.
-2. **Define true positives and negatives**. We rank species according to their estimated effects and set simulation $\xi\left(\tau\right), \gamma$ for all but the top 25% to 0.
-3. **Simulate data from alternative configurations**. We vary the sample size and rescale coefficients $\hat{\xi}\left(\tau\right)$ while constraining relative abundances for null taxa to have no counterfactual difference.
+1. **Estimate $\hat{\gamma}, \hat{\xi}\left(\tau\right)$ from real data**.  This
+defines $\hat{F}_{y \vert x, t, m}$ from which to simulate community profiles.
+2. **Define true positives and negatives**. We rank species according to their
+estimated effects and set simulation $\xi\left(\tau\right), \gamma$ for all but
+the top 25% to 0.
+3. **Simulate data from alternative configurations**. We vary the sample size
+and rescale coefficients $\hat{\xi}\left(\tau\right)$ while constraining
+relative abundances for null taxa to have no counterfactual difference.
 4. Estimate models across settings and **compute error rates**.
 
 ---
@@ -212,15 +267,41 @@ This is the same plot, but restricting to nonnegative counts.
 
 ---
 
-### 
+### Manipulating True Effects
 
-This is an example of how we can manipulate the counterfactual direct effects for a subset of taxa. We can do the same with indirect effects.
+Here is a toy example of how we can manipulate the counterfactual direct effects
+for a subset of taxa. For the three nonnull taxa, we scale the coefficients
+along the direct path by factors from 0 to 5.
+
+<img src="figures/zinq_scaling_demo.png" width=750/>
 
 ---
 
-Give some conclusion from our ZINQ study.
+### Manipulating True Effects
+
+Here is a toy example of how we can manipulate the counterfactual direct effects
+for a subset of taxa. For the three nonnull taxa, we scale the coefficients
+along the direct path by factors from 0 to 5.
+
+```{r, eval = FALSE}
+simulator <- dataset_generator(x, m, trt, y)
+params <- expand.grid(
+  sparsity = 0.5,
+  scale = seq(0.1, 4, length.out = 4)
+)
+
+metrics <- power_analysis(simulator, params)
+```
 
 ---
+
+### Power Analysis
+
+Here is a power analysis based on the real meditation study dataset.
+
+.center[
+<img src="figures/power_curve.png" width=750/>
+]
 
 ---
 
@@ -230,22 +311,29 @@ Give some conclusion from our ZINQ study.
 
 ### Motivation
 
-1. In future studies, we are likely to encounter similar difficulties in comparing causal inference methods.
-2. There is fortunately a growing literature on this topic, and we’ll review a few of the most interesting proposals.
+1. In future studies, we are likely to encounter similar difficulties in
+comparing causal inference methods.
+2. There is fortunately a growing literature on this topic. We’ll review a few
+of the most interesting proposals.
 
-Parikh et al.
-Schuler et al.
-Schuler et al. (2)
-Tran et al.
-Athey et al.
+.small[
+* **Validating Causal Inference Methods** [Parikh, Varjao, Xu, Tchetgen Tchetgen]
+* **Synth-Validation: Selecting the Best Causal Inference Method for a Given Dataset** [Schuler, Jung, Tibshirani, Hastie, Shah]
+* **A comparison of methods for model selection when estimating individual treatment effects** [Schuler, Baiocchi, Tibshirani, Shah]
+* Using wasserstein generative adversarial networks for the design of monte carlo simulations [Athey, Imbens, Metzger, Munro]
+* Model Criticism for Bayesian Causal Inference [Tran, Ruiz, Athey, Blei]
+]
 
 ---
 
 ### Model Complexity
 
-1. The basic difficulty that these papers address is that there is a bias-variance trade-off in causal inference methods as well. 
-2. The richest model won’t always give us the best counterfactual estimates (as we discovered firsthand).
-3. Unfortunately, we can’t rely on cross-validation to guide us towards the optimal trade-off.
+1. The basic difficulty that these papers address is that there is a
+bias-variance trade-off in causal inference methods as well.
+2. The richest model won’t always give us the best counterfactual estimates (as
+we experienced firsthand).
+3. Unlike in standard prediction problems, we can’t rely on cross-validation to
+guide us towards the optimal trade-off.
 
 ---
 
@@ -266,8 +354,8 @@ resembling the real data.
 3. Compare candidate models through their ability to capture the known treatment
 effects.
 
-We’ll look at how this is done in two methods, “Credence” and
-“Synth-Validation.”
+We’ll look at how this is done in two methods, Synth-Validation `r Citep(bib, "schuler_synth-validation_2017")` and Credence `r Citep(bib, "parikh_validating_2022")`. 
+
 
 ---
 
@@ -282,7 +370,7 @@ polynomials.
 
 ### Step 1: Treatment Effect Definition (Synth-Validation)
 
-Synth-Validation focuses solely on the average treatment effect. However,
+Synth-Validation focuses solely on the average treatment effect (ATE). However,
 they identify the range of plausible effects using an ensemble of models.
 
 ---
@@ -326,8 +414,10 @@ are applied to models trained on the observational counterpart.
 
 ### Validation Set Approaches
 
-1. So far, I have only considered simulation-based approaches. But there is an interesting alternative that has a very different flavor.
-2. The main idea is to compare the model’s predicted treatment effect with some nonparametric estimate on a validation set.
+1. So far, I have only considered simulation-based approaches. But there is an
+interesting alternative that has a very different flavor.
+2. The main idea is to compare the model’s predicted treatment effect with some
+nonparametric estimate on a validation set.
 
 ---
 
@@ -342,5 +432,5 @@ are applied to models trained on the observational counterpart.
 are finding some interesting questions around how to more efficiently compare
 between candidate models.
 2. Generative models are a valuable tool for microbiome analysis (especially for
-counterfactual / hypothetical reasoning), but without reliable approaches for
-model comparison, it will be hard to make progress.
+counterfactual / hypothetical reasoning), but methods for better model
+comparison are still needed

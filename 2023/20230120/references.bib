@@ -1,2 +1,74 @@
 
-tmp
+@article{bosch_gut_2022,
+        title = {The gut microbiota and depressive symptoms across ethnic groups},
+        volume = {13},
+        issn = {2041-1723},
+        url = {https://www.nature.com/articles/s41467-022-34504-1},
+        doi = {10.1038/s41467-022-34504-1},
+        language = {en},
+        number = {1},
+        urldate = {2022-12-11},
+        journal = {Nature Communications},
+        author = {Bosch, Jos A. and Nieuwdorp, Max and Zwinderman, Aeilko H. and Deschasaux, Mélanie and Radjabzadeh, Djawad and Kraaij, Robert and Davids, Mark and de Rooij, Susanne R. and Lok, Anja},
+        month = dec,
+        year = {2022},
+        pages = {7129},
+}
+
+@article{schuler_synth-validation_2017,
+	title = {Synth-{Validation}: {Selecting} the {Best} {Causal} {Inference} {Method} for a {Given} {Dataset}},
+	copyright = {arXiv.org perpetual, non-exclusive license},
+	shorttitle = {Synth-{Validation}},
+	url = {https://arxiv.org/abs/1711.00083},
+	doi = {10.48550/ARXIV.1711.00083},
+	abstract = {Many decisions in healthcare, business, and other policy domains are made without the support of rigorous evidence due to the cost and complexity of performing randomized experiments. Using observational data to answer causal questions is risky: subjects who receive different treatments also differ in other ways that affect outcomes. Many causal inference methods have been developed to mitigate these biases. However, there is no way to know which method might produce the best estimate of a treatment effect in a given study. In analogy to cross-validation, which estimates the prediction error of predictive models applied to a given dataset, we propose synth-validation, a procedure that estimates the estimation error of causal inference methods applied to a given dataset. In synth-validation, we use the observed data to estimate generative distributions with known treatment effects. We apply each causal inference method to datasets sampled from these distributions and compare the effect estimates with the known effects to estimate error. Using simulations, we show that using synth-validation to select a causal inference method for each study lowers the expected estimation error relative to consistently using any single method.},
+	urldate = {2022-12-26},
+	author = {Schuler, Alejandro and Jung, Ken and Tibshirani, Robert and Hastie, Trevor and Shah, Nigam},
+	year = {2017},
+	note = {Publisher: arXiv
+Version Number: 1},
+	keywords = {FOS: Computer and information sciences, Machine Learning (stat.ML)},
+}
+
+@inproceedings{parikh_validating_2022,
+	title = {Validating {Causal} {Inference} {Methods}},
+	url = {https://proceedings.mlr.press/v162/parikh22a.html},
+	abstract = {The fundamental challenge of drawing causal inference is that counterfactual outcomes are not fully observed for any unit. Furthermore, in observational studies, treatment assignment is likely to be confounded. Many statistical methods have emerged for causal inference under unconfoundedness conditions given pre-treatment covariates, including propensity score-based methods, prognostic score-based methods, and doubly robust methods. Unfortunately for applied researchers, there is no ‘one-size-fits-all’ causal method that can perform optimally universally. In practice, causal methods are primarily evaluated quantitatively on handcrafted simulated data. Such data-generative procedures can be of limited value because they are typically stylized models of reality. They are simplified for tractability and lack the complexities of real-world data. For applied researchers, it is critical to understand how well a method performs for the data at hand. Our work introduces a deep generative model-based framework, Credence, to validate causal inference methods. The framework’s novelty stems from its ability to generate synthetic data anchored at the empirical distribution for the observed sample, and therefore virtually indistinguishable from the latter. The approach allows the user to specify ground truth for the form and magnitude of causal effects and confounding bias as functions of covariates. Thus simulated data sets are used to evaluate the potential performance of various causal estimation methods when applied to data similar to the observed sample. We demonstrate Credence’s ability to accurately assess the relative performance of causal estimation techniques in an extensive simulation study and two real-world data applications from Lalonde and Project STAR studies.},
+	language = {en},
+	urldate = {2022-12-26},
+	booktitle = {Proceedings of the 39th {International} {Conference} on {Machine} {Learning}},
+	publisher = {PMLR},
+	author = {Parikh, Harsh and Varjao, Carlos and Xu, Louise and Tchetgen, Eric Tchetgen},
+	month = jun,
+	year = {2022},
+	note = {ISSN: 2640-3498},
+	pages = {17346--17358},
+}
+
+@article{tran_model_2016,
+	title = {Model {Criticism} for {Bayesian} {Causal} {Inference}},
+	copyright = {arXiv.org perpetual, non-exclusive license},
+	url = {https://arxiv.org/abs/1610.09037},
+	doi = {10.48550/ARXIV.1610.09037},
+	abstract = {The goal of causal inference is to understand the outcome of alternative courses of action. However, all causal inference requires assumptions. Such assumptions can be more influential than in typical tasks for probabilistic modeling, and testing those assumptions is important to assess the validity of causal inference. We develop model criticism for Bayesian causal inference, building on the idea of posterior predictive checks to assess model fit. Our approach involves decomposing the problem, separately criticizing the model of treatment assignments and the model of outcomes. Conditioned on the assumption of unconfoundedness---that the treatments are assigned independently of the potential outcomes---we show how to check any additional modeling assumption. Our approach provides a foundation for diagnosing model-based causal inferences.},
+	urldate = {2022-12-26},
+	author = {Tran, Dustin and Ruiz, Francisco J. R. and Athey, Susan and Blei, David M.},
+	year = {2016},
+	note = {Publisher: arXiv
+Version Number: 1},
+	keywords = {FOS: Computer and information sciences, Methodology (stat.ME)},
+}
+
+@article{schuler_comparison_2018,
+	title = {A comparison of methods for model selection when estimating individual treatment effects},
+	copyright = {arXiv.org perpetual, non-exclusive license},
+	url = {https://arxiv.org/abs/1804.05146},
+	doi = {10.48550/ARXIV.1804.05146},
+	abstract = {Practitioners in medicine, business, political science, and other fields are increasingly aware that decisions should be personalized to each patient, customer, or voter. A given treatment (e.g. a drug or advertisement) should be administered only to those who will respond most positively, and certainly not to those who will be harmed by it. Individual-level treatment effects can be estimated with tools adapted from machine learning, but different models can yield contradictory estimates. Unlike risk prediction models, however, treatment effect models cannot be easily evaluated against each other using a held-out test set because the true treatment effect itself is never directly observed. Besides outcome prediction accuracy, several metrics that can leverage held-out data to evaluate treatment effects models have been proposed, but they are not widely used. We provide a didactic framework that elucidates the relationships between the different approaches and compare them all using a variety of simulations of both randomized and observational data. Our results show that researchers estimating heterogenous treatment effects need not limit themselves to a single model-fitting algorithm. Instead of relying on a single method, multiple models fit by a diverse set of algorithms should be evaluated against each other using an objective function learned from the validation set. The model minimizing that objective should be used for estimating the individual treatment effect for future individuals.},
+	urldate = {2023-01-17},
+	author = {Schuler, Alejandro and Baiocchi, Michael and Tibshirani, Robert and Shah, Nigam},
+	year = {2018},
+	note = {Publisher: arXiv
+Version Number: 2},
+	keywords = {FOS: Computer and information sciences, Machine Learning (stat.ML), Machine Learning (cs.LG)},
+}
