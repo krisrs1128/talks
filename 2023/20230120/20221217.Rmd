@@ -66,7 +66,7 @@ Joint work with Xinran Miao and Hanying Jiang <br/>
 
 1. Describe progress on the meditation collaboration.
 2. Explore the model selection problem we faced in this project, together with our proposed approach.
-3. Review the more general literature on causal inference model evaluation.
+3. Review the more general literature on evaluation of causal inference models.
 
 ---
 class: middle
@@ -295,17 +295,18 @@ metrics <- power_analysis(simulator, params)
 
 ---
 
-### Power Analysis
-
-Here is a power analysis based on the real meditation study dataset.
+### Power Analysis on Meditation Data
 
 .center[
-<img src="figures/power_curve.png" width=750/>
+<img src="figures/power_curve.png" width=550/>
 ]
 
 ---
+class: middle
 
+.center[
 # Part 3: The Landscape of Causal Model Evaluation
+]
 
 ---
 
@@ -319,8 +320,8 @@ of the most interesting proposals.
 .small[
 * **Validating Causal Inference Methods** [Parikh, Varjao, Xu, Tchetgen Tchetgen]
 * **Synth-Validation: Selecting the Best Causal Inference Method for a Given Dataset** [Schuler, Jung, Tibshirani, Hastie, Shah]
-* **A comparison of methods for model selection when estimating individual treatment effects** [Schuler, Baiocchi, Tibshirani, Shah]
-* Using wasserstein generative adversarial networks for the design of monte carlo simulations [Athey, Imbens, Metzger, Munro]
+* **A comparison of Methods for Model Selection when Estimating Individual Treatment Effects** [Schuler, Baiocchi, Tibshirani, Shah]
+* Using Wasserstein Generative Adversarial Networks for the Design of Monte Carlo Simulations [Athey, Imbens, Metzger, Munro]
 * Model Criticism for Bayesian Causal Inference [Tran, Ruiz, Athey, Blei]
 ]
 
@@ -335,19 +336,26 @@ we experienced firsthand).
 3. Unlike in standard prediction problems, we can’t rely on cross-validation to
 guide us towards the optimal trade-off.
 
+.center[
+<img src="figures/complexity_tradeoff_ite.png" width=600/>
+]
+
 ---
 
 ### Cross Validation as a Simulator
 
 1. From one perspective, cross validation is a kind of synthetic data generator that comes with ground truth.
 2. Critically, it is *dataset specific.* We don’t need to handcraft the simulation mechanism, and it automatically returns datasets that are well-suited to model comparison on our particular problem.
-3. The ideal is to have a similar type of dataset-adaptive mechanism for causal method evaluation.
+
+.center[
+<img src="figures/cross-validation.png" width=800/>
+]
 
 ---
 
-### Recurring Theme
+### Recipe
 
-Several of the proposals have the following recipe,
+Several of the proposals are based on generative models,
 1. Specify (or learn) some plausible treatment effect functions.
 2. Define a generator that respects these treatment effects while also
 resembling the real data.
@@ -366,27 +374,71 @@ a hyperparameter. It must be specified by the user.
 2. They recommend at least trying (a) no treatment effect and (b) simple
 polynomials.
 
+.center[
+Candidate treatment effect functions $\tau\left(x\right)$.
+<img src="figures/candidate_f.png"/>
+]
+
 ---
 
 ### Step 1: Treatment Effect Definition (Synth-Validation)
 
-Synth-Validation focuses solely on the average treatment effect (ATE). However,
-they identify the range of plausible effects using an ensemble of models.
+1. Synth-Validation focuses solely on the average treatment effect
+$\Earg{\tau\left(x\right)}$ (ATE).
+2. Rather than requiring the user specify this, they identify the range of
+plausible effects using an ensemble of models.
+
+.center[
+<img src="figures/synth-validation-tau.png" width=700/>
+]
 
 ---
 
 ### Step 2: Generating Data (Credence)
 
 Credence assumes the following graphical model for the covariates $x_{i}$,
-treatment assignments $t_{i}$, and counterfactual outcomes $y^{(0)_{i}$ and
-$y^{(1)}_{i}$.
+treatment assignments $t_{i}$, and counterfactual outcomes $y_{i}^{0}$
+and $y_{i}^{0}$. It simultaneously learns to simulate  $x_i$, $t_{i} \vert x_{i}$, and $y_{i} \vert x_{i}, t_{i}$.
+
+.center[
+<img src="figures/credence_dag.svg" width=400/>
+]
 
 ---
 
 ### Step 2: Generating Data (Credence)
 
-This model is fit using a series of auto-encoders, but regularized towards the
-user-specified treatment effect function.
+1. The model is fit using two Variational Auto-Encoders. You can think of them
+as a black box conditional density simulators.
+1. The first models $x$ given the treatment.
+
+.center[
+<img src="figures/credence-vae1.png" width=525/>
+]
+
+---
+
+### Step 2: Generating Data (Credence)
+
+1. The model is fit using two Variational Auto-Encoders. You can think of them
+as a black box conditional density simulators.
+1. The second models $y^{t}$ given the $x$, but *regularized so that $y^{1}\left(x_i\right) - y^{0}\left(x_i\right) \approx \tau\left(x_i\right)$*.
+
+.center[
+<img src="figures/credence-vae2.png" width=475/>
+]
+
+---
+
+### Step 2: Generating Data (Credence)
+
+1. The model is fit using two Variational Auto-Encoders. You can think of them
+as a black box conditional density simulators.
+1. The second models $y^{t}$ given the $x$, but *regularized so that $y^{1}\left(x_i\right) - y^{0}\left(x_i\right) \approx \tau\left(x_i\right)$*.
+
+.center[
+<img src="figures/credence-vae3.png" width=475/>
+]
 
 ---
 
@@ -395,7 +447,40 @@ user-specified treatment effect function.
 1. In contrast, synth-validation simply samples covariates and treatment
 assignments from the observed data.
 2. The counterfactual outcomes are fit using separate regressions, but these are
-then offset so that the ATE exactly agrees with the value found in Step 1.
+then offset so that the ATE equals with the value found in Step 1.
+  - Alternatively, they use Constrained Gradient Boosting
+
+.center[
+<img src="figures/synthval-1.png" width=420/>
+]
+
+---
+
+### Step 2: Generating Data (Synth-Validation)
+
+1. In contrast, synth-validation simply samples covariates and treatment
+assignments from the observed data.
+2. The counterfactual outcomes are fit using separate regressions, but these are
+then offset so that the ATE equals with the value found in Step 1.
+  - Alternatively, they use Constrained Gradient Boosting
+
+.center[
+<img src="figures/synthval-2.png" width=420/>
+]
+
+---
+
+### Step 2: Generating Data (Synth-Validation)
+
+1. In contrast, synth-validation simply samples covariates and treatment
+assignments from the observed data.
+2. The counterfactual outcomes are fit using separate regressions, but these are
+then offset so that the ATE equals with the value found in Step 1.
+  - Alternatively, they use Constrained Gradient Boosting
+
+.center[
+<img src="figures/synthval-3.png" width=420/>
+]
 
 ---
 
