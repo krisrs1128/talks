@@ -14,7 +14,7 @@ output:
 ---
 
 class: title
-background-image: url("")
+background-image: url("cover.png")
 background-size: cover
 
 $\def\Gsn{\mathcal{N}}$
@@ -35,9 +35,9 @@ library(RefManageR)
 library(knitr)
 library(tidyverse)
 library(glue)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = FALSE)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
-set.seed(123)
+set.seed(20230120)
 
 BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
@@ -72,7 +72,7 @@ Joint work with Xinran Miao and Hanying Jiang <br/>
 class: middle
 
 .center[
-# Part 1: Meditation Study Update
+# Meditation Study Update
 ]
 
 ---
@@ -114,38 +114,35 @@ mediator_ix <- grepl("mediator", var_names)
 
 id_vars <- c("subject", "timepoint")
 data_list <- phyloseq_mediators(mindfulness, var_names[mediator_ix], id_vars)
-fit <- lnm_mediation(model_conf(pretreatment = TRUE), data_list)
-fit
+fit <- lnm_mediation(model_conf(baseline = TRUE), data_list)
 ```
 
 ---
 
-### R package
+### R Package
 
-We can easily summarize and visualize the results, both statically and interactively.
-
+We can summarize and visualize the results, both statically and interactively. 
 .pull-left[
 ```{r}
 summary(fit)
 ```
 ]
-
 .pull-right[
-```{r, fig.height = 6, fig.width = 5, out.width = 320}
+```{r, fig.height = 6, fig.width = 5, out.width = 290}
 plot_interval(fit, "direct")
 ```
 ]
 
 ---
 
-### R package
+### R Package
 
 .pull-left[
-We can easily summarize and visualize the results, both statically and interactively.
+We can summarize and visualize the results, both statically and interactively.
 ]
 
 .pull-right[
-```{r}
+```{r, out.width = 320, echo = FALSE}
 plot_interactive(fit)
 ```
 ]
@@ -154,7 +151,7 @@ plot_interactive(fit)
 class: middle
 
 .center[
-# Part 2: Comparing Models for the Meditation Study
+# Model Evaluation for the Meditation Study
 ]
 
 ---
@@ -305,7 +302,7 @@ metrics <- power_analysis(simulator, params)
 class: middle
 
 .center[
-# Part 3: The Landscape of Causal Model Evaluation
+# The Landscape of Causal Model Evaluation
 ]
 
 ---
@@ -320,7 +317,7 @@ of the most interesting proposals.
 .small[
 * **Validating Causal Inference Methods** [Parikh, Varjao, Xu, Tchetgen Tchetgen]
 * **Synth-Validation: Selecting the Best Causal Inference Method for a Given Dataset** [Schuler, Jung, Tibshirani, Hastie, Shah]
-* **A comparison of Methods for Model Selection when Estimating Individual Treatment Effects** [Schuler, Baiocchi, Tibshirani, Shah]
+* A comparison of Methods for Model Selection when Estimating Individual Treatment Effects [Schuler, Baiocchi, Tibshirani, Shah]
 * Using Wasserstein Generative Adversarial Networks for the Design of Monte Carlo Simulations [Athey, Imbens, Metzger, Munro]
 * Model Criticism for Bayesian Causal Inference [Tran, Ruiz, Athey, Blei]
 ]
@@ -329,22 +326,21 @@ of the most interesting proposals.
 
 ### Model Complexity
 
-1. The basic difficulty that these papers address is that there is a
-bias-variance trade-off in causal inference methods as well.
-2. The richest model won’t always give us the best counterfactual estimates (as
-we experienced firsthand).
+1. The basic difficulty is that there is a bias-variance trade-off in
+heterogeneous treatment effect estimation. The richest model won’t always give
+us the best counterfactual estimates.
 3. Unlike in standard prediction problems, we can’t rely on cross-validation to
 guide us towards the optimal trade-off.
 
 .center[
-<img src="figures/complexity_tradeoff_ite.png" width=600/>
+<img src="figures/complexity_tradeoff_ite.png" width=625/>
 ]
 
 ---
 
 ### Cross Validation as a Simulator
 
-1. From one perspective, cross validation is a kind of synthetic data generator that comes with ground truth.
+1. From one perspective, cross validation is a synthetic data generator (for which ground truth is available).
 2. Critically, it is *dataset specific.* We don’t need to handcraft the simulation mechanism, and it automatically returns datasets that are well-suited to model comparison on our particular problem.
 
 .center[
@@ -376,7 +372,7 @@ polynomials.
 
 .center[
 Candidate treatment effect functions $\tau\left(x\right)$.
-<img src="figures/candidate_f.png"/>
+<img src="figures/candidate_f.png" width=600/>
 ]
 
 ---
@@ -398,7 +394,7 @@ plausible effects using an ensemble of models.
 
 Credence assumes the following graphical model for the covariates $x_{i}$,
 treatment assignments $t_{i}$, and counterfactual outcomes $y_{i}^{0}$
-and $y_{i}^{0}$. It simultaneously learns to simulate  $x_i$, $t_{i} \vert x_{i}$, and $y_{i} \vert x_{i}, t_{i}$.
+and $y_{i}^{1}$. It simultaneously learns to simulate  $x_i$, $t_{i} \vert x_{i}$, and $y_{i} \vert x_{i}, t_{i}$.
 
 .center[
 <img src="figures/credence_dag.svg" width=400/>
@@ -486,36 +482,21 @@ then offset so that the ATE equals with the value found in Step 1.
 
 ### Evaluating the Selection Criteria
 
-1. It is tricky to tell whether these techniques actually help in selecting the
-best causal inference model.
-2. The most common strategy is to define a comprehensive simulation. Then, you
-can compare the proposed selection method with an oracle that knows the ground
-truth.
-3. In some special cases, paired observational and experimental data are
-available. The experiments are used for ground truth, and the selection methods
-are applied to models trained on the observational counterpart.
-
----
-
-### Validation Set Approaches
-
-1. So far, I have only considered simulation-based approaches. But there is an
-interesting alternative that has a very different flavor.
-2. The main idea is to compare the model’s predicted treatment effect with some
-nonparametric estimate on a validation set.
-
----
-
-### Example: Matching Estimators
-
-
+How do we tell whether these techniques help in selecting the best causal
+inference model?
+    * Strategy 1: Define a comprehensive simulation. Then, you can compare the
+    proposed selection method with an oracle that knows the ground truth.
+    * Strategy 2: In some special cases, paired observational and experimental
+    data are available. The experiments are used for ground truth, and the
+    selection methods are applied to models trained on the observational
+    counterpart.
+  
 ---
 
 ### Conclusion
 
-1. Even as we write up our approach to the analysis of the meditation study, we
-are finding some interesting questions around how to more efficiently compare
-between candidate models.
-2. Generative models are a valuable tool for microbiome analysis (especially for
-counterfactual / hypothetical reasoning), but methods for better model
-comparison are still needed
+1. Generative models are a valuable tool for microbiome analysis (especially for
+counterfactual / hypothetical reasoning), but methods for model comparison are
+still lacking.
+1. By drawing from the literature on causal model evaluation, we may be able to
+develop strategies for efficiently comparing candidate models.
