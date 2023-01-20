@@ -14,7 +14,7 @@ output:
 ---
 
 class: title
-background-image: url("cover.png")
+background-image: url("figures/cover.png")
 background-size: cover
 
 $\def\Gsn{\mathcal{N}}$
@@ -35,7 +35,7 @@ library(RefManageR)
 library(knitr)
 library(tidyverse)
 library(glue)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
 set.seed(20230120)
 
@@ -65,8 +65,8 @@ Joint work with Xinran Miao and Hanying Jiang <br/>
 ### Outline
 
 1. Describe progress on the meditation collaboration.
-2. Explore the model selection problem we faced in this project, together with our proposed approach.
-3. Review the more general literature on evaluation of causal inference models.
+2. Explore the model selection problem we faced in this project.
+3. Review example methods for evaluation of causal inference models.
 
 ---
 class: middle
@@ -80,7 +80,7 @@ class: middle
 ### Mindfulness Interventions
 
 1. There is growing evidence for a relationship between the microbiome and
-psychiatric conditions, both in mouse models and in observational human studies.
+psychiatric conditions, both in mouse models and in observational human studies `r Citep(bib, c("morais2021gut", "bosch_gut_2022"))`.
 2. Mindfulness interventions (e.g., meditation training) are known to alleviate
 symptoms associated with depression and anxiety.
 3. During one of its mindfulness training programs, the Center for Healthy Minds
@@ -91,10 +91,14 @@ control.
 
 ### Mediation Analysis
 
-1. We were concerned that the mindfulness intervention might be affect
-behavioral factors that in turn influences microbiota composition.
-2. To address this, we developed a suite of mediation analysis approaches,
-following work that generalizes mediation analysis to nonlinear settings.
+1. We were concerned that the mindfulness intervention might be affect behavior,
+which in turn influences microbiota composition.
+2. To address this, we developed a mediation analysis approach, following work
+that generalizes mediation analysis to nonlinear settings `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
+
+.center[
+<img src="figures/mediation-dag.svg" width=450/>
+]
 
 ---
 
@@ -104,7 +108,7 @@ We now have an R package that supports this analysis. It’s possible to specify
 variety of different model configurations, and new Stan code is prepared for
 each combination.
 
-```{r}
+```{r, message = FALSE, warning = FALSE, results = "hide"}
 library(LNMmediation)
 library(phyloseq)
 data(mindfulness)
@@ -114,7 +118,7 @@ mediator_ix <- grepl("mediator", var_names)
 
 id_vars <- c("subject", "timepoint")
 data_list <- phyloseq_mediators(mindfulness, var_names[mediator_ix], id_vars)
-fit <- lnm_mediation(model_conf(baseline = TRUE), data_list)
+fit <- lnm_mediation(model_conf(pretreatment = TRUE), data_list)
 ```
 
 ---
@@ -232,20 +236,6 @@ estimates, compared to the semisynthetic setup.
 
 ---
 
-### Semisynthetic Simulation Recipe
-  
-1. **Estimate $\hat{\gamma}, \hat{\xi}\left(\tau\right)$ from real data**.  This
-defines $\hat{F}_{y \vert x, t, m}$ from which to simulate community profiles.
-2. **Define true positives and negatives**. We rank species according to their
-estimated effects and set simulation $\xi\left(\tau\right), \gamma$ for all but
-the top 25% to 0.
-3. **Simulate data from alternative configurations**. We vary the sample size
-and rescale coefficients $\hat{\xi}\left(\tau\right)$ while constraining
-relative abundances for null taxa to have no counterfactual difference.
-4. Estimate models across settings and **compute error rates**.
-
----
-
 ### ZINQ Simulation Fidelity
 
 This model generates fairly realistic data.
@@ -261,6 +251,20 @@ This is the same plot, but restricting to nonnegative counts.
 .center[
 <img src="figures/comparison_no_zeros.png" width=700/>
 ]
+
+---
+
+### Semisynthetic Simulation Recipe
+  
+1. **Estimate $\hat{\gamma}, \hat{\xi}\left(\tau\right)$ from real data**.  This
+defines $\hat{F}_{y \vert x, t, m}$ from which to simulate community profiles.
+2. **Define true positives and negatives**. We rank species according to their
+estimated effects and set simulation $\xi\left(\tau\right), \gamma$ for all but
+the top 25% to 0.
+3. **Simulate data from alternative configurations**. We vary the sample size
+and rescale coefficients $\hat{\xi}\left(\tau\right)$ while constraining
+relative abundances for null taxa to have no counterfactual difference.
+4. Estimate models across settings and **compute error rates**.
 
 ---
 
@@ -302,7 +306,7 @@ metrics <- power_analysis(simulator, params)
 class: middle
 
 .center[
-# The Landscape of Causal Model Evaluation
+# Examples of Causal Model Evaluation
 ]
 
 ---
@@ -484,19 +488,37 @@ then offset so that the ATE equals with the value found in Step 1.
 
 How do we tell whether these techniques help in selecting the best causal
 inference model?
-    * Strategy 1: Define a comprehensive simulation. Then, you can compare the
-    proposed selection method with an oracle that knows the ground truth.
-    * Strategy 2: In some special cases, paired observational and experimental
-    data are available. The experiments are used for ground truth, and the
-    selection methods are applied to models trained on the observational
-    counterpart.
-  
+  * Strategy 1: Define a comprehensive simulation. Then, you can compare the
+  proposed selection method with an oracle that knows the ground truth.
+  * Strategy 2: In some special cases, paired observational and experimental
+data are available. The experiments are used for ground truth, and the
+selection methods are applied to models trained on the observational
+counterpart.
+
 ---
 
 ### Conclusion
 
 1. Generative models are a valuable tool for microbiome analysis (especially for
-counterfactual / hypothetical reasoning), but methods for model comparison are
-still lacking.
+counterfactual / hypothetical reasoning), but model comparison is still a
+challenge.
 1. By drawing from the literature on causal model evaluation, we may be able to
 develop strategies for efficiently comparing candidate models.
+
+---
+
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 7)
+```
+
