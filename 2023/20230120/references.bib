@@ -21,12 +21,9 @@
 	shorttitle = {Synth-{Validation}},
 	url = {https://arxiv.org/abs/1711.00083},
 	doi = {10.48550/ARXIV.1711.00083},
-	abstract = {Many decisions in healthcare, business, and other policy domains are made without the support of rigorous evidence due to the cost and complexity of performing randomized experiments. Using observational data to answer causal questions is risky: subjects who receive different treatments also differ in other ways that affect outcomes. Many causal inference methods have been developed to mitigate these biases. However, there is no way to know which method might produce the best estimate of a treatment effect in a given study. In analogy to cross-validation, which estimates the prediction error of predictive models applied to a given dataset, we propose synth-validation, a procedure that estimates the estimation error of causal inference methods applied to a given dataset. In synth-validation, we use the observed data to estimate generative distributions with known treatment effects. We apply each causal inference method to datasets sampled from these distributions and compare the effect estimates with the known effects to estimate error. Using simulations, we show that using synth-validation to select a causal inference method for each study lowers the expected estimation error relative to consistently using any single method.},
-	urldate = {2022-12-26},
 	author = {Schuler, Alejandro and Jung, Ken and Tibshirani, Robert and Hastie, Trevor and Shah, Nigam},
 	year = {2017},
-	note = {Publisher: arXiv
-Version Number: 1},
+	journal = {arXiv preprint},
 	keywords = {FOS: Computer and information sciences, Machine Learning (stat.ML)},
 }
 
@@ -64,11 +61,22 @@ Version Number: 1},
 	copyright = {arXiv.org perpetual, non-exclusive license},
 	url = {https://arxiv.org/abs/1804.05146},
 	doi = {10.48550/ARXIV.1804.05146},
-	abstract = {Practitioners in medicine, business, political science, and other fields are increasingly aware that decisions should be personalized to each patient, customer, or voter. A given treatment (e.g. a drug or advertisement) should be administered only to those who will respond most positively, and certainly not to those who will be harmed by it. Individual-level treatment effects can be estimated with tools adapted from machine learning, but different models can yield contradictory estimates. Unlike risk prediction models, however, treatment effect models cannot be easily evaluated against each other using a held-out test set because the true treatment effect itself is never directly observed. Besides outcome prediction accuracy, several metrics that can leverage held-out data to evaluate treatment effects models have been proposed, but they are not widely used. We provide a didactic framework that elucidates the relationships between the different approaches and compare them all using a variety of simulations of both randomized and observational data. Our results show that researchers estimating heterogenous treatment effects need not limit themselves to a single model-fitting algorithm. Instead of relying on a single method, multiple models fit by a diverse set of algorithms should be evaluated against each other using an objective function learned from the validation set. The model minimizing that objective should be used for estimating the individual treatment effect for future individuals.},
 	urldate = {2023-01-17},
 	author = {Schuler, Alejandro and Baiocchi, Michael and Tibshirani, Robert and Shah, Nigam},
 	year = {2018},
 	note = {Publisher: arXiv
+	journal = {arXiv Preprint},
 Version Number: 2},
 	keywords = {FOS: Computer and information sciences, Machine Learning (stat.ML), Machine Learning (cs.LG)},
+}
+
+@article{ling2021powerful,
+  title={Powerful and robust non-parametric association testing for microbiome data via a zero-inflated quantile approach (ZINQ)},
+  author={Ling, Wodan and Zhao, Ni and Plantinga, Anna M and Launer, Lenore J and Fodor, Anthony A and Meyer, Katie A and Wu, Michael C},
+  journal={Microbiome},
+  volume={9},
+  number={1},
+  pages={1--19},
+  year={2021},
+  publisher={BioMed Central}
 }
