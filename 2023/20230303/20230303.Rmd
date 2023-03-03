@@ -60,6 +60,8 @@ class: bottom
 1. What aspect of life as a PhD student are you most curious about / do you find
 most unclear?
 
+1. What are some of your assumptions about the PhD?
+
 ---
 
 ### Why do we do statistics?
