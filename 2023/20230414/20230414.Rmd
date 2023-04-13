@@ -1,0 +1,405 @@
+---
+title: ""
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+<!-- background-image: url("figures/cover.png") -->
+background-size: cover
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(RefManageR)
+library(knitr)
+library(tidyverse)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
+opts_knit$set(eval.after = "fig.cap")
+set.seed(20230414)
+
+#BibOptions(cite.style = "numeric")
+#bib <- ReadBib("references.bib")
+```
+
+.center[
+<br/>
+# Transfer Function Modeling of Microbial Community Shifts
+<br/>
+<br/>
+<br/>
+<br/>
+]
+
+#### Holmes Group Meeting
+
+.large[
+Joint work with Pratheepa Jeganathan <br/>
+13 | April | 2023
+<br/>
+]
+
+---
+
+
+1. How do microbiomes change?
+1. The answer is complicated by the fact that taxa interact -- we can't just "add" beneficial microbes and "subtract" pathogenic ones.
+1. We have to consider the community as a whole. Dysbiosis arises when the microbial ecosystem falls out of balance.
+
+---
+
+### Example 1: Diet change
+
+---
+
+### Example 2: Eels
+
+---
+
+### Example 3: Birth
+
+---
+
+### Example 4: Bone Marrow Transplants
+
+---
+
+### Key Questions
+
+1. Who?
+  - Which taxa are affected by an environmental shift?
+1. When?
+  - Are the effects immediate? Lagged? Do they persist?
+1. How?
+  - Are there host factors that mediate the effect?
+
+---
+
+### Transfer Functions
+
+1. We saw an analogy in the Intervention Analysis studies of 
+
+Figure: California study
+
+---
+
+### Transfer Functions
+
+These are just a particular form of autoregressive model:
+
+\begin{align}
+	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q}
+\end{align}
+
+where $y_{t}$ is the series of interest (e.g., ozone) and $w_{t}$ encodes the intervention (e.g., new regulations).
+
+---
+
+### Transfer Functions
+
+The pattern of AR coefficients determines $y_{t}$'s response to "pulse" and "step" interventions.
+
+Figure from their paper/book
+
+Note that, unlike generalized Lotka-Volterra models, they can model lagged intervention effects.
+
+
+---
+
+### Tree-Based Implementation
+
+In our adaptation, we model each species $j$ using a separate GBM:
+
+\begin{align}
+y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{t}	
+\end{align}
+
+* To forecast $H$ steps ahead, we plug in our intermediate predictions $\hat{y}_{j(t + h)}$
+* In principle, we could apply post-estimation smoothing to share information across related taxa.
+
+---
+
+### Tree-Based Implementation 
+
+We also let consider non-time varying features $z$ associated with the host:
+
+\begin{align}
+y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilon_{t}	
+\end{align}
+
+$f_{j}$ could learn interactions between patient characteristics $z$ and intervention indicator $w_{t}$.
+
+---
+
+### Digression: Mirror Statistics
+
+1. Our autoregressive GBM gives a kind of smoothing mechanism.
+1. To answer "who, when, how," we'll want a more formal inferential procedure.
+1. We've applied mirror statistics.
+
+---
+
+### Mirror Statistics - Setup
+
+1. Imagine a high-dimensional linear regression where most of the coefficients have no effect.
+1. Consider splitting the data and comparing the estimated $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$.
+
+
+---
+
+### Mirror Statistics - Definition
+
+1. If $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$ have the same sign and large effect sizes, then we have evidence that $\beta_{j} \neq 0$.
+1. This notion of stability is encoded in the statistic,
+
+\begin{align}
+	M_{j} = \text{sign}\left(\hat{\beta}^{(1)}_{j}\hat{\beta}^{(2)}_{j}\right)\left[\left|\hat{\beta}_{j}^{(1)}\right| + \left|\beta_{j}^{(2)}\right|\right]
+\end{align}
+
+---
+
+### Mirror Statistics - Definition
+
+Show figure of $M_{j}$'s.
+
+---
+
+### Mirror Statistics - FDR Control
+
+1. We can define a selection set $\hat{S}_{t} = \{j : M_{j} > t\}$.
+1. The relative size of the right vs. left tail is used to estimate the FDR,
+
+\begin{align}
+\widehat{FDP}\left(t\right) := \frac{\left|\{j : M_{j} < -t\right\}|}{\left|\{j : M_{j} > t\}\right|}
+\end{align}
+
+1. Choose as small a $t$ as you can get away with while bounding $\widehat{FDP}\left(t\right)$.
+
+---
+
+### Mirror Statistics - Aggregation
+
+1. The proposed method becomes much more powerful after aggregating over many splits.
+1. But I will skip over this...
+
+---
+
+### Mirror Statistics for GBMs
+
+We define mirror statistics for the immediate future by comparing counterfactual $w$'s:
+
+\begin{align}
+M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{0}_{q}, z^{s}\right)\right]
+\end{align}
+
+---
+
+### Mirror Statistics for GBMs
+
+
+\begin{align}
+M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{0}_{q}, z^{s}\right)\right]
+\end{align}
+
+1. This is for the immediate future, but the same idea applies to forecasts $h$ steps ahead
+1. We can also compute it for different patterns of $w_{t}$ (not $\mathbf{1}_{q}$ vs. $\mathbf{0}_{q}$).
+
+---
+
+### Simulation Study
+
+We simulated data to compare,
+
+1. Forecasting accuracy
+1. Inferential quality
+
+across a variety of dataset and method characteristics.
+
+---
+
+### Generative Mechanism
+
+\begin{align}
+    y_{it} &\sim NB\left(\mu_{it}, \varphi_{i}\right) \\
+	\mu_{it} &= \sum_{p = 1}^{P} A_{p} \mu_{i(t - p)} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \sum_{r = 0}^{R - 1} \left(C_{r} \odot z\right) w_{t - r}
+\end{align}
+
+* $A$ is a random, low-rank matrix
+* $B_{jd}, C_{jd}$ are zero for taxa with no intervention effects. 
+* Interventions are defined by random starting points and lengths.
+
+---
+
+### Generative Mechansim
+
+Give a figure showing how the simulated data look like, with random interventions
+
+---
+
+### Data Characteristics
+
+1. Signal strength $B$. Nonzero entries drawn from $\text{Unif}\left(\left[-2b, -b\right] \cup \left[b, 2b\right]\right)$ for $b\in \{0.25, 0.5, 1\}$ 
+1. Proportion of nonnull taxa $ \in (0.1, 0.2, 0.4)$
+1. Number of taxa $ \in (50, 100, 200, 400)$
+1. Everything else is fixed, and life is too short to list them.
+
+---
+
+### Method Characteristics
+
+1. Different methods: GBM with lags $P = Q = 2$ and $P = Q = 4$. MDSINE.
+1. Normalization methods: None, DESeq2 size factors, DESeq2 size factors + $\text{asinh}$ transformation
+
+---
+
+### Forecasting Error
+
+Figure giving the results
+
+---
+
+### Forecasting Error
+
+Figure giving example trajectories for some common taxon, between two mbtransfer and MDSINE.
+
+Give some commentary.
+
+---
+
+### Inferential Error
+
+1. Nonzero rows of $B_{0}$ are true, instantaneous effects
+1. True effects propagate: Nonzero rows of $B_{1}$ and nonzero rows of $A_{1}B_{0}$ are true, lag 1 effects
+1. More generally, consider $\cup_{p' = 0}^{q'}\left\{\text{Nonzero rows of} \left[\prod_{q = p'}^{q'} A_{q}\right] B_{p'}\right\}$ tracks all truly nonzero taxa at lag $q'$
+
+---
+
+Show the power vs. FDP figure
+
+---
+
+Show the summary table of False Discovery Rate in the simulation.
+
+
+This is consistent with recent work on mis-specification of popular microbiome hypothesis testing packages.
+
+---
+
+### David's Diet Data
+
+From an early study interested in sensitivity of the gut microbiome fo environmental shifts.
+
+1. 20 subjects, divided evenly into ``Plant'' and ''Animal'' perturbations
+1. 5 days in the middle where they ate only Plant-Based or Animal-Based diets
+1. Originally has 8 - 15 unevenly spaced timepoints per person. We linearly interpolated to a daily grid.
+1. Originally had 17310 taxa. We filtered to the 567 present in at least 20\% of samples.
+
+---
+
+### Mirror Statistics
+
+(boxplot of mirror statistics)
+
+---
+
+### Counterfactual Difference
+
+Compared to the paper's original analysis, we can distinguish taxa with transient/long-term effects.
+
+(Simulated trajectories for significant taxa)
+
+
+---
+
+These are the subject-level data corresponding to a few different trajectory patterns.
+
+---
+
+### Postpartum Dataset
+
+1. How does the microbiome shift during pregnancy/after birth?
+1. Filtered to the same samples as \texttt{10-fig4-post.Rmd} in the Data Repository link (Thank you authors!!!).
+1. Again, we interpolated to a biweekly time grid :_(
+
+1. Define perturbations $w_{t} = \mathbf{1}\left\{t \in [-2, 0]\right\}$ and subject-level covariates $z = \mathbf{1}\{\text{initiated birth control}\}$
+
+---
+
+### Mirror Statistics
+
+
+
+---
+
+### Counterfactual Differences
+
+1. We wanted to reproduce the finding that Lactobacillus recovery is related to contraception initiation.
+1. Unfortunately, our model does not seem to learn this interaction term (not enough samples?)
+
+---
+
+### Progressive Disclosure
+
+These are subject-level data for a few of those taxa.
+
+---
+
+### Residual Analysis
+
+1. On which subjects are our forecasts especially accurate/poor?
+1. Had expected to distinguish subjects with poor recovery. Instead found subjects with differential stability.
+
+---
+
+### R Package
+
+```{r, eval = FALSE}
+library(mbtransfer)
+ts_from_dfs(...)
+ts
+```
+
+---
+
+### R Package
+
+```{r, eval = FALSE}
+fit <- mbtransfer(ts, P = 3, Q = 3)
+```
+
+---
+
+```{r, eval = FALSE}
+tr_fun <- function(x) {
+  mbtransfer(x, P = 3, Q = 3)
+}
+
+ws <- steps(c("birth" = TRUE), lengths = 2:4, L = 4)
+staxa <- select_taxa(ts, ws[[1]], ws[[2]], tr_fun, n_splits = 20)
+```
+
+
+---
+
+### Next Steps
+
+1. We're implementing another baseline (the R package \texttt{Fido}).
+1. We might try another dataset example from among those listed in the introduction.
+1. We're considering adding the post-estimation smoothing idea, smoothing over tree or MDS space.
+1. We tried different normalization/preprocessing methods, but none were fast enough to consider within our simulation experiment.
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+#PrintBibliography(bib, start = 4, end = 7)
+```
+
