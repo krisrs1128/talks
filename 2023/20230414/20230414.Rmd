@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "20230414"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -21,12 +21,12 @@ background-size: cover
 library(RefManageR)
 library(knitr)
 library(tidyverse)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
 set.seed(20230414)
 
-#BibOptions(cite.style = "numeric")
-#bib <- ReadBib("references.bib")
+#BibOptions()#cite.style = "numeric")
+bib <- ReadBib("references.bib")
 ```
 
 .center[
@@ -48,26 +48,53 @@ Joint work with Pratheepa Jeganathan <br/>
 
 ---
 
+### Introduction
 
 1. How do microbiomes change?
-1. The answer is complicated by the fact that taxa interact -- we can't just "add" beneficial microbes and "subtract" pathogenic ones.
-1. We have to consider the community as a whole. Dysbiosis arises when the microbial ecosystem falls out of balance.
+1. The answer is complicated by the fact that taxa interact -- real-world shifts
+don't just "add" and "subtract" microbes
+1. We have to consider the community as a whole. Dysbiosis arises when the
+microbial ecosystem falls out of balance.
 
 ---
 
 ### Example 1: Diet change
 
+`r Citep(bib, "david2014diet")`
+
+```{r, out.width = 600}
+include_graphics("figures/diet-fig1-sub.png")
+```
+
 ---
 
 ### Example 2: Eels
+
+`r Citep(bib, "yajima2023core")`
+
+```{r, out.width = 750}
+include_graphics("figures/aquaculture.png")
+```
 
 ---
 
 ### Example 3: Birth
 
+`r Citep(bib, "costello2022longitudinal")`
+
+```{r, out.width = 900}
+include_graphics("figures/postpartum.png")
+```
+
 ---
 
 ### Example 4: Bone Marrow Transplants
+
+`r Citep(bib, "liao2021compilation")`
+
+```{r, out.width = 650}
+include_graphics("figures/hospitalome.png")
+```
 
 ---
 
@@ -84,9 +111,11 @@ Joint work with Pratheepa Jeganathan <br/>
 
 ### Transfer Functions
 
-1. We saw an analogy in the Intervention Analysis studies of 
+We saw an analogy in the Intervention Analysis studies of `r Citep(bib, "box1975intervention")`.
 
-Figure: California study
+```{r, out.width = 500}
+include_graphics("figures/intervention-analysis.png")
+```
 
 ---
 
@@ -95,7 +124,7 @@ Figure: California study
 These are just a particular form of autoregressive model:
 
 \begin{align}
-	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q}
+	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}
 \end{align}
 
 where $y_{t}$ is the series of interest (e.g., ozone) and $w_{t}$ encodes the intervention (e.g., new regulations).
@@ -104,11 +133,17 @@ where $y_{t}$ is the series of interest (e.g., ozone) and $w_{t}$ encodes the in
 
 ### Transfer Functions
 
-The pattern of AR coefficients determines $y_{t}$'s response to "pulse" and "step" interventions.
-
-Figure from their paper/book
-
-Note that, unlike generalized Lotka-Volterra models, they can model lagged intervention effects.
+.pull-left[
+* The pattern of AR coefficients determines $y_{t}$'s response to "pulse" and
+"step" interventions.
+* Note that, unlike generalized Lotka-Volterra models, they can model lagged
+intervention effects.
+]
+.pull-right[
+```{r, out.width = 400}
+include_graphics("figures/pulse.png")
+```
+]
 
 
 ---
@@ -121,7 +156,7 @@ In our adaptation, we model each species $j$ using a separate GBM:
 y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{t}	
 \end{align}
 
-* To forecast $H$ steps ahead, we plug in our intermediate predictions $\hat{y}_{j(t + h)}$
+* To forecast $H$ steps ahead, we plug in intermediate predictions $\hat{y}_{j(t + h)}$
 * In principle, we could apply post-estimation smoothing to share information across related taxa.
 
 ---
@@ -134,15 +169,15 @@ We also let consider non-time varying features $z$ associated with the host:
 y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilon_{t}	
 \end{align}
 
-$f_{j}$ could learn interactions between patient characteristics $z$ and intervention indicator $w_{t}$.
+$f_{j}$ could learn interactions between patient characteristics $z$ and intervention indicators $w_{t}$.
 
 ---
 
 ### Digression: Mirror Statistics
 
 1. Our autoregressive GBM gives a kind of smoothing mechanism.
-1. To answer "who, when, how," we'll want a more formal inferential procedure.
-1. We've applied mirror statistics.
+1. To answer "who, when, and how," it helps to have a formal inferential procedure.
+  - We'll apply mirror statistics `r Citep(bib, "dai2022false")`.
 
 ---
 
@@ -151,6 +186,30 @@ $f_{j}$ could learn interactions between patient characteristics $z$ and interve
 1. Imagine a high-dimensional linear regression where most of the coefficients have no effect.
 1. Consider splitting the data and comparing the estimated $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$.
 
+```{r, out.width = 750}
+include_graphics("figures/scatter_mirror_toy.png")
+```
+
+---
+
+### Mirror Statistics - Setup
+
+1. Imagine a high-dimensional linear regression where most of the coefficients have no effect.
+1. Consider splitting the data and comparing the estimated $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$.
+
+```{r, out.width = 900}
+include_graphics("figures/scatter_mirror_toy_col.png")
+```
+
+---
+
+### Mirror Statistics - Definition
+
+1. If $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$ have the same sign and large effect sizes, then we have evidence that $\beta_{j} \neq 0$.
+
+```{r}
+include_graphics("figures/mirror_betas.png")
+```
 
 ---
 
@@ -167,7 +226,9 @@ $f_{j}$ could learn interactions between patient characteristics $z$ and interve
 
 ### Mirror Statistics - Definition
 
-Show figure of $M_{j}$'s.
+```{r}
+include_graphics("figures/mirror_histogram.png")
+```
 
 ---
 
@@ -181,6 +242,22 @@ Show figure of $M_{j}$'s.
 \end{align}
 
 1. Choose as small a $t$ as you can get away with while bounding $\widehat{FDP}\left(t\right)$.
+
+---
+
+### Mirror Statistics - FDR Control
+
+.pull-left[
+```{r}
+include_graphics("figures/mirror_histogram.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figures/fdp_hat.png")
+```
+]
 
 ---
 
@@ -269,7 +346,7 @@ Figure giving the results
 
 Figure giving example trajectories for some common taxon, between two mbtransfer and MDSINE.
 
-Give some commentary.
+7-----------
 
 ---
 
