@@ -42,7 +42,7 @@ bib <- ReadBib("references.bib")
 
 .large[
 Joint work with Pratheepa Jeganathan <br/>
-13 | April | 2023
+14 | April | 2023
 <br/>
 ]
 
@@ -207,7 +207,7 @@ include_graphics("figures/scatter_mirror_toy_col.png")
 
 1. If $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$ have the same sign and large effect sizes, then we have evidence that $\beta_{j} \neq 0$.
 
-```{r}
+```{r, out.width = 800}
 include_graphics("figures/mirror_betas.png")
 ```
 
@@ -226,7 +226,7 @@ include_graphics("figures/mirror_betas.png")
 
 ### Mirror Statistics - Definition
 
-```{r}
+```{r, out.width = 750}
 include_graphics("figures/mirror_histogram.png")
 ```
 
@@ -236,12 +236,13 @@ include_graphics("figures/mirror_histogram.png")
 
 1. We can define a selection set $\hat{S}_{t} = \{j : M_{j} > t\}$.
 1. The relative size of the right vs. left tail is used to estimate the FDR,
+1. Choose as small a $t$ as you can get away with while bounding
+$\widehat{FDP}\left(t\right)$.
 
 \begin{align}
 \widehat{FDP}\left(t\right) := \frac{\left|\{j : M_{j} < -t\right\}|}{\left|\{j : M_{j} > t\}\right|}
 \end{align}
 
-1. Choose as small a $t$ as you can get away with while bounding $\widehat{FDP}\left(t\right)$.
 
 ---
 
@@ -273,7 +274,7 @@ include_graphics("figures/fdp_hat.png")
 We define mirror statistics for the immediate future by comparing counterfactual $w$'s:
 
 \begin{align}
-M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{0}_{q}, z^{s}\right)\right]
+M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{0}_{q}, z^{s}\right)\right]
 \end{align}
 
 ---
@@ -282,7 +283,7 @@ M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,t - p:t -
 
 
 \begin{align}
-M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,t - p:t - 1}, \mathbf{0}_{q}, z^{s}\right)\right]
+M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{0}_{q}, z^{s}\right)\right]
 \end{align}
 
 1. This is for the immediate future, but the same idea applies to forecasts $h$ steps ahead
@@ -305,27 +306,30 @@ across a variety of dataset and method characteristics.
 
 \begin{align}
     y_{it} &\sim NB\left(\mu_{it}, \varphi_{i}\right) \\
-	\mu_{it} &= \sum_{p = 1}^{P} A_{p} \mu_{i(t - p)} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \sum_{r = 0}^{R - 1} \left(C_{r} \odot z\right) w_{t - r}
+	\mu_{it} &= \sum_{p = 1}^{P} A_{p} \mu_{i(t - p)} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \sum_{q = 0}^{Q - 1} \left(C_{q} \odot z\right) w_{t - q}
 \end{align}
 
-* $A$ is a random, low-rank matrix
+* $A$ is a sparsified, low-rank matrix
 * $B_{jd}, C_{jd}$ are zero for taxa with no intervention effects. 
 * Interventions are defined by random starting points and lengths.
 
 ---
 
-### Generative Mechansim
+### Generative Mechanism
 
-Give a figure showing how the simulated data look like, with random interventions
+```{r, out.width = 800}
+include_graphics("figures/simulation-hm.png")
+```
+
 
 ---
 
 ### Data Characteristics
 
 1. Signal strength $B$. Nonzero entries drawn from $\text{Unif}\left(\left[-2b, -b\right] \cup \left[b, 2b\right]\right)$ for $b\in \{0.25, 0.5, 1\}$ 
-1. Proportion of nonnull taxa $ \in (0.1, 0.2, 0.4)$
-1. Number of taxa $ \in (50, 100, 200, 400)$
-1. Everything else is fixed, and life is too short to list them.
+1. Proportion of nonnull taxa $\in (0.1, 0.2, 0.4)$
+1. Number of taxa $\in (50, 100, 200, 400)$
+1. Everything else is fixed (somehow).
 
 ---
 
@@ -338,15 +342,10 @@ Give a figure showing how the simulated data look like, with random intervention
 
 ### Forecasting Error
 
-Figure giving the results
+```{r, out.width = 800}
+include_graphics("figures/forecasting-sim-error.png")
+```
 
----
-
-### Forecasting Error
-
-Figure giving example trajectories for some common taxon, between two mbtransfer and MDSINE.
-
-7-----------
 
 ---
 
@@ -358,14 +357,23 @@ Figure giving example trajectories for some common taxon, between two mbtransfer
 
 ---
 
-Show the power vs. FDP figure
+### Inferential Error
+
+```{r}
+include_graphics("figures/inference-sim-error.png")
+```
 
 ---
 
-Show the summary table of False Discovery Rate in the simulation.
+### Inferential Error
 
+DESeq2's inflated FDPs are consistent with `r Citep(bib, c("li2022exaggerated", "hawinkel2019broken"))`.
 
-This is consistent with recent work on mis-specification of popular microbiome hypothesis testing packages.
+```{r}
+read_csv("figures/summary_table_fdp.csv") |>
+  pivot_wider(names_from = c("method", "lag"), values_from = FDP) |>
+  kable()
+```
 
 ---
 
@@ -373,16 +381,40 @@ This is consistent with recent work on mis-specification of popular microbiome h
 
 From an early study interested in sensitivity of the gut microbiome fo environmental shifts.
 
-1. 20 subjects, divided evenly into ``Plant'' and ''Animal'' perturbations
+1. 20 subjects, divided evenly into Plant and Animal perturbations
 1. 5 days in the middle where they ate only Plant-Based or Animal-Based diets
 1. Originally has 8 - 15 unevenly spaced timepoints per person. We linearly interpolated to a daily grid.
-1. Originally had 17310 taxa. We filtered to the 567 present in at least 20\% of samples.
+1. Originally had 17310 taxa. We filtered to the 191 present in at least 40% of samples.
+
+---
+
+### Forecasting Error
+
+* How well does the model approximate the 18 most abundant taxa?
+* This trains on all samples then reconstructs the trajectories starting in the
+middle of the perturbation
+
+```{r, out.width = 675}
+include_graphics("figures/diet_forecast_error_insample.png")
+```
+
+---
+
+### Forecasting Error
+
+These are out-of-sample forecasting errors. We train on only half of the participants.
+
+```{r, out.width = 675}
+include_graphics("figures/diet_forecast_error.png")
+```
 
 ---
 
 ### Mirror Statistics
 
-(boxplot of mirror statistics)
+```{r}
+include_graphics("figures/diet-mirror.png")
+```
 
 ---
 
@@ -390,28 +422,34 @@ From an early study interested in sensitivity of the gut microbiome fo environme
 
 Compared to the paper's original analysis, we can distinguish taxa with transient/long-term effects.
 
-(Simulated trajectories for significant taxa)
-
+```{r, out.width = 800}
+include_graphics("figures/counterfactual_diet_staxa.png")
+```
 
 ---
 
-These are the subject-level data corresponding to a few different trajectory patterns.
+These are the subject-level data corresponding to a few different trajectory patterns ("sustained decrease, transient increase, sustained increase").
+
+```{r, out.width = 900}
+include_graphics("figures/progressive_disclosure_diet.png")
+```
 
 ---
 
 ### Postpartum Dataset
 
 1. How does the microbiome shift during pregnancy/after birth?
-1. Filtered to the same samples as \texttt{10-fig4-post.Rmd} in the Data Repository link (Thank you authors!!!).
-1. Again, we interpolated to a biweekly time grid :_(
-
-1. Define perturbations $w_{t} = \mathbf{1}\left\{t \in [-2, 0]\right\}$ and subject-level covariates $z = \mathbf{1}\{\text{initiated birth control}\}$
+1. Filtered to the same samples as `10-fig4-post.Rmd` in the [Data Repository](https://purl.stanford.edu/pz745bc9128) (Thank you authors!!!).
+1. We interpolated to a biweekly time grid :_(
+1. Define perturbations $w_{t} = \mathbf{1}\left\{t \in [\text{day } -14, \text{day }0]\right\}$ and subject-level covariates $z = \mathbf{1}\{\text{initiated birth control}\}$
 
 ---
 
 ### Mirror Statistics
 
-
+```{r, out.width = 1000}
+include_graphics("figures/postpartum-mirror.png")
+```
 
 ---
 
@@ -420,11 +458,19 @@ These are the subject-level data corresponding to a few different trajectory pat
 1. We wanted to reproduce the finding that Lactobacillus recovery is related to contraception initiation.
 1. Unfortunately, our model does not seem to learn this interaction term (not enough samples?)
 
+```{r, out.width = 800}
+include_graphics("figures/counterfactual_postpartum_staxa.png")
+```
+
 ---
 
 ### Progressive Disclosure
 
 These are subject-level data for a few of those taxa.
+
+```{r}
+include_graphics("figures/progressive_disclosure_postpartum.png")
+```
 
 ---
 
@@ -433,41 +479,58 @@ These are subject-level data for a few of those taxa.
 1. On which subjects are our forecasts especially accurate/poor?
 1. Had expected to distinguish subjects with poor recovery. Instead found subjects with differential stability.
 
+```{r, out.width = 650}
+include_graphics("figures/residual_postpartum.png")
+```
+
 ---
 
 ### R Package
-
-```{r, eval = FALSE}
+```{r, echo = FALSE}
+library(tfPaper)
+library(tidyverse)
+load("figures/postpartum_setup.rda")
+opts_chunk$set(echo = TRUE)
+```
+```{r, warning = FALSE, message = FALSE, echo = TRUE}
 library(mbtransfer)
-ts_from_dfs(...)
-ts
+
+ts <- reads |>
+ normalize("DESeq2-asinh", metadata) |>
+ ts_from_dfs(interventions, samples, subject_data) |>
+ interpolate(delta = 14, method = "linear")
 ```
 
 ---
 
 ### R Package
 
-```{r, eval = FALSE}
+```{r, echo =TRUE}
+ts[[1]][1:3, 1:5]
+```
+
+---
+
+### R Package
+
+Code to fit the model:
+
+```{r, eval = FALSE, echo = TRUE}
 fit <- mbtransfer(ts, P = 3, Q = 3)
 ```
 
----
+Defining counterfactuals and computing mirror statistics:
 
-```{r, eval = FALSE}
-tr_fun <- function(x) {
-  mbtransfer(x, P = 3, Q = 3)
-}
-
+```{r, eval = FALSE, echo = TRUE}
 ws <- steps(c("birth" = TRUE), lengths = 2:4, L = 4)
-staxa <- select_taxa(ts, ws[[1]], ws[[2]], tr_fun, n_splits = 20)
+staxa <- select_taxa(ts, ws[[1]], ws[[2]], \(x) mbtransfer(x, 3, 3), n_splits = 20)
 ```
-
 
 ---
 
 ### Next Steps
 
-1. We're implementing another baseline (the R package \texttt{Fido}).
+1. We're implementing another baseline (the R package `Fido`).
 1. We might try another dataset example from among those listed in the introduction.
 1. We're considering adding the post-estimation smoothing idea, smoothing over tree or MDS space.
 1. We tried different normalization/preprocessing methods, but none were fast enough to consider within our simulation experiment.
@@ -477,6 +540,22 @@ staxa <- select_taxa(ts, ws[[1]], ws[[2]], tr_fun, n_splits = 20)
 ### References
 
 ```{r, results='asis', echo = FALSE}
-#PrintBibliography(bib, start = 4, end = 7)
+PrintBibliography(bib, start = 1, end = 4)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 5, end = 8)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 9, end = 15)
 ```
 
