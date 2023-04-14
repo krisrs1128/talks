@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>20230414</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.21/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+&lt;!-- background-image: url("figures/cover.png") --&gt;
+background-size: cover
+
+
+
+.center[
+&lt;br/&gt;
+# Transfer Function Modeling of Microbial Community Shifts
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+]
+
+#### Holmes Group Meeting
+
+.large[
+Joint work with Pratheepa Jeganathan &lt;br/&gt;
+14 | April | 2023
+&lt;br/&gt;
+]
+
+---
+
+### Introduction
+
+1. How do microbiomes change?
+1. The answer is complicated by the fact that taxa interact -- real-world shifts
+don't just "add" and "subtract" microbes
+1. We have to consider the community as a whole. Dysbiosis arises when the
+microbial ecosystem falls out of balance.
+
+---
+
+### Example 1: Diet change
+
+(David, Maurice, Carmody, Gootenberg, Button, Wolfe, Ling, Devlin, Varma, Fischbach, and others, 2014)
+
+&lt;img src="figures/diet-fig1-sub.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Example 2: Eels
+
+(Yajima, Fujita, Hayashi, Shima, Suzuki, and Toju, 2023)
+
+&lt;img src="figures/aquaculture.png" width="750" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Example 3: Birth
+
+(Costello, DiGiulio, Robaczewska, Symul, Wong, Shaw, Stevenson, Holmes, Kwon, and Relman, 2022)
+
+&lt;img src="figures/postpartum.png" width="900" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Example 4: Bone Marrow Transplants
+
+(Liao, Taylor, Ceccarani, Fontana, Amoretti, Wright, Gomes, Peled, Taur, Perales, and others, 2021)
+
+&lt;img src="figures/hospitalome.png" width="650" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Key Questions
+
+1. Who?
+  - Which taxa are affected by an environmental shift?
+1. When?
+  - Are the effects immediate? Lagged? Do they persist?
+1. How?
+  - Are there host factors that mediate the effect?
+
+---
+
+### Transfer Functions
+
+We saw an analogy in the Intervention Analysis studies of (Box and Tiao, 1975).
+
+&lt;img src="figures/intervention-analysis.png" width="500" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Transfer Functions
+
+These are just a particular form of autoregressive model:
+
+`\begin{align}
+	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}
+\end{align}`
+
+where `\(y_{t}\)` is the series of interest (e.g., ozone) and `\(w_{t}\)` encodes the intervention (e.g., new regulations).
+
+---
+
+### Transfer Functions
+
+.pull-left[
+* The pattern of AR coefficients determines `\(y_{t}\)`'s response to "pulse" and
+"step" interventions.
+* Note that, unlike generalized Lotka-Volterra models, they can model lagged
+intervention effects.
+]
+.pull-right[
+&lt;img src="figures/pulse.png" width="400" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+### Tree-Based Implementation
+
+In our adaptation, we model each species `\(j\)` using a separate GBM:
+
+`\begin{align}
+y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{t}	
+\end{align}`
+
+* To forecast `\(H\)` steps ahead, we plug in intermediate predictions `\(\hat{y}_{j(t + h)}\)`
+* In principle, we could apply post-estimation smoothing to share information across related taxa.
+
+---
+
+### Tree-Based Implementation 
+
+We also let consider non-time varying features `\(z\)` associated with the host:
+
+`\begin{align}
+y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilon_{t}	
+\end{align}`
+
+`\(f_{j}\)` could learn interactions between patient characteristics `\(z\)` and intervention indicators `\(w_{t}\)`.
+
+---
+
+### Digression: Mirror Statistics
+
+1. Our autoregressive GBM gives a smoothing mechanism.
+1. To answer "who, when, and how," it helps to have a formal inferential procedure.
+  - We'll apply mirror statistics (Dai, Lin, Xing, and Liu, 2022).
+
+---
+
+### Mirror Statistics - Setup
+
+1. Imagine a high-dimensional linear regression where most coefficients have no effect.
+1. Consider splitting the data and comparing the estimated `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)`.
+
+&lt;img src="figures/scatter_mirror_toy.png" width="750" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Mirror Statistics - Setup
+
+1. Imagine a high-dimensional linear regression where most of the coefficients have no effect.
+1. Consider splitting the data and comparing the estimated `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)`.
+
+&lt;img src="figures/scatter_mirror_toy_col.png" width="900" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Mirror Statistics - Definition
+
+1. If `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)` have the same sign and large effect sizes, then we have evidence that `\(\beta_{j} \neq 0\)`.
+
+&lt;img src="figures/mirror_betas.png" width="800" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Mirror Statistics - Definition
+
+1. If `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)` have the same sign and large effect sizes, then we have evidence that `\(\beta_{j} \neq 0\)`.
+1. This notion of stability is encoded in the statistic,
+
+`\begin{align}
+	M_{j} = \text{sign}\left(\hat{\beta}^{(1)}_{j}\hat{\beta}^{(2)}_{j}\right)\left[\left|\hat{\beta}_{j}^{(1)}\right| + \left|\beta_{j}^{(2)}\right|\right]
+\end{align}`
+
+---
+
+### Mirror Statistics - Definition
+
+&lt;img src="figures/mirror_histogram.png" width="750" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Mirror Statistics - FDR Control
+
+1. We can define a selection set `\(\hat{S}_{t} = \{j : M_{j} &gt; t\}\)`.
+1. The relative size of the right vs. left tail is used to estimate the FDR,
+1. Choose as small a `\(t\)` as you can get away with while bounding
+`\(\widehat{FDP}\left(t\right)\)`.
+
+`\begin{align}
+\widehat{FDP}\left(t\right) := \frac{\left|\{j : M_{j} &lt; -t\right\}|}{\left|\{j : M_{j} &gt; t\}\right|}
+\end{align}`
+
+
+---
+
+### Mirror Statistics - FDR Control
+
+.pull-left[
+&lt;img src="figures/mirror_histogram.png" width="1008" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="figures/fdp_hat.png" width="1008" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Mirror Statistics - Aggregation
+
+1. The proposed method becomes much more powerful after aggregating over many splits.
+1. But I will skip over this...
+
+---
+
+### Mirror Statistics for GBMs
+
+We define mirror statistics for the immediate future by comparing counterfactual `\(w\)`'s:
+
+`\begin{align}
+M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{0}_{q}, z^{s}\right)\right]
+\end{align}`
+
+---
+
+### Mirror Statistics for GBMs
+
+
+`\begin{align}
+M_{j} = \frac{1}{S} \sum_{\text{patches } s} \left[f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{1}_{q}, z^{s}\right) - f_{j}\left(y^{s}_{j,(t - p):(t - 1)}, \mathbf{0}_{q}, z^{s}\right)\right]
+\end{align}`
+
+1. This is for the immediate future, but the same idea applies to forecasts `\(h\)` steps ahead
+1. We can also compute it for different patterns of `\(w_{t}\)` (not `\(\mathbf{1}_{q}\)` vs. `\(\mathbf{0}_{q}\)`).
+
+---
+
+### Simulation Study
+
+We simulated data to compare,
+
+1. Forecasting accuracy
+1. Inferential quality
+
+across a variety of dataset and method characteristics.
+
+---
+
+### Generative Mechanism
+
+`\begin{align}
+    y_{it} &amp;\sim NB\left(\mu_{it}, \varphi_{i}\right) \\
+	\mu_{it} &amp;= \sum_{p = 1}^{P} A_{p} \mu_{i(t - p)} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \sum_{q = 0}^{Q - 1} \left(C_{q} \odot z\right) w_{t - q}
+\end{align}`
+
+* `\(A\)` is a sparsified, low-rank matrix
+* `\(B_{jd}, C_{jd}\)` are zero for taxa with no intervention effects. 
+  - Interaction Hierarchy: `\(C\)` can only have a nonzero row if `\(B\)` has one
+* Interventions are defined by random starting points and lengths.
+
+---
+
+### Generative Mechanism
+
+&lt;img src="figures/simulation-hm.png" width="800" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### Data Characteristics
+
+1. Signal strength for `\(B\)`. Nonzero entries drawn from
+`\(\text{Unif}\left(\left[-2b, -b\right] \cup \left[b, 2b\right]\right)\)` for `\(b\in \{0.25, 0.5, 1\}\)`
+1. Proportion of nonnull taxa `\(\in (0.1, 0.2, 0.4)\)`
+1. Number of taxa `\(\in (50, 100, 200, 400)\)`
+1. Everything else is fixed (somehow).
+
+---
+
+### Method Characteristics
+
+1. Different methods: GBM with lags `\(P = Q = 2\)` and `\(P = Q = 4\)`. MDSINE.
+1. Normalization methods: None, DESeq2 size factors, DESeq2 size factors + `\(\text{asinh}\)` transformation
+
+---
+
+### Forecasting Error
+
+* Cross-validated forecasting error across taxa
+* Averages trajectory error for steps `\(h = 1, \dots, 5\)`, beginning just before
+first intervention on holdout subjects
+
+&lt;img src="figures/forecasting-sim-error.png" width="800" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### Inferential Error
+
+1. Nonzero rows of `\(B_{0}\)` are true, instantaneous effects
+1. True effects propagate: Nonzero rows of `\(B_{1}\)` and nonzero rows of `\(A_{1}B_{0}\)` are true, lag 1 effects
+1. More generally, consider `\(\cup_{p' = 0}^{q'}\left\{\text{Nonzero rows of} \left[\prod_{q = p'}^{q'} A_{q}\right] B_{p'}\right\}\)` tracks all truly nonzero taxa at lag `\(q'\)`
+
+---
+
+### Inferential Error
+
+&lt;img src="figures/inference-sim-error.png" width="1440" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Inferential Error
+
+DESeq2's inflated FDPs are consistent with (Li, Ge, Peng, Li, and Li, 2022; Hawinkel, Mattiello, Bijnens, and Thas, 2019).
+
+
+|normalization | lag| signal_B| DESeq2_0.1| DESeq2_0.2| DESeq2_0.4| mirror_0.1| mirror_0.2| mirror_0.4|
+|:-------------|---:|--------:|----------:|----------:|----------:|----------:|----------:|----------:|
+|DESeq2-asinh  |   1|     0.25|      0.704|      0.578|      0.335|      0.037|      0.111|      0.000|
+|DESeq2-asinh  |   1|     0.50|      0.726|      0.650|      0.359|      0.157|      0.115|      0.050|
+|DESeq2-asinh  |   1|     1.00|      0.785|      0.699|      0.490|      0.281|      0.295|      0.195|
+|DESeq2-asinh  |   2|     0.25|      0.247|      0.074|      0.025|      0.000|      0.067|      0.000|
+|DESeq2-asinh  |   2|     0.50|      0.210|      0.112|      0.000|      0.047|      0.067|      0.048|
+|DESeq2-asinh  |   2|     1.00|      0.248|      0.134|      0.039|      0.203|      0.092|      0.016|
+
+---
+
+### David's Diet Data
+
+(David, Maurice, Carmody et al., 2014) was an early study interested in the sensitivity
+of the gut microbiome to environmental shifts.
+
+1. 20 subjects, divided evenly into Plant and Animal perturbations
+1. 5 days in the middle where they ate only Plant-Based or Animal-Based diets
+1. Originally has 8 - 15 unevenly spaced timepoints per person. We linearly interpolated to a daily grid.
+1. Originally had 17310 taxa. We filtered to the 191 present in at least 40% of samples.
+
+---
+
+### Forecasting Error
+
+* How well does the model approximate the 18 most abundant taxa?
+* This trains using all samples and then reconstructs the trajectories starting in the
+middle of the perturbation
+
+&lt;img src="figures/diet_forecast_error_insample.png" width="675" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Forecasting Error
+
+These are out-of-sample forecasting errors. We train using only half of the participants.
+
+&lt;img src="figures/diet_forecast_error.png" width="675" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Mirror Statistics
+
+&lt;img src="figures/diet-mirror.png" width="1440" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Counterfactual Difference
+
+Compared to the paper's original analysis, we can distinguish taxa with transient/long-term effects.
+
+&lt;img src="figures/counterfactual_diet_staxa.png" width="800" style="display: block; margin: auto;" /&gt;
+
+---
+
+These are the subject-level data reflecting a few different trajectory patterns ("sustained decrease, transient increase, sustained increase").
+
+&lt;img src="figures/progressive_disclosure_diet.png" width="900" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Postpartum Dataset
+
+1. How does the microbiome shift during pregnancy/after birth?
+1. Filtered to the same samples as `10-fig4-post.Rmd` in the [Data Repository](https://purl.stanford.edu/pz745bc9128) (Thank you authors!!!).
+1. We interpolated to a biweekly time grid :_(
+1. Define perturbations `\(w_{t} = \mathbf{1}\left\{t \in [\text{day } -14, \text{day }0]\right\}\)` and subject-level covariates `\(z = \mathbf{1}\{\text{initiated birth control}\}\)`
+
+---
+
+### Mirror Statistics
+
+&lt;img src="figures/postpartum-mirror.png" width="1000" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Counterfactual Differences
+
+1. We wanted to reproduce the finding that Lactobacillus recovery is related to contraception initiation.
+1. Unfortunately, our model does not seem to learn this interaction term (not enough samples?)
+
+&lt;img src="figures/counterfactual_postpartum_staxa.png" width="800" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Progressive Disclosure
+
+These are subject-level data for a few of those taxa.
+
+&lt;img src="figures/progressive_disclosure_postpartum.png" width="1440" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Residual Analysis
+
+1. On which subjects are our forecasts especially accurate/poor?
+1. Had expected to distinguish subjects with poor recovery. Instead, found subjects with differential stability.
+
+&lt;img src="figures/residual_postpartum.png" width="650" style="display: block; margin: auto;" /&gt;
+
+---
+
+### R Package
+
+
+```r
+library(mbtransfer)
+
+ts &lt;- reads |&gt;
+ normalize("DESeq2-asinh", metadata) |&gt;
+ ts_from_dfs(interventions, samples, subject_data) |&gt;
+ interpolate(delta = 14, method = "linear")
+```
+
+---
+
+### R Package
+
+
+```r
+ts[[1]][1:3, 1:5]
+```
+
+```
+## An object of class "ts_inter_single"
+## Slot "values":
+##               S10001_T1 S10001_T2 S10001_T3  S10001_T4 S10001_T5
+## Lactobacillus 13.315174 13.776172 13.731513 14.5729124  14.02254
+## Gardnerella    0.000000  0.000000  0.000000  0.0000000   0.00000
+## Prevotella     5.021066  5.169668  6.438992  0.6609762   0.00000
+## 
+## Slot "time":
+## [1] -209 -195 -181 -167 -153
+## 
+## Slot "interventions":
+##       S10001_T1 S10001_T2 S10001_T3 S10001_T4 S10001_T5
+## birth         0         0         0         0         0
+```
+
+---
+
+### R Package
+
+.pull-left[
+Defining counterfactuals: 
+
+
+```r
+ws &lt;- steps(
+  c("birth" = TRUE), 
+  lengths = 2:4, L = 4
+)
+ws[1:3]
+```
+
+```
+## [[1]]
+##       yhat_1 yhat_2 yhat_3 yhat_4
+## birth      0      0      0      0
+## 
+## [[2]]
+##       yhat_1 yhat_2 yhat_3 yhat_4
+## birth      1      1      0      0
+## 
+## [[3]]
+##       yhat_1 yhat_2 yhat_3 yhat_4
+## birth      1      1      1      0
+```
+]
+
+.pull-right[
+Code to fit the model:
+
+
+```r
+fit &lt;- mbtransfer(ts, P = 3, Q = 3)
+```
+
+Computing mirror statistics:
+
+
+```r
+staxa &lt;- select_taxa(
+  ts, 
+  ws[[1]], ws[[2]], 
+  \(x) mbtransfer(x, 3, 3), 
+  n_splits = 20
+)
+```
+]
+
+---
+
+### Closing
+
+1. We're implementing another baseline (the R package `Fido`).
+1. We might try another dataset example from among those listed in the introduction.
+1. We're considering the post-estimation smoothing idea (smoothing over tree or MDS space).
+1. Other thoughts/ideas?
+
+---
+
+### References
+
+[1] G. E. Box and G. C. Tiao. "Intervention analysis with applications
+to economic and environmental problems". In: _Journal of the American
+Statistical association_ 70.349 (1975), pp. 70-79.
+
+[2] E. K. Costello, D. B. DiGiulio, A. Robaczewska, et al.
+"Longitudinal dynamics of the human vaginal ecosystem across the
+reproductive cycle". In: _bioRxiv_ (2022), pp. 2022-11.
+
+[3] C. Dai, B. Lin, X. Xing, et al. "False discovery rate control via
+data splitting". In: _Journal of the American Statistical Association_
+(2022), pp. 1-18.
+
+[4] L. A. David, C. F. Maurice, R. N. Carmody, et al. "Diet rapidly and
+reproducibly alters the human gut microbiome". In: _Nature_ 505.7484
+(2014), pp. 559-563.
+
+---
+
+### References
+
+[1] S. Hawinkel, F. Mattiello, L. Bijnens, et al. "A broken promise:
+microbiome differential abundance methods do not control the false
+discovery rate". In: _Briefings in bioinformatics_ 20.1 (2019), pp.
+210-221.
+
+[2] Y. Li, X. Ge, F. Peng, et al. "Exaggerated false positives by
+popular differential expression methods when analyzing human population
+samples". In: _Genome biology_ 23.1 (2022), p. 79.
+
+[3] C. Liao, B. P. Taylor, C. Ceccarani, et al. "Compilation of
+longitudinal microbiota data and hospitalome from hematopoietic cell
+transplantation patients". In: _Scientific data_ 8.1 (2021), p. 71.
+
+[4] D. Yajima, H. Fujita, I. Hayashi, et al. "Core species and
+interactions prominent in fish-associated microbiome dynamics". In:
+_Microbiome_ 11.1 (2023), p. 53.
+
+---
+
+### References
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
