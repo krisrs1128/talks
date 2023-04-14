@@ -142,7 +142,7 @@ blockquote {
   border-bottom: 1px solid #666;
 }
 .remark-slide table thead th { border-bottom: 1px solid #ddd; }
-th, td { padding: 5px; }
+th, td { padding: 5px; font-size: 18px; }
 .remark-slide thead, .remark-slide tfoot, .remark-slide tr:nth-child(even) { background: #B5B2D8 }
 table.dataTable tbody {
   background-color: #FFFFFF;

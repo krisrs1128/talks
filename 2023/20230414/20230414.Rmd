@@ -175,7 +175,7 @@ $f_{j}$ could learn interactions between patient characteristics $z$ and interve
 
 ### Digression: Mirror Statistics
 
-1. Our autoregressive GBM gives a kind of smoothing mechanism.
+1. Our autoregressive GBM gives a smoothing mechanism.
 1. To answer "who, when, and how," it helps to have a formal inferential procedure.
   - We'll apply mirror statistics `r Citep(bib, "dai2022false")`.
 
@@ -183,7 +183,7 @@ $f_{j}$ could learn interactions between patient characteristics $z$ and interve
 
 ### Mirror Statistics - Setup
 
-1. Imagine a high-dimensional linear regression where most of the coefficients have no effect.
+1. Imagine a high-dimensional linear regression where most coefficients have no effect.
 1. Consider splitting the data and comparing the estimated $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$.
 
 ```{r, out.width = 750}
@@ -311,6 +311,7 @@ across a variety of dataset and method characteristics.
 
 * $A$ is a sparsified, low-rank matrix
 * $B_{jd}, C_{jd}$ are zero for taxa with no intervention effects. 
+  - Interaction Hierarchy: $C$ can only have a nonzero row if $B$ has one
 * Interventions are defined by random starting points and lengths.
 
 ---
@@ -326,7 +327,8 @@ include_graphics("figures/simulation-hm.png")
 
 ### Data Characteristics
 
-1. Signal strength $B$. Nonzero entries drawn from $\text{Unif}\left(\left[-2b, -b\right] \cup \left[b, 2b\right]\right)$ for $b\in \{0.25, 0.5, 1\}$ 
+1. Signal strength for $B$. Nonzero entries drawn from
+$\text{Unif}\left(\left[-2b, -b\right] \cup \left[b, 2b\right]\right)$ for $b\in \{0.25, 0.5, 1\}$
 1. Proportion of nonnull taxa $\in (0.1, 0.2, 0.4)$
 1. Number of taxa $\in (50, 100, 200, 400)$
 1. Everything else is fixed (somehow).
@@ -341,6 +343,10 @@ include_graphics("figures/simulation-hm.png")
 ---
 
 ### Forecasting Error
+
+* Cross-validated forecasting error across taxa
+* Averages trajectory error for steps $h = 1, \dots, 5$, beginning just before
+first intervention on holdout subjects
 
 ```{r, out.width = 800}
 include_graphics("figures/forecasting-sim-error.png")
@@ -371,7 +377,8 @@ DESeq2's inflated FDPs are consistent with `r Citep(bib, c("li2022exaggerated", 
 
 ```{r}
 read_csv("figures/summary_table_fdp.csv") |>
-  pivot_wider(names_from = c("method", "lag"), values_from = FDP) |>
+  filter(normalization == "DESeq2-asinh") |>
+  pivot_wider(names_from = c("method", "prop_nonnull"), values_from = FDP) |>
   kable()
 ```
 
@@ -379,7 +386,8 @@ read_csv("figures/summary_table_fdp.csv") |>
 
 ### David's Diet Data
 
-From an early study interested in sensitivity of the gut microbiome fo environmental shifts.
+`r Citep(bib, "david2014diet")` was an early study interested in the sensitivity
+of the gut microbiome to environmental shifts.
 
 1. 20 subjects, divided evenly into Plant and Animal perturbations
 1. 5 days in the middle where they ate only Plant-Based or Animal-Based diets
@@ -391,7 +399,7 @@ From an early study interested in sensitivity of the gut microbiome fo environme
 ### Forecasting Error
 
 * How well does the model approximate the 18 most abundant taxa?
-* This trains on all samples then reconstructs the trajectories starting in the
+* This trains using all samples and then reconstructs the trajectories starting in the
 middle of the perturbation
 
 ```{r, out.width = 675}
@@ -402,7 +410,7 @@ include_graphics("figures/diet_forecast_error_insample.png")
 
 ### Forecasting Error
 
-These are out-of-sample forecasting errors. We train on only half of the participants.
+These are out-of-sample forecasting errors. We train using only half of the participants.
 
 ```{r, out.width = 675}
 include_graphics("figures/diet_forecast_error.png")
@@ -428,7 +436,7 @@ include_graphics("figures/counterfactual_diet_staxa.png")
 
 ---
 
-These are the subject-level data corresponding to a few different trajectory patterns ("sustained decrease, transient increase, sustained increase").
+These are the subject-level data reflecting a few different trajectory patterns ("sustained decrease, transient increase, sustained increase").
 
 ```{r, out.width = 900}
 include_graphics("figures/progressive_disclosure_diet.png")
@@ -477,7 +485,7 @@ include_graphics("figures/progressive_disclosure_postpartum.png")
 ### Residual Analysis
 
 1. On which subjects are our forecasts especially accurate/poor?
-1. Had expected to distinguish subjects with poor recovery. Instead found subjects with differential stability.
+1. Had expected to distinguish subjects with poor recovery. Instead, found subjects with differential stability.
 
 ```{r, out.width = 650}
 include_graphics("figures/residual_postpartum.png")
@@ -513,27 +521,45 @@ ts[[1]][1:3, 1:5]
 
 ### R Package
 
+.pull-left[
+Defining counterfactuals: 
+
+```{r, echo = TRUE}
+ws <- steps(
+  c("birth" = TRUE), 
+  lengths = 2:4, L = 4
+)
+ws[1:3]
+```
+]
+
+.pull-right[
 Code to fit the model:
 
 ```{r, eval = FALSE, echo = TRUE}
 fit <- mbtransfer(ts, P = 3, Q = 3)
 ```
 
-Defining counterfactuals and computing mirror statistics:
+Computing mirror statistics:
 
 ```{r, eval = FALSE, echo = TRUE}
-ws <- steps(c("birth" = TRUE), lengths = 2:4, L = 4)
-staxa <- select_taxa(ts, ws[[1]], ws[[2]], \(x) mbtransfer(x, 3, 3), n_splits = 20)
+staxa <- select_taxa(
+  ts, 
+  ws[[1]], ws[[2]], 
+  \(x) mbtransfer(x, 3, 3), 
+  n_splits = 20
+)
 ```
+]
 
 ---
 
-### Next Steps
+### Closing
 
 1. We're implementing another baseline (the R package `Fido`).
 1. We might try another dataset example from among those listed in the introduction.
-1. We're considering adding the post-estimation smoothing idea, smoothing over tree or MDS space.
-1. We tried different normalization/preprocessing methods, but none were fast enough to consider within our simulation experiment.
+1. We're considering the post-estimation smoothing idea (smoothing over tree or MDS space).
+1. Other thoughts/ideas?
 
 ---
 
