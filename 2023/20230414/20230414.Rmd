@@ -352,6 +352,13 @@ first intervention on holdout subjects
 include_graphics("figures/forecasting-sim-error.png")
 ```
 
+---
+
+### Computation Time
+
+```{r, out.width = 800}
+include_graphics("figures/computation-sim.png")
+```
 
 ---
 
