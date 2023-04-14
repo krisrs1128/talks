@@ -111,7 +111,7 @@ include_graphics("figures/hospitalome.png")
 
 ### Transfer Functions
 
-We saw an analogy in the Intervention Analysis studies of `r Citep(bib, "box1975intervention")`.
+We wanted to further develop the intervention analysis techniques of `r Citet(bib, "box1975intervention")`.
 
 ```{r, out.width = 500}
 include_graphics("figures/intervention-analysis.png")
@@ -150,7 +150,7 @@ include_graphics("figures/pulse.png")
 
 ### Tree-Based Implementation
 
-In our adaptation, we model each species $j$ using a separate GBM:
+In our adaptation, we model each taxon $j$ using a separate GBM:
 
 \begin{align}
 y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{t}	
@@ -163,13 +163,13 @@ y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{
 
 ### Tree-Based Implementation 
 
-We also let consider non-time varying features $z$ associated with the host:
+We also consider non-time varying features $z$ associated with the host:
 
 \begin{align}
 y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilon_{t}	
 \end{align}
 
-$f_{j}$ could learn interactions between patient characteristics $z$ and intervention indicators $w_{t}$.
+$f_{j}$ could learn interactions between host characteristics $z$ and intervention indicators $w_{t}$.
 
 ---
 
@@ -185,7 +185,6 @@ $f_{j}$ could learn interactions between patient characteristics $z$ and interve
 
 1. Imagine a high-dimensional linear regression where most coefficients have no effect.
 1. Consider splitting the data and comparing the estimated $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$.
-
 ```{r, out.width = 750}
 include_graphics("figures/scatter_mirror_toy.png")
 ```
@@ -194,10 +193,9 @@ include_graphics("figures/scatter_mirror_toy.png")
 
 ### Mirror Statistics - Setup
 
-1. Imagine a high-dimensional linear regression where most of the coefficients have no effect.
+1. Imagine a high-dimensional linear regression where most coefficients have no effect.
 1. Consider splitting the data and comparing the estimated $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$.
-
-```{r, out.width = 900}
+```{r, out.width = 750}
 include_graphics("figures/scatter_mirror_toy_col.png")
 ```
 
@@ -205,7 +203,8 @@ include_graphics("figures/scatter_mirror_toy_col.png")
 
 ### Mirror Statistics - Definition
 
-1. If $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$ have the same sign and large effect sizes, then we have evidence that $\beta_{j} \neq 0$.
+If $\hat{\beta}_{j}^{(1)}$ and $\hat{\beta}_{j}^{(2)}$ have the same sign and
+large effect sizes, then we have evidence that $\beta_{j} \neq 0$.
 
 ```{r, out.width = 800}
 include_graphics("figures/mirror_betas.png")
@@ -236,12 +235,11 @@ include_graphics("figures/mirror_histogram.png")
 
 1. We can define a selection set $\hat{S}_{t} = \{j : M_{j} > t\}$.
 1. The relative size of the right vs. left tail is used to estimate the FDR,
-1. Choose as small a $t$ as you can get away with while bounding
-$\widehat{FDP}\left(t\right)$.
-
 \begin{align}
 \widehat{FDP}\left(t\right) := \frac{\left|\{j : M_{j} < -t\right\}|}{\left|\{j : M_{j} > t\}\right|}
 \end{align}
+1. Choose as small a $t$ as you can get away with while bounding
+$\widehat{FDP}\left(t\right)$.
 
 
 ---
@@ -329,15 +327,16 @@ include_graphics("figures/simulation-hm.png")
 
 1. Signal strength for $B$. Nonzero entries drawn from
 $\text{Unif}\left(\left[-2b, -b\right] \cup \left[b, 2b\right]\right)$ for $b\in \{0.25, 0.5, 1\}$
-1. Proportion of nonnull taxa $\in (0.1, 0.2, 0.4)$
-1. Number of taxa $\in (50, 100, 200, 400)$
+1. Proportion of nonnull taxa $\in \{0.1, 0.2, 0.4\}$
+1. Number of taxa $\in \{50, 100, 200, 400\}$
 1. Everything else is fixed (somehow).
 
 ---
 
 ### Method Characteristics
 
-1. Different methods: GBM with lags $P = Q = 2$ and $P = Q = 4$. MDSINE.
+1. Different methods: MDSINE2 `r Citep(bib, "gibson2021intrinsic")`, GBM with
+lags $P = Q = 2$ and $P = Q = 4$.
 1. Normalization methods: None, DESeq2 size factors, DESeq2 size factors + $\text{asinh}$ transformation
 
 ---
@@ -357,8 +356,8 @@ include_graphics("figures/forecasting-sim-error.png")
 
 ### Inferential Error
 
-1. Nonzero rows of $B_{0}$ are true, instantaneous effects
-1. True effects propagate: Nonzero rows of $B_{1}$ and nonzero rows of $A_{1}B_{0}$ are true, lag 1 effects
+1. Nonzero rows of $B_{0}$ are true instantaneous effects
+1. True effects propagate: Nonzero rows of $B_{1}$ and nonzero rows of $A_{1}B_{0}$ are true lag 1 effects
 1. More generally, consider $\cup_{p' = 0}^{q'}\left\{\text{Nonzero rows of} \left[\prod_{q = p'}^{q'} A_{q}\right] B_{p'}\right\}$ tracks all truly nonzero taxa at lag $q'$
 
 ---
@@ -390,9 +389,9 @@ read_csv("figures/summary_table_fdp.csv") |>
 of the gut microbiome to environmental shifts.
 
 1. 20 subjects, divided evenly into Plant and Animal perturbations
-1. 5 days in the middle where they ate only Plant-Based or Animal-Based diets
+1. 5 days where they ate only Plant-Based or Animal-Based diets
 1. Originally has 8 - 15 unevenly spaced timepoints per person. We linearly interpolated to a daily grid.
-1. Originally had 17310 taxa. We filtered to the 191 present in at least 40% of samples.
+1. Started with 17310 taxa, but filtered to the 191 present in at least 40% of samples.
 
 ---
 
@@ -419,6 +418,8 @@ include_graphics("figures/diet_forecast_error.png")
 ---
 
 ### Mirror Statistics
+
+(There are many other unselected taxa not shown)
 
 ```{r}
 include_graphics("figures/diet-mirror.png")
@@ -534,7 +535,7 @@ ws[1:3]
 ]
 
 .pull-right[
-Code to fit the model:
+Fitting the model:
 
 ```{r, eval = FALSE, echo = TRUE}
 fit <- mbtransfer(ts, P = 3, Q = 3)
@@ -557,8 +558,8 @@ staxa <- select_taxa(
 ### Closing
 
 1. We're implementing another baseline (the R package `Fido`).
-1. We might try another dataset example from among those listed in the introduction.
-1. We're considering the post-estimation smoothing idea (smoothing over tree or MDS space).
+1. We might try another example from the introduction.
+1. We're considering the post-estimation smoothing idea (applied over tree or MDS space).
 1. Other thoughts/ideas?
 
 ---
