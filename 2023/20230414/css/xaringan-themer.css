@@ -94,13 +94,11 @@ a, a > code {
 }
 .title-slide {
   background-color: #09017F;
-  
-  
-  
 }
 .title-slide .remark-slide-number {
   display: none;
 }
+
 /* Two-column layout */
 .left-column {
   width: 20%;

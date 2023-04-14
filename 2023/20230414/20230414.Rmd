@@ -14,7 +14,8 @@ output:
 ---
 
 class: title
-<!-- background-image: url("figures/cover.png") -->
+image-opacity: 0.1
+background-image: url("figures/cover.png")
 background-size: cover
 
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
@@ -41,7 +42,7 @@ bib <- ReadBib("references.bib")
 #### Holmes Group Meeting
 
 .large[
-Joint work with Pratheepa Jeganathan <br/>
+Joint work with [Pratheepa Jeganathan](https://pratheepaj.github.io/) <br/>
 14 | April | 2023
 <br/>
 ]
@@ -225,7 +226,7 @@ include_graphics("figures/mirror_betas.png")
 
 ### Mirror Statistics - Definition
 
-```{r, out.width = 750}
+```{r, out.width = 720}
 include_graphics("figures/mirror_histogram.png")
 ```
 
