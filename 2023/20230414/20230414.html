@@ -91,7 +91,7 @@ microbial ecosystem falls out of balance.
 
 ### Transfer Functions
 
-We saw an analogy in the Intervention Analysis studies of (Box and Tiao, 1975).
+We wanted to further develop the intervention analysis techniques of Box and Tiao (1975).
 
 &lt;img src="figures/intervention-analysis.png" width="500" style="display: block; margin: auto;" /&gt;
 
@@ -126,7 +126,7 @@ intervention effects.
 
 ### Tree-Based Implementation
 
-In our adaptation, we model each species `\(j\)` using a separate GBM:
+In our adaptation, we model each taxon `\(j\)` using a separate GBM:
 
 `\begin{align}
 y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{t}	
@@ -139,13 +139,13 @@ y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{
 
 ### Tree-Based Implementation 
 
-We also let consider non-time varying features `\(z\)` associated with the host:
+We also consider non-time varying features `\(z\)` associated with the host:
 
 `\begin{align}
 y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilon_{t}	
 \end{align}`
 
-`\(f_{j}\)` could learn interactions between patient characteristics `\(z\)` and intervention indicators `\(w_{t}\)`.
+`\(f_{j}\)` could learn interactions between host characteristics `\(z\)` and intervention indicators `\(w_{t}\)`.
 
 ---
 
@@ -161,23 +161,22 @@ y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilo
 
 1. Imagine a high-dimensional linear regression where most coefficients have no effect.
 1. Consider splitting the data and comparing the estimated `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)`.
-
 &lt;img src="figures/scatter_mirror_toy.png" width="750" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ### Mirror Statistics - Setup
 
-1. Imagine a high-dimensional linear regression where most of the coefficients have no effect.
+1. Imagine a high-dimensional linear regression where most coefficients have no effect.
 1. Consider splitting the data and comparing the estimated `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)`.
-
-&lt;img src="figures/scatter_mirror_toy_col.png" width="900" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/scatter_mirror_toy_col.png" width="750" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ### Mirror Statistics - Definition
 
-1. If `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)` have the same sign and large effect sizes, then we have evidence that `\(\beta_{j} \neq 0\)`.
+If `\(\hat{\beta}_{j}^{(1)}\)` and `\(\hat{\beta}_{j}^{(2)}\)` have the same sign and
+large effect sizes, then we have evidence that `\(\beta_{j} \neq 0\)`.
 
 &lt;img src="figures/mirror_betas.png" width="800" style="display: block; margin: auto;" /&gt;
 
@@ -204,12 +203,11 @@ y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilo
 
 1. We can define a selection set `\(\hat{S}_{t} = \{j : M_{j} &gt; t\}\)`.
 1. The relative size of the right vs. left tail is used to estimate the FDR,
-1. Choose as small a `\(t\)` as you can get away with while bounding
-`\(\widehat{FDP}\left(t\right)\)`.
-
 `\begin{align}
 \widehat{FDP}\left(t\right) := \frac{\left|\{j : M_{j} &lt; -t\right\}|}{\left|\{j : M_{j} &gt; t\}\right|}
 \end{align}`
+1. Choose as small a `\(t\)` as you can get away with while bounding
+`\(\widehat{FDP}\left(t\right)\)`.
 
 
 ---
@@ -217,11 +215,11 @@ y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilo
 ### Mirror Statistics - FDR Control
 
 .pull-left[
-&lt;img src="figures/mirror_histogram.png" width="1008" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/mirror_histogram.png" width="1152" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
-&lt;img src="figures/fdp_hat.png" width="1008" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/fdp_hat.png" width="1152" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -291,15 +289,16 @@ across a variety of dataset and method characteristics.
 
 1. Signal strength for `\(B\)`. Nonzero entries drawn from
 `\(\text{Unif}\left(\left[-2b, -b\right] \cup \left[b, 2b\right]\right)\)` for `\(b\in \{0.25, 0.5, 1\}\)`
-1. Proportion of nonnull taxa `\(\in (0.1, 0.2, 0.4)\)`
-1. Number of taxa `\(\in (50, 100, 200, 400)\)`
+1. Proportion of nonnull taxa `\(\in \{0.1, 0.2, 0.4\}\)`
+1. Number of taxa `\(\in \{50, 100, 200, 400\}\)`
 1. Everything else is fixed (somehow).
 
 ---
 
 ### Method Characteristics
 
-1. Different methods: GBM with lags `\(P = Q = 2\)` and `\(P = Q = 4\)`. MDSINE.
+1. Different methods: MDSINE2 (Gibson, Kim, Acharya, Kaplan, DiBenedetto, Lavin, Berger, Allegretti, Bry, and Gerber, 2021), GBM with
+lags `\(P = Q = 2\)` and `\(P = Q = 4\)`.
 1. Normalization methods: None, DESeq2 size factors, DESeq2 size factors + `\(\text{asinh}\)` transformation
 
 ---
@@ -317,8 +316,8 @@ first intervention on holdout subjects
 
 ### Inferential Error
 
-1. Nonzero rows of `\(B_{0}\)` are true, instantaneous effects
-1. True effects propagate: Nonzero rows of `\(B_{1}\)` and nonzero rows of `\(A_{1}B_{0}\)` are true, lag 1 effects
+1. Nonzero rows of `\(B_{0}\)` are true instantaneous effects
+1. True effects propagate: Nonzero rows of `\(B_{1}\)` and nonzero rows of `\(A_{1}B_{0}\)` are true lag 1 effects
 1. More generally, consider `\(\cup_{p' = 0}^{q'}\left\{\text{Nonzero rows of} \left[\prod_{q = p'}^{q'} A_{q}\right] B_{p'}\right\}\)` tracks all truly nonzero taxa at lag `\(q'\)`
 
 ---
@@ -351,9 +350,9 @@ DESeq2's inflated FDPs are consistent with (Li, Ge, Peng, Li, and Li, 2022; Hawi
 of the gut microbiome to environmental shifts.
 
 1. 20 subjects, divided evenly into Plant and Animal perturbations
-1. 5 days in the middle where they ate only Plant-Based or Animal-Based diets
+1. 5 days where they ate only Plant-Based or Animal-Based diets
 1. Originally has 8 - 15 unevenly spaced timepoints per person. We linearly interpolated to a daily grid.
-1. Originally had 17310 taxa. We filtered to the 191 present in at least 40% of samples.
+1. Started with 17310 taxa, but filtered to the 191 present in at least 40% of samples.
 
 ---
 
@@ -376,6 +375,8 @@ These are out-of-sample forecasting errors. We train using only half of the part
 ---
 
 ### Mirror Statistics
+
+(There are many other unselected taxa not shown)
 
 &lt;img src="figures/diet-mirror.png" width="1440" style="display: block; margin: auto;" /&gt;
 
@@ -491,21 +492,21 @@ ws[1:3]
 
 ```
 ## [[1]]
-##       yhat_1 yhat_2 yhat_3 yhat_4
-## birth      0      0      0      0
+##       t1 t2 t3 t4
+## birth  0  0  0  0
 ## 
 ## [[2]]
-##       yhat_1 yhat_2 yhat_3 yhat_4
-## birth      1      1      0      0
+##       t1 t2 t3 t4
+## birth  1  1  0  0
 ## 
 ## [[3]]
-##       yhat_1 yhat_2 yhat_3 yhat_4
-## birth      1      1      1      0
+##       t1 t2 t3 t4
+## birth  1  1  1  0
 ```
 ]
 
 .pull-right[
-Code to fit the model:
+Fitting the model:
 
 
 ```r
@@ -530,8 +531,8 @@ staxa &lt;- select_taxa(
 ### Closing
 
 1. We're implementing another baseline (the R package `Fido`).
-1. We might try another dataset example from among those listed in the introduction.
-1. We're considering the post-estimation smoothing idea (smoothing over tree or MDS space).
+1. We might try another example from the introduction.
+1. We're considering the post-estimation smoothing idea (applied over tree or MDS space).
 1. Other thoughts/ideas?
 
 ---
@@ -558,28 +559,30 @@ reproducibly alters the human gut microbiome". In: _Nature_ 505.7484
 
 ### References
 
-[1] S. Hawinkel, F. Mattiello, L. Bijnens, et al. "A broken promise:
+[1] T. E. Gibson, Y. Kim, S. Acharya, et al. "Intrinsic instability of
+the dysbiotic microbiome revealed through dynamical systems inference
+at scale". In: _bioRxiv_ (2021), pp. 2021-12.
+
+[2] S. Hawinkel, F. Mattiello, L. Bijnens, et al. "A broken promise:
 microbiome differential abundance methods do not control the false
 discovery rate". In: _Briefings in bioinformatics_ 20.1 (2019), pp.
 210-221.
 
-[2] Y. Li, X. Ge, F. Peng, et al. "Exaggerated false positives by
+[3] Y. Li, X. Ge, F. Peng, et al. "Exaggerated false positives by
 popular differential expression methods when analyzing human population
 samples". In: _Genome biology_ 23.1 (2022), p. 79.
 
-[3] C. Liao, B. P. Taylor, C. Ceccarani, et al. "Compilation of
+[4] C. Liao, B. P. Taylor, C. Ceccarani, et al. "Compilation of
 longitudinal microbiota data and hospitalome from hematopoietic cell
 transplantation patients". In: _Scientific data_ 8.1 (2021), p. 71.
-
-[4] D. Yajima, H. Fujita, I. Hayashi, et al. "Core species and
-interactions prominent in fish-associated microbiome dynamics". In:
-_Microbiome_ 11.1 (2023), p. 53.
 
 ---
 
 ### References
 
-
+[1] D. Yajima, H. Fujita, I. Hayashi, et al. "Core species and
+interactions prominent in fish-associated microbiome dynamics". In:
+_Microbiome_ 11.1 (2023), p. 53.
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
