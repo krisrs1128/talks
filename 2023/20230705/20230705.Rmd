@@ -51,9 +51,52 @@ https://github.io/krisrs1128/LSLab
 
 ### Introduction
 
+These themes have recurred across almost all the projects I have encountered in
+my research:
+
+* **Multimodality**: Data are gathered from complementary sensors or assays
+* **Ecosystem Analysis**: We would like to understand the interactions taking place in a landscape that are difficult to observe except through data.
+
 ---
 
 ### Motivating Challenges
+
+.pull-left[
+* Glacier monitoring in the Hindu Kush Himalayas
+* Designing treatments for Bacterial Vaginosis
+* Understanding the role of the gut-brain axis in mental health
+* Reducing climate change misinformation by understanding its spread
+]
+
+.pull-right[
+Problem | Ecosystem | Data |
+--|--|--
+Glacier Monitoring | Himalayas | Remote Sensing
+Bacterial Vaginosis | Host-Microbiome | Meta-Omics
+Gut Brain Axis | Host-Microbiome | Meta-Omics
+Climate Misinformation | Social Media | Web Data
+]
+
+---
+
+### Motivating Challenges
+
+.pull-left[
+* **Glacier monitoring in the Hindu Kush Himalayas**
+* **Designing treatments for Bacterial Vaginosis**
+* Understanding the role of the gut-brain axis in mental health
+* Reducing climate change misinformation by understanding its spread
+]
+
+.pull-right[
+Problem | Ecosystem | Data |
+--|--|--
+Glacier Monitoring | Himalayas | Remote Sensing
+Bacterial Vaginosis | Host-Microbiome | Meta-Omics
+Gut Brain Axis | Host-Microbiome | Meta-Omics
+Climate Misinformation | Social Media | Web Data
+]
+
 
 ---
 
@@ -65,21 +108,48 @@ https://github.io/krisrs1128/LSLab
 
 ### Glacier Monitoring
 
+* This work has grown from a collaboration with ICIMOD
+* Glaciers provide important ecosystem resources, and their disappearance has a large impact on the communities around them
+* Effective remote sensing data analysis could help generate maps over large swaths of area much faster than human annotation could
+
 ---
 
 ### Glacier Monitoring
 
+Semantic segmentation models can be trained to distinguish different types of
+glaciers [Ref1] and estimate glacial lake areas [Ref2].
+
+(Glacier Image)
+(Lake Image)
+ 
+[Colab Notebook]()
+
 ---
 
 ### Multimodal Data
 
----
+* When working with data from different satellite sensors, there is a trade-off between spatial and spectral resolution.
+* A second wrinkle is that sources are ever-changing. If we would like to map change over long periods, it is necessary to integrate across them.
+* Though we haven't explored this, it would be possible to integrate ground-level ecosystem data, like species counts from wildlife monitoring apps
 
-### Multimodal Data
+(Figure of )
 
 ---
 
 ### An Experiment
+
+* How robust is multimodal segmentation to modality missingness?
+* Can we train models in contexts where all sources are available and then directly apply them to settings where some are not?
+
+(Figure of Transformers)
+
+This project was led by Yuliang Peng.
+
+---
+
+### Study Design
+
+We studied Segformer models [Ref3] with early, middle, and late fusion.
 
 ---
 
@@ -88,6 +158,9 @@ https://github.io/krisrs1128/LSLab
 ---
 
 ### Opportunities
+
+The dream would be to build models that automatically get better as new sources
+are released. 
 
 ---
 
