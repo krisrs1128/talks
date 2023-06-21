@@ -1,0 +1,150 @@
+---
+title: "20230705"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+image-opacity: 0.1
+background-image: url("figures/cover.png")
+background-size: cover
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(RefManageR)
+library(knitr)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
+opts_knit$set(eval.after = "fig.cap")
+
+#BibOptions()#cite.style = "numeric")
+bib <- ReadBib("references.bib")
+```
+
+.center[
+<br/>
+# Ecosystem Modeling using Multimodal Data
+<br/>
+<br/>
+<br/>
+<br/>
+]
+
+#### Microsoft AI for Social Good Lab
+
+.large[
+Kris Sankaran <br/>
+05 | July | 2023 <br/>
+https://github.io/krisrs1128/LSLab
+<br/>
+]
+
+---
+
+### Introduction
+
+---
+
+### Motivating Challenges
+
+---
+
+.center[
+## Multimodality in Earth Observation
+]
+
+---
+
+### Glacier Monitoring
+
+---
+
+### Glacier Monitoring
+
+---
+
+### Multimodal Data
+
+---
+
+### Multimodal Data
+
+---
+
+### An Experiment
+
+---
+
+### Results
+
+---
+
+### Opportunities
+
+---
+
+.center[
+## Multimodality in Microbiome Studies
+]
+
+---
+
+### Bacterial Vaginosis
+
+---
+
+### Bacterial Vaginosis
+
+---
+
+### Multimodal Data
+
+---
+
+### Multimodal Data
+
+---
+
+### Integrated Learning
+
+---
+
+### Analysis: Topic Alignment
+
+---
+
+### Analysis: Intervention Analysis
+
+---
+
+### Reusability and Open Science
+
+---
+
+.center[
+## Closing Thoughts
+]
+
+---
+
+### Mount Chiborazo
+
+---
+
+### Interdependence
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 4)
+```
