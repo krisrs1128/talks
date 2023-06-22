@@ -25,7 +25,7 @@ library(tidyverse)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
 
-#BibOptions()#cite.style = "numeric")
+BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
@@ -99,10 +99,15 @@ Climate Misinformation | Social Media | Web Data
 
 
 ---
+background-color: #f7f7f7
+background-image: url("figure/multimodal-glaciers-cover.png")
+background-size: contain
 
 .center[
 ## Multimodality in Earth Observation
 ]
+
+
 
 ---
 
@@ -117,12 +122,17 @@ Climate Misinformation | Social Media | Web Data
 ### Glacier Monitoring
 
 Semantic segmentation models can be trained to distinguish different types of
-glaciers [Ref1] and estimate glacial lake areas [Ref2].
+glaciers and estimate glacial lake areas `r Citep(bib, c("Baraka2020MachineLF", "Zheng2021InteractiveVA", "Ortiz2022MappingGL"))`
 
-(Glacier Image)
-(Lake Image)
+.pull-left[
+<img src="figure/glacier_lakes_trends.png"/>
+<img src="figure/glacier_lakes_volcano.png" width=250/>
+]
+.pull-right[
+<img src="figure/glacier_lakes_errors.png"/>
+]
  
-[Colab Notebook]()
+[Colab Notebook](https://colab.research.google.com/drive/1ZkDtLB_2oQpSFDejKZ4YQ5MXW4c531R6?usp=sharing#scrollTo=r9jkq9qYcX_-)
 
 ---
 
@@ -172,11 +182,15 @@ become available.
 
 ### Bacterial Vaginosis
 
+.pull-left[
 * Bacterial Vaginosis (BV) affects 20% of women worldwide, with elevated rates in Sub-Saharan Africa. It is a known risk factor for preterm birth and HIV transmission.
-* Treatment recommendations have remained essentially unchanged in 30 years, yet treatments are known to fail often/last only temporarily
-* The complexity is that BV is a disease of imbalance -- it is not the result of a single pathogen, but rather the interactions between a microbial community and the host's immune system
+* BV is a disease of imbalanc -- it doesn't come from a pathogen, but rather interactions across the microbial community / host immune system
+]
 
-[Figure of the pathways for BV]
+.pull-right[
+<img src="figure/bv_overview.jpg" width=500/>
+Figure from `r Citep(bib, "Mitchell2014BacterialVA")`.
+]
 
 ---
 
@@ -185,6 +199,7 @@ become available.
 * Several initiatives, including the Gates Foundation-funded Vaginal Microbiome Research Consortium, are gathering multimodal molecular ("multi-omics") profiles to clarify the mechanisms behind disease development and recurrence
 * The goal is to use these multi-omics profiles to design precision treatments.
   * E.g., new probiotics, vaginal fluid/microbiome transplants
+  
 
 ---
 
@@ -205,9 +220,9 @@ microbiome and the host immunological environment.
   - Cytokine Assays: Which immune system cells are present?
   - Survey Data: What host behaviors may influence disease trajectory?
 * Microbiome
-  - 16S rRNA sequence: What are the abundances of different bacterial species?
+  - 16S rRNA sequence: What are the bacterial species abundances?
   - Metagenomic Sequencing: What functions can those bacteria potentially carry out?
-  - Metatranscriptomic Sequencing: Which bacterial genes are expressed?
+  - Metatranscriptomic Sequencing: Which genes are expressed?
 * Either
   - Metabolomics: What small molecules are present?
 
@@ -223,8 +238,8 @@ interpretation workflow.
 * Disease state/trajectory prediction.
 * Interpretation and visualization.
 
-Aside: Simple concatenation usually works poorly -- some modalities drown out
-others.
+Aside: Simple concatenation usually works poorly because some modalities drown out
+others `r Citep(bib, c("Baker2019FeatureSF", "Ding2021CooperativeLF"))`
 
 <!-- * Supervised methods balance features from across sources to predict sample-level -->
 <!-- outcomes, like subsequent disease development -->
@@ -237,6 +252,12 @@ others.
 
 * It is natural to apply topic models to omics data (samples -> documents, words -> molecules)
 * We studied approaches to visualize an ensemble of topic models, using the results to study multiscale and multimodal relationships
+.pull-left[
+<img src="https://lasy.github.io/alto/articles/microbiome-demo_files/figure-html/plot-with-add-leaves-and-id-numbers-1.png" width=450/>
+]
+.pull-right[
+<img src="https://lasy.github.io/alto/articles/microbiome-demo_files/figure-html/beta-plot-2.png" width=450/>
+]
 
 [Multiscale analysis of count data through topic alignment](https://doi.org/10.1093/biostatistics/kxac018)
 
@@ -247,6 +268,9 @@ others.
 What would longitudinal trajectories be like with or without specific
 interventions? We adapted ideas from the transfer function methodology.
 
+.center[
+<img src="https://krisrs1128.github.io/mbtransfer/articles/postpartum_files/figure-html/unnamed-chunk-15-1.png"/>
+]
 
 [Microbiome Intervention Analysis with Transfer Functions and Mirror Statistics](https://arxiv.org/abs/2306.06364)
 
@@ -291,8 +315,7 @@ sources can be combined to create a unified view of the world^[It is also remark
 
 ### Interdependence
 
-At a time when most science focused on taxonomy, the *Tableau* pointed the way
-towards an approach that highlighted interdependence and unity within nature.
+At a time when most science focused on taxonomy, the *Tableau* highlighted interdependence and unity within nature.
 
 .center[
 <img width=820 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
