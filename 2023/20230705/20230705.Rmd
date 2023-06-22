@@ -55,7 +55,7 @@ These themes have recurred across almost all the projects I have encountered in
 my research:
 
 * **Multimodality**: Data are gathered from complementary sensors or assays
-* **Ecosystem Analysis**: We would like to understand the interactions taking place in a landscape that are difficult to observe except through data.
+* **Ecosystem Analysis**: We would like to understand the interactions in a landscape that are difficult to observe except through data.
 
 ---
 
@@ -73,7 +73,7 @@ Problem | Ecosystem | Data |
 --|--|--
 Glacier Monitoring | Himalayas | Remote Sensing
 Bacterial Vaginosis | Host-Microbiome | Meta-Omics
-Gut Brain Axis | Host-Microbiome | Meta-Omics
+Gut-Brain Axis | Host-Microbiome | Meta-Omics
 Climate Misinformation | Social Media | Web Data
 ]
 
@@ -93,7 +93,7 @@ Problem | Ecosystem | Data |
 --|--|--
 Glacier Monitoring | Himalayas | Remote Sensing
 Bacterial Vaginosis | Host-Microbiome | Meta-Omics
-Gut Brain Axis | Host-Microbiome | Meta-Omics
+Gut-Brain Axis | Host-Microbiome | Meta-Omics
 Climate Misinformation | Social Media | Web Data
 ]
 
@@ -109,8 +109,8 @@ Climate Misinformation | Social Media | Web Data
 ### Glacier Monitoring
 
 * This work has grown from a collaboration with ICIMOD
-* Glaciers provide important ecosystem resources, and their disappearance has a large impact on the communities around them
-* Effective remote sensing data analysis could help generate maps over large swaths of area much faster than human annotation could
+* Glaciers provide significant ecosystem resources, and their disappearance has a large impact on the communities around them
+* Effective remote sensing data analysis could help generate maps over large areas much faster than human annotation could
 
 ---
 
@@ -128,9 +128,9 @@ glaciers [Ref1] and estimate glacial lake areas [Ref2].
 
 ### Multimodal Data
 
-* When working with data from different satellite sensors, there is a trade-off between spatial and spectral resolution.
+* There is a trade-off between spatial and spectral resolution when working with data from different satellite sensors.
 * A second wrinkle is that sources are ever-changing. If we would like to map change over long periods, it is necessary to integrate across them.
-* Though we haven't explored this, it would be possible to integrate ground-level ecosystem data, like species counts from wildlife monitoring apps
+* Though we have not explored this, it would be possible to integrate ground-level ecosystem data, like species counts from wildlife monitoring apps
 
 (Figure of )
 
@@ -143,7 +143,7 @@ glaciers [Ref1] and estimate glacial lake areas [Ref2].
 
 (Figure of Transformers)
 
-This project was led by Yuliang Peng.
+Yuliang Peng led this project.
 
 ---
 
@@ -160,7 +160,7 @@ We studied Segformer models [Ref3] with early, middle, and late fusion.
 ### Opportunities
 
 The dream would be to build models that automatically get better as new sources
-are released. 
+become available.
 
 ---
 
@@ -172,33 +172,93 @@ are released.
 
 ### Bacterial Vaginosis
 
+* Bacterial Vaginosis (BV) affects 20% of women worldwide, with elevated rates in Sub-Saharan Africa. It is a known risk factor for preterm birth and HIV transmission.
+* Treatment recommendations have remained essentially unchanged in 30 years, yet treatments are known to fail often/last only temporarily
+* The complexity is that BV is a disease of imbalance -- it is not the result of a single pathogen, but rather the interactions between a microbial community and the host's immune system
+
+[Figure of the pathways for BV]
+
 ---
 
 ### Bacterial Vaginosis
 
+* Several initiatives, including the Gates Foundation-funded Vaginal Microbiome Research Consortium, are gathering multimodal molecular ("multi-omics") profiles to clarify the mechanisms behind disease development and recurrence
+* The goal is to use these multi-omics profiles to design precision treatments.
+  * E.g., new probiotics, vaginal fluid/microbiome transplants
+
 ---
 
 ### Multimodal Data
 
+Different molecular assays are needed to capture different aspects of both the
+microbiome and the host immunological environment. 
+
+* Results in multiple tables of data, each potentially high-dimensional
+* Typically gather data over time (but not necessarily on the same samples)
+
 ---
 
 ### Multimodal Data
+
+* Human Host
+  - Single Cell RNA-seq: How are genes from different host cell types expressed?
+  - Cytokine Assays: Which immune system cells are present?
+  - Survey Data: What host behaviors may influence disease trajectory?
+* Microbiome
+  - 16S rRNA sequence: What are the abundances of different bacterial species?
+  - Metagenomic Sequencing: What functions can those bacteria potentially carry out?
+  - Metatranscriptomic Sequencing: Which bacterial genes are expressed?
+* Either
+  - Metabolomics: What small molecules are present?
 
 ---
 
 ### Integrated Learning
 
+To help study BV, we have prepared code to support the entire analysis and
+interpretation workflow.
+
+* Experimental design and power analysis.
+* Normalization, batch effect correction, missing data imputation.
+* Disease state/trajectory prediction.
+* Interpretation and visualization.
+
+Aside: Simple concatenation usually works poorly -- some modalities drown out
+others.
+
+<!-- * Supervised methods balance features from across sources to predict sample-level -->
+<!-- outcomes, like subsequent disease development -->
+<!-- * Unsupervised methods create sample or feature-level "maps" that guide overall dataset interpretation -->
+<!-- * Network methods learn links between features across modalities -->
+
 ---
 
 ### Analysis: Topic Alignment
+
+* It is natural to apply topic models to omics data (samples -> documents, words -> molecules)
+* We studied approaches to visualize an ensemble of topic models, using the results to study multiscale and multimodal relationships
+
+[Multiscale analysis of count data through topic alignment](https://doi.org/10.1093/biostatistics/kxac018)
 
 ---
 
 ### Analysis: Intervention Analysis
 
+What would longitudinal trajectories be like with or without specific
+interventions? We adapted ideas from the transfer function methodology.
+
+
+[Microbiome Intervention Analysis with Transfer Functions and Mirror Statistics](https://arxiv.org/abs/2306.06364)
+
 ---
 
 ### Reusability and Open Science
+
+It has been rewarding to work with computational biologists who generate and
+analyze the BV data.
+
+* We can focus our energy on the development of rigorous data analysis methods
+* The collaboration results in modular, reusable packages and publicly accessible notebooks
 
 ---
 
@@ -210,9 +270,33 @@ are released.
 
 ### Mount Chiborazo
 
+This is one of my favorite visualizations from the history of science.
+
+.center[
+<img width=950 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
+]
+
+---
+
+### Mount Chiborazo
+
+It is Alexander von Humboldt's *Tableau Physique*, and it shows how multiple data
+sources can be combined to create a unified view of the world^[It is also remarkable how it anticipates many ideas from functional genomics.].
+
+.center[
+<img width=820 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
+]
+
 ---
 
 ### Interdependence
+
+At a time when most science focused on taxonomy, the *Tableau* pointed the way
+towards an approach that highlighted interdependence and unity within nature.
+
+.center[
+<img width=820 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
+]
 
 ---
 
