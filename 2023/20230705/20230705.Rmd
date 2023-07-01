@@ -54,49 +54,70 @@ https://github.io/krisrs1128/LSLab
 These themes have recurred across almost all the projects I have encountered in
 my research:
 
-* **Multimodality**: Data are gathered from complementary sensors or assays
+* **Multimodality**: Data are gathered from complementary sensors or assays.
 * **Ecosystem Analysis**: We would like to understand the interactions in a landscape that are difficult to observe except through data.
 
 ---
 
-### Motivating Challenges
+### Multimodality Setup
 
-.pull-left[
-* Glacier monitoring in the Hindu Kush Himalayas
-* Designing treatments for Bacterial Vaginosis
-* Understanding the role of the gut-brain axis in mental health
-* Reducing climate change misinformation by understanding its spread
-]
-
-.pull-right[
-Problem | Ecosystem | Data |
---|--|--
-Glacier Monitoring | Himalayas | Remote Sensing
-Bacterial Vaginosis | Host-Microbiome | Meta-Omics
-Gut-Brain Axis | Host-Microbiome | Meta-Omics
-Climate Misinformation | Social Media | Web Data
+.center[
+<img width=850 src="figure/multimodal.png"/>
 ]
 
 ---
 
-### Motivating Challenges
+### Multimodal Regression
+
+* If the goal is to predict a response from several sources, it can be helpful to
+use dimensionality reduction that emphasizes shared structure.
+* For example, cooperative learning `r Citep(bib, "Ding2021CooperativeLF")` solves:
+\begin{align*}
+\arg\min_{\beta_1 \in \mathbb{R}^{P_{1}}, \beta_2 \in \mathbb{R}^{P_2}} &\frac{1}{2}\left\|y-X_{1} \beta_{1}-X_{2} \beta_{2}\right\|^2+\frac{\rho}{2}\left\|\left(X_{1} \beta_{1}-X_{2} \beta_{2}\right)\right\|^2  + \\ 
+&\lambda_1\left\|\beta_{1}\right\|_1+\lambda_2\left\|\beta_{2}\right\|_1 .
+\end{align*}
+  The second term is similar to the CCA objective, highlighting shared structure across tables
+
+---
+
+### Multimodal Dimensionality Reduction
+
+* Canonical correlation analysis looks for shared structure across sources,
+\begin{align*}
+\arg\min_{u \in \mathbb{R}^{P_1}, v \in \mathbb{R}^{P_2}} &\operatorname{Cov}_{\mathbf{P}^{X_{1}X_{2}}}\left[z_i^{(1)}(u), z_i^{(2)}(v)\right] \\
+\text { subject to } &\operatorname{Var}_{\mathbf{P}^X_{1}}\left(z_i^{(1)}(u)\right)= \operatorname{Var}_{\mathbf{P}^{X_{2}}}\left(z_i^{(2)}(v)\right)=1
+\end{align*}
+where $z_i^{(1)}(u)=u^T x^{(1)}_i$ and $z_i^{(2)}(v)=v^T x^{(2)}_i$ are linear feature extractors.
+
+* In modern settings, it's often useful to introduce sparsity `r Citep(bib, c("Witten2009APM", "Gao2014SparseCA"))` or nonlinearity `r Citep(bib, c("Andrew2013DeepCC", "Wang2015OnDM"))`.
+
+---
+
+### Non-Exchangeability
+
+We often have context about how samples are related to one another, and using
+this information can improve power.
 
 .pull-left[
-* **Glacier monitoring in the Hindu Kush Himalayas**
-* **Designing treatments for Bacterial Vaginosis**
-* Understanding the role of the gut-brain axis in mental health
-* Reducing climate change misinformation by understanding its spread
+- Spatial or temporal structure
+- Cohort or batch effects
+- Network structure
 ]
 
 .pull-right[
-Problem | Ecosystem | Data |
---|--|--
-Glacier Monitoring | Himalayas | Remote Sensing
-Bacterial Vaginosis | Host-Microbiome | Meta-Omics
-Gut-Brain Axis | Host-Microbiome | Meta-Omics
-Climate Misinformation | Social Media | Web Data
+<img src="figure/nonexchangeability.png"/>
 ]
 
+---
+
+### Mosaics
+
+Often, the same measurements are not available across all samples. We need to
+integrate across sources without assuming uniform collection.
+
+.center[
+<img width=750 src="figure/mosaic.png"/>
+]
 
 ---
 background-color: #f7f7f7
@@ -107,15 +128,19 @@ background-size: contain
 ## Multimodality in Earth Observation
 ]
 
-
-
 ---
 
 ### Glacier Monitoring
 
-* This work has grown from a collaboration with ICIMOD
-* Glaciers provide significant ecosystem resources, and their disappearance has a large impact on the communities around them
-* Effective remote sensing data analysis could help generate maps over large areas much faster than human annotation could
+* Glaciers provide significant ecosystem resources, and their disappearance has a large impact on the communities around them.
+* Effective remote sensing data analysis could help generate maps over large areas much faster than human annotation could.
+
+.pull-left[
+<img width=300 src="figure/Blue-logo-on-a-white-background.jpg"/>
+]
+.pull-right[
+<a href="https://news.microsoft.com/on-the-issues/2021/01/12/ai-open-data-glacial-melt-himalaya/"><img width=300 src="figure/glaciers-article.png"/></a>
+]
 
 ---
 
@@ -139,8 +164,9 @@ glaciers and estimate glacial lake areas `r Citep(bib, c("Baraka2020MachineLF", 
 ### Multimodal Data
 
 * There is a trade-off between spatial and spectral resolution when working with data from different satellite sensors.
-* A second wrinkle is that sources are ever-changing. If we would like to map change over long periods, it is necessary to integrate across them.
-* Though we have not explored this, it would be possible to integrate ground-level ecosystem data, like species counts from wildlife monitoring apps
+* The sources are always changing. If we would like to build maps over long periods, we need to integrate them.
+* It is also possible to integrate ground-level ecosystem data, like species counts from wildlife monitoring apps.
+* The dream would be to build models that automatically get better as new sources become available.
 
 (Figure of )
 
@@ -169,8 +195,6 @@ We studied Segformer models [Ref3] with early, middle, and late fusion.
 
 ### Opportunities
 
-The dream would be to build models that automatically get better as new sources
-become available.
 
 ---
 
@@ -184,7 +208,7 @@ become available.
 
 .pull-left[
 * Bacterial Vaginosis (BV) affects 20% of women worldwide, with elevated rates in Sub-Saharan Africa. It is a known risk factor for preterm birth and HIV transmission.
-* BV is a disease of imbalanc -- it doesn't come from a pathogen, but rather interactions across the microbial community / host immune system
+* BV is a disease of imbalance -- it doesn't come from a single pathogen, but rather interactions across the microbial community / host immune system.
 ]
 
 .pull-right[
@@ -200,7 +224,6 @@ Figure from `r Citep(bib, "Mitchell2014BacterialVA")`.
 * The goal is to use these multi-omics profiles to design precision treatments.
   * E.g., new probiotics, vaginal fluid/microbiome transplants
   
-
 ---
 
 ### Multimodal Data
@@ -230,40 +253,16 @@ microbiome and the host immunological environment.
 
 ### Integrated Learning
 
-To help study BV, we have prepared code to support the entire analysis and
-interpretation workflow.
+Tools are needed across the entire data collection and analysis workflow:
 
 * Experimental design and power analysis.
 * Normalization, batch effect correction, missing data imputation.
 * Disease state/trajectory prediction.
 * Interpretation and visualization.
 
-Aside: Simple concatenation usually works poorly because some modalities drown out
-others `r Citep(bib, c("Baker2019FeatureSF", "Ding2021CooperativeLF"))`
-
-<!-- * Supervised methods balance features from across sources to predict sample-level -->
-<!-- outcomes, like subsequent disease development -->
-<!-- * Unsupervised methods create sample or feature-level "maps" that guide overall dataset interpretation -->
-<!-- * Network methods learn links between features across modalities -->
-
 ---
 
-### Analysis: Topic Alignment
-
-* It is natural to apply topic models to omics data (samples -> documents, words -> molecules)
-* We studied approaches to visualize an ensemble of topic models, using the results to study multiscale and multimodal relationships
-.pull-left[
-<img src="https://lasy.github.io/alto/articles/microbiome-demo_files/figure-html/plot-with-add-leaves-and-id-numbers-1.png" width=450/>
-]
-.pull-right[
-<img src="https://lasy.github.io/alto/articles/microbiome-demo_files/figure-html/beta-plot-2.png" width=450/>
-]
-
-[Multiscale analysis of count data through topic alignment](https://doi.org/10.1093/biostatistics/kxac018)
-
----
-
-### Analysis: Intervention Analysis
+### Example: Intervention Analysis
 
 What would longitudinal trajectories be like with or without specific
 interventions? We adapted ideas from the transfer function methodology.
@@ -276,23 +275,13 @@ interventions? We adapted ideas from the transfer function methodology.
 
 ---
 
-### Reusability and Open Science
-
-It has been rewarding to work with computational biologists who generate and
-analyze the BV data.
-
-* We can focus our energy on the development of rigorous data analysis methods
-* The collaboration results in modular, reusable packages and publicly accessible notebooks
-
----
-
 .center[
 ## Closing Thoughts
 ]
 
 ---
 
-### Mount Chiborazo
+### Mount Chimborazo
 
 This is one of my favorite visualizations from the history of science.
 
@@ -302,7 +291,7 @@ This is one of my favorite visualizations from the history of science.
 
 ---
 
-### Mount Chiborazo
+### Mount Chimborazo
 
 It is Alexander von Humboldt's *Tableau Physique*, and it shows how multiple data
 sources can be combined to create a unified view of the world^[It is also remarkable how it anticipates many ideas from functional genomics.].
