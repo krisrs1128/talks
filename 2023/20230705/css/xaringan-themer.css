@@ -89,15 +89,17 @@ a, a > code {
 .inverse h1, .inverse h2, .inverse h3 {
   color: #FFFFFF;
 }
-.title-slide, .title-slide h1, .title-slide h2, .title-slide h3 {
-  color: #FFFFFF;
+
+#title {
+  position: absolute;
+  color: #10040f;
+  font-family: 'Raleway';
+  font-size: 45px;
+  width: 500px;
+  left: 10px;
+  top: 10px;
 }
-.title-slide {
-  background-color: #09017F;
-  
-  
-  
-}
+
 .title-slide .remark-slide-number {
   display: none;
 }
@@ -140,6 +142,7 @@ blockquote {
   margin: auto;
   border-top: 1px solid #666;
   border-bottom: 1px solid #666;
+  font-size: 25px;
 }
 .remark-slide table thead th { border-bottom: 1px solid #ddd; }
 th, td { padding: 5px; }
@@ -243,4 +246,37 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   left: 0px;
   opacity: 1;
   z-index: -1;
+}
+
+#credit {
+  position: absolute;
+  top: 10px;
+  left: 950px; 
+  font-size: 20px;
+  text-align: center;
+}
+
+#microbiome-header {
+  background-color: white;
+  font-family: 'Raleway';
+  font-size: 45px;
+  color: #5f558e;
+}
+
+#von-humboldt {
+  position: absolute;
+  top: 300px;
+  left: 700px; 
+  text-align: center;
+}
+
+#subtitle {
+  position: absolute;
+  background-color: rgba(247, 247, 247, 0.8);
+  padding-left: 10px;
+  font-size: 20px;
+  width: 350px;
+  color: #1708be;
+  left: 10px;
+  bottom: 10px;
 }

@@ -14,8 +14,7 @@ output:
 ---
 
 class: title
-image-opacity: 0.1
-background-image: url("figures/cover.png")
+background-image: url("figure/chimborazo-data.png")
 background-size: cover
 
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
@@ -29,22 +28,25 @@ BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
-.center[
+.pull-left[
+<div id="title">
+Ecosystem Modeling using Multimodal Data
+</div>
 <br/>
-# Ecosystem Modeling using Multimodal Data
 <br/>
 <br/>
 <br/>
 <br/>
-]
-
-#### Microsoft AI for Social Good Lab
-
-.large[
+<br/>
+<br/>
+<br/>
+<br/>
+<div id="subtitle">
+Microsoft AI for Social Good Lab <br/>
 Kris Sankaran <br/>
 05 | July | 2023 <br/>
 https://github.io/krisrs1128/LSLab
-<br/>
+</div>
 ]
 
 ---
@@ -55,7 +57,15 @@ These themes have recurred across almost all the projects I have encountered in
 my research:
 
 * **Multimodality**: Data are gathered from complementary sensors or assays.
-* **Ecosystem Analysis**: We would like to understand the interactions in a landscape that are difficult to observe except through data.
+* **Ecosystem Analysis**: We would like to understand the interactions across a landscape, not just the isolated components
+
+.pull-left[
+<img width=400 src="figure/sensor_equipment.png"/>
+]
+
+.pull-right[
+<img width=380 src="figure/bacteria_ecosystem.png"/>
+]
 
 ---
 
@@ -163,43 +173,112 @@ glaciers and estimate glacial lake areas `r Citep(bib, c("Baraka2020MachineLF", 
 
 ### Multimodal Data
 
-* There is a trade-off between spatial and spectral resolution when working with data from different satellite sensors.
-* The sources are always changing. If we would like to build maps over long periods, we need to integrate them.
-* It is also possible to integrate ground-level ecosystem data, like species counts from wildlife monitoring apps.
-* The dream would be to build models that automatically get better as new sources become available.
+Data sources are always changing, and to map historical trajectories, we need to integrate them.
+  * There is a trade-off between spatial and spectral resolution.
+  * It is possible to include ground-level data, e.g., wildlife monitoring apps.
 
-(Figure of )
+.center[
+<img width=500 src="figure/satellites-evolution.png"/>
+]
+
+The dream would be to build models that automatically get better as new sources become available.
+
+---
+
+### Multimodal Data
+
+Data sources are always changing, and to map historical trajectories, we need to integrate them.
+  * There is a trade-off between spatial and spectral resolution.
+  * It is possible to include ground-level data, e.g., wildlife monitoring apps.
+
+.center[
+<img width=600 src="figure/two-maps.png"/>
+]
+
+The dream would be to build models that automatically get better as new sources become available.
 
 ---
 
 ### An Experiment
 
-* How robust is multimodal segmentation to modality missingness?
-* Can we train models in contexts where all sources are available and then directly apply them to settings where some are not?
+<div id="credit">
+Yuliang Peng <br>
+<img width=100 src="figure/portrait.png">
+</div>
 
-(Figure of Transformers)
+.pull-left[
+How robust is multimodal segmentation to modality missingness? 
+* Does it depend on transformer architectures?
+* This is the remote sensing analog of `r Citep(bib, "Ma2022AreMT")`.
+]
 
-Yuliang Peng led this project.
+.pull-right[
+<img width=500 src="figure/study-design.jpeg"/>
+]
 
 ---
 
 ### Study Design
 
-We studied Segformer models [Ref3] with early, middle, and late fusion.
+* We studied Segformer models `r Citep(bib, "Xie2021SegFormerSA")` with early, middle, and late fusion.
+* We downloaded aligned S1 and S2 imagery using the planetary computer ([script](https://github.com/krisrs1128/lake_labeller/blob/main/download/helpers.py), [data](https://github.com/krisrs1128/lake_labeller/blob/main/download/data_paths.csv))
+
+.center[
+<img width=600 src="figure/transformer-types.jpeg"/>
+]
+
+```{r, echo = FALSE}
+library(glue)
+
+base <- "https://g-5b2b0e.dtn.globus.wisc.edu/multimodal_glaciers/"
+files <- vector(length = 200)
+types <- c("s1", "s2")
+for (i in seq(0, 200)) {
+  for (j in seq_along(types)) {
+    files[2 * i + j] <- glue("{base}/{types[j]}-{i}-1.tiff")
+  }
+}
+
+write_csv(tibble(path = files), "~/Downloads/data_paths.csv")
+```
+
 
 ---
 
 ### Results
 
+.pull-left[
+|       | Early fusion   |           | Late fusion    |           |
+|-------|----------------|-----------|----------------|-----------|
+|       | Debris-covered | Clean ice | Debris-covered | Clean ice |
+| S1+S2 | 0.252          | 0.651     | 0.159          | 0.642     |
+| S1    | 0.002          | 0.087     | 0              | 0.061     |
+| S2    | 0.249          | 0.615     | 0              | 0.423     |
+]
+
+.pull-right[
+* The early fusion model uniformly outperformed the late fusion model
+  - S2 is much more important than S1
+* Caveat: This experiment used a small region with few debris-covered glaciers
+]
+
 ---
 
-### Opportunities
+### Results
 
+Example predictions from patches with the highest and lowest IoUs.
+
+<img src="figure/results-array-glaciers.png"/>
 
 ---
+
+background-image: url("figure/microbiome-header-2.png")
+
 
 .center[
-## Multimodality in Microbiome Studies
+<div id="microbiome-header">
+Multimodality in Microbiome Studies
+</div>
 ]
 
 ---
@@ -229,14 +308,7 @@ Figure from `r Citep(bib, "Mitchell2014BacterialVA")`.
 ### Multimodal Data
 
 Different molecular assays are needed to capture different aspects of both the
-microbiome and the host immunological environment. 
-
-* Results in multiple tables of data, each potentially high-dimensional
-* Typically gather data over time (but not necessarily on the same samples)
-
----
-
-### Multimodal Data
+microbiome and the host immunological environment over time. 
 
 * Human Host
   - Single Cell RNA-seq: How are genes from different host cell types expressed?
@@ -246,8 +318,6 @@ microbiome and the host immunological environment.
   - 16S rRNA sequence: What are the bacterial species abundances?
   - Metagenomic Sequencing: What functions can those bacteria potentially carry out?
   - Metatranscriptomic Sequencing: Which genes are expressed?
-* Either
-  - Metabolomics: What small molecules are present?
 
 ---
 
@@ -264,14 +334,37 @@ Tools are needed across the entire data collection and analysis workflow:
 
 ### Example: Intervention Analysis
 
+<div id="credit">
+Pratheepa Jeganathan <br>
+<img width=100 src="figure/portrait-2.jpeg">
+</div>
+
 What would longitudinal trajectories be like with or without specific
 interventions? We adapted ideas from the transfer function methodology.
+
+.pull-left[
+\begin{align}
+	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}
+\end{align}
+
+* $y_{t}$ is the vector of molecular features at time $t$
+* $w_{t}$ is an intervention indicator
+* $A$ and $B$ track inter-feature and intervention effects, respectively
+]
+
+.pull-right[
+<img width=500 src="figure/transfer-diagram.png"/>
+]
+
+---
+
+### Example: Intervention Analysis
 
 .center[
 <img src="https://krisrs1128.github.io/mbtransfer/articles/postpartum_files/figure-html/unnamed-chunk-15-1.png"/>
 ]
 
-[Microbiome Intervention Analysis with Transfer Functions and Mirror Statistics](https://arxiv.org/abs/2306.06364)
+[Manuscript](https://arxiv.org/abs/2306.06364), [Documentation](https://krisrs1128.github.io/mbtransfer/), [Demo](https://mybinder.org/v2/gh/krisrs1128/mbtransfer_demo/HEAD?urlpath=rstudio)
 
 ---
 
@@ -293,12 +386,17 @@ This is one of my favorite visualizations from the history of science.
 
 ### Mount Chimborazo
 
-It is Alexander von Humboldt's *Tableau Physique*, and it shows how multiple data
-sources can be combined to create a unified view of the world^[It is also remarkable how it anticipates many ideas from functional genomics.].
+It is Alexander von Humboldt's *Tableau Physique*, and it shows how multiple
+data sources can be combined to create a unified view of the world. It is also
+remarkable how it anticipates many ideas from modern ecology.
 
 .center[
 <img width=820 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
 ]
+
+<div id="von-humboldt">
+<img src="figure/von-humboldt.jpeg"/>
+</div>
 
 ---
 
@@ -307,7 +405,7 @@ sources can be combined to create a unified view of the world^[It is also remark
 At a time when most science focused on taxonomy, the *Tableau* highlighted interdependence and unity within nature.
 
 .center[
-<img width=820 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
+<img width=600 src="figure/chimborazo-data.png"/>
 ]
 
 ---
@@ -316,4 +414,20 @@ At a time when most science focused on taxonomy, the *Tableau* highlighted inter
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 4)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 5, end = 8)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 9, end = 12)
 ```
