@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>20230705</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.22/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+background-image: url("figure/chimborazo-data.png")
+background-size: cover
+
+
+
+.pull-left[
+&lt;div id="title"&gt;
+Ecosystem Modeling using Multimodal Data
+&lt;/div&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;div id="subtitle"&gt;
+Microsoft AI for Social Good Lab &lt;br/&gt;
+Kris Sankaran &lt;br/&gt;
+05 | July | 2023 &lt;br/&gt;
+https://github.io/krisrs1128/LSLab
+&lt;/div&gt;
+]
+
+---
+
+### Introduction
+
+These themes have recurred across almost all the projects I have encountered in
+my research:
+
+* **Multimodality**: Data are gathered from complementary sensors or assays.
+* **Ecosystem Analysis**: We would like to understand the interactions across a landscape, not just the isolated components
+
+.pull-left[
+&lt;img width=400 src="figure/sensor_equipment.png"/&gt;
+]
+
+.pull-right[
+&lt;img width=380 src="figure/bacteria_ecosystem.png"/&gt;
+]
+
+---
+
+### Multimodality Setup
+
+.center[
+&lt;img width=850 src="figure/multimodal.png"/&gt;
+]
+
+---
+
+### Multimodal Regression
+
+* If the goal is to predict a response from several sources, it can be helpful to
+use dimensionality reduction that emphasizes shared structure.
+* For example, cooperative learning [1] solves:
+`\begin{align*}
+\arg\min_{\beta_1 \in \mathbb{R}^{P_{1}}, \beta_2 \in \mathbb{R}^{P_2}} &amp;\frac{1}{2}\left\|y-X_{1} \beta_{1}-X_{2} \beta_{2}\right\|^2+\frac{\rho}{2}\left\|\left(X_{1} \beta_{1}-X_{2} \beta_{2}\right)\right\|^2  + \\ 
+&amp;\lambda_1\left\|\beta_{1}\right\|_1+\lambda_2\left\|\beta_{2}\right\|_1 .
+\end{align*}`
+  The second term is similar to the CCA objective, highlighting shared structure across tables
+
+---
+
+### Multimodal Dimensionality Reduction
+
+* Canonical correlation analysis looks for shared structure across sources,
+`\begin{align*}
+\arg\min_{u \in \mathbb{R}^{P_1}, v \in \mathbb{R}^{P_2}} &amp;\operatorname{Cov}_{\mathbf{P}^{X_{1}X_{2}}}\left[z_i^{(1)}(u), z_i^{(2)}(v)\right] \\
+\text { subject to } &amp;\operatorname{Var}_{\mathbf{P}^X_{1}}\left(z_i^{(1)}(u)\right)= \operatorname{Var}_{\mathbf{P}^{X_{2}}}\left(z_i^{(2)}(v)\right)=1
+\end{align*}`
+where `\(z_i^{(1)}(u)=u^T x^{(1)}_i\)` and `\(z_i^{(2)}(v)=v^T x^{(2)}_i\)` are linear feature extractors.
+
+* In modern settings, it's often useful to introduce sparsity [2; 3] or nonlinearity [4; 5].
+
+---
+
+### Non-Exchangeability
+
+We often have context about how samples are related to one another, and using
+this information can improve power.
+
+.pull-left[
+- Spatial or temporal structure
+- Cohort or batch effects
+- Network structure
+]
+
+.pull-right[
+&lt;img src="figure/nonexchangeability.png"/&gt;
+]
+
+---
+
+### Mosaics
+
+Often, the same measurements are not available across all samples. We need to
+integrate across sources without assuming uniform collection.
+
+.center[
+&lt;img width=750 src="figure/mosaic.png"/&gt;
+]
+
+---
+background-color: #f7f7f7
+background-image: url("figure/multimodal-glaciers-cover.png")
+background-size: contain
+
+.center[
+## Multimodality in Earth Observation
+]
+
+---
+
+### Glacier Monitoring
+
+* Glaciers provide significant ecosystem resources, and their disappearance has a large impact on the communities around them.
+* Effective remote sensing data analysis could help generate maps over large areas much faster than human annotation could.
+
+.pull-left[
+&lt;img width=300 src="figure/Blue-logo-on-a-white-background.jpg"/&gt;
+]
+.pull-right[
+&lt;a href="https://news.microsoft.com/on-the-issues/2021/01/12/ai-open-data-glacial-melt-himalaya/"&gt;&lt;img width=300 src="figure/glaciers-article.png"/&gt;&lt;/a&gt;
+]
+
+---
+
+### Glacier Monitoring
+
+Semantic segmentation models can be trained to distinguish different types of
+glaciers and estimate glacial lake areas [6; 7; 8]
+
+.pull-left[
+&lt;img src="figure/glacier_lakes_trends.png"/&gt;
+&lt;img src="figure/glacier_lakes_volcano.png" width=250/&gt;
+]
+.pull-right[
+&lt;img src="figure/glacier_lakes_errors.png"/&gt;
+]
+ 
+[Colab Notebook](https://colab.research.google.com/drive/1ZkDtLB_2oQpSFDejKZ4YQ5MXW4c531R6?usp=sharing#scrollTo=r9jkq9qYcX_-)
+
+---
+
+### Multimodal Data
+
+Data sources are always changing, and to map historical trajectories, we need to integrate them.
+  * There is a trade-off between spatial and spectral resolution.
+  * It is possible to include ground-level data, e.g., wildlife monitoring apps.
+
+.center[
+&lt;img width=500 src="figure/satellites-evolution.png"/&gt;
+]
+
+The dream would be to build models that automatically get better as new sources become available.
+
+---
+
+### Multimodal Data
+
+Data sources are always changing, and to map historical trajectories, we need to integrate them.
+  * There is a trade-off between spatial and spectral resolution.
+  * It is possible to include ground-level data, e.g., wildlife monitoring apps.
+
+.center[
+&lt;img width=600 src="figure/two-maps.png"/&gt;
+]
+
+The dream would be to build models that automatically get better as new sources become available.
+
+---
+
+### An Experiment
+
+&lt;div id="credit"&gt;
+Yuliang Peng &lt;br&gt;
+&lt;img width=100 src="figure/portrait.png"&gt;
+&lt;/div&gt;
+
+.pull-left[
+How robust is multimodal segmentation to modality missingness? 
+* Does it depend on transformer architectures?
+* This is the remote sensing analog of [9].
+]
+
+.pull-right[
+&lt;img width=500 src="figure/study-design.jpeg"/&gt;
+]
+
+---
+
+### Study Design
+
+* We studied Segformer models [10] with early, middle, and late fusion.
+* We downloaded aligned S1 and S2 imagery using the planetary computer ([script](https://github.com/krisrs1128/lake_labeller/blob/main/download/helpers.py), [data](https://github.com/krisrs1128/lake_labeller/blob/main/download/data_paths.csv))
+
+.center[
+&lt;img width=600 src="figure/transformer-types.jpeg"/&gt;
+]
+
+
+
+
+---
+
+### Results
+
+.pull-left[
+|       | Early fusion   |           | Late fusion    |           |
+|-------|----------------|-----------|----------------|-----------|
+|       | Debris-covered | Clean ice | Debris-covered | Clean ice |
+| S1+S2 | 0.252          | 0.651     | 0.159          | 0.642     |
+| S1    | 0.002          | 0.087     | 0              | 0.061     |
+| S2    | 0.249          | 0.615     | 0              | 0.423     |
+]
+
+.pull-right[
+* The early fusion model uniformly outperformed the late fusion model
+  - S2 is much more important than S1
+* Caveat: This experiment used a small region with few debris-covered glaciers
+]
+
+---
+
+### Results
+
+Example predictions from patches with the highest and lowest IoUs.
+
+&lt;img src="figure/results-array-glaciers.png"/&gt;
+
+---
+
+background-image: url("figure/microbiome-header-2.png")
+
+
+.center[
+&lt;div id="microbiome-header"&gt;
+Multimodality in Microbiome Studies
+&lt;/div&gt;
+]
+
+---
+
+### Bacterial Vaginosis
+
+.pull-left[
+* Bacterial Vaginosis (BV) affects 20% of women worldwide, with elevated rates in Sub-Saharan Africa. It is a known risk factor for preterm birth and HIV transmission.
+* BV is a disease of imbalance -- it doesn't come from a single pathogen, but rather interactions across the microbial community / host immune system.
+]
+
+.pull-right[
+&lt;img src="figure/bv_overview.jpg" width=500/&gt;
+Figure from [11].
+]
+
+---
+
+### Bacterial Vaginosis
+
+* Several initiatives, including the Gates Foundation-funded Vaginal Microbiome Research Consortium, are gathering multimodal molecular ("multi-omics") profiles to clarify the mechanisms behind disease development and recurrence
+* The goal is to use these multi-omics profiles to design precision treatments.
+  * E.g., new probiotics, vaginal fluid/microbiome transplants
+  
+---
+
+### Multimodal Data
+
+Different molecular assays are needed to capture different aspects of both the
+microbiome and the host immunological environment over time. 
+
+* Human Host
+  - Single Cell RNA-seq: How are genes from different host cell types expressed?
+  - Cytokine Assays: Which immune system cells are present?
+  - Survey Data: What host behaviors may influence disease trajectory?
+* Microbiome
+  - 16S rRNA sequence: What are the bacterial species abundances?
+  - Metagenomic Sequencing: What functions can those bacteria potentially carry out?
+  - Metatranscriptomic Sequencing: Which genes are expressed?
+
+---
+
+### Integrated Learning
+
+Tools are needed across the entire data collection and analysis workflow:
+
+* Experimental design and power analysis.
+* Normalization, batch effect correction, missing data imputation.
+* Disease state/trajectory prediction.
+* Interpretation and visualization.
+
+---
+
+### Example: Intervention Analysis
+
+&lt;div id="credit"&gt;
+Pratheepa Jeganathan &lt;br&gt;
+&lt;img width=100 src="figure/portrait-2.jpeg"&gt;
+&lt;/div&gt;
+
+What would longitudinal trajectories be like with or without specific
+interventions? We adapted ideas from the transfer function methodology.
+
+.pull-left[
+`\begin{align}
+	\mathbf{y}_{t} = \sum_{p = 1}^{P} A_{p} \mathbf{y}_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}\mathbf{w}_{t - q} + \mathbf{\epsilon}_{t}
+\end{align}`
+
+* `\(\mathbf{y}_{t}\)` is a `\(J\)`-dimensional vector of molecular features at time `\(t\)`
+* `\(\mathbf{w}_{t}\)` is an intervention indicator
+* `\(A\)` and `\(B\)` track inter-feature and intervention effects, respectively
+]
+
+.pull-right[
+&lt;img width=500 src="figure/transfer-diagram.png"/&gt;
+]
+
+---
+
+### Example: Intervention Analysis
+
+&lt;div id="credit"&gt;
+Pratheepa Jeganathan &lt;br&gt;
+&lt;img width=100 src="figure/portrait-2.jpeg"&gt;
+&lt;/div&gt;
+
+What would longitudinal trajectories be like with or without specific
+interventions? We adapted ideas from the transfer function methodology.
+
+.pull-left[
+`\begin{align}
+	y_{t j}=f_j\left(\mathbf{y}_{(t-P-1):(t-1)^{\prime}} \mathbf{w}_{(t-Q+1) x}\right)+\epsilon_{j t}
+\end{align}`
+
+* `\(\mathbf{y}_{t}\)` is a `\(J\)`-dimensional vector of molecular features at time `\(t\)`
+* `\(\mathbf{w}_{t}\)` is an intervention indicator
+* `\(f_{j}\)` captures nonlinear effects across interventions and molecular features
+]
+
+.pull-right[
+&lt;img width=500 src="figure/transfer-diagram.png"/&gt;
+]
+
+---
+
+### Example: Intervention Analysis
+
+.center[
+&lt;img src="https://krisrs1128.github.io/mbtransfer/articles/postpartum_files/figure-html/unnamed-chunk-15-1.png"/&gt;
+]
+
+[Manuscript](https://arxiv.org/abs/2306.06364), [Documentation](https://krisrs1128.github.io/mbtransfer/), [Demo](https://mybinder.org/v2/gh/krisrs1128/mbtransfer_demo/HEAD?urlpath=rstudio)
+
+---
+
+.center[
+## Closing Thoughts
+]
+
+---
+
+### Mount Chimborazo
+
+This is one of my favorite visualizations from the history of science.
+
+.center[
+&lt;img width=950 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/&gt;
+]
+
+---
+
+### Mount Chimborazo
+
+It is Alexander von Humboldt's *Tableau Physique*, and it shows how multiple
+data sources can be combined to create a unified view of the world. It is also
+remarkable how it anticipates many ideas from modern ecology.
+
+.center[
+&lt;img width=820 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/&gt;
+]
+
+&lt;div id="von-humboldt"&gt;
+&lt;img src="figure/von-humboldt.jpeg"/&gt;
+&lt;/div&gt;
+
+---
+
+### Interdependence
+
+At a time when most science focused on taxonomy, the *Tableau* highlighted interdependence and unity within nature.
+
+.center[
+&lt;img width=600 src="figure/chimborazo-data.png"/&gt;
+]
+
+---
+
+### References
+
+[1] D. Y. Ding, S. Li, B. Narasimhan, et al. "Cooperative
+learning for multiview analysis". In: _Proceedings of the
+National Academy of Sciences of the United States of America_
+119 (2021).
+
+[2] D. M. Witten, R. Tibshirani, and T. J. Hastie. "A
+penalized matrix decomposition, with applications to sparse
+principal components and canonical correlation analysis." In:
+_Biostatistics_ 10 3 (2009), pp.  515-34 .
+
+[3] C. Gao, Z. Ma, and H. H. Zhou. "Sparse CCA: Adaptive
+Estimation and Computational Barriers". In: _arXiv:
+Methodology_ (2014).
+
+[4] G. Andrew, R. Arora, J. A. Bilmes, et al. "Deep Canonical
+Correlation Analysis". In: _International Conference on
+Machine Learning_. 2013.
+
+---
+
+### References
+
+[5] W. Wang, R. Arora, K. Livescu, et al. "On Deep Multi-View
+Representation Learning". In: _International Conference on
+Machine Learning_. 2015.
+
+[6] S. Baraka, B. Akera, B. Aryal, et al. "Machine Learning
+for Glacier Monitoring in the Hindu Kush Himalaya". In:
+_ArXiv_ abs/2012.05013 (2020).
+
+[7] M. Zheng, X. Miao, and K. Sankaran. "Interactive
+Visualization and Representation Analysis Applied to Glacier
+Segmentation". In: _ISPRS Int. J. Geo Inf._ 11 (2021), p. 415.
+
+[8] A. Ortiz, W. Tian, T. C. Sherpa, et al. "Mapping Glacial
+Lakes Using Historically Guided Segmentation Models". In:
+_IEEE Journal of Selected Topics in Applied Earth Observations
+and Remote Sensing_ 15 (2022), pp. 9226-9240.
+
+---
+
+### References
+
+[9] C. M. Mitchell and J. M. Marrazzo. "Bacterial Vaginosis
+and the Cervicovaginal Immune Response". In: _American Journal
+of Reproductive Immunology_ 71 (2014), pp. 555 - 563.
+
+[10] M. Ma, J. Ren, L. Zhao, et al. "Are Multimodal
+Transformers Robust to Missing Modality?" In: _2022 IEEE/CVF
+Conference on Computer Vision and Pattern Recognition (CVPR)_
+(2022), pp. 18156-18165.
+
+[11] E. Xie, W. Wang, Z. Yu, et al. "SegFormer: Simple and
+Efficient Design for Semantic Segmentation with Transformers".
+In: _ArXiv_ abs/2105.15203 (2021).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

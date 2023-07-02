@@ -344,12 +344,38 @@ interventions? We adapted ideas from the transfer function methodology.
 
 .pull-left[
 \begin{align}
-	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}
+	\mathbf{y}_{t} = \sum_{p = 1}^{P} A_{p} \mathbf{y}_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}\mathbf{w}_{t - q} + \mathbf{\epsilon}_{t}
 \end{align}
 
-* $y_{t}$ is the vector of molecular features at time $t$
-* $w_{t}$ is an intervention indicator
+* $\mathbf{y}_{t}$ is a $J$-dimensional vector of molecular features at time $t$
+* $\mathbf{w}_{t}$ is an intervention indicator
 * $A$ and $B$ track inter-feature and intervention effects, respectively
+]
+
+.pull-right[
+<img width=500 src="figure/transfer-diagram.png"/>
+]
+
+---
+
+### Example: Intervention Analysis
+
+<div id="credit">
+Pratheepa Jeganathan <br>
+<img width=100 src="figure/portrait-2.jpeg">
+</div>
+
+What would longitudinal trajectories be like with or without specific
+interventions? We adapted ideas from the transfer function methodology.
+
+.pull-left[
+\begin{align}
+	y_{t j}=f_j\left(\mathbf{y}_{(t-P-1):(t-1)^{\prime}} \mathbf{w}_{(t-Q+1) x}\right)+\epsilon_{j t}
+\end{align}
+
+* $\mathbf{y}_{t}$ is a $J$-dimensional vector of molecular features at time $t$
+* $\mathbf{w}_{t}$ is an intervention indicator
+* $f_{j}$ captures nonlinear effects across interventions and molecular features
 ]
 
 .pull-right[
