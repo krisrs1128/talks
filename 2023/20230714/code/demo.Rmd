@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(edgeR)
 library(ggdist)
+library(patchwork)
 theme_set(theme_bw())
 set.seed(20230714)
 ```
@@ -107,6 +108,39 @@ simulate_pvalues(200, 1e4, nonnull_frac = 0.1) |>
   plot_pval(facet = FALSE)
 ggsave("../figure/histogram-3.svg")
 ```
+```{r}
+p_values <- simulate_pvalues(200, 1e4)
+
+h <- 0.01
+sorted_values <- p_values |>
+  arrange(p_value) |>
+  mutate(
+    bin = cut(p_value, seq(0, 1, by = h)),
+    bin_low = as.numeric(str_extract(bin, "[0-9\\.]+"))
+  ) |>
+  group_by(bin_low) |>
+  summarise(count = n()) |>
+  ungroup() |>
+  mutate(
+    count = count / n(),
+    sum_count = h * cumsum(count)
+  )
+  
+ggplot(sorted_values) +
+  geom_bar(aes(bin_low, count), stat = "identity", width = .015) +
+  scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(x = "p-value", y = "Density")
+ggsave("../figure/cdf-transformation-1.svg", width = 4, height = 2.5)
+
+ggplot(sorted_values) +
+  geom_bar(aes(bin_low, sum_count), stat = "identity", width = .015) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(x = "p-value", y = "Cumulative Density")
+
+ggsave("../figure/cdf-transformation-2.svg", width = 4, height = 2.5)
+```
 
 ### NB Miscalibration
 
@@ -146,13 +180,14 @@ x |>
   ) |>
   mutate(
     null = ifelse(hypothesis <= nonnull, "Nonnull", "Null"),
-    #null = factor(null, levels = c("Nonnull", "Null"))
+    null = factor(null, levels = c("Nonnull", "Null"))
   ) |>
   ggplot() +
   stat_pointinterval(
-    aes(as.factor(hypothesis), value, fill = state, col = state),
+    aes(as.factor(hypothesis), value, col = state),
     alpha = 0.6, width = 2
   ) +
+  scale_color_manual(values = cols) +
   facet_wrap(~ null, scale = "free_x", ncol = 1)
 ```
 
@@ -171,22 +206,29 @@ for (j in seq(2, ncol(x))) {
 p_values <- bind_rows(p_values) |>
   mutate(nonnull = hypothesis %in% seq_len(nonnull))
 
-# ggplot(p_values) +
-#   geom_histogram(aes(p_value), binwidth = 0.025) +
-#   scale_y_continuous(expand = c(0, 0, 0.1, 0))
-# 
-# ggsave("../figure/miscalibration_histogram_merged.png")
-
 ggplot(p_values) +
+  geom_histogram(aes(p_value, stat(density)), binwidth = 0.025) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+  labs(x = "p-value", y = "Density")
+
+ggsave("../figure/miscalibration_histogram_merged.png", width = 8, height = 4)
+
+p_values |>
+  mutate(nonnull = ifelse(nonnull, "Nonnull", "Null")) |>
+  ggplot() +
   geom_histogram(
-    aes(p_value, fill = nonnull),
+    aes(p_value, stat(density), fill = nonnull),
     binwidth = 0.025
   ) +
   scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
-  scale_fill_manual(values = c("orange", "royalblue")) +
-  facet_grid(nonnull ~ ., scales = "free_y")
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = cols, guide = FALSE) +
+  facet_grid(nonnull ~ ., scales = "free_y") +
+  labs(x = "p-value", y = "Density") +
+  theme(strip.text.y = element_text(angle = 0, size = 14))
 
-ggsave("../figure/miscalibration_histogram.png")
+ggsave("../figure/miscalibration_histogram.png", width = 8, height = 4)
 ```
 
 <!-- ### Context -->
