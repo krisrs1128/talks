@@ -53,8 +53,7 @@ https://github.io/krisrs1128/LSLab
 
 ### Introduction
 
-These themes have recurred across almost all the projects I have encountered in
-my research:
+These themes have recurred across almost all the projects that I have studied:
 
 * **Multimodality**: Data are gathered from complementary sensors or assays.
 * **Ecosystem Analysis**: We would like to understand the interactions across a landscape, not just the isolated components
@@ -77,19 +76,6 @@ my research:
 
 ---
 
-### Multimodal Regression
-
-* If the goal is to predict a response from several sources, it can be helpful to
-use dimensionality reduction that emphasizes shared structure.
-* For example, cooperative learning `r Citep(bib, "Ding2021CooperativeLF")` solves:
-\begin{align*}
-\arg\min_{\beta_1 \in \mathbb{R}^{P_{1}}, \beta_2 \in \mathbb{R}^{P_2}} &\frac{1}{2}\left\|y-X_{1} \beta_{1}-X_{2} \beta_{2}\right\|^2+\frac{\rho}{2}\left\|\left(X_{1} \beta_{1}-X_{2} \beta_{2}\right)\right\|^2  + \\ 
-&\lambda_1\left\|\beta_{1}\right\|_1+\lambda_2\left\|\beta_{2}\right\|_1 .
-\end{align*}
-  The second term is similar to the CCA objective, highlighting shared structure across tables
-
----
-
 ### Multimodal Dimensionality Reduction
 
 * Canonical correlation analysis looks for shared structure across sources,
@@ -100,6 +86,19 @@ use dimensionality reduction that emphasizes shared structure.
 where $z_i^{(1)}(u)=u^T x^{(1)}_i$ and $z_i^{(2)}(v)=v^T x^{(2)}_i$ are linear feature extractors.
 
 * In modern settings, it's often useful to introduce sparsity `r Citep(bib, c("Witten2009APM", "Gao2014SparseCA"))` or nonlinearity `r Citep(bib, c("Andrew2013DeepCC", "Wang2015OnDM"))`.
+
+---
+
+### Multimodal Regression
+
+* If the goal is to predict a response from several sources, it can be helpful to
+use dimensionality reduction that emphasizes shared structure.
+* For example, cooperative learning `r Citep(bib, "Ding2021CooperativeLF")` solves:
+\begin{align*}
+\arg\min_{\beta_1 \in \mathbb{R}^{P_{1}}, \beta_2 \in \mathbb{R}^{P_2}} &\frac{1}{2}\left\|y-X_{1} \beta_{1}-X_{2} \beta_{2}\right\|^2+\frac{\rho}{2}\left\|\left(X_{1} \beta_{1}-X_{2} \beta_{2}\right)\right\|^2  + \\ 
+&\lambda_1\left\|\beta_{1}\right\|_1+\lambda_2\left\|\beta_{2}\right\|_1 .
+\end{align*}
+  The second term is similar to the CCA objective, highlighting shared structure across tables
 
 ---
 
