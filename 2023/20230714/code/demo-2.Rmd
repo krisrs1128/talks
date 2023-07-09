@@ -1,0 +1,127 @@
+---
+title: "demo-2.Rmd"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+library(tidyverse)
+theme_set(theme_bw())
+```
+
+```{r}
+matnorm <- function(N, D, mu = 0, sigma = 1) {
+  rnorm(N * D, mu, sigma) |>
+    matrix(N, D)
+}
+
+matbern <- function(J, prob) {
+  rbinom(prod(J), 1, prob) |>
+    matrix(J[1], J[2])
+}
+
+estimate_fdr <- function(p_values, thresholds) {
+  m <- sapply(p_values, length)
+  R <- map2_dbl(p_values, thresholds, ~ mean(.x < .y))
+  sum(m * thresholds) / sum(m * R)
+}
+
+estimate_fdr_vec <- function(p_values, thresholds) {
+  fdp_hat <- matrix(0, length(thresholds), length(thresholds))
+  
+  for (t1 in seq_along(thresholds)) {
+    for (t2 in seq_along(thresholds)) {
+      fdp_hat[t1, t2] <- estimate_fdr(p_list, c(thresholds[t1], thresholds[t2]))
+    }
+  }
+  
+  as_tibble(fdp_hat) |>
+    mutate(ix1 = row_number()) |>
+    pivot_longer(-ix1, names_to = "ix2") |>
+    mutate(
+      ix2 = as.integer(str_extract(ix2, "[0-9]+")),
+      t1 = thresholds[ix1],
+      t2 = thresholds[ix2],
+    )
+}
+
+```
+
+```{r}
+N <- 50
+J <- c(200, 200)
+hyper <- list(a = .2, h = 10)
+```
+
+```{r}
+x <- sample(0:1, N * J[1], replace = TRUE) |>
+  matrix(N, J[1])
+
+dists <- abs(outer((1:J[1])/J[1], (1:J[2])/J[2], "-"))
+prob <- hyper$a * exp(-hyper$h * dists)
+beta <- matbern(J, prob)
+y <- x %*% beta + matnorm(N, J[2])
+```
+
+```{r}
+p_values <- matrix(0, J[1], J[2])
+
+for (j1 in seq_len(J[1])) {
+  if (j1 %% 10 == 0) {
+    print(j1)
+  }
+
+  for (j2 in seq_len(J[2])) {
+    p_values[j1, j2] <- cor.test(y[, j2], x[, j1])$p.value
+  }
+}
+``` 
+```{r}
+p_df <- as_tibble(p_values) |>
+  mutate(J1 = row_number()) |>
+  pivot_longer(-J1, names_to = "J2", values_to = "p") |>
+  mutate(
+    J1_frac = as.integer(J1) / J[1],
+    J2_frac = as.integer(str_extract(J2, "[0-9]+")) / J[2],
+    dist = abs(J1_frac - J2_frac)
+  )
+
+ggplot(p_df) +
+  geom_histogram(aes(p, stat(density))) +
+  facet_wrap(~ dist < 0.1) 
+```
+
+```{r}
+p_list <- list(p_values[dists < 0.1], p_values[dists >= 0.1])
+thresholds <- seq(1e-4, 1e-3, length.out = 100)
+fdp_df <- estimate_fdr_vec(p_list, thresholds)
+```
+
+```{r}
+ggplot(fdp_df) +
+  geom_tile(aes(t1, t2, fill = value, col = value)) +
+  scale_fill_distiller(direction = 1) +
+  scale_color_distiller(direction = 1)
+
+ggplot(fdp_df) +
+  geom_tile(aes(t1, t2, fill = value > 0.1, col = value > 0.1)) +
+  ylim(1e-4, 0.00025)
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
