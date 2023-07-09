@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 ```{r}
 library(tidyverse)
+library(IHW)
 theme_set(theme_bw())
 ```
 
@@ -24,22 +25,8 @@ matbern <- function(J, prob) {
     matrix(J[1], J[2])
 }
 
-estimate_fdr <- function(p_values, thresholds) {
-  m <- sapply(p_values, length)
-  R <- map2_dbl(p_values, thresholds, ~ mean(.x < .y))
-  sum(m * thresholds) / sum(m * R)
-}
-
-estimate_fdr_vec <- function(p_values, thresholds) {
-  fdp_hat <- matrix(0, length(thresholds), length(thresholds))
-  
-  for (t1 in seq_along(thresholds)) {
-    for (t2 in seq_along(thresholds)) {
-      fdp_hat[t1, t2] <- estimate_fdr(p_list, c(thresholds[t1], thresholds[t2]))
-    }
-  }
-  
-  as_tibble(fdp_hat) |>
+reshape_mat <- function(mat, thresholds) {
+  as_tibble(mat) |>
     mutate(ix1 = row_number()) |>
     pivot_longer(-ix1, names_to = "ix2") |>
     mutate(
@@ -47,6 +34,33 @@ estimate_fdr_vec <- function(p_values, thresholds) {
       t1 = thresholds[ix1],
       t2 = thresholds[ix2],
     )
+}
+
+estimate_fdr <- function(p_values, thresholds) {
+  m <- sapply(p_values, length)
+  R <- map2_dbl(p_values, thresholds, ~ mean(.x < .y))
+  sum(m * thresholds) / sum(m * R)
+}
+
+count_rejections <- function(p_values, thresholds) {
+  sum(map2_dbl(p_values, thresholds, ~ sum(.x < .y)))
+}
+
+estimate_fdr_vec <- function(p_values, thresholds) {
+  fdp_hat <- matrix(0, length(thresholds), length(thresholds))
+  rejections <- matrix(0, length(thresholds), length(thresholds))
+  
+  for (t1 in seq_along(thresholds)) {
+    for (t2 in seq_along(thresholds)) {
+      fdp_hat[t1, t2] <- estimate_fdr(p_values, c(thresholds[t1], thresholds[t2]))
+      rejections[t1, t2] <- count_rejections(p_values, c(thresholds[t1], thresholds[t2]))
+    }
+  }
+  
+  list(
+    fdr = reshape_mat(fdp_hat, thresholds) |> rename(fdr_hat = value), 
+    rejections = reshape_mat(rejections, thresholds) |> rename(rejections = value)
+  )
 }
 
 ```
@@ -64,7 +78,7 @@ x <- sample(0:1, N * J[1], replace = TRUE) |>
 dists <- abs(outer((1:J[1])/J[1], (1:J[2])/J[2], "-"))
 prob <- hyper$a * exp(-hyper$h * dists)
 beta <- matbern(J, prob)
-y <- x %*% beta + matnorm(N, J[2])
+y <- x %*% beta + matnorm(N, J[2], 0, 0.1)
 ```
 
 ```{r}
@@ -97,31 +111,62 @@ ggplot(p_df) +
 
 ```{r}
 p_list <- list(p_values[dists < 0.1], p_values[dists >= 0.1])
-thresholds <- seq(1e-4, 1e-3, length.out = 100)
-fdp_df <- estimate_fdr_vec(p_list, thresholds)
+thresholds <- seq(1e-4, .008, length.out = 100)
+estimates <- estimate_fdr_vec(p_list, thresholds)
+
+fdr_boundary <- estimates$fdr |>
+  filter(fdr_hat < 0.1) |>
+  group_by(t1) |>
+  summarise(max_t2 = max(t2))
 ```
 
 ```{r}
-ggplot(fdp_df) +
-  geom_tile(aes(t1, t2, fill = value, col = value)) +
+ggplot(estimates$fdr) +
+  geom_tile(aes(t1, t2, fill = fdr_hat, col = fdr_hat)) +
   scale_fill_distiller(direction = 1) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
   scale_color_distiller(direction = 1)
 
-ggplot(fdp_df) +
-  geom_tile(aes(t1, t2, fill = value > 0.1, col = value > 0.1)) +
-  ylim(1e-4, 0.00025)
+ggplot(estimates$fdr) +
+  geom_tile(aes(t1, t2, fill = fdr_hat, col = fdr_hat)) +
+  scale_fill_distiller(direction = 1) +
+  scale_color_distiller(direction = 1) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  geom_step(data = fdr_boundary, aes(t1, max_t2), linewidth = 1.25)
+
+ggplot(estimates$fdr) +
+  geom_tile(aes(t1, t2, fill = fdr_hat, col = fdr_hat)) +
+  scale_fill_distiller(direction = 1) +
+  scale_color_distiller(direction = 1) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(limits = c(1e-4, 0.0015), expand = c(0, 0)) +
+  geom_step(data = fdr_boundary, aes(t1, max_t2), linewidth = 1.25)
+
+ggplot(estimates$rejections) +
+  geom_tile(aes(t1, t2, fill = rejections, col = rejections)) +
+  geom_step(data = fdr_boundary, aes(t1, max_t2), linewidth = 1.25) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(limits = c(1e-4, 0.0015), expand = c(0, 0)) +
+  scale_fill_distiller(direction = 1) +
+  scale_color_distiller(direction = 1)
 ```
+
 
 ```{r}
+optimal_thresholds <- estimates$rejections |>
+  left_join(estimates$fdr) |>
+  filter(fdr_hat < 0.1) |>
+  slice_max(rejections) |>
+  select(t1, t2)
 
+ggplot(estimates$rejections) +
+  geom_tile(aes(t1, t2, fill = rejections, col = rejections)) +
+  geom_step(data = fdr_boundary, aes(t1, max_t2), linewidth = 1.25) +
+  geom_point(data = optimal_thresholds, aes(t1, t2), col = "red", size = 10) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(limits = c(1e-4, 0.0015), expand = c(0, 0)) +
+  scale_fill_distiller(direction = 1) +
+  scale_color_distiller(direction = 1)
 ```
-
-
-
-
-
-
-
-
-
-
