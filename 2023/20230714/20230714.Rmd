@@ -427,8 +427,8 @@ We have learned to use a higher threshold for hypotheses with smaller pairwise d
 
 ### Miscalibration
 
-Often in computational genomics, traditional hypothesis testing assumptions
-don't hold, so our $p$-values are not actually uniformly distributed.
+Often in computational genomics, traditional assumptions
+don't hold, so $p$-values are not actually uniformly distributed.
 
 .center[
   <img src="figure/miscalibration_histogram.png" width=800>
@@ -441,20 +441,19 @@ don't hold, so our $p$-values are not actually uniformly distributed.
 Imagine $x_{ij} \vert \text{disease = t} \sim \text{NB}\left(\mu_{jt}, \varphi\right)$ are genes whose expression potentially varies across disease status.
 
 \begin{align*}
-H_{0j}: \mu{j0} = \mu{j1} \\
-H_{1j}: \mu{j0} \neq \mu_{j1}
+H_{0j}: \mu_{j0} = \mu_{j1} \\
+H_{1j}: \mu_{j0} \neq \mu_{j1}
 \end{align*}
 
 ---
 
 ### Example
 
-* We have applied Trimmed Maximum of Means and a log normalization to these simulated data, as implemented in the popular `edgeR` package
-* We then apply two-sample $t$-tests
-  - We are quite far from the required approximate normality within groups
+* We applied Trimmed Maximum of Means and a log normalization to these simulated data, as implemented in the `edgeR` package
+* We then apply two-sample $t$-tests. Notice the nonuniformity of the null $p$-values.
 
 .center[
-  <img src="figure/miscalibration_histogram.png" width=800>
+<img src="figure/miscalibration_histogram.png" width=700>
 ]
 
 ---
@@ -505,12 +504,12 @@ where $\hat{\beta}^{(j)}$ are estimated on the separate splits.
 
 ### Symmetry and Mirrors
 
-Mirror statistics measure the agreement in variable importances between splits.
+Mirror statistics measure the agreement in estimates across splits.
 
-Example: $\text{sign}\left(\hat{\beta}^{1}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\frac{\hat{\beta}_{m}^{(1)} + \hat{\beta}_{m}^{(2)}}{2}\right]$
+Example: $\text{sign}\left(\hat{\beta}^{1}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]$
 
 .center[
-  <img src="figure/regression-mirrors.png" width=800>
+  <img src="figure/regression-mirrors.png" width=750>
 ]
 
 ---
@@ -584,7 +583,7 @@ We need a mechanism for aggregating selections across each split.
 
 ### Aggregation Procedure
 
-Let $\hat{I}_{1}, \dots, hat{I}_{m}$ store the column averages of this matrix. Larger $\hat{I}_{m}$ means:
+Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the column averages of this matrix. Larger $\hat{I}_{m}$ means:
   * The feature is selected even when $\absarg{S}_{k}$ is small
   * The feature is selected frequently
 
@@ -594,7 +593,7 @@ Let $\hat{I}_{1}, \dots, hat{I}_{m}$ store the column averages of this matrix. L
 
 ### Aggregation Procedure
 
-* For the final selection, choose features $m$ with the largest $\hat{I}_{m}$ possible, up until the ``budget'' exceeds $1 - q$.
+* For the final selection, choose features $m$ with the largest $\hat{I}_{m}$ possible, up until the budget exceeds $1 - q$.
 * This is guaranteed to control the FDR at level $q$
 
 ---
