@@ -3,100 +3,28 @@ title: "Untitled"
 output: html_document
 date: "`r Sys.Date()`"
 ---
-```{r}
-knitr::opts_chunk$set(
-  message = FALSE,
-  warning = FALSE
-)
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-library(tidyverse)
 library(edgeR)
 library(ggdist)
-library(patchwork)
+library(glmnet)
+library(multtest)
+library(tidyverse)
+source("mirror.R")
+source("mirror-demo.R")
 theme_set(theme_bw())
 set.seed(20230714)
 ```
 
 ### $p$-value Histograms
+
 ```{r}
 cols <- c("#F27A5E", "#15AEBF")
-
-matnorm <- function(mu) {
-  N <- nrow(mu)
-  M <- ncol(mu)
-
-  x <- matrix(nrow = N, ncol = M)
-  for (i in seq_len(N)) {
-    x[i, ] <- rnorm(M, mu[i, ])
-  }
-  
-  x
-}
-
-simulate_pvalues <- function(N, M, signal = 0.25, nonnull_frac = 0.2) {
-  mu <- matrix(0, N, M)
-  disease_ix <- seq_len(N / 2)
-  nonnull_ix <- seq_len(nonnull_frac * M)
-  mu[disease_ix, nonnull_ix] <- signal
-  x <- matnorm(mu)
-  
-  p_values <- list()
-  for (j in seq_len(M)) {
-    p_values[[j]] <- tibble(
-      hypothesis = j,
-      p_value = t.test(x[disease_ix, j], x[-disease_ix, j])$p.value
-    )
-  }
-  
-  p_values |>
-    bind_rows() |>
-    mutate(
-      nonnull = ifelse(hypothesis %in% nonnull_ix, "nonnull", "null"),
-      nonnull = factor(nonnull, levels = c("nonnull", "null"))
-    )
-}
-
-
-plot_pval <- function(p_values, facet = FALSE) {
-  p <- list()
-
-  p[[1]] <- ggplot(p_values) +
-    geom_histogram(aes(p_value, stat(density)), binwidth = 0.03) +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
-    labs(x = "p-value", y = "Density") +
-    theme(
-      axis.ticks = element_blank(),
-      panel.grid = element_blank(),
-      panel.border = element_blank()
-    )
-  
-  p[[2]] <- ggplot(p_values) +
-    geom_histogram(
-      aes(p_value, stat(density), fill = nonnull), 
-      position = "identity",
-      alpha = 0.7,
-      binwidth = 0.03
-    ) +
-    scale_x_continuous(expand = c(0, 0)) +
-    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
-    labs(x = "p-value", y = "Density") +
-    scale_fill_manual(values = cols, guide = "none") +
-    theme(
-      axis.ticks = element_blank(),
-      panel.grid = element_blank(),
-      panel.border = element_blank()
-    )
-  
-  if (facet) {
-    p[[2]] <- p[[2]] + 
-      facet_grid(nonnull ~ ., scales = "free_y")
-  }
-
-  p
-}
 
 simulate_pvalues(200, 1e4) |>
   plot_pval()
@@ -131,7 +59,7 @@ ggplot(sorted_values) +
   scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
   labs(x = "p-value", y = "Density")
-ggsave("../figure/cdf-transformation-1.svg", width = 4, height = 2.5)
+ggsave("../figure/cdf-transformation-1.png", width = 4, height = 2.5)
 
 ggplot(sorted_values) +
   geom_bar(aes(bin_low, sum_count), stat = "identity", width = .015) +
@@ -139,32 +67,22 @@ ggplot(sorted_values) +
   scale_x_continuous(expand = c(0, 0)) +
   labs(x = "p-value", y = "Cumulative Density")
 
-ggsave("../figure/cdf-transformation-2.svg", width = 4, height = 2.5)
+ggsave("../figure/cdf-transformation-2.png", width = 4, height = 2.5)
 ```
 
 ### NB Miscalibration
 
 ```{r}
-nb_matrix <- function(mu, N = 100, size = 1) {
-  x <- matrix(0, N, length(mu))
-  for (j in seq_along(mu)) {
-    x[, j] <- rnbinom(N, size, mu = mu[j])
-  }
-
-  x
-}
-```
-
-```{r}
-M <- 1000
-nonnull <- 200
-mu0 <- rep(50, M)
+M <- 2000
+nonnull <- 500
+mu0 <- rep(5, M)
 mu1 <- mu0
-mu1[1:nonnull] <- mu0[1:nonnull] * 1.6
+effect <- 2
+mu1[1:nonnull] <- mu0[1:nonnull] * sample(c(effect, 1 / effect), nonnull, replace = TRUE)
 
 x <- list(
-   disease = nb_matrix(mu1),
-   healthy = nb_matrix(mu0) 
+   disease = nb_matrix(mu1, size = 1),
+   healthy = nb_matrix(mu0, size = 1) 
   ) |>
   map(~ calcNormFactors(DGEList(t(.)))) |>
   map(~ as_tibble(t(cpm(., log = TRUE)))) |>
@@ -174,7 +92,7 @@ x <- list(
 ```{r}
 x |>
   pivot_longer(-state, names_to = "hypothesis") |>
-  mutate(hypothesis = as.integer(hypothesis)) |>
+  mutate(hypothesis = as.integer(str_extract(hypothesis, "[0-9]+"))) |>
   filter(
     hypothesis %in% c(1:10, (nonnull + 1):(nonnull + 10))
   ) |>
@@ -230,18 +148,48 @@ p_values |>
 
 ggsave("../figure/miscalibration_histogram.png", width = 8, height = 4)
 ```
+```{r}
+selection_bh <- mt.rawp2adjp(p_values$p_value, proc = "BH", alpha = 0.1)$adjp |>
+  mt.reject(alpha = 0.1)
 
-<!-- ### Context -->
+selection_bh <- which(selection_bh$which[, "BH"])
+metrics(selection_bh, nonnull)
+```
 
-<!-- ```{r} -->
-<!-- N <- c(100, 200) # the numbers of SNPs and histone markers, respectively -->
-<!-- snps <- matrix(N[1], 0) -->
+### Using Mirrors
 
-<!-- for (n in seq_len(N[1])) { -->
-<!-- } -->
-<!-- ``` -->
+```{r}
+x_ <- x |>
+  select(-state) |>
+  as.matrix()
+ms <- map(1:20, ~ glmnet_mirror(x_, x$state))
+m_df <- map_dfr(ms, ~ tibble(m = ., ix = seq_along(.)), .id = "replicate") |>
+  mutate(
+    nonnull = ix %in% seq_len(nonnull),
+    nonnull = ifelse(nonnull, "Nonnull", "Null")
+  )
+```
 
 
+```{r}
+ggplot(m_df) +
+  geom_histogram(aes(m), binwidth = 0.0005) +
+  scale_y_continuous(expand = c(0, 0, 0.05, 0)) +
+  scale_x_continuous(expand = c(0, 0))
+
+ggplot(m_df) +
+  geom_histogram(
+    aes(m, fill = nonnull),
+    position = "identity",
+    alpha = 0.9, binwidth = 0.0005
+  ) +
+  scale_y_continuous(expand = c(0, 0, 0.05, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = cols)
+```
 
 
-
+```{r}
+selection_mirror <- which(multiple_data_splitting(ms))
+metrics(selection_mirror, nonnull)
+```

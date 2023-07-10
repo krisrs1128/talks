@@ -153,7 +153,6 @@ ggplot(estimates$rejections) +
   scale_color_distiller(direction = 1)
 ```
 
-
 ```{r}
 optimal_thresholds <- estimates$rejections |>
   left_join(estimates$fdr) |>
