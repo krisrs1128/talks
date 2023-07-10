@@ -17,6 +17,13 @@ class: title
 background-image: url("figure/selective-cover.png")
 background-size: cover
 
+$$\def\absarg#1{\left|#1\right|}$$
+$$\def\Earg#1{\mathbf{E}\left[#1\right]}$$
+$$\def\reals{\mathbb{R}} % Real number symbol$$
+$$\def\integers{\mathbb{Z}} % Integer symbol$$
+$$\def\*#1{\mathbf{#1}}$$
+$$\def\m#1{\boldsymbol{#1}}$$
+$$\def\FDR{\widehat{\mathrm{FDR}}}$$
 
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
 library(RefManageR)
@@ -62,7 +69,11 @@ Notation
   * Hypotheses of interest: $H_{1}, \dots, H_{M}$
   * Associated $p$-values: $p_{1}, \dots, p_{M}$.
 
-Goal: Reject as many non-null hypotheses as possible while controlling the False Discovery Rate, $\mathbb{E}\left[\left\|\frac{\mathrm{False Positives}\right\|}{\left\|\mathrm{Rejections}\right\|}].
+Goal: Reject as many non-null hypotheses as possible while controlling the False Discovery Rate,
+
+\begin{align*}
+\Earg{\frac{\absarg{\text{False Positives}}}{\absarg{\text{Rejections}}\vee 1}}
+\end{align*}
 
 ---
 
@@ -72,7 +83,7 @@ Goal: Reject as many non-null hypotheses as possible while controlling the False
 * Microbiome: Is taxon $m$ associated with development of Type 1 diabetes?
 * Epigenetics: Is SNP $i$ associated with histone marker $j$? Each $i-j$ pairs defines on test $H_{m}$.
 
---- 
+---
 
 ### $p$-value histogram
 
@@ -96,10 +107,10 @@ Goal: Reject as many non-null hypotheses as possible while controlling the False
 
 ### Benjamini-Hochberg
 
-The BH procedure selects hypotheses in a way that controls the FDR at level $q$.
+The BH procedure controls the FDR at level $q$.
 
 1. Sort the p-values: $p_{(1)} \leq p_{(2}) \leq \dots \leq p_{(m)}$
-1. Find the largest $i$ such that $p_{(i)} leq \frac{i q}{m}$
+1. Find the largest $i$ such that $p_{(i)} \leq \frac{i q}{m}$
 1. Reject hypotheses associated with $p_{(1)} \leq \dots \leq p_{(i)}$ 
 
 ---
@@ -108,7 +119,9 @@ The BH procedure selects hypotheses in a way that controls the FDR at level $q$.
 
 At any threshold $t$, estimate the FDR using the relative areas from the null and alternative density.
 
-<img src="../figure/annotated_histogram.png" width=800>
+.center[
+<img src="figure/annotated_histogram.png" width=400/>
+]
 
 ---
 
@@ -116,7 +129,9 @@ At any threshold $t$, estimate the FDR using the relative areas from the null an
 
 At any threshold $t$, estimate the FDR using the relative areas from the null and alternative density.
 
-<img src="../figure/annotated_histogram-2.png" width=800>
+.center[
+<img src="figure/annotated_histogram-2.png" width=400/>
+]
 
 ---
 
@@ -126,12 +141,12 @@ Let $R\left(t\right)$ be the number of rejected hypotheses at threshold $t$. The
 
 .pull-left[
 \begin{align*}
-\hat{\text{FDR}}\left(t\right) &= \frac{\pi_{0}mt}{R\left(t\right)}
+\FDR\left(t\right) &= \frac{\pi_{0}mt}{R\left(t\right)}
 \end{align*}
 ]
 
 .pull-right[
-<img src="../figure/annotated_histogram-2.png" width=800>
+<img src="figure/annotated_histogram-2.png" width=400/>
 ]
 
 ---
@@ -144,14 +159,31 @@ Maximize the number of rejections while limiting false discoveries.
 Optimize:
 \begin{align*}
 \text{maximize } &R\left(t\right) \\
-\text{subject to } &\hat{\text{FDR}} \leq q
+\text{subject to } &\FDR\left(t\right) \leq q
 \end{align*}
 ]
 
 .pull-right[
-<img src="../figure/annotated_histogram-2.png" width=800>
+<img src="figure/annotated_histogram-2.png" width=450/>
 ]
 
+---
+
+### Why?
+
+Maximize the number of rejections while limiting false discoveries.
+
+.pull-left[
+Optimize:
+\begin{align*}
+\text{maximize } &t \\
+\text{subject to } &\FDR\left(t\right) \leq q
+\end{align*}
+]
+
+.pull-right[
+<img src="figure/annotated_histogram-2.png" width=450>
+]
 
 ---
 
@@ -163,12 +195,12 @@ Larger thresholds let more hypotheses through.
 Optimize:
 \begin{align*}
 \text{maximize } & t \\
-\text{subject to } &\hat{\text{FDR}} \leq q
+\text{subject to } &\FDR\left(t\right) \leq q
 \end{align*}
 ]
 
 .pull-right[
-<img src="../figure/annotated_histogram-3.png" width=800>
+<img src="figure/annotated_histogram-3.png" width=450>
 ]
 
 ---
@@ -181,12 +213,12 @@ Larger thresholds let more hypotheses through.
 Optimize:
 \begin{align*}
 \text{maximize } & t \\
-\text{subject to } &\hat{\text{FDR}} \leq q
+\text{subject to } &\FDR\left(t\right) \leq q
 \end{align*}
 ]
 
 .pull-right[
-<img src="../figure/annotated_histogram-4.png" width=800>
+<img src="figure/annotated_histogram-4.png" width=450>
 ]
 
 ---
@@ -198,13 +230,13 @@ Look for the largest $p$-value satisfying this inequality.
 .pull-left[
 Optimize:
 \begin{align*}
-\text{maximize } &R\left(t\right) \\
-\text{subject to } &\hat{\text{FDR}} \leq q
+\text{maximize } &t \\
+\text{subject to } &\FDR\left(t\right) \leq q
 \end{align*}
 ]
 
 .pull-right[
-<img src="../figure/annotated_histogram-5.png" width=800>
+<img src="figure/annotated_histogram-5.png" width=450>
 ]
 
 
@@ -217,8 +249,8 @@ Look for the largest $p$-value satisfying this inequality.
 .pull-left[
 Optimize:
 \begin{align*}
-\text{maximize } &R\left(t\right) \\
-\text{subject to } &\hat{\text{FDR}} \leq q
+\text{maximize } &t \\
+\text{subject to } &\FDR\left(t\right) \leq q
 \end{align*}
 ]
 
@@ -226,8 +258,8 @@ Optimize:
 If we substitute $t = p_{(i)}$, then
 
 \begin{align*}
-\frac{\pi_{0}m p_{(i)}}{i} &\leq q \\
-&\implies p_{(i)} \leq \frac{i q}{\pi_{0} m}
+&\frac{\pi_{0}m p_{(i)}}{i} \leq q \\
+\implies & p_{(i)} \leq \frac{i q}{\pi_{0} m}
 \end{align*}
 ]
 
@@ -247,7 +279,7 @@ If we substitute $t = p_{(i)}$, then
 * Using this information can improve power
 
 .center[
-  <img width=700 src="../split-histograms.png"/>
+  <img width=650 src="figure/split-histograms.png"/>
 ]
 
 ---
@@ -265,38 +297,42 @@ Looking for interesting contexts $\implies$ we are now doing selective inference
 
 ### Example: Testing Pairs
 
+.pull-left[
 Suppose we are testing associations between,
 
 * SNPs $x_{1}, \dots, x_{I}$
 * Histone Markers $y_{1}, \dots, y_{J}$
+]
 
+.pull-right[
 $H_{m}: \text{Cor}\left(x_{i}, y_{j}\right) = 0$.
 
 Even for moderate $I, J$, this is many tests!
+]
 
 .center[
-  <img src="../figure/pairwise-cors.png">
+  <img src="figure/pairwise-cors.png" width=800/>
 ]
 
 ---
 
 ### Pairwise Distance
 
-We expect that most true associations are ``local,'' but we don't necessarily want to rule out long-range connections.
+We expect that most true associations are local, but we don't necessarily want to rule out long-range connections.
 
 .center[
-  <img src="../figure/expected-distances.png">
+<img src="figure/expected-distances.png" width=600 />
 ]
 
 ---
 
 ### Grouping by Distance
 
-* Group the distances into bins $1 , \dots, G$.
-* We use different thresholds $\mathbf{t} = \left(t_{1}, \dots, t_{G}\right)$ across groups.
+* Group the distances into bins $1, \dots, G$.
+* We use different thresholds $\*t = \left(t_{1}, \dots, t_{G}\right)$ across groups.
 
 .center[
-  <img src="../figure/pairwise-example-groups.png">
+<img src="figure/pairwise-example-groups.png" width=800/>
 ]
 
 ---
@@ -304,17 +340,19 @@ We expect that most true associations are ``local,'' but we don't necessarily wa
 ### Generalization
 
 * Group the distances into bins $1 , \dots, G$.
-* We use different thresholds $\mathbf{t} = \left(t_{1}, \dots, t_{G}\right)$ across groups.
+* We use different thresholds $\*t = \left(t_{1}, \dots, t_{G}\right)$ across groups.
 
 .pull-left[
-R\left(\mathbf{t}\right) &:= \sum_{g} R_{g}\left(t_{g}\right) \\
-\hat{\text{FDR}}\left(\mathbf{t}\right) &:= \frac{\sum_{g = 1}^{G} m_{g}t_{g}}{R\left(\mathbf{t}\right)}
+\begin{align*}
+R\left(\*t\right) &:= \sum_{g} R_{g}\left(t_{g}\right) \\
+\FDR\left(\mathbf{t}\right) &:= \frac{\sum_{g = 1}^{G} m_{g}t_{g}}{R\left(\*t\right)}
+\end{align*}
 ]
 
 .pull-right[
 \begin{align*}
-\text{maximize } &R\left(\mathbf{t}\right) \\
-\text{subject to } &\hat{\text{FDR}\left(\mathbf{t}\right)} \leq q
+\text{maximize } &R\left(\*t\right) \\
+\text{subject to } &\FDR\left(\*t\right) \leq q
 \end{align*}
 ]
 
@@ -329,7 +367,7 @@ R_{g}\left(t_{g}\right) &= \hat{F}_{g}\left(t_{g}\right)
 \end{align*}
 
 .center[
-  <img src="../figure/cdf-transformation-annotated.png" width=800>
+  <img src="figure/cdf-transformation-annotated.png" width=800>
 ]
 
 ---
@@ -338,13 +376,11 @@ R_{g}\left(t_{g}\right) &= \hat{F}_{g}\left(t_{g}\right)
 
 We can plug this into generic optimization solvers:
 
-.pull-right[
 \begin{align*}
-\text{maximize } & \sum_{g} m_{g}\hat{F}\left(t_{g}\right)
+\text{maximize } & \sum_{g} m_{g}\hat{F}\left(t_{g}\right) \\
 \text{subject to } &
 \sum_{g = 1}^{G} m_{g}\left(t_{g} - m_{g}\hat{F}\left(t_{g}\right)\right) \leq q
 \end{align*}
-]
 
 ---
 
@@ -395,7 +431,7 @@ Often in computational genomics, traditional hypothesis testing assumptions
 don't hold, so our $p$-values are not actually uniformly distributed.
 
 .center[
-  <img src="../figure/miscalibration_histogram.png" width=800>
+  <img src="figure/miscalibration_histogram.png" width=800>
 ]
 
 ---
@@ -418,7 +454,7 @@ H_{1j}: \mu{j0} \neq \mu_{j1}
   - We are quite far from the required approximate normality within groups
 
 .center[
-  <img src="../figure/miscalibration_histogram.png" width=800>
+  <img src="figure/miscalibration_histogram.png" width=800>
 ]
 
 ---
@@ -449,7 +485,7 @@ Consider the regression $\*y = \*X \*\beta + \epsilon$.
   * $H_{0m}: \hat{\beta}_{m}$ is symmetric around 0
 
 .center[
-  <img src="../figure/regression-assumptions.png" width=800/>
+  <img src="figure/regression-assumptions.png" width=800/>
 ]
 
 ---
@@ -474,7 +510,7 @@ Mirror statistics measure the agreement in variable importances between splits.
 Example: $\text{sign}\left(\hat{\beta}^{1}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\frac{\hat{\beta}_{m}^{(1)} + \hat{\beta}_{m}^{(2)}}{2}\right]$
 
 .center[
-  <img src="../figure/regression-mirrors.png" width=800>
+  <img src="figure/regression-mirrors.png" width=800>
 ]
 
 ---
@@ -497,12 +533,12 @@ By symmetry, the size of the left tail informs the number of nulls at each thres
 
 .pull-left[
 \begin{align*}
-\hat{\text{FDR}}\left(t\right) &= \frac{\absarg{T_{m} < -t}}{\absarg{T_{m} > t}}
+\FDR\left(t\right) &= \frac{\absarg{T_{m} < -t}}{\absarg{T_{m} > t}}
 \end{align*}
 ]
 
 .pull-right[
-<img src="../symmetric-reference.png" width=500>
+<img src="figure/symmetric-reference.png" width=500>
 ]
 
 ---
@@ -512,15 +548,15 @@ By symmetry, the size of the left tail informs the number of nulls at each thres
 Maximize discoveries while controlling false discoveries:
 
 \begin{align*}
-\text{minimize} t \\
-\text{subject to } \text{FDR}\left(t\right) \leq q
+\text{maximize } &t \\
+\text{subject to } &\FDR\left(t\right) \leq q
 \end{align*}
 
 ---
 
 ### Code Demo
 
-This is how $\hat{FDR}\left(t\right)$ behaves on the Poisson example.
+This is how $\FDR\left(t\right)$ behaves on the Negative Binomial example.
 
 [Include an interactive]
 
@@ -565,7 +601,7 @@ Let $\hat{I}_{1}, \dots, hat{I}_{m}$ store the column averages of this matrix. L
 
 ### Code Example
 
-In our Poisson example, this leads to FDR control and good power. Here, we've simulated and averaged over 1000 splits.
+In our Negative Binomial example, this leads to FDR control and good power. Here, we've simulated and averaged over 1000 splits.
 
 | Method | FDR | Power |
 | --- | --- | --- |
