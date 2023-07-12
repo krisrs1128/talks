@@ -263,15 +263,17 @@ done
 library(fs)
 results <- dir_ls(".", glob="*rds") |>
   map_dfr(~ bind_rows(readRDS(.)) |> mutate(method = c("BH", "Mirror")), .id = "seed")
+results$fdr[is.na(results$fdr)] <- 0
 
 ggplot(results) +
-  geom_point(aes(fdr, power, col = method)) +
+  geom_vline(xintercept = 0.1, col = "forestgreen", linewidth = 2) +
+  geom_point(aes(fdr, power, col = method), size = 3) +
   scale_color_manual(values = c("orange", "blue")) +
   labs(x = expression(widehat(FDR)), y = "Power", col = "Method") +
   theme(
     axis.title = element_text(size = 14),
     legend.title = element_text(size = 14),
     legend.text = element_text(size = 12)
-    )
+  )
 ```
 
