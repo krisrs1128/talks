@@ -20,7 +20,7 @@ matnorm <- function(mu) {
   x
 }
 
-simulate_pvalues <- function(N, M, signal = 0.25, nonnull_frac = 0.2) {
+simulate_pvalues <- function(N, M, signal = 0.4, nonnull_frac = 0.2) {
   mu <- matrix(0, N, M)
   disease_ix <- seq_len(N / 2)
   nonnull_ix <- seq_len(nonnull_frac * M)
@@ -31,7 +31,7 @@ simulate_pvalues <- function(N, M, signal = 0.25, nonnull_frac = 0.2) {
   for (j in seq_len(M)) {
     p_values[[j]] <- tibble(
       hypothesis = j,
-      p_value = t.test(x[disease_ix, j], x[-disease_ix, j])$p.value
+      p_value = t.test(x[disease_ix, j], x[-disease_ix, j], var.equal = TRUE)$p.value
     )
   }
   

@@ -1,0 +1,277 @@
+---
+title: "Untitled"
+output: html_document
+date: "`r Sys.Date()`"
+params:
+  seed: 1
+---
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+```{r}
+library(edgeR)
+library(ggdist)
+library(glmnet)
+library(glue)
+library(multtest)
+library(tidyverse)
+source("mirror.R")
+source("mirror-helpers.R")
+th <- theme_bw() +
+  theme(
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    strip.text = element_text(size = 14)
+  )
+theme_set(th)
+set.seed(params$seed)
+```
+
+### $p$-value Histograms
+
+```{r}
+cols <- c("#BF0426", "#7BA69E")
+
+simulate_pvalues(200, 1e3) |>
+  plot_pval()
+ggsave("../figure/histogram-1.png", width = 8, height = 3.8)
+simulate_pvalues(200, 1e3, nonnull_frac = 0.1) |>
+  plot_pval()
+ggsave("../figure/histogram-2.png")
+```
+
+### NB Miscalibration
+
+```{r}
+M <- 2000
+nonnull <- 500
+mu0 <- rep(5, M)
+mu1 <- mu0
+effect <- 2
+mu1[1:nonnull] <- mu0[1:nonnull] * sample(c(effect, 1 / effect), nonnull, replace = TRUE)
+
+x <- list(
+   disease = nb_matrix(mu1, size = 1),
+   healthy = nb_matrix(mu0, size = 1) 
+  ) |>
+  map(~ calcNormFactors(DGEList(t(.)))) |>
+  map(~ as_tibble(t(cpm(., log = TRUE)))) |>
+  bind_rows(.id = "state")
+```
+
+```{r, height = 4, width = 6.5}
+x |>
+  pivot_longer(-state, names_to = "hypothesis") |>
+  mutate(hypothesis = as.integer(str_extract(hypothesis, "[0-9]+"))) |>
+  filter(
+    hypothesis %in% c(1:10, (nonnull + 1):(nonnull + 10))
+  ) |>
+  mutate(
+    null = ifelse(hypothesis <= nonnull, "Nonnull", "Null"),
+    null = factor(null, levels = c("Nonnull", "Null"))
+  ) |>
+  ggplot() +
+  stat_pointinterval(
+    aes(as.factor(hypothesis), value, col = state),
+    alpha = 0.6, interval_size_range = c(1, 2)
+  ) +
+  labs(x = "Variable", y = "Value", col = "State") +
+  scale_color_manual(values = cols) +
+  theme(
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12)
+  ) +
+  facet_wrap(~ null, scale = "free_x", ncol = 1)
+
+ggsave("../figure/mirror_inspiration_raw.png")
+```
+
+
+```{r}
+p_values <- list()
+ix <- seq_len(nrow(x) / 2)
+
+for (j in seq(2, ncol(x))) {
+  p_values[[j]] <- tibble(
+    hypothesis = j - 1,
+    p_value = t.test(x[ix, j], x[-ix, j])$p.value
+  )
+}
+
+p_values <- bind_rows(p_values) |>
+  mutate(nonnull = hypothesis %in% seq_len(nonnull))
+
+ggplot(p_values) +
+  geom_histogram(aes(p_value, stat(density)), binwidth = 0.025) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+  labs(x = "p-value", y = "Density")
+
+ggsave("../figure/miscalibration_histogram_merged.png", width = 8, height = 4)
+
+p_values |>
+  mutate(nonnull = ifelse(nonnull, "Nonnull", "Null")) |>
+  ggplot() +
+  geom_histogram(
+    aes(p_value, stat(density), fill = nonnull),
+    binwidth = 0.025
+  ) +
+  scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = cols, guide = FALSE) +
+  facet_grid(nonnull ~ ., scales = "free_y") +
+  labs(x = "p-value", y = "Density") +
+  theme(strip.text.y = element_text(angle = 0, size = 14))
+
+ggsave("../figure/miscalibration_histogram.png", width = 8, height = 4)
+```
+```{r}
+selection_bh <- mt.rawp2adjp(p_values$p_value, proc = "BH", alpha = 0.1)$adjp |>
+  mt.reject(alpha = 0.1)
+
+selection_bh <- which(selection_bh$which[, "BH"])
+results <- list(bh = metrics(selection_bh, nonnull))
+```
+
+### Using Mirrors
+
+```{r}
+x_ <- x |>
+  select(-state) |>
+  as.matrix()
+ms <- map(1:20, ~ glmnet_mirror(x_, x$state))
+m_df <- map_dfr(ms, ~ tibble(m = ., ix = seq_along(.)), .id = "replicate") |>
+  mutate(
+    nonnull = ix %in% seq_len(nonnull),
+    nonnull = ifelse(nonnull, "Nonnull", "Null")
+  )
+```
+
+
+```{r, fig.width = 8, fig.height = 4}
+ggplot(m_df) +
+  geom_histogram(aes(m), binwidth = 0.0005) +
+  labs(x = expression(paste("Mirror ", T[m])), fill = "Truth") +
+  scale_y_continuous(expand = c(0, 0, 0.05, 0)) +
+  scale_x_continuous(expand = c(0, 0))
+ggsave("../figure/mirror_histogram_merged.png")
+
+ggplot(m_df) +
+  geom_histogram(
+    aes(m, fill = nonnull),
+    position = "identity",
+    alpha = 0.9, binwidth = 0.0005
+  ) +
+  labs(x = expression(paste("Mirror ", T[m])), fill = "Truth") +
+  scale_y_continuous(expand = c(0, 0, 0.05, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = cols) +
+  theme(legend.position = "bottom")
+ggsave("../figure/mirror_histogram.png")
+```
+
+```{r, fig.width = 8, fig.height = 5}
+mds <- multiple_data_splitting(ms)
+mds_df <- mds$s_hat |>
+  as_tibble() |>
+  mutate(split = row_number()) |>
+  pivot_longer(-split) |>
+  mutate(
+    variable = as.integer(str_extract(name, "[0-9]+")),
+    value = ifelse(value, "Selected", "Unselected"),
+  )
+
+ggplot(mds_df) +
+  geom_tile(aes(split, variable, fill = value, col = value)) +
+  scale_fill_manual(values = c("#d00054", "#73aaff")) +
+  scale_color_manual(values = c("#d00054", "#73aaff")) +
+  guides(color = guide_legend(override.aes = list(size = 2, col = "black"))) +
+  labs(x = "Split", y = "Variable", fill = "", col = "") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(
+    legend.text = element_text(size = 12),
+    legend.position = "bottom"
+    )
+
+ggsave("../figure/selection.png")
+
+I_hat <- (mds$s_hat / rowSums(mds$s_hat)) |>
+  as_tibble() |>
+  mutate(split = row_number()) |>
+  pivot_longer(-split) |>
+  mutate(variable = as.integer(str_extract(name, "[0-9]+"))) |>
+  group_by(variable) |>
+  summarise(I_hat = mean(value))
+
+max_ix <- I_hat |>
+  mutate(ix = row_number(), I_sum = cumsum(I_hat)) |>
+  filter(I_sum < 0.9, I_hat > 0) |>
+  tail(1) |>
+  pull(ix)
+```
+
+```{r, fig.width = 8, fig.height = 5}
+ggplot(I_hat) +
+  geom_col(aes(reorder(factor(variable), -I_hat), I_hat), width=1) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(
+    y = expression(hat(I)[m]),
+    x = expression(paste("Sorted Variables ", italic(m)))
+    ) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
+  
+ggsave("../figure/I_hat.png")
+
+ggplot(I_hat) +
+  geom_col(aes(reorder(factor(variable), -I_hat), I_hat), width=1) +
+  geom_vline(xintercept = max_ix, col = "darkred", linewidth = 2) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(
+    y = expression(hat(I)[m]),
+    x = expression(paste("Sorted Variables ", italic(m)))
+    ) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
+  
+ggsave("../figure/I_hat_bar.png")
+```
+
+```{r}
+selection_mirror <- which(mds$combined)
+results[["mirror"]] <- metrics(selection_mirror, nonnull)
+saveRDS(results, glue("mirror_comparison-{params$seed}.rds"))
+```
+
+### Repeated Analysis
+
+```{bash, eval = FALSE}
+for i in {20230714..20230719}; do
+  Rscript -e "rmarkdown::render('mirror-demo.Rmd', params = list(seed=$i))"
+done
+```
+
+```{r, eval = FALSE, fig.width = 6, fig.height = 4}
+library(fs)
+results <- dir_ls(".", glob="*rds") |>
+  map_dfr(~ bind_rows(readRDS(.)) |> mutate(method = c("BH", "Mirror")), .id = "seed")
+
+ggplot(results) +
+  geom_point(aes(fdr, power, col = method)) +
+  scale_color_manual(values = c("orange", "blue")) +
+  labs(x = expression(widehat(FDR)), y = "Power", col = "Method") +
+  theme(
+    axis.title = element_text(size = 14),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12)
+    )
+```
+

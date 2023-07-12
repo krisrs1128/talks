@@ -9,9 +9,6 @@ fdp_hat <- function(m) {
   fdp
 }
 
-#' @importFrom dplyr slice_min
-#' @importFrom magrittr %>%
-#' @export
 tau_q <- function(fdp, q) {
   if (!any(na.omit(fdp$fdp) < q)) {
     return(NA)
@@ -41,7 +38,6 @@ selections <- function(m, tau) {
   m > tau
 }
 
-#' @export
 multiple_data_splitting <- function(ms, q = 0.1) {
   s_hat <- matrix(FALSE, length(ms), length(ms[[1]]))
   
@@ -51,16 +47,20 @@ multiple_data_splitting <- function(ms, q = 0.1) {
     s_hat[k, ] <- selections(ms[[k]], tau)
   }
   
-  consolidate(s_hat, q)
+  list(combined = consolidate(s_hat, q), s_hat = s_hat)
 }
 
-glmnet_mirror <- function(x, y) {
+glmnet_mirror <- function(x, y, train_fun = NULL) {
+  if (is.null(train_fun)) {
+    train_fun <- function(x_, y_) { 
+      cv.glmnet(x_, y_, family = "binomial", alpha = 0, intercept = FALSE) |>
+        coef() %>%
+        .[-1]
+    }
+  }
+  
   ix <- sample(nrow(x), 0.5 * nrow(x))
-  beta1 <- cv.glmnet(x[ix, ], y[ix], family = "binomial", alpha = 0, intercept = FALSE) |>
-    coef() %>%
-    .[-1]
-  beta2 <- cv.glmnet(x[-ix, ], y[-ix], family = "binomial", alpha = 0, intercept = FALSE) |>
-    coef() %>%
-    .[-1]
+  beta1 <- train_fun(x[ix, ], y[ix])
+  beta2 <- train_fun(x[-ix, ], y[-ix])
   sign(beta1 * beta2) * (abs(beta1) + abs(beta2))
 }
