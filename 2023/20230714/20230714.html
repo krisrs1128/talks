@@ -504,8 +504,8 @@ H_{1j}: \mu_{j0} \neq \mu_{j1}
 
 ### Example
 
-* We applied a Trimmed Maximum of Means and a log normalization to these simulated data, as implemented in the `edgeR` package
-* Notice the nonuniformity of the null `\(p\)`-values from hte two-sample `\(t\)`-tests
+* We used the `edgeR` package to normalize these data (TMM + log transform) [7]
+* Notice the nonuniformity of the null `\(p\)`-values from the two-sample `\(t\)`-tests
 
 .center[
 &lt;img src="figure/miscalibration_histogram.png" width=700/&gt;
@@ -520,7 +520,7 @@ We can avoid this problem if we bypass `\(p\)`-values altogether.
   - Significance can be deduced from test statistics directly
   - We do not have to use BH to ensure FDR control
   
-This idea is highly adaptable. We'll discuss [7], but see also [8].
+This idea is highly adaptable. We'll discuss [8], but see also [9; 10].
 ]
   
 .pull-right[
@@ -645,9 +645,133 @@ Issue:
   * A downside is that sample splitting samples reduces power.
   * Power can be recovered by aggregating over multiple iterations of splitting.
 
-Notation:
+Main Idea:
   * Create `\(K\)` different pairs of random splits
   * Let `\(\hat{S}_{k}\)` be the selected features when using mirror statistics on the `\(k^{th}\)` random split
+  * Look for consensus across the `\(\hat{S}_{k}\)`
+  * (See appendix for details)
+  
+---
+
+
+### Code Demo
+
+In our Negative Binomial example, this leads to FDR control and reasonable
+power. Here are the results over multiple runs.
+
+.center[
+&lt;img src="figure/mirror_fdr_summary.png" width=700/&gt;
+]
+
+---
+
+### Conclusion
+
+* Whenever the signal is subtle, hypothesis testing is crucial.
+* The key abstractions we encountered were,
+  - Optimization view of BH + Context = Focused Hypothesis Testing
+  - Data splitting + Symmetry assumptions = Formal Error Control
+* These abstractions are useful across the computational genomics workflow
+  - E.g., in experimental design [11] and interpretation of features generated through unsupervised learning [12; 10].
+  - See also variations developed in my lab [13; 14]
+
+---
+
+### References
+
+[1] Y. Benjamini and Y. Hochberg. "Controlling the false discovery
+rate: a practical and powerful approach to multiple testing". In:
+_Journal of the royal statistical society series b-methodological_ 57
+(1995), pp. 289-300.
+
+[2] N. Ignatiadis, B. Klaus, J. B. Zaugg, et al. "Data-driven
+hypothesis weighting increases detection power in genome-scale multiple
+testing". In: _Nature methods_ 13 (2016), pp. 577 - 580.
+
+[3] L. Lei and W. Fithian. "AdaPT: an interactive procedure for
+multiple testing with side information". In: _Journal of the Royal
+Statistical Society: Series B (Statistical Methodology)_ 80 (2016).
+
+[4] N. Ignatiadis and W. Huber. "Covariate powered cross‐weighted
+multiple testing". In: _Journal of the Royal Statistical Society:
+Series B (Statistical Methodology)_ 83 (2017).
+
+---
+
+### References
+
+[5] M. J. Zhang, F. Xia, and J. Y. Zou. "Fast and covariate-adaptive
+method amplifies detection power in large-scale multiple hypothesis
+testing". In: _Nature Communications_ 10 (2019).
+
+[6] R. Yurko, M. G. G'Sell, K. Roeder, et al. "A selective inference
+approach for false discovery rate control using multiomics covariates
+yields insights into disease risk". In: _Proceedings of the National
+Academy of Sciences of the United States of America_ 117 (2020), pp.
+15028 - 15035.
+
+[7] M. D. Robinson, D. J. McCarthy, and G. K. Smyth. "edgeR: a
+Bioconductor package for differential expression analysis of digital
+gene expression data". In: _Bioinformatics_ 26 (2009), pp. 139 - 140.
+
+[8] C. Dai, B. Lin, X. Xing, et al. "False Discovery Rate Control via
+Data Splitting". In: _Journal of the American Statistical Association_
+(2020).
+
+---
+
+### References
+
+[9] X. Ge, Y. E. Chen, D. Song, et al. "Clipper: p-value-free FDR
+control on high-throughput data from two conditions". In: _Genome
+Biology_ 22 (2021).
+
+[10] F. R. Guo and R. D. Shah. "Rank-transformed subsampling: inference
+for multiple data splitting and exchangeable p-values". In: _ArXiv_
+(2023).
+
+[11] C. Fannjiang, S. Bates, A. N. Angelopoulos, et al. "Conformal
+prediction under feedback covariate shift for biomolecular design". In:
+_Proceedings of the National Academy of Sciences of the United States
+of America_ 119 (2022).
+
+[12] D. Song and J. J. Li. "PseudotimeDE: inference of differential
+gene expression along cell pseudotime with well-calibrated p-values
+from single-cell RNA sequencing data". In: _Genome Biology_ 22 (2021).
+
+---
+
+### References
+
+[13] K. Sankaran and P. Jeganathan. "Microbiome Intervention Analysis
+with Transfer Functions and Mirror Statistics". In: _ArXiv_ (2023).
+
+[14] K. Sankaran and S. P. Holmes. "structSSI: Simultaneous and
+Selective Inference for Grouped or Hierarchically Structured Data." In:
+_Journal of statistical software_ 59 13 (2014), pp.  1-21 .
+
+---
+
+### Selective Inference
+
+Step (1) distinguishes selective inference from ordinary statistical inference.
+
+1. Search for interesting patterns.
+1. Test whether they could have just been coincidences.
+
+Looking for promising contexts `\(\implies\)` selective inference.
+
+---
+
+### Optimization
+
+This can be given into generic optimization solvers:
+
+`\begin{align*}
+\text{maximize } &amp; \sum_{g} m_{g}\hat{F}\left(t_{g}\right) \\
+\text{subject to } &amp;
+\sum_{g = 1}^{G} m_{g}\left(t_{g} - m_{g}\hat{F}\left(t_{g}\right)\right) \leq q
+\end{align*}`
 
 ---
 
@@ -663,7 +787,7 @@ We need a mechanism for aggregating `\(\hat{S}_{k}\)` across iterations.
 
 ### Aggregation Procedure
 
-Let `\(\hat{I}_{1}, \dots, \hat{I}_{m}\)` store the column averages of this matrix. Larger `\(\hat{I}_{m}\)` means:
+Let `\(\hat{I}_{1}, \dots, \hat{I}_{m}\)` store the row averages of this matrix. Larger `\(\hat{I}_{m}\)` means:
   * The feature is selected even when `\(\absarg{\hat{S}_{k}}\)` is small
   * The feature is selected frequently
 
@@ -693,89 +817,6 @@ Let `\(\hat{I}_{1}, \dots, \hat{I}_{m}\)` store the column averages of this matr
 .center[
   &lt;img src="figure/I_hat_bar.png" width=800/&gt;
 ]
-
----
-
-### Code Demo
-
-In our Negative Binomial example, this leads to FDR control and reasonable
-power. Here are the results over multiple runs.
-
-.center[
-&lt;img src="figure/mirror_fdr_summary.png" width=700/&gt;
-]
-
----
-
-### Conclusion
-
-* Whenever the signal is subtle, hypothesis testing is crucial.
-* The key abstractions we encountered were,
-  - Optimization view of BH + Context = Focused Hypothesis Testing
-  - Data splitting + Symmetry assumptions = Formal Error Control
-* These abstractions are useful across the computational genomics workflow
-  - E.g., in experimental design [9] and interpretation of features generated through unsupervised learning [10].
-  - See also variations developed in my lab [11]
-
----
-
-### References
-
-[1] N. Ignatiadis, B. Klaus, J. B. Zaugg, et al. "Data-driven
-hypothesis weighting increases detection power in genome-scale multiple
-testing". In: _Nature methods_ 13 (2016), pp. 577 - 580.
-
-[2] N. Ignatiadis and W. Huber. "Covariate powered cross‐weighted
-multiple testing". In: _Journal of the Royal Statistical Society:
-Series B (Statistical Methodology)_ 83 (2017).
-
-[3] C. Dai, B. Lin, X. Xing, et al. "False Discovery Rate Control via
-Data Splitting". In: _Journal of the American Statistical Association_
-(2020).
-
-[4] C. Fannjiang, S. Bates, A. N. Angelopoulos, et al. "Conformal
-prediction under feedback covariate shift for biomolecular design". In:
-_Proceedings of the National Academy of Sciences of the United States
-of America_ 119 (2022).
-
----
-
-### References
-
-[5] D. Song and J. J. Li. "PseudotimeDE: inference of differential gene
-expression along cell pseudotime with well-calibrated p-values from
-single-cell RNA sequencing data". In: _Genome Biology_ 22 (2021).
-
----
-
-### References
-
-
-
----
-
-### Selective Inference
-
-Step (1) distinguishes selective inference from ordinary statistical inference.
-
-1. Search for interesting patterns.
-1. Test whether they could have just been coincidences.
-
-Looking for promising contexts `\(\implies\)` selective inference.
-
----
-
-### Optimization
-
-This can be given into generic optimization solvers:
-
-`\begin{align*}
-\text{maximize } &amp; \sum_{g} m_{g}\hat{F}\left(t_{g}\right) \\
-\text{subject to } &amp;
-\sum_{g = 1}^{G} m_{g}\left(t_{g} - m_{g}\hat{F}\left(t_{g}\right)\right) \leq q
-\end{align*}`
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

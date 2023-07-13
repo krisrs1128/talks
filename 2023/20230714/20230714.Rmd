@@ -32,7 +32,7 @@ $$\def\Bern{\operatorname{Bern}}$$
 library(RefManageR)
 library(knitr)
 library(tidyverse)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
 
 BibOptions(cite.style = "numeric")
@@ -514,8 +514,8 @@ H_{1j}: \mu_{j0} \neq \mu_{j1}
 
 ### Example
 
-* We applied a Trimmed Maximum of Means and a log normalization to these simulated data, as implemented in the `edgeR` package
-* Notice the nonuniformity of the null $p$-values from hte two-sample $t$-tests
+* We used the `edgeR` package to normalize these data (TMM + log transform) `r Citep(bib, "Robinson2009edgeRAB")`
+* Notice the nonuniformity of the null $p$-values from the two-sample $t$-tests
 
 .center[
 <img src="figure/miscalibration_histogram.png" width=700/>
@@ -654,56 +654,14 @@ Issue:
   * A downside is that sample splitting samples reduces power.
   * Power can be recovered by aggregating over multiple iterations of splitting.
 
-Notation:
+Main Idea:
   * Create $K$ different pairs of random splits
   * Let $\hat{S}_{k}$ be the selected features when using mirror statistics on the $k^{th}$ random split
-
+  * Look for consensus across the $\hat{S}_{k}$
+  * (See appendix for details)
+  
 ---
 
-### Aggregation Procedure
-
-We need a mechanism for aggregating $\hat{S}_{k}$ across iterations.
-
-.center[
-<img src="figure/selection.png"/>
-]
-
----
-
-### Aggregation Procedure
-
-Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the column averages of this matrix. Larger $\hat{I}_{m}$ means:
-  * The feature is selected even when $\absarg{\hat{S}_{k}}$ is small
-  * The feature is selected frequently
-
-.center[
-  <img src="figure/selection.png" width=700/>
-]
-
----
-
-### Aggregation Procedure
-
-Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the column averages of this matrix. Larger $\hat{I}_{m}$ means:
-  * The feature is selected even when $\absarg{\hat{S}_{k}}$ is small
-  * The feature is selected frequently
-
-.center[
-  <img src="figure/I_hat.png" width=800/>
-]
-
----
-
-### Aggregation Procedure
-
-* For the final selection, choose features with the largest $\hat{I}_{m}$ possible, up until the budget exceeds $1 - q$.
-* This is guaranteed to (asymptotically) control the FDR at level $q$
-
-.center[
-  <img src="figure/I_hat_bar.png" width=800/>
-]
-
----
 
 ### Code Demo
 
@@ -752,6 +710,14 @@ PrintBibliography(bib, start = 9, end = 12)
 
 ---
 
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 13, end = 15)
+```
+
+---
+
 ### Selective Inference
 
 Step (1) distinguishes selective inference from ordinary statistical inference.
@@ -774,3 +740,46 @@ This can be given into generic optimization solvers:
 \end{align*}
 
 ---
+
+### Aggregation Procedure
+
+We need a mechanism for aggregating $\hat{S}_{k}$ across iterations.
+
+.center[
+<img src="figure/selection.png"/>
+]
+
+---
+
+### Aggregation Procedure
+
+Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the row averages of this matrix. Larger $\hat{I}_{m}$ means:
+  * The feature is selected even when $\absarg{\hat{S}_{k}}$ is small
+  * The feature is selected frequently
+
+.center[
+  <img src="figure/selection.png" width=700/>
+]
+
+---
+
+### Aggregation Procedure
+
+Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the column averages of this matrix. Larger $\hat{I}_{m}$ means:
+  * The feature is selected even when $\absarg{\hat{S}_{k}}$ is small
+  * The feature is selected frequently
+
+.center[
+  <img src="figure/I_hat.png" width=800/>
+]
+
+---
+
+### Aggregation Procedure
+
+* For the final selection, choose features with the largest $\hat{I}_{m}$ possible, up until the budget exceeds $1 - q$.
+* This is guaranteed to (asymptotically) control the FDR at level $q$
+
+.center[
+  <img src="figure/I_hat_bar.png" width=800/>
+]
