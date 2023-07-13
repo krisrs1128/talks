@@ -14,7 +14,7 @@ output:
 ---
 
 class: title
-background-image: url("figure/selective-cover.png")
+background-image: url("figure/cover-v2.jpg")
 background-size: cover
 
 $$\def\absarg#1{\left|#1\right|}$$
@@ -44,11 +44,15 @@ bib <- ReadBib("references.bib")
 Selective Inference for Computational Genomics
 </div>
 <div id="subtitle">
-<img src="figure/cropped-CGSI_logo_final-2.jpg" width=200/>
-Computational Genomics Summer Institute <br/>
+<img src="figure/cropped-CGSI_logo_final-2.jpg" width=200/><br/>
 Kris Sankaran <br/>
 14 | July | 2023 <br/>
 https://github.io/krisrs1128/LSLab
+</div>
+
+<div id="links">
+Slides: https://go.wisc.edu/7l1k95 <br/>
+Code: https://go.wisc.edu/s8hdtt
 </div>
 ]
 
@@ -56,15 +60,15 @@ https://github.io/krisrs1128/LSLab
 
 ### Learning Objectives
 
-You will be able to help collaborators solve scientific problems by adapting
+We will be able to help collaborators solve scientific problems by adapting
 modern methods from selective inference.
 
-By the end of this talk, you will be able to:
+By the end of this talk, we will be able to:
 
 1. Discuss the role of selective inference abstractions in computational genomics settings.
 1. Interpret $p$-value histograms and explain how they motivate the Benjamini-Hochberg procedure.
-1. Improve power in large scale inference by focusing attention on the most promising contexts.
-1. Diagnose miscalibration in large scale inference and apply data splitting to address it.
+1. Improve power in large-scale inference by focusing on the most promising contexts.
+1. Diagnose miscalibration in large-scale inference and apply data splitting to address it.
 
 ---
 
@@ -77,24 +81,30 @@ Notation
 Goal: Reject as many non-null hypotheses as possible while controlling the _False Discovery Rate_,
 
 \begin{align*}
-\Earg{\frac{\absarg{\text{False Positives}}}{\absarg{\text{Rejections}}\vee 1}}
+\text{FDR} := \Earg{\frac{\absarg{\text{False Positives}}}{\absarg{\text{Rejections}}\vee 1}}
 \end{align*}
 
 ---
 
 ### Examples
 
-* Microbiome: Is taxon $m$ associated with development of autism in infants?
+.pull-left[
+* Microbiome: Is taxon $m$ associated with the development of autism in infants?
 * Epigenetics: Is CpG site $m$ differentially methlyated among smokers?
 * Cancer: Is elevated immune cell expression of gene $m$ associated with improved survival rates?
+]
+
+.pull-right[
+<img src="figure/microbiome_selection.jpg" width=450/>
+]
 
 ---
 
 ### $p$-value histogram
 
 * Under the null, the $p$-values follow a uniform distribution. 
-* The spike near 0 comes from alternative hypotheses
-* Let $\pi_{0}$ denote the true proportion of nulls
+* The spike near 0 $\implies$ true alternative hypotheses
+* $\pi_{0}$ refers to the true proportion of nulls
 
 .center[
   <img src="figure/histogram-1.png" width=800/>
@@ -105,8 +115,8 @@ Goal: Reject as many non-null hypotheses as possible while controlling the _Fals
 ### $p$-value histogram
 
 * Under the null, the $p$-values follow a uniform distribution. 
-* The spike near 0 are likely from the alternative
-* Let $\pi_{0}$ denote the true proportion of nulls
+* The spike near 0 $\implies$ true alternative hypotheses
+* $\pi_{0}$ refers to the true proportion of nulls
 
 .center[
   <img src="figure/histogram-2.png" width=800/>
@@ -116,10 +126,10 @@ Goal: Reject as many non-null hypotheses as possible while controlling the _Fals
 
 ### Benjamini-Hochberg
 
-The Benjamini-Hochberg (BH) procedure `r Citep(bib, "BH")` controls the FDR at
+The Benjamini-Hochberg (BH) procedure `r Citep(bib, "Benjamini1995ControllingTF")` controls the FDR at
 level $q$.
 
-1. Sort the p-values: $p_{(1)} \leq p_{(2}) \leq \dots \leq p_{(m)}$
+1. Sort the $p$-values: $p_{(1)} \leq p_{(2}) \leq \dots \leq p_{(m)}$
 1. Find the largest $i$ such that $p_{(i)} \leq \frac{i q}{m}$
 1. Reject hypotheses associated with $p_{(1)} \leq \dots \leq p_{(i)}$ 
 
@@ -127,10 +137,10 @@ level $q$.
 
 ### Why?
 
-At any threshold $t$, estimate the FDR using the relative areas from the null and alternative density.
+At any threshold $t$, estimate the FDR using relative areas from the null and alternative densities.
 
 .center[
-<img src="figure/annotated_histogram.png" width=400/>
+<img src="figure/annotated_histogram.png" width=410/>
 ]
 
 ---
@@ -140,7 +150,7 @@ At any threshold $t$, estimate the FDR using the relative areas from the null an
 At any threshold $t$, estimate the FDR using relative areas from the null and alternative densities.
 
 .center[
-<img src="figure/annotated_histogram-2.png" width=400/>
+<img src="figure/annotated_histogram-2.png" width=410/>
 ]
 
 ---
@@ -156,7 +166,7 @@ Let $R\left(t\right)$ be the number of rejected hypotheses at threshold $t$. The
 ]
 
 .pull-right[
-<img src="figure/annotated_histogram-2.png" width=400/>
+<img src="figure/annotated_histogram-2.png" width=435/>
 ]
 
 ---
@@ -174,7 +184,7 @@ Optimize:
 ]
 
 .pull-right[
-<img src="figure/annotated_histogram-2.png" width=450/>
+<img src="figure/annotated_histogram-2.png" width=435/>
 ]
 
 ---
@@ -192,7 +202,7 @@ Optimize:
 ]
 
 .pull-right[
-<img src="figure/annotated_histogram-2.png" width=450>
+<img src="figure/annotated_histogram-2.png" width=435>
 ]
 
 ---
@@ -210,7 +220,7 @@ Optimize:
 ]
 
 .pull-right[
-<img src="figure/annotated_histogram-3.png" width=450>
+<img src="figure/annotated_histogram-3.png" width=435>
 ]
 
 ---
@@ -235,7 +245,7 @@ Optimize:
 
 ### Why?
 
-Look for the largest $p$-value satisfying this inequality.
+Larger thresholds let more hypotheses through.
 
 .pull-left[
 Optimize:
@@ -268,11 +278,15 @@ If we substitute $t = p_{(i)}$, then
 
 \begin{align*}
 &\frac{\pi_{0}m p_{(i)}}{i} \leq q \\
-\implies & p_{(i)} \leq \frac{i q}{\pi_{0} m}
+\implies & p_{(i)} \leq \frac{i q}{\pi_{0} m} \\
+\implies & p_{(i)} \leq \frac{i q}{ m}
 \end{align*}
 ]
 
 ---
+
+background-image: url("figure/split_night_sky.jpg")
+background-size: cover
 
 .middle[
 ## Power through Context
@@ -285,22 +299,11 @@ If we substitute $t = p_{(i)}$, then
 * We may know in advance that some hypotheses are more likely to be rejected than others.
   - Prior literature
   - Library size
-* Using this information can improve power. We'll discuss `r Citep(bib, "Ignatiadis2016DatadrivenHW")`, but see also `r Citep(bib, c("adapt", "Ignatiadis2017CovariatePC", "zou"))`
+* This information can improve power. We'll discuss `r Citep(bib, "Ignatiadis2016DatadrivenHW")`, but see `r Citep(bib, c("Lei2016AdaPTAI", "Ignatiadis2017CovariatePC", "Zhang2019FastAC", "Yurko2020ASI"))`
 
 .center[
-  <img width=650 src="figure/split-histograms.png"/>
+  <img width=620 src="figure/split-histograms.png"/>
 ]
-
----
-
-### Selective Inference
-
-Step (1) distinguishes selective inference from ordinary statistical inference.
-
-1. Search for interesting patterns.
-1. Test whether they could have just been coincidences.
-
-Looking for promising contexts $\implies$ selective inference.
 
 ---
 
@@ -327,7 +330,7 @@ Even for moderate $I, J$, this is many tests!
 
 ### Pairwise Distance
 
-We expect that most true associations are local, but we don't necessarily want to rule out long-range connections.
+We expect that most true associations are local, but we do not want to rule out long-range connections.
 
 .center[
 <img src="figure/expected-distances.png" width=600 />
@@ -369,31 +372,33 @@ R\left(\*t\right) &:= \sum_{g} R_{g}\left(t_{g}\right) \\
 
 ### Code Demo
 
-We simulated a SNP-histone marker association dataset $x_{n} \in \{0, 1\}^{I\prime}$ and $y_{n} \in \reals^{J}$.
+We simulated a SNP-histone marker association dataset $x_{n} \in \{0, 1\}^{I}$ and $y_{n} \in \reals^{J}$.
 
 .pull-left[
 \begin{align*}
 y_{n} &= B x_{n} + \epsilon_{n} \\
-x_{ni} &\sim \Bern\left(\frac{1}{2}\right)
-B_{nj} &\sim \Bern\left(0.4 \exp{- \frac{1}{10}\left|i - j\right|\right)
+\epsilon_{n} &\sim \mathcal{N}\left(0, 0.1^2\right) \\
+x_{ni} &\sim \Bern\left(\frac{1}{2}\right) \\
+B_{nj} &\sim \Bern\left(0.4 \exp\left(- \frac{1}{10}\left|\frac{i}{I} - \frac{j}{J}\right|\right)\right) \\
 \end{align*}
 ]
 
 .pull-right[
-<img src="figure/beta_heatmap.png"/>
+<img src="figure/beta_heatmap.png" width=400/>
 ]
 
 ---
 
 ### Code Demo
 
-We simulated a SNP-histone marker association dataset $x_{n} \in \{0, 1\}^{I\prime}$ and $y_{n} \in \reals^{J}$.
+We simulated a SNP-histone marker association dataset $x_{n} \in \{0, 1\}^{I}$ and $y_{n} \in \reals^{J}$.
 
 .pull-left[
 \begin{align*}
 y_{n} &= B x_{n} + \epsilon_{n} \\
-x_{ni} &\sim \Bern\left(\frac{1}{2}\right)
-B_{nj} &\sim \Bern\left(0.4 \exp{- \frac{1}{10}\left|\frac{i}{I} - \frac{j}{J}\right|\right)
+\epsilon_{n} &\sim \mathcal{N}\left(0, 0.1^2\right) \\
+x_{ni} &\sim \Bern\left(\frac{1}{2}\right) \\
+B_{nj} &\sim \Bern\left(0.4 \exp\left(- \frac{1}{10}\left|\frac{i}{I} - \frac{j}{J}\right|\right)\right) \\
 \end{align*}
 ]
 
@@ -407,7 +412,7 @@ B_{nj} &\sim \Bern\left(0.4 \exp{- \frac{1}{10}\left|\frac{i}{I} - \frac{j}{J}\r
 
 We can estimate $\FDR\left(\*t\right)$ with a few lines of code:
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 m <- map_dbl(p_values, length)
 R <- map2_dbl(p_values, thresholds, ~ sum(.x < .y))
 sum(m * thresholds) / R
@@ -420,29 +425,29 @@ sum(m * thresholds) / R
 
 ### Code Demo
 
-We can have more generous thresholds for $p$-values in the nearby group. This
+We can have more generous thresholds for $p$-values between nearby pairs. This
 invests the most "budget" on the promising contexts.
   
 .center[
-  <img src="figure/optimal-thresholds-1.png" width=800/>
+  <img src="figure/optimal-thresholds-1.png" width=700/>
 ]
 
 ---
 
 ### Code Demo
 
-We can have more generous thresholds for $p$-values in the nearby group. This
+We can have more generous thresholds for $p$-values between nearby pairs. This
 invests the most "budget" on the promising contexts.
   
 .center[
-  <img src="figure/optimal-thresholds-2.png" width=800/>
+  <img src="figure/optimal-thresholds-2.png" width=700/>
 ]
 
 ---
 
 ### Optimization
 
-* In practice, we would optimize $\*t$, rather than scanning across the entire
+* In practice, we would optimize $\*t$, rather than scanning the entire
 space.
 * The number of rejections can be derived from the CDF of the $p$-value histogram.
 
@@ -450,23 +455,11 @@ space.
 R_{g}\left(t_{g}\right) &= \hat{F}_{g}\left(t_{g}\right)
 \end{align*}
 
-* To ensure the optimization is convex, we can use the Grenander estimate of $\hat{F}_{g}$
+* To make the objective convex, we can use the Grenander estimate of $\hat{F}_{g}$
 
 .center[
-  <img src="figure/grenander_comparison.png" width=800>
+  <img src="figure/grenander_comparison.png" width=600>
 ]
-
----
-
-### Optimization
-
-This can be plugged into generic optimization solvers:
-
-\begin{align*}
-\text{maximize } & \sum_{g} m_{g}\hat{F}\left(t_{g}\right) \\
-\text{subject to } &
-\sum_{g = 1}^{G} m_{g}\left(t_{g} - m_{g}\hat{F}\left(t_{g}\right)\right) \leq q
-\end{align*}
 
 ---
 
@@ -478,11 +471,14 @@ This can be plugged into generic optimization solvers:
 ]
 
 .pull-right[
-A more elegant implementation uses a sequence $g = 1, \dots, G$ across many
+* A more elegant implementation uses a sequence $g = 1, \dots, G$ across many
 distance thresholds.
 ]
 
 ---
+
+background-image: url("figure/symmetry_cover.jpg")
+background-size: cover
 
 .middle[
 ## Calibration through Splitting
@@ -492,7 +488,7 @@ distance thresholds.
 
 ### Miscalibration
 
-Often in computational genomics, model assumptions don't exactly hold and
+Often in computational genomics, model assumptions do not hold and
 $p$-values are not uniformly distributed.
 
 .center[
@@ -503,7 +499,11 @@ $p$-values are not uniformly distributed.
 
 ### Example
 
-Imagine $x_{ij} \vert \text{disease = t} \sim \text{NB}\left(\mu_{jt}, \varphi\right)$ are genes whose expression potentially varies across disease status.
+Imagine gene $j$ in sample $n$ is distributed according to,
+\begin{align*}
+x_{nj} \vert \text{disease t} \sim \text{NB}\left(\mu_{jt}, \varphi\right)
+\end{align*}
+so that expression potentially varies according to disease status.
 
 \begin{align*}
 H_{0j}: \mu_{j0} = \mu_{j1} \\
@@ -514,8 +514,8 @@ H_{1j}: \mu_{j0} \neq \mu_{j1}
 
 ### Example
 
-* We applied Trimmed Maximum of Means and a log normalization to these simulated data, as implemented in the `edgeR` package
-* We then apply two-sample $t$-tests. Notice the nonuniformity of the null $p$-values.
+* We applied a Trimmed Maximum of Means and a log normalization to these simulated data, as implemented in the `edgeR` package
+* Notice the nonuniformity of the null $p$-values from hte two-sample $t$-tests
 
 .center[
 <img src="figure/miscalibration_histogram.png" width=700/>
@@ -525,36 +525,31 @@ H_{1j}: \mu_{j0} \neq \mu_{j1}
 
 ### Key Idea
 
+.pull-left[
 We can avoid this problem if we bypass $p$-values altogether.
   - Significance can be deduced from test statistics directly
-  - We don't have to use BH to ensure FDR control
+  - We do not have to use BH to ensure FDR control
   
-.center[
-<img src="figure/mirror_inspiration_raw.png" width = 800/>
+This idea is highly adaptable. We'll discuss `r Citep(bib, "Dai2020FalseDR")`, but see also `r Citep(bib, c("Ge2021ClipperPF", "Guo2023RanktransformedSI"))`.
 ]
-
-This is a highly adaptable idea. We'll discuss `r Citep(bib, "Dai2020FalseDR")`, but see also `r Citep(bib, c("clipper"))`.
+  
+.pull-right[
+<img src="figure/mirror_inspiration_raw.png" width = 650/>
+]
 
 ---
 
 ### Testing $\to$ Regression
 
+.pull-left[
 We work with the original data $\*X \in \reals^{N \times M}$ and $\*y \in \reals^{N}$. For example,
  * $y_{n}$: Disease state for patient $n$ 
  * $x_{nm}$: Expression level for gene $m$.
 
-Consider the regression $\*y = \*X \*\beta + \epsilon$.
-  * $H_{0m}: \hat{\beta}_{m}$ is symmetric around 0
-
----
-
-### Testing $\to$ Regression
-
-Consider the regression $\*y = \*X \*\beta + \epsilon$.
-  * $H_{0m}: \hat{\beta}_{m}$ is symmetric around 0
+Consider regressing $\*y = \*X \*\beta + \epsilon$. Under the null, $\hat{\beta}_{m}$ is symmetric around 0.
 
 .center[
-  <img src="figure/regression-assumptions.png" width=800/>
+  <img src="figure/regression-assumptions.png" width=600/>
 ]
 
 ---
@@ -565,7 +560,7 @@ Randomly split rows into $\left(\*X^{(1)}, \*y^{(1)}\right)$ and $\left(\*X^{(2)
 
 Mirror statistics have the form,
 \begin{align*}
-T_{m} &= \text{sign}\left(\hat{\beta}^{1}_{m}\hat{\beta}_{m}^{(2)}\right)f\left(\hat{\beta}^{(1)}_{m}, \hat{\beta}^{(2)}_{m}\right)
+T_{m} &= \text{sign}\left(\hat{\beta}^{(1)}_{m}\hat{\beta}_{m}^{(2)}\right)f\left(\absarg{\hat{\beta}^{(1)}_{m}}, \absarg{\hat{\beta}^{(2)}_{m}}\right)
 \end{align*}
 
 where $\hat{\beta}^{(j)}$ are estimated on the separate splits.
@@ -576,7 +571,7 @@ where $\hat{\beta}^{(j)}$ are estimated on the separate splits.
 
 Mirror statistics measure the agreement in estimates across splits.
 
-Example: $\text{sign}\left(\hat{\beta}^{1}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]$
+Example: $\text{sign}\left(\hat{\beta}^{(1)}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]$
 
 .center[
   <img src="figure/regression-mirrors.png" width=750>
@@ -591,7 +586,7 @@ Mirror statistics measure the agreement in estimates across splits.
 Example: $\text{sign}\left(\hat{\beta}^{1}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]$
 
 
-```{r, eval = FALSE}
+```{r, eval = FALSE, echo = TRUE}
 ix <- sample(nrow(x), 0.5 * nrow(x))
 beta1 <- train_fun(x[ix], y[ix])
 beta2 <- train_fun(x[-ix], y[-ix])
@@ -605,7 +600,7 @@ sign(beta1 * beta2) * (abs(beta1) + abs(beta2))
 Let's revisit the negative binomial problem. Here are the $T_{m}$.
 
 .center[
-  <img src="figure/mirror_histogram_merged.png"/>
+  <img src="figure/mirror_histogram_merged.png" width=800/>
 ]
 
 ---
@@ -615,7 +610,7 @@ Let's revisit the negative binomial problem. Here are the $T_{m}$.
 A reasonable strategy is to reject for all $T_{m}$ in the far right tail. How should we pick the threshold?
 
 .center[
-  <img src="figure/mirror_histogram_merged.png"/>
+  <img src="figure/mirror_histogram_merged.png" width=800/>
 ]
 
 ---
@@ -625,7 +620,7 @@ A reasonable strategy is to reject for all $T_{m}$ in the far right tail. How sh
 A reasonable strategy is to reject for all $T_{m}$ in the far right tail. How should we pick the threshold?
 
 .center[
-  <img src="figure/mirror_histogram.png"/>
+  <img src="figure/mirror_histogram.png" width=800/>
 ]
 
 ---
@@ -633,11 +628,17 @@ A reasonable strategy is to reject for all $T_{m}$ in the far right tail. How sh
 ### FDR Estimation
 
 By symmetry, the size of the left tail $\approx$ the number of nulls in the
-right tail:
+right tail,
 
 .pull-left[
 \begin{align*}
 \FDR\left(t\right) &= \frac{\absarg{T_{m} < -t}}{\absarg{T_{m} > t}}
+\end{align*}
+
+which suggests solving,
+\begin{align*}
+\text{maximize } &t \\
+\text{subject to } &\FDR\left(t\right) \leq q
 \end{align*}
 ]
 
@@ -647,22 +648,11 @@ right tail:
 
 ---
 
-### FDR Estimation
-
-Maximize discoveries while controlling false discoveries:
-
-\begin{align*}
-\text{maximize } &t \\
-\text{subject to } &\FDR\left(t\right) \leq q
-\end{align*}
-
----
-
 ### Multiple Splits
 
 Issue:
   * A downside is that sample splitting samples reduces power.
-  * Power can be recovered by aggregating over multiple iterations of splitting^[This is a recurring theme in the literature `r Citep(bib, "Guo2023RanktransformedSI")`].
+  * Power can be recovered by aggregating over multiple iterations of splitting.
 
 Notation:
   * Create $K$ different pairs of random splits
@@ -687,7 +677,7 @@ Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the column averages of this matrix. 
   * The feature is selected frequently
 
 .center[
-  <img src="figure/selection.png"/>
+  <img src="figure/selection.png" width=700/>
 ]
 
 ---
@@ -699,7 +689,7 @@ Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the column averages of this matrix. 
   * The feature is selected frequently
 
 .center[
-  <img src="figure/I_hat.png"/>
+  <img src="figure/I_hat.png" width=800/>
 ]
 
 ---
@@ -710,16 +700,19 @@ Let $\hat{I}_{1}, \dots, \hat{I}_{m}$ store the column averages of this matrix. 
 * This is guaranteed to (asymptotically) control the FDR at level $q$
 
 .center[
-  <img src="figure/I_hat_bar.png"/>
+  <img src="figure/I_hat_bar.png" width=800/>
 ]
 
 ---
 
-### Code Example
+### Code Demo
 
 In our Negative Binomial example, this leads to FDR control and reasonable
-power. Here are results over 10 runs.
+power. Here are the results over multiple runs.
 
+.center[
+<img src="figure/mirror_fdr_summary.png" width=700/>
+]
 
 ---
 
@@ -730,7 +723,8 @@ power. Here are results over 10 runs.
   - Optimization view of BH + Context = Focused Hypothesis Testing
   - Data splitting + Symmetry assumptions = Formal Error Control
 * These abstractions are useful across the computational genomics workflow
-  - E.g., in experimental design `r Citep(bib, c("Fannjiang2022ConformalPU"))` and interpretation of features generated through unsupervised learning `r Citep(bib, c("Song2021PseudotimeDEIO", "Guo2023RanktransformedSI"))`
+  - E.g., in experimental design `r Citep(bib, c("Fannjiang2022ConformalPU"))` and interpretation of features generated through unsupervised learning `r Citep(bib, c("Song2021PseudotimeDEIO", "Guo2023RanktransformedSI"))`.
+  - See also variations developed in my lab `r Citep(bib, c("Sankaran2023MicrobiomeIA", "Sankaran2014structSSISA"))`
 
 ---
 
@@ -755,3 +749,28 @@ PrintBibliography(bib, start = 5, end = 8)
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 9, end = 12)
 ```
+
+---
+
+### Selective Inference
+
+Step (1) distinguishes selective inference from ordinary statistical inference.
+
+1. Search for interesting patterns.
+1. Test whether they could have just been coincidences.
+
+Looking for promising contexts $\implies$ selective inference.
+
+---
+
+### Optimization
+
+This can be given into generic optimization solvers:
+
+\begin{align*}
+\text{maximize } & \sum_{g} m_{g}\hat{F}\left(t_{g}\right) \\
+\text{subject to } &
+\sum_{g = 1}^{G} m_{g}\left(t_{g} - m_{g}\hat{F}\left(t_{g}\right)\right) \leq q
+\end{align*}
+
+---

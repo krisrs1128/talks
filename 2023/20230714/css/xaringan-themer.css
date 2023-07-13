@@ -27,10 +27,18 @@ body {
   color: #0c0c0c;
 }
 
-h1, h2, h3 {
+h1, h3 {
   font-weight: normal;
   color: #5f558e;
 }
+
+h2 {
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 500px;
+  font-weight: normal;
+  color: #0c0c0c;
+}
+
 .remark-slide-content {
   font-size: 26px;
   padding: 1em 4em 1em 4em;
@@ -91,11 +99,12 @@ a, a > code {
 }
 
 #title {
+  background-color: rgba(255, 255, 255, 0.9);
   position: absolute;
   color: #10040f;
   font-family: 'Raleway';
   font-size: 45px;
-  width: 900px;
+  width: 600px;
   left: 10px;
   top: 10px;
 }
@@ -270,13 +279,29 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   text-align: center;
 }
 
+.cover {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding-left: 10px;
+}
+
 #subtitle {
   position: absolute;
-  background-color: rgba(247, 247, 247, 0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   padding-left: 10px;
   font-size: 20px;
   width: 350px;
   color: #5f558e;
   left: 10px;
+  bottom: 10px;
+}
+
+#links {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding-left: 10px;
+  font-size: 20px;
+  width: 400px;
+  color: #5f558e;
+  left: 750px;
   bottom: 10px;
 }
