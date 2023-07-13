@@ -40,7 +40,7 @@ simulate_pvalues(200, 1e3) |>
 ggsave("../figure/histogram-1.png", width = 8, height = 3.8)
 simulate_pvalues(200, 1e3, nonnull_frac = 0.1) |>
   plot_pval()
-ggsave("../figure/histogram-2.png")
+ggsave("../figure/histogram-2.png", width = 8, height = 3.8)
 ```
 
 ### NB Miscalibration
@@ -62,7 +62,7 @@ x <- list(
   bind_rows(.id = "state")
 ```
 
-```{r, height = 4, width = 6.5}
+```{r, height = 5, width = 3.5}
 x |>
   pivot_longer(-state, names_to = "hypothesis") |>
   mutate(hypothesis = as.integer(str_extract(hypothesis, "[0-9]+"))) |>
@@ -82,7 +82,8 @@ x |>
   scale_color_manual(values = cols) +
   theme(
     legend.title = element_text(size = 14),
-    legend.text = element_text(size = 12)
+    legend.text = element_text(size = 12),
+    legend.position = "bottom"
   ) +
   facet_wrap(~ null, scale = "free_x", ncol = 1)
 
@@ -142,7 +143,7 @@ results <- list(bh = metrics(selection_bh, nonnull))
 x_ <- x |>
   select(-state) |>
   as.matrix()
-ms <- map(1:20, ~ glmnet_mirror(x_, x$state))
+ms <- map(1:50, ~ glmnet_mirror(x_, x$state))
 m_df <- map_dfr(ms, ~ tibble(m = ., ix = seq_along(.)), .id = "replicate") |>
   mutate(
     nonnull = ix %in% seq_len(nonnull),
@@ -173,7 +174,7 @@ ggplot(m_df) +
 ggsave("../figure/mirror_histogram.png")
 ```
 
-```{r, fig.width = 8, fig.height = 5}
+```{r, fig.width = 8, fig.height = 3.5}
 mds <- multiple_data_splitting(ms)
 mds_df <- mds$s_hat |>
   as_tibble() |>
@@ -227,7 +228,7 @@ ggplot(I_hat) +
     axis.ticks.x = element_blank()
   )
   
-ggsave("../figure/I_hat.png")
+ggsave("../figure/I_hat.png", width = 6, height = 2.6)
 
 ggplot(I_hat) +
   geom_col(aes(reorder(factor(variable), -I_hat), I_hat), width=1) +
@@ -242,7 +243,7 @@ ggplot(I_hat) +
     axis.ticks.x = element_blank()
   )
   
-ggsave("../figure/I_hat_bar.png")
+ggsave("../figure/I_hat_bar.png", width = 6, height = 2.6)
 ```
 
 ```{r}
@@ -254,7 +255,7 @@ saveRDS(results, glue("mirror_comparison-{params$seed}.rds"))
 ### Repeated Analysis
 
 ```{bash, eval = FALSE}
-for i in {20230714..20230719}; do
+for i in {20230714..20230724}; do
   Rscript -e "rmarkdown::render('mirror-demo.Rmd', params = list(seed=$i))"
 done
 ```
@@ -263,17 +264,19 @@ done
 library(fs)
 results <- dir_ls(".", glob="*rds") |>
   map_dfr(~ bind_rows(readRDS(.)) |> mutate(method = c("BH", "Mirror")), .id = "seed")
-results$fdr[is.na(results$fdr)] <- 0
+#results$fdr[is.na(results$fdr)] <- 0
 
 ggplot(results) +
-  geom_vline(xintercept = 0.1, col = "forestgreen", linewidth = 2) +
+  geom_vline(xintercept = 0.1, col = "#D3D3D3", linewidth = 2) +
   geom_point(aes(fdr, power, col = method), size = 3) +
-  scale_color_manual(values = c("orange", "blue")) +
+  scale_color_manual(values = c("#F25C05", "#567D8C")) +
   labs(x = expression(widehat(FDR)), y = "Power", col = "Method") +
   theme(
     axis.title = element_text(size = 14),
     legend.title = element_text(size = 14),
     legend.text = element_text(size = 12)
-  )
-```
+  ) +
+  scale_y_continuous(limits = c(0.85, 1.0))
 
+ggsave("../figure/mirror_fdr_summary.png", width = 6, height = 3.5)
+```

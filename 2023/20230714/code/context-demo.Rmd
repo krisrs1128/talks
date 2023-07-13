@@ -52,7 +52,7 @@ as_tibble(beta) |>
     axis.text = element_text(size = 12),
   )
 
-ggsave("figure/beta_heatmap.png")
+ggsave("../figure/beta_heatmap.png", width=6, height=6)
 ```
 
 
@@ -69,7 +69,7 @@ for (j1 in seq_len(J[1])) {
   }
 }
 ``` 
-```{r, fig.width = 4, fig.height = 6}
+```{r, fig.width = 3.5, fig.height = 7}
 p_df <- as_tibble(p_values) |>
   mutate(J1 = row_number()) |>
   pivot_longer(-J1, names_to = "J2", values_to = "p") |>
@@ -94,7 +94,7 @@ ggplot(p_df) +
     strip.text = element_text(size = 14)
   )
 
-ggsave("context_p_values_histogram.png")
+ggsave("../figure/context_p_values_histogram.png", height = 4, width = 6)
 ```
 
 ```{r}
@@ -125,13 +125,14 @@ estimates$fdr |>
     fill = expression(widehat(FDR)(t))
   ) +
   theme(
+    legend.position = "bottom",
     axis.text = element_text(size = 12),
     axis.title = element_text(size = 14),
     legend.title = element_text(size = 14),
-    legend.text = element_text(size = 12),
+    legend.text = element_text(size = 10),
   )
 
-ggsave("figure/optimal-thresholds-1.png")
+ggsave("../figure/optimal-thresholds-1.png", height = 4, width = 6.5)
 ```
 
 ```{r}
@@ -158,13 +159,14 @@ estimates$rejection |>
   ) +
   geom_point(data = optimal_thresholds, aes(t1, t2), col = "red", size = 10) +
   theme(
+    legend.position = "bottom",
     axis.text = element_text(size = 12),
     axis.title = element_text(size = 14),
     legend.title = element_text(size = 14),
     legend.text = element_text(size = 12),
   )
 
-ggsave("figure/optimal-thresholds-2.png")
+ggsave("../figure/optimal-thresholds-2.png", height= 4, width = 6.5)
 ```
 
 ```{r, fig.width = 6.5, fig.height = 3}
@@ -188,5 +190,5 @@ tibble(
   scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
   scale_fill_manual(values = c("#D979A6", "#2A8C7A"))
 
-ggsave("figure/grenander_comparison.png")
+ggsave("../figure/grenander_comparison.png")
 ```
