@@ -35,9 +35,10 @@ set.seed(params$seed)
 ```{r}
 cols <- c("#BF0426", "#7BA69E")
 
-simulate_pvalues(200, 1e3) |>
+p <- simulate_pvalues(200, 1e3) |>
   plot_pval()
-ggsave("../figure/histogram-1.png", width = 8, height = 3.8)
+ggsave("../figure/histogram-1.png", p[[2]], width = 8, height = 3.8)
+ggsave("../figure/histogram-merged-1.png", p[[1]], width = 8, height = 3.8)
 simulate_pvalues(200, 1e3, nonnull_frac = 0.1) |>
   plot_pval()
 ggsave("../figure/histogram-2.png", width = 8, height = 3.8)

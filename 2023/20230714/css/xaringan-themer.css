@@ -303,5 +303,5 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   width: 400px;
   color: #5f558e;
   left: 750px;
-  bottom: 10px;
+  top: 10px;
 }

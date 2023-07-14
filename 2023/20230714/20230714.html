@@ -64,7 +64,7 @@ By the end of this talk, we will be able to:
 ### Large Scale Inference
 
 Notation
-  * Hypotheses of interest: `\(H_{1}, \dots, H_{M}\)`
+  * Hypotheses of interest: `\(H_{1}, \dots, H_{M}\)`. Some of them are non-null, but you don't know which.
   * Associated `\(p\)`-values: `\(p_{1}, \dots, p_{M}\)`.
 
 Goal: Reject as many non-null hypotheses as possible while controlling the _False Discovery Rate_,
@@ -85,6 +85,18 @@ Goal: Reject as many non-null hypotheses as possible while controlling the _Fals
 
 .pull-right[
 &lt;img src="figure/microbiome_selection.jpg" width=450/&gt;
+]
+
+---
+
+### `\(p\)`-value histogram
+
+* Under the null, the `\(p\)`-values follow a uniform distribution. 
+* The spike near 0 `\(\implies\)` true alternative hypotheses
+* `\(\pi_{0}\)` refers to the true proportion of nulls
+
+.center[
+  &lt;img src="figure/histogram-merged-1.png" width=800/&gt;
 ]
 
 ---
@@ -118,8 +130,8 @@ Goal: Reject as many non-null hypotheses as possible while controlling the _Fals
 The Benjamini-Hochberg (BH) procedure [1] controls the FDR at
 level `\(q\)`.
 
-1. Sort the `\(p\)`-values: `\(p_{(1)} \leq p_{(2}) \leq \dots \leq p_{(m)}\)`
-1. Find the largest `\(i\)` such that `\(p_{(i)} \leq \frac{i q}{m}\)`
+1. Sort the `\(p\)`-values: `\(p_{(1)} \leq p_{(2}) \leq \dots \leq p_{(M)}\)`
+1. Find the largest `\(i\)` such that `\(p_{(i)} \leq \frac{i q}{M}\)`
 1. Reject hypotheses associated with `\(p_{(1)} \leq \dots \leq p_{(i)}\)` 
 
 ---
@@ -150,7 +162,7 @@ Let `\(R\left(t\right)\)` be the number of rejected hypotheses at threshold `\(t
 
 .pull-left[
 `\begin{align*}
-\FDR\left(t\right) &amp;= \frac{\pi_{0}mt}{R\left(t\right)}
+\FDR\left(t\right) &amp;= \frac{\pi_{0}Mt}{R\left(t\right)}
 \end{align*}`
 ]
 
@@ -266,9 +278,9 @@ Optimize:
 If we substitute `\(t = p_{(i)}\)`, then
 
 `\begin{align*}
-&amp;\frac{\pi_{0}m p_{(i)}}{i} \leq q \\
-\implies &amp; p_{(i)} \leq \frac{i q}{\pi_{0} m} \\
-\implies &amp; p_{(i)} \leq \frac{i q}{ m}
+&amp;\frac{\pi_{0}M p_{(i)}}{i} \leq q \\
+\implies &amp; p_{(i)} \leq \frac{i q}{\pi_{0} M} \\
+\implies &amp; p_{(i)} \leq \frac{i q}{M}
 \end{align*}`
 ]
 
@@ -287,7 +299,7 @@ background-size: cover
 
 * We may know in advance that some hypotheses are more likely to be rejected than others.
   - Prior literature
-  - Library size
+  - Number of mapped reads
 * This information can improve power. We'll discuss [2], but see [3; 4; 5; 6]
 
 .center[
@@ -317,16 +329,6 @@ Even for moderate `\(I, J\)`, this is many tests!
 
 ---
 
-### Pairwise Distance
-
-We expect that most true associations are local, but we do not want to rule out long-range connections.
-
-.center[
-&lt;img src="figure/expected-distances.png" width=600 /&gt;
-]
-
----
-
 ### Grouping by Distance
 
 * Group the distances into bins `\(1, \dots, G\)`.
@@ -338,7 +340,7 @@ We expect that most true associations are local, but we do not want to rule out 
 
 ---
 
-### Generalization
+### Grouping by Distance
 
 * Group the distances into bins `\(1 , \dots, G\)`.
 * We use different thresholds `\(\*t = \left(t_{1}, \dots, t_{G}\right)\)` across groups.
@@ -439,30 +441,11 @@ invests the most "budget" on the promising contexts.
 
 * In practice, we would optimize `\(\*t\)`, rather than scanning the entire
 space.
-* The number of rejections can be derived from the CDF of the `\(p\)`-value histogram.
-
-`\begin{align*}
-R_{g}\left(t_{g}\right) &amp;= \hat{F}_{g}\left(t_{g}\right)
-\end{align*}`
-
-* To make the objective convex, we can use the Grenander estimate of `\(\hat{F}_{g}\)`
+* The number of rejections can be derived from the CDF of the `\(p\)`-value histogram, and the problem can be formulated as a convex optimization.
+* We haven't discussed it, but it is important to cross-weight to ensure independence between the thresholds and `\(p\)`-values.
 
 .center[
-  &lt;img src="figure/grenander_comparison.png" width=600&gt;
-]
-
----
-
-### Subtleties
-
-.pull-left[
-* Cross-Weighting: As written, the thresholds `\(\*t\)` are not independent of `\(p_{m}\)`. We should split the hypotheses to ensure independence.
-* Regularization: Thresholds can be smoothed to reflect group similarity
-]
-
-.pull-right[
-* A more elegant implementation uses a sequence `\(g = 1, \dots, G\)` across many
-distance thresholds.
+  &lt;img src="figure/grenander_comparison.png" width=650&gt;
 ]
 
 ---
@@ -476,35 +459,24 @@ background-size: cover
 
 ---
 
-### Miscalibration
-
-Often in computational genomics, model assumptions do not hold and
-`\(p\)`-values are not uniformly distributed.
-
-.center[
-  &lt;img src="figure/miscalibration_histogram.png" width=800&gt;
-]
-
----
-
 ### Example
 
-Imagine gene `\(j\)` in sample `\(n\)` is distributed according to,
+Imagine gene `\(m\)` in sample `\(n\)` is distributed according to,
 `\begin{align*}
-x_{nj} \vert \text{disease t} \sim \text{NB}\left(\mu_{jt}, \varphi\right)
+x_{nm} \vert \text{disease t} \sim \text{NB}\left(\mu_{mt}, \varphi\right)
 \end{align*}`
 so that expression potentially varies according to disease status.
 
 `\begin{align*}
-H_{0j}: \mu_{j0} = \mu_{j1} \\
-H_{1j}: \mu_{j0} \neq \mu_{j1}
+H_{0m}: \mu_{m0} = \mu_{m1} \\
+H_{1m}: \mu_{m0} \neq \mu_{m1}
 \end{align*}`
 
 ---
 
 ### Example
 
-* We used the `edgeR` package to normalize these data (TMM + log transform) [7]
+* We used the `edgeR` package to normalize these data (TMM + log transform) [7], inspired by the simulation in [8]
 * Notice the nonuniformity of the null `\(p\)`-values from the two-sample `\(t\)`-tests
 
 .center[
@@ -520,7 +492,7 @@ We can avoid this problem if we bypass `\(p\)`-values altogether.
   - Significance can be deduced from test statistics directly
   - We do not have to use BH to ensure FDR control
   
-This idea is highly adaptable. We'll discuss [8], but see also [9; 10].
+This idea is highly adaptable. We'll discuss [9], but see also [10; 11].
 ]
   
 .pull-right[
@@ -531,7 +503,6 @@ This idea is highly adaptable. We'll discuss [8], but see also [9; 10].
 
 ### Testing `\(\to\)` Regression
 
-.pull-left[
 We work with the original data `\(\*X \in \reals^{N \times M}\)` and `\(\*y \in \reals^{N}\)`. For example,
  * `\(y_{n}\)`: Disease state for patient `\(n\)` 
  * `\(x_{nm}\)`: Expression level for gene `\(m\)`.
@@ -573,7 +544,7 @@ Example: `\(\text{sign}\left(\hat{\beta}^{(1)}_{m}\hat{\beta}_{m}^{(2)}\right)\l
 
 Mirror statistics measure the agreement in estimates across splits.
 
-Example: `\(\text{sign}\left(\hat{\beta}^{1}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]\)`
+Example: `\(\text{sign}\left(\hat{\beta}^{(1)}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]\)`
 
 
 
@@ -588,7 +559,7 @@ sign(beta1 * beta2) * (abs(beta1) + abs(beta2))
 
 ### Mirror Histogram
 
-Let's revisit the negative binomial problem. Here are the `\(T_{m}\)`.
+Let's revisit the negative binomial problem. Which hypotheses should we reject?
 
 .center[
   &lt;img src="figure/mirror_histogram_merged.png" width=800/&gt;
@@ -598,17 +569,8 @@ Let's revisit the negative binomial problem. Here are the `\(T_{m}\)`.
 
 ### Mirror Histogram
 
-A reasonable strategy is to reject for all `\(T_{m}\)` in the far right tail. How should we pick the threshold?
-
-.center[
-  &lt;img src="figure/mirror_histogram_merged.png" width=800/&gt;
-]
-
----
-
-### Mirror Histogram
-
-A reasonable strategy is to reject for all `\(T_{m}\)` in the far right tail. How should we pick the threshold?
+A reasonable strategy is to reject for all `\(T_{m}\)` in the far right tail. How
+should we pick the threshold?
 
 .center[
   &lt;img src="figure/mirror_histogram.png" width=800/&gt;
@@ -649,7 +611,7 @@ Main Idea:
   * Create `\(K\)` different pairs of random splits
   * Let `\(\hat{S}_{k}\)` be the selected features when using mirror statistics on the `\(k^{th}\)` random split
   * Look for consensus across the `\(\hat{S}_{k}\)`
-  * (See appendix for details)
+  * (See backup slides for details)
   
 ---
 
@@ -660,8 +622,21 @@ In our Negative Binomial example, this leads to FDR control and reasonable
 power. Here are the results over multiple runs.
 
 .center[
-&lt;img src="figure/mirror_fdr_summary.png" width=700/&gt;
+&lt;img src="figure/mirror_fdr_summary.png" width=600/&gt;
 ]
+
+---
+
+### Teaser: Microbiome Intervention Analysis
+
+Mirror statistics support formal inference of delayed, nonlinear intervention
+effects in longitudinal microbiome studies [12].
+
+.center[
+&lt;img src="https://krisrs1128.github.io/mbtransfer/articles/postpartum_files/figure-html/unnamed-chunk-15-1.png"/&gt;
+]
+
+[Manuscript](https://arxiv.org/abs/2306.06364), [Documentation](https://krisrs1128.github.io/mbtransfer/), [Demo](https://mybinder.org/v2/gh/krisrs1128/mbtransfer_demo/HEAD?urlpath=rstudio)
 
 ---
 
@@ -672,8 +647,8 @@ power. Here are the results over multiple runs.
   - Optimization view of BH + Context = Focused Hypothesis Testing
   - Data splitting + Symmetry assumptions = Formal Error Control
 * These abstractions are useful across the computational genomics workflow
-  - E.g., in experimental design [11] and interpretation of features generated through unsupervised learning [12; 10].
-  - See also variations developed in my lab [13; 14]
+  - E.g., in experimental design [13] and interpretation of features generated through unsupervised learning [14; 11].
+  - Other variations developed in my lab [12; 15; 16]
 
 ---
 
@@ -714,41 +689,48 @@ Academy of Sciences of the United States of America_ 117 (2020), pp.
 Bioconductor package for differential expression analysis of digital
 gene expression data". In: _Bioinformatics_ 26 (2009), pp. 139 - 140.
 
-[8] C. Dai, B. Lin, X. Xing, et al. "False Discovery Rate Control via
-Data Splitting". In: _Journal of the American Statistical Association_
-(2020).
+[8] M. Stephens. "Simple Transform Simulation". In: _Online_ (2023).
+Accessed: 2023-07-14.
 
 ---
 
 ### References
 
-[9] X. Ge, Y. E. Chen, D. Song, et al. "Clipper: p-value-free FDR
+[9] C. Dai, B. Lin, X. Xing, et al. "False Discovery Rate Control via
+Data Splitting". In: _Journal of the American Statistical Association_
+(2020).
+
+[10] X. Ge, Y. E. Chen, D. Song, et al. "Clipper: p-value-free FDR
 control on high-throughput data from two conditions". In: _Genome
 Biology_ 22 (2021).
 
-[10] F. R. Guo and R. D. Shah. "Rank-transformed subsampling: inference
+[11] F. R. Guo and R. D. Shah. "Rank-transformed subsampling: inference
 for multiple data splitting and exchangeable p-values". In: _ArXiv_
 (2023).
 
-[11] C. Fannjiang, S. Bates, A. N. Angelopoulos, et al. "Conformal
+[12] K. Sankaran and P. Jeganathan. "Microbiome Intervention Analysis
+with Transfer Functions and Mirror Statistics". In: _ArXiv_ (2023).
+
+---
+
+### References
+
+[13] C. Fannjiang, S. Bates, A. N. Angelopoulos, et al. "Conformal
 prediction under feedback covariate shift for biomolecular design". In:
 _Proceedings of the National Academy of Sciences of the United States
 of America_ 119 (2022).
 
-[12] D. Song and J. J. Li. "PseudotimeDE: inference of differential
+[14] D. Song and J. J. Li. "PseudotimeDE: inference of differential
 gene expression along cell pseudotime with well-calibrated p-values
 from single-cell RNA sequencing data". In: _Genome Biology_ 22 (2021).
 
----
-
-### References
-
-[13] K. Sankaran and P. Jeganathan. "Microbiome Intervention Analysis
-with Transfer Functions and Mirror Statistics". In: _ArXiv_ (2023).
-
-[14] K. Sankaran and S. P. Holmes. "structSSI: Simultaneous and
+[15] K. Sankaran and S. P. Holmes. "structSSI: Simultaneous and
 Selective Inference for Grouped or Hierarchically Structured Data." In:
 _Journal of statistical software_ 59 13 (2014), pp.  1-21 .
+
+[16] K. Sankaran. "Functions for Performing Local FDR Estimation when
+Null and Alternative are Poisson [R package LocFDRPois version 1.0.0]".
+In: _CRAN_ (2015).
 
 ---
 
