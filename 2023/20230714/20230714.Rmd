@@ -141,7 +141,7 @@ Goal: Reject as many non-null hypotheses as possible while controlling the _Fals
 The Benjamini-Hochberg (BH) procedure `r Citep(bib, "Benjamini1995ControllingTF")` controls the FDR at
 level $q$.
 
-1. Sort the $p$-values: $p_{(1)} \leq p_{(2}) \leq \dots \leq p_{(M)}$
+1. Sort the $p$-values: $p_{(1)} \leq p_{(2)} \leq \dots \leq p_{(M)}$
 1. Find the largest $i$ such that $p_{(i)} \leq \frac{i q}{M}$
 1. Reject hypotheses associated with $p_{(1)} \leq \dots \leq p_{(i)}$ 
 
@@ -517,7 +517,8 @@ We work with the original data $\*X \in \reals^{N \times M}$ and $\*y \in \reals
  * $y_{n}$: Disease state for patient $n$ 
  * $x_{nm}$: Expression level for gene $m$.
 
-Consider regressing $\*y = \*X \*\beta + \epsilon$. Under the null, $\hat{\beta}_{m}$ is symmetric around 0.
+Consider regressing $\*y = \*X \*\beta + \epsilon$. The null hypothesis is that
+$\beta_{m} = 0$.
 
 .center[
   <img src="figure/regression-assumptions.png" width=600/>
