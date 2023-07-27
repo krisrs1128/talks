@@ -67,15 +67,15 @@ Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 01 Au
 
 ### Psychometric & Genomic Integration
 
-1. The Handelsman and Davidson Labs designed a longitudinal study to evaluate
-the relationship between mindfulness and the microbiome. The treatment group
-received meditation training.
-1. The study generated psychometric and microbiome data, and
-ongoing collection is gathering additional immunological and behavioral data
-2. Changes in one might be associated with effects across all. To approach this, we use the language of graphical modeling.
+1. What is the relationship between mindfulness and the microbiome? 
+1. The [Handelsman](https://handelsmanlab.discovery.wisc.edu/) and [Davidson groups](https://www.richardjdavidson.com/) designed a study where volunteers' gut
+microbiomes were sampled before and after a meditation training.
+  * This generates joint psychometric, behavioral, and microbiome data
+1. Changes in one assay might be associated with effects across all. To approach
+this, we use the language of graphical modeling.
 
 .center[
-<img src="figures/microbe-mind.svg" width=420/>
+  <img src="figures/microbe-mind.svg" width=420/>
 ]
 
 ---
@@ -84,7 +84,7 @@ ongoing collection is gathering additional immunological and behavioral data
 
 Mediation models are a type of graphical model where a treatment $T$ can
 influence a response $Y$ either directly or indirectly through a mediator
-variable $M$. This is formalized through a series of chained regression models,
+$M$. This is formalized through a series of chained regression models,
 
 \begin{align*}
 M &= \alpha_{0} + \alpha_{T}T + \alpha_{X}^{T}X + \varepsilon^{M} \text{ (mediation model)}\\
@@ -103,13 +103,12 @@ include_graphics("figures/mediation-dag.svg")
 $\beta_{T}$.
 * A more general approach considers the counterfactual difference in potential outcomes `r Citep(bib, c("imai2010general", "sohn2019compositional"))`,
 \begin{align}
-\tau\left(t'\right) &= \Earg{Y\left(X, 1, M\left(X, t'\right)\right) - Y\left(X,0, M\left(X, t'\right)\right)},\\
-\delta\left(t'\right) &= \Earg{Y\left(X, t', M\left(X, 1\right)\right) - Y\left(X, t', M\left(X, 0\right)\right)},
+\tau\left(t\right) &= \Earg{Y\left(X, 1, M\left(X, t\right)\right) - Y\left(X,0, M\left(X, t\right)\right)},\\
+\delta\left(t\right) &= \Earg{Y\left(X, t, M\left(X, 1\right)\right) - Y\left(X, t, M\left(X, 0\right)\right)},
 \end{align}
   where the expectation is over draws $X$, $\varepsilon^{M}$, and
   $\varepsilon^{Y}$ from the population.
-* $\tau$ and $\delta$ are viewed as intervening on the treatment and mediator,
-respectively
+* $\tau$ and $\delta$ intervene on the treatment and mediator, respectively
 
 ---
 ### Counterfactual Perspective
@@ -197,7 +196,7 @@ include_graphics("figures/lnm_med_model_causal.png")
 
 ### Simplified Setting
 
-* Let's see how simulation strategies compare on a simple setup.
+* Let's see how semisynthetic simulations can improve over more naive approaches.
 * Consider the problem of evaluating an LNM model. We will compare estimation
 quality when we simulate from,
  - The LNM itself
@@ -210,7 +209,7 @@ quality when we simulate from,
 In the first simulation, we simulate from a version of the LNM,
 
 \begin{align*}
-Y &\sim \Mult\left(N_{i}, \varphi^{-1}\left(\xi_{0} + \xi_{T}T\right)\right) \\
+Y &\sim \Mult\left(n, \varphi^{-1}\left(\xi_{0} + \xi_{T}T\right)\right) \\
 \xi_{T} &:= \text{HardThreshold}\left(\tilde{\xi}_{T}, \text{keep 25%}\right) \\
 \xi_{0}, \tilde{\xi}_{T} &\sim \Gsn\left(0, I_{K}\right) \\
 \end{align*}
@@ -227,7 +226,7 @@ In the second, we use the exact same $\xi_{T}$, but now to exponentially tilt
 samples from treatment,
 
 \begin{align*}
-Y \sim \Mult\left(N_{i}, \exp{\xi_{T}T}\odot \hat{p}^{\ast}\right)
+Y \sim \Mult\left(n, \exp{\xi_{T}T}\odot \hat{p}^{\ast}\right)
 \end{align*}
 Here, $\hat{p}^{\ast}$ is drawn randomly with replacement from compositions
 in an observed pilot dataset (the meditation study data, in this case).
@@ -272,7 +271,7 @@ metrics <- power_analysis(simulator, params)
 ### Meditation Study Results
 
 .pull-left[
-* Based on the simulation results, we use a diff-in-diff version of the LNM.
+* Based on the simulation results, we use a diff-in-diff model from our LNM-mediation suite.
 * We consider diet and sleep related variables as potential mediators in the mindfulness intervention.
   - Lack of significance in indirect effects suggests that behavior change alone does not explain microbiome composition shifts
 ]
@@ -285,8 +284,7 @@ metrics <- power_analysis(simulator, params)
 
 ### R Package
 
-We have written an R package that to support these modeling and evaluation
-techniques.
+We have prepared a package to support these modeling and evaluation techniques.
 
 .center[
 <img src="figures/lnm_mediation_docs.png" width=900/>
@@ -296,9 +294,7 @@ techniques.
 
 ### R Package
 
-We have written an R package that to support these modeling and evaluation
-techniques.
-
+We have prepared a package to support these modeling and evaluation techniques.
 
 ```{r, echo = TRUE}
 library(LNMmediation)
@@ -324,7 +320,7 @@ plot_predictive(fit, max_taxa = 10) +
 
 ### Interactive Visualization
 
-```{r, eccho = TRUE}
+```{r, echo = TRUE, out.width = 700}
 plot_interactive(fit)
 ```
 
