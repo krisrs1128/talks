@@ -69,7 +69,7 @@ Kris Sankaran | [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab) | 01 Au
 
 1. What is the relationship between mindfulness and the microbiome? 
 1. The [Handelsman](https://handelsmanlab.discovery.wisc.edu/) and [Davidson groups](https://www.richardjdavidson.com/) designed a study where volunteers' gut
-microbiomes were sampled before and after a meditation training.
+microbiomes were sampled before and after meditation training.
   * This generates joint psychometric, behavioral, and microbiome data
 1. Changes in one assay might be associated with effects across all. To approach
 this, we use the language of graphical modeling.
@@ -99,7 +99,7 @@ include_graphics("figures/mediation-dag.svg")
 
 ### Counterfactual Perspective
 
-* Typically the direct and indirect effects are read off $\alpha_{T}$ and
+* Typically the direct and indirect effects are read off $\alpha_{T}$, $\beta_{M}$, and
 $\beta_{T}$.
 * A more general approach considers the counterfactual difference in potential outcomes `r Citep(bib, c("imai2010general", "sohn2019compositional"))`,
 \begin{align}
@@ -148,7 +148,7 @@ Multinomial (LNM),
 
 .pull-left[
 \begin{align*}
-Y &\sim \Mult\left(n, \varphi^{-1}\left(X^{T}\beta\right)\right) \\
+Y \vert \beta &\sim \Mult\left(n, \varphi^{-1}\left(X^{T}\beta\right)\right) \\
 \beta &\sim \Gsn\left(0, \diag\left(\sigma_{k}^{2}\right)\right)
 \end{align*}
 where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$ and $n$ denotes sequencing depth.
@@ -167,8 +167,8 @@ include_graphics("figures/lnm.svg")
 We incorporate the mediator path in an LNM model.
 
 \begin{align*}
-Y &\sim \Mult\left(n, \varphi^{-1}\left(\mu\right)\right) \\
-\mu &= \beta_0 + \beta_T T + \beta_X^T X + \beta_M^T M + \varepsilon^{\eta} \\ 
+Y \vert \mu &\sim \Mult\left(n, \varphi^{-1}\left(\mu\right)\right) \\
+\mu \vert M &= \beta_0 + \beta_T T + \beta_X^T X + \beta_M^T M + \varepsilon^{\mu} \\ 
 M &= \alpha_0 + \alpha_T T + \alpha_X^T X + \varepsilon^m\\
 \end{align*}
 
@@ -178,23 +178,7 @@ include_graphics("figures/lnm_med_model_causal.png")
 
 ---
 
-### ZINQ-based Model Comparison
-
-1. We compare models using a semisynthetic simulator, following `r Citep(bib, "ling2021powerful")`.
-2. This approach estimates a CDF for each species using,
-\begin{align*}
- \logit{\Parg{Y > 0 \vert X}} = \gamma_{0} + \gamma^{T}X \\
- Q_{Y}\left(\tau \vert X, Y > 0\right) =\xi_{0}\left(\tau\right) + \xi\left(\tau\right)^{T}X
-\end{align*}
-    where $Q_{Y}\left(\tau \vert X, Y > 0\right)$ is the conditional $\tau^{th}$ quantile of a nonzero count.
-
-.center[
-<img src="figures/zinq.png" width=400/>
-]
-
----
-
-### Simplified Setting
+### Semisynthetic Model Comparison
 
 * Let's see how semisynthetic simulations can improve over more naive approaches.
 * Consider the problem of evaluating an LNM model. We will compare estimation
@@ -247,7 +231,8 @@ estimates, compared to the semisynthetic setup.
 ### Graphical ZINQ
 
 1. We can adapt this to the graphical model setting by estimating nonparametric relationships across edges.
-2. We can estimate ground truth direct and indirect effects by simulating from known $\gamma$ and $\xi\left(\tau\right)$.
+2. We can estimate ground truth direct and indirect effects by simulating from
+prespecified edge relationships.
 
 .center[
 <img src="figures/mediation-assumptions.svg" width=570/>
@@ -255,10 +240,25 @@ estimates, compared to the semisynthetic setup.
 
 ---
 
+### ZINQ-based Model Comparison
+
+1. We design a semisynthetic simulator following `r Citep(bib, "ling2021powerful")`.
+2. This approach estimates a CDF for each species using,
+\begin{align*}
+ \logit{\Parg{Y > 0 \vert X}} = \gamma_{0} + \gamma^{T}X \\
+ Q_{Y}\left(\tau \vert X, Y > 0\right) =\xi_{0}\left(\tau\right) + \xi\left(\tau\right)^{T}X
+\end{align*}
+    where $Q_{Y}\left(\tau \vert X, Y > 0\right)$ is the conditional $\tau^{th}$ quantile of a nonzero count.
+
+.center[
+<img src="figures/zinq.png" width=400/>
+]
+
+---
+
 ### Graphical ZINQ
 
-1. We can adapt this to the graphical model setting by estimating nonparametric relationships across edges.
-2. We can estimate ground truth direct and indirect effects by simulating from known $\gamma$ and $\xi\left(\tau\right)$.
+Our package provides utilities for ZINQ estimation, simulation, and model comparison utilities.
 
 ```{r, eval = FALSE, echo = TRUE}
 simulator <- dataset_generator(x, m, trt, y) # covariates, mediators, treatment, abundances
