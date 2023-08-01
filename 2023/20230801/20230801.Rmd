@@ -167,7 +167,7 @@ include_graphics("figures/lnm.svg")
 We incorporate the mediator path in an LNM model.
 
 \begin{align*}
-Y \vert \mu &\sim \Mult\left(n, \varphi^{-1}\left(\mu\right)\right) \\
+Y \vert \mu, M &\sim \Mult\left(n, \varphi^{-1}\left(\mu\right)\right) \\
 \mu \vert M &= \beta_0 + \beta_T T + \beta_X^T X + \beta_M^T M + \varepsilon^{\mu} \\ 
 M &= \alpha_0 + \alpha_T T + \alpha_X^T X + \varepsilon^m\\
 \end{align*}
