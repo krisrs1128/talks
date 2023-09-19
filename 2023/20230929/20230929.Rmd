@@ -1,0 +1,150 @@
+---
+title: "Department Lightning Talks 2024"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+background-image: url("figures/interactive-screenshot.png")
+background-size: cover
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(RefManageR)
+library(knitr)
+library(tidyverse)
+library(glue)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_knit$set(eval.after = "fig.cap")
+set.seed(123)
+
+BibOptions(cite.style = "numeric")
+bib <- ReadBib("references.bib")
+```
+
+<div id="links">
+Slides: https://go.wisc.edu/77q6rs <br>
+Lab Site: https://go.wisc.edu/[place link here]
+</div>
+
+### Microbiome Data Science
+
+*What*: My lab develops data science tools to help better understand microbial ecosystems, often integrating several data modalities.
+.pull-left[
+*Who*: Some of our active collaborations include work with:
+* Psychologists to understand the gut-brain axis.
+* Physicians to understand inflammation and HIV transmission.
+* Microbiologists to understand pathogen invasion dynamics.
+]
+
+.pull-right[
+<img src="figures/microbiome-header-2.png" width = 500/>
+]
+
+---
+
+### The Future is Interactive
+
+If you’ve taken any of my classes, you know that I use live coding to teach data analysis methods.
+
+1. There are often mistakes and dead ends that we manage to work past
+2. We can gradually improve our analysis through critical re-evaluation
+3. We can tour the garden of forking paths, in the sense of `r Citep(bib, c("Gelman2004ExploratoryDA", "Pu2018TheGO"))`
+
+(picture of a data analysis as garden of forking paths)
+	
+---
+
+### The Future is Interactive
+
+Why: My dream is to have a similarly fluid, interactive workflow for multi-omics. Interacting with data and models at all stages will promote both rigor and imagination in data analysis.
+
+How: Build modular, user-centric software with a firm statistical foundation.
+
+---
+
+### Example 1: Visual Interactivity
+
+1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand"
+2. We’ve written an R package this logic to longitudinal multi-omics data
+visualization
+
+---
+
+### Example 2: Developer Interactivity
+
+1. Simulation can guide experimental design, methods benchmarking, and synthetic
+null hypothesis testing.
+2. We are developing a package that allows tidy-style learning and manipulation
+of simulators.
+
+(setup and plot a simulator)
+
+---
+
+### Example 2: Developer Interactivity
+
+1. Simulation can guide experimental design, model development, and synthetic
+null inference.
+2. We are developing a package that allows tidy-style learning and manipulation
+of simulators.
+
+(alter and replot)
+
+---
+
+## Example 2: Developer Interactivity
+
+1. Simulation can guide experimental design, methods benchmarking, and synthetic
+null hypothesis testing.
+2. We are developing a package that allows tidy-style learning and manipulation
+of simulators.
+
+.pull-left[
+```{r, many_alterations, eval = FALSE, echo = TRUE}
+margins_altered <- margins |>
+  mutate(
+    Iapp:Chgb, 
+    link = ~ pseudotime
+  ) |>
+  mutate(
+    Pyy, 
+    link = ~ ns(pseudotime, 2) * cell_type
+  ) |>
+  estimate(sce)
+```
+]
+
+---
+
+## Example 2: Developer Interactivity
+
+1. Simulation can guide experimental design, methods benchmarking, and synthetic
+null hypothesis testing.
+2. We are developing a package that allows tidy-style learning and manipulation
+of simulators.
+
+```{r, eval = FALSE, echo = TRUE}
+experiments <- list(methylation = methyl_exper, rna = rna_exper)
+families <- list(~ ZINBLSS(), ~ GaussianLSS())
+sims <- experiments |>
+  map2(families, \(x, y) setup_simulator(x, ~ cell_type, y)) |>
+  join_pamona()
+```
+
+---
+
+### References
+
+```{r, results='asis'}
+PrintBibliography(bib, start = 1, end = 5)
+```
+
