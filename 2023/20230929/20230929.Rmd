@@ -7,7 +7,7 @@ output:
     self_contained: false
     fig_caption: true
     nature:
-      highlightStyle: github
+      highlightStyle: kate
       highlightLines: true
       ratio: "16:9"
     seal: false
@@ -22,7 +22,7 @@ library(RefManageR)
 library(knitr)
 library(tidyverse)
 library(glue)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 opts_knit$set(eval.after = "fig.cap")
 set.seed(123)
 
@@ -32,7 +32,7 @@ bib <- ReadBib("references.bib")
 
 <div id="links">
 Slides: https://go.wisc.edu/77q6rs <br>
-Lab Site: https://go.wisc.edu/[place link here]
+Lab Site: https://go.wisc.edu/pgb8nl
 </div>
 
 ### Microbiome Data Science
@@ -73,9 +73,15 @@ How: Build modular, user-centric software with a firm statistical foundation.
 
 ### Example 1: Visual Interactivity
 
+.pull-left[
 1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand"
-2. We’ve written an R package this logic to longitudinal multi-omics data
-visualization
+2. Lab member Kaiyan Ma has written an R package applying this logic to
+longitudinal multi-omics data visualization
+]
+
+.pull-right[
+<img src="figures/molpad_recording.gif"/>
+]
 
 ---
 
@@ -86,18 +92,20 @@ null hypothesis testing.
 2. We are developing a package that allows tidy-style learning and manipulation
 of simulators.
 
-(setup and plot a simulator)
+```{r, eval = FALSE}
+simulator <- setup_simulator(
+  sce,
+  ~ ns(pseudotime, df = params$df) * cell_type,
+  ~ ZINBLSS()
+) |>
+  estimate()
+```
 
----
 
-### Example 2: Developer Interactivity
-
-1. Simulation can guide experimental design, model development, and synthetic
-null inference.
-2. We are developing a package that allows tidy-style learning and manipulation
-of simulators.
-
-(alter and replot)
+```{r, eval = FALSE}
+simulated <- simulate(simulator, n_samples = 10)
+plot(simulator, "pseudotime", simulated)
+```
 
 ---
 
@@ -109,15 +117,15 @@ null hypothesis testing.
 of simulators.
 
 .pull-left[
-```{r, many_alterations, eval = FALSE, echo = TRUE}
-margins_altered <- margins |>
+```{r, eval = FALSE}
+altered <- simulator |>
   mutate(
     Iapp:Chgb, 
     link = ~ pseudotime
   ) |>
   mutate(
     Pyy, 
-    link = ~ ns(pseudotime, 2) * cell_type
+    link = ~ cell_type * ns(pseudotime, 3)
   ) |>
   estimate(sce)
 ```
@@ -132,7 +140,7 @@ null hypothesis testing.
 2. We are developing a package that allows tidy-style learning and manipulation
 of simulators.
 
-```{r, eval = FALSE, echo = TRUE}
+```{r, eval = FALSE}
 experiments <- list(methylation = methyl_exper, rna = rna_exper)
 families <- list(~ ZINBLSS(), ~ GaussianLSS())
 sims <- experiments |>
@@ -144,7 +152,7 @@ sims <- experiments |>
 
 ### References
 
-```{r, results='asis'}
+```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 5)
 ```
 
