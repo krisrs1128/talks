@@ -1,0 +1,152 @@
+---
+title: "simulation_demo.Rmd"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r}
+library(tidyverse)
+options(
+  ggplot2.discrete.colour = c("#388ECC", "#F68B33", "#3F8C61", "#8C2E62", "#F2B705", "#11A0D9"),
+  ggplot2.discrete.fill = c("#388ECC", "#F68B33", "#3F8C61", "#8C2E62", "#F2B705", "#11A0D9"),
+  ggplot2.continuous.colour = function(...) scale_color_distiller(palette = "Spectral", ...),
+  ggplot2.continuous.fill = function(...) scale_fill_distiller(palette = "Spectral", ...)
+)
+
+th <- theme_classic() +
+  theme(
+    panel.background = element_rect(fill="transparent"),
+    strip.background = element_rect(fill="transparent"),
+    plot.background = element_rect(fill="transparent", color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill="transparent"),
+    legend.box.background = element_rect(fill="transparent"),
+    legend.position = "bottom"
+  )
+
+theme_set(th)
+```
+
+
+```{r}
+library(scDesigner)
+library(SummarizedExperiment)
+library(gamboostLSS)
+library(splines)
+source("helpers.R")
+set.seed(20230924) # 23 is good
+```
+
+
+```{r}
+filter_abund <- function(x, thresh = 0.001) {
+  col_total <- colSums(x[, -1])
+  x[, c(TRUE, col_total / sum(col_total) > thresh)]
+}
+```
+
+```{r}
+metadata <- read_tsv("~/Desktop/collaborations/mbio_simulators/power_analysis/data/sample_metadata.tsv")
+counts <- read_tsv("~/Desktop/collaborations/mbio_simulators/power_analysis/data/alltp_genes_counts.tsv") |>
+  column_to_rownames("SampleID") |>
+  as.matrix() |>
+  filter_abund() |>
+  scale()
+
+exper <- SummarizedExperiment(
+  assay = SimpleList(counts = t(counts)),
+  colData = metadata
+)
+```
+
+
+```{r}
+simulator <- setup_simulator(exper, ~ ns(Age, 3) * Genotype, ~ GaussianLSS()) |>
+ estimate()
+samples <- simulate(simulator)
+```
+
+
+```{r, fig.width = 7, fig.height = 3}
+features <- c("ATPF1B", "E3.2.1.22B", "murG", "npdA", "recF", "wbpO", "yidC")
+plot(simulator, "Age", samples, color = "Genotype", transform = identity, feature = features) +
+  labs(x = "Mouse Age (Weeks)", y = "Gene Expression (Scaled)")
+ggsave("gaussian_fit.png", dpi = 200)
+
+plot_corr(exper, samples)
+ggsave("pairwise_cors_t.png", dpi = 200)
+```
+
+```{r}
+links <- list(
+  mu = ~ ns(Age, 3) * Genotype,
+  sigma = ~ ns(Age, 3) * Genotype,
+  df = ~ Genotype
+)
+simulator <- setup_simulator(exper, links, ~ StudentTLSS()) |>
+  estimate()
+samples <- simulate(simulator)
+```
+
+
+```{r, fig.width = 7, fig.height = 3}
+plot(simulator, "Age", samples, color = "Genotype", transform = identity, feature = features) +
+  labs(x = "Mouse Age (Weeks)", y = "Gene Expression (Scaled)")
+ggsave("student_fit.png", dpi = 200)
+```
+
+
+```{r, fig.width = 5, fig.height = 5}
+plot_correlations(exper, transform = identity)
+plot_correlations(samples, transform = identity)
+plot_corr(exper, samples)
+ggsave("pairwise_cors_t.png", dpi = 200)
+```
+
+```{r, fig.width = 7, fig.height = 3}
+nulls <- c("AARS", "ABC-2.AB.A", "ABC.FEV.P", "ABC.FEV.S", "ABC.PE.A", "ABC.PE.P", "ABC.PE.P1", "ABC.PE.S")
+plot(simulator, "Age", samples, color = "Genotype", transform = identity, feature = nulls) +
+  labs(x = "Mouse Age (Weeks)", y = "Gene Expression (Scaled)")
+ggsave("nulls_unaltered.png", dpi = 200)
+```
+
+```{r, fig.width = 7, fig.height = 3}
+plot_altered(simulator, nulls, ~ ns(Age, 3))
+ggsave("altered_ns.png", dpi = 200)
+plot_altered(simulator, nulls, ~ Age)
+ggsave("altered_linear.png", dpi = 200)
+```
+
+### Example 2
+
+```{r}
+sce <- readRDS((url("https://figshare.com/ndownloader/files/40581992")))[1:10, ]
+simulator <- setup_margins(sce, ~ ns(pseudotime, 3), ~ ZINBLSS()) |>
+  estimate(sce)
+```
+
+```{r}
+grid <- expand_colData(sce, c("pseudotime", "cell_type"))
+simulated <- sample_marginals(simulator, grid, n = 4)
+point_opts <- list(alpha = 0.3, size = 0.1)
+plot(simulator, sce, "pseudotime", simulated, point_opts = point_opts)
+```
+  
+
+
+
+
+
+
+
+```{r}
+altered <- simulator |>
+  mutate(Ins1, family = ~ ZINBLSS()) |>
+  estimate(sce)
+```
+
+```{r}
+simulated <- sample_marginals(altered, grid, n = 4)
+plot(altered, sce, "pseudotime", simulated, point_opts = point_opts)
+```
