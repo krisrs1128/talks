@@ -72,50 +72,31 @@ samples <- simulate(simulator)
 features <- c("ATPF1B", "E3.2.1.22B", "murG", "npdA", "recF", "wbpO", "yidC")
 plot(simulator, "Age", samples, color = "Genotype", transform = identity, feature = features) +
   labs(x = "Mouse Age (Weeks)", y = "Gene Expression (Scaled)")
-ggsave("gaussian_fit.png", dpi = 200)
+ggsave("figures/gaussian_fit.png", dpi = 200)
+```
 
+
+```{r, fig.width = 4, fig.height = 4}
 plot_corr(exper, samples)
-ggsave("pairwise_cors_t.png", dpi = 200)
-```
-
-```{r}
-links <- list(
-  mu = ~ ns(Age, 3) * Genotype,
-  sigma = ~ ns(Age, 3) * Genotype,
-  df = ~ Genotype
-)
-simulator <- setup_simulator(exper, links, ~ StudentTLSS()) |>
-  estimate()
-samples <- simulate(simulator)
-```
-
-
-```{r, fig.width = 7, fig.height = 3}
-plot(simulator, "Age", samples, color = "Genotype", transform = identity, feature = features) +
-  labs(x = "Mouse Age (Weeks)", y = "Gene Expression (Scaled)")
-ggsave("student_fit.png", dpi = 200)
-```
-
-
-```{r, fig.width = 5, fig.height = 5}
-plot_correlations(exper, transform = identity)
-plot_correlations(samples, transform = identity)
-plot_corr(exper, samples)
-ggsave("pairwise_cors_t.png", dpi = 200)
+ggsave("figures/pairwise_cors.png", dpi = 200)
 ```
 
 ```{r, fig.width = 7, fig.height = 3}
 nulls <- c("AARS", "ABC-2.AB.A", "ABC.FEV.P", "ABC.FEV.S", "ABC.PE.A", "ABC.PE.P", "ABC.PE.P1", "ABC.PE.S")
 plot(simulator, "Age", samples, color = "Genotype", transform = identity, feature = nulls) +
   labs(x = "Mouse Age (Weeks)", y = "Gene Expression (Scaled)")
-ggsave("nulls_unaltered.png", dpi = 200)
+ggsave("figures/nulls_unaltered.png", dpi = 200)
 ```
 
-```{r, fig.width = 7, fig.height = 3}
-plot_altered(simulator, nulls, ~ ns(Age, 3))
-ggsave("altered_ns.png", dpi = 200)
+```{r}
+p <- plot_altered(simulator, nulls, ~ ns(Age, 3))
+ggsave("figures/altered_ns.png", p$plot, dpi = 200, width = 7, height = 3)
+plot_corr(exper, p$samples)
+ggsave("figures/pairwise_cors_altered.png", dpi = 200, width = 2, height = 2)
 plot_altered(simulator, nulls, ~ Age)
-ggsave("altered_linear.png", dpi = 200)
+ggsave("figures/altered_linear.png", p$plot, dpi = 200, width = 7, height = 3)
+plot_corr(exper, p$samples)
+ggsave("figures/pairwise_cors_altered_linear.png", p$plot, dpi = 200, width = 2, height = 2)
 ```
 
 ### Example 2
