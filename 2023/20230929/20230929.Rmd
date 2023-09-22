@@ -2,20 +2,15 @@
 title: "Department Lightning Talks 2024"
 output:
   xaringan::moon_reader:
+    chakra: https://remarkjs.com/downloads/remark-0.15.0.min.js
     css: ["default", "css/xaringan-themer.css"]
     lib_dir: libs
-    self_contained: false
+    self_contained: true
     fig_caption: true
     nature:
-      highlightStyle: kate
-      highlightLines: true
       ratio: "16:9"
     seal: false
 ---
-
-class: title
-background-image: url("figures/interactive-screenshot.png")
-background-size: cover
 
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
 library(RefManageR)
@@ -30,23 +25,29 @@ BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
+.microbiome-figure-top[
+<img src="figures/microbiome-header-top.png"></img>
+]
+
 <div id="links">
 Slides: https://go.wisc.edu/77q6rs <br>
 Lab Site: https://go.wisc.edu/pgb8nl
 </div>
 
+<br/>
+<br/>
+
 ### Microbiome Data Science
 
-*What*: My lab develops data science tools to help better understand microbial ecosystems, often integrating several data modalities.
-.pull-left[
-*Who*: Some of our active collaborations include work with:
+**What**: My lab develops data science tools to help better understand microbial ecosystems, often integrating several data modalities.
+
+**Who**: Some of our active collaborations include work with:
 * Psychologists to understand the gut-brain axis.
 * Physicians to understand inflammation and HIV transmission.
 * Microbiologists to understand pathogen invasion dynamics.
-]
 
-.pull-right[
-<img src="figures/microbiome-header-2.png" width = 500/>
+.microbiome-figure-bottom[
+<img src="figures/microbiome-header-2.png"></img>
 ]
 
 ---
@@ -57,24 +58,30 @@ If you’ve taken any of my classes, you know that I use live coding to teach da
 
 1. There are often mistakes and dead ends that we manage to work past
 2. We can gradually improve our analysis through critical re-evaluation
-3. We can tour the garden of forking paths, in the sense of `r Citep(bib, c("Gelman2004ExploratoryDA", "Pu2018TheGO"))`
+3. We can easily check and refine our models `r Citep(bib, c("Gelman2004ExploratoryDA", "Wickham2016RFD"))`
 
-(picture of a data analysis as garden of forking paths)
+.center[
+<img src="figures/data_flow.png" width=600/>
+]
 	
 ---
 
 ### The Future is Interactive
 
-Why: My dream is to have a similarly fluid, interactive workflow for multi-omics. Interacting with data and models at all stages will promote both rigor and imagination in data analysis.
+**Why**: My dream is to have a similarly fluid, interactive workflow for multi-omics. Interacting with data and models at all stages will promote both rigor and imagination in data analysis.
 
-How: Build modular, user-centric software with a firm statistical foundation.
+**How**: Build modular, user-centric software for multimodal data transformation, modeling, and visualization.
 
+.center[
+<img src="figures/multimodal_flow.png" width=600/>
+]
+	
 ---
 
 ### Example 1: Visual Interactivity
 
 .pull-left[
-1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand"
+1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand" `r Citep(bib, "Shneiderman1996TheEH")`
 2. Lab member Kaiyan Ma has written an R package applying this logic to
 longitudinal multi-omics data visualization
 ]
@@ -89,64 +96,79 @@ longitudinal multi-omics data visualization
 
 1. Simulation can guide experimental design, methods benchmarking, and synthetic
 null hypothesis testing.
-2. We are developing a package that allows tidy-style learning and manipulation
-of simulators.
+1. A modular approach lets researchers experiment more interactively.
 
 ```{r, eval = FALSE}
-simulator <- setup_simulator(
-  sce,
-  ~ ns(pseudotime, df = params$df) * cell_type,
-  ~ ZINBLSS()
-) |>
-  estimate()
+simulator <- setup_simulator(exper, ~ ns(Age, 3) * Genotype, ~ GaussianLSS()) |>
+ estimate()
+samples <- simulate(simulator)
 ```
-
-
-```{r, eval = FALSE}
-simulated <- simulate(simulator, n_samples = 10)
-plot(simulator, "pseudotime", simulated)
-```
-
----
-
-## Example 2: Developer Interactivity
-
-1. Simulation can guide experimental design, methods benchmarking, and synthetic
-null hypothesis testing.
-2. We are developing a package that allows tidy-style learning and manipulation
-of simulators.
-
-.pull-left[
-```{r, eval = FALSE}
-altered <- simulator |>
-  mutate(
-    Iapp:Chgb, 
-    link = ~ pseudotime
-  ) |>
-  mutate(
-    Pyy, 
-    link = ~ cell_type * ns(pseudotime, 3)
-  ) |>
-  estimate(sce)
-```
+.pull-three-quarters-left[
+<img src="figures/gaussian_fit.png" width=840 style="top: 390px; left: 10px; position: absolute"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors.png" width=220 style="bottom: 25px; right: 120px; position: absolute"/>
 ]
 
 ---
 
 ## Example 2: Developer Interactivity
 
-1. Simulation can guide experimental design, methods benchmarking, and synthetic
-null hypothesis testing.
-2. We are developing a package that allows tidy-style learning and manipulation
-of simulators.
+```{r, eval = FALSE}
+simulator <- simulator |>
+  mutate(any_of(nulls), link = ~ ns(Age, 3)) |>
+  estimate()
+```
+
+.pull-three-quarters-left[
+<img src="figures/nulls_unaltered.png"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors.png"/>
+]
+
+---
+
+## Example 2: Developer Interactivity
+
+```{r, eval = FALSE}
+simulator <- simulator |>
+  mutate(any_of(nulls), link = ~ ns(Age, 3)) |>
+  estimate()
+```
+
+.pull-three-quarters-left[
+<img src="figures/altered_ns.png"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors_altered.png"/>
+]
+
+---
+
+## Example 2: Developer Interactivity
 
 ```{r, eval = FALSE}
 experiments <- list(methylation = methyl_exper, rna = rna_exper)
 families <- list(~ ZINBLSS(), ~ GaussianLSS())
-sims <- experiments |>
+simulator <- experiments |>
   map2(families, \(x, y) setup_simulator(x, ~ cell_type, y)) |>
   join_pamona()
 ```
+
+---
+
+
+### Reaching Out
+
+* You can learn more at [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab).
+
+* I enjoy working with students with a variety of educational levels and backgrounds.
+
+* I encourage you to reach out for any reason -- I'm always happy to talk about
+statistics.
+
+* Email: [ksankaran@wisc.edu](mailto:ksankaran@wisc.edu)
 
 ---
 
