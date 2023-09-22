@@ -35,6 +35,18 @@ h1, h2, h3 {
 .remark-slide-content {
   font-size: 26px;
   padding: 1em 4em 1em 4em;
+  background-color: #f7f7f7;
+}
+
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em 0px;
+    margin-top: 0em;
+    margin-right: 0px;
+    margin-bottom: 0em;
+    margin-left: 0px;
 }
 
 .remark-slide-content h1 {
@@ -50,15 +62,10 @@ h1, h2, h3 {
   font-size: 35px;
 }
 .remark-code, .remark-inline-code {
-  font-family: 'Lucida Console', Monaco, monospace;
-  font-style: 36px;
-}
-.remark-code {
+  font-size: 20px;
 }
 .remark-inline-code {
   color: #09017F;
-  
-  
 }
 .remark-slide-number {
   color: #09017F;
@@ -68,19 +75,12 @@ h1, h2, h3 {
 }
 
 strong{color:#09017F;}
-a, a > code {
-  color: #09017F;
-  text-decoration: none;
-}
 .footnote {
   
   position: absolute;
   bottom: 3em;
   padding-right: 4em;
   font-size: 0.9em;
-}
-.remark-code-line-highlighted {
-  background-color: #D2B6E8;
 }
 .inverse {
   background-color: #09017F;
@@ -131,6 +131,14 @@ a, a > code {
 img, video, iframe {
   max-width: 100%;
 }
+.pull-three-quarters-left {
+  float: left;
+  width: 75%;
+}
+.pull-three-quarters-right {
+  float: right;
+  width: 25%;
+}
 blockquote {
   border-left: solid 5px #09017F80;
   padding-left: 1em;
@@ -179,6 +187,20 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-family: 'Indie Flower';
 }
 
+.microbiome-figure-top {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+}
+
+
+.microbiome-figure-bottom {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+}
+
 .remark-slide-content.full-slide-fig{
   padding: 0px 0px 0px 0px;
   width: 100%;
@@ -218,5 +240,5 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   width: 400px;
   color: #5f558e;
   left: 750px;
-  top: 10px;
+  top: 150px;
 }
