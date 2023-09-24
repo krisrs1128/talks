@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Department Lightning Talks 2024</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.24/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+.microbiome-figure-top[
+&lt;img src="figures/microbiome-header-top.png"&gt;&lt;/img&gt;
+]
+
+&lt;div id="links"&gt;
+Slides: https://go.wisc.edu/77q6rs &lt;br&gt;
+Lab Site: https://go.wisc.edu/pgb8nl
+&lt;/div&gt;
+
+&lt;br/&gt;
+&lt;br/&gt;
+
+### Microbiome Data Science
+
+**What**: My lab develops data science tools to help better understand microbial ecosystems, often integrating several data modalities.
+
+**Who**: Some of our active collaborations include work with:
+* Psychologists to understand the gut-brain axis.
+* Physicians to understand inflammation and HIV transmission.
+* Microbiologists to understand pathogen invasion dynamics.
+
+.microbiome-figure-bottom[
+&lt;img src="figures/microbiome-header-2.png"&gt;&lt;/img&gt;
+]
+
+---
+
+### The Future is Interactive
+
+If you’ve taken any of my classes, you know that I use live coding to teach data analysis methods.
+
+1. There are often mistakes and dead ends that we manage to work past
+2. We can gradually improve our analysis through critical re-evaluation
+3. We can easily check and refine our models [1]
+
+.center[
+&lt;img src="figures/data_flow.png" width=600/&gt;
+]
+	
+---
+
+### The Future is Interactive
+
+**Why**: My dream is to have a similarly fluid, interactive workflow for multi-omics. Interacting with data and models at all stages will promote both rigor and imagination in data analysis.
+
+**How**: Build modular, user-centric software for multimodal data transformation, modeling, and visualization.
+
+.center[
+&lt;img src="figures/multimodal_flow.png" width=600/&gt;
+]
+	
+---
+
+### Example 1: Visual Interactivity
+
+.pull-left[
+1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand" [3]
+2. Lab member Kaiyan Ma has written an R package applying this logic to
+longitudinal multi-omics data visualization
+]
+
+.pull-right[
+&lt;img src="figures/molpad_recording.gif"/&gt;
+]
+
+---
+
+### Example 2: Developer Interactivity
+
+1. Simulation can guide experimental design, methods benchmarking, and synthetic
+null hypothesis testing.
+1. A modular approach lets researchers experiment more interactively.
+
+
+```r
+simulator &lt;- setup_simulator(exper, ~ ns(Age, 3) * Genotype, ~ GaussianLSS()) |&gt;
+ estimate()
+samples &lt;- simulate(simulator)
+```
+.pull-three-quarters-left[
+&lt;img src="figures/gaussian_fit.png" width=840 style="top: 390px; left: 10px; position: absolute"/&gt;
+]
+.pull-three-quarters-right[
+&lt;img src="figures/pairwise_cors.png" width=220 style="bottom: 25px; right: 120px; position: absolute"/&gt;
+]
+
+---
+
+## Example 2: Developer Interactivity
+
+
+```r
+simulator &lt;- simulator |&gt;
+  mutate(any_of(nulls), link = ~ ns(Age, 3)) |&gt;
+  estimate()
+```
+
+.pull-three-quarters-left[
+&lt;img src="figures/nulls_unaltered.png"/&gt;
+]
+.pull-three-quarters-right[
+&lt;img src="figures/pairwise_cors.png"/&gt;
+]
+
+---
+
+## Example 2: Developer Interactivity
+
+
+```r
+simulator &lt;- simulator |&gt;
+  mutate(any_of(nulls), link = ~ ns(Age, 3)) |&gt;
+  estimate()
+```
+
+.pull-three-quarters-left[
+&lt;img src="figures/altered_ns.png"/&gt;
+]
+.pull-three-quarters-right[
+&lt;img src="figures/pairwise_cors_altered.png"/&gt;
+]
+
+---
+
+## Example 2: Developer Interactivity
+
+
+```r
+experiments &lt;- list(methylation = methyl_exper, rna = rna_exper)
+families &lt;- list(~ ZINBLSS(), ~ GaussianLSS())
+simulator &lt;- experiments |&gt;
+  map2(families, \(x, y) setup_simulator(x, ~ cell_type, y)) |&gt;
+  join_pamona()
+```
+
+---
+
+
+### Reaching Out
+
+* You can learn more at [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab).
+
+* I enjoy working with students with a variety of educational levels and backgrounds.
+
+* I encourage you to reach out for any reason -- I'm always happy to talk about
+statistics.
+
+* Email: [ksankaran@wisc.edu](mailto:ksankaran@wisc.edu)
+
+---
+
+### References
+
+[1] A. Gelman. "Exploratory Data Analysis for Complex Models". In: _Journal of
+Computational and Graphical Statistics_ 13 (2004), pp. 755 - 779.
+&lt;https://api.semanticscholar.org/CorpusID:15403312&gt;.
+
+[2] X. Pu and M. Kay. "The Garden of Forking Paths in Visualization: A Design
+Space for Reliable Exploratory Visual Analytics : Position Paper". In: _2018
+IEEE Evaluation and Beyond - Methodological Approaches for Visualization
+(BELIV)_ (2018), pp. 37-45. &lt;https://api.semanticscholar.org/CorpusID:53688664&gt;.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-0.15.0.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
