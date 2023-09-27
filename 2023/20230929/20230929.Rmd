@@ -1,5 +1,5 @@
 ---
-title: "Department Lightning Talks 2024"
+title: "Department Lightning Talks 2023"
 output:
   xaringan::moon_reader:
     chakra: https://remarkjs.com/downloads/remark-0.15.0.min.js
@@ -30,7 +30,7 @@ bib <- ReadBib("references.bib")
 ]
 
 <div id="links">
-Slides: https://go.wisc.edu/77q6rs <br>
+Slides: https://go.wisc.edu/uhka79 <br>
 Lab Site: https://go.wisc.edu/pgb8nl
 </div>
 
@@ -39,12 +39,12 @@ Lab Site: https://go.wisc.edu/pgb8nl
 
 ### Microbiome Data Science
 
-**What**: My lab develops data science tools to help better understand microbial ecosystems, often integrating several data modalities.
+**What**: My lab develops data science tools to help better understand microbial ecosystems, often by combining several 'omics views.
 
 **Who**: Some of our active collaborations include work with:
 * Psychologists to understand the gut-brain axis.
 * Physicians to understand inflammation and HIV transmission.
-* Microbiologists to understand pathogen invasion dynamics.
+* Microbiologists to understand pathogen invasion in plant roots.
 
 .microbiome-figure-bottom[
 <img src="figures/microbiome-header-2.png"></img>
@@ -54,11 +54,11 @@ Lab Site: https://go.wisc.edu/pgb8nl
 
 ### The Future is Interactive
 
-If you’ve taken any of my classes, you know that I use live coding to teach data analysis methods.
+If you’ve taken any of my classes, you know that I use live coding to teach data analysis methods:
 
-1. There are often mistakes and dead ends that we manage to work past
-2. We can gradually improve our analysis through critical re-evaluation
-3. We can easily check and refine our models `r Citep(bib, c("Gelman2004ExploratoryDA", "Wickham2016RFD"))`
+1. There are often mistakes and dead ends that we manage to work past.
+2. We can gradually improve our analysis through critical re-evaluation.
+3. We can easily check and refine our models, in the sense of `r Citep(bib, c("Gelman2004ExploratoryDA", "Wickham2016RFD"))`.
 
 .center[
 <img src="figures/data_flow.png" width=600/>
@@ -94,14 +94,14 @@ longitudinal multi-omics data visualization
 
 ### Example 2: Developer Interactivity
 
-1. Simulation can guide experimental design, methods benchmarking, and synthetic
-null hypothesis testing.
+1. Simulation can guide experimental design, methods benchmarking, and
+comparison with synthetic nulls.
 1. A modular approach lets researchers experiment more interactively.
 
 ```{r, eval = FALSE}
 simulator <- setup_simulator(exper, ~ ns(Age, 3) * Genotype, ~ GaussianLSS()) |>
  estimate()
-samples <- simulate(simulator)
+samples <- sample(simulator)
 ```
 .pull-three-quarters-left[
 <img src="figures/gaussian_fit.png" width=840 style="top: 390px; left: 10px; position: absolute"/>
@@ -149,12 +149,14 @@ simulator <- simulator |>
 ## Example 2: Developer Interactivity
 
 ```{r, eval = FALSE}
-experiments <- list(methylation = methyl_exper, rna = rna_exper)
-families <- list(~ ZINBLSS(), ~ GaussianLSS())
-simulator <- experiments |>
+experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
+families <- list(~ BI(), ~ GaussianLSS())
+sims <- experiments |>
   map2(families, \(x, y) setup_simulator(x, ~ cell_type, y)) |>
   join_pamona()
 ```
+
+<img src="figures/simulator_join.png" width=1300/>
 
 ---
 

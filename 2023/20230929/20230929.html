@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Department Lightning Talks 2024</title>
+    <title>Department Lightning Talks 2023</title>
     <meta charset="utf-8" />
-    <script src="libs/header-attrs-2.24/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
   </head>
@@ -18,7 +18,7 @@
 ]
 
 &lt;div id="links"&gt;
-Slides: https://go.wisc.edu/77q6rs &lt;br&gt;
+Slides: https://go.wisc.edu/uhka79 &lt;br&gt;
 Lab Site: https://go.wisc.edu/pgb8nl
 &lt;/div&gt;
 
@@ -27,12 +27,12 @@ Lab Site: https://go.wisc.edu/pgb8nl
 
 ### Microbiome Data Science
 
-**What**: My lab develops data science tools to help better understand microbial ecosystems, often integrating several data modalities.
+**What**: My lab develops data science tools to help better understand microbial ecosystems, often by combining several 'omics views.
 
 **Who**: Some of our active collaborations include work with:
 * Psychologists to understand the gut-brain axis.
 * Physicians to understand inflammation and HIV transmission.
-* Microbiologists to understand pathogen invasion dynamics.
+* Microbiologists to understand pathogen invasion in plant roots.
 
 .microbiome-figure-bottom[
 &lt;img src="figures/microbiome-header-2.png"&gt;&lt;/img&gt;
@@ -42,11 +42,11 @@ Lab Site: https://go.wisc.edu/pgb8nl
 
 ### The Future is Interactive
 
-If you’ve taken any of my classes, you know that I use live coding to teach data analysis methods.
+If you’ve taken any of my classes, you know that I use live coding to teach data analysis methods:
 
-1. There are often mistakes and dead ends that we manage to work past
-2. We can gradually improve our analysis through critical re-evaluation
-3. We can easily check and refine our models [1]
+1. There are often mistakes and dead ends that we manage to work past.
+2. We can gradually improve our analysis through critical re-evaluation.
+3. We can easily check and refine our models, in the sense of [1; 3].
 
 .center[
 &lt;img src="figures/data_flow.png" width=600/&gt;
@@ -69,7 +69,7 @@ If you’ve taken any of my classes, you know that I use live coding to teach da
 ### Example 1: Visual Interactivity
 
 .pull-left[
-1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand" [3]
+1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand" [2]
 2. Lab member Kaiyan Ma has written an R package applying this logic to
 longitudinal multi-omics data visualization
 ]
@@ -82,15 +82,15 @@ longitudinal multi-omics data visualization
 
 ### Example 2: Developer Interactivity
 
-1. Simulation can guide experimental design, methods benchmarking, and synthetic
-null hypothesis testing.
+1. Simulation can guide experimental design, methods benchmarking, and
+comparison with synthetic nulls.
 1. A modular approach lets researchers experiment more interactively.
 
 
 ```r
 simulator &lt;- setup_simulator(exper, ~ ns(Age, 3) * Genotype, ~ GaussianLSS()) |&gt;
  estimate()
-samples &lt;- simulate(simulator)
+samples &lt;- sample(simulator)
 ```
 .pull-three-quarters-left[
 &lt;img src="figures/gaussian_fit.png" width=840 style="top: 390px; left: 10px; position: absolute"/&gt;
@@ -141,12 +141,14 @@ simulator &lt;- simulator |&gt;
 
 
 ```r
-experiments &lt;- list(methylation = methyl_exper, rna = rna_exper)
-families &lt;- list(~ ZINBLSS(), ~ GaussianLSS())
-simulator &lt;- experiments |&gt;
+experiments &lt;- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
+families &lt;- list(~ BI(), ~ GaussianLSS())
+sims &lt;- experiments |&gt;
   map2(families, \(x, y) setup_simulator(x, ~ cell_type, y)) |&gt;
   join_pamona()
 ```
+
+&lt;img src="figures/simulator_join.png" width=1300/&gt;
 
 ---
 
@@ -166,14 +168,16 @@ statistics.
 
 ### References
 
-[1] A. Gelman. "Exploratory Data Analysis for Complex Models". In: _Journal of
-Computational and Graphical Statistics_ 13 (2004), pp. 755 - 779.
+[1] A. Gelman. "Exploratory Data Analysis for
+Complex Models". In: _Journal of Computational and
+Graphical Statistics_ 13 (2004), pp. 755 - 779.
 &lt;https://api.semanticscholar.org/CorpusID:15403312&gt;.
 
-[2] X. Pu and M. Kay. "The Garden of Forking Paths in Visualization: A Design
-Space for Reliable Exploratory Visual Analytics : Position Paper". In: _2018
-IEEE Evaluation and Beyond - Methodological Approaches for Visualization
-(BELIV)_ (2018), pp. 37-45. &lt;https://api.semanticscholar.org/CorpusID:53688664&gt;.
+[2] B. Shneiderman. "The eyes have it: a task by
+data type taxonomy for information visualizations".
+In: _Proceedings 1996 IEEE Symposium on Visual
+Languages_ (1996), pp. 336-343.
+&lt;https://api.semanticscholar.org/CorpusID:2281975&gt;.
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
