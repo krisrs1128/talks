@@ -177,6 +177,6 @@ statistics.
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 5)
+PrintBibliography(bib)
 ```
 
