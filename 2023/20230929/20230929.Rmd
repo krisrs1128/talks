@@ -149,6 +149,23 @@ simulator <- simulator |>
 ## Example 2: Developer Interactivity
 
 ```{r, eval = FALSE}
+simulator <- simulator |>
+  mutate(any_of(nulls), link = ~ Age) |>
+  estimate()
+```
+
+.pull-three-quarters-left[
+<img src="figures/altered_linear.png"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors_altered_linear.png"/>
+]
+
+---
+
+## Example 2: Developer Interactivity
+
+```{r, eval = FALSE}
 experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
 families <- list(~ BI(), ~ GaussianLSS())
 sims <- experiments |>
@@ -163,7 +180,7 @@ sims <- experiments |>
 
 ### Reaching Out
 
-* You can learn more at [krisrs1128.github.io/LSLab](krisrs1128.github.io/LSLab).
+* You can learn more at [go.wisc.edu/pgb8nl](go.wisc.edu/pgb8nl).
 
 * I enjoy working with students with a variety of educational levels and backgrounds.
 
