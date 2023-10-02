@@ -173,7 +173,7 @@ plot_altered <- function(simulator, nulls, formula) {
     mutate(any_of(nulls), link = formula)
   
   simulator <- estimate(simulator)
-  samples <- simulate(simulator)
+  samples <- sample(simulator)
   p <- plot(simulator, "Age", samples, color = "Genotype", transform = identity, feature = nulls) +
     labs(x = "Mouse Age (Weeks)", y = "Gene Expression (Scaled)")
   list(plot = p, samples = samples)
