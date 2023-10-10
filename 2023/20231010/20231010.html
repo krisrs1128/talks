@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Selective Inference in Computational Genomics</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+background-image: url("figure/cover-v2.jpg")
+background-size: cover
+
+`$$\def\absarg#1{\left|#1\right|}$$`
+`$$\def\Earg#1{\mathbf{E}\left[#1\right]}$$`
+`$$\def\reals{\mathbb{R}} % Real number symbol$$`
+`$$\def\integers{\mathbb{Z}} % Integer symbol$$`
+`$$\def\*#1{\mathbf{#1}}$$`
+`$$\def\m#1{\boldsymbol{#1}}$$`
+`$$\def\FDR{\widehat{\operatorname{FDR}}}$$`
+`$$\def\Gsn{\mathcal{N}}$$`
+`$$\def\Unif{\operatorname{Unif}}$$`
+`$$\def\Bern{\operatorname{Bern}}$$`
+
+
+
+.pull-left[
+&lt;div id="title"&gt;
+Selective Inference for Computational Genomics
+&lt;/div&gt;
+&lt;div id="subtitle"&gt;
+BME 780: Methods in Quantitative Biology
+Kris Sankaran &lt;br/&gt;
+10 | October | 2023 &lt;br/&gt;
+https://github.io/krisrs1128/LSLab
+&lt;/div&gt;
+
+&lt;div id="links"&gt;
+Slides: https://go.wisc.edu/ &lt;br/&gt;
+Code: https://go.wisc.edu/s8hdtt
+&lt;/div&gt;
+]
+
+---
+
+### Learning Objectives
+
+We will be able to help collaborators solve scientific problems by adapting
+modern methods from selective inference.
+
+By the end of this talk, we will be able to:
+
+1. Discuss the role of selective inference abstractions in computational genomics settings.
+1. Interpret `\(p\)`-value histograms and explain how they motivate the Benjamini-Hochberg procedure.
+1. Improve power in large-scale inference by focusing on the most promising contexts.
+1. Diagnose miscalibration in large-scale inference and apply data splitting to address it.
+
+---
+
+### Large Scale Inference
+
+Notation
+  * Hypotheses of interest: `\(H_{1}, \dots, H_{M}\)`. Some of them are non-null, but you don't know which.
+  * Associated `\(p\)`-values: `\(p_{1}, \dots, p_{M}\)`.
+
+Goal: Reject as many non-null hypotheses as possible while controlling the _False Discovery Rate_,
+
+`\begin{align*}
+\text{FDR} := \Earg{\frac{\absarg{\text{False Positives}}}{\absarg{\text{Rejections}}\vee 1}}
+\end{align*}`
+
+---
+
+### Examples
+
+.pull-left[
+* Microbiome: Is taxon `\(m\)` associated with the development of autism in infants?
+* Epigenetics: Is CpG site `\(m\)` differentially methlyated among smokers?
+* Cancer: Is elevated immune cell expression of gene `\(m\)` associated with improved survival rates?
+]
+
+.pull-right[
+&lt;img src="figure/microbiome_selection.jpg" width=450/&gt;
+]
+
+---
+
+### Examples
+
+* [Comic](https://imgs.xkcd.com/comics/significant.png)
+* [Search](https://www.biostars.org/post/search/?query=multiple+hypothesis+testing)
+
+---
+
+### `\(p\)`-value histogram
+
+* Under the null, the `\(p\)`-values follow a uniform distribution. 
+* The spike near 0 `\(\implies\)` true alternative hypotheses
+* `\(\pi_{0}\)` refers to the true proportion of nulls
+
+.center[
+  &lt;img src="figure/histogram-merged-1.png" width=800/&gt;
+]
+
+---
+
+### `\(p\)`-value histogram
+
+* Under the null, the `\(p\)`-values follow a uniform distribution. 
+* The spike near 0 `\(\implies\)` true alternative hypotheses
+* `\(\pi_{0}\)` refers to the true proportion of nulls
+
+.center[
+  &lt;img src="figure/histogram-1.png" width=800/&gt;
+]
+
+---
+
+### `\(p\)`-value histogram
+
+* Under the null, the `\(p\)`-values follow a uniform distribution. 
+* The spike near 0 `\(\implies\)` true alternative hypotheses
+* `\(\pi_{0}\)` refers to the true proportion of nulls
+
+.center[
+  &lt;img src="figure/histogram-2.png" width=800/&gt;
+]
+
+---
+
+### Benjamini-Hochberg
+
+The Benjamini-Hochberg (BH) procedure [1] controls the FDR at
+level `\(q\)`.
+
+1. Sort the `\(p\)`-values: `\(p_{(1)} \leq p_{(2)} \leq \dots \leq p_{(M)}\)`
+1. Find the largest `\(i\)` such that `\(p_{(i)} \leq \frac{i q}{M}\)`
+1. Reject hypotheses associated with `\(p_{(1)} \leq \dots \leq p_{(i)}\)` 
+
+---
+
+### Why?
+
+At any threshold `\(t\)`, estimate the FDR using relative areas from the null and alternative densities.
+
+.center[
+&lt;img src="figure/annotated_histogram.png" width=410/&gt;
+]
+
+---
+
+### Why?
+
+At any threshold `\(t\)`, estimate the FDR using relative areas from the null and alternative densities.
+
+.center[
+&lt;img src="figure/annotated_histogram-2.png" width=410/&gt;
+]
+
+---
+
+### Why?
+
+Let `\(R\left(t\right)\)` be the number of rejected hypotheses at threshold `\(t\)`. Then,
+
+.pull-left[
+`\begin{align*}
+\FDR\left(t\right) &amp;= \frac{\pi_{0}Mt}{R\left(t\right)}
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/annotated_histogram-2.png" width=435/&gt;
+]
+
+---
+
+### Why?
+
+Maximize the number of rejections while limiting false discoveries.
+
+.pull-left[
+Optimize:
+`\begin{align*}
+\text{maximize } &amp;R\left(t\right) \\
+\text{subject to } &amp;\FDR\left(t\right) \leq q
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/annotated_histogram-2.png" width=435/&gt;
+]
+
+---
+
+### Why?
+
+Maximize the number of rejections while limiting false discoveries.
+
+.pull-left[
+Optimize:
+`\begin{align*}
+\text{maximize } &amp;t \\
+\text{subject to } &amp;\FDR\left(t\right) \leq q
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/annotated_histogram-2.png" width=435&gt;
+]
+
+---
+
+### Why?
+
+Larger thresholds let more hypotheses through.
+
+.pull-left[
+Optimize:
+`\begin{align*}
+\text{maximize } &amp; t \\
+\text{subject to } &amp;\FDR\left(t\right) \leq q
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/annotated_histogram-3.png" width=435&gt;
+]
+
+---
+
+### Why?
+
+Larger thresholds let more hypotheses through.
+
+.pull-left[
+Optimize:
+`\begin{align*}
+\text{maximize } &amp; t \\
+\text{subject to } &amp;\FDR\left(t\right) \leq q
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/annotated_histogram-4.png" width=450&gt;
+]
+
+---
+
+### Why?
+
+Larger thresholds let more hypotheses through.
+
+.pull-left[
+Optimize:
+`\begin{align*}
+\text{maximize } &amp;t \\
+\text{subject to } &amp;\FDR\left(t\right) \leq q
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/annotated_histogram-5.png" width=450&gt;
+]
+
+---
+
+### Why?
+
+Look for the largest `\(p\)`-value satisfying this inequality.
+
+.pull-left[
+Optimize:
+`\begin{align*}
+\text{maximize } &amp;t \\
+\text{subject to } &amp;\FDR\left(t\right) \leq q
+\end{align*}`
+]
+
+.pull-right[
+If we substitute `\(t = p_{(i)}\)`, then
+
+`\begin{align*}
+&amp;\frac{\pi_{0}M p_{(i)}}{i} \leq q \\
+\implies &amp; p_{(i)} \leq \frac{i q}{\pi_{0} M} \\
+\implies &amp; p_{(i)} \leq \frac{i q}{M}
+\end{align*}`
+]
+
+---
+
+background-image: url("figure/split_night_sky.jpg")
+background-size: cover
+
+.middle[
+## Power through Context
+]
+
+---
+
+### Hypotheses are not identical
+
+* We may know in advance that some hypotheses are more likely to be rejected than others.
+  - Prior literature
+  - Number of mapped reads
+* This information can improve power. We'll discuss [2], but see [3; 4; 5; 6]
+
+.center[
+  &lt;img width=620 src="figure/split-histograms.png"/&gt;
+]
+
+---
+
+### Example: Testing Pairs
+
+.pull-left[
+Suppose we are testing associations between,
+
+* SNPs `\(x_{1}, \dots, x_{I}\)`
+* Histone Markers `\(y_{1}, \dots, y_{J}\)`
+]
+
+.pull-right[
+`\(H_{m}: \text{Cor}\left(x_{i}, y_{j}\right) = 0\)`.
+
+Even for moderate `\(I, J\)`, this is many tests!
+]
+
+.center[
+  &lt;img src="figure/pairwise-cors.png" width=800/&gt;
+]
+
+---
+
+### Grouping by Distance
+
+* Group the distances into bins `\(1, \dots, G\)`.
+* We use different thresholds `\(\*t = \left(t_{1}, \dots, t_{G}\right)\)` across groups.
+
+.center[
+&lt;img src="figure/pairwise-example-groups.png" width=800/&gt;
+]
+
+---
+
+### Grouping by Distance
+
+* Group the distances into bins `\(1 , \dots, G\)`.
+* We use different thresholds `\(\*t = \left(t_{1}, \dots, t_{G}\right)\)` across groups.
+
+.pull-left[
+`\begin{align*}
+R\left(\*t\right) &amp;:= \sum_{g} R_{g}\left(t_{g}\right) \\
+\FDR\left(\mathbf{t}\right) &amp;:= \frac{\sum_{g = 1}^{G} m_{g}t_{g}}{R\left(\*t\right)}
+\end{align*}`
+]
+
+.pull-right[
+`\begin{align*}
+\text{maximize } &amp;R\left(\*t\right) \\
+\text{subject to } &amp;\FDR\left(\*t\right) \leq q
+\end{align*}`
+]
+
+---
+
+### Code Demo
+
+We simulated a SNP-histone marker association dataset `\(x_{n} \in \{0, 1\}^{I}\)` and `\(y_{n} \in \reals^{J}\)`.
+
+.pull-left[
+`\begin{align*}
+y_{n} &amp;= B x_{n} + \epsilon_{n} \\
+\epsilon_{n} &amp;\sim \mathcal{N}\left(0, 0.1^2\right) \\
+x_{ni} &amp;\sim \Bern\left(\frac{1}{2}\right) \\
+B_{nj} &amp;\sim \Bern\left(0.4 \exp\left(- \frac{1}{10}\left|\frac{i}{I} - \frac{j}{J}\right|\right)\right) \\
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/beta_heatmap.png" width=400/&gt;
+]
+
+---
+
+### Code Demo
+
+We simulated a SNP-histone marker association dataset `\(x_{n} \in \{0, 1\}^{I}\)` and `\(y_{n} \in \reals^{J}\)`.
+
+.pull-left[
+`\begin{align*}
+y_{n} &amp;= B x_{n} + \epsilon_{n} \\
+\epsilon_{n} &amp;\sim \mathcal{N}\left(0, 0.1^2\right) \\
+x_{ni} &amp;\sim \Bern\left(\frac{1}{2}\right) \\
+B_{nj} &amp;\sim \Bern\left(0.4 \exp\left(- \frac{1}{10}\left|\frac{i}{I} - \frac{j}{J}\right|\right)\right) \\
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="figure/context_p_values_histogram.png"/&gt;
+]
+
+---
+
+### Code Demo
+
+We can estimate `\(\FDR\left(\*t\right)\)` with a few lines of code:
+
+
+```r
+m &lt;- map_dbl(p_values, length)
+R &lt;- map2_dbl(p_values, thresholds, ~ sum(.x &lt; .y))
+sum(m * thresholds) / R
+```
+
+* `p_values` is a list of `\(p\)`-values for each group `\(g\)`
+* `thresholds` is a vector storing `\(\*t\)`
+
+---
+
+### Code Demo
+
+We can have more generous thresholds for `\(p\)`-values between nearby pairs. This
+invests the most "budget" on the promising contexts.
+  
+.center[
+  &lt;img src="figure/optimal-thresholds-1.png" width=700/&gt;
+]
+
+---
+
+### Code Demo
+
+We can have more generous thresholds for `\(p\)`-values between nearby pairs. This
+invests the most "budget" on the promising contexts.
+  
+.center[
+  &lt;img src="figure/optimal-thresholds-2.png" width=700/&gt;
+]
+
+---
+
+### Optimization
+
+* In practice, we would optimize `\(\*t\)`, rather than scanning the entire
+space.
+* The number of rejections can be derived from the CDF of the `\(p\)`-value histogram, and the problem can be formulated as a convex optimization.
+* We haven't discussed it, but it is important to cross-weight to ensure independence between the thresholds and `\(p\)`-values.
+
+.center[
+  &lt;img src="figure/grenander_comparison.png" width=650&gt;
+]
+
+---
+
+background-image: url("figure/symmetry_cover.jpg")
+background-size: cover
+
+.middle[
+## Calibration through Splitting
+]
+
+---
+
+### Example
+
+Imagine gene `\(m\)` in sample `\(n\)` is distributed according to,
+`\begin{align*}
+x_{nm} \vert \text{disease t} \sim \text{NB}\left(\mu_{mt}, \varphi\right)
+\end{align*}`
+so that expression potentially varies according to disease status.
+
+`\begin{align*}
+H_{0m}: \mu_{m0} = \mu_{m1} \\
+H_{1m}: \mu_{m0} \neq \mu_{m1}
+\end{align*}`
+
+---
+
+### Example
+
+* We used the `edgeR` package to normalize these data (TMM + log transform) [7], inspired by the simulation in [8]
+* Notice the nonuniformity of the null `\(p\)`-values from the two-sample `\(t\)`-tests
+
+.center[
+&lt;img src="figure/miscalibration_histogram.png" width=700/&gt;
+]
+
+---
+
+### Key Idea
+
+.pull-left[
+We can avoid this problem if we bypass `\(p\)`-values altogether.
+  - Significance can be deduced from test statistics directly
+  - We do not have to use BH to ensure FDR control
+  
+This idea is highly adaptable. We'll discuss [9], but see also [10; 11].
+]
+  
+.pull-right[
+&lt;img src="figure/mirror_inspiration_raw.png" width = 650/&gt;
+]
+
+---
+
+### Testing `\(\to\)` Regression
+
+We work with the original data `\(\*X \in \reals^{N \times M}\)` and `\(\*y \in \reals^{N}\)`. For example,
+ * `\(y_{n}\)`: Disease state for patient `\(n\)` 
+ * `\(x_{nm}\)`: Expression level for gene `\(m\)`.
+
+Consider regressing `\(\*y = \*X \*\beta + \epsilon\)`. The null hypothesis is that
+`\(\beta_{m} = 0\)`.
+
+.center[
+  &lt;img src="figure/regression-assumptions.png" width=600/&gt;
+]
+
+---
+
+### Symmetry and Mirrors
+
+Randomly split rows into `\(\left(\*X^{(1)}, \*y^{(1)}\right)\)` and `\(\left(\*X^{(2)}, \*y^{(2)}\right)\)`.
+
+Mirror statistics have the form,
+`\begin{align*}
+T_{m} &amp;= \text{sign}\left(\hat{\beta}^{(1)}_{m}\hat{\beta}_{m}^{(2)}\right)f\left(\absarg{\hat{\beta}^{(1)}_{m}}, \absarg{\hat{\beta}^{(2)}_{m}}\right)
+\end{align*}`
+
+where `\(\hat{\beta}^{(j)}\)` are estimated on the separate splits.
+
+---
+
+### Symmetry and Mirrors
+
+Mirror statistics measure the agreement in estimates across splits.
+
+Example: `\(\text{sign}\left(\hat{\beta}^{(1)}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]\)`
+
+.center[
+  &lt;img src="figure/regression-mirrors.png" width=750&gt;
+]
+
+---
+
+### Symmetry and Mirrors
+
+Mirror statistics measure the agreement in estimates across splits.
+
+Example: `\(\text{sign}\left(\hat{\beta}^{(1)}_{m}\hat{\beta}_{m}^{(2)}\right)\left[\absarg{\hat{\beta}_{m}^{(1)}} + \absarg{\hat{\beta}_{m}^{(2)}}\right]\)`
+
+
+
+```r
+ix &lt;- sample(nrow(x), 0.5 * nrow(x))
+beta1 &lt;- train_fun(x[ix], y[ix])
+beta2 &lt;- train_fun(x[-ix], y[-ix])
+sign(beta1 * beta2) * (abs(beta1) + abs(beta2))
+```
+
+---
+
+### Mirror Histogram
+
+Let's revisit the negative binomial problem. Which hypotheses should we reject?
+
+.center[
+  &lt;img src="figure/mirror_histogram_merged.png" width=800/&gt;
+]
+
+---
+
+### Mirror Histogram
+
+A reasonable strategy is to reject for all `\(T_{m}\)` in the far right tail. How
+should we pick the threshold?
+
+.center[
+  &lt;img src="figure/mirror_histogram.png" width=800/&gt;
+]
+
+---
+
+### FDR Estimation
+
+By symmetry, the size of the left tail `\(\approx\)` the number of nulls in the
+right tail,
+
+.pull-left[
+`\begin{align*}
+\FDR\left(t\right) &amp;= \frac{\absarg{T_{m} &lt; -t}}{\absarg{T_{m} &gt; t}}
+\end{align*}`
+
+which suggests solving,
+`\begin{align*}
+\text{maximize } &amp;t \\
+\text{subject to } &amp;\FDR\left(t\right) \leq q
+\end{align*}`
+]
+
+.pull-right[
+  &lt;img src="figure/mirror_histogram.png"/&gt;
+]
+
+---
+
+### Multiple Splits
+
+Issue:
+  * A downside is that sample splitting samples reduces power.
+  * Power can be recovered by aggregating over multiple iterations of splitting.
+
+Main Idea:
+  * Create `\(K\)` different pairs of random splits
+  * Let `\(\hat{S}_{k}\)` be the selected features when using mirror statistics on the `\(k^{th}\)` random split
+  * Look for consensus across the `\(\hat{S}_{k}\)`
+  * (See backup slides for details)
+  
+---
+
+
+### Code Demo
+
+In our Negative Binomial example, this leads to FDR control and reasonable
+power. Here are the results over multiple runs.
+
+.center[
+&lt;img src="figure/mirror_fdr_summary.png" width=600/&gt;
+]
+
+---
+
+### Conclusion
+
+* Whenever the signal is subtle, hypothesis testing is crucial.
+* The key abstractions we encountered were,
+  - Optimization view of BH + Context = Focused Hypothesis Testing
+  - Data splitting + Symmetry assumptions = Formal Error Control
+* These abstractions are useful across the computational genomics workflow
+  - E.g., in experimental design [12] and interpretation of features generated through unsupervised learning [13; 11].
+  - Other variations developed in my lab [14; 15; 16]
+
+---
+
+### References
+
+[1] Y. Benjamini and Y. Hochberg. "Controlling the false discovery
+rate: a practical and powerful approach to multiple testing". In:
+_Journal of the royal statistical society series b-methodological_ 57
+(1995), pp. 289-300.
+
+[2] N. Ignatiadis, B. Klaus, J. B. Zaugg, et al. "Data-driven
+hypothesis weighting increases detection power in genome-scale multiple
+testing". In: _Nature methods_ 13 (2016), pp. 577 - 580.
+
+[3] L. Lei and W. Fithian. "AdaPT: an interactive procedure for
+multiple testing with side information". In: _Journal of the Royal
+Statistical Society: Series B (Statistical Methodology)_ 80 (2016).
+
+[4] N. Ignatiadis and W. Huber. "Covariate powered
+cross&lt;U+2010&gt;weighted multiple testing". In: _Journal of the Royal
+Statistical Society: Series B (Statistical Methodology)_ 83 (2017).
+
+---
+
+### References
+
+[5] M. J. Zhang, F. Xia, and J. Y. Zou. "Fast and covariate-adaptive
+method amplifies detection power in large-scale multiple hypothesis
+testing". In: _Nature Communications_ 10 (2019).
+
+[6] R. Yurko, M. G. G'Sell, K. Roeder, et al. "A selective inference
+approach for false discovery rate control using multiomics covariates
+yields insights into disease risk". In: _Proceedings of the National
+Academy of Sciences of the United States of America_ 117 (2020), pp.
+15028 - 15035.
+
+[7] M. D. Robinson, D. J. McCarthy, and G. K. Smyth. "edgeR: a
+Bioconductor package for differential expression analysis of digital
+gene expression data". In: _Bioinformatics_ 26 (2009), pp. 139 - 140.
+
+[8] M. Stephens. "Simple Transform Simulation". In: _Online_ (2023).
+Accessed: 2023-07-14.
+
+---
+
+### References
+
+[9] C. Dai, B. Lin, X. Xing, et al. "False Discovery Rate Control via
+Data Splitting". In: _Journal of the American Statistical Association_
+(2020).
+
+[10] X. Ge, Y. E. Chen, D. Song, et al. "Clipper: p-value-free FDR
+control on high-throughput data from two conditions". In: _Genome
+Biology_ 22 (2021).
+
+[11] F. R. Guo and R. D. Shah. "Rank-transformed subsampling: inference
+for multiple data splitting and exchangeable p-values". In: _ArXiv_
+(2023).
+
+[12] C. Fannjiang, S. Bates, A. N. Angelopoulos, et al. "Conformal
+prediction under feedback covariate shift for biomolecular design". In:
+_Proceedings of the National Academy of Sciences of the United States
+of America_ 119 (2022).
+
+---
+
+### References
+
+[13] D. Song and J. J. Li. "PseudotimeDE: inference of differential
+gene expression along cell pseudotime with well-calibrated p-values
+from single-cell RNA sequencing data". In: _Genome Biology_ 22 (2021).
+
+[14] K. Sankaran and P. Jeganathan. "Microbiome Intervention Analysis
+with Transfer Functions and Mirror Statistics". In: _ArXiv_ (2023).
+
+[15] K. Sankaran and S. P. Holmes. "structSSI: Simultaneous and
+Selective Inference for Grouped or Hierarchically Structured Data." In:
+_Journal of statistical software_ 59 13 (2014), pp.  1-21 .
+
+[16] K. Sankaran. "Functions for Performing Local FDR Estimation when
+Null and Alternative are Poisson [R package LocFDRPois version 1.0.0]".
+In: _CRAN_ (2015).
+
+---
+
+### Selective Inference
+
+Step (1) distinguishes selective inference from ordinary statistical inference.
+
+1. Search for interesting patterns.
+1. Test whether they could have just been coincidences.
+
+Looking for promising contexts `\(\implies\)` selective inference.
+
+---
+
+### Optimization
+
+This can be given into generic optimization solvers:
+
+`\begin{align*}
+\text{maximize } &amp; \sum_{g} m_{g}\hat{F}\left(t_{g}\right) \\
+\text{subject to } &amp;
+\sum_{g = 1}^{G} m_{g}\left(t_{g} - m_{g}\hat{F}\left(t_{g}\right)\right) \leq q
+\end{align*}`
+
+---
+
+### Aggregation Procedure
+
+We need a mechanism for aggregating `\(\hat{S}_{k}\)` across iterations.
+
+.center[
+&lt;img src="figure/selection.png"/&gt;
+]
+
+---
+
+### Aggregation Procedure
+
+Let `\(\hat{I}_{1}, \dots, \hat{I}_{m}\)` store the row averages of this matrix. Larger `\(\hat{I}_{m}\)` means:
+  * The feature is selected even when `\(\absarg{\hat{S}_{k}}\)` is small
+  * The feature is selected frequently
+
+.center[
+  &lt;img src="figure/selection.png" width=700/&gt;
+]
+
+---
+
+### Aggregation Procedure
+
+Let `\(\hat{I}_{1}, \dots, \hat{I}_{m}\)` store the column averages of this matrix. Larger `\(\hat{I}_{m}\)` means:
+  * The feature is selected even when `\(\absarg{\hat{S}_{k}}\)` is small
+  * The feature is selected frequently
+
+.center[
+  &lt;img src="figure/I_hat.png" width=800/&gt;
+]
+
+---
+
+### Aggregation Procedure
+
+* For the final selection, choose features with the largest `\(\hat{I}_{m}\)` possible, up until the budget exceeds `\(1 - q\)`.
+* This is guaranteed to (asymptotically) control the FDR at level `\(q\)`
+
+.center[
+  &lt;img src="figure/I_hat_bar.png" width=800/&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
