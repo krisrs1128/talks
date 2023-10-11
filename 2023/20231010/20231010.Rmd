@@ -1,5 +1,5 @@
 ---
-title: "Selective Inference in Computational Genomics"
+title: "Multiple Testing in Quantitative Biology"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -15,6 +15,7 @@ output:
 
 class: title
 background-size: cover
+background-image: url("figure/background.png")
 
 $$\def\absarg#1{\left|#1\right|}$$
 $$\def\Earg#1{\mathbf{E}\left[#1\right]}$$
@@ -40,18 +41,18 @@ bib <- ReadBib("references.bib")
 
 .pull-left[
 <div id="title">
-Selective Inference for Computational Genomics
+Multiple Testing in Quantitative Biology
 </div>
 <div id="subtitle">
 BME 780: Methods in Quantitative Biology
 Kris Sankaran <br/>
-10 | October | 2023 <br/>
+11 | October | 2023 <br/>
 https://github.io/krisrs1128/LSLab
 </div>
 
 <div id="links">
 Slides: https://go.wisc.edu/005s29 <br/>
-Code: https://go.wisc.edu/s8hdtt
+Code:  https://go.wisc.edu/p2oly1
 </div>
 ]
 
@@ -300,6 +301,10 @@ If we substitute $t = p_{(i)}$, then
 \implies & p_{(i)} \leq \frac{i q}{M}
 \end{align*}
 ]
+
+---
+
+Discussion, Q1: [https://go.wisc.edu/aq19dy]( https://go.wisc.edu/aq19dy)
 
 ---
 
@@ -652,6 +657,10 @@ power. Here are the results over multiple runs.
 * These abstractions are useful across the computational genomics workflow
   - E.g., in experimental design `r Citep(bib, c("Fannjiang2022ConformalPU"))` and interpretation of features generated through unsupervised learning `r Citep(bib, c("Song2021PseudotimeDEIO", "Guo2023RanktransformedSI"))`.
   - Other variations developed in my lab `r Citep(bib, c("Sankaran2023MicrobiomeIA", "Sankaran2014structSSISA", "Sankaran2015FunctionsFP"))`
+
+---
+
+Discussion, Q2: [https://go.wisc.edu/aq19dy]( https://go.wisc.edu/aq19dy)
 
 ---
 
