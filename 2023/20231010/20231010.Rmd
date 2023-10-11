@@ -61,11 +61,11 @@ Code:  https://go.wisc.edu/p2oly1
 ### Learning Objectives
 
 We will be able to help collaborators solve scientific problems by adapting
-modern methods from selective inference.
+modern methods from multiple testing.
 
 By the end of this talk, we will be able to:
 
-1. Discuss the role of selective inference abstractions in computational genomics settings.
+1. Discuss the role of multiple testing abstractions in computational genomics settings.
 1. Interpret $p$-value histograms and explain how they motivate the Benjamini-Hochberg procedure.
 1. Improve power in large-scale inference by focusing on the most promising contexts.
 1. Diagnose miscalibration in large-scale inference and apply data splitting to address it.
