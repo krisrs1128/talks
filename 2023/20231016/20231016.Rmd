@@ -1,0 +1,215 @@
+---
+title: "Lecture 11"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+<div id="title">
+STAT 613: Statistical Methods for Data Science
+</div>
+
+<div id="subtitle">
+Lecture 11 <br>
+16 | October | 2023
+</div>
+
+---
+
+### Outline
+1. Describe the underlying model for the multiple linear regression data generating process.
+2. Explain how the multiple linear regression parameters can be estimated (mathematically and in code).
+3. Correctly interpret the fitted multiple linear regression coefficients within a specific problem context.
+4. Summarize challenges that can arise in MLR, but not SLR.
+
+---
+
+### Multiple Linear Regression
+
+* Generalizes SLR, and is useful whenever multiple predictors might be related to a response.
+* The data $\{x_{i}, y_{i}\}_{i = 1}^{n}$ satisfies $y_{i} = \beta_{0} + \beta_{1}x_{i1} + \dots + \beta_{p} x_{ip} + \epsilon_{i}$
+	where each $x_i = \left(x_{i1}, \dots, x_{ip}\right)$ is $p$-dimensional.
+* $\epsilon_{i}$ is iid noise. Common assumptions are either (1) $\epsilon_{i} \sim P_{\epsilon}$ with mean 0, variance $\sigma^2$ or, more strongly (2) $\epsilon_{i} \sim N\left(0, \sigma^2\right)$.
+
+---
+
+### Multiple Linear Regression: Compact Representation
+
+1. Rowwise, scalar: $y_{i} = \beta_{0} + \beta_{1}x_{i1} + \dots + \beta_{p} x_{ip} + \epsilon_{i}$ for $i = 1, \dots, n$.
+2. Rowwise, vector: $y_{i} = \mathbf{\beta}^T x_{i} + \epsilon_{i}$ for $i = 1, \dots, n$.
+3. Columnwise, vector: $\mathbf{y} = \beta_0\mathbf{1} + \beta_1 \mathbf{x}_{1} + \dots +\beta_{p}\mathbf{x_{p}} + \mathbf{\epsilon}$
+4. Matrix: $\mathbf{y} = \mathbf{\tilde{X}}\mathbf{\beta} + \mathbf{\epsilon}$
+
+---
+
+### Geometric Interpretation
+
+1. SLR $\rightarrow$ Line, MLR $\rightarrow$ Plane
+2. Each coordinate of $\mathbf{\beta}$ describes the slope along one axis.
+
+(Draw a figure)
+
+---
+
+### Estimation
+
+1. What are good choices of $\hat{\beta}$?
+2. We want the plane to closely approximate the data.
+
+(show another app, comparing plane with choices of beta)
+
+---
+
+### Estimation
+
+Just like in SLR, we can fit $\hat{\mathbf{\beta}}$ by minimizing the squared distance from $y_{i}$ to the prediction surface $\mathbf{\tilde{X}}\mathbf{\hat{\beta}}$.
+
+$$\hat{\mathbf{\beta}} := \arg\min \|\mathbf{y} - \mathbf{\tilde{X}}\mathbf{\beta}\|_{2}^{2}$$
+
+A calculation just like in Lecture 8 yields a closed form solution:
+$$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathbf{\tilde{X}}^{T}\mathbf{y}$$
+
+(show the calculation)
+
+---
+
+### Estimation
+
+We can obtain these estimates using the `lm` function in R.
+
+(give an example)
+
+---
+
+### MLR vs. SLR
+
+So far, this discussion has closely paralleled the discussion for SLR. Can you think of potential differences?
+
+---
+
+### Interpreting Coefficients
+$$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathbf{\tilde{X}}^{T}\mathbf{y}$$
+1. If the columns of $\tilde{\mathbf{X}}$ are correlated, then the coefficients have to be interpreted with respect to one another.
+	1. It doesn’t make sense to discuss $\beta_{j}$ in isolation
+2. _Ceteris Paribus_: $\beta_{j}$ describes how a unit increase in $X_{j}$ changes $y$ when holding all other predictors constant.
+3. Derive this using $y_{i} = x_{i}^{T}\beta + \epsilon$.
+
+---
+
+### Interpreting Coefficients
+
+1. This can make sense of otherwise counterintuitive estimates. Here is a model fitted to “Tackles” in American football.
+2. We expect bigger people to make more tackles. Why is the coefficient for height negative?
+
+(add code example)
+
+---
+
+### Challenge 1: Correlation
+
+1. In addition to complicating interpretation, correlation between predictors can have a destabilizing effect.
+
+1. I’ve simulated examples from the sampling distribution of $\hat{\mathbf{\beta}}$ when two predictors are more vs. less correlated with one another.
+
+---
+
+### Sampling Distribution under Correlation
+
+Here are example sampling distributions from simulations where the predictors are more vs. less correlated.
+
+---
+
+### Challenge 2: Selection
+
+1. Including more features than necessary can also increase the variance of $\hat{\beta}$ (hurting prediction/inferential performance).
+2. It will become important to have a systematic way to select the right submodel if we have many potentially irrelevant predictors.
+---
+
+### Sampling Distribution - Irrelevant Features
+
+Here are example sampling distributions when we have many irrelevant features.
+
+---
+
+### Sampling Distribution - Irrelevant Features 
+
+How might we be able to deal with these irrelevant features?
+
+---
+
+### t-statistic
+
+Can we safely drop feature $j$ from the model?
+
+$$H_{0}: \beta_{j} = 0 \\
+H_{1}: \beta_{j} \neq 0$$
+Define the test statistic
+$$t = \frac{\hat{\beta_{j}}}{\sqrt{\widehat{\text{Var}}\left(\hat{\beta}_{j}\right)}}$$
+and reject when this is large.
+
+
+---
+
+### t-statistic
+
+Under $H_{0}$, it turns out that $t \sim T_{n - p}$.
+
+Intuition: We only reject when $\hat{\beta}_{j}$ is much larger than the typical error due to sampling noise.
+
+---
+### Preview: F-statistic
+
+Can we safely drop several features from the model? One idea is to compare the relative errors between the model that uses all the features and those that use just a subset.
+
+$$\frac{RSS_{\text{sub}} - RSS_{\text{full}}}{RSS_{\text{full}}}$$
+
+---
+### Preview: F-statistic
+
+It turns out that if we normalize by the number of parameters in the full ($p$) and sub ($q$) models, then assuming that the submodel is correct,
+
+$$\frac{\frac{1}{p - q}\left(RSS_{\text{sub}} - RSS_{\text{full}}\right)}{\frac{1}{n - p}RSS_{\text{full}}} \sim F_{p - q, n - p}$$
+
+This makes it possible to formally test whether the submodel is sufficient to explain the data.
+---
+
+### Sampling Distribution Formula
+
+How can we derive these reference distributions? We need to understand the sampling distribution of $\hat{\beta}$ under different choices of $\mathbf{\beta}$.
+
+If we assume that $\epsilon_{i}$ has mean 0 and variance $\sigma^2$, then
+
+$$E\left[\hat{\beta}\right] = E\left[\left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\mathbf{y}\right] \\
+= \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}E\left[\mathbf{y}\right] \\
+= \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\mathbf{\beta} \\
+= \mathbf{\beta}$$
+
+---
+
+### Sampling Distribution
+
+How can we derive these reference distributions? We need to understand the sampling distribution of $\hat{\beta}$ under different choices of $\mathbf{\beta}$.
+
+If we assume that $\epsilon_{i}$ has mean 0 and variance $\sigma^2$, then
+
+$$\text{Cov}\left[\hat{\beta}\right] = \text{Cov}\left[\left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\mathbf{y}\right] \\
+= \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\text{Var}\left[\mathbf{y}\right]\tilde{\mathbf{X}}\left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1} \\
+= \sigma^2 \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}$$
+
+---
+
+### Sampling Distribution
+
+If we further assume that $\epsilon_{i} \sim N\left(0, \sigma^2\right)$ independently, then we can conclude,
+$$\hat{\beta} \sim N\left(\beta, \sigma^2\left(\tilde{\mathbf{X}}^T\tilde{\mathbf{X}}\right)^{-1}\right)$$
+This explains the elliptical shape was saw in some of the simulations.
