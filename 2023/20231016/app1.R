@@ -1,10 +1,13 @@
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
 library(rgl)
 library(shiny)
+theme_set(theme_classic())
+
 ui <- fluidPage(
   sliderInput("N", "Sample Size", 5, 500, 10),
   sliderInput("beta_1", "beta_1", -2, 2, 1, step = 0.1),
-  sliderInput("beta_2", "beta_2", -2, 2, -1, step = 0.1),
+  sliderInput("beta_2", "beta_2", -2, 2, 1, step = 0.1),
   sliderInput("sigma", "sigma", 0.001, 10, 1),
   fluidRow(
     column(plotOutput("rss"), width = 4),
@@ -27,8 +30,8 @@ server <- function(input, output) {
 
   output$rss <- renderPlot({
     grid <- expand.grid(
-      seq(input$beta_1 - 1, input$beta_1 + 2, length.out = n_grid),
-      seq(input$beta_2 - 2, input$beta_2 + 2, length.out = n_grid)
+      seq(input$beta_1 - 1.5 * input$sigma, input$beta_1 + 1.5 * input$sigma, length.out = 40),
+      seq(input$beta_2 - 1.5 * input$sigma, input$beta_2 + 1.5 * input$sigma, length.out = 40)
     )
 
     data <- generate_data()
@@ -52,8 +55,8 @@ server <- function(input, output) {
       stat_contour(aes(z = RSS), col = "black", bins = 10) +
       geom_point(data = data.frame(beta_1 = input$beta_1, beta_2 = input$beta_2), size = 5, col = "red") +
       geom_point(data = data.frame(beta_1 = beta_[2], beta_2 = beta_[3]), size = 5, col = "purple") +
-      scale_x_continuous(expand = c(0, 0)) +
-      scale_y_continuous(expand = c(0, 0)) +
+      scale_x_continuous(limits = c(input$beta_1 - 1.5 * input$sigma, input$beta_1 + 1.5 * input$sigma), expand = c(0, 0)) +
+      scale_y_continuous(limits = c(input$beta_2 - 1.5 * input$sigma, input$beta_2 + 1.5 * input$sigma), expand = c(0, 0)) +
       scale_fill_distiller(direction = 1) +
       scale_color_distiller(direction = 1) +
       coord_fixed()

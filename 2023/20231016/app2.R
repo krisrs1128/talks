@@ -1,4 +1,5 @@
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
 library(rgl)
 library(shiny)
 theme_set(theme_classic())
@@ -6,7 +7,7 @@ theme_set(theme_classic())
 ui <- fluidPage(
   sliderInput("N", "Sample Size", 5, 500, 10),
   sliderInput("beta_1", "beta_1", -2, 2, 1, step = 0.1),
-  sliderInput("beta_2", "beta_2", -2, 2, -1, step = 0.1),
+  sliderInput("beta_2", "beta_2", -2, 2, 1, step = 0.1),
   sliderInput("rho", "rho", 0, 1, 0),
   sliderInput("sigma", "sigma", 0.001, 10, 1),
   fluidRow(

@@ -17,6 +17,11 @@ class: title
 STAT 613: Statistical Methods for Data Science
 &lt;/div&gt;
 
+&lt;div id="links"/&gt;
+Slides: go.wisc.edu/nuhal2 &lt;br/&gt;
+Whiteboard: 
+&lt;/div&gt;
+
 &lt;div id="subtitle"&gt;
 Lecture 11 &lt;br&gt;
 16 | October | 2023
@@ -80,8 +85,6 @@ Just like in SLR, we can fit `\(\hat{\mathbf{\beta}}\)` by minimizing the square
 
 A calculation just like in Lecture 8 yields a closed form solution:
 `$$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathbf{\tilde{X}}^{T}\mathbf{y}$$`
-
-(work through on whiteboard)
 
 ---
 
@@ -164,28 +167,15 @@ We expect bigger people to make more tackles. Why is the coefficient for height 
 
 1. I’ve simulated examples from the sampling distribution of `\(\hat{\mathbf{\beta}}\)` when two predictors are more vs. less correlated with one another.
 
----
-
-### Sampling Distribution under Correlation
-
-Here are example sampling distributions from simulations where the predictors are more vs. less correlated.
-
-App code: https://go.wisc.edu/vtvga2
+1. App code: https://go.wisc.edu/vtvga2
 
 ---
 
 ### Challenge 2: Selection
 
 1. Including more features than necessary can also increase the variance of `\(\hat{\beta}\)` (hurting prediction/inferential performance).
-2. It will become important to have a systematic way to select the right submodel if we have many potentially irrelevant predictors.
-
----
-
-### Sampling Distribution - Irrelevant Features
-
-Here are example sampling distributions when we have many irrelevant features.
-
-App code: https://go.wisc.edu/w66521
+1. It will become important to have a systematic way to select the right submodel if we have many potentially irrelevant predictors.
+1. App code: https://go.wisc.edu/w66521
 
 ---
 
@@ -198,23 +188,22 @@ App code: https://go.wisc.edu/w66521
 
 ### t-statistic
 
-Can we safely drop feature `\(j\)` from the model?
+.pull-left[Can we safely drop feature `\(j\)` from the model?
 
 `$$H_{0}: \beta_{j} = 0 \\
 H_{1}: \beta_{j} \neq 0$$`
 Define the test statistic
 `$$t = \frac{\hat{\beta_{j}}}{\sqrt{\widehat{\text{Var}}\left(\hat{\beta}_{j}\right)}}$$`
 and reject when this is large.
+]
+
+.pull-right[
+Under `\(H_{0}\)`, it turns out that `\(t \sim T_{n - p}\)`. This provides
+a reference for testing `\(H_{0}\)` vs. `\(H_{1}\)`.
+]
 
 ---
 
-### t-statistic
-
-Under `\(H_{0}\)`, it turns out that `\(t \sim T_{n - p}\)`.
-
-Intuition: We only reject when `\(\hat{\beta}_{j}\)` is much larger than the typical error due to sampling noise.
-
----
 ### Preview: F-statistic
 
 Can we safely drop several features from the model? One idea is to compare the relative errors between the model that uses all the features and those that use just a subset.
