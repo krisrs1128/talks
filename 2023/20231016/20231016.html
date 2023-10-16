@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lecture 11</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+&lt;div id="title"&gt;
+STAT 613: Statistical Methods for Data Science
+&lt;/div&gt;
+
+&lt;div id="subtitle"&gt;
+Lecture 11 &lt;br&gt;
+16 | October | 2023
+&lt;/div&gt;
+
+---
+
+### Outline
+1. Describe the underlying model for the multiple linear regression data generating process.
+2. Explain how the multiple linear regression parameters can be estimated (mathematically and in code).
+3. Correctly interpret the fitted multiple linear regression coefficients within a specific problem context.
+4. Summarize challenges that can arise in MLR, but not SLR.
+
+---
+
+### Multiple Linear Regression
+
+* Generalizes SLR, and is useful whenever multiple predictors might be related to a response.
+* The data `\(\{x_{i}, y_{i}\}_{i = 1}^{n}\)` satisfies `\(y_{i} = \beta_{0} + \beta_{1}x_{i1} + \dots + \beta_{p} x_{ip} + \epsilon_{i}\)`
+	where each `\(x_i = \left(x_{i1}, \dots, x_{ip}\right)\)` is `\(p\)`-dimensional.
+* `\(\epsilon_{i}\)` is iid noise. Common assumptions are either 
+  - `\(\epsilon_{i} \sim P_{\epsilon}\)` with mean 0, variance `\(\sigma^2\)`
+  - `\(\epsilon_{i} \sim N\left(0, \sigma^2\right)\)` (stronger assumption)
+
+---
+
+### Multiple Linear Regression: Compact Representation
+
+1. Rowwise, scalar: `\(y_{i} = \beta_{0} + \beta_{1}x_{i1} + \dots + \beta_{p} x_{ip} + \epsilon_{i}\)` for `\(i = 1, \dots, n\)`.
+2. Rowwise, vector: `\(y_{i} = \mathbf{\beta}^T x_{i} + \epsilon_{i}\)` for `\(i = 1, \dots, n\)`.
+3. Columnwise, vector: `\(\mathbf{y} = \beta_0\mathbf{1} + \beta_1 \mathbf{x}_{1} + \dots +\beta_{p}\mathbf{x_{p}} + \mathbf{\epsilon}\)`
+4. Matrix: `\(\mathbf{y} = \mathbf{\tilde{X}}\mathbf{\beta} + \mathbf{\epsilon}\)`
+
+---
+
+### Geometric Interpretation
+
+1. SLR `\(\rightarrow\)` Line, MLR `\(\rightarrow\)` Plane
+2. Each coordinate of `\(\mathbf{\beta}\)` describes the slope along one axis.
+
+&lt;img src="https://kenndanielso.github.io/mlrefined/mlrefined_images/superlearn_images/Fig_3_1_new.png"/&gt;
+
+Figure from the [ML Refined](https://kenndanielso.github.io/mlrefined/blog_posts/8_Linear_regression/8_1_Least_squares_regression.html) book.
+
+---
+
+### Estimation
+
+1. What are good choices of `\(\hat{\beta}\)`?
+2. We want the plane to closely approximate the data.
+
+App code: https://go.wisc.edu/773e87
+
+---
+
+### Estimation
+
+Just like in SLR, we can fit `\(\hat{\mathbf{\beta}}\)` by minimizing the squared distance from `\(y_{i}\)` to the prediction surface `\(\mathbf{\tilde{X}}\mathbf{\hat{\beta}}\)`.
+
+`$$\hat{\mathbf{\beta}} := \arg\min \|\mathbf{y} - \mathbf{\tilde{X}}\mathbf{\beta}\|_{2}^{2}$$`
+
+A calculation just like in Lecture 8 yields a closed form solution:
+`$$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathbf{\tilde{X}}^{T}\mathbf{y}$$`
+
+(work through on whiteboard)
+
+---
+
+### Estimation
+
+We can obtain these estimates using the `lm` function in R.
+
+
+```r
+data(iris)
+lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+```
+
+```
+## 
+## Call:
+## lm(formula = Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+## 
+## Coefficients:
+##  (Intercept)   Sepal.Width  Petal.Length  
+##       2.2491        0.5955        0.4719
+```
+
+---
+
+### Estimation
+
+We can obtain these estimates using the `lm` function in R.
+
+
+```r
+X &lt;- cbind(1, iris[, c("Sepal.Width", "Petal.Length")]) |&gt;
+  as.matrix()
+y &lt;- iris$Sepal.Length
+
+solve(t(X) %*% X) %*% t(X) %*% y
+```
+
+```
+##                   [,1]
+## 1            2.2491402
+## Sepal.Width  0.5955247
+## Petal.Length 0.4719200
+```
+
+---
+
+### MLR vs. SLR
+
+So far, this discussion has closely paralleled the discussion for SLR. Can you think of potential differences?
+
+Discussion link: https://go.wisc.edu/fxsdns
+
+---
+
+### Interpreting Coefficients
+`$$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathbf{\tilde{X}}^{T}\mathbf{y}$$`
+1. If the columns of `\(\tilde{\mathbf{X}}\)` are correlated, then the coefficients have to be interpreted with respect to one another.
+	1. It doesn’t make sense to discuss `\(\beta_{j}\)` in isolation
+2. _Ceteris Paribus_: `\(\beta_{j}\)` describes how a unit increase in `\(X_{j}\)` changes `\(y\)` when holding all other predictors constant.
+3. Derive this using `\(y_{i} = x_{i}^{T}\beta + \epsilon\)`.
+
+---
+
+### Interpreting Coefficients
+
+This can make sense of otherwise counterintuitive estimates. Here is a model fitted to “Tackles” in American football.
+
+$$
+\widehat{Tackles} = \beta_{0} + 0.5 \text{Weight} - 0.1 \text{Height}
+$$
+
+We expect bigger people to make more tackles. Why is the coefficient for height negative?
+
+---
+
+### Challenge 1: Correlation
+
+1. In addition to complicating interpretation, correlation between predictors can have a destabilizing effect.
+
+1. I’ve simulated examples from the sampling distribution of `\(\hat{\mathbf{\beta}}\)` when two predictors are more vs. less correlated with one another.
+
+---
+
+### Sampling Distribution under Correlation
+
+Here are example sampling distributions from simulations where the predictors are more vs. less correlated.
+
+App code: https://go.wisc.edu/vtvga2
+
+---
+
+### Challenge 2: Selection
+
+1. Including more features than necessary can also increase the variance of `\(\hat{\beta}\)` (hurting prediction/inferential performance).
+2. It will become important to have a systematic way to select the right submodel if we have many potentially irrelevant predictors.
+
+---
+
+### Sampling Distribution - Irrelevant Features
+
+Here are example sampling distributions when we have many irrelevant features.
+
+App code: https://go.wisc.edu/w66521
+
+---
+
+### Sampling Distribution - Irrelevant Features 
+
+* How might we be able to deal with these irrelevant features?
+* Evidence that only a subset of features is important also has strong scientific implications.
+
+---
+
+### t-statistic
+
+Can we safely drop feature `\(j\)` from the model?
+
+`$$H_{0}: \beta_{j} = 0 \\
+H_{1}: \beta_{j} \neq 0$$`
+Define the test statistic
+`$$t = \frac{\hat{\beta_{j}}}{\sqrt{\widehat{\text{Var}}\left(\hat{\beta}_{j}\right)}}$$`
+and reject when this is large.
+
+---
+
+### t-statistic
+
+Under `\(H_{0}\)`, it turns out that `\(t \sim T_{n - p}\)`.
+
+Intuition: We only reject when `\(\hat{\beta}_{j}\)` is much larger than the typical error due to sampling noise.
+
+---
+### Preview: F-statistic
+
+Can we safely drop several features from the model? One idea is to compare the relative errors between the model that uses all the features and those that use just a subset.
+
+`$$\frac{RSS_{\text{sub}} - RSS_{\text{full}}}{RSS_{\text{full}}}$$`
+
+---
+### Preview: F-statistic
+
+It turns out that if we normalize by the number of parameters in the full ($p$) and sub ($q$) models, then assuming that the submodel is correct,
+
+`$$\frac{\frac{1}{p - q}\left(RSS_{\text{sub}} - RSS_{\text{full}}\right)}{\frac{1}{n - p}RSS_{\text{full}}} \sim F_{p - q, n - p}$$`
+
+This makes it possible to formally test whether the submodel is sufficient to explain the data.
+---
+
+### Sampling Distribution Formula
+
+How can we derive these reference distributions? We need to understand the sampling distribution of `\(\hat{\beta}\)` under different choices of `\(\mathbf{\beta}\)`.
+
+If we assume that `\(\epsilon_{i}\)` has mean 0 and variance `\(\sigma^2\)`, then
+
+`$$E\left[\hat{\beta}\right] = E\left[\left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\mathbf{y}\right] \\
+= \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}E\left[\mathbf{y}\right] \\
+= \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\mathbf{\beta} \\
+= \mathbf{\beta}$$`
+
+---
+
+### Sampling Distribution
+
+How can we derive these reference distributions? We need to understand the sampling distribution of `\(\hat{\beta}\)` under different choices of `\(\mathbf{\beta}\)`.
+
+If we assume that `\(\epsilon_{i}\)` has mean 0 and variance `\(\sigma^2\)`, then
+
+`$$\text{Cov}\left[\hat{\beta}\right] = \text{Cov}\left[\left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\mathbf{y}\right] \\
+= \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}\tilde{\mathbf{X}}^{T}\text{Var}\left[\mathbf{y}\right]\tilde{\mathbf{X}}\left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1} \\
+= \sigma^2 \left(\tilde{\mathbf{X}}^{T}\tilde{\mathbf{X}}\right)^{-1}$$`
+
+---
+
+### Sampling Distribution
+
+If we further assume that `\(\epsilon_{i} \sim N\left(0, \sigma^2\right)\)` independently, then we can conclude,
+`$$\hat{\beta} \sim N\left(\beta, \sigma^2\left(\tilde{\mathbf{X}}^T\tilde{\mathbf{X}}\right)^{-1}\right)$$`
+This explains the elliptical shape was saw in some of the simulations.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

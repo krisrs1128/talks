@@ -19,6 +19,9 @@ class: title
 STAT 613: Statistical Methods for Data Science
 </div>
 
+<div id="links"/>
+</div>
+
 <div id="subtitle">
 Lecture 11 <br>
 16 | October | 2023
@@ -39,7 +42,9 @@ Lecture 11 <br>
 * Generalizes SLR, and is useful whenever multiple predictors might be related to a response.
 * The data $\{x_{i}, y_{i}\}_{i = 1}^{n}$ satisfies $y_{i} = \beta_{0} + \beta_{1}x_{i1} + \dots + \beta_{p} x_{ip} + \epsilon_{i}$
 	where each $x_i = \left(x_{i1}, \dots, x_{ip}\right)$ is $p$-dimensional.
-* $\epsilon_{i}$ is iid noise. Common assumptions are either (1) $\epsilon_{i} \sim P_{\epsilon}$ with mean 0, variance $\sigma^2$ or, more strongly (2) $\epsilon_{i} \sim N\left(0, \sigma^2\right)$.
+* $\epsilon_{i}$ is iid noise. Common assumptions are either 
+  - $\epsilon_{i} \sim P_{\epsilon}$ with mean 0, variance $\sigma^2$
+  - $\epsilon_{i} \sim N\left(0, \sigma^2\right)$ (stronger assumption)
 
 ---
 
@@ -57,7 +62,9 @@ Lecture 11 <br>
 1. SLR $\rightarrow$ Line, MLR $\rightarrow$ Plane
 2. Each coordinate of $\mathbf{\beta}$ describes the slope along one axis.
 
-(Draw a figure)
+<img src="https://kenndanielso.github.io/mlrefined/mlrefined_images/superlearn_images/Fig_3_1_new.png"/>
+
+Figure from the [ML Refined](https://kenndanielso.github.io/mlrefined/blog_posts/8_Linear_regression/8_1_Least_squares_regression.html) book.
 
 ---
 
@@ -66,7 +73,7 @@ Lecture 11 <br>
 1. What are good choices of $\hat{\beta}$?
 2. We want the plane to closely approximate the data.
 
-(show another app, comparing plane with choices of beta)
+App code: https://go.wisc.edu/773e87
 
 ---
 
@@ -79,7 +86,16 @@ $$\hat{\mathbf{\beta}} := \arg\min \|\mathbf{y} - \mathbf{\tilde{X}}\mathbf{\bet
 A calculation just like in Lecture 8 yields a closed form solution:
 $$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathbf{\tilde{X}}^{T}\mathbf{y}$$
 
-(show the calculation)
+---
+
+### Estimation
+
+We can obtain these estimates using the `lm` function in R.
+
+```{r}
+data(iris)
+lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+```
 
 ---
 
@@ -87,13 +103,21 @@ $$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathb
 
 We can obtain these estimates using the `lm` function in R.
 
-(give an example)
+```{r}
+X <- cbind(1, iris[, c("Sepal.Width", "Petal.Length")]) |>
+  as.matrix()
+y <- iris$Sepal.Length
+
+solve(t(X) %*% X) %*% t(X) %*% y
+```
 
 ---
 
 ### MLR vs. SLR
 
 So far, this discussion has closely paralleled the discussion for SLR. Can you think of potential differences?
+
+Discussion link: https://go.wisc.edu/fxsdns
 
 ---
 
@@ -108,10 +132,13 @@ $$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathb
 
 ### Interpreting Coefficients
 
-1. This can make sense of otherwise counterintuitive estimates. Here is a model fitted to “Tackles” in American football.
-2. We expect bigger people to make more tackles. Why is the coefficient for height negative?
+This can make sense of otherwise counterintuitive estimates. Here is a model fitted to “Tackles” in American football.
 
-(add code example)
+$$
+\widehat{Tackles} = \beta_{0} + 0.5 \text{Weight} - 0.1 \text{Height}
+$$
+
+We expect bigger people to make more tackles. Why is the coefficient for height negative?
 
 ---
 
@@ -127,23 +154,29 @@ $$\hat{\beta} = \left(\mathbf{\tilde{X}}^{T}\mathbf{\tilde{X}}\right)^{-1}\mathb
 
 Here are example sampling distributions from simulations where the predictors are more vs. less correlated.
 
+App code: https://go.wisc.edu/vtvga2
+
 ---
 
 ### Challenge 2: Selection
 
 1. Including more features than necessary can also increase the variance of $\hat{\beta}$ (hurting prediction/inferential performance).
 2. It will become important to have a systematic way to select the right submodel if we have many potentially irrelevant predictors.
+
 ---
 
 ### Sampling Distribution - Irrelevant Features
 
 Here are example sampling distributions when we have many irrelevant features.
 
+App code: https://go.wisc.edu/w66521
+
 ---
 
 ### Sampling Distribution - Irrelevant Features 
 
-How might we be able to deal with these irrelevant features?
+* How might we be able to deal with these irrelevant features?
+* Evidence that only a subset of features is important also has strong scientific implications.
 
 ---
 
@@ -156,7 +189,6 @@ H_{1}: \beta_{j} \neq 0$$
 Define the test statistic
 $$t = \frac{\hat{\beta_{j}}}{\sqrt{\widehat{\text{Var}}\left(\hat{\beta}_{j}\right)}}$$
 and reject when this is large.
-
 
 ---
 
