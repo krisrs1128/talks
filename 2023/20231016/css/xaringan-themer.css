@@ -104,7 +104,7 @@ a, a > code {
   color: #10040f;
   font-family: 'Raleway';
   font-size: 45px;
-  width: 1000px;
+  width: 700px;
   left: 10px;
   top: 10px;
 }
@@ -303,6 +303,6 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-size: 20px;
   width: 400px;
   color: #5f558e;
-  left: 750px;
+  left: 900px;
   top: 10px;
 }
