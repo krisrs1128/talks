@@ -21,7 +21,7 @@ STAT 613: Statistical Methods for Data Science
 
 <div id="links"/>
 Slides: go.wisc.edu/nuhal2 <br/>
-Whiteboard: 
+Whiteboard: go.wisc.edu/keg7n7
 </div>
 
 <div id="subtitle">
