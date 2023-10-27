@@ -30,6 +30,7 @@ library(gamboostLSS)
 opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
 knit_hooks$set(output = scDesigner::ansi_aware_handler)
+options(crayon.enabled = TRUE)
 set.seed(20230120)
 
 options(
@@ -153,7 +154,9 @@ Copula Summary
 
 ### scDesign Interface
 
-Main Idea: Apply tidy design/HCI principles to improve user interaction with multi-omics simulators.
+.center[
+**Main Idea: Apply tidy design principles to improve user interaction with multi-omics simulators.**
+]
 
 ---
 
@@ -174,7 +177,7 @@ For the data itself, we rely on the `SummarizedExperiment` class.
 * `assay` specifies the measured counts
 
 ```{r, read_data, echo = FALSE}
-sce <- readRDS(url("https://figshare.com/ndownloader/files/40581992"))[1:10, ]
+sce <- readRDS("data/PANCREAS_sce.rds")[1:10, ]
 ```
 
 ---
@@ -184,8 +187,8 @@ sce <- readRDS(url("https://figshare.com/ndownloader/files/40581992"))[1:10, ]
 For each gene, we can specify the regression formula and distributional family.
 
 ```{r, setup_margins}
-margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
-margins
+margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS()) |>
+  estimate(sce)
 ```
 
 ---
@@ -212,7 +215,11 @@ simulator <- new("JointDistribution", margins = margins, dependence = copula_gau
 We can support different correlation structures across groups.
 
 ```{r modified_copula}
-simulator <- new("JointDistribution", margins = margins, dependence = copula_gaussian(~ cell_type))
+simulator <- new(
+  "JointDistribution", 
+  margins = margins, 
+  dependence = copula_gaussian(~ cell_type)
+  )
 ```
 
 ---
@@ -256,11 +263,9 @@ More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
 
 ---
 
-### Plot
+### Plot Margins
 
-We can plot margins of interest.
-
-```{r example_plot}
+```{r example_plot, out.width = 800}
 line_opts <- list(col = "#8C2E62", linewidth = 2)
 ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
 plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts) +
@@ -269,11 +274,9 @@ plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts) +
 
 ---
 
-### Plot
+### Plot Correlations
 
-We can also plot second-order relationships.
-
-```{r correlation_plot}
+```{r correlation_plot, out.width = 500, fig.height = 7, fig.width = 10}
 grid <- expand_colData(sce, "pseudotime")
 samples <- sample(simulator, n_samples = 10, new_data = grid)
 plot_correlations(samples)
@@ -303,12 +306,13 @@ margins |>
 
 ### Mutate
 
-```{r second_alteration}
+```{r second_alteration, out.width = 800}
 altered <- margins |>
-  mutate(Spp1:Cck, link = ~ pseudotime) |>
+  mutate(Chga:Ins1, link = ~ pseudotime) |>
   estimate(sce)
 
-plot(altered, sce, "pseudotime", line = line_opts, ribbon = ribbon_opts)
+plot(altered, sce, "pseudotime", line = line_opts, ribbon = ribbon_opts) +
+  facet_wrap(~ feature, ncol = 4, scales = "free_y")
 ```
 
 ---
@@ -322,11 +326,15 @@ margins |>
 	mutate(c("Pyy", "Spp1"), family = ~ GaussianLSS())
 ```
 
-and can layer several on top of one another.
+---
+
+### Mutate
+
+And we can layer several on top of one another.
 
 ```{r, layered_alteration}
 margins |>
-  mutate(Spp1:Cck, link = ~ pseudotime) |>
+  mutate(Chga:Ins1, link = ~ pseudotime) |>
   mutate(Pyy, link = ~ ns(pseudotime, 2) * cell_type) |>
   mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 3), sigma = ~ 1, nu = ~ 1))
 ```
@@ -361,15 +369,15 @@ margins |>
 
 ---
 
-### <span style="color:#025E73">Modularity</span>Join
+### <span style="color:#025E73">Modularity</span> Join
 
 If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
 
-<img src=“figures/simulator_join_motivation.png”/>
+<img src="figures/simulator_join_motivation.png"/>
 
 ```{r, echo = FALSE}
-SCGEMMETH_sce <- readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AAAo-79sEfTkvrEig0q4L5Oia/SCGEMMETH_sce.rds?raw=1")))
-SCGEMRNA_sce <-readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AADEKgmZG4FsW5tdbu1fdYKda/SCGEMRNA_sce.rds?raw=1")))
+SCGEMMETH_sce <- readRDS("data/SCGEMMETH_sce.rds")
+SCGEMRNA_sce <-readRDS("data/SCGEMRNA_sce.rds")
 
 rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
 rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
@@ -377,7 +385,7 @@ rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
 
 ---
 
-### <span style="color:#025E73">Modularity</span>Join
+### <span style="color:#025E73">Modularity</span> Join
 
 If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
 
@@ -401,7 +409,7 @@ sim_joined <- map(sims, estimate, nu = 0.1) |>
 
 This assumes that we have samples where all features are measured.
 
-<img src=“figures/simulator_join_features.png”/>
+<img src="figures/simulator_join_features.png"/>
 
 ---
 
@@ -471,15 +479,6 @@ plot_bivariate(
 
 ---
 
-### Package Development
-
-`testthat` and Continuous Integration have been positive developments... write
-to me if you want to discuss this.
-
-<img src=“figures/test_suite.png”/>
-
----
-
 ## Case Studies
 
 <div class=“subtitle”/>
@@ -516,7 +515,7 @@ Questions:
 ]
 
 .pull-right[
-<img src="figures/cca_f1000.png"/>
+<img src="figures/cca_f1000.gif"/>
 ]
 
 ---
@@ -546,19 +545,18 @@ Questions:
 ---
 
 ### Part 2: Hypothetical Experiments
-1. We can now simulate experiments with varying samples sizes for both the microbiome.
-1. For each sample size, we fit sparse CCA and identify a basis $\hat{V}_{n}$
-spanning the $K = 5$ left and right sparse CCA factors
-1. We use the subspace $\hat{V}_{5000}$ as a reference, since it has the largest
-sample size.
-1. We compute the canonical angles between this reference and all (smaller
-sample size) fits.
-
-.center[
-<img src="figures/canonical_angles_paper.png"/>
+.pull-left[
+1. Across sample sizes $n$, we simulate new data, fit sparse CCA, and identify a
+basis $\hat{V}_{n}$ spanning the $K = 5$ left and right sparse CCA factors
+1. We use $\hat{V}_{5000}$ as a reference and compute canonical angles with all
+smaller sample sizes.
 ]
 
+.pull-right[
+<img src="figures/canonical_angles_paper.png"/>
 Figure from `r Citep(bib, "Arikawa2018TheoreticalFF")`.
+]
+
 
 ---
 ### Non-Mosaic Case
@@ -566,7 +564,7 @@ Figure from `r Citep(bib, "Arikawa2018TheoreticalFF")`.
 With more samples, the canonical angles shrink in a predictable way.
 
 .center[
-<img src="figures/canonical_angles.png"/>
+<img src="figures/canonical_angles.png" width=750/>
 ]
 
 ---
@@ -577,7 +575,7 @@ Here, we have allowed the sample sizes to differ and use KNN imputation to run
 CCA on an imputed table.
 
 .center[
-<img src="figures/mosaic_example.png"/>
+<img src="figures/mosaic_example.png" width=750/>
 ]
 
 ---
@@ -590,21 +588,21 @@ From _Of P-Values and Bayes: A Modest Proposal_ by Steve Goodman:
 
 ---
 
-
 ### Case Study 2: Multi-Study Comparison
 
 From _Of P-Values and Bayes: A Modest Proposal_ by Steve Goodman:
 
 > Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
 
----- 
+---
 
 ### Case Study 2: Multi-Study Comparison
 
 1. Simulators offer a way of encoding community consensus. We are interested in how evidence accumulates and consensus evolves.
 2. We will work with the `curatedMetagenomicsData`, which includes 12 studies of colorectal cancer (CRC) processed with the same pipeline.
 
----- 
+--- 
+
 ### Association from first study
 
 For each taxon $j$, we fit two $\text{ZINB}\left(\mu_{j}, \sigma_{j}, \nu_{j}\right)$ models:
@@ -616,13 +614,14 @@ H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Dept
 
 Given data $X^{(1)}$ from study 1, we compute $P\left(H_{j1} \vert X^{(1)}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
 
----- 
+--- 
 
 ### Association from first study
 
 These are the taxa with the largest value of $P\left(H_{j1} \vert X^{(1)}\right)$.
 
----- 
+--- 
+
 ### Remaining studies
 
 We can see how this changes as the number of studies is increased. We now consider,
@@ -632,22 +631,29 @@ H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Dept
 \end{align}
 and fit associated ZINB models using all data from studies $X^{(1)}, \dots, X^{(K)}$.
 
----- 
+--- 
+
 ### Remaining Studies
 
 This provides a simple summary of how evidence has evolved as more studies are
 completed.
 
-<img src="figures/hypothesis_evolution.png"/>
+.center[
+<img src="figures/hypothesis_evolution.png" width = 900/>
+]
 
----- 
+--- 
 
 ### Remaining Studies
 
 We can focus in on some of the more interesting curves, and the low-level data
 seem consistent with the high-level summary.
 
----- 
+.center[
+<img src="hypothesis_evolution_example.png" width = 900/>
+]
+
+--- 
 
 ### Memos for the New Millennium
 Most of this work is just revisiting some classical ideas for new kinds of data and scientific cultures. In this spirit, here is a statistical adaptation of Italo Calvino’s Norton Lectures:
@@ -664,7 +670,7 @@ Most of this work is just revisiting some classical ideas for new kinds of data 
 <img src="figures/calvino.png"/>
 ]
 
----- 
+--- 
 
 ### Acknowledgements
 
@@ -679,6 +685,7 @@ Most of this work is just revisiting some classical ideas for new kinds of data 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 3)
 ```
+
 ---
 
 ### References
