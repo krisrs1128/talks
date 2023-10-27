@@ -19,11 +19,13 @@ background-size: cover
 
 ```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
 library(RefManageR)
+library(STexampleData)
 library(knitr)
 library(tidyverse)
 library(glue)
 library(splines)
 library(scDesigner)
+library(gamlss)
 library(gamboostLSS)
 opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
@@ -162,10 +164,12 @@ Main Idea: Apply tidy design/HCI principles to improve user interaction with mul
 ### Data Structures (Nouns)
 
 We have defined separate classes for specifying,
+
 * Gene-level probability models.
 * Correlation structures across genes.
 
 For the data itself, we rely on the `SummarizedExperiment` class.
+
 * `colData` specifies the experimental design
 * `assay` specifies the measured counts
 
@@ -222,9 +226,9 @@ simulator <- setup_simulator(
   sce,
   ~ ns(pseudotime, df = 3),
   ~ ZINBLSS(),
-  copula = copula_adaptive()
+  copula = copula_gaussian()
 ) |>
-  estimate(nu = 0.1)
+  estimate()
 ```
 
 ---
@@ -232,9 +236,11 @@ simulator <- setup_simulator(
 #### Extensibility
 
 For the marginals, we can borrow from existing LSS packages (gamboostLSS and gamlss) to implement a variety of gene-wise regressions,
+
 * Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
 
 We can also build a unified interface to a variety of copula estimation routines,
+
 * Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
 * Vine copulas for capturing higher-order moments.
 
@@ -255,11 +261,10 @@ More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
 We can plot margins of interest.
 
 ```{r example_plot}
-line_opts <- list(col = "red")
-p <- plot_univariate(simulator@margins, simulator@template, "pseudotime", line_opts = line_opts) +
+line_opts <- list(col = "#8C2E62", linewidth = 2)
+ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
+plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts) +
   facet_wrap(~ feature, ncol = 4)
-tail(p$layers[[2]]$data)
-p
 ```
 
 ---
@@ -291,7 +296,7 @@ We can change the regression formula for specific genes. Syntax color highlights
 
 ```{r, mutate_margins}
 margins |>
-  mutate(Iapp:Chgb, link = ~ pseudotime) 
+  mutate(Spp1:Cck, link = ~ pseudotime) 
 ```
 
 ---
@@ -300,10 +305,10 @@ margins |>
 
 ```{r second_alteration}
 altered <- margins |>
-  mutate(Iapp:Chgb, link = ~ pseudotime) |>
-  estimate()
+  mutate(Spp1:Cck, link = ~ pseudotime) |>
+  estimate(sce)
 
-plot(altered, "pseudotime")
+plot(altered, sce, "pseudotime", line = line_opts, ribbon = ribbon_opts)
 ```
 
 ---
@@ -321,9 +326,9 @@ and can layer several on top of one another.
 
 ```{r, layered_alteration}
 margins |>
-  mutate(Iapp:Chgb, link = ~ pseudotime) |>
+  mutate(Spp1:Cck, link = ~ pseudotime) |>
   mutate(Pyy, link = ~ ns(pseudotime, 2) * cell_type) |>
-  mutate(Spp1, link = list(mu = ~ ns(pseudotime, df = params$df), sigma = ~ 1, nu = ~ 1))
+  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 3), sigma = ~ 1, nu = ~ 1))
 ```
 
 ---
@@ -365,6 +370,9 @@ If we can also establish simple rules for combining simulators, then there will 
 ```{r, echo = FALSE}
 SCGEMMETH_sce <- readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AAAo-79sEfTkvrEig0q4L5Oia/SCGEMMETH_sce.rds?raw=1")))
 SCGEMRNA_sce <-readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AADEKgmZG4FsW5tdbu1fdYKda/SCGEMRNA_sce.rds?raw=1")))
+
+rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
+rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
 ```
 
 ---
@@ -386,7 +394,7 @@ sims <- experiments |>
 
 One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
 
-```{r, join_simulators_glasso}
+```{r, join_simulators_glasso, eval = FALSE}
 sim_joined <- map(sims, estimate, nu = 0.1) |>
   join_copula(copula_glasso())
 ```
@@ -405,7 +413,9 @@ Alternatively, we can combine two simulators by conditioning them on shared late
 sim_joined <- join_pamona(sims)
 ```
 
+.center[
 <img src="figures/simulator_join.png"/>
+]
 
 ---
 
@@ -434,9 +444,11 @@ domain-specific structure .
 For example, this makes spatial information accessible within the regression:
 
 ```{r, spatial_estimation}
-simulator <- augment(spatial_experiment) |>
+spatial_experiment <- augment(spatial_experiment)
+
+simulator <- spatial_experiment |>
   setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
-  estimate()
+  estimate(spatial_experiment)
 ```
 
 ---
@@ -448,8 +460,8 @@ For example, this makes spatial information accessible within the regression:
 ```{r plot_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
 features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
 plot_bivariate(
-    fit, spe[, 1:5e2], features,
-    feature_names = c("ENSG00000198840", "ENSG00000197971", "ENSG00000229117")
+    simulator, spatial_experiment[, 1:5e2], features,
+    feature_names = c("ENSG00000198899", "ENSG00000198888", "ENSG00000167996")
   ) +
   labs(
     "fill" = expression(log(1 + count)),
@@ -542,7 +554,9 @@ sample size.
 1. We compute the canonical angles between this reference and all (smaller
 sample size) fits.
 
-<img src="figures/canonical_angles.png"/>
+.center[
+<img src="figures/canonical_angles_paper.png"/>
+]
 
 Figure from `r Citep(bib, "Arikawa2018TheoreticalFF")`.
 
@@ -621,15 +635,17 @@ and fit associated ZINB models using all data from studies $X^{(1)}, \dots, X^{(
 ---- 
 ### Remaining Studies
 
-This provides a simple summary of how evidence has evolved as more studies are completed. I find it a little troubling how “flat” many of the curves are.
+This provides a simple summary of how evidence has evolved as more studies are
+completed.
 
-<img src=“figures/hypothesis_evolution.png”/>
+<img src="figures/hypothesis_evolution.png"/>
 
 ---- 
 
 ### Remaining Studies
 
-We can focus in on some of the more interesting curves, and the low-level data seem consistent with the high-level summary.
+We can focus in on some of the more interesting curves, and the low-level data
+seem consistent with the high-level summary.
 
 ---- 
 
@@ -663,7 +679,6 @@ Most of this work is just revisiting some classical ideas for new kinds of data 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 3)
 ```
-
 ---
 
 ### References
