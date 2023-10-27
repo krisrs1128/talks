@@ -30,6 +30,27 @@ opts_knit$set(eval.after = "fig.cap")
 knit_hooks$set(output = scDesigner::ansi_aware_handler)
 set.seed(20230120)
 
+options(
+  ggplot2.discrete.colour = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
+  ggplot2.discrete.fill = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
+  ggplot2.continuous.colour = function(...) scale_color_distiller(palette = "Spectral", ...),
+  ggplot2.continuous.fill = function(...) scale_fill_distiller(palette = "Spectral", ...)
+)
+
+th <- theme_classic() +
+  theme(
+    panel.background = element_rect(fill="transparent"),
+    strip.background = element_rect(fill="transparent"),
+    plot.background = element_rect(fill="transparent", color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill="transparent"),
+    legend.box.background = element_rect(fill="transparent"),
+    legend.position = "bottom"
+  )
+
+theme_set(th)
+
 BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
@@ -148,6 +169,10 @@ For the data itself, we rely on the `SummarizedExperiment` class.
 * `colData` specifies the experimental design
 * `assay` specifies the measured counts
 
+```{r, read_data, echo = FALSE}
+sce <- readRDS(url("https://figshare.com/ndownloader/files/40581992"))[1:10, ]
+```
+
 ---
 
 #### Gene-Level Models
@@ -155,7 +180,6 @@ For the data itself, we rely on the `SummarizedExperiment` class.
 For each gene, we can specify the regression formula and distributional family.
 
 ```{r, setup_margins}
-sce <- readRDS((url("https://figshare.com/ndownloader/files/40581992")))
 margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
 margins
 ```
@@ -198,9 +222,9 @@ simulator <- setup_simulator(
   sce,
   ~ ns(pseudotime, df = 3),
   ~ ZINBLSS(),
-  copula = copula_gaussian(~ cell_type)
+  copula = copula_adaptive()
 ) |>
-  estimate()
+  estimate(nu = 0.1)
 ```
 
 ---
@@ -231,7 +255,11 @@ More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
 We can plot margins of interest.
 
 ```{r example_plot}
-plot(simulator, "pseudotime")
+line_opts <- list(col = "red")
+p <- plot_univariate(simulator@margins, simulator@template, "pseudotime", line_opts = line_opts) +
+  facet_wrap(~ feature, ncol = 4)
+tail(p$layers[[2]]$data)
+p
 ```
 
 ---
@@ -332,19 +360,18 @@ margins |>
 
 If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
 
-<img src=“figures/join_mixed_data.png”/>
+<img src=“figures/simulator_join_motivation.png”/>
 
 ```{r, echo = FALSE}
 SCGEMMETH_sce <- readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AAAo-79sEfTkvrEig0q4L5Oia/SCGEMMETH_sce.rds?raw=1")))
 SCGEMRNA_sce <-readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AADEKgmZG4FsW5tdbu1fdYKda/SCGEMRNA_sce.rds?raw=1")))
 ```
 
-
 ---
 
 ### <span style="color:#025E73">Modularity</span>Join
 
-(Modularity) If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
+If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
 
 ```{r illustrate_joins}
 experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
@@ -366,7 +393,7 @@ sim_joined <- map(sims, estimate, nu = 0.1) |>
 
 This assumes that we have samples where all features are measured.
 
-<img src=“figures/simulator_join_simple.png”/>
+<img src=“figures/simulator_join_features.png”/>
 
 ---
 
@@ -393,7 +420,7 @@ sim_joined
 ```{r, spatial_download, echo = FALSE}
 spe <- Visium_humanDLPFC()
 gene_order <- order(rowSums(counts(spe)), decreasing = TRUE)
-spatial_experiment <- spe[gene_order[1:100], ]
+spatial_experiment <- spe[gene_order[1:10], ]
 ```
 
 ---
@@ -432,13 +459,10 @@ plot_bivariate(
 
 ---
 
-### Package Development…
+### Package Development
 
-I’m trying to write this more carefully than my other packages…
-
-1. I’ve been using `testthat` and it helps a lot!
-2. The repository has Continuous Integration (currently failing, but still good to know).
-3. I’ve documented every function with at least one example.
+`testthat` and Continuous Integration have been positive developments... write
+to me if you want to discuss this.
 
 <img src=“figures/test_suite.png”/>
 
@@ -491,7 +515,10 @@ Questions:
 2. Fit a gaussian models to the metabolome.
 3. Join them using highly regularized covariance estimates.
 
-(Show some code)
+.center[
+  <img src="figures/cca_microbiome_hist.png"/>
+]
+
 ---
 
 ### Part 1: Estimate Simulators
@@ -499,14 +526,26 @@ Questions:
 1. Fit ZINB models to the microbiome.
 2. Fit a gaussian models to the metabolome.
 3. Join them using highly regularized covariance estimates.
-(Show some original + simulated (large sample size) features)
+
+.center[
+  <img src="figures/cca_metab_hist.png"/>
+]
 
 ---
 
 ### Part 2: Hypothetical Experiments
 1. We can now simulate experiments with varying samples sizes for both the microbiome.
-2. We use a fit with 5000 samples as a reference point.
-3. We compute the canonical angles between this reference and all (smaller sample size) fits.
+1. For each sample size, we fit sparse CCA and identify a basis $\hat{V}_{n}$
+spanning the $K = 5$ left and right sparse CCA factors
+1. We use the subspace $\hat{V}_{5000}$ as a reference, since it has the largest
+sample size.
+1. We compute the canonical angles between this reference and all (smaller
+sample size) fits.
+
+<img src="figures/canonical_angles.png"/>
+
+Figure from `r Citep(bib, "Arikawa2018TheoreticalFF")`.
+
 ---
 ### Non-Mosaic Case
 
@@ -561,13 +600,13 @@ H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Dept
 H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right)
 \end{align}
 
-Given data $S_1$ from study 1, we compute $P\left(H_{j1} \vert S_{1}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
+Given data $X^{(1)}$ from study 1, we compute $P\left(H_{j1} \vert X^{(1)}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
 
 ---- 
 
 ### Association from first study
 
-These are the taxa with the largest value of $P\left(H_{j1} \vert S_{1}\right)$.
+These are the taxa with the largest value of $P\left(H_{j1} \vert X^{(1)}\right)$.
 
 ---- 
 ### Remaining studies
@@ -577,7 +616,7 @@ We can see how this changes as the number of studies is increased. We now consid
 H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID} + \text{CRC}\\
 H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID}
 \end{align}
-and fit associated ZINB models using all data from studies $S_{1}, \dots, S_{K}$.
+and fit associated ZINB models using all data from studies $X^{(1)}, \dots, X^{(K)}$.
 
 ---- 
 ### Remaining Studies
