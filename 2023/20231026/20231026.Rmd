@@ -140,23 +140,16 @@ We seem to need some form of more interactive simulation/model building.
 ### scDesign
 
 I have been trying put this philosophy into practice by through a new version of
-the scDesign package. Here is a review of the existing model.
+the scDesign package. The simulation method has two main steps:
 
-.pull-left[
-Margin Summary
-]
-
-.pull-right[
-Copula Summary
-]
+* Estimate gene-wise regression models using location-shape-scale families.
+* Couple the quantiles from pairs of features using a Gaussian or Vine Copula.
 
 ---
 
-### scDesign Interface
+### scDesign
 
-.center[
 **Main Idea: Apply tidy design principles to improve user interaction with multi-omics simulators.**
-]
 
 ---
 
@@ -182,18 +175,21 @@ sce <- readRDS("data/PANCREAS_sce.rds")[1:10, ]
 
 ---
 
-#### Gene-Level Models
+### Gene-Level Models
 
 For each gene, we can specify the regression formula and distributional family.
 
 ```{r, setup_margins}
-margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS()) |>
-  estimate(sce)
+margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
+```
+
+```{r, estimate_margins, echo = FALSE}
+margins <- estimate(margins, sce)
 ```
 
 ---
 
-#### Gene-Level Models
+### Gene-Level Models
 
 Different parameters can have different formulas.
 
@@ -204,7 +200,7 @@ setup_margins(sce, formulas,  ~ ZINBLSS())
 
 ---
 
-#### Copula Models
+### Copula Models
 
 We can tie together a collection of marginals using a copula model.
 
@@ -219,12 +215,12 @@ simulator <- new(
   "JointDistribution", 
   margins = margins, 
   dependence = copula_gaussian(~ cell_type)
-  )
+)
 ```
 
 ---
 
-#### Wrapper
+### Wrapper
 
 We can build both the marginal and joint distributions simultaneously.
 
@@ -240,7 +236,7 @@ simulator <- setup_simulator(
 
 ---
 
-#### Extensibility
+### Extensibility
 
 For the marginals, we can borrow from existing LSS packages (gamboostLSS and gamlss) to implement a variety of gene-wise regressions,
 
@@ -264,11 +260,14 @@ More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
 ---
 
 ### Plot Margins
-
-```{r example_plot, out.width = 800}
+```{r, echo = FALSE}
 line_opts <- list(col = "#8C2E62", linewidth = 2)
 ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
-plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts) +
+point_opts <- list(size = 0.9, alpha = 0.6)
+```
+
+```{r example_plot, out.width = 800}
+plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts, point = point_opts) +
   facet_wrap(~ feature, ncol = 4)
 ```
 
@@ -276,10 +275,10 @@ plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts) +
 
 ### Plot Correlations
 
-```{r correlation_plot, out.width = 500, fig.height = 7, fig.width = 10}
+```{r correlation_plot, out.width = 500, fig.height = 6.5, fig.width = 10}
 grid <- expand_colData(sce, "pseudotime")
 samples <- sample(simulator, n_samples = 10, new_data = grid)
-plot_correlations(samples)
+plot_correlations(samples, points_opts = list(size = 1.5, alpha = 1))
 ```
 
 ---
@@ -307,11 +306,9 @@ margins |>
 ### Mutate
 
 ```{r second_alteration, out.width = 800}
-altered <- margins |>
-  mutate(Chga:Ins1, link = ~ pseudotime) |>
+altered <- mutate(margins, Chga:Ins1, link = ~ pseudotime) |>
   estimate(sce)
-
-plot(altered, sce, "pseudotime", line = line_opts, ribbon = ribbon_opts) +
+plot(altered, sce, "pseudotime", line = line_opts, ribbon = ribbon_opts, point = point_opts) +
   facet_wrap(~ feature, ncol = 4, scales = "free_y")
 ```
 
@@ -409,7 +406,9 @@ sim_joined <- map(sims, estimate, nu = 0.1) |>
 
 This assumes that we have samples where all features are measured.
 
-<img src="figures/simulator_join_features.png"/>
+.center[
+<img src="figures/simulator_join_features.png" width = 650/>
+]
 
 ---
 
@@ -422,7 +421,7 @@ sim_joined <- join_pamona(sims)
 ```
 
 .center[
-<img src="figures/simulator_join.png"/>
+<img src="figures/simulator_join.png" width = 800/>
 ]
 
 ---
@@ -481,10 +480,6 @@ plot_bivariate(
 
 ## Case Studies
 
-<div class=“subtitle”/>
-i.e., So What?
-</div>
-
 ---
 
 ### Overview
@@ -507,15 +502,11 @@ i.e., So What?
 ### Example
 
 For concreteness, let’s revisit the microbiome + metabolome mouse study CCA from the F1000 Workflow paper. This had 12 samples.
-
-.pull-left[
-Questions:
 1. How does estimation quality improve with sample size?
 2. Is it worth gathering unpaired samples? (mosaic designs)
-]
 
-.pull-right[
-<img src="figures/cca_f1000.gif"/>
+.center[
+<img src="figures/cca_f1000.gif" width=650/>
 ]
 
 ---
@@ -523,7 +514,7 @@ Questions:
 ### Part 1: Estimate Simulators
 
 1. Fit ZINB models to the microbiome.
-2. Fit a gaussian models to the metabolome.
+2. Fit Gaussian models to the metabolome.
 3. Join them using highly regularized covariance estimates.
 
 .center[
@@ -535,7 +526,7 @@ Questions:
 ### Part 1: Estimate Simulators
 
 1. Fit ZINB models to the microbiome.
-2. Fit a gaussian models to the metabolome.
+2. Fit Gaussian models to the metabolome.
 3. Join them using highly regularized covariance estimates.
 
 .center[
@@ -601,7 +592,7 @@ From _Of P-Values and Bayes: A Modest Proposal_ by Steve Goodman:
 1. Simulators offer a way of encoding community consensus. We are interested in how evidence accumulates and consensus evolves.
 2. We will work with the `curatedMetagenomicsData`, which includes 12 studies of colorectal cancer (CRC) processed with the same pipeline.
 
---- 
+---
 
 ### Association from first study
 
@@ -614,13 +605,17 @@ H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Dept
 
 Given data $X^{(1)}$ from study 1, we compute $P\left(H_{j1} \vert X^{(1)}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
 
---- 
+---
 
 ### Association from first study
 
 These are the taxa with the largest value of $P\left(H_{j1} \vert X^{(1)}\right)$.
 
---- 
+.center[
+<img src="figures/initial_selection.png" width=750/>
+]
+
+---
 
 ### Remaining studies
 
@@ -631,7 +626,9 @@ H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Dept
 \end{align}
 and fit associated ZINB models using all data from studies $X^{(1)}, \dots, X^{(K)}$.
 
---- 
+This lets us track $P\left(H_{j1} \vert X^{(1)}, \dots, X^{(K)}\right)$.
+
+---
 
 ### Remaining Studies
 
@@ -642,7 +639,7 @@ completed.
 <img src="figures/hypothesis_evolution.png" width = 900/>
 ]
 
---- 
+---
 
 ### Remaining Studies
 
@@ -650,27 +647,21 @@ We can focus in on some of the more interesting curves, and the low-level data
 seem consistent with the high-level summary.
 
 .center[
-<img src="hypothesis_evolution_example.png" width = 900/>
+<img src="figures/hypothesis_evolution_example.png" width = 900/>
 ]
 
---- 
+---
 
 ### Memos for the New Millennium
 Most of this work is just revisiting some classical ideas for new kinds of data and scientific cultures. In this spirit, here is a statistical adaptation of Italo Calvino’s Norton Lectures:
 
-.pull-left[
 1. **Lightness**: A well-designed interface brings a lightness to statistical thought.
 2. **Quickness**: We value the ability quickly experiment with and compare hypotheses.
 3. **Exactitude**: Simulations require precision in scientific hypotheses.
 4. **Visibility**: Simulation can bring biological mechanisms to the surface.
 5. **Multiplicity**: We must learn to manage information that appears in many forms.
-]
 
-.pull-right[
-<img src="figures/calvino.png"/>
-]
-
---- 
+---
 
 ### Acknowledgements
 
