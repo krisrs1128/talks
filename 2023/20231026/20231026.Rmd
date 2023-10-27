@@ -17,15 +17,17 @@ class: title
 background-image: url("figures/cover.png")
 background-size: cover
 
-```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
 library(RefManageR)
 library(knitr)
 library(tidyverse)
 library(glue)
+library(splines)
 library(scDesigner)
 library(gamboostLSS)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = FALSE)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
+knit_hooks$set(output = scDesigner::ansi_aware_handler)
 set.seed(20230120)
 
 BibOptions(cite.style = "numeric")
@@ -152,7 +154,7 @@ For the data itself, we rely on the `SummarizedExperiment` class.
 
 For each gene, we can specify the regression formula and distributional family.
 
-```{r, eval = TRUE}
+```{r, setup_margins}
 sce <- readRDS((url("https://figshare.com/ndownloader/files/40581992")))
 margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
 margins
@@ -164,16 +166,10 @@ margins
 
 Different parameters can have different formulas.
 
+```{r modify_formulas}
 formulas <- list("mu" = ~ ns(psuedotime, df = params$df), "sigma" = ~ 1, "nu" = ~ 1)
 setup_margins(sce, formulas,  ~ ZINBLSS())
-
-#> Plan:
-#> # A tibble: 6 × 3
-#>     feature              family                       link
-#>                                     
-#> 1       Pyy ZINBI [mu,sigma,nu] mu~ns(psuedotime, df = ...
-#> 2      Iapp ZINBI [mu,sigma,nu] mu~ns(psuedotime, df = ...
-
+```
 
 ---
 
@@ -181,11 +177,15 @@ setup_margins(sce, formulas,  ~ ZINBLSS())
 
 We can tie together a collection of marginals using a copula model.
 
+```{r join_into_copula}
 simulator <- new("JointDistribution", margins = margins, dependence = copula_gaussian())
+```
 
 We can support different correlation structures across groups.
 
+```{r modified_copula}
 simulator <- new("JointDistribution", margins = margins, dependence = copula_gaussian(~ cell_type))
+```
 
 ---
 
@@ -193,7 +193,7 @@ simulator <- new("JointDistribution", margins = margins, dependence = copula_gau
 
 We can build both the marginal and joint distributions simultaneously.
 
-```{r}
+```{r wrap_into_simulator}
 simulator <- setup_simulator(
   sce,
   ~ ns(pseudotime, df = 3),
@@ -230,9 +230,9 @@ More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
 
 We can plot margins of interest.
 
-plot(sim, "pseudotime")
-
-<img src=“figures/pseudotime_margins.png”/>
+```{r example_plot}
+plot(simulator, "pseudotime")
+```
 
 ---
 
@@ -240,16 +240,17 @@ plot(sim, "pseudotime")
 
 We can also plot second-order relationships.
 
-samples <- sample(sim, n_samples = 10, new_data = grid)
+```{r correlation_plot}
+grid <- expand_colData(sce, "pseudotime")
+samples <- sample(simulator, n_samples = 10, new_data = grid)
 plot_correlations(samples)
-
-<img src=“figures/pseudotime_correlation.png”/>
+```
 
 ---
 
-### Mutate
+### <span style="color:#D94E4E">Interactivity</span> - Mutate
 
-(Interactivity) There are many reasons we might want to alter an initial simulator,
+There are many reasons we might want to alter an initial simulator,
 * Synthetic Nulls: We may want to formalize a synthetic null as the absence of a particular functional relationship.
 * Iteration: We may want to improve the simulator’s goodness-of-fit by modifying the regression.
 * Power Analysis: We may want to construct data from alternative experimental designs or biological signal strengths.
@@ -260,22 +261,22 @@ plot_correlations(samples)
 
 We can change the regression formula for specific genes. Syntax color highlights modifications that haven’t be re-fit.
 
+```{r, mutate_margins}
 margins |>
   mutate(Iapp:Chgb, link = ~ pseudotime) 
-
-<img src=“figures/mutate_cli.”/>_
+```
 
 ---
 
 ### Mutate
 
+```{r second_alteration}
 altered <- margins |>
   mutate(Iapp:Chgb, link = ~ pseudotime) |>
   estimate()
 
 plot(altered, "pseudotime")
-
-<img src=“figures/altered_linear.png”/>_
+```
 
 ---
 
@@ -283,13 +284,19 @@ plot(altered, "pseudotime")
 
 We can also change the probability distributions.
 
+```{r, probability_alteration}
 margins |>
 	mutate(c("Pyy", "Spp1"), family = ~ GaussianLSS())
+```
+
 and can layer several on top of one another.
+
+```{r, layered_alteration}
 margins |>
   mutate(Iapp:Chgb, link = ~ pseudotime) |>
   mutate(Pyy, link = ~ ns(pseudotime, 2) * cell_type) |>
   mutate(Spp1, link = list(mu = ~ ns(pseudotime, df = params$df), sigma = ~ 1, nu = ~ 1))
+```
 
 ---
 
@@ -298,40 +305,48 @@ margins |>
 1. Here is a more realistic example from a short longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null where there is no disease effect for a known subset of genes.
 
-<img src=“figures/hd_effect.png”/>_
+.pull-three-quarters-left[
+<img src="figures/nulls_unaltered.png"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors.png"/>
+]
 
 ---
+
 ### Mutate
 
 1. Here is a more realistic example from a short longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null where there is no disease effect for a known subset of genes.
 
-<img src=“figures/hd_no_effect.png”/>
+.pull-three-quarters-left[
+<img src="figures/altered_ns.png"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors_altered.png"/>
+]
 
 ---
 
-### Mutate
+### <span style="color:#025E73">Modularity</span>Join
 
-If we want to simulate under a new experimental design, we can specify the new design points when sampling.
-
-new_design <- expand_colData(simulator, c("pseudotime", "cell_type"))
-samples <- sample(simulator, n_samples = 10, new_data = new_design)
-
----
-
-### Join
-
-(Modularity) If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
+If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
 
 <img src=“figures/join_mixed_data.png”/>
 
+```{r, echo = FALSE}
+SCGEMMETH_sce <- readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AAAo-79sEfTkvrEig0q4L5Oia/SCGEMMETH_sce.rds?raw=1")))
+SCGEMRNA_sce <-readRDS((url("https://www.dropbox.com/sh/0tptrft7hsstpi3/AADEKgmZG4FsW5tdbu1fdYKda/SCGEMRNA_sce.rds?raw=1")))
+```
+
+
 ---
 
-### Join
+### <span style="color:#025E73">Modularity</span>Join
 
 (Modularity) If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
 
-```{r}
+```{r illustrate_joins}
 experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
 families <- list(~ BI(), ~ GaussianLSS())
 sims <- experiments |>
@@ -344,7 +359,7 @@ sims <- experiments |>
 
 One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
 
-```{r}
+```{r, join_simulators_glasso}
 sim_joined <- map(sims, estimate, nu = 0.1) |>
   join_copula(copula_glasso())
 ```
@@ -359,11 +374,11 @@ This assumes that we have samples where all features are measured.
 
 Alternatively, we can combine two simulators by conditioning them on shared latent structure.
 
-```{r}
+```{r join_simulators}
 sim_joined <- join_pamona(sims)
 ```
 
-<img src=“figures/simulator_join_conditioning.png”/>_
+<img src="figures/simulator_join.png"/>
 
 ---
 
@@ -371,27 +386,48 @@ sim_joined <- join_pamona(sims)
 
 This used partial manifold alignment to learn shared latent variables across assays. This works even in the diagonal integration setting.
 
+```{r print_joined}
+sim_joined
 ```
-#> # A tibble: 27 × 3
-#>      feature              family                       link
-#>                                      
-#>  1  AK123759 ZINBI [mu,sigma,nu] ~cell_type + UMAP1 + UMAP2
-#>  2    ADAM33 ZINBI [mu,sigma,nu] ~cell_type + UMAP1 + UMAP2
-#>  3      NFIX ZINBI [mu,sigma,nu] ~cell_type + UMAP1 + UMAP2
+
+```{r, spatial_download, echo = FALSE}
+spe <- Visium_humanDLPFC()
+gene_order <- order(rowSums(counts(spe)), decreasing = TRUE)
+spatial_experiment <- spe[gene_order[1:100], ]
 ```
 
 ---
 
-### Augment
+### <span style="color:#025E73">Modularity</span> - Augment
 
-(Modularity) We want a unified interface that works across diverse data types. One way to create consistency is to **augment** the general `SummarizedExperiment` with domain-specific structure .
+We want a unified interface that works across diverse data types. One way to
+create consistency is to **augment** the general `SummarizedExperiment` with
+domain-specific structure .
 
 For example, this makes spatial information accessible within the regression:
 
-```{r}
+```{r, spatial_estimation}
 simulator <- augment(spatial_experiment) |>
   setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
   estimate()
+```
+
+---
+
+### <span style="color:#025E73">Modularity</span> - Augment
+
+For example, this makes spatial information accessible within the regression:
+
+```{r plot_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
+features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
+plot_bivariate(
+    fit, spe[, 1:5e2], features,
+    feature_names = c("ENSG00000198840", "ENSG00000197971", "ENSG00000229117")
+  ) +
+  labs(
+    "fill" = expression(log(1 + count)),
+    "color" = expression(log(1 + count))
+  )
 ```
 
 ---
@@ -410,12 +446,8 @@ I’m trying to write this more carefully than my other packages…
 
 ## Case Studies
 
----
-
-## Case Studies
-
 <div class=“subtitle”/>
-So What?
+i.e., So What?
 </div>
 
 ---
@@ -423,7 +455,7 @@ So What?
 ### Overview
 
 1. These models have too many parameters to be directly useful for data analysis.
-	1. “All models are wrong, but these are not wrong enough.”
+	1. "All models are wrong, but these are not wrong enough."
 2. They *can* be useful indirectly,
 	1. Providing ground truth for benchmarking models with fewer, more interpretable parameters.
 	2. Carrying out systematic power analysis that is informed by past data we have available.
