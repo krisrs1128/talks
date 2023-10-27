@@ -1,0 +1,607 @@
+---
+title: "Simplifying Multi-omics Simulation"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+background-image: url("figures/cover.png")
+background-size: cover
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(RefManageR)
+library(knitr)
+library(tidyverse)
+library(glue)
+library(scDesigner)
+library(gamboostLSS)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = FALSE)
+opts_knit$set(eval.after = "fig.cap")
+set.seed(20230120)
+
+BibOptions(cite.style = "numeric")
+bib <- ReadBib("references.bib")
+```
+
+.center[
+<br/>
+# Simplifying Multi-omics Simulation
+<br/>
+<br/>
+<br/>
+<br/>
+]
+
+#### Holmes Group Meeting
+
+.large[
+27 | October | 2023
+<br/>
+]
+
+---
+
+### Holmes Lab Meeting
+
+---
+
+### Simplifying Multi-omics Simulation
+
+.subtitle[
+Kris Sankaran
+27 | October | 2023
+Holmes Lab Meeting
+]
+
+---
+
+### Challenge - Translating Hypotheses
+
+1. Translating scientific hypotheses into quantitative models is more challenging than is widely appreciated.
+	1. Precise technology does not imply precise thought!
+2. This challenge is one central driver of the reproducibility crisis.
+
+---
+
+### Proposals
+
+.pull-left[
+Richard McElreath has proposed a recipe to address this.
+]
+
+<img src=“figures/mcelreath.png”/>
+
+---
+
+### Proposals
+
+Miguel Hernan argues that we can sharpen discussions about causality by forcing critics to propose a DAG.
+
+> A critic of your study says “the inferences from this observational study may be incorrect because of potential confounding.” The critic is not making a scientific statement, but a logical one
+ > To appropriately criticize your study … he can say something along the lines of “the inferences from this observational study may be incorrect because of potential confounding due to cigarette smoking, a common cause through which a backdoor path may remain open”.
+
+---
+
+### Proposals
+
+Jessica Li advocates for the use of synthetic nulls to clarify what exactly a biological discovery looks like.
+
+<img src="figures/li_talk.png"/>
+
+---
+
+### Eleven Grand Challenges
+
+Even non-statisticians care! Granted, the motivation is less philosophical.
+
+> Due to aforementioned difficulties, the most affordable sources of benchmarking and validation data are in silico simulations. Simulations provide ground truth test examples that can be rapidly and cost-effectively generated under different assumptions.
+
+---
+
+### Eleven Grand Challenges
+
+Even non-statisticians care! Granted, the motivation is less philosophical.
+
+> Many single-cell data analysis packages include their own ad hoc data simulators [111, 211, 241, 264, 349–353]. However, these simulators are usually not available as separate tools or even as a source code, tailored to specific problems studied in corresponding papers and sometimes not comprehensively documented, thus limiting their utility for the broad research community.
+
+---
+
+### Grammar of Simulation
+
+We seem to need some form of more interactive simulation/model building.
+
+1. Modularity: We should make generative models that are reconfigurable across varied ‘omics data types and experimental designs.
+2. Communication: We have the public data resources that can guide the development of precise hypothesis.
+3. Interactivity: We should make it enjoyable to evaluate and modify statistical hypotheses.
+
+---
+
+### scDesign
+
+I have been trying put this philosophy into practice by helping build a new version of the scDesign package.
+
+.pull-left[
+Margin Summary
+]
+
+.pull-right[
+Copula Summary
+]
+
+---
+
+### scDesign Interface
+
+Our main idea is to apply tidy design/HCI principles to improve user interaction with multi-omics simulators.
+
+---
+
+## Design
+
+---
+
+### Data Structures (Nouns)
+
+We have defined separate classes for specifying,
+* Gene-level probability models.
+* Correlation structures across genes.
+
+For the data itself, we rely on the `SummarizedExperiment` class.
+* `colData` specifies the experimental design
+* `assay` specifies the measured counts
+
+---
+
+#### Gene-Level Models
+
+For each gene, we can specify the regression formula and distributional family.
+
+```{r, eval = TRUE}
+sce <- readRDS((url("https://figshare.com/ndownloader/files/40581992")))
+margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
+margins
+```
+
+---
+
+#### Gene-Level Models
+
+Different parameters can have different formulas.
+
+formulas <- list("mu" = ~ ns(psuedotime, df = params$df), "sigma" = ~ 1, "nu" = ~ 1)
+setup_margins(sce, formulas,  ~ ZINBLSS())
+
+#> Plan:
+#> # A tibble: 6 × 3
+#>     feature              family                       link
+#>                                     
+#> 1       Pyy ZINBI [mu,sigma,nu] mu~ns(psuedotime, df = ...
+#> 2      Iapp ZINBI [mu,sigma,nu] mu~ns(psuedotime, df = ...
+
+
+---
+
+#### Copula Models
+
+We can tie together a collection of marginals using a copula model.
+
+simulator <- new("JointDistribution", margins = margins, dependence = copula_gaussian())
+
+We can support different correlation structures across groups.
+
+simulator <- new("JointDistribution", margins = margins, dependence = copula_gaussian(~ cell_type))
+
+---
+
+#### Wrapper
+
+We can build both the marginal and joint distributions simultaneously.
+
+```{r}
+simulator <- setup_simulator(
+  sce,
+  ~ ns(pseudotime, df = 3),
+  ~ ZINBLSS(),
+  copula = copula_gaussian(~ cell_type)
+) |>
+  estimate()
+```
+
+---
+
+#### Extensibility
+
+For the marginals, we can borrow from existing LSS packages (gamboostLSS and gamlss) to implement a variety of gene-wise regressions,
+* Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
+
+We can also build a unified interface to a variety of copula estimation routines,
+* Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
+* Vine copulas for capturing higher-order moments.
+
+---
+
+### Operations (Verbs)
+
+This syntax specifies a simulation model. What can we do with these building blocks?
+
+Of course, we can **estimate** and **sample**.
+
+More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
+
+---
+
+### Plot
+
+We can plot margins of interest.
+
+plot(sim, "pseudotime")
+
+<img src=“figures/pseudotime_margins.png”/>
+
+---
+
+### Plot
+
+We can also plot second-order relationships.
+
+samples <- sample(sim, n_samples = 10, new_data = grid)
+plot_correlations(samples)
+
+<img src=“figures/pseudotime_correlation.png”/>
+
+---
+
+### Mutate
+
+(Interactivity) There are many reasons we might want to alter an initial simulator,
+* Synthetic Nulls: We may want to formalize a synthetic null as the absence of a particular functional relationship.
+* Iteration: We may want to improve the simulator’s goodness-of-fit by modifying the regression.
+* Power Analysis: We may want to construct data from alternative experimental designs or biological signal strengths.
+
+---
+
+### Mutate
+
+We can change the regression formula for specific genes. Syntax color highlights modifications that haven’t be re-fit.
+
+margins |>
+  mutate(Iapp:Chgb, link = ~ pseudotime) 
+
+<img src=“figures/mutate_cli.”/>_
+
+---
+
+### Mutate
+
+altered <- margins |>
+  mutate(Iapp:Chgb, link = ~ pseudotime) |>
+  estimate()
+
+plot(altered, "pseudotime")
+
+<img src=“figures/altered_linear.png”/>_
+
+---
+
+### Mutate
+
+We can also change the probability distributions.
+
+margins |>
+	mutate(c("Pyy", "Spp1"), family = ~ GaussianLSS())
+and can layer several on top of one another.
+margins |>
+  mutate(Iapp:Chgb, link = ~ pseudotime) |>
+  mutate(Pyy, link = ~ ns(pseudotime, 2) * cell_type) |>
+  mutate(Spp1, link = list(mu = ~ ns(pseudotime, df = params$df), sigma = ~ 1, nu = ~ 1))
+
+---
+
+### Mutate
+
+1. Here is a more realistic example from a short longitudinal microbiome study.
+2. We can use `mutate` to define a synthetic null where there is no disease effect for a known subset of genes.
+
+<img src=“figures/hd_effect.png”/>_
+
+---
+### Mutate
+
+1. Here is a more realistic example from a short longitudinal microbiome study.
+2. We can use `mutate` to define a synthetic null where there is no disease effect for a known subset of genes.
+
+<img src=“figures/hd_no_effect.png”/>
+
+---
+
+### Mutate
+
+If we want to simulate under a new experimental design, we can specify the new design points when sampling.
+
+new_design <- expand_colData(simulator, c("pseudotime", "cell_type"))
+samples <- sample(simulator, n_samples = 10, new_data = new_design)
+
+---
+
+### Join
+
+(Modularity) If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
+
+<img src=“figures/join_mixed_data.png”/>
+
+---
+
+### Join
+
+(Modularity) If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
+
+```{r}
+experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
+families <- list(~ BI(), ~ GaussianLSS())
+sims <- experiments |>
+  map2(families, \(x, y) setup_simulator(x, ~ cell_type, y))
+```
+
+---
+
+### Join (Copula)
+
+One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
+
+```{r}
+sim_joined <- map(sims, estimate, nu = 0.1) |>
+  join_copula(copula_glasso())
+```
+
+This assumes that we have samples where all features are measured.
+
+<img src=“figures/simulator_join_simple.png”/>
+
+---
+
+### Join (Conditioning)
+
+Alternatively, we can combine two simulators by conditioning them on shared latent structure.
+
+```{r}
+sim_joined <- join_pamona(sims)
+```
+
+<img src=“figures/simulator_join_conditioning.png”/>_
+
+---
+
+### Join (Conditioning)
+
+This used partial manifold alignment to learn shared latent variables across assays. This works even in the diagonal integration setting.
+
+```
+#> # A tibble: 27 × 3
+#>      feature              family                       link
+#>                                      
+#>  1  AK123759 ZINBI [mu,sigma,nu] ~cell_type + UMAP1 + UMAP2
+#>  2    ADAM33 ZINBI [mu,sigma,nu] ~cell_type + UMAP1 + UMAP2
+#>  3      NFIX ZINBI [mu,sigma,nu] ~cell_type + UMAP1 + UMAP2
+```
+
+---
+
+### Augment
+
+(Modularity) We want a unified interface that works across diverse data types. One way to create consistency is to **augment** the general `SummarizedExperiment` with domain-specific structure .
+
+For example, this makes spatial information accessible within the regression:
+
+```{r}
+simulator <- augment(spatial_experiment) |>
+  setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
+  estimate()
+```
+
+---
+
+### Package Development…
+
+I’m trying to write this more carefully than my other packages…
+
+1. I’ve been using `testthat` and it helps a lot!
+2. The repository has Continuous Integration (currently failing, but still good to know).
+3. I’ve documented every function with at least one example.
+
+<img src=“figures/test_suite.png”/>
+
+---
+
+## Case Studies
+
+---
+
+## Case Studies
+
+<div class=“subtitle”/>
+So What?
+</div>
+
+---
+
+### Overview
+
+1. These models have too many parameters to be directly useful for data analysis.
+	1. “All models are wrong, but these are not wrong enough.”
+2. They *can* be useful indirectly,
+	1. Providing ground truth for benchmarking models with fewer, more interpretable parameters.
+	2. Carrying out systematic power analysis that is informed by past data we have available.
+
+---
+
+### Case Study 1: Multi-omics Power Analysis
+
+1. In practice, most power analysis are univariate, e.g., to guide differential expression.
+2. How should we do multivariate power analysis, especially when we have several tables?
+
+---
+
+### Example
+
+For concreteness, let’s revisit the microbiome + metabolome mouse study CCA from the F1000 Workflow paper. This had 12 samples.
+
+.pull-left[
+Questions:
+1. How does estimation quality improve with sample size?
+2. Is it worth gathering unpaired samples? (mosaic designs)
+]
+
+.pull-right[
+<img src="figures/cca_f1000.png"/>
+]
+
+---
+
+### Part 1: Estimate Simulators
+
+1. Fit ZINB models to the microbiome.
+2. Fit a gaussian models to the metabolome.
+3. Join them using highly regularized covariance estimates.
+(Show some code)
+---
+
+### Part 1: Estimate Simulators
+
+1. Fit ZINB models to the microbiome.
+2. Fit a gaussian models to the metabolome.
+3. Join them using highly regularized covariance estimates.
+(Show some original + simulated (large sample size) features)
+
+---
+
+### Part 2: Hypothetical Experiments
+1. We can now simulate experiments with varying samples sizes for both the microbiome.
+2. We use a fit with 5000 samples as a reference point.
+3. We compute the canonical angles between this reference and all (smaller sample size) fits.
+---
+### Non-Mosaic Case
+
+With more samples, the canonical angles shrink in a predictable way.
+
+---
+
+### Mosaic Case
+
+Here, we have allowed the sample sizes to differ and use KNN imputation to run
+CCA on an imputed table.
+
+---
+
+### Case Study 2: Multi-Study Comparison
+
+From _Of P-Values and Bayes: A Modest Proposal_ by Steve Goodman:
+
+> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
+
+---
+
+
+### Case Study 2: Multi-Study Comparison
+
+From _Of P-Values and Bayes: A Modest Proposal_ by Steve Goodman:
+
+> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
+
+---- 
+
+### Case Study 2: Multi-Study Comparison
+
+1. Simulators offer a way of encoding community consensus. We are interested in how evidence accumulates and consensus evolves.
+2. We will work with the `curatedMetagenomicsData`, which includes 12 studies of colorectal cancer (CRC) processed with the same pipeline.
+
+---- 
+### Association from first study
+
+For each taxon $j$, we fit two $\text{ZINB}\left(\mu_{j}, \sigma_{j}, \nu_{j}\right)$ models:
+
+\begin{align}
+H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{CRC}\\
+H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right)
+\end{align}
+
+Given data $S_1$ from study 1, we compute $P\left(H_{j1} \vert S_{1}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
+
+---- 
+
+### Association from first study
+
+These are the taxa with the largest value of $P\left(H_{j1} \vert S_{1}\right)$.
+
+---- 
+### Remaining studies
+
+We can see how this changes as the number of studies is increased. We now consider,
+\begin{align}
+H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID} + \text{CRC}\\
+H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID}
+\end{align}
+and fit associated ZINB models using all data from studies $S_{1}, \dots, S_{K}$.
+
+---- 
+### Remaining Studies
+
+This provides a simple summary of how evidence has evolved as more studies are completed. I find it a little troubling how “flat” many of the curves are.
+
+<img src=“figures/hypothesis_evolution.png”/>
+
+---- 
+
+### Remaining Studies
+
+We can focus in on some of the more interesting curves, and the low-level data seem consistent with the high-level summary.
+
+---- 
+
+### Memos for the New Millennium
+Most of this work is just revisiting some classical ideas for new kinds of data and scientific cultures. In this spirit, here is a statistical adaptation of Italo Calvino’s Norton Lectures:
+
+.pull-left[
+1. **Lightness**: A well-designed interface brings a lightness to statistical thought.
+2. **Quickness**: We value the ability quickly experiment with and compare hypotheses.
+3. **Exactitude**: Simulations require precision in scientific hypotheses.
+4. **Visibility**: Simulation can bring biological mechanisms to the surface.
+5. **Multiplicity**: We must learn to manage information that appears in many forms.
+]
+
+.pull-right[
+<img src="figures/calvino.png"/>
+]
+
+---- 
+
+### Acknowledgements
+
+* Members of my research group - Hanying Jiang, Shuchen Yan, Zhuoyan Xu, Kaiyan Ma, Margaret Thairu, and Mason Garza
+* Members of the JSB Lab (UCLA) and the MixOmics group (University of Melbourne).
+* Funding mechanism:
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 7)
+```
+
