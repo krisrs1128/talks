@@ -490,6 +490,7 @@ Questions:
 1. Fit ZINB models to the microbiome.
 2. Fit a gaussian models to the metabolome.
 3. Join them using highly regularized covariance estimates.
+
 (Show some code)
 ---
 
@@ -511,12 +512,20 @@ Questions:
 
 With more samples, the canonical angles shrink in a predictable way.
 
+.center[
+<img src="figures/canonical_angles.png"/>
+]
+
 ---
 
 ### Mosaic Case
 
 Here, we have allowed the sample sizes to differ and use KNN imputation to run
 CCA on an imputed table.
+
+.center[
+<img src="figures/mosaic_example.png"/>
+]
 
 ---
 
