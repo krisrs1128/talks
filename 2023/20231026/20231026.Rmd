@@ -32,35 +32,15 @@ BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
-.center[
-<br/>
-# Simplifying Multi-omics Simulation
-<br/>
-<br/>
-<br/>
-<br/>
-]
+<div id="title">
+Simplifying Multi-omics Simulation
+</div>
 
-#### Holmes Group Meeting
-
-.large[
-27 | October | 2023
-<br/>
-]
-
----
-
-### Holmes Lab Meeting
-
----
-
-### Simplifying Multi-omics Simulation
-
-.subtitle[
-Kris Sankaran
-27 | October | 2023
+<div id="subtitle">
+Kris Sankaran <br/>
+27 | October | 2023 <br/>
 Holmes Lab Meeting
-]
+</div>
 
 ---
 
@@ -75,18 +55,22 @@ Holmes Lab Meeting
 ### Proposals
 
 .pull-left[
-Richard McElreath has proposed a recipe to address this.
+Richard McElreath argues that simulation should be the first step in a
+scientific study.
 ]
 
-<img src=“figures/mcelreath.png”/>
+.pull-right[
+<img src="figures/mcelreath.png"/>
+]
 
 ---
 
 ### Proposals
 
-Miguel Hernan argues that we can sharpen discussions about causality by forcing critics to propose a DAG.
+Miguel Hernan argues that we can sharpen discussions about causality by forcing critics to specify a competing DAG.
 
-> A critic of your study says “the inferences from this observational study may be incorrect because of potential confounding.” The critic is not making a scientific statement, but a logical one
+> A critic of your study says “the inferences from this observational study may be incorrect because of potential confounding.” The critic is not making a scientific statement, but a logical one.
+>
  > To appropriately criticize your study … he can say something along the lines of “the inferences from this observational study may be incorrect because of potential confounding due to cigarette smoking, a common cause through which a backdoor path may remain open”.
 
 ---
@@ -95,7 +79,9 @@ Miguel Hernan argues that we can sharpen discussions about causality by forcing 
 
 Jessica Li advocates for the use of synthetic nulls to clarify what exactly a biological discovery looks like.
 
-<img src="figures/li_talk.png"/>
+.center[
+<img src="figures/li_talk.png" width=700/>
+]
 
 ---
 
@@ -119,15 +105,16 @@ Even non-statisticians care! Granted, the motivation is less philosophical.
 
 We seem to need some form of more interactive simulation/model building.
 
-1. Modularity: We should make generative models that are reconfigurable across varied ‘omics data types and experimental designs.
-2. Communication: We have the public data resources that can guide the development of precise hypothesis.
-3. Interactivity: We should make it enjoyable to evaluate and modify statistical hypotheses.
+1. <span style="color:#025E73">Modularity</span>: We should make generative models that are reconfigurable across varied ‘omics data types and experimental designs.
+2. <span style="color:#378C5C">Communication</span>: We have the public data resources that can guide the development of precise hypothesis.
+3. <span style="color:#D94E4E">Interactivity</span>: We should make it enjoyable to evaluate and modify statistical hypotheses.
 
 ---
 
 ### scDesign
 
-I have been trying put this philosophy into practice by helping build a new version of the scDesign package.
+I have been trying put this philosophy into practice by through a new version of
+the scDesign package. Here is a review of the existing model.
 
 .pull-left[
 Margin Summary
@@ -141,7 +128,7 @@ Copula Summary
 
 ### scDesign Interface
 
-Our main idea is to apply tidy design/HCI principles to improve user interaction with multi-omics simulators.
+Main Idea: Apply tidy design/HCI principles to improve user interaction with multi-omics simulators.
 
 ---
 

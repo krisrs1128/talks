@@ -104,7 +104,7 @@ a, a > code {
   color: #10040f;
   font-family: 'Raleway';
   font-size: 45px;
-  width: 700px;
+  width: 900px;
   left: 10px;
   top: 10px;
 }
@@ -289,11 +289,10 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.8);
   padding-left: 10px;
   font-size: 20px;
-  width: 500px;
+  width: 350px;
   color: #5f558e;
   left: 10px;
   bottom: 10px;
-  font-size: 36px;
 }
 
 #links {
@@ -303,6 +302,6 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-size: 20px;
   width: 400px;
   color: #5f558e;
-  left: 800px;
+  left: 750px;
   top: 10px;
 }
