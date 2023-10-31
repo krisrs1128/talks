@@ -116,7 +116,7 @@ OpenSim is used for rehabilitation.
 .pull-left[
 Simulators augment two kinds of reasoning: 
 
-1. Drawing inferences about global parameters 
+1. Drawing inferences about global parameters.
 2. Examining the effect of imagined perturbations.
 ]
 
@@ -129,13 +129,13 @@ Simulators augment two kinds of reasoning:
 
 ### Grammar of Generative Models
 
-[Language metaphor] Transparent simulators can be built by interactively composing simple modules. Probabilistic programming has simplified the process.
+Transparent simulators can be built by interactively composing simple modules. Probabilistic programming has simplified the process.
 
-.pull-left[
-<img src="figure/modules.jpeg"/>
+.pull-three-left[
+<img src="figure/modules.jpeg" width=700/>
 ]
 
-.pull-right[
+.pull-three-right[
 a. Regression <br/>
 b: Hierarchy <br/>
 c: Latent Structure <br/>
@@ -156,7 +156,6 @@ loops both condense duplicated information.
 beta = random_normal(D, 0, sigma2_beta)
 for (i = 1...n)
   y[i] = random_normal(
-    N, 
     x[i] * beta, 
     sigma2_y
   )
@@ -174,39 +173,17 @@ for (i = 1...n)
 By learning a discriminator to contrast real vs. simulated data, we can systematically improve the assumed generative mechanism.
 
 .center[
-<img src="figure/iterability.jpeg" width=700/>
+<img src="figure/iterability.jpeg" width=730/>
 ]
 
 ---
 
-## Experimental Design
+### Experimental Design Renaissance
 
----
+Let's consider a microbiomics case study: To block or not to block?
 
-### Experimental Design
-
-The diversity of modern data sources has led to an experimental design renaissance. Central principles in simulation-based experimental design are:
-
-1. Calibration: Generators must be trained to match existing data rather than constructed de novo.
-2. Control: We should be able to manipulate the experimental and generative parameters.
-3. Transparency: Mechanisms leading to simulated data should refer to language already used within the application domain.
-4. Usability: The most widely used simulators are adaptable and well-documented.
----
-
-### Case Study Context
-
-1. In microbiome studies, we may ask whether some species become more/less abundant during treatments (e.g., diet changes).
-2. There is known to be widespread person-to-person variation in taxonomic profiles.
-
----
-
-### Experimental Design Dilemma
-
-Should we block or not?
-
-Create a diagram showing the different sampling plans.
-
-Trade-off: Blocking removes person-level effects but increases participant burden.
+* Blocking removes person-level effects...
+* ...but increases participant burden.
 
 ---
 
@@ -218,34 +195,38 @@ How can we navigate trade-offs like this? Simulate!
 <img src="figure/blocking.jpeg" width=840/>
 ]
 
-Simulations provide evidence for more precise decision-making.
-
----
-
-## Emulation
+Simulators provide data for more precise decision-making.
 
 ---
 
 ### Covasim
 
-1. Following the outbreak of COVID-19, the research community came together to build simulators that could inform pandemic response.
-2. Covasim is an example of an agent-based model of disease spread. Starting from local interaction rules, it lets us draw global inferences.
-	1. E.g., “What would happen if we held classes remotely for two weeks?”
+Following the outbreak of COVID-19, the research community came together to build simulators that could inform pandemic response.
+* E.g., "What would happen if we held classes remotely for two weeks?"
+	
+.center[
+<img src="figure/covasim.png" width=700/>
+]
+	
 
 ---
 
 ### Covasim
 
-1. These models can benefit from a statistical perspective.
-2. Statistical emulators can be trained to mimic the relationship between input hyperparameters and output data, substantially reducing the computational burden.
-3. Simulation-based inference lets us infer disease parameters even without any probability densities.
+Covasim is an example of an agent-based model. Starting from local interaction
+rules, it lets us draw global inferences.
+
+<img src="figure/emulation.jpeg"/>
+
+Statistical emulators mimic the relationship between input hyperparameters and
+output data, substantially reducing the computational burden.
 
 ---
 
 ### The Role of Statistics + Additional Materials
 
-1. Our paper has many more examples, like the evolution of mimicry in butterflies, longitudinal study design, the duality between agents and particles, …
-2. Paper Link: [https://go.wisc.edu/833zs8](https://go.wisc.edu/833zs8)
-3. Code (R + Python + NetLogo): [https://go.wisc.edu/7222i9](https://go.wisc.edu/7222i9)
+ We have many more examples, like the evolution of mimicry in butterflies, longitudinal study design, the duality between agents and particles, …
+* Paper Link: [https://go.wisc.edu/833zs8](https://go.wisc.edu/833zs8)
+* Code (R + Python + NetLogo): [https://go.wisc.edu/7222i9](https://go.wisc.edu/7222i9)
 
-Inference and imagination: Calibration to observed data grounds us in reality, while tinkering with generative mechanisms encourages us to imagine alternatives.
+**Inference and imagination**: Statistical calibration grounds us in reality while generative tinkering encourages us to imagine.

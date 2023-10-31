@@ -140,6 +140,14 @@ a, a > code {
 .pull-right ~ * {
   clear: both;
 }
+.pull-three-left {
+  float: left;
+  width: 75%;
+}
+.pull-three-right {
+  float: right;
+  width: 25%;
+}
 img, video, iframe {
   max-width: 100%;
 }
