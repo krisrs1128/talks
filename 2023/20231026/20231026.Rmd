@@ -143,17 +143,13 @@ I have been trying put this philosophy into practice by through a new version of
 the scDesign package. The simulation method has two main steps:
 
 * Estimate gene-wise regression models using location-shape-scale families.
-* Couple the quantiles from pairs of features using a Gaussian or Vine Copula.
-
----
-
-### scDesign
-
-**Main Idea: Apply tidy design principles to improve user interaction with multi-omics simulators.**
+* Couple the quantiles from dependent pairs of features using a Gaussian or Vine Copula.
 
 ---
 
 ## Design
+
+**Main Idea: Apply tidy design principles to improve user interaction with multi-omics simulators.**
 
 ---
 
@@ -181,6 +177,7 @@ For each gene, we can specify the regression formula and distributional family.
 
 ```{r, setup_margins}
 margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
+margins
 ```
 
 ```{r, estimate_margins, echo = FALSE}
@@ -194,7 +191,7 @@ margins <- estimate(margins, sce)
 Different parameters can have different formulas.
 
 ```{r modify_formulas}
-formulas <- list("mu" = ~ ns(psuedotime, df = params$df), "sigma" = ~ 1, "nu" = ~ 1)
+formulas <- list("mu" = ~ ns(psuedotime, df = 3), "sigma" = ~ 1, "nu" = ~ 1)
 setup_margins(sce, formulas,  ~ ZINBLSS())
 ```
 
@@ -205,7 +202,11 @@ setup_margins(sce, formulas,  ~ ZINBLSS())
 We can tie together a collection of marginals using a copula model.
 
 ```{r join_into_copula}
-simulator <- new("JointDistribution", margins = margins, dependence = copula_gaussian())
+simulator <- new(
+  "JointDistribution", 
+  margins = margins, 
+  dependence = copula_gaussian()
+)
 ```
 
 We can support different correlation structures across groups.
@@ -224,6 +225,7 @@ simulator <- new(
 
 We can build both the marginal and joint distributions simultaneously.
 
+.pull-left[
 ```{r wrap_into_simulator}
 simulator <- setup_simulator(
   sce,
@@ -233,6 +235,13 @@ simulator <- setup_simulator(
 ) |>
   estimate()
 ```
+]
+
+.pull-right[
+```{r, print_simulator}
+simulator
+```
+]
 
 ---
 
@@ -263,7 +272,7 @@ More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
 ```{r, echo = FALSE}
 line_opts <- list(col = "#8C2E62", linewidth = 2)
 ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
-point_opts <- list(size = 0.9, alpha = 0.6)
+point_opts <- list(size = 0.4, alpha = 0.3)
 ```
 
 ```{r example_plot, out.width = 800}
@@ -275,7 +284,7 @@ plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts, point = po
 
 ### Plot Correlations
 
-```{r correlation_plot, out.width = 500, fig.height = 6.5, fig.width = 10}
+```{r correlation_plot, out.width = 600, fig.height = 6.5, fig.width = 10}
 grid <- expand_colData(sce, "pseudotime")
 samples <- sample(simulator, n_samples = 10, new_data = grid)
 plot_correlations(samples, points_opts = list(size = 1.5, alpha = 1))
@@ -407,7 +416,7 @@ sim_joined <- map(sims, estimate, nu = 0.1) |>
 This assumes that we have samples where all features are measured.
 
 .center[
-<img src="figures/simulator_join_features.png" width = 650/>
+<img src="figures/simulator_join_features.png" width = 680/>
 ]
 
 ---
@@ -655,11 +664,13 @@ seem consistent with the high-level summary.
 ### Memos for the New Millennium
 Most of this work is just revisiting some classical ideas for new kinds of data and scientific cultures. In this spirit, here is a statistical adaptation of Italo Calvino’s Norton Lectures:
 
-1. **Lightness**: A well-designed interface brings a lightness to statistical thought.
+1. **Lightness**: A well-designed interface brings a kind of effortlessness to
+statistical thought.
 2. **Quickness**: We value the ability quickly experiment with and compare hypotheses.
 3. **Exactitude**: Simulations require precision in scientific hypotheses.
 4. **Visibility**: Simulation can bring biological mechanisms to the surface.
-5. **Multiplicity**: We must learn to manage information that appears in many forms.
+5. **Multiplicity**: We must become comfortable working simultaneously with data
+with multiple different forms.
 
 ---
 
