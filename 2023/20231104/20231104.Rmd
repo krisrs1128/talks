@@ -1,0 +1,251 @@
+---
+title: "Beyond Black Box Simulation"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+background-image: url("figures/cover.png")
+background-size: cover
+
+```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
+library(RefManageR)
+library(knitr)
+library(tidyverse)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
+opts_knit$set(eval.after = "fig.cap")
+set.seed(20230120)
+th <- theme_classic() +
+  theme(
+    panel.background = element_rect(fill="transparent"),
+    strip.background = element_rect(fill="transparent"),
+    plot.background = element_rect(fill="transparent", color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill="transparent"),
+    legend.box.background = element_rect(fill="transparent"),
+    legend.position = "bottom"
+  )
+
+theme_set(th)
+
+BibOptions(cite.style = "numeric")
+#bib <- ReadBib("references.bib")
+```
+
+### Beyond Black Box Simulation
+
+<div id="links">
+Paper: https://go.wisc.edu/833zs8
+Code: https://go.wisc.edu/7222i9
+</div>
+
+<div id="subtitle">
+Kris Sankaran <br/>
+Wisconsin Institute for Discovery <br/>
+UW-Madison Department of Statistics
+</div>
+
+---
+
+### New Lingua Franca of Science
+
+.pull-left[
+1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
+2. How does this interface with statistics?
+	- Experimental design, model building, and decision-making.
+]
+
+.pull-right[
+.center[
+<img src="figure/esm.png"/>
+]
+
+The E3SM is used for long-term climate projections.
+]
+
+---
+
+### New Lingua Franca of Science
+
+.pull-left[
+1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
+2. How does this interface with statistics?
+	- Experimental design, model building, and decision-making.
+]
+
+.pull-right[
+.center[
+<img src="figure/splatter.png"/>
+]
+
+Splatter generates synthetic single-cell genomics data.
+]
+
+---
+
+
+### New Lingua Franca of Science
+
+.pull-left[
+1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
+2. How does this interface with statistics?
+	- Experimental design, model building, and decision-making.
+]
+
+.pull-right[
+.center[
+<img src="figure/opensim_running.gif"/>
+]
+OpenSim is used for rehabilitation.
+]
+
+---
+
+### What could you do with a hologram?
+
+.pull-left[
+Simulators augment two kinds of reasoning: 
+
+1. Drawing inferences about global parameters 
+2. Examining the effect of imagined perturbations.
+]
+
+.pull-right[
+<img src="figure/hologram-wave.jpeg" width=350/>
+]
+
+
+---
+
+### Grammar of Generative Models
+
+[Language metaphor] Transparent simulators can be built by interactively composing simple modules. Probabilistic programming has simplified the process.
+
+.pull-left[
+<img src="figure/modules.jpeg"/>
+]
+
+.pull-right[
+a. Regression <br/>
+b: Hierarchy <br/>
+c: Latent Structure <br/>
+d: Temporal Variation
+]
+
+
+---
+
+### Reasoning with Simulators
+
+It can be helpful to view generative mechanisms from mathematical,
+computational, and graphical perspectives. For example, plate diagrams and for
+loops both condense duplicated information.
+
+.pull-left[
+```{r, eval = FALSE}
+beta = random_normal(D, 0, sigma2_beta)
+for (i = 1...n)
+  y[i] = random_normal(
+    N, 
+    x[i] * beta, 
+    sigma2_y
+  )
+```
+]
+
+.pull-right[
+<img src="figure/plate.jpeg" width=320/>
+]
+
+---
+
+### Discrepancy and Iterability
+
+By learning a discriminator to contrast real vs. simulated data, we can systematically improve the assumed generative mechanism.
+
+.center[
+<img src="figure/iterability.jpeg" width=700/>
+]
+
+---
+
+## Experimental Design
+
+---
+
+### Experimental Design
+
+The diversity of modern data sources has led to an experimental design renaissance. Central principles in simulation-based experimental design are:
+
+1. Calibration: Generators must be trained to match existing data rather than constructed de novo.
+2. Control: We should be able to manipulate the experimental and generative parameters.
+3. Transparency: Mechanisms leading to simulated data should refer to language already used within the application domain.
+4. Usability: The most widely used simulators are adaptable and well-documented.
+---
+
+### Case Study Context
+
+1. In microbiome studies, we may ask whether some species become more/less abundant during treatments (e.g., diet changes).
+2. There is known to be widespread person-to-person variation in taxonomic profiles.
+
+---
+
+### Experimental Design Dilemma
+
+Should we block or not?
+
+Create a diagram showing the different sampling plans.
+
+Trade-off: Blocking removes person-level effects but increases participant burden.
+
+---
+
+### Simulation to the Rescue
+
+How can we navigate trade-offs like this? Simulate!
+
+.center[
+<img src="figure/blocking.jpeg" width=840/>
+]
+
+Simulations provide evidence for more precise decision-making.
+
+---
+
+## Emulation
+
+---
+
+### Covasim
+
+1. Following the outbreak of COVID-19, the research community came together to build simulators that could inform pandemic response.
+2. Covasim is an example of an agent-based model of disease spread. Starting from local interaction rules, it lets us draw global inferences.
+	1. E.g., “What would happen if we held classes remotely for two weeks?”
+
+---
+
+### Covasim
+
+1. These models can benefit from a statistical perspective.
+2. Statistical emulators can be trained to mimic the relationship between input hyperparameters and output data, substantially reducing the computational burden.
+3. Simulation-based inference lets us infer disease parameters even without any probability densities.
+
+---
+
+### The Role of Statistics + Additional Materials
+
+1. Our paper has many more examples, like the evolution of mimicry in butterflies, longitudinal study design, the duality between agents and particles, …
+2. Paper Link: [https://go.wisc.edu/833zs8](https://go.wisc.edu/833zs8)
+3. Code (R + Python + NetLogo): [https://go.wisc.edu/7222i9](https://go.wisc.edu/7222i9)
+
+Inference and imagination: Calibration to observed data grounds us in reality, while tinkering with generative mechanisms encourages us to imagine alternatives.
