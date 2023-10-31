@@ -223,7 +223,7 @@ output data, substantially reducing the computational burden.
 
 ---
 
-### The Role of Statistics + Additional Materials
+### Conclusion
 
  We have many more examples, like the evolution of mimicry in butterflies, longitudinal study design, the duality between agents and particles, …
 * Paper Link: [https://go.wisc.edu/833zs8](https://go.wisc.edu/833zs8)
