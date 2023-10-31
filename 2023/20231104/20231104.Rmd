@@ -230,3 +230,10 @@ output data, substantially reducing the computational burden.
 * Code (R + Python + NetLogo): [https://go.wisc.edu/7222i9](https://go.wisc.edu/7222i9)
 
 **Inference and imagination**: Statistical calibration grounds us in reality while generative tinkering encourages us to imagine.
+
+---
+
+### Acknowledgements
+
+* Members of my research group - Hanying Jiang, Shuchen Yan, Zhuoyan Xu, Kaiyan Ma, Margaret Thairu, and Mason Garza
+* Funding mechanism: 
