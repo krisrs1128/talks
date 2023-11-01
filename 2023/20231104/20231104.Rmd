@@ -14,7 +14,7 @@ output:
 ---
 
 class: title
-background-image: url("figures/cover.png")
+background-image: url("figure/cover-transparent.png")
 background-size: cover
 
 ```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
@@ -42,17 +42,25 @@ BibOptions(cite.style = "numeric")
 #bib <- ReadBib("references.bib")
 ```
 
-### Beyond Black Box Simulation
+<div id="title">
+Beyond Black Box Simulation
+</div>
+<div id="subtitle">
+ASA SSC Mini-Symposium <br/>
+[4 | November | 2023]
+</div>
 
 <div id="links">
 Paper: https://go.wisc.edu/833zs8
 Code: https://go.wisc.edu/7222i9
 </div>
 
-<div id="subtitle">
-Kris Sankaran <br/>
-Wisconsin Institute for Discovery <br/>
-UW-Madison Department of Statistics
+<img src="figure/logo" width=50 id="logo"/>
+<div id="bio">
+<strong>Kris Sankaran</strong>, UW-Madison<br/>
+joint work with,
+<br/>
+<strong>Susan Holmes</strong> Stanford University
 </div>
 
 ---
@@ -61,7 +69,7 @@ UW-Madison Department of Statistics
 
 .pull-left[
 1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
-2. How does this interface with statistics?
+2. Where is the interface with statistics?
 	- Experimental design, model building, and decision-making.
 ]
 
@@ -79,7 +87,7 @@ The E3SM is used for long-term climate projections.
 
 .pull-left[
 1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
-2. How does this interface with statistics?
+2. Where is the interface with statistics?
 	- Experimental design, model building, and decision-making.
 ]
 
@@ -98,7 +106,7 @@ Splatter generates synthetic single-cell genomics data.
 
 .pull-left[
 1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
-2. How does this interface with statistics?
+2. Where is the interface with statistics?
 	- Experimental design, model building, and decision-making.
 ]
 
@@ -185,6 +193,8 @@ Let's consider a microbiomics case study: To block or not to block?
 * Blocking removes person-level effects...
 * ...but increases participant burden.
 
+<img src="figure/blocking_simplex.png"/>
+
 ---
 
 ### Simulation to the Rescue
@@ -236,4 +246,4 @@ output data, substantially reducing the computational burden.
 ### Acknowledgements
 
 * Members of my research group - Hanying Jiang, Shuchen Yan, Zhuoyan Xu, Kaiyan Ma, Margaret Thairu, and Mason Garza
-* Funding mechanism: 
+* Funding mechanism: NIGMS R01GM152744 

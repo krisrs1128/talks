@@ -210,61 +210,6 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-family: 'Raleway';
 }
 
-.my_title {
-  position: relative;
-  z-index: 1;
-}
-
-.my_title p {
-  margin: 0;
-}
-
-.my_title .pull-left {
-  float: left;
-  width: 60%;
-}
-
-.my_title .pull-right {
-  float: right;
-  width: 27%;
-}
-
-.my_title::before {    
-      content: "";
-      background-image: url("https://uwmadison.box.com/shared/static/ebncvy25z4q6livvmzy9b10a1th5zt33.png");
-      background-size: cover;
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
-      opacity: 0.1;
-      z-index: -1;
-}
-
-.background-rivers {
-  position: relative;
-  z-index: 1;
-}
-
-.background-rivers h1 {
-  background-color: #F7F7F7;
-  width: 30%;
-}
-
-.background-rivers::before {
-  content: "";
-  background-image: url("https://uwmadison.box.com/shared/static/arknmgopwjq2y4x5h8oeduzlbkvjyybn.jpg");
-  background-size: cover;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  opacity: 1;
-  z-index: -1;
-}
-
 #credit {
   position: absolute;
   top: 10px;
@@ -287,28 +232,40 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   text-align: center;
 }
 
-.cover {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding-left: 10px;
-}
-
 #subtitle {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   padding-left: 10px;
-  font-size: 20px;
-  width: 500px;
+  font-size: 32px;
+  width: 460px;
   color: #5f558e;
   left: 10px;
   bottom: 10px;
 }
 
+#logo {
+  position: absolute;
+  left: 650px;
+  bottom: 30px;
+}
+
+#bio {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding-left: 10px;
+  font-size: 24px;
+  width: 500px;
+  color: #5f558e;
+  left: 720px;
+  bottom: 10px;
+}
+
 #links {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   padding-left: 10px;
-  font-size: 20px;
-  width: 400px;
+  font-size: 24px;
+  width: 440px;
   color: #5f558e;
   left: 750px;
   top: 10px;
