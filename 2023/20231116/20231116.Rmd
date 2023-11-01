@@ -14,7 +14,7 @@ output:
 ---
 
 class: title
-background-image: url("figure/chimborazo-data.png")
+background-image: url("figures/chimborazo-data.png")
 background-size: cover
 
 ```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
@@ -115,10 +115,81 @@ background-size: contain
 
 ---
 
-### Glacier Monitoring
+### Glacier Lakes Monitoring
 
-Semantic segmentation models can be trained to distinguish different types of
-glaciers and estimate glacial lake areas `r Citep(bib, c("Baraka2020MachineLF", "Zheng2021InteractiveVA", "Ortiz2022MappingGL"))`
+* Of particular significance is the rapid growth of glacial lakes. 
+* This can lead to Glacial Lake Outburst Floods
+
+<image from history>
+
+These floods had been part of the Himalayan folklore for thousands of years.
+
+---
+
+### Glacier Lakes Monitoring
+
+* Of particular significance is the rapid growth of glacial lakes. 
+* This can lead to Glacial Lake Outburst Floods
+
+<screenshot from NYT>
+
+Unfortunately, their frequency -- and the human toll they take -- appears to be
+increasing.
+
+---
+
+### Glacier Lakes Monitoring
+
+We wanted a more automatic way to estimate glacial lake area from satellite
+imagery `r Citep(bib, c("Ortiz2022MappingGL"))`.
+
+We generated a new labeled dataset:
+* Sentinel 2: Medium resolution, available ~ biweekly since 2015.
+* Bing Aerial Imagery: Very high resolution, only one timepoint
+* Labels: Manual annotation efforts from ICIMOD.
+
+You can access the data here.
+
+---
+
+### Sentinel 2 Imagery
+
+---
+
+### Bing Imagery
+
+---
+
+### Example Labels
+
+---
+
+### Historical Ablation Trick
+
+One trick that substantially improved performance was to include ablated
+historical labels as model input.
+
+---
+
+### Historical Ablation Trick
+
+Ablation ensures that the model doesn't simply copy the historical labels.
+
+---
+
+### Results
+
+<performance table>
+
+---
+
+### Results
+
+<example imagery>
+
+---
+
+### Interpretation
 
 .pull-left[
 <img src="figure/glacier_lakes_trends.png"/>
@@ -162,11 +233,6 @@ The dream would be to build models that automatically get better as new sources 
 
 ### An Experiment
 
-<div id="credit">
-Yuliang Peng <br>
-<img width=100 src="figure/portrait.png">
-</div>
-
 .pull-left[
 How robust is multimodal segmentation to modality missingness? 
 * Does it depend on transformer architectures?
@@ -203,7 +269,6 @@ for (i in seq(0, 200)) {
 write_csv(tibble(path = files), "~/Downloads/data_paths.csv")
 ```
 
-
 ---
 
 ### Results
@@ -233,6 +298,9 @@ Example predictions from patches with the highest and lowest IoUs.
 
 ---
 
+## Multimodality in Genomics
+
+---
 
 ### Challenge - Translating Hypotheses
 
@@ -482,8 +550,8 @@ If we can also establish simple rules for combining simulators, then there will 
 <img src="figures/simulator_join_motivation.png"/>
 
 ```{r, echo = FALSE}
-SCGEMMETH_sce <- readRDS("data/SCGEMMETH_sce.rds")
-SCGEMRNA_sce <-readRDS("data/SCGEMRNA_sce.rds")
+SCGEMMETH_sce <- readRDS("../20231026/data/SCGEMMETH_sce.rds")
+SCGEMRNA_sce <-readRDS("../20231026/data/SCGEMRNA_sce.rds")
 
 rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
 rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
@@ -676,7 +744,7 @@ CCA on an imputed table.
 This is one of my favorite visualizations from the history of science.
 
 .center[
-<img width=950 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
+<img width=950 src="figures/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
 ]
 
 ---
@@ -688,11 +756,11 @@ data sources can be combined to create a unified view of the world. It is also
 remarkable how it anticipates many ideas from modern ecology.
 
 .center[
-<img width=820 src="figure/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
+<img width=820 src="figures/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
 ]
 
 <div id="von-humboldt">
-<img src="figure/von-humboldt.jpeg"/>
+<img src="figures/von-humboldt.jpeg"/>
 </div>
 
 ---
@@ -702,7 +770,7 @@ remarkable how it anticipates many ideas from modern ecology.
 At a time when most science focused on taxonomy, the *Tableau* highlighted interdependence and unity within nature.
 
 .center[
-<img width=600 src="figure/chimborazo-data.png"/>
+<img width=600 src="figures/chimborazo-data.png"/>
 ]
 
 ---
