@@ -1,0 +1,111 @@
+---
+title: "WID Symposium 2023"
+output:
+  xaringan::moon_reader:
+    chakra: https://remarkjs.com/downloads/remark-0.15.0.min.js
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: true
+    fig_caption: true
+    nature:
+      ratio: "16:9"
+    seal: false
+---
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(RefManageR)
+library(knitr)
+library(tidyverse)
+library(glue)
+opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_knit$set(eval.after = "fig.cap")
+set.seed(123)
+
+BibOptions(cite.style = "numeric")
+bib <- ReadBib("references.bib")
+```
+
+.microbiome-figure-top[
+<img src="figures/microbiome-header-top.png"></img>
+]
+
+<div id="links">
+Slides: https://go.wisc.edu/ <br>
+Lab Site: https://go.wisc.edu/pgb8nl
+</div>
+
+<br/>
+<br/>
+
+### Microbiome Data Science
+
+My lab develops data science tools to help researchers better understand
+microbial ecosystems.  We make sure that our tools can be adapted to complex
+experimental designs and combinations of 'omics.
+
+Why is multi-omics helpful? Think of the cell as a symphony.
+
+.microbiome-figure-bottom[
+<img src="figures/microbiome-header-2.png"></img>
+]
+
+---
+
+### The Future is Interactive
+
+If you’ve taken any of my classes, you know that I use live coding to teach data analysis methods:
+
+1. There are often mistakes and dead ends that we manage to work past.
+2. We can gradually improve our analysis through critical re-evaluation.
+3. We can easily check and refine our models, in the sense of `r Citep(bib, c("Gelman2004ExploratoryDA", "Wickham2016RFD"))`.
+
+.center[
+<img src="figures/data_flow.png" width=600/>
+]
+	
+---
+
+### The Future is Interactive
+
+**Why**: My dream is to have a similarly fluid, interactive workflow for multi-omics. Interacting with data and models at all stages will promote both rigor and imagination in data analysis.
+
+**How**: Build modular, user-centric software for multimodal data transformation, modeling, and visualization.
+
+.center[
+<img src="figures/multimodal_flow.png" width=600/>
+]
+
+---
+
+### Example: Visual Interactivity
+
+.pull-left[
+1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand" `r Citep(bib, "Shneiderman1996TheEH")`
+2. Lab member Kaiyan Ma has written an R package applying this logic to
+longitudinal multi-omics data visualization
+]
+
+.pull-right[
+<img src="figures/molpad_recording.gif"/>
+]
+
+---
+
+### Reaching Out
+
+Beyond visualization, we also think about interactive computing to support data
+preparation (e.g., from heterogeneous studies) and generative modeling (e.g.,
+for synthetic null testing).
+
+* You can learn more at [go.wisc.edu/pgb8nl](go.wisc.edu/pgb8nl) and at our booth.
+
+* Email: [ksankaran@wisc.edu](mailto:ksankaran@wisc.edu)
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib)
+```
+
