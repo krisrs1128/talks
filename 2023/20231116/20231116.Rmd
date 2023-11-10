@@ -1,5 +1,5 @@
 ---
-title: "Multimodal Machine Learning: Examples from Earth and Biological Systems"
+title: "Visualization in Deep Learning: Theme and Variations"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -14,771 +14,459 @@ output:
 ---
 
 class: title
-background-image: url("figures/chimborazo-data.png")
+background-image: url("figures/svcca-training.giv")
 background-size: cover
 
 ```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
-library(RefManageR)
-library(STexampleData)
 library(knitr)
-library(tidyverse)
-library(glue)
-library(splines)
-library(scDesigner)
-library(gamlss)
-library(gamboostLSS)
+library(RefManageR)
 opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
-knit_hooks$set(output = scDesigner::ansi_aware_handler)
-options(crayon.enabled = TRUE)
-set.seed(20230120)
-
-options(
-  ggplot2.discrete.colour = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
-  ggplot2.discrete.fill = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
-  ggplot2.continuous.colour = function(...) scale_color_distiller(palette = "Spectral", ...),
-  ggplot2.continuous.fill = function(...) scale_fill_distiller(palette = "Spectral", ...)
-)
-
-th <- theme_classic() +
-  theme(
-    panel.background = element_rect(fill="transparent"),
-    strip.background = element_rect(fill="transparent"),
-    plot.background = element_rect(fill="transparent", color=NA),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    legend.background = element_rect(fill="transparent"),
-    legend.box.background = element_rect(fill="transparent"),
-    legend.position = "bottom"
-  )
-
-theme_set(th)
-
 BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
 <div id="title">
-Multimodal Machine Learning: Examples from Earth and Biological Systems
+Visualization in Deep Learning: Theme and Variations
 </div>
 
 <div id="subtitle">
 Kris Sankaran <br/>
+<a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 16 | November | 2023 <br/>
 Machine Learning Lunch Meetings
 </div>
 
 ---
 
-### Multimodality Setup
+### Theme: Representations of DL Models
+
+We often talk about how deep learning models learn higher-order representations from the data they are provided.
+
+<img src="figures/bengio_representations.png"/>
+
+---
+
+### Theme: Representations of DL Models
+
+What representations help with our reasoning about the models themselves?
+
+<img src="collage-nnet-architecture-loss-curves-transformer-picture.png"/>
+
+---
+
+### Audience Question
+
+What kinds of visualizations do you make in your daily machine learning research (and not just for publication)?
+
+Discussion Page: [go.wisc.edu]
+
+---
+### Variations
+
+Visualization is often used to:
+1. Summarize training dynamics.
+2. Reason about errors and predictions.
+3. Describe memory and representation learning mechanisms.
+
+These abstractions help with:
+1. Training and improving real-world models. (1, 2)
+2. Guiding research through improved mental models. (1, 3)
+3. Tying models into broader scientific discussion. (3)
+
+---
+
+### Variations
+
+I’ll be drawing examples mainly from two of my projects:
+
+2. **Glacier Ecosystem Mapping**: Application of satellite image segmentation to climate change adaptation and disaster preparedness.
+3. Remembrances of States Past: A visual analysis of "time warping" in sequence models.
+
+I will highlight <span style="color:red"/>general visualization principles</span> in red.
+
+<img src="figures/glacier_overview.png"/>
+---
+
+### Variations
+
+I’ll be drawing examples mainly from two of my projects:
+
+2. Glacier Ecosystem Mapping: Application of satellite image segmentation to climate change adaptation and disaster preparedness.
+3. **Remembrances of States Past**: A visual analysis of "time warping" in sequence models.
+
+I will highlight <span style="color:red"/>general visualization principles</span> in red.
+
+<img src="figures/remembrances_overview.png"/>
+
+---
+
+## Visualizing Training Dynamics
+
+---
+### Loss Curves
+
+Despite (or because of?) their simplicity, these plots have been one of the most impactful visualizations in modern machine learning.
+
+<img src="figures/loss_example.png"/>
+
+---
+
+### Loss Curves
+
+They highlight whether the model is over/underfitting. This has immediate consequences for model architecture, optimization, and regularization.
+
+<img src="figures/loss_example.png"/>
+
+---
+### Example: Counting Crossings
+
+In this toy problem, we apply a sequence model (with gated recurrent units) to count the number of times a curve has crossed the grey band.
 
 .center[
-<img width=850 src="figure/multimodal.png"/>
+<iframe width="800" height="484" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past?cells=chart"></iframe>
 ]
 
 ---
 
-### Multimodal Dimensionality Reduction
+### Example: Counting Crossings
 
-* Canonical correlation analysis looks for shared structure across sources,
-\begin{align*}
-\arg\min_{u \in \mathbb{R}^{P_1}, v \in \mathbb{R}^{P_2}} &\operatorname{Cov}_{\mathbf{P}^{X_{1}X_{2}}}\left[z_i^{(1)}(u), z_i^{(2)}(v)\right] \\
-\text { subject to } &\operatorname{Var}_{\mathbf{P}^X_{1}}\left(z_i^{(1)}(u)\right)= \operatorname{Var}_{\mathbf{P}^{X_{2}}}\left(z_i^{(2)}(v)\right)=1
-\end{align*}
-where $z_i^{(1)}(u)=u^T x^{(1)}_i$ and $z_i^{(2)}(v)=v^T x^{(2)}_i$ are linear feature extractors.
+The example dataset are a collection of labeled pairs: 
 
-* In modern settings, it's often useful to introduce sparsity `r Citep(bib, c("Witten2009APM", "Gao2014SparseCA"))` or nonlinearity `r Citep(bib, c("Andrew2013DeepCC", "Wang2015OnDM"))`.
-
----
-
-background-color: #f7f7f7
-background-image: url("figure/multimodal-glaciers-cover.png")
-background-size: contain
+* $\mathbf{x}_{i} \in \mathbb{R}^{100}$: A random spline trajectory stored as a long vector.
+* $y_i$: The number of times the trajectory crosses the interval $\left[0, 1\right]$.
 
 .center[
-## Multimodality in Earth Observation
+<iframe width="100%" height="400" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1310?cells=chart9"></iframe>
 ]
 
 ---
 
-### Glacier Monitoring
+### Loss Curves
 
-* Glaciers provide significant ecosystem resources, and their disappearance has a large impact on the communities around them.
-* Effective remote sensing data analysis could help generate maps over large areas much faster than human annotation could.
+It's interesting to visualize the evolution of instance-level errors, especially
+examples that remain difficult to predict late in training.
+
+.center[
+<iframe width="950" height="500" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1311?cells=chart11"></iframe>
+]
+
+---
+
+### <span style="col: red;">Dynamic Linking</span>
+
+This visualization applies dynamic linking. By coordinating interaction across several panels, we can encode complementary views of the same data.
+
+(NYT Linked Views)
+
+---
+### Activations and Gradients
 
 .pull-left[
-<img width=300 src="figure/Blue-logo-on-a-white-background.jpg"/>
+More than losses, it can be worthwhile to visualize feature maps and gradients
+throughout the training process.
+
+These are activations from a UMAP model trained to segment glaciers `r
+Citep(bib, "zheng2022")`. The skip connections prevented the deepest layer in
+the architecture from ever being learned!
 ]
+
 .pull-right[
-<a href="https://news.microsoft.com/on-the-issues/2021/01/12/ai-open-data-glacial-melt-himalaya/"><img width=300 src="figure/glaciers-article.png"/></a>
+<img src="figures/glacier_representations.png" width=470/>
 ]
 
 ---
 
-### Glacier Lakes Monitoring
+### Activations and Gradients
 
-* Of particular significance is the rapid growth of glacial lakes. 
-* This can lead to Glacial Lake Outburst Floods
+More than losses, it can be worthwhile to visualize feature maps and gradients throughout the training process.
 
-<image from history>
+<img src="figures/gradient_vis.png"/>
 
-These floods had been part of the Himalayan folklore for thousands of years.
-
----
-
-### Glacier Lakes Monitoring
-
-* Of particular significance is the rapid growth of glacial lakes. 
-* This can lead to Glacial Lake Outburst Floods
-
-<screenshot from NYT>
-
-Unfortunately, their frequency -- and the human toll they take -- appears to be
-increasing.
+Here is an example from Shixia Liu’s group that shows the value of visualizing gradients during training.
 
 ---
 
-### Glacier Lakes Monitoring
-
-We wanted a more automatic way to estimate glacial lake area from satellite
-imagery `r Citep(bib, c("Ortiz2022MappingGL"))`.
-
-We generated a new labeled dataset:
-* Sentinel 2: Medium resolution, available ~ biweekly since 2015.
-* Bing Aerial Imagery: Very high resolution, only one timepoint
-* Labels: Manual annotation efforts from ICIMOD.
-
-You can access the data here.
+## Visualizing Errors and Predictions
 
 ---
 
-### Sentinel 2 Imagery
+### Visualizing Errors
+
+We fit satellite image segmentation models to datasets on building footprints and glacier labels, respectively. Here are examples that were flagged as being especially poor quality.
+
+.center[
+<img src="figures/img_6560_kitsap4.png" width=250/>
+<img src="figures/pred_6560_kitsap4.png" width=250/>
+<img src="figures/mask_6560_kitsap4.png" width=250/>
+]
+
+In both cases, our worst examples are due to label noise. Can you tell what happened?
 
 ---
 
-### Bing Imagery
+### Visualizing Errors
+
+We fit satellite image segmentation models to datasets on building footprints and glacier labels, respectively. Here are examples that were flagged as being especially poor quality.
+
+.center[
+<img src="figures/img_6560_kitsap4.png" width=250/>
+<img src="figures/pred_6560_kitsap4.png" width=250/>
+<img src="figures/mask_6560_kitsap4.png" width=250/>
+]
+
+In both cases, our worst examples are due to label noise. Can you tell what happened?
 
 ---
 
-### Example Labels
+For problems where each sample is associated with a continuous accuracy measure, it is helpful to look at representatives from across the continuum.
+
+<img src="figures/glacial_lakes_grid.gif" width=700/>
+
+Different models can have different failure modes, and this kind of visualization compactly represents that.
+
+---
+<span style="color: red"/>Small Multiples</span>
+
+In visualization, the idea of repeating a view across many parallel instances is called small multiples. They can reveal substantial information at a single glance.
+
+<img src="figures/small_multiples_example.png"/>
 
 ---
 
-### Historical Ablation Trick
-
-One trick that substantially improved performance was to include ablated
-historical labels as model input.
-
----
-
-### Historical Ablation Trick
-
-Ablation ensures that the model doesn't simply copy the historical labels.
-
----
-
-### Results
-
-<performance table>
-
----
-
-### Results
-
-<example imagery>
-
----
-
-### Interpretation
+<span style="color: red"/>Data-to-Ink</span>
 
 .pull-left[
-<img src="figure/glacier_lakes_trends.png"/>
-<img src="figure/glacier_lakes_volcano.png" width=250/>
+We were also careful to remove extraneous plot elements (e.g., unnecessary tick marks and grid lines). This is line with the goal of maximizing data-to-ink `r Citep(bib, "tufte1985")`.]
+
+.pull-right[
+<img src="figures/glacial_lakes_grid.gif" width=800/>
+]
+
+---
+
+### Smoothed Error Rates
+
+This is the result of a PCA on the activations at the last layer of the building footprint segmentation model. For the background, we smoothed the error metric across training examples.
+
+<iframe src="https://adrijanik.github.io/unet-vis#div_main" width=1000 height=400/>
+
+---
+
+### Navigating Predictions
+
+How might a model's predictions guide decision making?
+
+.pull-left[
+We worked on a project with ICIMOD to identify regions that lakes that were growing rapidly. These are a risk factor for glacial lake outburst floods.
+]
+
+.pull-right[
+<img src="figures/nyt_glacier.png"/>
+]
+
+---
+
+### Navigating Predictions
+
+From predicted segmentations, we could fit trends to each lake's estimated area.
+This volcano plot shows those that need more proactive monitoring.
+
+.center[
+<img src="figures/volcano_plot.gif" width=640/>
+]
+
+---
+
+### Navigating Predictions
+
+We also implemented a Shiny App to look up images from lakes with interesting trends.
+
+<iframe width=1000 src="https://krisrs1128.shinyapps.io/glacial_lake_visualization/" height=450/>
+
+---
+### <span style="col: red;">Focus-plus-Context</span>
+
+This is an instance of the focus-plus-context principle `r Citep(bib, "heer2004")`. The idea is to let the reader zoom into patterns of interest without losing relevant context.
+
+.center[
+<img src="figures/doitree_dmoz.gif" width=800/>
+]
+
+---
+
+## Visualizing Representations
+
+---
+### Goals of Representation Analysis
+
+Deep learning models should sense higher-order abstractions. We can evaluate this by analyzing their learned representations.
+
+1. How do architectural components compare, and how does it relate to performance differences?
+2. Why do common training practices like transfer learning and normalization seem to help?
+3. How do data-driven representations relate to concepts designed by human experts?
+
+---
+
+### Visualizing LSTMs
+
+A classic paper in this field looked at feature activations in character-level sequence models. It discovered representations related to sequence position and quotations, for example.
+
+<img src="figures/lstm-activations-1.png"/>
+
+---
+
+### Visualizing LSTMs
+
+This paper helped demystify the mechanics of LSTM models. We could see how gating prevented important pieces of memory from being overwritten over long stretches of text.
+
+<img src="figures/lstm-activations-2.png"/>
+
+---
+
+### Parking lot or…?
+
+Back to the building footprint labeling task, here are two images we found with similar feature activations.
+(todo: check which layers exactly)
+
+.pull-left[
+<img src="figures/cars.png" width=400/>
 ]
 .pull-right[
-<img src="figure/glacier_lakes_errors.png"/>
+<img src="figures/graves.png" width=400/>
 ]
+
+---
+
+### Cemetery
+
+This layer activates a particular set of neurons that encodes  "clustered rectangularness."
+
+.pull-left[
+<img src="figures/cars.png" width=400/>
+]
+.pull-right[
+<img src="figures/graves.png" width=400/>
+]
+
+---
+
+### Counting Model
+
+Let’s look at features from the counting model. The few layers
+encode the $y$-value of the trajectory. Later ones count crossings.
+
+<iframe width="100%" height="484" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1323?cells=chart7"></iframe>
+
+---
+### Time Warping
+
+My main interest in this example was actually the "time warping" phenomenon. This is related to an algebraic observation about the structure of gated recurrent units.
+
+(add the derivation)
+
+---
+### Time Warping
+
+During "steep" regions of the warping function, we experience time moving more rapidly. In the original frame of reference, we forget more quickly.
  
-[Colab Notebook](https://colab.research.google.com/drive/1ZkDtLB_2oQpSFDejKZ4YQ5MXW4c531R6?usp=sharing#scrollTo=r9jkq9qYcX_-)
+<iframe width="100%" height="472" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1323?cells=chart10"></iframe>
+ 
+---
+
+### Time Warping
+
+In our trained model, we can analyze the gatings $g_{t}$ to see how the counting model warps time.
+
+<iframe width="100%" height="484" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1323?cells=chart8"></iframe>
 
 ---
 
-### Multimodal Data
+### Other Useful Ideas
 
-Data sources are always changing, and to map historical trajectories, we need to integrate them.
-  * There is a trade-off between spatial and spectral resolution.
-  * It is possible to include ground-level data, e.g., wildlife monitoring apps.
+* **Linear Probes**: To see whether a layer has learned particular "concept," try predicting using its activations to learn a linear classifier. See also concept activation.
+* Centered Kernel Alignment: To compare a pair of high-dimensional representations, use a measure of multivariate association.
+
+<img src="figures/linear_probes.png"/>
+
+---
+
+### Other Useful Ideas
+
+* Linear Probes: To see whether a layer has learned particular "concept," try predicting using its activations to learn a linear classifier. See also concept activation.
+* Centered Kernel Alignment: To compare a pair of high-dimensional representations, use a measure of multivariate association.
+
+<img src="figures/cka_alignment.png"/>
+
+---
+### Learned Representations in Science
+
+Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
 
 .center[
-<img width=500 src="figure/satellites-evolution.png"/>
-]
-
-The dream would be to build models that automatically get better as new sources become available.
-
----
-
-### Multimodal Data
-
-Data sources are always changing, and to map historical trajectories, we need to integrate them.
-  * There is a trade-off between spatial and spectral resolution.
-  * It is possible to include ground-level data, e.g., wildlife monitoring apps.
-
-.center[
-<img width=600 src="figure/two-maps.png"/>
-]
-
-The dream would be to build models that automatically get better as new sources become available.
-
----
-
-### An Experiment
-
-.pull-left[
-How robust is multimodal segmentation to modality missingness? 
-* Does it depend on transformer architectures?
-* This is the remote sensing analog of `r Citep(bib, "Ma2022AreMT")`.
-]
-
-.pull-right[
-<img width=500 src="figure/study-design.jpeg"/>
+<iframe src="https://esmatlas.com/explore?at=1%2C1%2C21.999999344348925" width=950 height=350/>
 ]
 
 ---
+### Learned Representations in Science
 
-### Study Design
+Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
 
-* We studied Segformer models `r Citep(bib, "Xie2021SegFormerSA")` with early, middle, and late fusion.
-* We downloaded aligned S1 and S2 imagery using the planetary computer ([script](https://github.com/krisrs1128/lake_labeller/blob/main/download/helpers.py), [data](https://github.com/krisrs1128/lake_labeller/blob/main/download/data_paths.csv))
-
-.center[
-<img width=600 src="figure/transformer-types.jpeg"/>
-]
-
-```{r, echo = FALSE}
-library(glue)
-
-base <- "https://g-5b2b0e.dtn.globus.wisc.edu/multimodal_glaciers/"
-files <- vector(length = 200)
-types <- c("s1", "s2")
-for (i in seq(0, 200)) {
-  for (j in seq_along(types)) {
-    files[2 * i + j] <- glue("{base}/{types[j]}-{i}-1.tiff")
-  }
-}
-
-write_csv(tibble(path = files), "~/Downloads/data_paths.csv")
-```
+<img src="figures/scgpt-atlas.png"/>
 
 ---
 
-### Results
+### Intriguing Experiment
 
-.pull-left[
-|       | Early fusion   |           | Late fusion    |           |
-|-------|----------------|-----------|----------------|-----------|
-|       | Debris-covered | Clean ice | Debris-covered | Clean ice |
-| S1+S2 | 0.252          | 0.651     | 0.159          | 0.642     |
-| S1    | 0.002          | 0.087     | 0              | 0.061     |
-| S2    | 0.249          | 0.615     | 0              | 0.423     |
-]
+`r Citep(bib, c("viegas", "manning"))` presented connections between linguistics and BERT embeddings. For example, they found that embedding and formal parse-tree distances were closely related.
 
-.pull-right[
-* The early fusion model uniformly outperformed the late fusion model
-  - S2 is much more important than S1
-* Caveat: This experiment used a small region with few debris-covered glaciers
-]
+<img src="figures/parse-tree.png"/>
 
 ---
 
-### Results
+### Intriguing Experiment
 
-Example predictions from patches with the highest and lowest IoUs.
+They also saw how the embeddings reflect word sense disambiguation and built an app to interactively query different words.
 
-<img src="figure/results-array-glaciers.png"/>
-
----
-
-## Multimodality in Genomics
+<img src="figures/word-sense.png"/>
 
 ---
 
-### Challenge - Translating Hypotheses
+### Why do these work?
 
-1. Translating scientific hypotheses into quantitative models is more challenging than is widely appreciated.
-	1. Precise technology does not imply precise thought!
-2. This challenge is one central driver of the reproducibility crisis.
+I like how these visualizations:
+(1) Encourage readers to engage with existing mental models. 
+(2) Provide domain-relevant context for interacting with learned representations.
 
----
-
-### Grammar of Simulation
-
-We seem to need some form of more interactive simulation/model building.
-
-1. <span style="color:#025E73">Modularity</span>: We should make generative models that are reconfigurable across varied ‘omics data types and experimental designs.
-2. <span style="color:#378C5C">Communication</span>: We have the public data resources that can guide the development of precise hypothesis.
-3. <span style="color:#D94E4E">Interactivity</span>: We should make it enjoyable to evaluate and modify statistical hypotheses.
+This seems like a promising way to balance efficiency and agency in theory building. Hopefully we can avoid the "kaggleization of science" `r Citep(bib, "manning_interview")`.
 
 ---
 
-### scDesign
+### Multi-omics analog?
 
-The simulation method has two main steps:
+How might these ideas play out in multi-omics foundation models?
 
-* Estimate gene-wise regression models using location-shape-scale families.
-* Couple the quantiles from dependent pairs of features using a Gaussian or Vine Copula.
+* Gene regulatory networks <—> parse trees. Both provide simple abstractions for reasoning about complex processes.
+* Gene-sense disambiguation. A protein’s purpose can depend on its cellular surroundings, and it’s possible that foundation models have learned to represent this.
 
-We will decompose this analysis to support direct interaction.
-
----
-
-### Data Structures (Nouns)
-
-We have defined separate classes for specifying,
-
-* Gene-level probability models.
-* Correlation structures across genes.
-
-For the data itself, we rely on the `SummarizedExperiment` class.
-
-* `colData` specifies the experimental design
-* `assay` specifies the measured counts
-
-```{r, read_data, echo = FALSE}
-sce <- readRDS("../20231026/data/PANCREAS_sce.rds")[1:10, ]
-```
+<img src="figures/multi-omics-graph.png"/>
 
 ---
 
-### Gene-Level Models
+### Conclusion
 
-For each gene, we can specify the regression formula and distributional family.
+I hope that you have learned a few visualization ideas that can help your research and collaborations (Discussion: go.wisc.edu). 
 
-```{r, setup_margins}
-margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
-margins
-```
+Some final thoughts:
 
-```{r, estimate_margins, echo = FALSE}
-margins <- estimate(margins, sce)
-```
-
----
-
-### Gene-Level Models
-
-Different parameters can have different formulas.
-
-```{r modify_formulas}
-formulas <- list("mu" = ~ ns(psuedotime, df = 3), "sigma" = ~ 1, "nu" = ~ 1)
-setup_margins(sce, formulas,  ~ ZINBLSS())
-```
-
----
-
-### Copula Models
-
-We can tie together a collection of marginals using a copula model.
-
-```{r join_into_copula}
-simulator <- new(
-  "JointDistribution", 
-  margins = margins, 
-  dependence = copula_gaussian()
-)
-```
-
-We can support different correlation structures across groups.
-
-```{r modified_copula}
-simulator <- new(
-  "JointDistribution", 
-  margins = margins, 
-  dependence = copula_gaussian(~ cell_type)
-)
-```
-
----
-
-### Wrapper
-
-We can build both the marginal and joint distributions simultaneously.
-
-.pull-left[
-```{r wrap_into_simulator}
-simulator <- setup_simulator(
-  sce,
-  ~ ns(pseudotime, df = 3),
-  ~ ZINBLSS(),
-  copula = copula_gaussian()
-) |>
-  estimate()
-```
-]
-
-.pull-right[
-```{r, print_simulator}
-simulator
-```
-]
-
----
-
-### Extensibility
-
-For the marginals, we can borrow from existing LSS packages (gamboostLSS and gamlss) to implement a variety of gene-wise regressions,
-
-* Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
-
-We can also build a unified interface to a variety of copula estimation routines,
-
-* Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
-* Vine copulas for capturing higher-order moments.
-
----
-
-### Operations (Verbs)
-
-This syntax specifies a simulation model. What can we do with these building blocks?
-
-Of course, we can **estimate** and **sample**.
-
-More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
-
----
-
-### Plot Margins
-```{r, echo = FALSE}
-line_opts <- list(col = "#8C2E62", linewidth = 2)
-ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
-point_opts <- list(size = 0.4, alpha = 0.3)
-```
-
-```{r example_plot, out.width = 800}
-plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts, point = point_opts) +
-  facet_wrap(~ feature, ncol = 4)
-```
-
----
-
-### <span style="color:#D94E4E">Interactivity</span> - Mutate
-
-There are many reasons we might want to alter an initial simulator,
-* Synthetic Nulls: We may want to formalize a synthetic null as the absence of a particular functional relationship.
-* Iteration: We may want to improve the simulator’s goodness-of-fit by modifying the regression.
-* Power Analysis: We may want to construct data from alternative experimental designs or biological signal strengths.
-
----
-
-### Mutate
-
-We can change the regression formula for specific genes. Syntax color highlights modifications that haven’t be re-fit.
-
-```{r, mutate_margins}
-margins |>
-  mutate(Spp1:Cck, link = ~ pseudotime) 
-```
-
----
-
-### Mutate
-
-```{r second_alteration, out.width = 800}
-altered <- mutate(margins, Chga:Ins1, link = ~ pseudotime) |>
-  estimate(sce)
-plot(altered, sce, "pseudotime", line = line_opts, ribbon = ribbon_opts, point = point_opts) +
-  facet_wrap(~ feature, ncol = 4, scales = "free_y")
-```
-
----
-
-### Mutate
-
-We can also change the probability distributions.
-
-```{r, probability_alteration}
-margins |>
-	mutate(c("Pyy", "Spp1"), family = ~ GaussianLSS())
-```
-
----
-
-### Mutate
-
-And we can layer several on top of one another.
-
-```{r, layered_alteration}
-margins |>
-  mutate(Chga:Ins1, link = ~ pseudotime) |>
-  mutate(Pyy, link = ~ ns(pseudotime, 2) * cell_type) |>
-  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 3), sigma = ~ 1, nu = ~ 1))
-```
-
----
-
-### Mutate
-
-1. Here is a more realistic example from a short longitudinal microbiome study.
-2. We can use `mutate` to define a synthetic null where there is no disease effect for a known subset of genes.
-
-.pull-three-quarters-left[
-<img src="figures/nulls_unaltered.png"/>
-]
-.pull-three-quarters-right[
-<img src="figures/pairwise_cors.png"/>
-]
-
----
-
-### Mutate
-
-1. Here is a more realistic example from a short longitudinal microbiome study.
-2. We can use `mutate` to define a synthetic null where there is no disease effect for a known subset of genes.
-
-.pull-three-quarters-left[
-<img src="figures/altered_ns.png"/>
-]
-.pull-three-quarters-right[
-<img src="figures/pairwise_cors_altered.png"/>
-]
-
----
-
-### <span style="color:#025E73">Modularity</span> Join
-
-If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
-
-<img src="figures/simulator_join_motivation.png"/>
-
-```{r, echo = FALSE}
-SCGEMMETH_sce <- readRDS("../20231026/data/SCGEMMETH_sce.rds")
-SCGEMRNA_sce <-readRDS("../20231026/data/SCGEMRNA_sce.rds")
-
-rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
-rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
-```
-
----
-
-### <span style="color:#025E73">Modularity</span> Join
-
-If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
-
-```{r illustrate_joins}
-experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
-families <- list(~ BI(), ~ GaussianLSS())
-sims <- experiments |>
-  map2(families, \(x, y) setup_simulator(x, ~ cell_type, y))
-```
-
----
-
-### Join (Copula)
-
-One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
-
-```{r, join_simulators_glasso, eval = FALSE}
-sim_joined <- map(sims, estimate, nu = 0.1) |>
-  join_copula(copula_glasso())
-```
-
-This assumes that we have samples where all features are measured.
-
-.center[
-<img src="figures/simulator_join_features.png" width = 680/>
-]
-
----
-
-### Join (Conditioning)
-
-Alternatively, we can combine two simulators by conditioning them on shared latent structure.
-
-```{r join_simulators}
-sim_joined <- join_pamona(sims)
-```
-
-.center[
-<img src="figures/simulator_join.png" width = 800/>
-]
-
----
-
-### Join (Conditioning)
-
-This used partial manifold alignment to learn shared latent variables across assays. This works even in the diagonal integration setting.
-
-```{r print_joined}
-sim_joined
-```
-
-```{r, spatial_download, echo = FALSE}
-spe <- Visium_humanDLPFC()
-gene_order <- order(rowSums(counts(spe)), decreasing = TRUE)
-spatial_experiment <- spe[gene_order[1:10], ]
-```
-
----
-
-### <span style="color:#025E73">Modularity</span> - Augment
-
-We want a unified interface that works across diverse data types. One way to
-create consistency is to **augment** the general `SummarizedExperiment` with
-domain-specific structure .
-
-For example, this makes spatial information accessible within the regression:
-
-```{r, spatial_estimation}
-spatial_experiment <- augment(spatial_experiment)
-
-simulator <- spatial_experiment |>
-  setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
-  estimate(spatial_experiment)
-```
-
----
-
-### <span style="color:#025E73">Modularity</span> - Augment
-
-For example, this makes spatial information accessible within the regression:
-
-```{r plot_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
-features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
-plot_bivariate(
-    simulator, spatial_experiment[, 1:5e2], features,
-    feature_names = c("ENSG00000198899", "ENSG00000198888", "ENSG00000167996")
-  ) +
-  labs(
-    "fill" = expression(log(1 + count)),
-    "color" = expression(log(1 + count))
-  )
-```
-
----
-
-### Case Study: Multi-omics Power Analysis
-
-1. In practice, most power analysis are univariate, e.g., to guide differential expression.
-2. How should we do multivariate power analysis, especially when we have several tables?
-
----
-
-### Example
-
-For concreteness, let’s revisit the microbiome + metabolome mouse study CCA from [F1000 Workflow paper]. This had 12 samples.
-1. How does estimation quality improve with sample size?
-2. Is it worth gathering unpaired samples? (mosaic designs)
-
-.center[
-<img src="figures/cca_f1000.gif" width=650/>
-]
-
----
-
-### Part 1: Estimate Simulators
-
-1. Fit ZINB models to the microbiome.
-2. Fit Gaussian models to the metabolome.
-3. Join them using highly regularized covariance estimates.
-
-.center[
-  <img src="figures/cca_microbiome_hist.png"/>
-]
-
----
-
-### Part 1: Estimate Simulators
-
-1. Fit ZINB models to the microbiome.
-2. Fit Gaussian models to the metabolome.
-3. Join them using highly regularized covariance estimates.
-
-.center[
-  <img src="figures/cca_metab_hist.png"/>
-]
-
----
-
-### Part 2: Hypothetical Experiments
-.pull-left[
-1. Across sample sizes $n$, we simulate new data, fit sparse CCA, and identify a
-basis $\hat{V}_{n}$ spanning the $K = 5$ left and right sparse CCA factors
-1. We use $\hat{V}_{5000}$ as a reference and compute canonical angles with all
-smaller sample sizes.
-]
-
-.pull-right[
-<img src="figures/canonical_angles_paper.png"/>
-Figure from `r Citep(bib, "Arikawa2018TheoreticalFF")`.
-]
-
----
-### Non-Mosaic Case
-
-With more samples, the canonical angles shrink in a predictable way.
-
-.center[
-<img src="figures/canonical_angles.png" width=750/>
-]
-
----
-
-### Mosaic Case
-
-Here, we have allowed the sample sizes to differ and use KNN imputation to run
-CCA on an imputed table.
-
-.center[
-<img src="figures/mosaic_example.png" width=750/>
-]
-
----
-
-.center[
-## Closing Thoughts
-]
-
----
-
-### Mount Chimborazo
-
-This is one of my favorite visualizations from the history of science.
-
-.center[
-<img width=950 src="figures/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
-]
-
----
-
-### Mount Chimborazo
-
-It is Alexander von Humboldt's *Tableau Physique*, and it shows how multiple
-data sources can be combined to create a unified view of the world. It is also
-remarkable how it anticipates many ideas from modern ecology.
-
-.center[
-<img width=820 src="figures/Geographie_der_Pflanzen_in_den_Tropen-Ländern.jpg"/>
-]
-
-<div id="von-humboldt">
-<img src="figures/von-humboldt.jpeg"/>
-</div>
-
----
-
-### Interdependence
-
-At a time when most science focused on taxonomy, the *Tableau* highlighted interdependence and unity within nature.
-
-.center[
-<img width=600 src="figures/chimborazo-data.png"/>
-]
-
----
-
-### Acknowledgements
-
-* Members of my research group - Hanying Jiang, Shuchen Yan, Zhuoyan Xu, Kaiyan Ma, Margaret Thairu, and Mason Garza
-* Funding mechanism:
+1. Training, evaluation, and representation analysis all provide opportunities for thoughtful visualization.
+2. When we build deep learning models, we are part of a human-machine system, and visualization is an important part of the link.
 
 ---
 
@@ -787,12 +475,3 @@ At a time when most science focused on taxonomy, the *Tableau* highlighted inter
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 3)
 ```
-
----
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 4, end = 7)
-```
-
