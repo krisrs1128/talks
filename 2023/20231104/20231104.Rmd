@@ -53,6 +53,7 @@ ASA SSC Mini-Symposium <br/>
 <div id="links">
 Paper: https://go.wisc.edu/833zs8
 Code: https://go.wisc.edu/7222i9
+Slides: https://go.wisc.edu/fg7wr4
 </div>
 
 <img src="figure/logo.svg" width=50 id="logo"/>
