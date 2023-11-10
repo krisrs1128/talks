@@ -41,17 +41,18 @@ Machine Learning Lunch Meetings
 
 ### Theme: Representations of DL Models
 
+.pull-left[
+
 We often talk about how deep learning models learn higher-order representations from the data they are provided.
 
-<img src="figures/bengio_representations.png"/>
+But what representations help us reason about the models themselves?
+]
 
----
+.pull-right[
+<img src="figures/semantic-representation.png" width=230/>
 
-### Theme: Representations of DL Models
-
-What representations help with our reasoning about the models themselves?
-
-<img src="collage-nnet-architecture-loss-curves-transformer-picture.png"/>
+Figure from `r Citep(bib, "Bengio2007LearningDA")`
+]
 
 ---
 
@@ -109,21 +110,23 @@ I’ll be drawing examples mainly from two projects:
 ## Visualizing Training Dynamics
 
 ---
-### Loss Curves
-
-Despite (or because of?) their simplicity, these plots have been one of the most impactful visualizations in modern machine learning.
-
-<img src="figures/loss_example.png"/>
-
----
 
 ### Loss Curves
 
-They highlight whether the model is over/underfitting. This has immediate consequences for model architecture, optimization, and regularization.
+.pull-left[
+These visualizations are easy to make and highlight whether the model is
+over/underfitting. This has immediate consequences for model architecture,
+optimization hyperparameters, and regularization.
+]
 
-<img src="figures/loss_example.png"/>
+.pull-right[
+<img src="figures/loss_example.png" width=500/>
+
+Figure from `r Citep(bib, "MaLectureNotes")`.
+]
 
 ---
+
 ### Example: Counting Crossings
 
 In this toy problem, we apply a sequence model (with gated recurrent units) to count the number of times a curve has crossed the grey band.
@@ -163,12 +166,12 @@ examples that remain difficult to predict late in training.
 
 ### <span style="col: red;">Dynamic Linking</span>
 
-This visualization applies dynamic linking. By coordinating interaction across
-panels, we can show several views of the same data.
+This visualization applies dynamic linking `r Citep(bib, "Shneiderman1996TheEH")`. By coordinating interaction across panels, we can show
+several views of the same data.
 
 ```{r, echo = FALSE}
 library(robservable)
-robservable("@krisrs1128/week-3-4", include = 5, height = 410)
+robservable("@krisrs1128/week-3-4", include = 5, height = 250)
 ```
 
 ---
@@ -178,8 +181,7 @@ robservable("@krisrs1128/week-3-4", include = 5, height = 410)
 More than losses, it can be worthwhile to visualize feature maps and gradients
 throughout the training process.
 
-These are activations from a UMAP model trained to segment glaciers `r
-Citep(bib, "zheng2022")`. The skip connections prevented the deepest layer in
+These are activations from a UMAP model trained to segment glaciers `r Citep(bib, "Zheng2021InteractiveVA")`. The skip connections prevented the deepest layer in
 the architecture from ever being learned!
 ]
 
@@ -194,8 +196,8 @@ the architecture from ever being learned!
 .pull-left[
 1. Dimensionality reduction can shed more light onto training dynamics for the full model.
 2. This figure from `r Citep(bib, "Erhan2010WhyDU")` shows that unsupervised
-pretraining acts like a regularizer, causing many independent runs to converge
-to relatively similar functions.
+pretraining acts like a regularizer. It's especially interesting because it
+works on function space, not the parameter space.
 ]
 
 .pull-right[
@@ -210,7 +212,7 @@ to relatively similar functions.
 
 ### Visualizing Errors
 
-We fit satellite image segmentation models to datasets on building footprints and glacier labels, respectively. Here are examples that were flagged as being especially poor quality.
+We fit satellite image segmentation models to datasets on building footprints `r Citep(bib, "Janik2019InterpretingBS")`. Here are examples that were flagged as being especially poor quality.
 
 .center[
 <img src="figures/img_6560_kitsap4.png" width=250/>
@@ -256,7 +258,9 @@ We were also careful to remove extraneous plot elements (e.g., unnecessary tick 
 
 This is the result of a PCA on the activations at the last layer of the building footprint segmentation model. For the background, we smoothed the error metric across training examples.
 
-<iframe src="https://adrijanik.github.io/unet-vis#div_main" width=1000 height=400/>
+.center[
+<iframe src="https://adrijanik.github.io/unet-vis#div_main" width=1000 height=350/>
+]
 
 ---
 
@@ -306,7 +310,7 @@ We also implemented a Shiny App to look up images from lakes with interesting tr
 ---
 ### <span style="col: red;">Focus-plus-Context</span>
 
-This is an instance of the focus-plus-context principle `r Citep(bib, "heer2004")`. The idea is to let the reader zoom into patterns of interest without losing relevant context.
+This is an instance of the focus-plus-context principle `r Citep(bib, "Heer2004DOITreesRS")`. The idea is to let the reader zoom into patterns of interest without losing relevant context.
 
 .center[
 <img src="figures/doitree_dmoz.gif" width=800/>
@@ -393,7 +397,7 @@ In our trained model, we can analyze the gatings $g_{t}$ to see how the counting
 
 ### Other Useful Ideas
 
-* **Linear Probes**: To see whether a layer has learned particular "concept," try predicting using its activations to learn a linear classifier. See also concept activation.
+* **Linear Classifier Probes**: To see whether a layer has learned particular "concept," try predicting using its activations to learn a linear classifier `r Citep(bib, "Alain2016UnderstandingIL")`.
 * Centered Kernel Alignment: To compare a pair of high-dimensional representations, use a measure of multivariate association.
 
 <img src="figures/linear_probes.png"/>
@@ -422,15 +426,21 @@ Scientific foundation models are gaining prominence, and it’s common to make d
 
 Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
 
-<img src="figures/scgpt-atlas.png"/>
+.center[
+<img src="figures/scgpt-atlas.png" width=540/>
+]
 
 ---
 
 ### Intriguing Experiment
 
-`r Citep(bib, c("viegas", "manning"))` presented connections between linguistics and BERT embeddings. For example, they found that embedding and formal parse-tree distances were closely related.
+.pull-left[
+`r Citep(bib, c("Coenen2019VisualizingAM", "Hewitt2019ASP"))` presented connections between linguistics and BERT embeddings. For example, they found that embedding and formal parse-tree distances were closely related.
+]
 
-<img src="figures/parse-tree.png"/>
+.pull-right[
+<img src="figures/parse-tree.png" width=500/>
+]
 
 ---
 
@@ -438,7 +448,9 @@ Scientific foundation models are gaining prominence, and it’s common to make d
 
 They also saw how the embeddings reflect word sense disambiguation and built an app to interactively query different words.
 
-<img src="figures/word-sense.png"/>
+.center[
+<img src="figures/word-sense.png" width=840/>
+]
 
 ---
 
@@ -447,6 +459,7 @@ They also saw how the embeddings reflect word sense disambiguation and built an 
 I like how these visualizations:
 
 (1) Encourage readers to engage with existing mental models. 
+
 (2) Provide domain-relevant context for interacting with learned representations.
 
 This seems like a promising way to balance efficiency and agency in theory building. Hopefully we can avoid the "kaggleization of science" `r Citep(bib, "manning_interview")`.
@@ -480,4 +493,28 @@ Some final thoughts:
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 7)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 8, end = 10)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 11, end = 13)
 ```
