@@ -17,33 +17,42 @@ library(RefManageR)
 library(knitr)
 library(tidyverse)
 library(glue)
-opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 opts_knit$set(eval.after = "fig.cap")
 set.seed(123)
 
 BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
-
+<br/>
+<br/>
 .microbiome-figure-top[
 <img src="figures/microbiome-header-top.png"></img>
 ]
-
 <div id="links">
 Slides: https://go.wisc.edu/ <br>
 Lab Site: https://go.wisc.edu/pgb8nl
 </div>
 
-<br/>
-<br/>
+
 
 ### Microbiome Data Science
 
 My lab develops data science tools to help researchers better understand
-microbial ecosystems.  We make sure that our tools can be adapted to complex
+microbial ecosystems. We make sure that our tools can be adapted to complex
 experimental designs and combinations of 'omics.
 
-Why is multi-omics helpful? Think of the cell as a symphony.
+.pull-left[
+Why is multi-omics helpful? If the microbiome is a symphony, then each data
+source lets us hear a new set of instruments.
+]
+
+.pull-right[
+<img src="figures/symphony-score-2.png"/>
+]
+
+<br/>
+<br/>
 
 .microbiome-figure-bottom[
 <img src="figures/microbiome-header-2.png"></img>
@@ -82,7 +91,7 @@ If you’ve taken any of my classes, you know that I use live coding to teach da
 .pull-left[
 1. Shneiderman’s Mantra: "Overview first, zoom and filter, then details-on-demand" `r Citep(bib, "Shneiderman1996TheEH")`
 2. Lab member Kaiyan Ma has written an R package applying this logic to
-longitudinal multi-omics data visualization
+longitudinal multi-omics data visualization.
 ]
 
 .pull-right[
@@ -91,11 +100,11 @@ longitudinal multi-omics data visualization
 
 ---
 
-### Reaching Out
+### Conclusion
 
-Beyond visualization, we also think about interactive computing to support data
-preparation (e.g., from heterogeneous studies) and generative modeling (e.g.,
-for synthetic null testing).
+Interactive computing goes beyond visualization, and we have also written
+software to support interactive generative modeling and inference in microbiome
+problems.
 
 * You can learn more at [go.wisc.edu/pgb8nl](go.wisc.edu/pgb8nl) and at our booth.
 

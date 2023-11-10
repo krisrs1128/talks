@@ -20,6 +20,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Open+Sans&family=Rubik+Gemstones&display=swap');
 
 body {
   font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
@@ -27,21 +28,25 @@ body {
   color: #0c0c0c;
 }
 
-h1, h3 {
+h1, h2, h3 {
   font-weight: normal;
   color: #5f558e;
 }
-
-h2 {
-  background-color: rgba(255, 255, 255, 0.8);
-  width: 500px;
-  font-weight: normal;
-  color: #0c0c0c;
-}
-
 .remark-slide-content {
   font-size: 26px;
   padding: 1em 4em 1em 4em;
+  background-color: #f7f7f7;
+}
+
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em 0px;
+    margin-top: 0em;
+    margin-right: 0px;
+    margin-bottom: 0em;
+    margin-left: 0px;
 }
 
 .remark-slide-content h1 {
@@ -57,15 +62,10 @@ h2 {
   font-size: 35px;
 }
 .remark-code, .remark-inline-code {
-  font-family: 'Lucida Console', Monaco, monospace;
-  font-style: 24px;
-}
-.remark-code {
+  font-size: 20px;
 }
 .remark-inline-code {
   color: #09017F;
-  
-  
 }
 .remark-slide-number {
   color: #09017F;
@@ -75,19 +75,12 @@ h2 {
 }
 
 strong{color:#09017F;}
-a, a > code {
-  color: #09017F;
-  text-decoration: none;
-}
 .footnote {
   
   position: absolute;
   bottom: 3em;
   padding-right: 4em;
   font-size: 0.9em;
-}
-.remark-code-line-highlighted {
-  background-color: #D2B6E8;
 }
 .inverse {
   background-color: #09017F;
@@ -97,16 +90,11 @@ a, a > code {
 .inverse h1, .inverse h2, .inverse h3 {
   color: #FFFFFF;
 }
-
-#title {
-  background-color: rgba(255, 255, 255, 0.9);
-  position: absolute;
-  color: #10040f;
-  font-family: 'Raleway';
-  font-size: 45px;
-  width: 900px;
-  left: 10px;
-  top: 10px;
+.title-slide, .title-slide h1, .title-slide h2, .title-slide h3 {
+  color: #FFFFFF;
+}
+.title-slide {
+  background-color: #09017F;
 }
 
 .title-slide .remark-slide-number {
@@ -143,6 +131,14 @@ a, a > code {
 img, video, iframe {
   max-width: 100%;
 }
+.pull-three-quarters-left {
+  float: left;
+  width: 75%;
+}
+.pull-three-quarters-right {
+  float: right;
+  width: 25%;
+}
 blockquote {
   border-left: solid 5px #09017F80;
   padding-left: 1em;
@@ -151,7 +147,6 @@ blockquote {
   margin: auto;
   border-top: 1px solid #666;
   border-bottom: 1px solid #666;
-  font-size: 25px;
 }
 .remark-slide table thead th { border-bottom: 1px solid #ddd; }
 th, td { padding: 5px; }
@@ -191,6 +186,19 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-size: 90px;
   font-family: 'Indie Flower';
 }
+
+.microbiome-figure-top {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+}
+
+
+.microbiome-figure-bottom {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
 }
 
 .remark-slide-content.full-slide-fig{
@@ -198,101 +206,30 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   width: 100%;
 }
 
-.my_title h1 h2 {
-  font-family: 'Raleway';
+.section_header {
+  vertical-align: top;
 }
 
-.my_title {
-  position: relative;
-  z-index: 1;
+.title h1 {
+  color: #595959;
+  font-family: 'Montserrat';
 }
 
-.my_title p {
-  margin: 0;
+.title h4 {
+  color: #595959;
+  font-family: 'Montserrat';
 }
 
-.my_title .pull-left {
-  float: left;
-  width: 60%;
+.title .large {
+  color: #595959;
+  font-family: 'Montserrat';
 }
 
-.my_title .pull-right {
-  float: right;
-  width: 27%;
-}
-
-.my_title::before {    
-      content: "";
-      background-image: url("https://uwmadison.box.com/shared/static/ebncvy25z4q6livvmzy9b10a1th5zt33.png");
-      background-size: cover;
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
-      opacity: 0.1;
-      z-index: -1;
-}
-
-.background-rivers {
-  position: relative;
-  z-index: 1;
-}
-
-.background-rivers h1 {
-  background-color: #F7F7F7;
-  width: 30%;
-}
-
-.background-rivers::before {
-  content: "";
-  background-image: url("https://uwmadison.box.com/shared/static/arknmgopwjq2y4x5h8oeduzlbkvjyybn.jpg");
-  background-size: cover;
+.logo {
   position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  opacity: 1;
-  z-index: -1;
-}
-
-#credit {
-  position: absolute;
-  top: 10px;
-  left: 950px; 
-  font-size: 20px;
-  text-align: center;
-}
-
-#microbiome-header {
-  background-color: white;
-  font-family: 'Raleway';
-  font-size: 45px;
-  color: #5f558e;
-}
-
-#von-humboldt {
-  position: absolute;
-  top: 300px;
-  left: 700px; 
-  text-align: center;
-}
-
-.cover {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding-left: 10px;
-}
-
-#subtitle {
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding-left: 10px;
-  font-size: 20px;
-  width: 350px;
-  color: #5f558e;
-  left: 10px;
-  bottom: 10px;
+  width: 250px;
+  bottom: 30px;
+  right: 20px;
 }
 
 #links {
@@ -303,5 +240,5 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   width: 400px;
   color: #5f558e;
   left: 750px;
-  top: 10px;
+  top: 150px;
 }
