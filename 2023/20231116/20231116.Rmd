@@ -27,7 +27,7 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="title">
-Visualization in Deep Learning: Theme and Variations
+Visualization in Deep Learning: <br/> Theme and Variations
 </div>
 
 <div id="subtitle">
@@ -59,9 +59,8 @@ What representations help with our reasoning about the models themselves?
 
 What kinds of visualizations do you make in your daily machine learning research (and not just for publication)?
 
-Discussion Page: [go.wisc.edu]
-
 ---
+
 ### Variations
 
 Visualization is often used to:
@@ -164,9 +163,13 @@ examples that remain difficult to predict late in training.
 
 ### <span style="col: red;">Dynamic Linking</span>
 
-This visualization applies dynamic linking. By coordinating interaction across several panels, we can encode complementary views of the same data.
+This visualization applies dynamic linking. By coordinating interaction across
+panels, we can show several views of the same data.
 
-(NYT Linked Views)
+```{r, echo = FALSE}
+library(robservable)
+robservable("@krisrs1128/week-3-4", include = 5, height = 410)
+```
 
 ---
 ### Activations and Gradients
@@ -182,6 +185,21 @@ the architecture from ever being learned!
 
 .pull-right[
 <img src="figures/glacier_representations.png" width=460/>
+]
+
+---
+
+### Dimensionality Reduction
+
+.pull-left[
+1. Dimensionality reduction can shed more light onto training dynamics for the full model.
+2. This figure from `r Citep(bib, "Erhan2010WhyDU")` shows that unsupervised
+pretraining acts like a regularizer, causing many independent runs to converge
+to relatively similar functions.
+]
+
+.pull-right[
+<img src="figures/unsupervised-pretraining.png" width=550/>
 ]
 
 ---
@@ -385,9 +403,9 @@ In our trained model, we can analyze the gatings $g_{t}$ to see how the counting
 ### Other Useful Ideas
 
 * Linear Probes: To see whether a layer has learned particular "concept," try predicting using its activations to learn a linear classifier. See also concept activation.
-* Centered Kernel Alignment: To compare a pair of high-dimensional representations, use a measure of multivariate association.
+* **Centered Kernel Alignment**: To compare a pair of high-dimensional representations, use a measure of multivariate association.
 
-<img src="figures/cka_alignment.png"/>
+<img src="figures/cka.png"/>
 
 ---
 ### Learned Representations in Science
@@ -399,6 +417,7 @@ Scientific foundation models are gaining prominence, and it’s common to make d
 ]
 
 ---
+
 ### Learned Representations in Science
 
 Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
@@ -426,6 +445,7 @@ They also saw how the embeddings reflect word sense disambiguation and built an 
 ### Why do these work?
 
 I like how these visualizations:
+
 (1) Encourage readers to engage with existing mental models. 
 (2) Provide domain-relevant context for interacting with learned representations.
 
@@ -446,7 +466,8 @@ How might these ideas play out in multi-omics foundation models?
 
 ### Conclusion
 
-I hope that you have learned a few visualization ideas that can help your research and collaborations (Discussion: go.wisc.edu). 
+I hope that you have learned a few visualization ideas that can help your
+research and collaborations.
 
 Some final thoughts:
 
