@@ -78,26 +78,32 @@ These abstractions help with:
 
 ### Variations
 
-I’ll be drawing examples mainly from two of my projects:
+I’ll be drawing examples mainly from two projects:
 
+.pull-left[
 2. **Glacier Ecosystem Mapping**: Application of satellite image segmentation to climate change adaptation and disaster preparedness.
 3. Remembrances of States Past: A visual analysis of "time warping" in sequence models.
+]
 
-I will highlight <span style="color:red"/>general visualization principles</span> in red.
+.pull-right[
+<img src="figures/GL082082E30346N.png" width="100%"/>
+]
 
-<img src="figures/glacier_overview.png"/>
 ---
 
 ### Variations
 
-I’ll be drawing examples mainly from two of my projects:
+I’ll be drawing examples mainly from two projects:
 
+.pull-left[
 2. Glacier Ecosystem Mapping: Application of satellite image segmentation to climate change adaptation and disaster preparedness.
 3. **Remembrances of States Past**: A visual analysis of "time warping" in sequence models.
+]
 
-I will highlight <span style="color:red"/>general visualization principles</span> in red.
-
-<img src="figures/remembrances_overview.png"/>
+.pull-right[
+<iframe width="100%" height="800" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1310?cells=chart9"></iframe>
+]
 
 ---
 
@@ -175,18 +181,8 @@ the architecture from ever being learned!
 ]
 
 .pull-right[
-<img src="figures/glacier_representations.png" width=470/>
+<img src="figures/glacier_representations.png" width=460/>
 ]
-
----
-
-### Activations and Gradients
-
-More than losses, it can be worthwhile to visualize feature maps and gradients throughout the training process.
-
-<img src="figures/gradient_vis.png"/>
-
-Here is an example from Shixia Liu’s group that shows the value of visualizing gradients during training.
 
 ---
 
@@ -208,32 +204,22 @@ In both cases, our worst examples are due to label noise. Can you tell what happ
 
 ---
 
-### Visualizing Errors
-
-We fit satellite image segmentation models to datasets on building footprints and glacier labels, respectively. Here are examples that were flagged as being especially poor quality.
-
-.center[
-<img src="figures/img_6560_kitsap4.png" width=250/>
-<img src="figures/pred_6560_kitsap4.png" width=250/>
-<img src="figures/mask_6560_kitsap4.png" width=250/>
-]
-
-In both cases, our worst examples are due to label noise. Can you tell what happened?
-
----
-
 For problems where each sample is associated with a continuous accuracy measure, it is helpful to look at representatives from across the continuum.
 
+.center[
 <img src="figures/glacial_lakes_grid.gif" width=700/>
+]
 
 Different models can have different failure modes, and this kind of visualization compactly represents that.
 
 ---
 <span style="color: red"/>Small Multiples</span>
 
-In visualization, the idea of repeating a view across many parallel instances is called small multiples. They can reveal substantial information at a single glance.
+In visualization, the idea of repeating a view across many parallel instances is called small multiples. This creates information-dense views.
 
-<img src="figures/small_multiples_example.png"/>
+.center[
+<img src="figures/small-multiples.jpeg" width=850/>
+]
 
 ---
 
@@ -243,7 +229,7 @@ In visualization, the idea of repeating a view across many parallel instances is
 We were also careful to remove extraneous plot elements (e.g., unnecessary tick marks and grid lines). This is line with the goal of maximizing data-to-ink `r Citep(bib, "tufte1985")`.]
 
 .pull-right[
-<img src="figures/glacial_lakes_grid.gif" width=800/>
+<img src="figures/glacial_lakes_grid.gif"/>
 ]
 
 ---
@@ -258,14 +244,15 @@ This is the result of a PCA on the activations at the last layer of the building
 
 ### Navigating Predictions
 
-How might a model's predictions guide decision making?
 
 .pull-left[
-We worked on a project with ICIMOD to identify regions that lakes that were growing rapidly. These are a risk factor for glacial lake outburst floods.
+How might a model's predictions guide decision making?
+
+We worked on a project with ICIMOD to identify regions that lakes that were growing rapidly. These are a risk factor for glacial lake outbursts.
 ]
 
 .pull-right[
-<img src="figures/nyt_glacier.png"/>
+<img src="figures/nyt_glacial_lakes.png" width=450/>
 ]
 
 ---
@@ -277,6 +264,17 @@ This volcano plot shows those that need more proactive monitoring.
 
 .center[
 <img src="figures/volcano_plot.gif" width=640/>
+]
+
+---
+
+### Navigating Predictions
+
+From predicted segmentations, we could fit trends to each lake's estimated area.
+This volcano plot shows those that need more proactive monitoring.
+
+.center[
+<img src="figures/sanka8-3215722-large.gif" width=1000/>
 ]
 
 ---
@@ -311,22 +309,6 @@ Deep learning models should sense higher-order abstractions. We can evaluate thi
 
 ---
 
-### Visualizing LSTMs
-
-A classic paper in this field looked at feature activations in character-level sequence models. It discovered representations related to sequence position and quotations, for example.
-
-<img src="figures/lstm-activations-1.png"/>
-
----
-
-### Visualizing LSTMs
-
-This paper helped demystify the mechanics of LSTM models. We could see how gating prevented important pieces of memory from being overwritten over long stretches of text.
-
-<img src="figures/lstm-activations-2.png"/>
-
----
-
 ### Parking lot or…?
 
 Back to the building footprint labeling task, here are two images we found with similar feature activations.
@@ -341,16 +323,19 @@ Back to the building footprint labeling task, here are two images we found with 
 
 ---
 
-### Cemetery
+### Visualizing LSTMs
 
-This layer activates a particular set of neurons that encodes  "clustered rectangularness."
+A classic paper in this field looked at feature activations in character-level sequence models. It discovered representations related to sequence position and code properties, for example.
 
-.pull-left[
-<img src="figures/cars.png" width=400/>
-]
-.pull-right[
-<img src="figures/graves.png" width=400/>
-]
+<img src="figures/lstm-activations-1.png"/>
+
+---
+
+### Visualizing LSTMs
+
+This paper helped demystify the mechanics of LSTM models. We could see how gating prevented important pieces of memory from being overwritten over long stretches of text.
+
+<img src="figures/lstm-activations-2.png"/>
 
 ---
 
