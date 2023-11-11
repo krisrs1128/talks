@@ -22,7 +22,7 @@ library(knitr)
 library(RefManageR)
 opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
-BibOptions(cite.style = "numeric")
+#BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
@@ -363,11 +363,12 @@ This paper helped demystify the mechanics of LSTM models. We could see how gatin
 
 ### Counting Model
 
-Let’s look at features from the counting model. The few layers
-encode the $y$-value of the trajectory. Later ones count crossings.
+Let’s look at features from the counting model. The first few layers encode the
+general $y$-value of the trajectory. Later ones focus in on crossings.
+
 
 <iframe width="100%" height="484" frameborder="0"
-  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1323?cells=chart7"></iframe>
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1324?cells=chart7"></iframe>
 
 ---
 ### Time Warping
@@ -417,7 +418,7 @@ In our trained model, we can analyze the gatings $g_{t}$ to see how the counting
 Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
 
 .center[
-<iframe src="https://esmatlas.com/explore?at=1%2C1%2C21.999999344348925" width=950 height=350/>
+<iframe src="https://esmatlas.com/explore" width=950 height=350/>
 ]
 
 ---
