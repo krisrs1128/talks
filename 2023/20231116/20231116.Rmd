@@ -404,21 +404,15 @@ In our trained model, we can analyze the $z_{t}$ to see how our counting model w
 
 ---
 
-### Other Useful Ideas
+### Comparing Representations
 
-* **Linear Classifier Probes**: To see whether a layer has learned particular "concept," try predicting using its activations to learn a linear classifier `r Citep(bib, "Alain2016UnderstandingIL")`.
-* Centered Kernel Alignment: To compare a pair of high-dimensional representations, use a measure of multivariate association.
-
-<img src="figures/linear_probes.png"/>
-
----
-
-### Other Useful Ideas
-
-* Linear Probes: To see whether a layer has learned particular "concept," try predicting using its activations to learn a linear classifier. See also concept activation.
-* **Centered Kernel Alignment**: To compare a pair of high-dimensional representations, use a measure of multivariate association.
+To compare high-dimensional representations, we need to
+measure multivariate association. Popular choices are `r Citep(bib, c("Saha2022DistillingRS", "Raghu2017SVCCASV"))`, though also note `r Citep(bib, c("Golub1992TheCC", "Josse2016MeasuringMA"))`.
 
 <img src="figures/cka.png"/>
+
+A CKA representation analysis contrasting ViT and ResNet representations across
+depths, from `r Citep(bib, "Raghu2021DoVT")`.
 
 ---
 ### Learned Representations in Science
