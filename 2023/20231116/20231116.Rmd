@@ -371,16 +371,24 @@ general $y$-value of the trajectory. Later ones focus in on crossings.
   src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1324?cells=chart7"></iframe>
 
 ---
-### Time Warping
 
-My main interest in this example was actually the "time warping" phenomenon. This is related to an algebraic observation about the structure of gated recurrent units.
+### Visualizing Other Parameters
 
-(add the derivation)
+\begin{align*}
+{\color{9955bb}h_{t}} &= \left(1 - {\color{ffba00}z_t}\right) \circ {\color{#ff9966}{h_{t - 1}}} + {\color{ffba00}z_{t}} \circ \tilde{h}_{t} \\
+{\color{ffba00}{z_t}} &= \sigma\left(W_z {\color{#ab294d}{x_t}} + U_z {\color{#ff9966}{h_{t - 1}}}\right) \\
+\tilde{h}_{t} &= \tanh\left({\color{#298eab}W}{\color{#ab294d}{x_t}} + {\color{#29ab87}{U}}\left({\color{#ffa6c9}r_t} \circ {\color{#ff9966}h_{t - 1}}\right)\right)
+\end{align*}
+
+<iframe width="100%" height="409" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past?cells=chart5"></iframe>
 
 ---
+
 ### Time Warping
 
-During "steep" regions of the warping function, we experience time moving more rapidly. In the original frame of reference, we forget more quickly.
+Using the language of `r Citep(bib, "tallec2018can")`, when $z_{t}$ is small, we <span style="color:#9d648e">accelerate time</span> and forget more quickly. When it is
+large, we <span style="color:#5b8ac0">expand time</span> and preserve memory.
  
 <iframe width="100%" height="472" frameborder="0"
   src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1323?cells=chart10"></iframe>
@@ -389,7 +397,7 @@ During "steep" regions of the warping function, we experience time moving more r
 
 ### Time Warping
 
-In our trained model, we can analyze the gatings $g_{t}$ to see how the counting model warps time.
+In our trained model, we can analyze the $z_{t}$ to see how our counting model warps time.
 
 <iframe width="100%" height="484" frameborder="0"
   src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1323?cells=chart8"></iframe>
