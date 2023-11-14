@@ -14,7 +14,6 @@ output:
 ---
 
 class: title
-background-image: url("figures/svcca-training.giv")
 background-size: cover
 
 ```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
@@ -31,7 +30,7 @@ Visualization in Deep Learning: <br/> Theme and Variations
 </div>
 
 <div id="links">
-Slides: [https://go.wisc.edu/9p83o9](https://go.wisc.edu/9p83o9)
+Slides: <a href="https://go.wisc.edu/9p83o9">https://go.wisc.edu/9p83o9</a>
 </div>
 
 <br/>
@@ -53,7 +52,6 @@ Machine Learning Lunch Meetings
 ### Audience Question
 
 What kinds of visualizations do you use for your research? Why do you make them?
-
 
 [**https://go.wisc.edu/z03w7z**](https://go.wisc.edu/z03w7z)
 
@@ -172,6 +170,7 @@ robservable("@krisrs1128/week-3-4", include = 5, height = 250)
 ```
 
 ---
+
 ### Activations and Gradients
 
 .pull-left[
@@ -230,7 +229,7 @@ For problems where each sample is associated with a continuous accuracy measure,
 Different models can have different failure modes, and this kind of visualization compactly represents that.
 
 ---
-<span style="color: red"/>Small Multiples</span>
+<span style="color: #D93611"/>Small Multiples</span>
 
 In visualization, the idea of repeating a view across many parallel instances is called small multiples. This creates information-dense views.
 
@@ -240,7 +239,7 @@ In visualization, the idea of repeating a view across many parallel instances is
 
 ---
 
-<span style="color: red"/>Data-to-Ink</span>
+<span style="color: #D93611"/>Data-to-Ink</span>
 
 .pull-left[
 We were also careful to remove extraneous plot elements (e.g., unnecessary tick marks and grid lines). This is line with the goal of maximizing data-to-ink `r Citep(bib, "tufte1985")`.]
@@ -284,34 +283,6 @@ This volcano plot shows those that need more proactive monitoring.
 
 .center[
 <img src="figures/volcano_plot.gif" width=640/>
-]
-
----
-
-### Navigating Predictions
-
-From predicted segmentations, we could fit trends to each lake's estimated area.
-This volcano plot shows those that need more proactive monitoring.
-
-.center[
-<img src="figures/sanka8-3215722-large.gif" width=1000/>
-]
-
----
-
-### Navigating Predictions
-
-We also implemented a Shiny App to look up images from lakes with interesting trends.
-
-<iframe width=1000 src="https://krisrs1128.shinyapps.io/glacial_lake_visualization/" height=450/>
-
----
-### <span style="col: red;">Focus-plus-Context</span>
-
-This is an instance of the focus-plus-context principle `r Citep(bib, "Heer2004DOITreesRS")`. The idea is to let the reader zoom into patterns of interest without losing relevant context.
-
-.center[
-<img src="figures/doitree_dmoz.gif" width=800/>
 ]
 
 ---
@@ -384,19 +355,6 @@ general $y$-value of the trajectory. Later ones focus in on crossings.
 
 <iframe width="100%" height="484" frameborder="0"
   src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past@1324?cells=chart7"></iframe>
-
----
-
-### Visualizing GRU Mechanics
-
-\begin{align*}
-{\color{9955bb}h_{t}} &= \left(1 - {\color{ffba00}z_t}\right) \circ {\color{#ff9966}{h_{t - 1}}} + {\color{ffba00}z_{t}} \circ \tilde{h}_{t} \\
-{\color{ffba00}{z_t}} &= \sigma\left(W_z {\color{#ab294d}{x_t}} + U_z {\color{#ff9966}{h_{t - 1}}}\right) \\
-\tilde{h}_{t} &= \tanh\left({\color{#298eab}W}{\color{#ab294d}{x_t}} + {\color{#29ab87}{U}}\left({\color{#ffa6c9}r_t} \circ {\color{#ff9966}h_{t - 1}}\right)\right)
-\end{align*}
-
-<iframe width="100%" height="409" frameborder="0"
-  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past?cells=chart5"></iframe>
 
 ---
 
@@ -550,3 +508,45 @@ PrintBibliography(bib, start = 14, end = 18)
 PrintBibliography(bib, start = 18, end = 20)
 ```
 
+---
+
+### Navigating Predictions
+
+From predicted segmentations, we could fit trends to each lake's estimated area.
+This volcano plot shows those that need more proactive monitoring.
+
+.center[
+<img src="figures/sanka8-3215722-large.gif" width=1000/>
+]
+
+---
+
+### Navigating Predictions
+
+We also implemented a Shiny App to look up images from lakes with interesting trends.
+
+<iframe width=1000 src="https://krisrs1128.shinyapps.io/glacial_lake_visualization/" height=450/>
+
+---
+### <span style="col: #D93611;">Focus-plus-Context</span>
+
+This is an instance of the focus-plus-context principle `r Citep(bib, "Heer2004DOITreesRS")`. The idea is to let the reader zoom into patterns of interest without losing relevant context.
+
+.center[
+<img src="figures/doitree_dmoz.gif" width=800/>
+]
+
+---
+
+### Visualizing GRU Mechanics
+
+\begin{align*}
+{\color{9955bb}h_{t}} &= \left(1 - {\color{ffba00}z_t}\right) \circ {\color{#ff9966}{h_{t - 1}}} + {\color{ffba00}z_{t}} \circ \tilde{h}_{t} \\
+{\color{ffba00}{z_t}} &= \sigma\left(W_z {\color{#ab294d}{x_t}} + U_z {\color{#ff9966}{h_{t - 1}}}\right) \\
+\tilde{h}_{t} &= \tanh\left({\color{#298eab}W}{\color{#ab294d}{x_t}} + {\color{#29ab87}{U}}\left({\color{#ffa6c9}r_t} \circ {\color{#ff9966}h_{t - 1}}\right)\right)
+\end{align*}
+
+<iframe width="100%" height="409" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past?cells=chart5"></iframe>
+
+---

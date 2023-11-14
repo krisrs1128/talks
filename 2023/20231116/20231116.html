@@ -14,7 +14,6 @@
 
 
 class: title
-background-image: url("figures/svcca-training.giv")
 background-size: cover
 
 
@@ -24,7 +23,8 @@ Visualization in Deep Learning: &lt;br/&gt; Theme and Variations
 &lt;/div&gt;
 
 &lt;div id="links"&gt;
-Slides: [https://go.wisc.edu/9p83o9](https://go.wisc.edu/9p83o9)
+
+Slides: &lt;a href="https://go.wisc.edu/9p83o9"&gt;https://go.wisc.edu/9p83o9&lt;/a&gt;
 &lt;/div&gt;
 
 &lt;br/&gt;
@@ -46,7 +46,6 @@ Machine Learning Lunch Meetings
 ### Audience Question
 
 What kinds of visualizations do you use for your research? Why do you make them?
-
 
 [**https://go.wisc.edu/z03w7z**](https://go.wisc.edu/z03w7z)
 
@@ -159,10 +158,11 @@ examples that remain difficult to predict late in training.
 This visualization applies dynamic linking [2]. By coordinating interaction across panels, we can show
 several views of the same data.
 
-<div id="htmlwidget-4b54d46cd65d1eab9bcc" style="width:1200px;height:250px;" class="robservable html-widget "></div>
-<script type="application/json" data-for="htmlwidget-4b54d46cd65d1eab9bcc">{"x":{"notebook":"@krisrs1128/week-3-4","include":5,"hide":null,"input":null,"input_js":[],"observers":null,"update_height":true,"update_width":true},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-61a7543193b3257d07b2" style="width:1200px;height:250px;" class="robservable html-widget "></div>
+<script type="application/json" data-for="htmlwidget-61a7543193b3257d07b2">{"x":{"notebook":"@krisrs1128/week-3-4","include":5,"hide":null,"input":null,"input_js":[],"observers":null,"update_height":true,"update_width":true},"evals":[],"jsHooks":[]}</script>
 
 ---
+
 ### Activations and Gradients
 
 .pull-left[
@@ -221,7 +221,7 @@ For problems where each sample is associated with a continuous accuracy measure,
 Different models can have different failure modes, and this kind of visualization compactly represents that.
 
 ---
-&lt;span style="color: red"/&gt;Small Multiples&lt;/span&gt;
+&lt;span style="color: #D93611"/&gt;Small Multiples&lt;/span&gt;
 
 In visualization, the idea of repeating a view across many parallel instances is called small multiples. This creates information-dense views.
 
@@ -231,7 +231,7 @@ In visualization, the idea of repeating a view across many parallel instances is
 
 ---
 
-&lt;span style="color: red"/&gt;Data-to-Ink&lt;/span&gt;
+&lt;span style="color: #D93611"/&gt;Data-to-Ink&lt;/span&gt;
 
 .pull-left[
 We were also careful to remove extraneous plot elements (e.g., unnecessary tick marks and grid lines). This is line with the goal of maximizing data-to-ink .]
@@ -279,34 +279,6 @@ This volcano plot shows those that need more proactive monitoring.
 
 ---
 
-### Navigating Predictions
-
-From predicted segmentations, we could fit trends to each lake's estimated area.
-This volcano plot shows those that need more proactive monitoring.
-
-.center[
-&lt;img src="figures/sanka8-3215722-large.gif" width=1000/&gt;
-]
-
----
-
-### Navigating Predictions
-
-We also implemented a Shiny App to look up images from lakes with interesting trends.
-
-&lt;iframe width=1000 src="https://krisrs1128.shinyapps.io/glacial_lake_visualization/" height=450/&gt;
-
----
-### &lt;span style="col: red;"&gt;Focus-plus-Context&lt;/span&gt;
-
-This is an instance of the focus-plus-context principle [6]. The idea is to let the reader zoom into patterns of interest without losing relevant context.
-
-.center[
-&lt;img src="figures/doitree_dmoz.gif" width=800/&gt;
-]
-
----
-
 ## Visualizing Representations
 
 ---
@@ -321,7 +293,7 @@ abstractions from data. What visualizations can help us gauge progress?
 .pull-right[
 &lt;img src="figures/semantic-representation.png" width=230/&gt;
 
-Figure from [7]
+Figure from [6]
 ]
 
 ---
@@ -351,7 +323,7 @@ Back to the building footprint labeling task, here are two images we found with 
 
 ### Visualizing LSTMs
 
-The classic paper [8] looked at feature
+The classic paper [7] looked at feature
 activations in character-level sequence models. It discovered representations
 related to sequence position and code properties, for example.
 
@@ -378,35 +350,22 @@ general `\(y\)`-value of the trajectory. Later ones focus in on crossings.
 
 ---
 
-### Visualizing GRU Mechanics
-
-`\begin{align*}
-{\color{9955bb}h_{t}} &amp;= \left(1 - {\color{ffba00}z_t}\right) \circ {\color{#ff9966}{h_{t - 1}}} + {\color{ffba00}z_{t}} \circ \tilde{h}_{t} \\
-{\color{ffba00}{z_t}} &amp;= \sigma\left(W_z {\color{#ab294d}{x_t}} + U_z {\color{#ff9966}{h_{t - 1}}}\right) \\
-\tilde{h}_{t} &amp;= \tanh\left({\color{#298eab}W}{\color{#ab294d}{x_t}} + {\color{#29ab87}{U}}\left({\color{#ffa6c9}r_t} \circ {\color{#ff9966}h_{t - 1}}\right)\right)
-\end{align*}`
-
-&lt;iframe width="100%" height="409" frameborder="0"
-  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past?cells=chart5"&gt;&lt;/iframe&gt;
-
----
-
 ### Comparing Representations
 
 To compare high-dimensional representations, we need to
-measure multivariate association. Popular choices are [9; 10], though also note [11].
+measure multivariate association. Popular choices are [8; 9], though also note [10].
 
 &lt;img src="figures/cka.png"/&gt;
 
 A CKA representation analysis contrasting ViT and ResNet representations across
-depths, from [12].
+depths, from [11].
 
 ---
 
 ### Comparing Representations
 
 To compare high-dimensional representations, we need to
-measure multivariate association. Popular choices are [9; 10], though also note [11].
+measure multivariate association. Popular choices are [8; 9], though also note [10].
 
 .center[
 &lt;img src="figures/cca_angle.png" width=500/&gt;
@@ -439,7 +398,7 @@ Scientific foundation models are gaining prominence, and it’s common to make d
 ### Intriguing Experiment
 
 .pull-left[
-[13; 14] presented connections between linguistics and BERT embeddings. For example, they found that embedding and formal parse-tree distances were closely related.
+[12; 13] presented connections between linguistics and BERT embeddings. For example, they found that embedding and formal parse-tree distances were closely related.
 ]
 
 .pull-right[
@@ -466,7 +425,7 @@ I like how these visualizations:
 
 (2) Provide domain-relevant context for interacting with learned representations.
 
-This seems like a promising way to balance efficiency and agency in theory building. Hopefully we can avoid the "kaggleization of science" [15].
+This seems like a promising way to balance efficiency and agency in theory building. Hopefully we can avoid the "kaggleization of science" [14].
 
 ---
 
@@ -531,77 +490,77 @@ Segmentation Models in Remote Sensing
 Applications". In: _MLVis@EuroVis_. 2019.
 &lt;https://api.semanticscholar.org/CorpusID:201139207&gt;.
 
-[6] J. Heer and S. K. Card. "DOITrees
-revisited: scalable, space-constrained
-visualization of hierarchical data". In:
-_Proceedings of the working conference on
-Advanced visual interfaces_ (2004).
-&lt;https://api.semanticscholar.org/CorpusID:818990&gt;.
-
-[7] Y. Bengio. "Learning Deep Architectures
+[6] Y. Bengio. "Learning Deep Architectures
 for AI". In: _Found. Trends Mach. Learn._ 2
 (2007), pp. 1-127.
 &lt;https://api.semanticscholar.org/CorpusID:207178999&gt;.
 
----
-
-### References
-
-[8] A. Karpathy, J. Johnson, and L. Fei-Fei.
+[7] A. Karpathy, J. Johnson, and L. Fei-Fei.
 "Visualizing and Understanding Recurrent
 Networks". In: _ArXiv_ abs/1506.02078
 (2015).
 &lt;https://api.semanticscholar.org/CorpusID:988348&gt;.
 
-[9] A. Saha, A. Bialkowski, and S. Khalifa.
+---
+
+### References
+
+[8] A. Saha, A. Bialkowski, and S. Khalifa.
 "Distilling Representational Similarity
 using Centered Kernel Alignment (CKA)". In:
 _British Machine Vision Conference_. 2022.
 &lt;https://api.semanticscholar.org/CorpusID:256902315&gt;.
 
-[10] M. Raghu, J. Gilmer, J. Yosinski, et
-al. "SVCCA: Singular Vector Canonical
+[9] M. Raghu, J. Gilmer, J. Yosinski, et al.
+"SVCCA: Singular Vector Canonical
 Correlation Analysis for Deep Learning
 Dynamics and Interpretability". In: _Neural
 Information Processing Systems_. 2017.
 &lt;https://api.semanticscholar.org/CorpusID:23890457&gt;.
 
----
-
-### References
-
-[11] J. Josse and S. P. Holmes. "Measuring
+[10] J. Josse and S. P. Holmes. "Measuring
 multivariate association and beyond." In:
 _Statistics surveys_ 10 (2016), pp.  132-167
 .
 &lt;https://api.semanticscholar.org/CorpusID:207137323&gt;.
 
-[12] M. Raghu, T. Unterthiner, S. Kornblith,
+---
+
+### References
+
+[11] M. Raghu, T. Unterthiner, S. Kornblith,
 et al. "Do Vision Transformers See Like
 Convolutional Neural Networks?" In: _Neural
 Information Processing Systems_. 2021.
 &lt;https://api.semanticscholar.org/CorpusID:237213700&gt;.
 
-[13] A. Coenen, E. Reif, A. Yuan, et al.
+[12] A. Coenen, E. Reif, A. Yuan, et al.
 "Visualizing and Measuring the Geometry of
 BERT". In: _ArXiv_ abs/1906.02715 (2019).
 &lt;https://api.semanticscholar.org/CorpusID:174802633&gt;.
 
----
-
-### References
-
-[14] J. Hewitt and C. D. Manning. "A
+[13] J. Hewitt and C. D. Manning. "A
 Structural Probe for Finding Syntax in Word
 Representations". In: _North American
 Chapter of the Association for Computational
 Linguistics_. 2019.
 &lt;https://api.semanticscholar.org/CorpusID:106402715&gt;.
 
-[15] _Fireside Chat with Christopher
+---
+
+### References
+
+[14] _Fireside Chat with Christopher
 Manning_.
 &lt;https://www.microsoft.com/en-us/research/video/fireside-chat-with-christopher-manning/&gt;.
 Accessed: 2023-11-14.
+
+[15] J. Heer and S. K. Card. "DOITrees
+revisited: scalable, space-constrained
+visualization of hierarchical data". In:
+_Proceedings of the working conference on
+Advanced visual interfaces_ (2004).
+&lt;https://api.semanticscholar.org/CorpusID:818990&gt;.
 
 ---
 
@@ -609,6 +568,48 @@ Accessed: 2023-11-14.
 
 
 
+---
+
+### Navigating Predictions
+
+From predicted segmentations, we could fit trends to each lake's estimated area.
+This volcano plot shows those that need more proactive monitoring.
+
+.center[
+&lt;img src="figures/sanka8-3215722-large.gif" width=1000/&gt;
+]
+
+---
+
+### Navigating Predictions
+
+We also implemented a Shiny App to look up images from lakes with interesting trends.
+
+&lt;iframe width=1000 src="https://krisrs1128.shinyapps.io/glacial_lake_visualization/" height=450/&gt;
+
+---
+### &lt;span style="col: #D93611;"&gt;Focus-plus-Context&lt;/span&gt;
+
+This is an instance of the focus-plus-context principle [15]. The idea is to let the reader zoom into patterns of interest without losing relevant context.
+
+.center[
+&lt;img src="figures/doitree_dmoz.gif" width=800/&gt;
+]
+
+---
+
+### Visualizing GRU Mechanics
+
+`\begin{align*}
+{\color{9955bb}h_{t}} &amp;= \left(1 - {\color{ffba00}z_t}\right) \circ {\color{#ff9966}{h_{t - 1}}} + {\color{ffba00}z_{t}} \circ \tilde{h}_{t} \\
+{\color{ffba00}{z_t}} &amp;= \sigma\left(W_z {\color{#ab294d}{x_t}} + U_z {\color{#ff9966}{h_{t - 1}}}\right) \\
+\tilde{h}_{t} &amp;= \tanh\left({\color{#298eab}W}{\color{#ab294d}{x_t}} + {\color{#29ab87}{U}}\left({\color{#ffa6c9}r_t} \circ {\color{#ff9966}h_{t - 1}}\right)\right)
+\end{align*}`
+
+&lt;iframe width="100%" height="409" frameborder="0"
+  src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past?cells=chart5"&gt;&lt;/iframe&gt;
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
