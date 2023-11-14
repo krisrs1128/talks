@@ -20,7 +20,7 @@ background-size: cover
 ```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
 library(knitr)
 library(RefManageR)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
 opts_knit$set(eval.after = "fig.cap")
 BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
@@ -29,6 +29,13 @@ bib <- ReadBib("references.bib")
 <div id="title">
 Visualization in Deep Learning: <br/> Theme and Variations
 </div>
+
+<br/>
+<br/>
+
+.center[
+<img src="figures/svcca_training.gif"/>
+]
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -242,7 +249,9 @@ We were also careful to remove extraneous plot elements (e.g., unnecessary tick 
 
 ### Smoothed Error Rates
 
-This is the result of a PCA on the activations at the last layer of the building footprint segmentation model. For the background, we smoothed the error metric across training examples.
+This is the result of a PCA on the activations at the last layer of the building
+footprint segmentation model. For the background, we learned smoothed error
+metrics across training examples.
 
 .center[
 <iframe src="https://adrijanik.github.io/unet-vis#div_main" width=1000 height=350/>
@@ -251,7 +260,6 @@ This is the result of a PCA on the activations at the last layer of the building
 ---
 
 ### Navigating Predictions
-
 
 .pull-left[
 How might a model's predictions guide decision making?
@@ -308,7 +316,7 @@ This is an instance of the focus-plus-context principle `r Citep(bib, "Heer2004D
 
 ---
 
-### Theme: Representations of DL Models
+### Representations of DL Models
 
 .pull-left[
 A central goal of deep learning is to automatically learn higher-level
@@ -323,8 +331,6 @@ Figure from `r Citep(bib, "Bengio2007LearningDA")`
 
 ---
 
-
----
 ### Goals of Representation Analysis
 
 Deep learning models should sense higher-order abstractions. We can evaluate this by analyzing their learned representations.
@@ -338,7 +344,6 @@ Deep learning models should sense higher-order abstractions. We can evaluate thi
 ### Parking lot or…?
 
 Back to the building footprint labeling task, here are two images we found with similar feature activations.
-(todo: check which layers exactly)
 
 .pull-left[
 <img src="figures/cars.png" width=400/>
@@ -351,7 +356,9 @@ Back to the building footprint labeling task, here are two images we found with 
 
 ### Visualizing LSTMs
 
-A classic paper in this field looked at feature activations in character-level sequence models. It discovered representations related to sequence position and code properties, for example.
+The classic paper `r Citep(bib, "Karpathy2015VisualizingAU")` looked at feature
+activations in character-level sequence models. It discovered representations
+related to sequence position and code properties, for example.
 
 <img src="figures/lstm-activations-1.png"/>
 
@@ -394,12 +401,25 @@ general $y$-value of the trajectory. Later ones focus in on crossings.
 To compare high-dimensional representations, we need to
 measure multivariate association. Popular choices are `r Citep(bib, c("Saha2022DistillingRS", "Raghu2017SVCCASV"))`, though also note `r Citep(bib, c("Golub1992TheCC", "Josse2016MeasuringMA"))`.
 
+<img src="figures/cca_angle.png"/>
+
+A CKA representation analysis contrasting ViT and ResNet representations across
+depths, from `r Citep(bib, "Raghu2021DoVT")`.
+
+---
+
+### Comparing Representations
+
+To compare high-dimensional representations, we need to
+measure multivariate association. Popular choices are `r Citep(bib, c("Saha2022DistillingRS", "Raghu2017SVCCASV"))`, though also note `r Citep(bib, c("Golub1992TheCC", "Josse2016MeasuringMA"))`.
+
 <img src="figures/cka.png"/>
 
 A CKA representation analysis contrasting ViT and ResNet representations across
 depths, from `r Citep(bib, "Raghu2021DoVT")`.
 
 ---
+
 ### Learned Representations in Science
 
 Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
@@ -450,7 +470,7 @@ I like how these visualizations:
 
 (2) Provide domain-relevant context for interacting with learned representations.
 
-This seems like a promising way to balance efficiency and agency in theory building. Hopefully we can avoid the "kaggleization of science" `r Citep(bib, "manning_interview")`.
+This seems like a promising way to balance efficiency and agency in theory building. Hopefully we can avoid the "kaggleization of science" `r Citep(bib, "manning_msft")`.
 
 ---
 
@@ -461,7 +481,7 @@ How might these ideas play out in multi-omics foundation models?
 * Gene regulatory networks <—> parse trees. Both provide simple abstractions for reasoning about complex processes.
 * Gene-sense disambiguation. A protein’s purpose can depend on its cellular surroundings, and it’s possible that foundation models have learned to represent this.
 
-<img src="figures/multi-omics-graph.png"/>
+<img src="figures/go-graph.png"/>
 
 ---
 
