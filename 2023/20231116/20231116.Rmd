@@ -401,7 +401,7 @@ general $y$-value of the trajectory. Later ones focus in on crossings.
 To compare high-dimensional representations, we need to
 measure multivariate association. Popular choices are `r Citep(bib, c("Saha2022DistillingRS", "Raghu2017SVCCASV"))`, though also note `r Citep(bib, c("Golub1992TheCC", "Josse2016MeasuringMA"))`.
 
-<img src="figures/cca_angle.png"/>
+<img src="figures/cka.png"/>
 
 A CKA representation analysis contrasting ViT and ResNet representations across
 depths, from `r Citep(bib, "Raghu2021DoVT")`.
@@ -413,10 +413,11 @@ depths, from `r Citep(bib, "Raghu2021DoVT")`.
 To compare high-dimensional representations, we need to
 measure multivariate association. Popular choices are `r Citep(bib, c("Saha2022DistillingRS", "Raghu2017SVCCASV"))`, though also note `r Citep(bib, c("Golub1992TheCC", "Josse2016MeasuringMA"))`.
 
-<img src="figures/cka.png"/>
+.center[
+<img src="figures/cca_angle.png" width=500/>
+]
 
-A CKA representation analysis contrasting ViT and ResNet representations across
-depths, from `r Citep(bib, "Raghu2021DoVT")`.
+These contrast the column spaces of feature activation matrices.
 
 ---
 
@@ -481,7 +482,9 @@ How might these ideas play out in multi-omics foundation models?
 * Gene regulatory networks <—> parse trees. Both provide simple abstractions for reasoning about complex processes.
 * Gene-sense disambiguation. A protein’s purpose can depend on its cellular surroundings, and it’s possible that foundation models have learned to represent this.
 
+.center[
 <img src="figures/go-graph.png"/>
+]
 
 ---
 
