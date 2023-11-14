@@ -30,6 +30,10 @@ bib <- ReadBib("references.bib")
 Visualization in Deep Learning: <br/> Theme and Variations
 </div>
 
+<div id="links">
+Slides: [https://go.wisc.edu/9p83o9](https://go.wisc.edu/9p83o9)
+</div>
+
 <br/>
 <br/>
 
