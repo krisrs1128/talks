@@ -23,7 +23,6 @@ Visualization in Deep Learning: &lt;br/&gt; Theme and Variations
 &lt;/div&gt;
 
 &lt;div id="links"&gt;
-
 Slides: &lt;a href="https://go.wisc.edu/9p83o9"&gt;https://go.wisc.edu/9p83o9&lt;/a&gt;
 &lt;/div&gt;
 
@@ -45,7 +44,9 @@ Machine Learning Lunch Meetings
 
 ### Audience Question
 
-What kinds of visualizations do you use for your research? Why do you make them?
+What kinds of visualizations do you use for your research? 
+
+Why do you make them?
 
 [**https://go.wisc.edu/z03w7z**](https://go.wisc.edu/z03w7z)
 
@@ -53,7 +54,7 @@ What kinds of visualizations do you use for your research? Why do you make them?
 
 ### Variations
 
-Visualization is often used to:
+Visualization can help:
 1. Summarize training dynamics.
 2. Reason about errors and predictions.
 3. Describe memory and representation learning mechanisms.
@@ -111,7 +112,7 @@ optimization hyperparameters, and regularization.
 .pull-right[
 &lt;img src="figures/loss_example.png" width=500/&gt;
 
-Figure from [1].
+Figure from .
 ]
 
 ---
@@ -129,7 +130,7 @@ In this toy problem, we apply a sequence model (with gated recurrent units) to c
 
 ### Example: Counting Crossings
 
-The example dataset are a collection of labeled pairs: 
+The example dataset is a collection of labeled pairs: 
 
 * `\(\mathbf{x}_{i} \in \mathbb{R}^{200}\)`: A random trajectory stored as a long vector.
 * `\(y_i\)`: The number of times the trajectory crosses the interval `\(\left[0, 1\right]\)`.
@@ -158,8 +159,8 @@ examples that remain difficult to predict late in training.
 This visualization applies dynamic linking [2]. By coordinating interaction across panels, we can show
 several views of the same data.
 
-<div id="htmlwidget-61a7543193b3257d07b2" style="width:1200px;height:250px;" class="robservable html-widget "></div>
-<script type="application/json" data-for="htmlwidget-61a7543193b3257d07b2">{"x":{"notebook":"@krisrs1128/week-3-4","include":5,"hide":null,"input":null,"input_js":[],"observers":null,"update_height":true,"update_width":true},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-2350101522160b54ab31" style="width:1200px;height:250px;" class="robservable html-widget "></div>
+<script type="application/json" data-for="htmlwidget-2350101522160b54ab31">{"x":{"notebook":"@krisrs1128/week-3-4","include":5,"hide":null,"input":null,"input_js":[],"observers":null,"update_height":true,"update_width":true},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -182,10 +183,10 @@ the architecture from ever being learned!
 ### Dimensionality Reduction
 
 .pull-left[
-1. Dimensionality reduction can shed more light onto training dynamics for the full model.
+1. Dimensionality reduction can shed light on training dynamics for the full model.
 2. This figure from [4] shows that unsupervised
-pretraining acts like a regularizer. It's especially interesting because it
-works on function space, not the parameter space.
+pretraining acts like a regularizer. It's also interesting because it works on
+function (not the parameter) space.
 ]
 
 .pull-right[
@@ -200,7 +201,7 @@ works on function space, not the parameter space.
 
 ### Visualizing Errors
 
-We fit satellite image segmentation models to datasets on building footprints [5]. Here are examples that were flagged as being especially poor quality.
+We fit satellite image segmentation models to datasets on building footprints [5]. Here are examples that were flagged as being poor quality.
 
 .center[
 &lt;img src="figures/img_6560_kitsap4.png" width=250/&gt;
@@ -212,7 +213,8 @@ In both cases, our worst examples are due to label noise. Can you tell what happ
 
 ---
 
-For problems where each sample is associated with a continuous accuracy measure, it is helpful to look at representatives from across the continuum.
+For problems where each sample is associated with a continuous accuracy measure,
+we can look at representatives from across the continuum.
 
 .center[
 &lt;img src="figures/glacial_lakes_grid.gif" width=700/&gt;
@@ -223,7 +225,8 @@ Different models can have different failure modes, and this kind of visualizatio
 ---
 &lt;span style="color: #D93611"/&gt;Small Multiples&lt;/span&gt;
 
-In visualization, the idea of repeating a view across many parallel instances is called small multiples. This creates information-dense views.
+In visualization, repeating a view across many parallel instances is called
+small multiples. This creates information-dense views.
 
 .center[
 &lt;img src="figures/small-multiples.jpeg" width=850/&gt;
@@ -234,7 +237,9 @@ In visualization, the idea of repeating a view across many parallel instances is
 &lt;span style="color: #D93611"/&gt;Data-to-Ink&lt;/span&gt;
 
 .pull-left[
-We were also careful to remove extraneous plot elements (e.g., unnecessary tick marks and grid lines). This is line with the goal of maximizing data-to-ink .]
+We removed extraneous plot elements (e.g., unnecessary tick marks and grid
+lines). This aligns with the goal of maximizing the data-to-ink ratio .
+]
 
 .pull-right[
 &lt;img src="figures/glacial_lakes_grid.gif"/&gt;
@@ -244,9 +249,9 @@ We were also careful to remove extraneous plot elements (e.g., unnecessary tick 
 
 ### Smoothed Error Rates
 
-This is the result of a PCA on the activations at the last layer of the building
-footprint segmentation model. For the background, we learned smoothed error
-metrics across training examples.
+We applied PCA to the activations of the bottleneck layer in the building
+footprint segmentation model. The background shows smoothed error rates across
+training examples.
 
 .center[
 &lt;iframe src="https://adrijanik.github.io/unet-vis#div_main" width=1000 height=350/&gt;
@@ -257,9 +262,10 @@ metrics across training examples.
 ### Navigating Predictions
 
 .pull-left[
-How might a model's predictions guide decision making?
+How might a model's predictions guide decision-making?
 
-We worked on a project with ICIMOD to identify regions that lakes that were growing rapidly. These are a risk factor for glacial lake outbursts.
+We worked on a project with ICIMOD to identify regions with rapidly growing
+lakes. This is a risk factor for glacial lake outbursts.
 ]
 
 .pull-right[
@@ -270,11 +276,22 @@ We worked on a project with ICIMOD to identify regions that lakes that were grow
 
 ### Navigating Predictions
 
-From predicted segmentations, we could fit trends to each lake's estimated area.
-This volcano plot shows those that need more proactive monitoring.
+We fit trends of estimated areas across the predicted segmentation maps. This
+volcano plot shows those that need more proactive monitoring.
 
 .center[
 &lt;img src="figures/volcano_plot.gif" width=640/&gt;
+]
+
+---
+
+### Navigating Predictions
+
+We fit trends of estimated areas across the predicted segmentation maps. This
+volcano plot shows those that need more proactive monitoring.
+
+.center[
+&lt;img src="figures/sanka8-3215722-large.gif" width=1000/&gt;
 ]
 
 ---
@@ -283,7 +300,7 @@ This volcano plot shows those that need more proactive monitoring.
 
 ---
 
-### Representations of DL Models
+### Learning Abstractions
 
 .pull-left[
 A central goal of deep learning is to automatically learn higher-level
@@ -298,12 +315,12 @@ Figure from [6]
 
 ---
 
-### Goals of Representation Analysis
+### The role of visualization?
 
 Deep learning models should sense higher-order abstractions. We can evaluate this by analyzing their learned representations.
 
-1. How do architectural components compare, and how does it relate to performance differences?
-2. Why do common training practices like transfer learning and normalization seem to help?
+1. How do architectural components compare?
+2. Why do training practices like transfer learning and normalization help?
 3. How do data-driven representations relate to concepts designed by human experts?
 
 ---
@@ -342,7 +359,7 @@ This paper helped demystify the mechanics of LSTM models. We could see how gatin
 ### Counting Model
 
 Let’s look at features from the counting model. The first few layers encode the
-general `\(y\)`-value of the trajectory. Later ones focus in on crossings.
+general `\(y\)`-value of the trajectory. Later ones focus on crossings.
 
 
 &lt;iframe width="100%" height="484" frameborder="0"
@@ -377,7 +394,9 @@ These contrast the column spaces of feature activation matrices.
 
 ### Learned Representations in Science
 
-Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
+Scientific foundation models are gaining prominence, and they are often
+accompanied by dimensionality reduction plots. Can we make something that
+encourages more precise discourse?
 
 .center[
 &lt;iframe src="https://esmatlas.com/explore" width=950 height=350/&gt;
@@ -387,7 +406,9 @@ Scientific foundation models are gaining prominence, and it’s common to make d
 
 ### Learned Representations in Science
 
-Scientific foundation models are gaining prominence, and it’s common to make dimensionality reduction plots from them. Can we make something that encourages more precise discourse?
+Scientific foundation models are gaining prominence, and they are often
+accompanied by dimensionality reduction plots. Can we make something that
+encourages more precise discourse?
 
 .center[
 &lt;img src="figures/scgpt-atlas.png" width=700/&gt;
@@ -409,7 +430,7 @@ Scientific foundation models are gaining prominence, and it’s common to make d
 
 ### Intriguing Experiment
 
-They also saw how the embeddings reflect word sense disambiguation and built an app to interactively query different words.
+They also saw how the embeddings reflect word sense disambiguation and built an app to query different words interactively.
 
 .center[
 &lt;img src="figures/word-sense.png" width=840/&gt;
@@ -417,7 +438,7 @@ They also saw how the embeddings reflect word sense disambiguation and built an 
 
 ---
 
-### Why do these work?
+### General Lessons?
 
 I like how these visualizations:
 
@@ -425,16 +446,17 @@ I like how these visualizations:
 
 (2) Provide domain-relevant context for interacting with learned representations.
 
-This seems like a promising way to balance efficiency and agency in theory building. Hopefully we can avoid the "kaggleization of science" [14].
+This seems like a promising way to balance efficiency and agency in theory
+building -- a way to avoid the "kaggleization of science" [14].
 
 ---
 
-### Multi-omics analog?
+### Multi-omics Analog
 
 How might these ideas play out in multi-omics foundation models?
 
 * Gene regulatory networks &lt;—&gt; parse trees. Both provide simple abstractions for reasoning about complex processes.
-* Gene-sense disambiguation. A protein’s purpose can depend on its cellular surroundings, and it’s possible that foundation models have learned to represent this.
+* Gene-sense disambiguation. A protein’s purpose can depend on its cellular surroundings, and foundation models may have learned to represent this.
 
 .center[
 &lt;img src="figures/go-graph.png"/&gt;
@@ -449,118 +471,83 @@ research and collaborations.
 
 Some final thoughts:
 
+1. Visualization bridges human and machine representations.
 1. Training, evaluation, and representation analysis all provide opportunities for thoughtful visualization.
-2. When we build deep learning models, we are part of a human-machine system, and visualization is an important part of the link.
 
 ---
 
 ### References
 
-[1] T. Ma and A. Ng. "CS229 Lecture notes".
-In: _NA_ (2007).
-&lt;https://api.semanticscholar.org/CorpusID:628573&gt;.
-
-[2] B. Shneiderman. "The eyes have it: a
-task by data type taxonomy for information
-visualizations". In: _Proceedings 1996 IEEE
-Symposium on Visual Languages_ (1996), pp.
-336-343.
-&lt;https://api.semanticscholar.org/CorpusID:2281975&gt;.
-
-[3] M. Zheng, X. Miao, and K. Sankaran.
-"Interactive Visualization and
-Representation Analysis Applied to Glacier
-Segmentation". In: _ISPRS Int. J. Geo Inf._
-11 (2021), p. 415.
-
----
-
-### References
-
-[4] D. Erhan, A. C. Courville, Y. Bengio, et
-al. "Why Does Unsupervised Pre-training Help
-Deep Learning?" In: _International
-Conference on Artificial Intelligence and
-Statistics_. 2010.
-&lt;https://api.semanticscholar.org/CorpusID:15796526&gt;.
-
-[5] A. Janik, K. Sankaran, and A. Ortiz.
-"Interpreting Black-Box Semantic
-Segmentation Models in Remote Sensing
-Applications". In: _MLVis@EuroVis_. 2019.
-&lt;https://api.semanticscholar.org/CorpusID:201139207&gt;.
-
-[6] Y. Bengio. "Learning Deep Architectures
-for AI". In: _Found. Trends Mach. Learn._ 2
-(2007), pp. 1-127.
-&lt;https://api.semanticscholar.org/CorpusID:207178999&gt;.
-
-[7] A. Karpathy, J. Johnson, and L. Fei-Fei.
-"Visualizing and Understanding Recurrent
-Networks". In: _ArXiv_ abs/1506.02078
-(2015).
-&lt;https://api.semanticscholar.org/CorpusID:988348&gt;.
-
----
-
-### References
-
-[8] A. Saha, A. Bialkowski, and S. Khalifa.
-"Distilling Representational Similarity
-using Centered Kernel Alignment (CKA)". In:
-_British Machine Vision Conference_. 2022.
-&lt;https://api.semanticscholar.org/CorpusID:256902315&gt;.
-
-[9] M. Raghu, J. Gilmer, J. Yosinski, et al.
-"SVCCA: Singular Vector Canonical
-Correlation Analysis for Deep Learning
-Dynamics and Interpretability". In: _Neural
-Information Processing Systems_. 2017.
-&lt;https://api.semanticscholar.org/CorpusID:23890457&gt;.
-
-[10] J. Josse and S. P. Holmes. "Measuring
-multivariate association and beyond." In:
-_Statistics surveys_ 10 (2016), pp.  132-167
-.
-&lt;https://api.semanticscholar.org/CorpusID:207137323&gt;.
-
----
-
-### References
-
-[11] M. Raghu, T. Unterthiner, S. Kornblith,
-et al. "Do Vision Transformers See Like
-Convolutional Neural Networks?" In: _Neural
-Information Processing Systems_. 2021.
-&lt;https://api.semanticscholar.org/CorpusID:237213700&gt;.
-
-[12] A. Coenen, E. Reif, A. Yuan, et al.
-"Visualizing and Measuring the Geometry of
-BERT". In: _ArXiv_ abs/1906.02715 (2019).
-&lt;https://api.semanticscholar.org/CorpusID:174802633&gt;.
-
-[13] J. Hewitt and C. D. Manning. "A
-Structural Probe for Finding Syntax in Word
-Representations". In: _North American
-Chapter of the Association for Computational
-Linguistics_. 2019.
-&lt;https://api.semanticscholar.org/CorpusID:106402715&gt;.
-
----
-
-### References
-
-[14] _Fireside Chat with Christopher
-Manning_.
+[1] _Fireside Chat with Christopher Manning_.
 &lt;https://www.microsoft.com/en-us/research/video/fireside-chat-with-christopher-manning/&gt;.
 Accessed: 2023-11-14.
 
-[15] J. Heer and S. K. Card. "DOITrees
-revisited: scalable, space-constrained
-visualization of hierarchical data". In:
-_Proceedings of the working conference on
-Advanced visual interfaces_ (2004).
-&lt;https://api.semanticscholar.org/CorpusID:818990&gt;.
+[2] Y. Bengio. "Learning Deep Architectures for AI". In: _Found. Trends Mach. Learn._ 2
+(2007), pp. 1-127. &lt;https://api.semanticscholar.org/CorpusID:207178999&gt;.
+
+[3] A. Coenen, E. Reif, A. Yuan, et al. "Visualizing and Measuring the Geometry of BERT".
+In: _ArXiv_ abs/1906.02715 (2019). &lt;https://api.semanticscholar.org/CorpusID:174802633&gt;.
+
+---
+
+### References
+
+[1] D. Erhan, A. C. Courville, Y. Bengio, et al. "Why Does Unsupervised Pre-training Help
+Deep Learning?" In: _International Conference on Artificial Intelligence and Statistics_.
+2010.
+
+[2] J. Heer and S. K. Card. "DOITrees revisited: scalable, space-constrained
+visualization of hierarchical data". In: _Proceedings of the working conference on
+Advanced visual interfaces_ (2004). &lt;https://api.semanticscholar.org/CorpusID:818990&gt;.
+
+[3] J. Hewitt and C. D. Manning. "A Structural Probe for Finding Syntax in Word
+Representations". In: _North American Chapter of the Association for Computational
+Linguistics_. 2019. &lt;https://api.semanticscholar.org/CorpusID:106402715&gt;.
+
+[4] A. Janik, K. Sankaran, and A. Ortiz. "Interpreting Black-Box Semantic Segmentation
+Models in Remote Sensing Applications". In: _MLVis@EuroVis_. 2019.
+&lt;https://api.semanticscholar.org/CorpusID:201139207&gt;.
+
+---
+
+### References
+
+[1] J. Josse and S. P. Holmes. "Measuring multivariate association and beyond." In:
+_Statistics surveys_ 10 (2016), pp.  132-167 .
+&lt;https://api.semanticscholar.org/CorpusID:207137323&gt;.
+
+[2] A. Karpathy, J. Johnson, and L. Fei-Fei. "Visualizing and Understanding Recurrent
+Networks". In: _ArXiv_ abs/1506.02078 (2015).
+&lt;https://api.semanticscholar.org/CorpusID:988348&gt;.
+
+[3] M. Raghu, J. Gilmer, J. Yosinski, et al. "SVCCA: Singular Vector Canonical
+Correlation Analysis for Deep Learning Dynamics and Interpretability". In: _Neural
+Information Processing Systems_. 2017.
+&lt;https://api.semanticscholar.org/CorpusID:23890457&gt;.
+
+---
+
+### References
+
+[1] M. Raghu, T. Unterthiner, S. Kornblith, et al. "Do Vision Transformers See Like
+Convolutional Neural Networks?" In: _Neural Information Processing Systems_. 2021.
+&lt;https://api.semanticscholar.org/CorpusID:237213700&gt;.
+
+[2] A. Saha, A. Bialkowski, and S. Khalifa. "Distilling Representational Similarity using
+Centered Kernel Alignment (CKA)". In: _British Machine Vision Conference_. 2022.
+&lt;https://api.semanticscholar.org/CorpusID:256902315&gt;.
+
+[3] B. Shneiderman. "The eyes have it: a task by data type taxonomy for information
+visualizations". In: _Proceedings 1996 IEEE Symposium on Visual Languages_ (1996), pp.
+336-343. &lt;https://api.semanticscholar.org/CorpusID:2281975&gt;.
+
+---
+
+### References
+
+[1] M. Zheng, X. Miao, and K. Sankaran. "Interactive Visualization and Representation
+Analysis Applied to Glacier Segmentation". In: _ISPRS Int. J. Geo Inf._ 11 (2021), p.
+415.
 
 ---
 
@@ -572,18 +559,7 @@ Advanced visual interfaces_ (2004).
 
 ### Navigating Predictions
 
-From predicted segmentations, we could fit trends to each lake's estimated area.
-This volcano plot shows those that need more proactive monitoring.
-
-.center[
-&lt;img src="figures/sanka8-3215722-large.gif" width=1000/&gt;
-]
-
----
-
-### Navigating Predictions
-
-We also implemented a Shiny App to look up images from lakes with interesting trends.
+We implemented a Shiny App to look up images from lakes with interesting trends.
 
 &lt;iframe width=1000 src="https://krisrs1128.shinyapps.io/glacial_lake_visualization/" height=450/&gt;
 
@@ -601,15 +577,13 @@ This is an instance of the focus-plus-context principle [15]. The idea is to let
 ### Visualizing GRU Mechanics
 
 `\begin{align*}
-{\color{9955bb}h_{t}} &amp;= \left(1 - {\color{ffba00}z_t}\right) \circ {\color{#ff9966}{h_{t - 1}}} + {\color{ffba00}z_{t}} \circ \tilde{h}_{t} \\
-{\color{ffba00}{z_t}} &amp;= \sigma\left(W_z {\color{#ab294d}{x_t}} + U_z {\color{#ff9966}{h_{t - 1}}}\right) \\
+{\color{#9955bb}h_{t}} &amp;= \left(1 - {\color{#ffba00}z_t}\right) \circ {\color{#ff9966}{h_{t - 1}}} + {\color{#ffba00}z_{t}} \circ \tilde{h}_{t} \\
+{\color{#ffba00}{z_t}} &amp;= \sigma\left(W_z {\color{#ab294d}{x_t}} + U_z {\color{#ff9966}{h_{t - 1}}}\right) \\
 \tilde{h}_{t} &amp;= \tanh\left({\color{#298eab}W}{\color{#ab294d}{x_t}} + {\color{#29ab87}{U}}\left({\color{#ffa6c9}r_t} \circ {\color{#ff9966}h_{t - 1}}\right)\right)
 \end{align*}`
 
 &lt;iframe width="100%" height="409" frameborder="0"
   src="https://observablehq.com/embed/@krisrs1128/remembrances-of-states-past?cells=chart5"&gt;&lt;/iframe&gt;
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
