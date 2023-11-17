@@ -156,11 +156,11 @@ examples that remain difficult to predict late in training.
 
 ### &lt;span style="col: red;"&gt;Dynamic Linking&lt;/span&gt;
 
-This visualization applies dynamic linking [2]. By coordinating interaction across panels, we can show
+This visualization applies dynamic linking [1]. By coordinating interaction across panels, we can show
 several views of the same data.
 
-<div id="htmlwidget-2350101522160b54ab31" style="width:1200px;height:250px;" class="robservable html-widget "></div>
-<script type="application/json" data-for="htmlwidget-2350101522160b54ab31">{"x":{"notebook":"@krisrs1128/week-3-4","include":5,"hide":null,"input":null,"input_js":[],"observers":null,"update_height":true,"update_width":true},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-17fcab44a0ba88f6416b" style="width:1200px;height:250px;" class="robservable html-widget "></div>
+<script type="application/json" data-for="htmlwidget-17fcab44a0ba88f6416b">{"x":{"notebook":"@krisrs1128/week-3-4","include":5,"hide":null,"input":null,"input_js":[],"observers":null,"update_height":true,"update_width":true},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -170,7 +170,7 @@ several views of the same data.
 More than losses, it can be worthwhile to visualize feature maps and gradients
 throughout the training process.
 
-These are activations from a UMAP model trained to segment glaciers [3]. The skip connections prevented the deepest layer in
+These are activations from a UMAP model trained to segment glaciers [2]. The skip connections prevented the deepest layer in
 the architecture from ever being learned!
 ]
 
@@ -184,7 +184,7 @@ the architecture from ever being learned!
 
 .pull-left[
 1. Dimensionality reduction can shed light on training dynamics for the full model.
-2. This figure from [4] shows that unsupervised
+2. This figure from [3] shows that unsupervised
 pretraining acts like a regularizer. It's also interesting because it works on
 function (not the parameter) space.
 ]
@@ -201,7 +201,7 @@ function (not the parameter) space.
 
 ### Visualizing Errors
 
-We fit satellite image segmentation models to datasets on building footprints [5]. Here are examples that were flagged as being poor quality.
+We fit satellite image segmentation models to datasets on building footprints [4]. Here are examples that were flagged as being poor quality.
 
 .center[
 &lt;img src="figures/img_6560_kitsap4.png" width=250/&gt;
@@ -310,7 +310,7 @@ abstractions from data. What visualizations can help us gauge progress?
 .pull-right[
 &lt;img src="figures/semantic-representation.png" width=230/&gt;
 
-Figure from [6]
+Figure from [5]
 ]
 
 ---
@@ -340,7 +340,7 @@ Back to the building footprint labeling task, here are two images we found with 
 
 ### Visualizing LSTMs
 
-The classic paper [7] looked at feature
+The classic paper [6] looked at feature
 activations in character-level sequence models. It discovered representations
 related to sequence position and code properties, for example.
 
@@ -370,19 +370,19 @@ general `\(y\)`-value of the trajectory. Later ones focus on crossings.
 ### Comparing Representations
 
 To compare high-dimensional representations, we need to
-measure multivariate association. Popular choices are [8; 9], though also note [10].
+measure multivariate association. Popular choices are [7; 8], though also note [9].
 
 &lt;img src="figures/cka.png"/&gt;
 
 A CKA representation analysis contrasting ViT and ResNet representations across
-depths, from [11].
+depths, from [10].
 
 ---
 
 ### Comparing Representations
 
 To compare high-dimensional representations, we need to
-measure multivariate association. Popular choices are [8; 9], though also note [10].
+measure multivariate association. Popular choices are [7; 8], though also note [9].
 
 .center[
 &lt;img src="figures/cca_angle.png" width=500/&gt;
@@ -419,7 +419,7 @@ encourages more precise discourse?
 ### Intriguing Experiment
 
 .pull-left[
-[12; 13] presented connections between linguistics and BERT embeddings. For example, they found that embedding and formal parse-tree distances were closely related.
+[11; 12] presented connections between linguistics and BERT embeddings. For example, they found that embedding and formal parse-tree distances were closely related.
 ]
 
 .pull-right[
@@ -447,7 +447,7 @@ I like how these visualizations:
 (2) Provide domain-relevant context for interacting with learned representations.
 
 This seems like a promising way to balance efficiency and agency in theory
-building -- a way to avoid the "kaggleization of science" [14].
+building -- a way to avoid the "kaggleization of science" [13].
 
 ---
 
@@ -478,76 +478,81 @@ Some final thoughts:
 
 ### References
 
-[1] _Fireside Chat with Christopher Manning_.
+[1] B. Shneiderman. "The eyes have it: a task by data type taxonomy for
+information visualizations". In: _Proceedings 1996 IEEE Symposium on
+Visual Languages_ (1996), pp. 336-343.
+&lt;https://api.semanticscholar.org/CorpusID:2281975&gt;.
+
+[2] M. Zheng, X. Miao, and K. Sankaran. "Interactive Visualization and
+Representation Analysis Applied to Glacier Segmentation". In: _ISPRS
+Int. J. Geo Inf._ 11 (2021), p. 415.
+
+[3] D. Erhan, A. C. Courville, Y. Bengio, et al. "Why Does Unsupervised
+Pre-training Help Deep Learning?" In: _International Conference on
+Artificial Intelligence and Statistics_. 2010.
+
+---
+
+### References
+
+[4] A. Janik, K. Sankaran, and A. Ortiz. "Interpreting Black-Box
+Semantic Segmentation Models in Remote Sensing Applications". In:
+_MLVis@EuroVis_. 2019.
+&lt;https://api.semanticscholar.org/CorpusID:201139207&gt;.
+
+[5] Y. Bengio. "Learning Deep Architectures for AI". In: _Found. Trends
+Mach. Learn._ 2 (2007), pp. 1-127.
+&lt;https://api.semanticscholar.org/CorpusID:207178999&gt;.
+
+[6] A. Karpathy, J. Johnson, and L. Fei-Fei. "Visualizing and
+Understanding Recurrent Networks". In: _ArXiv_ abs/1506.02078 (2015).
+&lt;https://api.semanticscholar.org/CorpusID:988348&gt;.
+
+[7] A. Saha, A. Bialkowski, and S. Khalifa. "Distilling
+Representational Similarity using Centered Kernel Alignment (CKA)". In:
+_British Machine Vision Conference_. 2022.
+&lt;https://api.semanticscholar.org/CorpusID:256902315&gt;.
+
+---
+
+### References
+
+[8] M. Raghu, J. Gilmer, J. Yosinski, et al. "SVCCA: Singular Vector
+Canonical Correlation Analysis for Deep Learning Dynamics and
+Interpretability". In: _Neural Information Processing Systems_. 2017.
+&lt;https://api.semanticscholar.org/CorpusID:23890457&gt;.
+
+[9] J. Josse and S. P. Holmes. "Measuring multivariate association and
+beyond." In: _Statistics surveys_ 10 (2016), pp.  132-167 .
+&lt;https://api.semanticscholar.org/CorpusID:207137323&gt;.
+
+[10] M. Raghu, T. Unterthiner, S. Kornblith, et al. "Do Vision
+Transformers See Like Convolutional Neural Networks?" In: _Neural
+Information Processing Systems_. 2021.
+&lt;https://api.semanticscholar.org/CorpusID:237213700&gt;.
+
+---
+
+### References
+
+[11] A. Coenen, E. Reif, A. Yuan, et al. "Visualizing and Measuring the
+Geometry of BERT". In: _ArXiv_ abs/1906.02715 (2019).
+&lt;https://api.semanticscholar.org/CorpusID:174802633&gt;.
+
+[12] J. Hewitt and C. D. Manning. "A Structural Probe for Finding
+Syntax in Word Representations". In: _North American Chapter of the
+Association for Computational Linguistics_. 2019.
+&lt;https://api.semanticscholar.org/CorpusID:106402715&gt;.
+
+[13] _Fireside Chat with Christopher Manning_.
 &lt;https://www.microsoft.com/en-us/research/video/fireside-chat-with-christopher-manning/&gt;.
 Accessed: 2023-11-14.
 
-[2] Y. Bengio. "Learning Deep Architectures for AI". In: _Found. Trends Mach. Learn._ 2
-(2007), pp. 1-127. &lt;https://api.semanticscholar.org/CorpusID:207178999&gt;.
-
-[3] A. Coenen, E. Reif, A. Yuan, et al. "Visualizing and Measuring the Geometry of BERT".
-In: _ArXiv_ abs/1906.02715 (2019). &lt;https://api.semanticscholar.org/CorpusID:174802633&gt;.
-
 ---
 
 ### References
 
-[1] D. Erhan, A. C. Courville, Y. Bengio, et al. "Why Does Unsupervised Pre-training Help
-Deep Learning?" In: _International Conference on Artificial Intelligence and Statistics_.
-2010.
 
-[2] J. Heer and S. K. Card. "DOITrees revisited: scalable, space-constrained
-visualization of hierarchical data". In: _Proceedings of the working conference on
-Advanced visual interfaces_ (2004). &lt;https://api.semanticscholar.org/CorpusID:818990&gt;.
-
-[3] J. Hewitt and C. D. Manning. "A Structural Probe for Finding Syntax in Word
-Representations". In: _North American Chapter of the Association for Computational
-Linguistics_. 2019. &lt;https://api.semanticscholar.org/CorpusID:106402715&gt;.
-
-[4] A. Janik, K. Sankaran, and A. Ortiz. "Interpreting Black-Box Semantic Segmentation
-Models in Remote Sensing Applications". In: _MLVis@EuroVis_. 2019.
-&lt;https://api.semanticscholar.org/CorpusID:201139207&gt;.
-
----
-
-### References
-
-[1] J. Josse and S. P. Holmes. "Measuring multivariate association and beyond." In:
-_Statistics surveys_ 10 (2016), pp.  132-167 .
-&lt;https://api.semanticscholar.org/CorpusID:207137323&gt;.
-
-[2] A. Karpathy, J. Johnson, and L. Fei-Fei. "Visualizing and Understanding Recurrent
-Networks". In: _ArXiv_ abs/1506.02078 (2015).
-&lt;https://api.semanticscholar.org/CorpusID:988348&gt;.
-
-[3] M. Raghu, J. Gilmer, J. Yosinski, et al. "SVCCA: Singular Vector Canonical
-Correlation Analysis for Deep Learning Dynamics and Interpretability". In: _Neural
-Information Processing Systems_. 2017.
-&lt;https://api.semanticscholar.org/CorpusID:23890457&gt;.
-
----
-
-### References
-
-[1] M. Raghu, T. Unterthiner, S. Kornblith, et al. "Do Vision Transformers See Like
-Convolutional Neural Networks?" In: _Neural Information Processing Systems_. 2021.
-&lt;https://api.semanticscholar.org/CorpusID:237213700&gt;.
-
-[2] A. Saha, A. Bialkowski, and S. Khalifa. "Distilling Representational Similarity using
-Centered Kernel Alignment (CKA)". In: _British Machine Vision Conference_. 2022.
-&lt;https://api.semanticscholar.org/CorpusID:256902315&gt;.
-
-[3] B. Shneiderman. "The eyes have it: a task by data type taxonomy for information
-visualizations". In: _Proceedings 1996 IEEE Symposium on Visual Languages_ (1996), pp.
-336-343. &lt;https://api.semanticscholar.org/CorpusID:2281975&gt;.
-
----
-
-### References
-
-[1] M. Zheng, X. Miao, and K. Sankaran. "Interactive Visualization and Representation
-Analysis Applied to Glacier Segmentation". In: _ISPRS Int. J. Geo Inf._ 11 (2021), p.
-415.
 
 ---
 
@@ -566,7 +571,7 @@ We implemented a Shiny App to look up images from lakes with interesting trends.
 ---
 ### &lt;span style="col: #D93611;"&gt;Focus-plus-Context&lt;/span&gt;
 
-This is an instance of the focus-plus-context principle [15]. The idea is to let the reader zoom into patterns of interest without losing relevant context.
+This is an instance of the focus-plus-context principle [14]. The idea is to let the reader zoom into patterns of interest without losing relevant context.
 
 .center[
 &lt;img src="figures/doitree_dmoz.gif" width=800/&gt;
