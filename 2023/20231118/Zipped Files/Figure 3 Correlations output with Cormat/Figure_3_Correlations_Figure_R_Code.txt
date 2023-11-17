@@ -1,0 +1,7 @@
+
+R_Survey_Data <- read.csv("D:/Research/Tung_BIDA/DSJIE/Final_Revision_3_09062022/SurveyData_120_Rows_05252020.csv")
+Survey_25Qns_correlations <- R_Survey_Data[1:120,4:28]
+cor(Survey_25Qns_correlations)
+source("http://www.sthda.com/upload/rquery_cormat.r")
+require("corrplot")
+rquery.cormat(Survey_25Qns_correlations)

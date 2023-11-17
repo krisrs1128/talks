@@ -1,0 +1,54 @@
+# File name: KMO_Bartlett_CronAlpha_PCA_R_ProgramCode.R   # Work done on 05272020
+# ======================================================   ======================
+
+# PCA Analysis
+# ============
+R_Survey_Data <- read.csv("D:/Research/Tung_BIDA/DSJIE/DSJIE_Data_Analysis/SurveyData_120_Rows_05252020.csv")
+
+columns <- R_Survey_Data[,c(4:28)]
+
+bartlett.test(columns)
+
+library(psych)
+KMO(columns)
+
+#Reliability: Cronback Alphas
+#============================
+
+JP_Qns <- R_Survey_Data[,c(16:19,31)]
+psych::alpha(JP_Qns)
+
+IDMBA_Qns <- R_Survey_Data[,c(4:6,29)]
+psych::alpha(IDMBA_Qns)
+
+EiLR_Qns <- R_Survey_Data[,c(13:15,30)]
+psych::alpha(EiLR_Qns)
+
+RvsXL_Qns <- R_Survey_Data[,c(26:27,32)]
+psych::alpha(RvsXL_Qns)
+
+XL_Exp_Qns <- R_Survey_Data[,c(21:23)]
+psych::alpha(XL_Exp_Qns)
+
+VBA_Exp_Qns <- R_Survey_Data[,c(24:25)]
+psych::alpha(VBA_Exp_Qns)
+
+SRC_Qns <- R_Survey_Data[,c(8:11)]
+psych::alpha(SRC_Qns)
+
+
+# PCA
+# ===
+# rc stands for rotated components
+
+rc <- principal(columns,nfactors = 7,rotate = "varimax",scores = T)
+rc
+
+
+# Scree plot and Parallel analysis with twice the data
+# ====================================================
+R_Survey_DataX2 <- rbind(R_Survey_Data,R_Survey_Data)
+columns <- R_Survey_DataX2[,c(4:28)]
+fa.parallel(columns, fa="pc", n.iter=500, show.legend=FALSE, main="Scree plot")
+fa.parallel(columns, fa="rc", n.iter=500, show.legend=FALSE, main="Scree plot")
+

@@ -1,0 +1,19 @@
+# Demographics Analysis
+Demographics_data_columns <- read.csv("D:/Research/Tung_BIDA/DSJIE/DSJIE_Data_Analysis/Demographic_data_graphs.csv")
+
+# ggplots
+install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=Gender))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=AgeGp))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=ESL))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=Work))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=FGC))
+
+
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=ESL))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=AgeGp))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=FGC))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=Work))
+ggplot(data=Demographics_data_columns)+geom_bar(aes(x=Gender))

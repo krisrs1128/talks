@@ -1,0 +1,19 @@
+# ================================================================
+# Folder name: Word done on 05242020
+# R File name: ISLR books gam package final soln R code 05242020.R
+# ================================================================
+
+R_Survey_Data <- read.csv("D:/Research/Tung_BIDA/DSJIE/DSJIE_Data_Analysis/SurveyData_120_Rows_05252020.csv")
+
+install.packages("gam")  # ISLR'S gam() and NOT mgcv package
+library(gam)
+
+# 1: Run ISLR'S gam() with orginal data with log(SRC) transform
+# =============================================================
+#   ======= THIS IS THE BEST MODEL ======
+# =====================================================
+
+gam_model_log <- gam(log(SRC) ~ s(JP) + s(IDMBA) + s(EiLR) + s(RvsXL) + s(XL_Exp) + s(VBA_Exp), data = R_Survey_Data)
+summary(gam_model_log)
+par(mfrow=c(1,1))
+plot(gam_model_log, se=TRUE)
