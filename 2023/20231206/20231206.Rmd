@@ -14,7 +14,6 @@ output:
 ---
 
 class: title
-background-image: url("figures/cover.png")
 background-size: cover
 
 ```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
@@ -68,7 +67,9 @@ Expressive Interfaces for Multi-omics Simulation
 
 Requires: 2.5 megabytes of system memory or 3 megabytes under System 7, and a hard drive.</i>
 
--- The New York Times, 1992
+-- The New York Times, 1992, reviewing the newly released SimLife
+
+<br/>
 
 <i>Heard melodies are sweet, but those unheard <br/>
 Are sweeter; therefore, ye soft pipes, play on... <br/></i>
@@ -76,6 +77,7 @@ Are sweeter; therefore, ye soft pipes, play on... <br/></i>
 
 <div id="subtitle">
 Kris Sankaran <br/>
+<a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 06 | December | 2023 <br/>
 UW-Madison Statistics Seminar <br/>
 </div>
@@ -145,12 +147,85 @@ zingeR, ...
 
 ### A Grand Challenge
 
-There is active interest in specializing these simulators to specific problem
-and data contexts. However, most efforts remain isolated from one another.
-
 *Many single-cell data analysis packages include their own ad hoc data simulators [111, 211, 241, 264, 349–353]. However, these simulators are usually not available as separate tools or even as a source code, tailored to specific problems studied in corresponding papers and sometimes not comprehensively documented, thus limiting their utility for the broad research community.*
 
 -- Challenge 11 from "Eleven grand challenges in single-cell data science."
+
+---
+
+### That Quote is Unfair
+
+1. Simulation is not a part of routine data analysis yet, but it's not because
+every single researcher in the field is sloppy.
+
+1. There are two issues rooted in the classical mental model of simulation:
+  * We treat simulators as **black boxes**, granted, with many knobs.
+  * Simulators are **monolithic**, and components cannot be easily extended or
+interchanged across problem contexts.
+
+    The alternative should be coming into focus by now.
+    
+---
+
+### Existing Interfaces
+
+This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart). Of the packages I've listed,
+it has most thoughtful interface.
+
+```{r, eval = FALSE}
+params <- setParams(params, mean.shape = 0.5, de.prob = 0.2)
+params
+#> A Params object of class SplatParams 
+#> Parameters can be (estimable) or [not estimable], 'Default' or  'NOT DEFAULT' 
+#> Secondary parameters are usually set during simulation
+#> 
+#> Global: 
+#> (GENES)  (Cells)   [SEED] 
+#>    8000      100   694289 
+#> 
+#> 29 additional parameters 
+#> 
+#> Batches: 
+#>     [Batches]  [Batch Cells]     [Location]        [Scale]       [Remove] 
+#>             1            100            0.1            0.1          FALSE 
+#> 
+#> Mean: 
+#>  (RATE)  (SHAPE) 
+#>     0.5      0.5 
+```
+
+---
+
+### Existing Interfaces
+
+.pull-left[
+Here is an example from the [`scDesign3` Quick Start](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html).
+This package has the most generally applicable statistical methodology.
+]
+
+.pull-right[
+```{r, eval = FALSE}
+example_simu <- scdesign3(
+    sce = example_sce,
+    assay_use = "counts",
+    celltype = "cell_type",
+    pseudotime = "pseudotime",
+    spatial = NULL,
+    other_covariates = NULL,
+    mu_formula = "s(pseudotime, k = 10, bs = 'cr')",
+    sigma_formula = "1", # If you want your dispersion also varies along pseudotime, use "s(pseudotime, k = 5, bs = 'cr')"
+    family_use = "nb",
+    n_cores = 2,
+    usebam = FALSE,
+    corr_formula = "1",
+    copula = "gaussian",
+    DT = TRUE,
+    pseudo_obs = FALSE,
+    return_model = FALSE,
+    nonzerovar = FALSE
+  )
+```
+]
 
 ---
 
@@ -170,18 +245,39 @@ activity, and well-designed tools encourage substantive community engagement.
 
 ---
 
-### scDesign
+### `scDesign3` Review
 
-I have been trying put this philosophy into practice by through a new version of
-the scDesign package. The simulation method has two main steps:
+The rest of the talk will be about using these principles to develop a new
+version of `scDesign3`. Let's review that package's approach.
 
-* Estimate gene-wise regression models using location-shape-scale families.
-* Couple the quantiles from dependent pairs of features using a Gaussian or Vine Copula.
+.center[
+<img src="figures/scdesignOverview.png" width=800/>
+]
+
+First, we estimate models $\hat{F}_{g}\left(y_{i} \vert \mathbf{x}_{i}\right)$ for each gene $g$.
+
+* Can use a variety of families: Gaussian, Poisson, Negative Binomial,...
+* Can learn relationships for each parameter $\theta\left(\mathbf{x}_{i}\right)$.
 
 ---
 
-## Design
+### `scDesign3` Review
 
+.pull-left[
+<img src="figures/scdesignOverview2.png" width=400/>
+]
+
+.pull-right[
+Model the joint distribution of quantiles using a copula model.
+* The existing package supports Gaussian and Vine copulas.
+* Can estimate separate copulas across groups to capture differential dependence.
+]
+
+---
+
+.section[
+## Interface Design
+]
 
 ---
 
@@ -285,8 +381,9 @@ For the marginals, we can borrow from existing LSS packages (gamboostLSS and gam
 
 We can also build a unified interface to a variety of copula estimation routines,
 
-* Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
 * Vine copulas for capturing higher-order moments.
+* Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
+* `copula_vine(), copula_adaptive(), copula_glasso(), ...`
 
 ---
 
@@ -294,10 +391,9 @@ We can also build a unified interface to a variety of copula estimation routines
 
 This syntax specifies a simulation model. What can we do with these building blocks?
 
-Of course, we can **estimate** and **sample**.
-
-More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
-
+  * Of course, we can **estimate** and **sample**.
+  * More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
+  
 ---
 
 ### Plot Margins
@@ -321,6 +417,15 @@ grid <- expand_colData(sce, "pseudotime")
 samples <- sample(simulator, n_samples = 10, new_data = grid)
 plot_correlations(samples, points_opts = list(size = 1.5, alpha = 1))
 ```
+
+---
+
+### <span style="color:#D94E4E">Plot</span> - Mutate
+
+We have an experimental interactive visualization that can be used for model criticism.
+
+(screenshot)
+(link)
 
 ---
 
@@ -485,41 +590,51 @@ spatial_experiment <- spe[gene_order[1:10], ]
 
 ### <span style="color:#025E73">Modularity</span> - Augment
 
-We want a unified interface that works across diverse data types. One way to
-create consistency is to **augment** the general `SummarizedExperiment` with
-domain-specific structure .
+Another way to alter a simulator is to make implicit data explicitly available,
+in the spirit of the broom package's `augment`.
 
-For example, this makes spatial information accessible within the regression:
+For example, these data have clear mouse-level effects.
 
-```{r, spatial_estimation}
-spatial_experiment <- augment(spatial_experiment)
-
-simulator <- spatial_experiment |>
-  setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
-  estimate(spatial_experiment)
-```
+.center[
+<img src="figures/subject_effect_real.png" width=750/>
+]
 
 ---
 
 ### <span style="color:#025E73">Modularity</span> - Augment
 
-For example, this makes spatial information accessible within the regression:
+1. Unfortunately, none of the packages we use at the marginal estimation step support random effects.
 
-```{r plot_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
-features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
-plot_bivariate(
-    simulator, spatial_experiment[, 1:5e2], features,
-    feature_names = c("ENSG00000198899", "ENSG00000198888", "ENSG00000167996")
-  ) +
-  labs(
-    "fill" = expression(log(1 + count)),
-    "color" = expression(log(1 + count))
-  )
+1. We defined an `augment` function that defines a simple proxy,
+
+    * Compute sample-wise low-dimensional multidimensional scaling coordinates $z_{i}$.
+    * For mouse $s$, condition on its average coordinates: $F_{g}\left(y_{ig} \vert x_{i}, \bar{z}_{s\left(i\right)}\right)$
+    * Use with caution: The $z_{i}$ will be correlated with the diet effect.
+
+.large-code[
+```{r, eval = FALSE}
+exper <- augment_mds(exper, K = 4) |>
+  groupwise_average(starts_with("MDS"), MouseID)
 ```
+]
 
 ---
 
-## Case Studies
+### <span style="color:#025E73">Modularity</span> - Augment
+
+* Compute sample-wise low-dimensional multidimensional scaling coordinates $z_{i}$.
+* For mouse $s$, condition on its average coordinates: $F_{g}\left(y_{ig} \vert x_{i}, \bar{z}_{s\left(i\right)}\right)$
+* Use with caution: The $z_{i}$ will be correlated with the diet effect.
+
+.center[
+<img src="figures/mouse_effect_comparison.png" width=1000/>
+]
+
+---
+
+.section[
+## Examples
+]
 
 ---
 
@@ -697,7 +812,9 @@ seem consistent with the high-level summary.
 
 1. Translating scientific hypotheses in quantitative models is more challenging
 than is widely appreciated. This arguably contributes to the ongoing
-reproducibility crisis `r Citep(bib, "")`
+reproducibility crisis `r Citep(bib, c("Hernan2024-ea", "072523_overton"))`
+
+1. A truly scientific critique proposes a modification of the proposed generative model.
 
 1. Generative models train researchers in this skill, and effective interactive
 computing interfaces can accelerate their adoption.

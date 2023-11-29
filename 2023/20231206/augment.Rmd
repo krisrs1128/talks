@@ -1,0 +1,132 @@
+---
+title: "scDesign for BEME Simulation"
+output: pdf_document
+date: "2023-11-10"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+set.seed(20231128)
+```
+
+## Setup and Preprocessing
+
+Let's source some helper functions and read in the original data. Note that I have modified the `filter_otu_ids` function in ``helper_v1.R`` to extract the top 5 OTUs.
+
+```{r read_data, message=FALSE}
+source("helpers_v1.R")
+theme_set(theme_classic())
+load(glue("data_org/BEME.RData"))
+data.raw <- data.raw - 1 
+n_mice<-46
+
+keep_ids <- filter_otu_ids(data.raw, sample.info, 0.2)
+sample.info <- sample.info |>
+  rownames_to_column("SampleID") |>
+  filter(
+    SampleID %in% rownames(data.raw),
+    SampleID != "83M",
+    Day != "A",
+    Rep == "Biological"
+  ) |>
+  mutate(
+    day = str_extract(Day, "[0-9]+"),
+    day = as.numeric(day)
+  )
+
+data.raw <- data.raw[sample.info$SampleID, ]
+data.raw <- data.raw[, keep_ids]
+D <- length(keep_ids)
+
+```
+
+Next set of code stores the data in a SummarizedExperiment object.
+
+```{r build_experiment}
+exper <- SummarizedExperiment(
+  assays = SimpleList(counts = log(1 + t(data.raw))),
+  colData = DataFrame(sample.info)
+)
+rownames(exper) <- str_replace(rownames(exper), "OTU_", "Taxon ")
+
+exper <- augment_mds(exper, K = 4) |>
+  groupwise_average(starts_with("MDS"), MouseID)
+```
+
+## With MDS
+
+Define and estimate a simulator using the code below. 
+
+```{r setup_simulator}
+simulator <- setup_simulator(
+  exper, 
+  ~ Diet * bs(day, knots = c(1.5), degree = 2, Boundary.knots = c(0, 8)) + MDS1 + MDS2 + MDS3 + MDS4,
+  ~ GaussianLSS(),
+  copula_gaussian()
+) |>
+  estimate(nu = 0.05, mstop = 1000)
+samples_mds <- sample(simulator)
+```
+
+## Without MDS
+
+```{r setup_simulator_without}
+simulator <- setup_simulator(
+  exper, 
+  ~ Diet * bs(day, knots = c(1.5), degree = 2, Boundary.knots = c(0, 8)),
+  ~ GaussianLSS(),
+  copula_gaussian()
+) |>
+  estimate(nu = 0.05, mstop = 1000)
+
+samples_no_mds <- sample(simulator)
+```
+
+
+```{r}
+pivot_experiment <- scDesigner:::pivot_experiment
+combined <- list(
+  `Original Data` = pivot_experiment(exper) |> select(-Day),
+  `Simulated w/ MDS` = pivot_experiment(samples_mds) |> select(-Day),
+  `Simulated w/o MDS` = pivot_experiment(samples_no_mds) |> select(-Day)
+) |>
+  bind_rows(.id = "group")
+```
+
+```{r, fig.height = 2.6, fig.width = 8}
+combined |>
+  group_by(group, MouseID, feature) |>
+  summarise(sd = sd(value)) |>
+  mutate(group = factor(group)) |>
+  arrange(feature, MouseID) |>
+  ggplot() +
+  geom_boxplot(aes(sd, group, fill = group)) +
+  labs(
+    x = "Mouse-Level Standard Deviations", 
+    fill = "Source",
+    y = "Source"
+  ) +
+  scale_fill_manual(values = c("#8C2A60", "#025373", "#97A69B")) +
+  facet_wrap(~ reorder(feature, -sd), scales = "free", ncol = 7) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.position = "bottom"
+  )
+
+ggsave("figures/mouse_effect_comparison.png", width = 8, height = 2.6)
+```
+
+```{r}
+
+otu_order <- pivot_experiment(exper) |>
+  group_by(feature) |>
+  summarise(value = mean(value)) |>
+  arrange(-value) |>
+  pull(feature)
+
+plot_samples(exper, FALSE, otu_order = otu_order)
+ggsave("subject_effect_real.png", width = 8, height = 3)
+plot_samples(samples_mds, FALSE, otu_order = otu_order)
+ggsave("subject_estimate_augment.png", width = 8, height = 3)
+```
