@@ -1,0 +1,38 @@
+---
+title: "Untitled"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+```{r}
+library(genefilter)
+library(tidyverse)
+```
+
+```{r}
+impute_numeric <- function(x) {
+  x <- suppressWarnings(as.numeric(as.character(x)))
+  x[is.na(x)] <- mean(x, na.rm = TRUE)
+  x
+}
+
+library(SpiecEasi)
+data(amgut2.filt.phy)
+sample_data(amgut2.filt.phy) <- sample_data(amgut2.filt.phy) |>
+  data.frame() |>
+  mutate(
+    across(any_of(c("AGE", "BMI", "PLANT_PER", "CARBOHYDRATE_PER")), impute_numeric),
+    BMI = ifelse(BMI > 35, 35, BMI),
+    sequencing_depth = colSums(otu_table(amgut2.filt.phy))
+  )
+
+bad_ix <- sample_data(amgut2.filt.phy)$sequencing_depth < 1e3
+amgut <- subset_samples(amgut2.filt.phy, !bad_ix) |>
+  filter_taxa(kOverA(50, 100), prune = TRUE)
+
+saveRDS(amgut, file = "amgut.rds")
+```

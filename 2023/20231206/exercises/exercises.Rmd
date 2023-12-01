@@ -1,0 +1,134 @@
+---
+title: "Untitled"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE, message = FALSE}
+source("setup.R")
+```
+
+```{r}
+library(Matrix)
+library(STexampleData)
+library(copula)
+library(CovTools)
+library(SummarizedExperiment)
+library(gamboostLSS)
+library(scDesigner)
+library(splines)
+```
+
+```{r}
+counts <- read_csv("amgut-counts.csv") |>
+  column_to_rownames("taxon") |>
+  as.matrix()
+metadata <- read_csv("amgut-metadata.csv")
+
+exper <- SummarizedExperiment(
+  assays = SimpleList(counts = counts),
+  colData = metadata
+)
+```
+
+```{r}
+sim <- setup_simulator(
+  exper,
+  ~ log(sequencing_depth) + BMI,
+  ~ ZINBLSS()
+) |>
+  estimate(mstop = 100)
+
+sim
+```
+
+```{r, fig.width = 12, fig.height = 4}
+plot(sim, "BMI", sample(sim))
+new_data <- colData(exper) |>
+  as_tibble() |>
+  mutate(
+    newdata_index = row_number(),
+    sequencing_depth = 2e4
+  )
+plot(sim, "BMI", new_data = new_data, sim = sample(sim, new_data = new_data))
+```
+
+```{r}
+simulated <- sample(sim)
+pivot_experiment <- scDesigner:::pivot_experiment
+
+pivoted <- list(
+    real = pivot_experiment(exper),
+    simulated = pivot_experiment(simulated)
+  ) |>
+  bind_rows(.id = "source") |>
+  filter(feature %in% rownames(simulated)[1:20])
+
+ggplot(pivoted) +
+  geom_histogram(
+    aes(log(1 + value), 
+    fill = source
+    ), 
+  position = "identity", alpha = 0.6
+  ) +
+  facet_wrap(~ reorder(feature, value), scales = "free")
+```
+
+```{r}
+rho <- p2P(sim@dependence@fit[[1]]@parameters)
+heatmap(rho)
+```
+
+```{r}
+rho <- rep(0.6, 3) |>
+  map(~ matrix(., nrow = 15, ncol = 15)) |>
+  bdiag()
+diag(rho) <- 1
+
+altered <- sim |>
+  mutate_correlation(rho)
+
+simulated <- sample(altered)
+x <- log(1+ t(assay(simulated)))
+omega <- PreEst.glasso(x)
+#omega <- PreEst.glasso(x, method = list(type = "fixed", param = 0.2))
+heatmap(solve(omega$C))
+
+sigma <- CovEst.2003LW(x)
+heatmap(sigma$S)
+
+data.frame(
+  truth = as.numeric(rho),
+  lw = as.numeric(cov2cor(sigma$S)),
+  glasso = as.numeric(cov2cor(solve(omega$C)))
+) |>
+  pivot_longer(-truth, values_to = "estimate") |>
+  ggplot() +
+  geom_jitter(aes(truth, estimate, col = name), alpha = 0.6, size = 0.4) +
+  geom_abline(slope = 1) +
+  facet_wrap(~ name)
+```
+
+
+### Augmenting Spatial Data
+
+```{r, spatial_estimation}
+spatial_experiment <- readRDS("dlpfc.rds")
+spatial_experiment <- augment(spatial_experiment)
+
+simulator <- spatial_experiment |>
+  setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
+  estimate(spatial_experiment, mstop = 50)
+```
+
+```{r plot_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
+features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
+plot_bivariate(
+    simulator, spatial_experiment, features,
+    max_print = 20
+  ) +
+  labs(
+    "fill" = expression(log(1 + count)),
+    "color" = expression(log(1 + count))
+  )
+```
