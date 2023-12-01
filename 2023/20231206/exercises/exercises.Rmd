@@ -9,6 +9,7 @@ source("setup.R")
 ```
 
 ```{r}
+librayr(Matrix)
 library(SummarizedExperiment)
 library(gamboostLSS)
 library(scDesigner)
@@ -57,26 +58,21 @@ sim <- setup_simulator(
 ) |>
   estimate(mstop = 100)
 
-sim
+simulated <- sample(sim)
 ```
 
 ```{r}
-simulated <- sample(sim)
-pivot_experiment <- scDesigner:::pivot_experiment
-
 pivoted <- list(
-    real = pivot_experiment(exper),
-    simulated = pivot_experiment(simulated)
-  ) |>
+  real = pivot_experiment(exper),
+  simulated = pivot_experiment(simulated)
+) |>
   bind_rows(.id = "source") |>
   filter(feature %in% rownames(simulated)[1:20])
 
 ggplot(pivoted) +
   geom_histogram(
-    aes(log(1 + value), 
-    fill = source
-    ), 
-  position = "identity", alpha = 0.6
+    aes(log(1 + value), fill = source),
+    position = "identity", alpha = 0.6
   ) +
   facet_wrap(~ reorder(feature, value), scales = "free")
 ```
@@ -85,10 +81,7 @@ ggplot(pivoted) +
 plot(sim, "BMI", sample(sim))
 new_data <- colData(exper) |>
   as_tibble() |>
-  mutate(
-    newdata_index = row_number(),
-    sequencing_depth = 2e4
-  )
+  mutate(sequencing_depth = 2e4)
 plot(sim, "BMI", new_data = new_data, sim = sample(sim, new_data = new_data))
 ```
 
@@ -97,7 +90,7 @@ Pick a pair of species with high correlation under this model and visualize the
 joint distribution of their ranks. Is the model's estimate appropriate?
 
 ```{r}
-rho <- p2P(sim@dependence@fit[[1]]@parameters)
+rho <- copula_parameters(sim)
 heatmap(rho)
 ```
 
@@ -114,28 +107,28 @@ rho <- rep(0.6, 3) |>
   bdiag()
 diag(rho) <- 1
 
-altered <- sim |>
-  mutate_correlation(rho)
+simulated <- sim |>
+  mutate_correlation(rho) |>
+  sample()
 
-simulated <- sample(altered)
-x <- log(1+ t(assay(simulated)))
-omega <- PreEst.glasso(x)
-#omega <- PreEst.glasso(x, method = list(type = "fixed", param = 0.2))
-heatmap(solve(omega$C))
+library(SpiecEasi)
+sigma_se <- spiec.easi(t(assay(simulated)), nlambda = 10)
+heatmap(cov2cor(sigma_se$est$cov[[1]]))
 
-sigma <- CovEst.2003LW(x)
-heatmap(sigma$S)
+x <- log(1 + t(assay(simulated)))
+sigma_lw <- CovEst.2003LW(x)
+heatmap(cov2cor(sigma$S))
 
 data.frame(
   truth = as.numeric(rho),
-  lw = as.numeric(cov2cor(sigma$S)),
-  glasso = as.numeric(cov2cor(solve(omega$C)))
+  se = as.numeric(cov2cor(sigma_se$est$cov[[1]])),
+  lw = as.numeric(cov2cor(sigma_lw$S))
 ) |>
   pivot_longer(-truth, values_to = "estimate") |>
   ggplot() +
   geom_jitter(aes(truth, estimate, col = name), alpha = 0.6, size = 0.4) +
   geom_abline(slope = 1) +
-  facet_wrap(~ name)
+  facet_wrap(~name)
 ```
 
 ### Augmenting Spatial Data
@@ -143,7 +136,7 @@ data.frame(
 One goal of modern molecular biology is to build a map of the cell, its
 molecular machinery, and its relationships with larger systems (e.g., the
 circulatory system). Yet, until 2018 - 2020, this map had no sense of spatial
-orientation.  This has changed with the advent of spatial sequencing
+orientation. This has changed with the advent of spatial sequencing
 technologies, where we can now measure the abundances of individual molecules
 together with their spatial location within tissue samples.
 
@@ -162,20 +155,34 @@ a. Visualize the spatial gene expression pattern associated with a subset of
 genes of your choice. What is the extent of spatial smoothness? How skewed are
 the expression levels?
 
+```{r}
+coords <- spatialCoords(spatial_experiment)
+x <- assay(spatial_experiment) |>
+  as.matrix() |>
+  t()
+
+bind_cols(x[, 1:3], coords) |>
+  pivot_longer(-starts_with("pxl")) |>
+  ggplot() +
+  geom_point(aes(pxl_col_in_fullres, pxl_row_in_fullres, col = log(1 + value))) +
+  facet_wrap(~ name)
+```
+
 
 b. Estimate a simulator based on your observations from (a). Visualize the
 estimated mean functions across the tissue (not just at the observed locations).
 
 ```{r fit_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
+library(splines)
 simulator <- spatial_experiment |>
   setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
   estimate(spatial_experiment, mstop = 50)
 
 features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
 plot_bivariate(
-    simulator, spatial_experiment, features,
-    max_print = 20
-  ) +
+  simulator, spatial_experiment, features,
+  max_print = 20
+) +
   labs(
     "fill" = expression(log(1 + count)),
     "color" = expression(log(1 + count))

@@ -34,3 +34,7 @@ theme_set(th)
 heatmap <- function(...) {
   stats::heatmap(..., col=hcl.colors(15, "Zissou"))
 }
+
+copula_parameters <- function(x) {
+  p2P(sim@dependence@fit[[1]]@parameters)
+}
