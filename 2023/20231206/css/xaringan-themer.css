@@ -34,7 +34,6 @@ h1, h3 {
 
 h2 {
   background-color: rgba(255, 255, 255, 0.8);
-  width: 500px;
   font-weight: normal;
   color: #0c0c0c;
 }
@@ -50,7 +49,7 @@ h2 {
 }
 .remark-slide-content h2 {
   font-family: 'Raleway';
-  font-size: 45px;
+  font-size: 60px;
 }
 .remark-slide-content h3 {
   font-family: 'Raleway';
@@ -58,14 +57,15 @@ h2 {
 }
 .remark-code, .remark-inline-code {
   font-family: 'Lucida Console', Monaco, monospace;
-  font-style: 24px;
 }
 .remark-code {
+  font-size: 20px;
 }
 .remark-inline-code {
   color: #09017F;
-  
-  
+}
+.large-code .remark-code{
+  font-size: 25px;
 }
 .remark-slide-number {
   color: #09017F;
@@ -198,65 +198,6 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   width: 100%;
 }
 
-.my_title h1 h2 {
-  font-family: 'Raleway';
-}
-
-.my_title {
-  position: relative;
-  z-index: 1;
-}
-
-.my_title p {
-  margin: 0;
-}
-
-.my_title .pull-left {
-  float: left;
-  width: 60%;
-}
-
-.my_title .pull-right {
-  float: right;
-  width: 27%;
-}
-
-.my_title::before {    
-      content: "";
-      background-image: url("https://uwmadison.box.com/shared/static/ebncvy25z4q6livvmzy9b10a1th5zt33.png");
-      background-size: cover;
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
-      opacity: 0.1;
-      z-index: -1;
-}
-
-.background-rivers {
-  position: relative;
-  z-index: 1;
-}
-
-.background-rivers h1 {
-  background-color: #F7F7F7;
-  width: 30%;
-}
-
-.background-rivers::before {
-  content: "";
-  background-image: url("https://uwmadison.box.com/shared/static/arknmgopwjq2y4x5h8oeduzlbkvjyybn.jpg");
-  background-size: cover;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  opacity: 1;
-  z-index: -1;
-}
-
 #credit {
   position: absolute;
   top: 10px;
@@ -265,23 +206,9 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   text-align: center;
 }
 
-#microbiome-header {
-  background-color: white;
-  font-family: 'Raleway';
-  font-size: 45px;
-  color: #5f558e;
-}
-
-#von-humboldt {
-  position: absolute;
-  top: 300px;
-  left: 700px; 
+.section {
   text-align: center;
-}
-
-.cover {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding-left: 10px;
+  vertical-align: bottom;
 }
 
 #subtitle {
@@ -291,7 +218,8 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-size: 20px;
   width: 350px;
   color: #5f558e;
-  left: 10px;
+  text-align: right;
+  right: 20px;
   bottom: 10px;
 }
 

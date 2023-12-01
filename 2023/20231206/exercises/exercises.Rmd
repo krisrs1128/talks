@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "`scDesigner` Exercises"
 output: html_document
 date: "`r Sys.Date()`"
 ---
@@ -9,27 +9,45 @@ source("setup.R")
 ```
 
 ```{r}
-library(Matrix)
-library(STexampleData)
-library(copula)
-library(CovTools)
 library(SummarizedExperiment)
 library(gamboostLSS)
 library(scDesigner)
-library(splines)
 ```
+
+## Q1 [Microbiome Networks]
+
+Which microbes are friends with one another? Unlike human social networks, there
+is no simple way to observe microbe-microbe interactions -- we have to make do
+from indirect evidence. A standard approach is use population profiles as a
+proxy for true ecological interaction. Species that often co-occur are
+understood to have cooperative ecological interactions, while those that never
+co-occur are thought to compete for the same niche.
+
+Many algorithms have been designed around this intuition, all trying to go
+beyond simple co-occurrence and instead capture more complex types of
+dependence. A challenge in practice is that it's hard to know which method to
+use when, since the problem is unsupervised. Even when thorough simulation
+benchmarking studies are available, it's often not obvious how well those
+simulation setups match our problems of interest.
+
+Let's use `scDesigner` to carry out a mini-benchmark study on the American Gut
+microbiome dataset. We will simulate data with known correlation structure and
+species-level marginals estimated from the real study data. The block below
+reads in the data.
 
 ```{r}
 counts <- read_csv("amgut-counts.csv") |>
-  column_to_rownames("taxon") |>
-  as.matrix()
+  column_to_rownames("taxon")
 metadata <- read_csv("amgut-metadata.csv")
 
 exper <- SummarizedExperiment(
-  assays = SimpleList(counts = counts),
+  assays = SimpleList(counts = as.matrix(counts)),
   colData = metadata
 )
 ```
+
+a. Estimate a simulator with the species-wise regression formula
+`~log(sequencing_depth) + BMI`. Comment on the quality of the fitted model.
 
 ```{r}
 sim <- setup_simulator(
@@ -40,17 +58,6 @@ sim <- setup_simulator(
   estimate(mstop = 100)
 
 sim
-```
-
-```{r, fig.width = 12, fig.height = 4}
-plot(sim, "BMI", sample(sim))
-new_data <- colData(exper) |>
-  as_tibble() |>
-  mutate(
-    newdata_index = row_number(),
-    sequencing_depth = 2e4
-  )
-plot(sim, "BMI", new_data = new_data, sim = sample(sim, new_data = new_data))
 ```
 
 ```{r}
@@ -74,10 +81,32 @@ ggplot(pivoted) +
   facet_wrap(~ reorder(feature, value), scales = "free")
 ```
 
+```{r, fig.width = 12, fig.height = 4}
+plot(sim, "BMI", sample(sim))
+new_data <- colData(exper) |>
+  as_tibble() |>
+  mutate(
+    newdata_index = row_number(),
+    sequencing_depth = 2e4
+  )
+plot(sim, "BMI", new_data = new_data, sim = sample(sim, new_data = new_data))
+```
+
+b. Visualize the correlation matrix estimated by the simulator's copula model.
+Pick a pair of species with high correlation under this model and visualize the
+joint distribution of their ranks. Is the model's estimate appropriate?
+
 ```{r}
 rho <- p2P(sim@dependence@fit[[1]]@parameters)
 heatmap(rho)
 ```
+
+c. Replace the true correlation matrix with one of your own design. Simulate
+data from this modified model and estimate the microbe interaction network using
+(i) the SpiecEasi algorithm and (ii) the Ledoit-Wolfe covariance estimator.
+According to your benchmark, which method is preferable? How might you refine
+your simulator to improve its faithfulness to the covariance you observed in
+(b)?
 
 ```{r}
 rho <- rep(0.6, 3) |>
@@ -109,19 +138,39 @@ data.frame(
   facet_wrap(~ name)
 ```
 
-
 ### Augmenting Spatial Data
+
+One goal of modern molecular biology is to build a map of the cell, its
+molecular machinery, and its relationships with larger systems (e.g., the
+circulatory system). Yet, until 2018 - 2020, this map had no sense of spatial
+orientation.  This has changed with the advent of spatial sequencing
+technologies, where we can now measure the abundances of individual molecules
+together with their spatial location within tissue samples.
+
+In this exercise, we will build a model of spatial transcription in the
+dorsolateral prefrontal cortex (DLPFC). This model could then be used downstream
+to create negative controls and ensure properly calibrated spatial differential
+expression analysis. The block below reads a small subset of [DLPFC
+data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8095368/) into an object of
+class [`SpatialExperiment`](https://github.com/drighelli/SpatialExperiment). 
 
 ```{r, spatial_estimation}
 spatial_experiment <- readRDS("dlpfc.rds")
-spatial_experiment <- augment(spatial_experiment)
+```
 
+a. Visualize the spatial gene expression pattern associated with a subset of
+genes of your choice. What is the extent of spatial smoothness? How skewed are
+the expression levels?
+
+
+b. Estimate a simulator based on your observations from (a). Visualize the
+estimated mean functions across the tissue (not just at the observed locations).
+
+```{r fit_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
 simulator <- spatial_experiment |>
   setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
   estimate(spatial_experiment, mstop = 50)
-```
 
-```{r plot_spatial, fig.height = 3.5, fig.width = 9, echo = FALSE}
 features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
 plot_bivariate(
     simulator, spatial_experiment, features,
