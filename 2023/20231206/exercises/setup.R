@@ -9,7 +9,15 @@ knitr::opts_chunk$set(
   dev.args = list(bg = "transparent")
 )
 
+library(CovTools)
+library(Matrix)
+library(SpiecEasi)
+library(SummarizedExperiment)
+library(gamboostLSS)
+library(splines)
 library(tidyverse)
+library(scDesigner)
+
 options(
   ggplot2.discrete.colour = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
   ggplot2.discrete.fill = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
