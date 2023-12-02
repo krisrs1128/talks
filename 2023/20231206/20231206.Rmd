@@ -420,15 +420,6 @@ plot_correlations(samples, points_opts = list(size = 1.5, alpha = 1))
 
 ---
 
-### <span style="color:#D94E4E">Plot</span> - Mutate
-
-We have an experimental interactive visualization that can be used for model criticism.
-
-(screenshot)
-(link)
-
----
-
 ### <span style="color:#D94E4E">Interactivity</span> - Mutate
 
 There are many reasons we might want to alter an initial simulator,
@@ -633,6 +624,21 @@ exper <- augment_mds(exper, K = 4) |>
 ---
 
 .section[
+## Interactive Demo
+]
+<br/>
+<br/>
+<br/>
+
+<div style="font-size: 34px;">
+Live Code: <a href="https://go.wisc.edu/">https://go.wisc.edu/</a>
+<br/>
+Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
+</div>
+
+---
+
+.section[
 ## Examples
 ]
 
@@ -655,9 +661,9 @@ exper <- augment_mds(exper, K = 4) |>
 
 ---
 
-### Example
+### Example 1
 
-For concreteness, let’s revisit the microbiome + metabolome mouse study CCA from the F1000 Workflow paper. This had 12 samples.
+For concreteness, let’s consider the microbiome + metabolome mouse study from `r Citep(bib, "Callahan2016BioconductorWF")`. This had 12 samples.
 1. How does estimation quality improve with sample size?
 2. Is it worth gathering unpaired samples? (mosaic designs)
 
@@ -667,7 +673,7 @@ For concreteness, let’s revisit the microbiome + metabolome mouse study CCA fr
 
 ---
 
-### Part 1: Estimate Simulators
+### Example 1: Estimate Simulators
 
 1. Fit ZINB models to the microbiome.
 2. Fit Gaussian models to the metabolome.
@@ -704,25 +710,14 @@ smaller sample sizes.
 Figure from `r Citep(bib, "Arikawa2018TheoreticalFF")`.
 ]
 
-
 ---
-### Non-Mosaic Case
+
+### Part 2: Hypothetical Experiments
 
 With more samples, the canonical angles shrink in a predictable way.
 
 .center[
 <img src="figures/canonical_angles.png" width=750/>
-]
-
----
-
-### Mosaic Case
-
-Here, we have allowed the sample sizes to differ and use KNN imputation to run
-CCA on an imputed table.
-
-.center[
-<img src="figures/mosaic_example.png" width=750/>
 ]
 
 ---
@@ -808,58 +803,37 @@ seem consistent with the high-level summary.
 
 ---
 
-### Precise Technology $\neq$ Precise Thought
+### Bonus: <span style="color:#D94E4E">Interactive Plot</span>
 
-1. Translating scientific hypotheses in quantitative models is more challenging
-than is widely appreciated. This arguably contributes to the ongoing
-reproducibility crisis `r Citep(bib, c("Hernan2024-ea", "072523_overton"))`
+We have an experimental interactive visualization that can be used for model criticism. You can check out the code: https://go.wisc.edu/q43ol3
 
-1. A truly scientific critique proposes a modification of the proposed generative model.
-
-1. Generative models train researchers in this skill, and effective interactive
-computing interfaces can accelerate their adoption.
+.center[
+<a href="localhost:5000">
+<img src="figures/scdesigner-interactive.png" width=700/>
+</a>
+]
 
 ---
 
-### Memos for the New Millennium
+### Statistics as the Science of Thought Experiments
 
-<table id="images" style="width: 100%; border: none;">
-<tr>
-<td style="width: 20%;">
-  <img src="figures/cloud.png" width=100px/> 
-</td>
-<td style="width: 20%;">
-  <img src="figures/speedometer.svg" width=55px/> 
-</td>
-<td style="width: 20%;">
-<img src="figures/compass.jpeg" width=60px/> 
-</td>
-<td style="width: 20%;">
-<img src="figures/microscope.jpeg" width=50px/> 
-</td>
-<td style="width: 20%;">
-<img src="figures/galaxy.png" width=80px/> 
-</td>
-</tr>
-</table>
-Lightness: A well-designed interface brings a kind of effortlessness to
-statistical thought.
+.pull-left[
+1. Precise technology $\neq$ precise thought. The opacity of translating scientific hypotheses into quantitative models arguably contributes to the reproducibility crisis `r Citep(bib, c("Hernan2024-ea", "072523_overton"))`. 
 
-Quickness: We value the ability quickly experiment with and compare hypotheses.
+1. Simulation-based methods train researchers in this translation, and
+effective interactive computing interfaces can accelerate their adoption.
+]
 
-Exactitude: Simulations require precision in scientific hypotheses.
-
-Visibility: Simulation can bring biological mechanisms to the surface.
-
-Multiplicity: We must become comfortable working simultaneously with data
-with multiple different forms.
+.pull-right[
+<img src="figures/somnium.jpeg" width=350/>
+]
 
 ---
 
 ### Acknowledgements
 
-* Members of my research group - Hanying Jiang, Shuchen Yan, Zhuoyan Xu, Kaiyan Ma, Margaret Thairu, and Mason Garza
-* Members of the JSB Lab (UCLA) and the MixOmics group (University of Melbourne).
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, and Kaiyan Ma
+* Discussions with Jingyi Jessica Li (UCLA)
 * Funding mechanism: NIGMS R01GM152744.
 
 ---
@@ -878,3 +852,12 @@ PrintBibliography(bib, start = 1, end = 3)
 PrintBibliography(bib, start = 4, end = 7)
 ```
 
+---
+### Mosaic Case
+
+Here, we have allowed the sample sizes to differ and use KNN imputation to run
+CCA on an imputed table.
+
+.center[
+<img src="figures/mosaic_example.png" width=750/>
+]
