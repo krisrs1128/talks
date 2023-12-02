@@ -1,6 +1,8 @@
 ---
 title: "`scDesigner` Exercises"
-output: html_document
+format:
+  html:
+    code-fold: true
 date: "`r Sys.Date()`"
 ---
 
@@ -12,7 +14,7 @@ source("setup.R")
 
 Which microbes are friends with one another? Unlike human social networks, there
 is no simple way to observe microbe-microbe interactions -- we have to make do
-from indirect evidence. One approach uses population profiles as a proxy for
+with indirect evidence. One approach uses population profiles as a proxy for
 ecological interaction. Taxa that often co-occur are understood to have
 cooperative ecological interactions, while those that don't are thought to
 compete for the same niche.
@@ -44,6 +46,13 @@ exper <- SummarizedExperiment(
 
 a. Estimate a simulator with the taxon-wise regression formula
 `~log(sequencing_depth) + BMI`. Comment on the quality of the fitted model.
+
+We'll estimate zero-inflated negative binomial location-shape-scale (`ZINBLSS`)
+models for each gene. The simulated data is always a `SummarizedExperiment`.
+This means that any workflow that applied to the original data can be applied to
+the simulated one without any changes. Notice also that `sample` defaults to
+drawing samples from the same design as the original input experiment (we'll
+modify this using the `new_data` argument in a minute).
 
 ```{r}
 #| label: example-sim
@@ -90,9 +99,9 @@ can assume that all samples had exactly the same sequencing depth.
 
 ```{r, fig.width = 12, fig.height = 4}
 #| label: bmi-scatter
-plot(sim, "BMI", sample(sim))
-new_data <- colData(exper) 
-new_data$sequencing_depth <- 2e4
+new_data <- colData(exper) |>
+  as_tibble() |>
+  mutate(sequencing_depth = 2e4)
 plot(sim, "BMI", sample(sim, new_data = new_data), new_data = new_data)
 ```
 
@@ -153,8 +162,8 @@ Let's first look at the [`SpiecEasi` covariance estimate](https://github.com/zdk
 graphical lasso that is designed to be well-adapted to microbiome data. The good
 news is that it does warn that the default choices of $\lambda$ are too large,
 which is correct in this case. Unfortunately, it took a while to get this
-answer, and we had already been quite in allowing it to fit 10 choices fo
-$\lambda$.
+answer, and we had already been quite generous in allowing it to fit 10 choices
+of $\lambda$.
 
 ```{r}
 #| label: spieceasi
@@ -169,7 +178,7 @@ results make much more sense.
 #| label: lw
 x <- log(1 + t(assay(simulated)))
 sigma_lw <- CovEst.2003LW(x)
-heatmap(cov2cor(sigma$S))
+heatmap(cov2cor(sigma_lw$S))
 ```
 
 Since color comparisons are difficult to evaluate precisely, we can also make a
@@ -235,11 +244,10 @@ once they're within a certain closed region (though see the refinements below).
 ```{r}
 #| label: raw-data
 coords <- spatialCoords(spatial_experiment)
-x <- assay(spatial_experiment) |>
-  as.matrix() |>
-  t()
 
-bind_cols(x[, 1:3], coords) |>
+t(assay(spatial_experiment)[1:3, ]) |>
+  as.matrix() |>
+  bind_cols(coords) |>
   pivot_longer(-starts_with("pxl")) |>
   ggplot() +
   geom_point(aes(pxl_col_in_fullres, pxl_row_in_fullres, col = log(1 + value))) +
@@ -269,7 +277,6 @@ spatial_experiment <- augment(spatial_experiment)
 colnames(colData(spatial_experiment))
 ```
 
-
 We'll just use the interaction between two univariate spline functions. We're
 using negative binomial models -- it's educational to try out other families
 (e.g., `GaussianLSS`, `StudentTLSS`, or `ZIPoLSS`).
@@ -290,18 +297,15 @@ model.
 ```{r fig.height = 7, fig.width = 9}
 #| label: vis-spatial
 features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
-plot_bivariate(
-  simulator, spatial_experiment, features,
-  max_print = 20
-) +
+plot_bivariate(simulator, spatial_experiment, features, max_print = 20) +
   labs(
     "fill" = expression(log(1 + count)),
     "color" = expression(log(1 + count))
   )
 ```
 
-Given this spatial simulator, we can imagine planting some negative controls by
-removing the spatial structure for some genes. This can be helpful for
-calibrating spatial differential expression tests. Alternatively, we could
-evaluate spatial clustering methods by defining a ground truth where many genes
-are simulated from exactly the same probably model.
+Given this simulator, we can imagine planting negative controls by removing the
+spatial structure for some genes. This can be helpful for calibrating spatial
+differential expression tests. Alternatively, we could evaluate spatial
+clustering methods by defining a ground truth where many genes are simulated
+from exactly the same probably model.

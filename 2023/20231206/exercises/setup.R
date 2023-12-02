@@ -9,14 +9,15 @@ knitr::opts_chunk$set(
   dev.args = list(bg = "transparent")
 )
 
-library(CovTools)
-library(Matrix)
-library(SpiecEasi)
-library(SummarizedExperiment)
-library(gamboostLSS)
-library(splines)
-library(tidyverse)
-library(scDesigner)
+suppressPackageStartupMessages(library(CovTools))
+suppressPackageStartupMessages(library(Matrix))
+suppressPackageStartupMessages(library(SpiecEasi))
+suppressPackageStartupMessages(library(SummarizedExperiment))
+suppressPackageStartupMessages(library(SpatialExperiment))
+suppressPackageStartupMessages(library(gamboostLSS))
+suppressPackageStartupMessages(library(splines))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(scDesigner))
 
 options(
   ggplot2.discrete.colour = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
