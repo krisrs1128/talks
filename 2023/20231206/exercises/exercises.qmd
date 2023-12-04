@@ -47,12 +47,12 @@ exper <- SummarizedExperiment(
 a. Estimate a simulator with the taxon-wise regression formula
 `~log(sequencing_depth) + BMI`. Comment on the quality of the fitted model.
 
-We'll estimate zero-inflated negative binomial location-shape-scale (`ZINBLSS`)
-models for each gene. The simulated data is always a `SummarizedExperiment`.
-This means that any workflow that applied to the original data can be applied to
-the simulated one without any changes. Notice also that `sample` defaults to
-drawing samples from the same design as the original input experiment (we'll
-modify this using the `new_data` argument in a minute).
+We've estimated a zero-inflated negative binomial location-shape-scale
+(`ZINBLSS`) models for each gene, using a gaussian copula to capture dependence.
+The data structure below captures all the simulator components, and we can swap
+pieces in and out to modify the form of the simulator. For example, if we
+wanted, we could `mutate` the family and link function associated with
+particular features.
 
 ```{r}
 #| label: example-sim
@@ -62,8 +62,18 @@ sim <- setup_simulator(
   ~ ZINBLSS()
 ) |>
   estimate(mstop = 100)
+sim
+```
 
+The simulated data is always a `SummarizedExperiment`. This means that any
+workflow that applied to the original data can be applied to the simulated one
+without any changes. Notice also that `sample` defaults to drawing samples from
+the same design as the original input experiment (we'll modify this using the
+`new_data` argument in a minute).
+
+```{r}
 simulated <- sample(sim)
+simulated
 ```
 
 Let's compare the marginal count distributions for the real and simulated data.
@@ -124,7 +134,7 @@ The pair below is one of those with high positive correlation. You can replace
 the selection with the commented out line to see what one of the anticorrelated
 pairs of taxa looks like.
 
-```{r, fig.width = 10, fig.height = 10}
+```{r, fig.width = 5, fig.height = 5}
 #| label: correlation-pairs
 #taxa <- rownames(exper)[c(33, 43)]
 taxa <- rownames(exper)[c(14, 25)]
@@ -215,7 +225,7 @@ workflow can be used as long as it applies to a `SummarizedExperiment` object.
 ### Augmenting Spatial Data
 
 Modern molecular biology aims to build a map of the cell, its molecular
-machinery, and its relationships with larger systems (e.g., the circulatory
+machinery, and its relationships within larger systems (e.g., the circulatory
 system). Yet, until 2018 - 2020, this map had no sense of spatial orientation.
 This has changed with the advent of spatial sequencing technologies, where we
 can now measure the abundances of individual molecules together with their
@@ -230,7 +240,7 @@ class [`SpatialExperiment`](https://github.com/drighelli/SpatialExperiment).
 
 ```{r}
 #| label: spatial-estimation
-spatial_experiment <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/dlpfc.rds"))
+spatial_experiment <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/dlpfc-v2.rds"))
 ```
 
 a. Visualize the spatial gene expression pattern associated with a subset of
@@ -308,4 +318,4 @@ Given this simulator, we can imagine planting negative controls by removing the
 spatial structure for some genes. This can be helpful for calibrating spatial
 differential expression tests. Alternatively, we could evaluate spatial
 clustering methods by defining a ground truth where many genes are simulated
-from exactly the same probably model.
+from exactly the same probability model.

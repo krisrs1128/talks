@@ -9,6 +9,9 @@ knitr::opts_chunk$set(
   dev.args = list(bg = "transparent")
 )
 
+knitr::knit_hooks$set(output = scDesigner::ansi_aware_handler)
+options(crayon.enabled = TRUE)
+
 suppressPackageStartupMessages(library(CovTools))
 suppressPackageStartupMessages(library(Matrix))
 suppressPackageStartupMessages(library(SpiecEasi))
