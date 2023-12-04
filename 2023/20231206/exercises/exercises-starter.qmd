@@ -1,0 +1,111 @@
+---
+title: "`scDesigner` Exercises"
+format:
+  html:
+    code-fold: true
+date: "`r Sys.Date()`"
+---
+
+```{r}
+#| label: libraries
+source("setup.R")
+```
+
+## Microbiome Networks
+
+Which microbes are friends with one another? Unlike human social networks, there
+is no simple way to observe microbe-microbe interactions -- we have to make do
+with indirect evidence. One approach uses population profiles as a proxy for
+ecological interaction. Taxa that often co-occur are understood to have
+cooperative ecological interactions, while those that don't are thought to
+compete for the same niche.
+
+Many algorithms have been designed around this intuition, all trying to go
+beyond simple co-occurrence and instead capture more complex types of
+dependence. A challenge in practice is that it's hard to know which method to
+use when, since the problem is unsupervised. Even when thorough simulation
+benchmarking studies are available, it's often not obvious how well those
+simulation setups match our problems of interest.
+
+Let's use `scDesigner` to benchmark network estimation methods using data from
+rounds 1 and 2 of the [American Gut
+Project](https://journals.asm.org/doi/10.1128/msystems.00031-18). We will
+simulate data with known correlation structure and taxa-level marginals
+estimated from the study data. The block below reads in the data.
+
+```{r}
+#| label: read-data
+counts <- read_csv("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/amgut-counts.csv") |>
+  column_to_rownames("taxon")
+metadata <- read_csv("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/amgut-metadata.csv")
+
+exper <- SummarizedExperiment(
+  assays = SimpleList(counts = as.matrix(counts)),
+  colData = metadata
+)
+
+exper
+```
+
+a. Estimate a simulator with the taxon-wise regression formula
+`~log(sequencing_depth) + BMI`. Comment on the quality of the fitted model.
+
+```{r}
+
+```
+
+b. Visualize the correlation matrix estimated by the simulator's copula model.
+Pick a pair of taxa with high correlation under this model and visualize the
+joint distribution of their ranks. Is the model's estimate appropriate?
+
+
+```{r}
+
+```
+
+c. Replace the correlation matrix with a design of your own. Simulate data from
+this modified model and estimate the microbe interaction network using (i) the
+SpiecEasi algorithm and (ii) the Ledoit-Wolfe covariance estimator. According to
+your benchmark, which method is preferable? How might you refine your simulator
+to improve its faithfulness to the covariance you observed in (b)?
+
+```{r}
+
+```
+
+### Augmenting Spatial Data
+
+Modern molecular biology aims to build a map of the cell, its molecular
+machinery, and its relationships within larger systems (e.g., the circulatory
+system). Yet, until 2018 - 2020, this map had no sense of spatial orientation.
+This has changed with the advent of spatial sequencing technologies, where we
+can now measure the abundances of individual molecules together with their
+spatial location within tissue samples.
+
+In this exercise, we will build a model of spatial transcription in the
+dorsolateral prefrontal cortex (DLPFC). This model could then be used downstream
+to create negative controls and ensure properly calibrated spatial differential
+expression analysis. The block below reads a small subset of [DLPFC
+data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8095368/) into an object of
+class [`SpatialExperiment`](https://github.com/drighelli/SpatialExperiment). 
+
+```{r}
+#| label: spatial-estimation
+spatial_experiment <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/dlpfc-v2.rds"))
+```
+
+a. Visualize the spatial gene expression pattern associated with a subset of
+genes of your choice. What is the extent of spatial smoothness? How skewed are
+the expression levels?
+
+```{r}
+
+```
+
+b. Estimate a simulator based on your observations from (a). Visualize the
+estimated mean functions across the tissue (not just at the observed locations).
+
+```{r}
+
+```
+
