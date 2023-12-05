@@ -233,3 +233,12 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   left: 750px;
   top: 10px;
 }
+
+.pull-three-quarters-left {
+  float: left;
+  width: 75%;
+}
+.pull-three-quarters-right {
+  float: right;
+  width: 25%;
+}

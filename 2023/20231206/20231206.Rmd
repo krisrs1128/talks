@@ -26,8 +26,7 @@ library(splines)
 library(scDesigner)
 library(gamlss)
 library(gamboostLSS)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE)
-opts_knit$set(eval.after = "fig.cap")
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
 knit_hooks$set(output = scDesigner::ansi_aware_handler)
 options(crayon.enabled = TRUE)
 set.seed(20230120)
@@ -92,7 +91,7 @@ Simulation plays several roles in modern high-throughput biology.
 
 * **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
 
-* **Biological Mechanisms**: Generative models can suggest improved mental models of biological processes.
+* **Biological Understanding**: Generative models can suggest improved mental models of biological processes.
 
 ---
 
@@ -104,7 +103,7 @@ Simulation plays several roles in modern high-throughput biology.
 
 * **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
 
-* **Biological Mechanisms**: Generative models can suggest improved mental models of biological processes.
+* **Biological Understanding**: Generative models can suggest improved mental models of biological processes.
 
 <g style="font-size: 18px;">
 Examples: BASICS,
@@ -281,17 +280,18 @@ Model the joint distribution of quantiles using a copula model.
 
 ---
 
-### Data Structures (Nouns)
+### Nouns & Verbs
 
-We have defined separate classes for specifying,
+We can break the interface design question into two parts.
 
-* Gene-level probability models.
-* Correlation structures across genes.
+1. Data Structures: How can we represent the simulator in a way that is both
+transparent to a human and precise enough for a computer?
 
-For the data itself, we rely on the `SummarizedExperiment` class.
+1. Operations: How can we encourage users to study and tinker with the data
+structures?
 
-* `colData` specifies the experimental design
-* `assay` specifies the measured counts
+If the resulting grammar is expressive enough, then researchers will be able to
+solve problems we may not have even anticipated.
 
 ```{r, read_data, echo = FALSE}
 sce <- readRDS("data/PANCREAS_sce.rds")[1:10, ]
@@ -299,7 +299,7 @@ sce <- readRDS("data/PANCREAS_sce.rds")[1:10, ]
 
 ---
 
-### Gene-Level Models
+### Nouns: Gene-Level Models
 
 For each gene, we can specify the regression formula and distributional family.
 
@@ -314,18 +314,7 @@ margins <- estimate(margins, sce)
 
 ---
 
-### Gene-Level Models
-
-Different parameters can have different formulas.
-
-```{r modify_formulas}
-formulas <- list("mu" = ~ ns(psuedotime, df = 3), "sigma" = ~ 1, "nu" = ~ 1)
-setup_margins(sce, formulas,  ~ ZINBLSS())
-```
-
----
-
-### Copula Models
+### Nouns: Copula Models
 
 We can tie together a collection of marginals using a copula model.
 
@@ -347,14 +336,7 @@ simulator <- new(
 )
 ```
 
----
-
-### Wrapper
-
-We can build both the marginal and joint distributions simultaneously.
-
-.pull-left[
-```{r wrap_into_simulator}
+```{r wrap_into_simulator, echo = FALSE}
 simulator <- setup_simulator(
   sce,
   ~ ns(pseudotime, df = 3),
@@ -363,19 +345,12 @@ simulator <- setup_simulator(
 ) |>
   estimate()
 ```
-]
-
-.pull-right[
-```{r, print_simulator}
-simulator
-```
-]
 
 ---
 
 ### Extensibility
 
-For the marginals, we can borrow from existing LSS packages (gamboostLSS and gamlss) to implement a variety of gene-wise regressions,
+For the marginals, we can borrow from existing LSS packages (gamlss `r Citep(bib, "Rigby2005GeneralizedAM")`, gamboostLSS `r Citep(bib, "Hofner2014gamboostLSSAR")`) to implement a variety of gene-wise regressions,
 
 * Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
 
@@ -387,16 +362,7 @@ We can also build a unified interface for a variety of copula estimation routine
 
 ---
 
-### Operations (Verbs)
-
-This syntax specifies a simulation model. What can we do with these building blocks?
-
-  * Of course, we can **estimate** and **sample**.
-  * More interestingly, we can also **plot**, **mutate**, **join**, **augment**.
-  
----
-
-### Plot Margins
+### Verbs: Plot
 ```{r, echo = FALSE}
 line_opts <- list(col = "#8C2E62", linewidth = 2)
 ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
@@ -404,23 +370,23 @@ point_opts <- list(size = 0.4, alpha = 0.3)
 ```
 
 ```{r example_plot, out.width = 800}
-plot(simulator, "pseudotime", line = line_opts, ribbon = ribbon_opts, point = point_opts) +
+plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4)
 ```
 
 ---
 
-### Plot Correlations
+### Verbs: Plot
 
 ```{r correlation_plot, out.width = 600, fig.height = 6.5, fig.width = 10}
 grid <- expand_colData(sce, "pseudotime")
-samples <- sample(simulator, n_samples = 10, new_data = grid)
+samples <- sample(simulator, new_data = grid)
 plot_correlations(samples, points_opts = list(size = 1.5, alpha = 1))
 ```
 
 ---
 
-### <span style="color:#D94E4E">Interactivity</span> - Mutate
+### Verbs: <span style="color:#D94E4E">Mutate</span>
 
 There are many reasons we might want to alter an initial simulator,
 * Synthetic Nulls: We can define negative controls to safeguard against false discoveries.
@@ -429,7 +395,7 @@ There are many reasons we might want to alter an initial simulator,
 
 ---
 
-### Mutate
+### Verbs: <span style="color:#D94E4E">Mutate</span>
 
 We can change the regression formula for specific genes. Syntax color highlights modifications that haven’t been re-fit.
 
@@ -440,44 +406,33 @@ margins |>
 
 ---
 
-### Mutate
+### Verbs: <span style="color:#D94E4E">Mutate</span>
 
 ```{r second_alteration, out.width = 800}
-altered <- mutate(margins, Chga:Ins1, link = ~ pseudotime) |>
+altered <- mutate(margins, Spp1:Cck, link = ~ pseudotime) |>
   estimate(sce)
-plot(altered, sce, "pseudotime", line = line_opts, ribbon = ribbon_opts, point = point_opts) +
+plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4, scales = "free_y")
 ```
 
 ---
 
-### Mutate
-
-We can also change the probability distributions.
-
-```{r, probability_alteration}
-margins |>
-	mutate(c("Pyy", "Spp1"), family = ~ GaussianLSS())
-```
-
----
-
-### Mutate
+### Verbs: <span style="color:#D94E4E">Mutate</span>
 
 And we can layer several on top of one another.
 
 ```{r, layered_alteration}
 margins |>
-  mutate(Chga:Ins1, link = ~ pseudotime) |>
-  mutate(Pyy, link = ~ ns(pseudotime, 2) * cell_type) |>
+  mutate(Spp1:Cck, link = ~ pseudotime) |>
+  mutate(c("Pyy", "Ins1"), family = ~ GaussianLSS()) |>
   mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 3), sigma = ~ 1, nu = ~ 1))
 ```
 
 ---
 
-### Mutate
+### Verbs: <span style="color:#D94E4E">Mutate</span>
 
-1. Here is a more realistic example from a short longitudinal microbiome study.
+1. Here is a more realistic example from a longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -489,9 +444,9 @@ margins |>
 
 ---
 
-### Mutate
+### Verbs: <span style="color:#D94E4E">Mutate</span>
 
-1. Here is a more realistic example from a short longitudinal microbiome study.
+1. Here is a more realistic example from a longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -503,12 +458,9 @@ margins |>
 
 ---
 
-### <span style="color:#025E73">Modularity</span> Join
+### Verbs: <span style="color:#025E73">Join</span>
 
-If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
-
-<img src="figures/simulator_join_motivation.png"/>
-
+We should make it possible to combine simulators like Lego blocks.
 ```{r, echo = FALSE}
 SCGEMMETH_sce <- readRDS("data/SCGEMMETH_sce.rds")
 SCGEMRNA_sce <-readRDS("data/SCGEMRNA_sce.rds")
@@ -517,12 +469,6 @@ rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
 rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
 ```
 
----
-
-### <span style="color:#025E73">Modularity</span> Join
-
-If we can also establish simple rules for combining simulators, then there will be space for even more creativity.
-
 ```{r illustrate_joins}
 experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
 families <- list(~ BI(), ~ GaussianLSS())
@@ -530,9 +476,11 @@ sims <- experiments |>
   map2(families, \(x, y) setup_simulator(x, ~ cell_type, y))
 ```
 
+<img src="figures/simulator_join_motivation.png"/>
+
 ---
 
-### Join (Copula)
+### Verbs: <span style="color:#025E73">Join</span> (Copula)
 
 One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
 
@@ -549,7 +497,7 @@ This assumes that we have samples where all features are measured.
 
 ---
 
-### Join (Conditioning)
+### Verbs: <span style="color:#025E73">Join</span> (Conditioning)
 
 Alternatively, we can combine two simulators by conditioning them on shared latent structure.
 
@@ -563,9 +511,11 @@ sim_joined <- join_pamona(sims)
 
 ---
 
-### Join (Conditioning)
+### Verbs: <span style="color:#025E73">Join</span> (Conditioning)
 
-This used partial manifold alignment to learn shared latent variables across assays and works even in the diagonal integration setting.
+This used partial manifold alignment `r Citep(bib, "Cao2020ManifoldAF")` to
+learn shared latent variables across assays and works even in the diagonal
+integration setting.
 
 ```{r print_joined}
 sim_joined
@@ -575,6 +525,158 @@ sim_joined
 spe <- Visium_humanDLPFC()
 gene_order <- order(rowSums(counts(spe)), decreasing = TRUE)
 spatial_experiment <- spe[gene_order[1:10], ]
+```
+
+---
+
+.section[
+## Interactive Demo
+]
+<br/>
+<br/>
+<br/>
+
+<div style="font-size: 34px;">
+Live Code: <a href="https://go.wisc.edu/">https://go.wisc.edu/</a>
+<br/>
+Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
+<br/>
+Compiled Quarto: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62eh36</a>
+</div>
+
+---
+
+### Example: Multi-Study Comparison
+
+From `r Citep(bib, "Goodman2001OfPA")` by Steve Goodman:
+
+> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
+
+---
+
+### Example: Multi-Study Comparison
+
+From `r Citep(bib, "Goodman2001OfPA")` by Steve Goodman:
+
+> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
+
+---
+
+### Example: Multi-Study Comparison
+
+1. Simulators offer a way of encoding community consensus. We are interested in how evidence accumulates and consensus evolves.
+2. We will work with the `curatedMetagenomicData` `r Citep(bib, "Pasolli2017AccessibleCM")`, which includes 12 colorectal
+cancer (CRC) studies processed with the same pipeline.
+
+---
+
+### Association from first study
+
+For each taxon $j$, we fit two $\text{ZINB}\left(\mu_{j}, \sigma_{j}, \nu_{j}\right)$ models:
+
+\begin{align}
+H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) \\
+H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{CRC}
+\end{align}
+
+Given data $X^{(1)}$ from study 1, we compute $P\left(H_{j1} \vert X^{(1)}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
+
+---
+
+### Association from first study
+
+These are the taxa with the largest value of $P\left(H_{j1} \vert X^{(1)}\right)$.
+
+.center[
+<img src="figures/initial_selection.png" width=750/>
+]
+
+---
+
+### Remaining Studies
+
+We can see how this changes as the number of studies is increased. We now consider,
+\begin{align}
+H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID} \\
+H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID} + \text{CRC}
+\end{align}
+and fit associated ZINB models using all data from studies $X^{(1)}, \dots, X^{(K)}$.
+
+This lets us track $P\left(H_{j1} \vert X^{(1)}, \dots, X^{(K)}\right)$.
+
+---
+
+### Remaining Studies
+
+This provides a simple summary of how evidence has evolved as more studies are
+completed.
+
+.center[
+<img src="figures/hypothesis_evolution.png" width = 900/>
+]
+
+---
+
+### Remaining Studies
+
+We can focus on some of the more interesting curves, and the low-level data seem
+consistent with the high-level summary.
+
+.center[
+<img src="figures/hypothesis_evolution_example.png" width = 900/>
+]
+
+---
+
+### Bonus: <span style="color:#D94E4E">Interactive Plot</span>
+
+We have an experimental interactive visualization that can be used for model criticism. You can check out the code: https://go.wisc.edu/q43ol3
+
+.center[
+<a href="http://localhost:5000">
+<img src="figures/scdesigner-interactive.png" width=700/>
+</a>
+]
+
+---
+
+
+### Thank you!
+
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, and Kaiyan Ma
+* Discussions with Jingyi Jessica Li (UCLA)
+* Funding: NIGMS R01GM152744.
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 6)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 7, end = 10)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 11, end = 14)
 ```
 
 ---
@@ -623,30 +725,7 @@ exper <- augment_mds(exper, K = 4) |>
 
 ---
 
-.section[
-## Interactive Demo
-]
-<br/>
-<br/>
-<br/>
-
-<div style="font-size: 34px;">
-Live Code: <a href="https://go.wisc.edu/">https://go.wisc.edu/</a>
-<br/>
-Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
-<br/>
-Compiled Quarto: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62eh36</a>
-</div>
-
----
-
-.section[
-## Examples
-]
-
----
-
-### Case Study 1: Multi-omics Power Analysis
+### Example 1: Multi-omics Power Analysis
 
 1. In practice, most power analyses are univariate, e.g., to guide differential expression.
 2. How should we do multivariate power analysis, especially with several tables?
@@ -713,124 +792,6 @@ With more samples, the canonical angles shrink predictably.
 
 ---
 
-### Case Study 2: Multi-Study Comparison
-
-From `r Citep(bib, "Goodman2001OfPA")` by Steve Goodman:
-
-> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
-
----
-
-### Case Study 2: Multi-Study Comparison
-
-From `r Citep(bib, "Goodman2001OfPA")` by Steve Goodman:
-
-> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
-
----
-
-### Case Study 2: Multi-Study Comparison
-
-1. Simulators offer a way of encoding community consensus. We are interested in how evidence accumulates and consensus evolves.
-2. We will work with the `curatedMetagenomicData`, which includes 12 colorectal
-cancer (CRC) studies processed with the same pipeline `r Citep(bib, "Pasolli2017AccessibleCM")`.
-
----
-
-### Association from first study
-
-For each taxon $j$, we fit two $\text{ZINB}\left(\mu_{j}, \sigma_{j}, \nu_{j}\right)$ models:
-
-\begin{align}
-H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{CRC}\\
-H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right)
-\end{align}
-
-Given data $X^{(1)}$ from study 1, we compute $P\left(H_{j1} \vert X^{(1)}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
-
----
-
-### Association from first study
-
-These are the taxa with the largest value of $P\left(H_{j1} \vert X^{(1)}\right)$.
-
-.center[
-<img src="figures/initial_selection.png" width=750/>
-]
-
----
-
-### Remaining studies
-
-We can see how this changes as the number of studies is increased. We now consider,
-\begin{align}
-H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID} + \text{CRC}\\
-H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID}
-\end{align}
-and fit associated ZINB models using all data from studies $X^{(1)}, \dots, X^{(K)}$.
-
-This lets us track $P\left(H_{j1} \vert X^{(1)}, \dots, X^{(K)}\right)$.
-
----
-
-### Remaining Studies
-
-This provides a simple summary of how evidence has evolved as more studies are
-completed.
-
-.center[
-<img src="figures/hypothesis_evolution.png" width = 900/>
-]
-
----
-
-### Remaining Studies
-
-We can focus on some of the more interesting curves, and the low-level data seem
-consistent with the high-level summary.
-
-.center[
-<img src="figures/hypothesis_evolution_example.png" width = 900/>
-]
-
----
-
-### Bonus: <span style="color:#D94E4E">Interactive Plot</span>
-
-We have an experimental interactive visualization that can be used for model criticism. You can check out the code: https://go.wisc.edu/q43ol3
-
-.center[
-<a href="http://localhost:5000">
-<img src="figures/scdesigner-interactive.png" width=700/>
-</a>
-]
-
----
-
-
-### Thank you!
-
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, and Kaiyan Ma
-* Discussions with Jingyi Jessica Li (UCLA)
-* Funding mechanism: NIGMS R01GM152744.
-
----
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 3)
-```
-
----
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 4, end = 7)
-```
-
----
 ### Mosaic Case
 
 Here, we have allowed the sample sizes to differ and use KNN imputation to run
@@ -855,4 +816,3 @@ effective interactive computing interfaces can accelerate their adoption.
 <img src="figures/somnium.jpeg" width=350/>
 ]
 
----
