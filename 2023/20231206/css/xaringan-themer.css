@@ -220,7 +220,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   color: #5f558e;
   text-align: right;
   right: 20px;
-  bottom: 10px;
+  bottom: 25px;
 }
 
 #links {
@@ -230,8 +230,8 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-size: 20px;
   width: 400px;
   color: #5f558e;
-  left: 750px;
-  top: 10px;
+  left: 20px;
+  bottom: 25px;
 }
 
 .pull-three-quarters-left {

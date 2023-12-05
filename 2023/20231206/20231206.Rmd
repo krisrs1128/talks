@@ -56,6 +56,10 @@ BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
+
+<div id="links">
+Slides: <a href="https://go.wisc.edu/4y9176">go.wisc.edu/4y9176</a>
+</div>
 <div id="title">
 Expressive Interfaces for Multi-omics Simulation
 </div>
@@ -152,17 +156,17 @@ zingeR, ...
 
 ---
 
-### That's a bit Uncharitable
+### That's a Bit Uncharitable
 
-1. Simulation is not a part of routine data analysis yet, but it's not because
-every single researcher in the field is sloppy.
+1. Most researchers do not routinely use simulation. The issue isn't sloppiness
+in sharing or documenting code, though.
 
-1. There are two issues rooted in the classical mental model of simulation:
-  * We treat simulators as **black boxes**, granted, with many knobs.
-  * Simulators are **monolithic**, and components cannot be easily extended or
-interchanged across problem contexts.
+1. The deeper issue is that we usually view simulators as monolithic. We can
+adjust parameters but can't interchange components. This makes them less
+adaptable to new technologies or application contexts.
 
-    The alternative should be coming into focus by now.
+1. I will show two examples of well-designed simulators. How would you go about
+trying to extend them?
     
 ---
 
@@ -291,7 +295,7 @@ transparent to a human and precise enough for a computer?
 structures?
 
 If the resulting grammar is expressive enough, then researchers will be able to
-solve problems we may not have even anticipated.
+solve problems we may not have anticipated.
 
 ```{r, read_data, echo = FALSE}
 sce <- readRDS("data/PANCREAS_sce.rds")[1:10, ]
@@ -350,11 +354,11 @@ simulator <- setup_simulator(
 
 ### Extensibility
 
-For the marginals, we can borrow from existing LSS packages (gamlss `r Citep(bib, "Rigby2005GeneralizedAM")`, gamboostLSS `r Citep(bib, "Hofner2014gamboostLSSAR")`) to implement a variety of gene-wise regressions,
+For the marginals, we can borrow from existing LSS packages (gamlss `r Citep(bib, "Rigby2005GeneralizedAM")`, gamboostLSS `r Citep(bib, "Hofner2014gamboostLSSAR")`) to implement gene-wise regressions,
 
 * Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
 
-We can also build a unified interface for a variety of copula estimation routines,
+We can also build a unified interface to various copula estimation routines,
 
 * Vine copulas for capturing higher-order moments.
 * Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
