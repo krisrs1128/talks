@@ -269,20 +269,20 @@ For each gene, we can specify the regression formula and distributional family.
 
 
 ```r
-margins &lt;- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
+margins &lt;- setup_margins(sce, ~ ns(pseudotime, 3),  ~ ZINBLSS())
 margins
 ```
 
 &lt;pre class="r-output"&gt;&lt;code&gt;## &lt;span style='color: #BB00BB;'&gt;Plan:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 6 x 3&lt;/span&gt;
-##     feature              family                    link
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;                  &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       &lt;span style='color: #00BBBB;'&gt;Pyy&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Iapp&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chgb&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Rbp4&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Spp1&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
+##     feature              family               link
+##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
+## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       &lt;span style='color: #00BBBB;'&gt;Pyy&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Iapp&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chgb&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Rbp4&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Spp1&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
 ## &lt;span style='color: #00BBBB;'&gt;Pyy, Iapp, Chgb&lt;/span&gt;, and &lt;span style='color: #00BBBB;'&gt;7&lt;/span&gt; &lt;span style='color: #00BBBB;'&gt;other features&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
 ## Estimates:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 0 x 0&lt;/span&gt;
@@ -351,9 +351,8 @@ plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, 
 
 
 ```r
-grid &lt;- expand_colData(sce, "pseudotime")
-samples &lt;- sample(simulator, new_data = grid)
-plot_correlations(samples, points_opts = list(size = 1.5, alpha = 1))
+sample(simulator) |&gt;
+  plot_correlations(points = point_opts)
 ```
 
 &lt;img src="20231206_files/figure-html/correlation_plot-1.png" width="600" style="display: block; margin: auto;" /&gt;
@@ -376,20 +375,20 @@ We can change the regression formula for specific genes. Syntax color highlights
 
 ```r
 margins |&gt;
-  mutate(Spp1:Cck, link = ~ pseudotime) 
+  mutate(Chga:Ins1, link = ~ pseudotime) 
 ```
 
 &lt;pre class="r-output"&gt;&lt;code&gt;## &lt;span style='color: #BB00BB;'&gt;Plan:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 6 x 3&lt;/span&gt;
-##     feature              family                    link
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;                  &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       Pyy ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      Iapp ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      Rbp4 ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Spp1&lt;/span&gt; ZINBI [mu,sigma,nu]             ~pseudotime
-## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]             ~pseudotime
-## &lt;span style='color: #00BBBB;'&gt;Spp1 and Chga and Cck&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
+##     feature              family               link
+##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
+## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       Pyy ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      Iapp ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      Rbp4 ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      Spp1 ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]        ~pseudotime
+## &lt;span style='color: #00BBBB;'&gt;Chga and Cck and Ins1&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
 ## Estimates:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 3 x 2&lt;/span&gt;
 ##   feature fit       
@@ -406,7 +405,7 @@ margins |&gt;
 
 
 ```r
-altered &lt;- mutate(margins, Spp1:Cck, link = ~ pseudotime) |&gt;
+altered &lt;- mutate(margins, Chga:Ins1, link = ~ pseudotime) |&gt;
   estimate(sce)
 plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4, scales = "free_y")
@@ -423,22 +422,22 @@ And we can layer several on top of one another.
 
 ```r
 margins |&gt;
-  mutate(Spp1:Cck, link = ~ pseudotime) |&gt;
-  mutate(c("Pyy", "Ins1"), family = ~ GaussianLSS()) |&gt;
-  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 3), sigma = ~ 1, nu = ~ 1))
+  mutate(Chga:Ins1, link = ~ pseudotime) |&gt;
+  mutate(c("Pyy", "Rbp4"), family = ~ GaussianLSS()) |&gt;
+  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 5), sigma = ~ 1, nu = ~ 1))
 ```
 
 &lt;pre class="r-output"&gt;&lt;code&gt;## &lt;span style='color: #BB00BB;'&gt;Plan:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 6 x 3&lt;/span&gt;
-##     feature              family                    link
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;                  &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       &lt;span style='color: #00BBBB;'&gt;Pyy&lt;/span&gt; Gaussian [mu,sigma] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Iapp&lt;/span&gt; ZINBI [mu,sigma,nu]    mu~ns(pseudotime,...
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      Rbp4 ZINBI [mu,sigma,nu] ~ns(pseudotime, df = 3)
-## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Spp1&lt;/span&gt; ZINBI [mu,sigma,nu]             ~pseudotime
-## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]             ~pseudotime
-## &lt;span style='color: #00BBBB;'&gt;Pyy, Iapp, Spp1&lt;/span&gt;, and &lt;span style='color: #00BBBB;'&gt;3&lt;/span&gt; &lt;span style='color: #00BBBB;'&gt;other features&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
+##     feature              family                       link
+##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;                     &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
+## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       &lt;span style='color: #00BBBB;'&gt;Pyy&lt;/span&gt; Gaussian [mu,sigma]         ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Iapp&lt;/span&gt; ZINBI [mu,sigma,nu] mu~ns(pseudotime, df = ...
+## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu]         ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Rbp4&lt;/span&gt; Gaussian [mu,sigma]         ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      Spp1 ZINBI [mu,sigma,nu]         ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]                ~pseudotime
+## &lt;span style='color: #00BBBB;'&gt;Pyy, Iapp, Rbp4&lt;/span&gt;, and &lt;span style='color: #00BBBB;'&gt;3&lt;/span&gt; &lt;span style='color: #00BBBB;'&gt;other features&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
 ## Estimates:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 3 x 2&lt;/span&gt;
 ##   feature fit       
@@ -525,7 +524,7 @@ sim_joined &lt;- join_pamona(sims)
 
 &lt;pre class="r-output"&gt;&lt;code&gt;## Pamona start!
 ## use random seed: 1
-## Pamona Done! takes 3.288163 seconds
+## Pamona Done! takes 1.609353 seconds
 &lt;/code&gt;&lt;/pre&gt;
 
 .center[
@@ -734,8 +733,8 @@ We have an experimental interactive visualization that can be used for model cri
 
 ### References
 
-[1] D. L&lt;U+00E4&gt;hnemann, J. K&lt;U+00F6&gt;ster, E. Szczurek, et al. "Eleven
-grand challenges in single-cell data science". In: _Genome Biology_ 21
+[1] D. Lahnemann, J. Koster, E. Szczurek, et al. "Eleven grand
+challenges in single-cell data science". In: _Genome Biology_ 21
 (2020). &lt;https://api.semanticscholar.org/CorpusID:211054289&gt;.
 
 [2] L. Zappia, B. Phipson, and A. Oshlack. "Splatter: simulation of
@@ -751,67 +750,39 @@ Biotechnology_ (2023), pp. 1-6.
 
 ### References
 
-[4] S. N. Goodman. "Of P-values and Bayes: a modest
-proposal." In: _Epidemiology_ 12 3 (2001), pp.  295-7
-.
-&lt;https://api.semanticscholar.org/CorpusID:41986475&gt;.
-
-[5] E. Pasolli, L. Schiffer, P. Manghi, et al.
-"Accessible, curated metagenomic data through
-ExperimentHub". In: _Nature Methods_ 14 (2017), pp.
-1023-1024.
-&lt;https://api.semanticscholar.org/CorpusID:3403081&gt;.
-
-[6] B. J. Callahan, K. Sankaran, J. Fukuyama, et al.
-"Bioconductor Workflow for Microbiome Data Analysis:
-from raw reads to community analyses". In:
-_F1000Research_ 5 (2016).
-&lt;https://api.semanticscholar.org/CorpusID:6468345&gt;.
-
----
-
-### References
-
-[7] G. H. Golub and H. Zha. "Perturbation analysis of
-the canonical correlations of matrix pairs". In:
-_Linear Algebra and its Applications_ 210 (1994), pp.
-3-28.
-&lt;https://api.semanticscholar.org/CorpusID:123160725&gt;.
-
-[8] K. Arikawa. "Theoretical framework for analyzing
-structural compliance properties of proteins". In:
-_Biophysics and Physicobiology_ 15 (2018), pp. 58 -
-74.
-&lt;https://api.semanticscholar.org/CorpusID:4472297&gt;.
-
-[9] M. A. Hernan and J. M. Robins. _Causal
-inference_. En. Boca Raton, FL: CRC Press, Jan. 2024.
-
-[10] J. J. Li. "Using Synthetic Null Data to Enhance
-Statistical Rigor in Genomics".
-&lt;http://jsb.ucla.edu/sites/default/files/072523_Overton.pdf&gt;.
-
----
-
-### References
-
-[11] B. Hofner, A. Mayr, and M. Schmid. "gamboostLSS:
-An R Package for Model Building and Variable
-Selection in the GAMLSS Framework". In: _arXiv:
-Computation_ (2014).
-&lt;https://api.semanticscholar.org/CorpusID:62302678&gt;.
-
-[12] R. A. Rigby and D. M. Stasinopoulos.
-"Generalized additive models for location, scale and
-shape". In: _Journal of the Royal Statistical
+[4] R. A. Rigby and D. M. Stasinopoulos. "Generalized additive models
+for location, scale and shape". In: _Journal of the Royal Statistical
 Society: Series C (Applied Statistics)_ 54 (2005).
 &lt;https://api.semanticscholar.org/CorpusID:56076930&gt;.
 
-[13] K. Cao, Y. Hong, and L. Wan. "Manifold alignment
-for heterogeneous single-cell multi-omics data
-integration using Pamona". In: _Bioinformatics_ 38
-(2020), pp. 211 - 219.
+[5] B. Hofner, A. Mayr, and M. Schmid. "gamboostLSS: An R Package for
+Model Building and Variable Selection in the GAMLSS Framework". In:
+_arXiv: Computation_ (2014).
+&lt;https://api.semanticscholar.org/CorpusID:62302678&gt;.
+
+[6] K. Cao, Y. Hong, and L. Wan. "Manifold alignment for heterogeneous
+single-cell multi-omics data integration using Pamona". In:
+_Bioinformatics_ 38 (2020), pp. 211 - 219.
 &lt;https://api.semanticscholar.org/CorpusID:226959190&gt;.
+
+---
+
+### References
+
+[7] S. N. Goodman. "Of P-values and Bayes: a modest proposal." In:
+_Epidemiology_ 12 3 (2001), pp.  295-7 .
+&lt;https://api.semanticscholar.org/CorpusID:41986475&gt;.
+
+[8] E. Pasolli, L. Schiffer, P. Manghi, et al. "Accessible, curated
+metagenomic data through ExperimentHub". In: _Nature Methods_ 14
+(2017), pp. 1023-1024.
+&lt;https://api.semanticscholar.org/CorpusID:3403081&gt;.
+
+---
+
+### References
+
+
 
 ---
 

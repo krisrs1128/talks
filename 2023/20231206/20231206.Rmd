@@ -26,7 +26,7 @@ library(splines)
 library(scDesigner)
 library(gamlss)
 library(gamboostLSS)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
 knit_hooks$set(output = scDesigner::ansi_aware_handler)
 options(crayon.enabled = TRUE)
 set.seed(20230120)
@@ -308,7 +308,7 @@ sce <- readRDS("data/PANCREAS_sce.rds")[1:10, ]
 For each gene, we can specify the regression formula and distributional family.
 
 ```{r, setup_margins}
-margins <- setup_margins(sce, ~ ns(pseudotime, df = 3),  ~ ZINBLSS())
+margins <- setup_margins(sce, ~ ns(pseudotime, 3),  ~ ZINBLSS())
 margins
 ```
 
@@ -343,7 +343,7 @@ simulator <- new(
 ```{r wrap_into_simulator, echo = FALSE}
 simulator <- setup_simulator(
   sce,
-  ~ ns(pseudotime, df = 3),
+  ~ ns(pseudotime, 3),
   ~ ZINBLSS(),
   copula = copula_gaussian()
 ) |>
@@ -383,9 +383,8 @@ plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, 
 ### Verbs: Plot
 
 ```{r correlation_plot, out.width = 600, fig.height = 6.5, fig.width = 10}
-grid <- expand_colData(sce, "pseudotime")
-samples <- sample(simulator, new_data = grid)
-plot_correlations(samples, points_opts = list(size = 1.5, alpha = 1))
+sample(simulator) |>
+  plot_correlations(points = point_opts)
 ```
 
 ---
@@ -405,7 +404,7 @@ We can change the regression formula for specific genes. Syntax color highlights
 
 ```{r, mutate_margins}
 margins |>
-  mutate(Spp1:Cck, link = ~ pseudotime) 
+  mutate(Chga:Ins1, link = ~ pseudotime) 
 ```
 
 ---
@@ -413,7 +412,7 @@ margins |>
 ### Verbs: <span style="color:#D94E4E">Mutate</span>
 
 ```{r second_alteration, out.width = 800}
-altered <- mutate(margins, Spp1:Cck, link = ~ pseudotime) |>
+altered <- mutate(margins, Chga:Ins1, link = ~ pseudotime) |>
   estimate(sce)
 plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4, scales = "free_y")
@@ -427,9 +426,9 @@ And we can layer several on top of one another.
 
 ```{r, layered_alteration}
 margins |>
-  mutate(Spp1:Cck, link = ~ pseudotime) |>
-  mutate(c("Pyy", "Ins1"), family = ~ GaussianLSS()) |>
-  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 3), sigma = ~ 1, nu = ~ 1))
+  mutate(Chga:Ins1, link = ~ pseudotime) |>
+  mutate(c("Pyy", "Rbp4"), family = ~ GaussianLSS()) |>
+  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 5), sigma = ~ 1, nu = ~ 1))
 ```
 
 ---
