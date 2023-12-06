@@ -158,14 +158,17 @@ simulator.
 
 ```{r}
 #| label: mutate-correlation
-rho <- rep(0.6, 3) |>
+rho <- c(0.4, .6, 0.8) |>
   map(~ matrix(., nrow = 15, ncol = 15)) |>
-  bdiag()
+  bdiag() |>
+  as.matrix()
 diag(rho) <- 1
 
 simulated <- sim |>
   mutate_correlation(rho) |>
   sample()
+
+x <- t(assay(simulated))
 ```
 
 Let's first look at the [`SpiecEasi` covariance estimate](https://github.com/zdk123/SpiecEasi). This is a variant of the
@@ -177,8 +180,10 @@ of $\lambda$.
 
 ```{r}
 #| label: spieceasi
-sigma_se <- spiec.easi(t(assay(simulated)), nlambda = 10)
-heatmap(cov2cor(sigma_se$est$cov[[1]]))
+rho_se <- spiec.easi(x, nlambda = 10, pulsar.params = list(rep.num = 1)) |>  getOptCov() |>
+  as.matrix() |>
+  cov2cor()
+heatmap(rho_se)
 ```
 
 Let's instead use the Ledoit-Wolfe estimator on the log-transformed data. The
@@ -186,9 +191,9 @@ results make much more sense.
 
 ```{r}
 #| label: lw
-x <- log(1 + t(assay(simulated)))
-sigma_lw <- CovEst.2003LW(x)
-heatmap(cov2cor(sigma_lw$S))
+rho_lw <- CovEst.2003LW(log(1 + x))$S |>
+  cov2cor()
+heatmap(rho_lw)
 ```
 
 Since color comparisons are difficult to evaluate precisely, we can also make a
@@ -196,11 +201,7 @@ scatterplot comparing the different covariance estimators.
 
 ```{r}
 #| label: covariance-metrics
-data.frame(
-  truth = as.numeric(rho),
-  se = as.numeric(cov2cor(sigma_se$est$cov[[1]])),
-  lw = as.numeric(cov2cor(sigma_lw$S))
-) |>
+data.frame(truth = c(rho), se = c(rho_se), lw = c(rho_lw)) |>
   pivot_longer(-truth, values_to = "estimate") |>
   ggplot() +
   geom_jitter(aes(truth, estimate, col = name), alpha = 0.6, size = 0.4) +

@@ -26,7 +26,7 @@ library(splines)
 library(scDesigner)
 library(gamlss)
 library(gamboostLSS)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
 knit_hooks$set(output = scDesigner::ansi_aware_handler)
 options(crayon.enabled = TRUE)
 set.seed(20230120)
@@ -89,27 +89,27 @@ UW-Madison Statistics Seminar <br/>
 
 ### Why Simulate?
 
-Simulation plays several roles in modern high-throughput biology.
-
 * **Experimental Design**: We have to decide on cohorts, longitudinal sampling plans, and sequencing technologies, not to mention sample sizes.
 
 * **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
 
-* **Biological Understanding**: Generative models can suggest improved mental models of biological processes.
+* **Data Augmentation**: Simulated samples can improve algorithmic performance and integration.
+
+* **Calibration**: Statistical performance on simulated data can help us calibrate workflows to improve power and control the false discovery rate.
 
 ---
 
 ### Why Simulate?
 
-Simulation plays several roles in modern high-throughput biology.
-
 * **Experimental Design**: We have to decide on cohorts, longitudinal sampling plans, and sequencing technologies, not to mention sample sizes.
 
 * **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
 
-* **Biological Understanding**: Generative models can suggest improved mental models of biological processes.
+* **Data Augmentation**: Simulated samples can improve algorithmic performance and integration.
 
-<g style="font-size: 18px;">
+* **Calibration**: Statistical performance on simulated data can help us calibrate workflows to improve power and control the false discovery rate.
+
+<g style="font-size: 20px; margin: 0; line-height: 30px; display: block;">
 Examples: BASICS,
 compcodeR,
 deconvR,
@@ -158,12 +158,12 @@ zingeR, ...
 
 ### That's a Bit Uncharitable
 
-1. Most researchers do not routinely use simulation. The issue isn't sloppiness
-in sharing or documenting code, though.
+1. It's true that most researchers do not routinely use simulation. The issue
+isn't sloppiness in sharing or documenting code, though.
 
 1. The deeper issue is that we usually view simulators as monolithic. We can
-adjust parameters but can't interchange components. This makes them less
-adaptable to new technologies or application contexts.
+adjust parameters but can't interchange components. This makes them hard to
+adapt to new technologies or applications.
 
 1. I will show two examples of well-designed simulators. How would you go about
 trying to extend them?
@@ -288,10 +288,10 @@ Model the joint distribution of quantiles using a copula model.
 
 We can break the interface design question into two parts.
 
-1. Data Structures: How can we represent the simulator in a way that is both
+1. **Data Structures**: How can we represent the simulator in a way that is both
 transparent to a human and precise enough for a computer?
 
-1. Operations: How can we encourage users to study and tinker with the data
+1. **Operations**: How can we encourage users to study and tinker with the data
 structures?
 
 If the resulting grammar is expressive enough, then researchers will be able to
@@ -366,7 +366,7 @@ We can also build a unified interface to various copula estimation routines,
 
 ---
 
-### Verbs: Plot
+### Verbs: <span style="color: #D94E4E">Plot</span>
 ```{r, echo = FALSE}
 line_opts <- list(col = "#8C2E62", linewidth = 2)
 ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
@@ -380,49 +380,26 @@ plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, 
 
 ---
 
-### Verbs: Plot
+### Verbs: <span style="color:#025E73">Mutate</span>
 
-```{r correlation_plot, out.width = 600, fig.height = 6.5, fig.width = 10}
-sample(simulator) |>
-  plot_correlations(points = point_opts)
-```
-
----
-
-### Verbs: <span style="color:#D94E4E">Mutate</span>
-
-There are many reasons we might want to alter an initial simulator,
-* Synthetic Nulls: We can define negative controls to safeguard against false discoveries.
-* Iteration: We may want to improve the simulator’s goodness of fit by modifying the regression.
-* Power Analysis: We may want to construct data from alternative experimental designs or biological signal strengths.
-
----
-
-### Verbs: <span style="color:#D94E4E">Mutate</span>
-
-We can change the regression formula for specific genes. Syntax color highlights modifications that haven’t been re-fit.
-
-```{r, mutate_margins}
-margins |>
-  mutate(Chga:Ins1, link = ~ pseudotime) 
-```
-
----
-
-### Verbs: <span style="color:#D94E4E">Mutate</span>
+`mutate` lets you modify a few elements from a larger simulator.
 
 ```{r second_alteration, out.width = 800}
 altered <- mutate(margins, Chga:Ins1, link = ~ pseudotime) |>
   estimate(sce)
+```
+```{r plot_alteration, out.width = 800, echo = FALSE}
 plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4, scales = "free_y")
 ```
 
 ---
 
-### Verbs: <span style="color:#D94E4E">Mutate</span>
+### Verbs: <span style="color:#025E73">Mutate</span>
 
-And we can layer several on top of one another.
+We can layer several changes on top of one another. Syntax color highlights
+modifications that haven’t been re-fit.
+
 
 ```{r, layered_alteration}
 margins |>
@@ -433,7 +410,7 @@ margins |>
 
 ---
 
-### Verbs: <span style="color:#D94E4E">Mutate</span>
+### Verbs: <span style="color:#025E73">Mutate</span>
 
 1. Here is a more realistic example from a longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
@@ -447,7 +424,7 @@ margins |>
 
 ---
 
-### Verbs: <span style="color:#D94E4E">Mutate</span>
+### Verbs: <span style="color:#025E73">Mutate</span>
 
 1. Here is a more realistic example from a longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
@@ -495,7 +472,7 @@ sim_joined <- map(sims, estimate, nu = 0.1) |>
 This assumes that we have samples where all features are measured.
 
 .center[
-<img src="figures/simulator_join_features.png" width = 680/>
+<img src="figures/copula_join.png" width = 680/>
 ]
 
 ---
@@ -524,12 +501,6 @@ integration setting.
 sim_joined
 ```
 
-```{r, spatial_download, echo = FALSE}
-spe <- Visium_humanDLPFC()
-gene_order <- order(rowSums(counts(spe)), decreasing = TRUE)
-spatial_experiment <- spe[gene_order[1:10], ]
-```
-
 ---
 
 .section[
@@ -546,14 +517,6 @@ Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m<
 <br/>
 Compiled Quarto: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62eh36</a>
 </div>
-
----
-
-### Example: Multi-Study Comparison
-
-From `r Citep(bib, "Goodman2001OfPA")` by Steve Goodman:
-
-> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
 
 ---
 
@@ -646,7 +609,7 @@ We have an experimental interactive visualization that can be used for model cri
 
 ### Thank you!
 
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, and Kaiyan Ma
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, and Kaiyan Ma
 * Discussions with Jingyi Jessica Li (UCLA)
 * Funding: NIGMS R01GM152744.
 
@@ -681,6 +644,24 @@ PrintBibliography(bib, start = 7, end = 10)
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 11, end = 14)
 ```
+
+---
+
+### Verbs: Plot
+
+```{r correlation_plot, out.width = 600, fig.height = 6, fig.width = 8}
+sample(simulator) |>
+  plot_correlations(points = point_opts)
+```
+
+---
+
+### Verbs: <span style="color:#D94E4E">Mutate</span>
+
+There are many reasons we might want to alter an initial simulator,
+* **Synthetic Nulls**: We can define negative controls to safeguard against false discoveries.
+* **Iteration**: We may want to improve the simulator’s goodness of fit by modifying the regression.
+* **Power Analysis**: We may want to construct data from alternative experimental designs or biological signal strengths.
 
 ---
 

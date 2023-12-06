@@ -51,16 +51,14 @@ a. Estimate a simulator with the taxon-wise regression formula
 `~log(sequencing_depth) + BMI`. Comment on the quality of the fitted model.
 
 ```{r}
-
 ```
 
 b. Visualize the correlation matrix estimated by the simulator's copula model.
 Pick a pair of taxa with high correlation under this model and visualize the
 joint distribution of their ranks. Is the model's estimate appropriate?
 
-
 ```{r}
-
+heatmap(copula_parameters(sim))
 ```
 
 c. Replace the correlation matrix with a design of your own. Simulate data from
@@ -70,8 +68,39 @@ your benchmark, which method is preferable? How might you refine your simulator
 to improve its faithfulness to the covariance you observed in (b)?
 
 ```{r}
+rho <- c(0.4, .6, 0.8) |>
+  map(~ matrix(., nrow = 15, ncol = 15)) |>
+  bdiag() |>
+  as.matrix()
+
+diag(rho) <- 1
+
+# alter and sample from the simulator here
+
 
 ```
+
+
+```{r}
+# Spiec-Easi Estimator
+rho_se <- spiec.easi(x, nlambda = 3, pulsar.params = list(rep.num = 1)) |>
+  getOptCov() |>
+  as.matrix() |>
+  cov2cor()
+
+# Ledoit-Wolfe Estimator
+rho_lw <- CovEst.2003LW(log(1 + x))$S |>
+  cov2cor()
+
+# visualize results
+data.frame(truth = c(rho), se = c(rho_se), lw = c(rho_lw)) |>
+  pivot_longer(-truth, values_to = "estimate") |>
+  ggplot() +
+  geom_jitter(aes(truth, estimate, col = name), alpha = 0.6, size = 0.4) +
+  geom_abline(slope = 1) +
+  facet_wrap(~name)
+```
+
 
 ### Augmenting Spatial Data
 

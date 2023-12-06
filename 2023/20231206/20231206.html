@@ -49,27 +49,27 @@ UW-Madison Statistics Seminar &lt;br/&gt;
 
 ### Why Simulate?
 
-Simulation plays several roles in modern high-throughput biology.
-
 * **Experimental Design**: We have to decide on cohorts, longitudinal sampling plans, and sequencing technologies, not to mention sample sizes.
 
 * **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
 
-* **Biological Understanding**: Generative models can suggest improved mental models of biological processes.
+* **Data Augmentation**: Simulated samples can improve algorithmic performance and integration.
+
+* **Calibration**: Statistical performance on simulated data can help us calibrate workflows to improve power and control the false discovery rate.
 
 ---
 
 ### Why Simulate?
 
-Simulation plays several roles in modern high-throughput biology.
-
 * **Experimental Design**: We have to decide on cohorts, longitudinal sampling plans, and sequencing technologies, not to mention sample sizes.
 
 * **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
 
-* **Biological Understanding**: Generative models can suggest improved mental models of biological processes.
+* **Data Augmentation**: Simulated samples can improve algorithmic performance and integration.
 
-&lt;g style="font-size: 18px;"&gt;
+* **Calibration**: Statistical performance on simulated data can help us calibrate workflows to improve power and control the false discovery rate.
+
+&lt;g style="font-size: 20px; margin: 0; line-height: 30px; display: block;"&gt;
 Examples: BASICS,
 compcodeR,
 deconvR,
@@ -118,12 +118,12 @@ zingeR, ...
 
 ### That's a Bit Uncharitable
 
-1. Most researchers do not routinely use simulation. The issue isn't sloppiness
-in sharing or documenting code, though.
+1. It's true that most researchers do not routinely use simulation. The issue
+isn't sloppiness in sharing or documenting code, though.
 
 1. The deeper issue is that we usually view simulators as monolithic. We can
-adjust parameters but can't interchange components. This makes them less
-adaptable to new technologies or application contexts.
+adjust parameters but can't interchange components. This makes them hard to
+adapt to new technologies or applications.
 
 1. I will show two examples of well-designed simulators. How would you go about
 trying to extend them?
@@ -250,10 +250,10 @@ Model the joint distribution of quantiles using a copula model.
 
 We can break the interface design question into two parts.
 
-1. Data Structures: How can we represent the simulator in a way that is both
+1. **Data Structures**: How can we represent the simulator in a way that is both
 transparent to a human and precise enough for a computer?
 
-1. Operations: How can we encourage users to study and tinker with the data
+1. **Operations**: How can we encourage users to study and tinker with the data
 structures?
 
 If the resulting grammar is expressive enough, then researchers will be able to
@@ -334,7 +334,7 @@ We can also build a unified interface to various copula estimation routines,
 
 ---
 
-### Verbs: Plot
+### Verbs: &lt;span style="color: #D94E4E"&gt;Plot&lt;/span&gt;
 
 
 
@@ -347,77 +347,24 @@ plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, 
 
 ---
 
-### Verbs: Plot
+### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
-
-```r
-sample(simulator) |&gt;
-  plot_correlations(points = point_opts)
-```
-
-&lt;img src="20231206_files/figure-html/correlation_plot-1.png" width="600" style="display: block; margin: auto;" /&gt;
-
----
-
-### Verbs: &lt;span style="color:#D94E4E"&gt;Mutate&lt;/span&gt;
-
-There are many reasons we might want to alter an initial simulator,
-* Synthetic Nulls: We can define negative controls to safeguard against false discoveries.
-* Iteration: We may want to improve the simulator’s goodness of fit by modifying the regression.
-* Power Analysis: We may want to construct data from alternative experimental designs or biological signal strengths.
-
----
-
-### Verbs: &lt;span style="color:#D94E4E"&gt;Mutate&lt;/span&gt;
-
-We can change the regression formula for specific genes. Syntax color highlights modifications that haven’t been re-fit.
-
-
-```r
-margins |&gt;
-  mutate(Chga:Ins1, link = ~ pseudotime) 
-```
-
-&lt;pre class="r-output"&gt;&lt;code&gt;## &lt;span style='color: #BB00BB;'&gt;Plan:
-## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 6 x 3&lt;/span&gt;
-##     feature              family               link
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       Pyy ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      Iapp ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      Rbp4 ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      Spp1 ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]        ~pseudotime
-## &lt;span style='color: #00BBBB;'&gt;Chga and Cck and Ins1&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
-## Estimates:
-## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 3 x 2&lt;/span&gt;
-##   feature fit       
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;chr&gt;&lt;/span&gt;   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;list&gt;&lt;/span&gt;    
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt; Pyy     &lt;span style='color: #555555;'&gt;&lt;glmbsLSS&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt; Iapp    &lt;span style='color: #555555;'&gt;&lt;glmbsLSS&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt; Chgb    &lt;span style='color: #555555;'&gt;&lt;glmbsLSS&gt;&lt;/span&gt;
-## ... and 7 additional features.
-&lt;/code&gt;&lt;/pre&gt;
-
----
-
-### Verbs: &lt;span style="color:#D94E4E"&gt;Mutate&lt;/span&gt;
+`mutate` lets you modify a few elements from a larger simulator.
 
 
 ```r
 altered &lt;- mutate(margins, Chga:Ins1, link = ~ pseudotime) |&gt;
   estimate(sce)
-plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
-  facet_wrap(~ feature, ncol = 4, scales = "free_y")
 ```
-
-&lt;img src="20231206_files/figure-html/second_alteration-1.png" width="800" style="display: block; margin: auto;" /&gt;
+&lt;img src="20231206_files/figure-html/plot_alteration-1.png" width="800" style="display: block; margin: auto;" /&gt;
 
 ---
 
-### Verbs: &lt;span style="color:#D94E4E"&gt;Mutate&lt;/span&gt;
+### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
-And we can layer several on top of one another.
+We can layer several changes on top of one another. Syntax color highlights
+modifications that haven’t been re-fit.
+
 
 
 ```r
@@ -429,14 +376,14 @@ margins |&gt;
 
 &lt;pre class="r-output"&gt;&lt;code&gt;## &lt;span style='color: #BB00BB;'&gt;Plan:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 6 x 3&lt;/span&gt;
-##     feature              family                       link
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;                     &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       &lt;span style='color: #00BBBB;'&gt;Pyy&lt;/span&gt; Gaussian [mu,sigma]         ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Iapp&lt;/span&gt; ZINBI [mu,sigma,nu] mu~ns(pseudotime, df = ...
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu]         ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Rbp4&lt;/span&gt; Gaussian [mu,sigma]         ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      Spp1 ZINBI [mu,sigma,nu]         ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]                ~pseudotime
+##     feature              family               link
+##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
+## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       &lt;span style='color: #00BBBB;'&gt;Pyy&lt;/span&gt; Gaussian [mu,sigma] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Iapp&lt;/span&gt; ZINBI [mu,sigma,nu]  mu~ns(pseudoti...
+## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Rbp4&lt;/span&gt; Gaussian [mu,sigma] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      Spp1 ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]        ~pseudotime
 ## &lt;span style='color: #00BBBB;'&gt;Pyy, Iapp, Rbp4&lt;/span&gt;, and &lt;span style='color: #00BBBB;'&gt;3&lt;/span&gt; &lt;span style='color: #00BBBB;'&gt;other features&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
 ## Estimates:
 ## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 3 x 2&lt;/span&gt;
@@ -450,7 +397,7 @@ margins |&gt;
 
 ---
 
-### Verbs: &lt;span style="color:#D94E4E"&gt;Mutate&lt;/span&gt;
+### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
 1. Here is a more realistic example from a longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
@@ -464,7 +411,7 @@ margins |&gt;
 
 ---
 
-### Verbs: &lt;span style="color:#D94E4E"&gt;Mutate&lt;/span&gt;
+### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
 1. Here is a more realistic example from a longitudinal microbiome study.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
@@ -508,7 +455,7 @@ sim_joined &lt;- map(sims, estimate, nu = 0.1) |&gt;
 This assumes that we have samples where all features are measured.
 
 .center[
-&lt;img src="figures/simulator_join_features.png" width = 680/&gt;
+&lt;img src="figures/copula_join.png" width = 680/&gt;
 ]
 
 ---
@@ -524,7 +471,7 @@ sim_joined &lt;- join_pamona(sims)
 
 &lt;pre class="r-output"&gt;&lt;code&gt;## Pamona start!
 ## use random seed: 1
-## Pamona Done! takes 1.609353 seconds
+## Pamona Done! takes 3.288163 seconds
 &lt;/code&gt;&lt;/pre&gt;
 
 .center[
@@ -607,8 +554,6 @@ sim_joined
 ## altExpNames(0):
 &lt;/code&gt;&lt;/pre&gt;
 
-
-
 ---
 
 .section[
@@ -625,14 +570,6 @@ Colab Notebook: &lt;a href="https://go.wisc.edu/u5a94m"&gt;https://go.wisc.edu/u
 &lt;br/&gt;
 Compiled Quarto: &lt;a href="https://go.wisc.edu/62eh36"&gt; https://go.wisc.edu/62eh36&lt;/a&gt;
 &lt;/div&gt;
-
----
-
-### Example: Multi-Study Comparison
-
-From [7] by Steve Goodman:
-
-&gt; Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
 
 ---
 
@@ -725,7 +662,7 @@ We have an experimental interactive visualization that can be used for model cri
 
 ### Thank you!
 
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, and Kaiyan Ma
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, and Kaiyan Ma
 * Discussions with Jingyi Jessica Li (UCLA)
 * Funding: NIGMS R01GM152744.
 
@@ -733,8 +670,8 @@ We have an experimental interactive visualization that can be used for model cri
 
 ### References
 
-[1] D. Lahnemann, J. Koster, E. Szczurek, et al. "Eleven grand
-challenges in single-cell data science". In: _Genome Biology_ 21
+[1] D. L&lt;U+00E4&gt;hnemann, J. K&lt;U+00F6&gt;ster, E. Szczurek, et al. "Eleven
+grand challenges in single-cell data science". In: _Genome Biology_ 21
 (2020). &lt;https://api.semanticscholar.org/CorpusID:211054289&gt;.
 
 [2] L. Zappia, B. Phipson, and A. Oshlack. "Splatter: simulation of
@@ -750,39 +687,88 @@ Biotechnology_ (2023), pp. 1-6.
 
 ### References
 
-[4] R. A. Rigby and D. M. Stasinopoulos. "Generalized additive models
-for location, scale and shape". In: _Journal of the Royal Statistical
+[4] S. N. Goodman. "Of P-values and Bayes: a modest
+proposal." In: _Epidemiology_ 12 3 (2001), pp.  295-7
+.
+&lt;https://api.semanticscholar.org/CorpusID:41986475&gt;.
+
+[5] E. Pasolli, L. Schiffer, P. Manghi, et al.
+"Accessible, curated metagenomic data through
+ExperimentHub". In: _Nature Methods_ 14 (2017), pp.
+1023-1024.
+&lt;https://api.semanticscholar.org/CorpusID:3403081&gt;.
+
+[6] B. J. Callahan, K. Sankaran, J. Fukuyama, et al.
+"Bioconductor Workflow for Microbiome Data Analysis:
+from raw reads to community analyses". In:
+_F1000Research_ 5 (2016).
+&lt;https://api.semanticscholar.org/CorpusID:6468345&gt;.
+
+---
+
+### References
+
+[7] G. H. Golub and H. Zha. "Perturbation analysis of
+the canonical correlations of matrix pairs". In:
+_Linear Algebra and its Applications_ 210 (1994), pp.
+3-28.
+&lt;https://api.semanticscholar.org/CorpusID:123160725&gt;.
+
+[8] K. Arikawa. "Theoretical framework for analyzing
+structural compliance properties of proteins". In:
+_Biophysics and Physicobiology_ 15 (2018), pp. 58 -
+74.
+&lt;https://api.semanticscholar.org/CorpusID:4472297&gt;.
+
+[9] M. A. Hernan and J. M. Robins. _Causal
+inference_. En. Boca Raton, FL: CRC Press, Jan. 2024.
+
+[10] J. J. Li. "Using Synthetic Null Data to Enhance
+Statistical Rigor in Genomics".
+&lt;http://jsb.ucla.edu/sites/default/files/072523_Overton.pdf&gt;.
+
+---
+
+### References
+
+[11] B. Hofner, A. Mayr, and M. Schmid. "gamboostLSS:
+An R Package for Model Building and Variable
+Selection in the GAMLSS Framework". In: _arXiv:
+Computation_ (2014).
+&lt;https://api.semanticscholar.org/CorpusID:62302678&gt;.
+
+[12] R. A. Rigby and D. M. Stasinopoulos.
+"Generalized additive models for location, scale and
+shape". In: _Journal of the Royal Statistical
 Society: Series C (Applied Statistics)_ 54 (2005).
 &lt;https://api.semanticscholar.org/CorpusID:56076930&gt;.
 
-[5] B. Hofner, A. Mayr, and M. Schmid. "gamboostLSS: An R Package for
-Model Building and Variable Selection in the GAMLSS Framework". In:
-_arXiv: Computation_ (2014).
-&lt;https://api.semanticscholar.org/CorpusID:62302678&gt;.
-
-[6] K. Cao, Y. Hong, and L. Wan. "Manifold alignment for heterogeneous
-single-cell multi-omics data integration using Pamona". In:
-_Bioinformatics_ 38 (2020), pp. 211 - 219.
+[13] K. Cao, Y. Hong, and L. Wan. "Manifold alignment
+for heterogeneous single-cell multi-omics data
+integration using Pamona". In: _Bioinformatics_ 38
+(2020), pp. 211 - 219.
 &lt;https://api.semanticscholar.org/CorpusID:226959190&gt;.
 
 ---
 
-### References
+### Verbs: Plot
 
-[7] S. N. Goodman. "Of P-values and Bayes: a modest proposal." In:
-_Epidemiology_ 12 3 (2001), pp.  295-7 .
-&lt;https://api.semanticscholar.org/CorpusID:41986475&gt;.
 
-[8] E. Pasolli, L. Schiffer, P. Manghi, et al. "Accessible, curated
-metagenomic data through ExperimentHub". In: _Nature Methods_ 14
-(2017), pp. 1023-1024.
-&lt;https://api.semanticscholar.org/CorpusID:3403081&gt;.
+```r
+sample(simulator) |&gt;
+  plot_correlations(points = point_opts)
+```
+
+&lt;img src="20231206_files/figure-html/correlation_plot-1.png" width="600" style="display: block; margin: auto;" /&gt;
 
 ---
 
-### References
+### Verbs: &lt;span style="color:#D94E4E"&gt;Mutate&lt;/span&gt;
 
-
+There are many reasons we might want to alter an initial simulator,
+* **Synthetic Nulls**: We can define negative controls to safeguard against false discoveries.
+* **Iteration**: We may want to improve the simulator’s goodness of fit by modifying the regression.
+* **Power Analysis**: We may want to construct data from alternative experimental designs or biological signal strengths.
 
 ---
 
