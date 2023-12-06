@@ -233,10 +233,11 @@ First, we estimate models `\(\hat{F}_{g}\left(y_{i} \vert \mathbf{x}_{i}\right)\
 ]
 
 .pull-right[
-Model the joint distribution of quantiles using a copula model.
-* The existing package supports Gaussian and Vine copulas.
-* Can estimate separate copulas across groups to capture differential dependence.
+1. Next, we model the joint distribution of quantiles using a copula model.
+
+1. This correlates genes even after conditioning on the same `\(\mathbf{x}_{i}\)`.
 ]
+
 
 ---
 
@@ -564,7 +565,7 @@ sim_joined
 &lt;br/&gt;
 
 &lt;div style="font-size: 34px;"&gt;
-Live Code: &lt;a href="https://go.wisc.edu/"&gt;https://go.wisc.edu/&lt;/a&gt;
+Live Code: &lt;a href="https://go.wisc.edu/411090/"&gt;https://go.wisc.edu/411090/&lt;/a&gt;
 &lt;br/&gt;
 Colab Notebook: &lt;a href="https://go.wisc.edu/u5a94m"&gt;https://go.wisc.edu/u5a94m&lt;/a&gt;
 &lt;br/&gt;
