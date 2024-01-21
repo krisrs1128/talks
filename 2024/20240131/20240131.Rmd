@@ -1,0 +1,210 @@
+---
+title: "WID Seminar 2024"
+output:
+  xaringan::moon_reader:
+    chakra: https://remarkjs.com/downloads/remark-0.15.0.min.js
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: true
+    fig_caption: true
+    nature:
+      ratio: "16:9"
+    seal: false
+---
+
+```{r, echo = FALSE, warnings = FALSE, message = FALSE}
+library(RefManageR)
+library(knitr)
+library(tidyverse)
+library(glue)
+opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_knit$set(eval.after = "fig.cap")
+set.seed(123)
+
+BibOptions(cite.style = "numeric")
+#bib <- ReadBib("references.bib")
+```
+
+<div id="links">
+Slides:  https://go.wisc.edu/<br>
+</div>
+
+## Statistical and Computational Challenges in Phylogenetic Inference
+
+.pull-right[<img width=400 src="figures/tree-of-life.webp"/>]
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+.pull-left[<div id="subtitle">
+Kris Sankaran <br/>
+31 | January | 2024 <br/>
+WID Discovery Seminar<br/>
+</div>]
+
+---
+
+### Solís-Lemus Lab: Themes
+
+**Theory**: Making statistical assumptions precise and understanding their consequences through careful study. Figure from [(Solís-Lemus 2023)](https://press.princeton.edu/books/hardcover/9780691207599/species-tree-inference)
+
+.center[
+<img src="figures/concordance-factors.png"/>
+]
+
+---
+
+### Solís-Lemus Lab: Themes
+
+**Algorithms**: Designing computational algorithms fitting for a sci-fi movie director. Figure from [(Wu and Solís-Lemus 2023)]( https://arxiv.org/abs/2211.16647)
+
+.center[
+<img src="figures/invariants.png"/>
+]
+
+---
+
+### Solís-Lemus Lab: Themes
+
+**Software**: Writing packages and tutorials that have helped researchers around the world.
+
+<img src="figures/software-monatage.png"/>
+
+---
+
+### Phylogenetic Trees
+
+1. These trees represent descent-with-modification in evolutionary theory.
+1. Nodes represent populations diverging into separate species.
+
+.center[
+<img src="figures/phylogeny.gif"/>
+]
+Figure from [(Baum, et al., 2005)](https://doi.org/10.1126/science.1117727).
+
+---
+
+### Scientific Importance
+
+.pull-left[
+Phylogenetics help to:
+
+1. **Clarify evolutionary relationships.**
+1. Facilitate conservation in a changing climate.
+1. Trace the origin and spread of pathogens.
+]
+
+.pull-right[
+<img src="figures/bird_evolution.webp" width=700/>
+]
+
+---
+
+### Scientific Importance
+
+.pull-left[
+Phylogenetics help to:
+
+1. Clarify evolutionary relationships.
+1. **Facilitate conservation in a changing climate.**
+1. Trace the origin and spread of pathogens.
+]
+
+.pull-right[
+<img src="figures/climate-phylo.jpg" width=450/>
+]
+
+---
+
+### Scientific Importance
+
+.pull-left[
+Phylogenetics help to:
+
+1. Clarify evolutionary relationships.
+1. Facilitate conservation in a changing climate.
+1. **Trace the origin and spread of pathogens.**
+]
+
+
+.pull-right[
+<img src="figures/nextstrain.png"/>
+Figure from the [nextstrain project](https://nextstrain.org/ncov/open/global/6m).
+]
+---
+
+### Gene Trees
+
+1. Since genes evolve, they have their own sets of common ancestors.
+1. For example, genes might diverge before species do, and they may flow between
+already separated populations.
+
+.pull-left[
+<img width=600 src="figures/species-gene-sequence-1.png"/>
+]
+.pull-rigth[
+Figure from [(Mirareb 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
+]
+
+
+---
+
+### Gene Trees
+
+1. Since genes evolve, they have their own sets of common ancestors.
+1. For example, genes might diverge before species do, and they may flow between
+already separated populations.
+
+.pull-left[
+<img width=400 src="figures/species-gene-sequence.png"/>
+]
+.pull-rigth[
+Figure from [(Mirareb 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
+]
+
+
+---
+
+### Concatenation
+
+Figure from [Botany/Plantpath 563](https://crsl4.github.io/phylogenetics-class/), Lecture 14. 
+
+.center[
+<img width=720 src="figures/inconsistency.png"/>
+]
+
+---
+
+### Trees $\to$ Networks
+
+An analogous inconsistency occurs if gene flow is ignored. Figure from [(Solís-Lemus 2023)](https://press.princeton.edu/books/hardcover/9780691207599/species-tree-inference), see also [(Solís-Lemus et al., 2015)](https://doi.org/10.1093/sysbio/syw030).
+
+.center[
+<img width=1200 src="figures/gene-flow-motivation.png"/>
+]
+
+---
+
+### Challenges
+
+1. **Approximation**: Evolution is complex, and statistical approximations are
+limited. For example, mutation rates are often heterogeneous.
+1. **Scalability**: As the number of taxa increases, algorithms must face a
+combinatorial explosion in the number of candidate networks.
+1. **Signal**: Many important problems have limited phylogenetic signal. For eample,
+this created controversy in the study of COVID-19.
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+#PrintBibliography(bib)
+```
+
