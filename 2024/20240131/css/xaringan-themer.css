@@ -133,11 +133,11 @@ img, video, iframe {
 }
 .pull-three-quarters-left {
   float: left;
-  width: 75%;
+  width: 60%;
 }
 .pull-three-quarters-right {
   float: right;
-  width: 25%;
+  width: 40%;
 }
 blockquote {
   border-left: solid 5px #09017F80;

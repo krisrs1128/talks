@@ -13,27 +13,20 @@ output:
 ---
 
 ```{r, echo = FALSE, warnings = FALSE, message = FALSE}
-library(RefManageR)
 library(knitr)
-library(tidyverse)
-library(glue)
 opts_chunk$set(message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 opts_knit$set(eval.after = "fig.cap")
 set.seed(123)
-
-BibOptions(cite.style = "numeric")
-#bib <- ReadBib("references.bib")
 ```
-
-<div id="links">
-Slides:  https://go.wisc.edu/<br>
-</div>
 
 ## Statistical and Computational Challenges in Phylogenetic Inference
 
-.pull-right[<img width=400 src="figures/tree-of-life.webp"/>]
+.pull-three-quarters-left[
+### Introducing the Solís-Lemus Lab
+]
 
-<br/>
+.pull-three-quarters-right[<img width=400 src="figures/tree-of-life.webp"/>]
+
 <br/>
 <br/>
 <br/>
