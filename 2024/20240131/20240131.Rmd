@@ -191,6 +191,18 @@ An analogous inconsistency occurs if gene flow is ignored. Figure from [(Solís-
 
 ---
 
+### WID Themes
+
+1. <img src="figures/computer.png" width=70/> Methodological: The Solís-Lemus Lab's research enriches the class of
+available tools for phylogenetic networks, ensuring **robustness** to departures
+from classical phylogenetic assumptions.
+
+1. <img src="figures/books.png" width=70/> Scientific angle: To understand
+**change** in biological populations, we first need to reconstruct their
+history.
+
+---
+
 ### The COVID-19 Controversy
 
 In the early months of the COVID-19 pandemic, there was significant interest in

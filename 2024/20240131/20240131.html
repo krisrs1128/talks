@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>WID Seminar 2024</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+&lt;div id="links"&gt;
+Slides:  https://go.wisc.edu/&lt;br&gt;
+&lt;/div&gt;
+
+## Statistical and Computational Challenges in Phylogenetic Inference
+
+.pull-right[&lt;img width=400 src="figures/tree-of-life.webp"/&gt;]
+
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+.pull-left[&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+31 | January | 2024 &lt;br/&gt;
+WID Discovery Seminar&lt;br/&gt;
+&lt;/div&gt;]
+
+---
+
+### Solís-Lemus Lab: Themes
+
+**Theory**: Making statistical assumptions precise and understanding their consequences through careful study. Figure from [(Solís-Lemus 2023)](https://press.princeton.edu/books/hardcover/9780691207599/species-tree-inference)
+
+.center[
+&lt;img src="figures/concordance-factors.png"/&gt;
+]
+
+---
+
+### Solís-Lemus Lab: Themes
+
+**Algorithms**: Designing computational algorithms fitting for a sci-fi movie director. Figure from [(Wu and Solís-Lemus 2023)]( https://arxiv.org/abs/2211.16647)
+
+.center[
+&lt;img src="figures/invariants.png"/&gt;
+]
+
+---
+
+### Solís-Lemus Lab: Themes
+
+**Software**: Writing packages and tutorials that have helped researchers around the world.
+
+&lt;img src="figures/software-monatage.png"/&gt;
+
+---
+
+### Phylogenetic Trees
+
+1. These trees represent descent-with-modification in evolutionary theory.
+1. Nodes represent populations diverging into separate species.
+
+.center[
+&lt;img src="figures/phylogeny.gif"/&gt;
+]
+Figure from [(Baum, et al., 2005)](https://doi.org/10.1126/science.1117727).
+
+---
+
+### Scientific Importance
+
+.pull-left[
+Phylogenetics help to:
+
+1. **Clarify evolutionary relationships.**
+1. Facilitate conservation in a changing climate.
+1. Trace the origin and spread of pathogens.
+]
+
+.pull-right[
+&lt;img src="figures/bird_evolution.webp" width=700/&gt;
+]
+
+---
+
+### Scientific Importance
+
+.pull-left[
+Phylogenetics help to:
+
+1. Clarify evolutionary relationships.
+1. **Facilitate conservation in a changing climate.**
+1. Trace the origin and spread of pathogens.
+]
+
+.pull-right[
+&lt;img src="figures/climate-phylo.jpg" width=450/&gt;
+]
+
+---
+
+### Scientific Importance
+
+.pull-left[
+Phylogenetics help to:
+
+1. Clarify evolutionary relationships.
+1. Facilitate conservation in a changing climate.
+1. **Trace the origin and spread of pathogens.**
+]
+
+
+.pull-right[
+&lt;img src="figures/nextstrain.png"/&gt;
+Figure from the [nextstrain project](https://nextstrain.org/ncov/open/global/6m).
+]
+---
+
+### Gene Trees
+
+1. Since genes evolve, they have their own sets of common ancestors.
+1. For example, genes might diverge before species do, and they may flow between
+already separated populations.
+
+.pull-left[
+&lt;img width=600 src="figures/species-gene-sequence-1.png"/&gt;
+]
+.pull-rigth[
+Figure from [(Mirarab 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
+]
+
+
+---
+
+### Gene Trees
+
+1. Since genes evolve, they have their own sets of common ancestors.
+1. For example, genes might diverge before species do, and they may flow between
+already separated populations.
+
+.pull-left[
+&lt;img width=400 src="figures/species-gene-sequence.png"/&gt;
+]
+.pull-rigth[
+Figure from [(Mirarab 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
+]
+
+
+---
+
+### Concatenation
+
+Figure from [Botany/Plantpath 563](https://crsl4.github.io/phylogenetics-class/), Lecture 14. 
+
+.center[
+&lt;img width=720 src="figures/inconsistency.png"/&gt;
+]
+
+---
+
+### Trees `\(\to\)` Networks
+
+An analogous inconsistency occurs if gene flow is ignored. Figure from [(Solís-Lemus 2023)](https://press.princeton.edu/books/hardcover/9780691207599/species-tree-inference), see also [(Solís-Lemus et al., 2015)](https://doi.org/10.1093/sysbio/syw030).
+
+.center[
+&lt;img width=1200 src="figures/gene-flow-motivation.png"/&gt;
+]
+
+---
+
+### WID Themes
+
+1. &lt;img src="figures/computer.png" width=70/&gt; Methodological: The Solís-Lemus Lab's research enriches the class of
+available tools for phylogenetic networks, ensuring **robustness** to departures
+from classical phylogenetic assumptions.
+
+1. &lt;img src="figures/books.png" width=70/&gt; Scientific angle: To understand
+**change** in biological populations, we first need to reconstruct their
+history.
+
+---
+
+### The COVID-19 Controversy
+
+In the early months of the COVID-19 pandemic, there was significant interest in
+determining the evolutionary relationships between the many sequenced strains.
+
+&lt;img src="figures/original_paper.png" width=900/&gt;
+
+[Forster et al. 2020](https://doi.org/10.1073/pnas.2004999117)
+
+---
+
+### The COVID-19 Controversy
+
+Experts in the phylogenetics community raised concerns about the application of
+computational methods without evaluating assumptions and interpretations more
+critically.
+
+&lt;img src="figures/responses.png" width=1300/&gt;
+
+[Sánchez-Pacheco et al. 2020](https://doi.org/10.1073/pnas.2007062117)
+[Mavian et al. 2020](https://doi.org/10.1073/pnas.2007062117)
+
+---
+
+### The COVID-19 Controversy
+
+In the end, this was a reminder that accurate, general-purpose phylogenetics
+analysis remains a challenging open problem.
+
+.center[
+&lt;img src="figures/conciliation.png" width=680/&gt;
+]
+
+[Morel et al. 2020](https://doi.org/10.1093/molbev/msaa314)
+
+---
+
+### References
+
+Baum, D. A., Smith, S. D., &amp; Donovan, S. S. S. (2005). The Tree-Thinking Challenge. In Science (Vol. 310, Issue 5750, pp. 979–980). American Association for the Advancement of Science (AAAS). https://doi.org/10.1126/science.1117727
+
+Forster, P., Forster, L., Renfrew, C., &amp; Forster, M. (2020). Phylogenetic network analysis of SARS-CoV-2 genomes. In Proceedings of the National Academy of Sciences (Vol. 117, Issue 17, pp. 9241–9243). Proceedings of the National Academy of Sciences. https://doi.org/10.1073/pnas.2004999117
+
+---
+
+Mavian, C., Pond, S. K., Marini, S., Magalis, B. R., Vandamme, A.-M., Dellicour, S., Scarpino, S. V., Houldcroft, C., Villabona-Arenas, J., Paisie, T. K., Trovão, N. S., Boucher, C., Zhang, Y., Scheuermann, R. H., Gascuel, O., Lam, T. T.-Y., Suchard, M. A., Abecasis, A., Wilkinson, E., … Salemi, M. (2020). Sampling bias and incorrect rooting make phylogenetic network tracing of SARS-COV-2 infections unreliable. In Proceedings of the National Academy of Sciences (Vol. 117, Issue 23, pp. 12522–12523). Proceedings of the National Academy of Sciences. https://doi.org/10.1073/pnas.2007295117
+
+Mirarab, S., Nakhleh, L., &amp; Warnow, T. (2021). Multispecies Coalescent: Theory and Applications in Phylogenetics. In Annual Review of Ecology, Evolution, and Systematics (Vol. 52, Issue 1, pp. 247–268). Annual Reviews. https://doi.org/10.1146/annurev-ecolsys-012121-095340
+
+---
+
+Morel, B., Barbera, P., Czech, L., Bettisworth, B., Hübner, L., Lutteropp, S., Serdari, D., Kostaki, E.-G., Mamais, I., Kozlov, A. M., Pavlidis, P., Paraskevis, D., &amp; Stamatakis, A. (2020). Phylogenetic Analysis of SARS-CoV-2 Data Is Difficult. In H. Malik (Ed.), Molecular Biology and Evolution (Vol. 38, Issue 5, pp. 1777–1791). Oxford University Press (OUP). https://doi.org/10.1093/molbev/msaa314
+
+Sánchez-Pacheco, S. J., Kong, S., Pulido-Santacruz, P., Murphy, R. W., &amp; Kubatko, L. (2020). Median-joining network analysis of SARS-CoV-2 genomes is neither phylogenetic nor evolutionary. In Proceedings of the National Academy of Sciences (Vol. 117, Issue 23, pp. 12518–12519). Proceedings of the National Academy of Sciences. https://doi.org/10.1073/pnas.2007062117
+
+Solís-Lemus, C., Yang, M., &amp; Ané, C. (2016). Inconsistency of Species Tree Methods under Gene Flow. In Systematic Biology (Vol. 65, Issue 5, pp. 843–851). Oxford University Press (OUP). https://doi.org/10.1093/sysbio/syw030
+
+---
+
+Solís-Lemus, C. (2023). Network Thinking: In Species Tree Inference (pp. 120–144). Princeton University Press. https://doi.org/10.2307/j.ctv2wr4wdf.12
+
+Wu, Z., &amp; Solis-Lemus, C. (2022). Ultrafast learning of 4-node hybridization cycles in phylogenetic networks using algebraic invariants (Version 3). arXiv. https://doi.org/10.48550/ARXIV.2211.16647
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-0.15.0.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
