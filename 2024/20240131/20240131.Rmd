@@ -149,7 +149,7 @@ already separated populations.
 <img width=600 src="figures/species-gene-sequence-1.png"/>
 ]
 .pull-rigth[
-Figure from [(Mirareb 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
+Figure from [(Mirarab 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
 ]
 
 
@@ -165,7 +165,7 @@ already separated populations.
 <img width=400 src="figures/species-gene-sequence.png"/>
 ]
 .pull-rigth[
-Figure from [(Mirareb 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
+Figure from [(Mirarab 2021)](https://doi.org/10.1146/annurev-ecolsys-012121-095340).
 ]
 
 
@@ -191,20 +191,65 @@ An analogous inconsistency occurs if gene flow is ignored. Figure from [(Solís-
 
 ---
 
-### Challenges
+### The COVID-19 Controversy
 
-1. **Approximation**: Evolution is complex, and statistical approximations are
-limited. For example, mutation rates are often heterogeneous.
-1. **Scalability**: As the number of taxa increases, algorithms must face a
-combinatorial explosion in the number of candidate networks.
-1. **Signal**: Many important problems have limited phylogenetic signal. For eample,
-this created controversy in the study of COVID-19.
+In the early months of the COVID-19 pandemic, there was significant interest in
+determining the evolutionary relationships between the many sequenced strains.
+
+<img src="figures/original_paper.png" width=900/>
+
+[Forster et al. 2020](https://doi.org/10.1073/pnas.2004999117)
+
+---
+
+### The COVID-19 Controversy
+
+Experts in the phylogenetics community raised concerns about the application of
+computational methods without evaluating assumptions and interpretations more
+critically.
+
+<img src="figures/responses.png" width=1300/>
+
+[Sánchez-Pacheco et al. 2020](https://doi.org/10.1073/pnas.2007062117)
+[Mavian et al. 2020](https://doi.org/10.1073/pnas.2007062117)
+
+---
+
+### The COVID-19 Controversy
+
+In the end, this was a reminder that accurate, general-purpose phylogenetics
+analysis remains a challenging open problem.
+
+.center[
+<img src="figures/conciliation.png" width=680/>
+]
+
+[Morel et al. 2020](https://doi.org/10.1093/molbev/msaa314)
 
 ---
 
 ### References
 
-```{r, results='asis', echo = FALSE}
-#PrintBibliography(bib)
-```
+Baum, D. A., Smith, S. D., & Donovan, S. S. S. (2005). The Tree-Thinking Challenge. In Science (Vol. 310, Issue 5750, pp. 979–980). American Association for the Advancement of Science (AAAS). https://doi.org/10.1126/science.1117727
 
+Forster, P., Forster, L., Renfrew, C., & Forster, M. (2020). Phylogenetic network analysis of SARS-CoV-2 genomes. In Proceedings of the National Academy of Sciences (Vol. 117, Issue 17, pp. 9241–9243). Proceedings of the National Academy of Sciences. https://doi.org/10.1073/pnas.2004999117
+
+---
+
+Mavian, C., Pond, S. K., Marini, S., Magalis, B. R., Vandamme, A.-M., Dellicour, S., Scarpino, S. V., Houldcroft, C., Villabona-Arenas, J., Paisie, T. K., Trovão, N. S., Boucher, C., Zhang, Y., Scheuermann, R. H., Gascuel, O., Lam, T. T.-Y., Suchard, M. A., Abecasis, A., Wilkinson, E., … Salemi, M. (2020). Sampling bias and incorrect rooting make phylogenetic network tracing of SARS-COV-2 infections unreliable. In Proceedings of the National Academy of Sciences (Vol. 117, Issue 23, pp. 12522–12523). Proceedings of the National Academy of Sciences. https://doi.org/10.1073/pnas.2007295117
+
+Mirarab, S., Nakhleh, L., & Warnow, T. (2021). Multispecies Coalescent: Theory and Applications in Phylogenetics. In Annual Review of Ecology, Evolution, and Systematics (Vol. 52, Issue 1, pp. 247–268). Annual Reviews. https://doi.org/10.1146/annurev-ecolsys-012121-095340
+
+---
+
+Morel, B., Barbera, P., Czech, L., Bettisworth, B., Hübner, L., Lutteropp, S., Serdari, D., Kostaki, E.-G., Mamais, I., Kozlov, A. M., Pavlidis, P., Paraskevis, D., & Stamatakis, A. (2020). Phylogenetic Analysis of SARS-CoV-2 Data Is Difficult. In H. Malik (Ed.), Molecular Biology and Evolution (Vol. 38, Issue 5, pp. 1777–1791). Oxford University Press (OUP). https://doi.org/10.1093/molbev/msaa314
+
+Sánchez-Pacheco, S. J., Kong, S., Pulido-Santacruz, P., Murphy, R. W., & Kubatko, L. (2020). Median-joining network analysis of SARS-CoV-2 genomes is neither phylogenetic nor evolutionary. In Proceedings of the National Academy of Sciences (Vol. 117, Issue 23, pp. 12518–12519). Proceedings of the National Academy of Sciences. https://doi.org/10.1073/pnas.2007062117
+
+Solís-Lemus, C., Yang, M., & Ané, C. (2016). Inconsistency of Species Tree Methods under Gene Flow. In Systematic Biology (Vol. 65, Issue 5, pp. 843–851). Oxford University Press (OUP). https://doi.org/10.1093/sysbio/syw030
+
+---
+
+Solís-Lemus, C. (2023). Network Thinking: In Species Tree Inference (pp. 120–144). Princeton University Press. https://doi.org/10.2307/j.ctv2wr4wdf.12
+
+Wu, Z., & Solis-Lemus, C. (2022). Ultrafast learning of 4-node hybridization cycles in phylogenetic networks using algebraic invariants (Version 3). arXiv. https://doi.org/10.48550/ARXIV.2211.16647
