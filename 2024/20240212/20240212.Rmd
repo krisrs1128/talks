@@ -122,10 +122,53 @@ We need ways to encode the less obvious objectives as well.
 
 ---
 
-# What Makes a Visualization Interpretable?
+# What Makes a Visualization Good?
 
 .center[
   cartoon icon of a graphic
 ]
 
 ---
+
+### At-the-Surface
+
+A good visualization is:
+
+1. Legible: It knows to omit extraneous, distracting elements.
+1. Annotated: All axes and graphical encodings should be described.
+1. Information-Dense: A large amount of variation should be communicated
+efficiently.
+
+---
+
+### Below-the-Surface
+
+More subtlely, it should pay attention to:
+
+1. Data Provenance: If we don't know the data sources, we should be skeptical or
+anything that's shown, no matter how compelling.
+1. Audience: The effectiveness of a visualization is dependent on the visual
+vocabulary of its audience.
+1. Prioritization: Every design emphasizes some comparisons over others. Are the
+comparisons honest, and are the "important" patterns visible?
+1. Interactivity: Does it engage the reader's problem solving capacity or
+spoonfeed them trivialities?
+
+---
+
+### [Analogy]^[Of course, this analogy is only an approximation -- e.g., you can opt-out of a
+newspaper visualization, not a AI-based loan decision!]
+
+The nuance with which we can think about visualization can be translated to
+interpretability.
+
+*  Legibility $\to$ Parsimony, Modularity
+*  Annotation $\to$ Explanations, Simulatability
+*  Information Density $\to$ Variance Explained, Prediction Performance
+
+Whether or not a model is interpretable is just as subtle a judgment as whether
+a visualization is good.
+
+---
+
+
