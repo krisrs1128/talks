@@ -1,0 +1,131 @@
+---
+title: Interpretability
+author: Kris Sankaran
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+css: custom.css
+---
+
+<div id="links">
+Slides: <a href="https://go.wisc.edu/4y9176">go.wisc.edu/4y9176</a>
+</div>
+<div id="title">
+Interpretable Machine Learning: What's Possible and a What's Next?
+</div>
+
+<br/>
+<div id="subtitle">
+Kris Sankaran <br/>
+<a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+12 | February | 2023 <br/>
+Workshop on Trustworthy Machine Learning<br/>
+</div>
+
+---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+.pull-left[
+Decisions: They can be automate or assist with judgments that previously would
+have been done entirely by people.
+]
+
+.pull-right[
+  Figures for advertisements (google)
+  and for diagnosis (X-ray)
+]
+
+---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+.pull-left[
+  Discovery: They can orient us within large data catalogs and can guide us
+  towards promising hypotheses.
+]
+
+.pull-right[
+ Figures of satellite imagery with greenhouse gas monitoring
+ Figure of next generation sequencing data, maybe visium
+]
+
+---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+.pull-left[
+  Creativity: They can make it easier for those without technical training to
+  explore ideas and express themselves.
+]
+
+.pull-right[
+  AI assisted artwork
+  AI assisted font design
+  Gmail autoreplies...
+]
+
+---
+
+### The Challenge
+
+Each class of problems comes with subtle objectives. We should...
+
+* [Decision-Making] Respect the right-to-explanation.
+* [Decision-Making] Promote socially-agreed-upon ideas of fairness.
+* [Decision-Making] Avoid introducing new types of mistakes [cite Lipton]
+* [Discovery] Ensure that analysis are reproducible.
+* [Discovery] Highlight parsimonious and testable explanations.
+* [Creativity] Allow user interaction and control.
+* [Creativity] Avoid the homogeneization of perspectives.
+
+---
+
+### The Challenge
+
+Yet, for so much of model development, practitioners still focus on
+out-of-sample prediction error.
+
+We need ways to encode the less obvious objectives as well.
+
+---
+
+# What Makes a Model Interpretable?
+
+.center[
+  cartoon icon of a computer
+]
+
+---
+
+# What Makes a Model Interpretable?
+
+.center[
+  cartoon icon of a computer
+]
+
+### This is a difficult questions....let's start with an easier one.
+
+---
+
+# What Makes a Visualization Interpretable?
+
+.center[
+  cartoon icon of a graphic
+]
+
+---
