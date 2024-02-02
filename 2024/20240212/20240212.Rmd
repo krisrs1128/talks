@@ -157,7 +157,7 @@ spoonfeed them trivialities?
 ---
 
 ### [Analogy]^[Of course, this analogy is only an approximation -- e.g., you can opt-out of a
-newspaper visualization, not a AI-based loan decision!]
+newspaper visualization, not a AI-based loan decision.]
 
 The nuance with which we can think about visualization can be translated to
 interpretability.
@@ -166,9 +166,238 @@ interpretability.
 *  Annotation $\to$ Explanations, Simulatability
 *  Information Density $\to$ Variance Explained, Prediction Performance
 
-Whether or not a model is interpretable is just as subtle a judgment as whether
-a visualization is good.
+Whether or not a model is interpretable is as subtle as whether a visualization
+is effective.
+
+---
+
+### Historical Context
+
+1. **Initial Wave**: Early ML systems required expert-crafted features. Deep learning
+removed this requirement, creating a new need for post-hoc expalnations.
+
+1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
+and commentaries attempt to establish shared vocabulary (Lipton 2018, Adebayo
+2018, Murdoch 2019, Rudin 2019).
+
+1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
+evaluation, and substantive theory -- these are beginning to emerge.
+
+.center[
+  <img src="timeline"/>
+]
+
+---
+
+### Vocabulary
+
+1. **Interpretable Model**: A model that, by virtue of its design, is easy for
+its stakeholders to accurately describe and alter.
+1. **Explainability Technique**: A method that shapes our mental models about
+black box systems.
+
+.center[
+  <img src="figure/interpretable_explainable.png"/>
+]
+
+---
+
+### Vocabulary
+
+1. **Local Explanation**: An artifact for reasoning about individual predictions.
+
+1. **Global Explanation**: An artifact for reasoning about an entire model.
+
+<img src="figures/local_vs_global.png"/>
+
+---
+
+## Methods
+
+---
+
+### Running Example
+
+I have simulated a toy dataset on which to illustrate some common approaches.
+
+Problem: Our collaborators sampled longitudinal microbiome profiles from 1000
+study participants. Some of these participants eventually developed a disease.
+What microbiome properties are related to disease development?
+
+.pull[
+toy figure of FRESH cohort
+
+This setup is motivated by studies of HIV development in the FRESH cohort.
+]
+
+---
+
+### Dataset
+
+$N = 1000$ participants, $P = 144$ species, $T = 50$ timepoints
+
+.center[
+  <img src="figure/simulated-data.png"/>
+]
+
+---
+
+### Directly Interpretable Models
+
+Let's consider sparse logistic regression and decision trees applied to the
+widened data.
+
+.pull-left[
+1. Parsimony: Predictions can be traced to a few input features, low-order
+interactions, or latent factors.
+2. Simulatability: Given a new input and a description of the model, a model
+user can make a prediction with relatively little effort.
+]
+
+.pull-left[
+  <img src="figures/widened_data.png"/>
+]
+
+---
+
+### Sparse Logistic Regression
+
+.center[
+  Figure of cross-validation performance against number of features.
+]
+
+Using too few features leads to poor cross-validation performance.
+
+---
+
+### Decision Trees
+
+We can achieve slightly better performance with decision trees. They are
+somewhat deep, which complicates interpretability.
+
+.center[
+  example decision tree prediction. 
+]
+
+---
+
+### Instability
+
+More troublingly, the outputs from both approaches are unstable. This makes
+sense -- the longitudinal structure makes features very correlated.
+
+.center[
+  unstable, different decision tree prediction.
+]
+
+---
+
+### Feature Engineering
+
+To address this, we decide to reduce dimensionality by handcrafting some
+features: overall slope and curvature for each taxon.
+
+.center[
+ same regression picture, but now showing the reduced feature space
+]
+
+---
+
+### Feature Engineering
+
+This improves prediction performance and somewhat addresses the instability
+problem.
+
+Lesson: In the original feature space, there was an interpretability-accuracy
+trade-off (a consequence of the bias variance trade-off). However, we have the
+flexibility to choose *more interpretable and more predictive representatives.*
+
+---
+
+### Transformers
+
+1. One driving principle of deep learning is that, with sufficiently many examples,
+end-to-end optimization should be preferred to expert design.
+  - Easier to implement, more accurate.
+1. We can apply the GPT2 architecture to our problem, viewing neighboring
+microbiome profiles as neighboring words in a sentence.
+  - It should automatically learn features like what we defined.
+
+---
+
+### Aside: Transformers Mechanics
+
+---
+
+### Aside: Transformers Mechanics
+
+---
+
+### Embeddings
+
+We can obtain a global explanation by analyzing intermediate representations
+within the deep learning architecture. Let's analyze the features just before
+the classification step in our transformer architecture.
+
+.center[
+  figure of achitecture with the embeddings being extracted before the end
+]
+
+---
+
+### Interactions via Embeddings
+
+In text data, we can understand context-dependent meaning by looking for
+clusters in the latent space. These represent a type of interaction between
+features.
+
+.center[
+  Show the BERT visualization.
+]
+
+---
+
+### Interaction via Embeddings
+
+We can build the analogous visualization for our microbiome problem.
+
+* Word $\to$ Microbe
+* Clusters of Meaning $\to$ Subcommunities containing that microbe
+
+.center[
+  Show the cluster visualization for the microbiome
+]
+
+---
+
+### Interpolations
+
+Another common technique in this space is to analyze interpolations.
 
 ---
 
 
+
+### Distillation
+
+---
+
+### Iterative Structuration
+
+---
+
+### Integrated Gradients
+
+---
+
+### Concept Bottlenecks
+
+---
+
+### Simulation Mechanism
+
+---
+
+### Multimodality
+
+---
