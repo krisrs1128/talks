@@ -510,21 +510,6 @@ concept-level annotations for every sample.
 
 ### Concept Bottlenecks
 
-We can train this model using tuples $\left(x_{i}, c_{i}, y_{i}\right)$ and
-objective function:
-
-\begin{align*}
-\arg \min _{f, g} \sum_i\left[L\left(f \circ g\left(x_i\right), y_i\right)+\lambda \sum_j L_{C_j}\left(g\left(x_i\right), c_{i j}\right)\right]
-\end{align*}
-
-.center[
-<img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
-]
-
----
-
-### Concept Bottlenecks
-
 For example, in the microbiome example, we could define interpretable "concepts"
 by looking at the taxa trends for commonly co-varying groups of species.
 
@@ -570,7 +555,7 @@ Here is the simulation mechanism that we used.
 ### Generalist Models
 
 .pull-left[
-1. **Future deep learning models will be designed to solve many problems
+1. **Modern deep learning models are being designed to solve many problems
 simultaneously.**
 
 1. Since deep learning architectures are composable, they can handle multimodal
@@ -588,8 +573,8 @@ settings easily.
 ### Generalist Models
 
 .pull-left[
-1. Future deep learning models will be designed to solve many problems
-simultaneously. 
+1. Modern deep learning models are being designed to solve many problems
+simultaneously.
 
 1. **Since deep learning architectures are composable, they can handle multimodal
 settings easily.**
@@ -605,8 +590,9 @@ settings easily.**
 ### Generalist Models
 
 .pull-left[
-1. Future deep learning models will be designed to solve many problems
-simultaneously. 
+
+1. Modern deep learning models are being designed to solve many problems
+simultaneously.
 
 1. Since deep learning architectures are composable, they can handle multimodal
 settings easily.
