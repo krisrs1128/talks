@@ -529,8 +529,8 @@ making a final classification.
 
 ### Concept Bottlenecks
 
-Performance is comparable to before, and we obtain intermediate concept labels
-to explain each instance's prediction.
+Performance is comparable to before, and we obtain concept labels to help us
+explain each instance's prediction.
 
 ---
 
@@ -545,9 +545,117 @@ Here is the simulation mechanism that we used.
 
 ---
 
-### Multimodality
-
-An open challenge in interpretability is how to work with multiple sources
-simultaneously. 
+## Discussion
 
 ---
+
+### Generalist Models
+
+.pull-left[
+1. Future deep learning models will be designed to solve many problems
+simultaneously. 
+]
+
+.pull-right[
+  <img src="figures/chatgpt.png"/>
+]
+
+---
+
+### Generalist Models
+
+.pull-left[
+1. Future deep learning models will be designed to solve many problems
+simultaneously. 
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+]
+
+.pull-right[
+  <img src="figures/open-vocab-segmentation.gif"/>
+]
+---
+
+### Multimodality
+
+.pull-left[
+1. Future deep learning models will be designed to solve many problems
+simultaneously. 
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+
+1. We are also seeing increasingly rich ways to communicate with them.
+
+]
+
+.pull-right[
+  <img src="figures/scribbles.gif"/>
+]
+
+---
+
+### Shared Language
+
+However, this communication has been essentially one-way. Models don't always
+behave in the ways we expect, and they do not offer artifacts to guide
+interpretation.
+
+---
+
+### Visualization Metaphor
+
+We can look to data visualization for inspiration. 
+
+1. People from many backgrounds are comfortable reading and creating data
+visualizations.
+
+1. Visualization tools provide shared representations between code and thought,
+and they encourage critical evaluation of data.
+
+---
+
+### Visualization Metaphor
+
+Model interpretability still seems quite far from this potential.
+
+1. How will interpretable ML appear in future news and scientific reports?
+
+1. What interpretable ML tools will be taught to undergraduates across
+disciplines?
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 6)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 7, end = 10)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 11, end = 14)
+```
