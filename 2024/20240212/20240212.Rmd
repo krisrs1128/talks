@@ -15,17 +15,27 @@ output:
 css: custom.css
 ---
 
+```{r, echo = FALSE}
+library(RefManageR)
+bib <- ReadBib("references.bib")
+```
+
+
 <div id="links">
 Slides: <a href="https://go.wisc.edu/4y9176">go.wisc.edu/4y9176</a>
 </div>
 <div id="title">
-Interpretable Machine Learning: What's Possible and a What's Next?
+Interpretable Machine Learning <br> 
+
+<span style="font-size: 30px">
+What's Possible? What's Next?
+</span>
 </div>
 
 <br/>
 <div id="subtitle">
 Kris Sankaran <br/>
-<a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+<a href="https://go.wisc.edu/">go.wisc.edu/</a> <br/>
 12 | February | 2023 <br/>
 Workshop on Trustworthy Machine Learning<br/>
 </div>
@@ -105,27 +115,30 @@ We need ways to encode the less obvious objectives as well.
 ---
 
 # What Makes a Model Interpretable?
-
+<br/>
 .center[
-  cartoon icon of a computer
+<img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/>
 ]
 
 ---
 
 # What Makes a Model Interpretable?
-
+<br/>
 .center[
-  cartoon icon of a computer
+<img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/>
 ]
 
-### This is a difficult questions....let's start with an easier one.
+<p style="font-size: 30px; position: absolute; left: 20px; top: 200px; width: 450px">
+This is a difficult questions....
+let's start with an easier one.
+</p>
 
 ---
 
 # What Makes a Visualization Good?
-
+<br/>
 .center[
-  cartoon icon of a graphic
+<img src="figures/visualization.png" width=350 style="position: absolute; left: 450px"/>
 ]
 
 ---
@@ -156,8 +169,8 @@ spoonfeed them trivialities?
 
 ---
 
-### [Analogy]^[Of course, this analogy is only an approximation -- e.g., you can opt-out of a
-newspaper visualization, not a AI-based loan decision.]
+### Analogy<sup>1</sup>.footnote[<sup>1</sup><p style="font-size: 20px">Of course, this analogy is only an approximation -- e.g., you can opt-out of a
+newspaper visualization, not a AI-based loan decision.</p>]
 
 The nuance with which we can think about visualization can be translated to
 interpretability.
@@ -352,7 +365,7 @@ clusters after applying PCA to the embeddings. These represent a type of
 interaction between features.
 
 .center[
-  Show the BERT visualization.
+<img src="figures/bert_context.png"/>
 ]
 
 ---
@@ -372,8 +385,9 @@ We can build the analogous visualization for our microbiome problem.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space (ref. Latent Space Cartography).
-Here, I have traced out the microbiome profiles lying between two groups.
+Another common technique is to analyze linear interpolations in this space (ref.
+Latent Space Cartography).  Here, I have traced out the microbiome profiles
+lying between two groups.
 
 ---
 
@@ -386,7 +400,7 @@ model to approximate a black box.
 using iterative generalized additive models.
 
 .center[
-  <img src="figures/distillation_gams.png"/>
+  <img src="figures/distillation-details.png"/>
 ]
 
 ---
@@ -394,8 +408,8 @@ using iterative generalized additive models.
 ### Distillation
 
 If we fit a GAM to the predicted probabilities from our transformer, we obtain
-slightly better performance than if we had fit the GAM originally (just remove
-this slide if not true). 
+slightly better performance than if we had fit the GAM originally (if not true,
+move to the assess the distillation discussion).
 
 .pull-left[
   <img src="figures/distillation_example.png"/>
@@ -439,9 +453,9 @@ approach is to perturb that input and see how the prediction could have changed.
 For example, we can compute the gradient of each class as we perturb a reference
 towards a sample of interest (Sundararajan, Sturmfels).
 
-$$
-\left(x_{i} - x_{i}') \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right))}{\partial x_{i}} d\alpha
-$$
+\begin{align*}
+\left(x_{i} - x_{i}'\right) \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right)\right)}{\partial x_{i}} d\alpha
+\end{align*}
 
 ---
 
@@ -451,7 +465,7 @@ For example, we can compute the gradient of each class as we perturb a reference
 towards a sample of interest (Sundararajan, Sturmfels).
 
 .center[
-  <img src="figures/integrated_gradients_animation.gif"/>
+  <img src="figures/integrated_gradients_animation.gif" width=1200/>
 ]
 
 ---
@@ -471,10 +485,10 @@ Show one example where it highlights the bumps for some taxa.
 ### Sanity Checks
 
 Evaluating local explanations is notoriously subjective. Some researchers have
-proposed automatic “sanity checks” (Adebayo et al. 2018).
+proposed automatic "sanity checks" (Adebayo et al. 2018).
 
 .center[
-  <img src="figures/sanity_checks.png"/>
+  <img src="figures/sanity_checks.png" width=680/>
 ]
 
 There have also been theoretical results that identify situations where feature
@@ -489,7 +503,7 @@ to a set of human-interpretable concepts (Koh, 2020). This requires dense,
 concept-level annotations for every sample.
 
 .center[
-<img src="figures/koh_concept.png"/>
+<img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
 ]
 
 ---
@@ -499,8 +513,12 @@ concept-level annotations for every sample.
 We can train this model using tuples $\left(x_{i}, c_{i}, y_{i}\right)$ and
 objective function:
 
+\begin{align*}
+\arg \min _{f, g} \sum_i\left[L\left(f \circ g\left(x_i\right), y_i\right)+\lambda \sum_j L_{C_j}\left(g\left(x_i\right), c_{i j}\right)\right]
+\end{align*}
+
 .center[
-<img src="figures/koh_concept.png"/>
+<img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
 ]
 
 ---
@@ -552,8 +570,13 @@ Here is the simulation mechanism that we used.
 ### Generalist Models
 
 .pull-left[
-1. Future deep learning models will be designed to solve many problems
-simultaneously. 
+1. **Future deep learning models will be designed to solve many problems
+simultaneously.**
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+
+1. We are also seeing increasingly rich ways to communicate with them.
 ]
 
 .pull-right[
@@ -568,11 +591,10 @@ simultaneously.
 1. Future deep learning models will be designed to solve many problems
 simultaneously. 
 
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
+1. **Since deep learning architectures are composable, they can handle multimodal
+settings easily.**
 
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
+1. We are also seeing increasingly rich ways to communicate with them.
 ]
 
 .pull-right[
@@ -580,7 +602,7 @@ settings easily.
 ]
 ---
 
-### Multimodality
+### Generalist Models
 
 .pull-left[
 1. Future deep learning models will be designed to solve many problems
@@ -589,7 +611,7 @@ simultaneously.
 1. Since deep learning architectures are composable, they can handle multimodal
 settings easily.
 
-1. We are also seeing increasingly rich ways to communicate with them.
+1. **We are also seeing increasingly rich ways to communicate with them.**
 
 ]
 
@@ -659,3 +681,12 @@ PrintBibliography(bib, start = 7, end = 10)
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 11, end = 14)
 ```
+
+
+---
+
+### Attributions
+
+explainable reinforcement learning by iconpro86 from <a href="https://thenounproject.com/browse/icons/term/explainable-reinforcement-learning/" target="_blank" title="explainable reinforcement learning Icons">Noun Project</a> (CC BY 3.0)
+
+data visualization by Iconiqu from <a href="https://thenounproject.com/browse/icons/term/data-visualization/" target="_blank" title="data visualization Icons">Noun Project</a> (CC BY 3.0)
