@@ -336,8 +336,8 @@ microbiome profiles as neighboring words in a sentence.
 ### Embeddings
 
 We can obtain a global explanation by analyzing intermediate representations
-within the deep learning architecture. Let's analyze the features just before
-the classification step in our transformer architecture.
+("embeddings") within the deep learning architecture. Let's analyze the features
+just before the classification step in our transformer architecture.
 
 .center[
   figure of achitecture with the embeddings being extracted before the end
@@ -348,8 +348,8 @@ the classification step in our transformer architecture.
 ### Interactions via Embeddings
 
 In text data, we can understand context-dependent meaning by looking for
-clusters in the latent space. These represent a type of interaction between
-features.
+clusters after applying PCA to the embeddings. These represent a type of
+interaction between features.
 
 .center[
   Show the BERT visualization.
@@ -372,32 +372,182 @@ We can build the analogous visualization for our microbiome problem.
 
 ### Interpolations
 
-Another common technique in this space is to analyze interpolations.
+Another common technique is to analyze linear interpolations in this space (ref. Latent Space Cartography).
+Here, I have traced out the microbiome profiles lying between two groups.
 
 ---
 
+### Distillation
 
+1. Distillation is another form of global summarization. It uses a transparent
+model to approximate a black box.
+
+1. For example, Tan et al. (2018) audited proprietary policing and loan models
+using iterative generalized additive models.
+
+.center[
+  <img src="figures/distillation_gams.png"/>
+]
+
+---
 
 ### Distillation
+
+If we fit a GAM to the predicted probabilities from our transformer, we obtain
+slightly better performance than if we had fit the GAM originally (just remove
+this slide if not true). 
+
+.pull-left[
+  <img src="figures/distillation_example.png"/>
+]
+
+.pull-right[
+  ```{r}
+    # distillation code
+  ```
+]
 
 ---
 
 ### Iterative Structuration
 
+.pull-left[
+1. One perspective is that we are treating the black box itself as the object of
+data analysis.
+
+1. Like in any data analysis, it is important to assess the quality of the
+approximation.
+]
+
+.pull-right[
+<img src="figures/iterative_structuration.png"/>
+]
+
+---
+
+### Perturbation
+
+If you want an explanation for a generic model’s decision on an instance, one
+approach is to perturb that input and see how the prediction could have changed.
+
+<img src="figures/perturbation_types.png"/>
+
 ---
 
 ### Integrated Gradients
+
+For example, we can compute the gradient of each class as we perturb a reference
+towards a sample of interest (Sundararajan, Sturmfels).
+
+$$
+\left(x_{i} - x_{i}') \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right))}{\partial x_{i}} d\alpha
+$$
+
+---
+
+### Integrated Gradients
+
+For example, we can compute the gradient of each class as we perturb a reference
+towards a sample of interest (Sundararajan, Sturmfels).
+
+.center[
+  <img src="figures/integrated_gradients_animation.gif"/>
+]
+
+---
+
+### Integrated Gradients
+
+In our microbiome example, this can highlight the species and timepoints that
+are most responsible for the disease vs. healthy classification of each example.
+
+.center[
+Show one example where it highlights the bumps for some taxa.
+<img src="figure/"/>
+]
+
+---
+
+### Sanity Checks
+
+Evaluating local explanations is notoriously subjective. Some researchers have
+proposed automatic “sanity checks” (Adebayo et al. 2018).
+
+.center[
+  <img src="figures/sanity_checks.png"/>
+]
+
+There have also been theoretical results that identify situations where feature
+attribution is unidentified (Bilodeau et al. 2023).
 
 ---
 
 ### Concept Bottlenecks
 
+Alternatively, we can explain a decision by reducing the arbitrary feature space
+to a set of human-interpretable concepts (Koh, 2020). This requires dense,
+concept-level annotations for every sample.
+
+.center[
+<img src="figures/koh_concept.png"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+We can train this model using tuples $\left(x_{i}, c_{i}, y_{i}\right)$ and
+objective function:
+
+.center[
+<img src="figures/koh_concept.png"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+For example, in the microbiome example, we could define interpretable "concepts"
+by looking at the taxa trends for commonly co-varying groups of species.
+
+.center[
+  Visualization of concepts
+]
+
+---
+
+### Concept Bottlenecks
+
+We reconfigure our transformer model to first predict the concept label before
+making a final classification.
+
+.center[
+  Modified architecture
+]
+
+---
+
+### Concept Bottlenecks
+
+Performance is comparable to before, and we obtain intermediate concept labels
+to explain each instance's prediction.
+
 ---
 
 ### Simulation Mechanism
 
+Here is the simulation mechanism that we used.
+
+.center[
+  Come up with a visual representation of this mechanism, starting with
+  increasing/decreasing, continuing to nearest neighbors in the concept space
+]
+
 ---
 
 ### Multimodality
+
+An open challenge in interpretability is how to work with multiple sources
+simultaneously. 
 
 ---
