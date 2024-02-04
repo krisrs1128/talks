@@ -297,22 +297,29 @@ user can make a prediction with relatively little effort.
 
 ### Decision Trees
 
-We can achieve slightly better performance with decision trees. They are
-somewhat deep, which complicates interpretability.
+Using a decision tree, we can reach ~ 74% accuracy. We only need 17 splits!
 
-.center[
-  example decision tree prediction. 
+.pull-three-quarters-left[
+<img src="figures/final_rpart_tree.svg" width=700/>
+]
+.pull-three-quarters-right[
+<img src="figures/tree_tuning.svg"/>
 ]
 
 ---
 
 ### Instability
 
-More troublingly, the outputs from both approaches are unstable. This makes
-sense -- the longitudinal structure makes features very correlated.
+.pull-left[
+1. Troublingly, the outputs from both approaches are unstable. We should not
+trust these interpretations, no matter how "directly interpretable" the model
+class.
+2. In the simulation, this is a consequence of correlated features -- adjacent
+timepoints have similar values.
+]
 
-.center[
-  unstable, different decision tree prediction.
+.pull-right[
+<img src="figures/lasso_instability.svg"/>
 ]
 
 ---
@@ -323,15 +330,14 @@ To address this, we decide to reduce dimensionality by handcrafting some
 features: overall slope and curvature for each taxon.
 
 .center[
- same regression picture, but now showing the reduced feature space
+  <img src="figures/widened_data.jpeg" width=600/>
 ]
 
 ---
 
 ### Feature Engineering
 
-This improves prediction performance and somewhat addresses the instability
-problem.
+This improves prediction performance and addresses the instability problem.
 
 Lesson: In the original feature space, there was an interpretability-accuracy
 trade-off (a consequence of the bias variance trade-off). However, we have the
@@ -344,9 +350,9 @@ flexibility to choose *more interpretable and more predictive representatives.*
 1. One driving principle of deep learning is that, with sufficiently many examples,
 end-to-end optimization should be preferred to expert design.
   - Easier to implement, more accurate.
-1. We can apply the GPT2 architecture to our problem, viewing neighboring
-microbiome profiles as neighboring words in a sentence.
-  - It should automatically learn features like what we defined.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+  - We expect this to automatically learn predictive features.
 
 ---
 
@@ -361,11 +367,11 @@ microbiome profiles as neighboring words in a sentence.
 ### Embeddings
 
 We can obtain a global explanation by analyzing intermediate representations
-("embeddings") within the deep learning architecture. Let's analyze the features
-just before the classification step in our transformer architecture.
+("embeddings") within the deep learning architecture. This is the result of the
+PCA applied to the original data and transformer-derived embeddings.
 
 .center[
-  figure of achitecture with the embeddings being extracted before the end
+<img src="figures/pca_comparison.svg"/>
 ]
 
 ---
@@ -390,7 +396,7 @@ We can build the analogous visualization for our microbiome problem.
 * Clusters of Meaning $\to$ Subcommunities containing that microbe
 
 .center[
-  Show the cluster visualization for the microbiome
+
 ]
 
 ---
