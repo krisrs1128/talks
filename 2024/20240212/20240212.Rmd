@@ -16,12 +16,15 @@ css: custom.css
 ---
 
 ```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE)
 library(RefManageR)
 bib <- ReadBib("references.bib")
 ```
 
 
 <div id="links">
+Workshop on Trustworthy Machine Learning<br/>
 Slides: <a href="https://go.wisc.edu/4y9176">go.wisc.edu/4y9176</a>
 </div>
 <div id="title">
@@ -37,7 +40,6 @@ What's Possible? What's Next?
 Kris Sankaran <br/>
 <a href="https://go.wisc.edu/">go.wisc.edu/</a> <br/>
 12 | February | 2023 <br/>
-Workshop on Trustworthy Machine Learning<br/>
 </div>
 
 ---
@@ -169,8 +171,7 @@ spoonfeed them trivialities?
 
 ---
 
-### Analogy<sup>1</sup>.footnote[<sup>1</sup><p style="font-size: 20px">Of course, this analogy is only an approximation -- e.g., you can opt-out of a
-newspaper visualization, not a AI-based loan decision.</p>]
+### Analogy
 
 The nuance with which we can think about visualization can be translated to
 interpretability.
@@ -210,7 +211,7 @@ its stakeholders to accurately describe and alter.
 black box systems.
 
 .center[
-  <img src="figure/interpretable_explainable.png"/>
+  <img src="figures/black_box_flashlight.png" width=720/>
 ]
 
 ---
@@ -221,7 +222,9 @@ black box systems.
 
 1. **Global Explanation**: An artifact for reasoning about an entire model.
 
-<img src="figures/local_vs_global.png"/>
+.center[
+<img src="figures/explanation_types.png" width=800/>
+]
 
 ---
 
@@ -231,55 +234,64 @@ black box systems.
 
 ### Running Example
 
-I have simulated a toy dataset on which to illustrate some common approaches.
+Problem: Imagine sampling longitudinal microbiome profiles from 500 study
+participants, some of whom eventually developed a disease. Can we discovery any
+microbiome-related risk factors?  This simulation is motivated by studies of HIV risk
+in the FRESH cohort `r Citep(bib, 'Gosmann2017LactobacillusDeficientCB')`.
 
-Problem: Our collaborators sampled longitudinal microbiome profiles from 1000
-study participants. Some of these participants eventually developed a disease.
-What microbiome properties are related to disease development?
-
-.pull[
-toy figure of FRESH cohort
-
-This setup is motivated by studies of HIV development in the FRESH cohort.
+.center[
+  <img src="figures/simulated-data.svg"/>
 ]
 
 ---
 
-### Dataset
+### Data Organization
 
-$N = 1000$ participants, $P = 144$ species, $T = 50$ timepoints
+We can frame this as a regression problem where all 50 timepoints and 144
+species are stacked horizontally.
 
 .center[
-  <img src="figure/simulated-data.png"/>
+  <img src="figures/widened_data.jpeg" width=600/>
 ]
-
 ---
 
 ### Directly Interpretable Models
 
-Let's consider sparse logistic regression and decision trees applied to the
-widened data.
+More interpretable models tend to support,
 
-.pull-left[
 1. Parsimony: Predictions can be traced to a few input features, low-order
 interactions, or latent factors.
 2. Simulatability: Given a new input and a description of the model, a model
 user can make a prediction with relatively little effort.
-]
 
-.pull-left[
-  <img src="figures/widened_data.png"/>
+.center[
+<img src="figures/parsimony_types.png" width=800/>
 ]
 
 ---
 
 ### Sparse Logistic Regression
 
-.center[
-  Figure of cross-validation performance against number of features.
+.pull-left[
+1. We can reach ~ 77% accuracy using only 38 of the original 7200 features.
+
+1. Each coefficient has a simple species $\times$ time interpretation.
+```
+# A tibble: 7,201 x 2
+   term      estimate
+   <chr>        <dbl>
+ 1 tax13_24     0.593
+ 2 tax114_26    0.555
+ 3 tax66_50     0.457
+ 4 tax105_36    0.289
+ 5 tax46_30     0.261
+ 6 tax46_19     0.232
+```
 ]
 
-Using too few features leads to poor cross-validation performance.
+.pull-right[
+<img src="figures/lasso_estimates.svg" width=500/>
+]
 
 ---
 
@@ -590,7 +602,6 @@ settings easily.**
 ### Generalist Models
 
 .pull-left[
-
 1. Modern deep learning models are being designed to solve many problems
 simultaneously.
 
