@@ -420,8 +420,8 @@ We can build the analogous visualization for our microbiome problem.
 * Word $\to$ Microbe
 * Clusters of Meaning $\to$ Subcommunities containing that microbe
 
-.pull-left[
-<img src="figures/species_21_series.svg"/>
+.center[
+<img src="figures/species_21_series.svg" width=800/>
 ]
 
 ---
@@ -432,8 +432,8 @@ Another common technique is to analyze linear interpolations in this space (ref.
 Latent Space Cartography).  Here, I have traced out the microbiome profiles
 lying between two groups.
 
-.pull-left[
-<img src="figures/species_21_interpolation.svg"/>
+.center[
+<img src="figures/species_21_interpolation.svg" width=940/>
 ]
 
 ---
@@ -523,8 +523,7 @@ In our microbiome example, this can highlight the species and timepoints that
 are most responsible for the disease vs. healthy classification of each example.
 
 .center[
-Show one example where it highlights the bumps for some taxa.
-<img src="figure/"/>
+<img src="figures/microbiome_integrated_gradients.svg"/>
 ]
 
 ---
@@ -557,8 +556,8 @@ concept-level annotations for every sample.
 
 ### Concept Bottlenecks
 
-For example, in the microbiome example, we could define interpretable "concepts"
-by looking at the taxa trends for commonly co-varying groups of species.
+In the microbiome example, we could define interpretable "concepts" by looking
+at the taxa trends for commonly co-varying groups of species.
 
 .center[
   Visualization of concepts
