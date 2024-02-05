@@ -1,0 +1,219 @@
+---
+title: Simulation Workshop
+author: Kris Sankaran
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+css: custom.css
+---
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE)
+library(RefManageR)
+bib <- ReadBib("references.bib")
+```
+
+
+<div id="links">
+Methods for Biological Data Workshop<br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
+</div>
+<div id="title">
+Simulation in Omics
+</div>
+
+<br/>
+<div id="subtitle">
+Kris Sankaran <br/>
+<a href="https://go.wisc.edu/">go.wisc.edu/</a> <br/>
+07 | February | 2024 <br/>
+</div>
+
+---
+
+
+### Why Simulate?
+
+* **Experimental Design**: We have to decide on cohorts, longitudinal sampling plans, and sequencing technologies, not to mention sample sizes.
+
+* **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
+
+* **Data Augmentation**: Simulated samples can improve algorithmic performance and integration.
+
+* **Calibration**: Statistical performance on simulated data can help us calibrate workflows to improve power and control the false discovery rate.
+
+---
+
+### Why Simulate?
+
+* **Experimental Design**: We have to decide on cohorts, longitudinal sampling plans, and sequencing technologies, not to mention sample sizes.
+
+* **Benchmarking**: They allow us to benchmark algorithms even when ground truth labels are unavailable.
+
+* **Data Augmentation**: Simulated samples can improve algorithmic performance and integration.
+
+* **Calibration**: Statistical performance on simulated data can help us calibrate workflows to improve power and control the false discovery rate.
+
+<g style="font-size: 20px; margin: 0; line-height: 30px; display: block;">
+Examples: BASICS,
+compcodeR,
+deconvR,
+dropsim,
+ESCO,
+FreeHi-C,
+FreeHiCLite,
+hierarchicell,
+kersplat,
+metaART,
+MOSim,
+MSstatsSampleSize,
+MIDAS,
+Mimesys,
+multiomics_networks_simulation,
+muscat,
+powsimR,
+POWSC,
+SCDD,
+scDesign3,
+SCRIP,
+Sim3C,
+SimATAC,
+SimFFPE,
+sismonr,
+spaSim,
+sparseDOSSA,
+Splat,
+SPARSim,
+SPsimSeq,
+SparseDC,
+SymSim,
+ZINB-WaVE,
+zingeR, ...
+</g>
+
+---
+
+### 
+
+---
+
+### Experimental Design
+
+Let's consider a microbiome case study: To block or not to block?
+
+* Blocking removes person-level effects...
+* ...but increases participant burden.
+
+<img src="figure/blocking_simplex.png"/>
+
+---
+
+### Simulation to the Rescue
+
+How can we navigate trade-offs like this? Simulate!
+
+.center[
+<img src="figure/blocking.jpeg" width=840/>
+]
+
+Simulators provide data for more precise decision-making.
+
+---
+
+### Inference
+
+By learning a discriminator to contrast real vs. simulated data, we can
+systematically improve the assumed generative mechanism.
+
+.center[
+<img src="figure/iterability.jpeg" width=730/>
+]
+
+---
+
+### Philosophy
+
+.pull-left[
+1. Simulation encourages more precise thinking about what exactly are the null
+and alternative hypotheses of interest.
+1. There is usually more variation present in data than is possible to estimate.
+Simulation clarifies what is possible to estimate well.
+]
+
+.pull-right[
+<img src="figure/iterative_structuration.png"/>
+]
+
+---
+
+## `scDesign` Mechanics
+
+---
+
+We will focus on the `scDesign` family of simulators. Let's review that
+package's approach.
+
+.center[
+<img src="figure/scdesignOverview.png" width=800/>
+]
+
+First, we estimate models $\hat{F}_{g}\left(y_{i} \vert \mathbf{x}_{i}\right)$ for each gene $g$.
+
+* Can use a variety of families: Gaussian, Poisson, Negative Binomial,...
+* Can learn relationships for each parameter $\theta\left(\mathbf{x}_{i}\right)$.
+
+---
+
+
+### `scDesign3` Review
+
+.pull-left[
+<img src="figure/scdesignOverview2.png" width=400/>
+]
+
+.pull-right[
+1. Next, we model the joint distribution of quantiles using a copula model.
+
+1. This correlates genes even after conditioning on the same $\mathbf{x}_{i}$.
+]
+
+---
+
+## Recipe + Examples
+
+---
+
+### 
+
+---
+
+## Demo + Setup
+
+---
+
+### Crash Course: Experiment Classes
+
+
+---
+
+### Crash Course: Visualization
+
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
