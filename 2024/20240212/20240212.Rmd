@@ -420,8 +420,8 @@ We can build the analogous visualization for our microbiome problem.
 * Word $\to$ Microbe
 * Clusters of Meaning $\to$ Subcommunities containing that microbe
 
-.center[
-
+.pull-left[
+<img src="figures/species_21_series.svg"/>
 ]
 
 ---
@@ -431,6 +431,10 @@ We can build the analogous visualization for our microbiome problem.
 Another common technique is to analyze linear interpolations in this space (ref.
 Latent Space Cartography).  Here, I have traced out the microbiome profiles
 lying between two groups.
+
+.pull-left[
+<img src="figures/species_21_interpolation.svg"/>
+]
 
 ---
 
