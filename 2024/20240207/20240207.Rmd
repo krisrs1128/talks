@@ -22,11 +22,12 @@ library(tidyverse)
 opts_chunk$set(cache = FALSE)
 ```
 
-
 <div id="links">
 Methods for Biological Data Workshop<br/>
 Slides: <a href="https://go.wisc.edu/v4hsh9">https://go.wisc.edu/v4hsh9</a> <br/>
-Code: <a href="https://go.wisc.edu/1lq21r">https://go.wisc.edu/1lq21r</a>
+Colab: <a href="https://go.wisc.edu/1lq21r">https://go.wisc.edu/1lq21r</a><br/>
+Quarto: <a href="https://go.wisc.edu/5met6d">https://go.wisc.edu/5met6d</a><br/>
+Compiled: <a href="https://go.wisc.edu/g63hy9">https://go.wisc.edu/g63hy9</a>
 </div>
 <div id="title">
 Simulation in Omics
@@ -40,7 +41,6 @@ Requires: 2.5 megabytes of system memory or 3 megabytes under System 7, and a ha
 <br/>
 -- The New York Times, 1992, reviewing the newly released SimLife
 
-<br/>
 <br/>
 <br/>
 

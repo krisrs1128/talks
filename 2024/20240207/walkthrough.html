@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-02-07">
+
+<title>Simulation - Methods for Biological Data Workshop</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="walkthrough_files/libs/clipboard/clipboard.min.js"></script>
+<script src="walkthrough_files/libs/quarto-html/quarto.js"></script>
+<script src="walkthrough_files/libs/quarto-html/popper.min.js"></script>
+<script src="walkthrough_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="walkthrough_files/libs/quarto-html/anchor.min.js"></script>
+<link href="walkthrough_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="walkthrough_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="walkthrough_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="walkthrough_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="walkthrough_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Simulation - Methods for Biological Data Workshop</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 7, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyr' was built under R version 4.3.2</code></pre>
+</div>
+</div>
+<section id="traditional-scdesign" class="level2">
+<h2 class="anchored" data-anchor-id="traditional-scdesign">Traditional scDesign</h2>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/read_96ff230242551e73d043a10b1a2cfc7f">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mapping <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/mapping.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/filtered_samples.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>samples</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; <span style="color: #555555;"># A tibble: 97 x 51</span>
+#&gt;    sample       ASV1  ASV2  ASV3  ASV4  ASV5  ASV6  ASV7  ASV8  ASV9 ASV10 ASV11
+#&gt;    <span style="color: #555555; font-style: italic;"><chr></chr></span>       <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span>
+#&gt; <span style="color: #555555;"> 1</span> 11737.D00M~   166 <span style="text-decoration: underline;">42</span>045  <span style="text-decoration: underline;">3</span>693 <span style="text-decoration: underline;">35</span>849  <span style="text-decoration: underline;">7</span>675   766   144     0 <span style="text-decoration: underline;">14</span>809    30     0
+#&gt; <span style="color: #555555;"> 2</span> 11737.D00M~   121 <span style="text-decoration: underline;">49</span>431   723 <span style="text-decoration: underline;">35</span>162  <span style="text-decoration: underline;">8</span>583     0    30     0 <span style="text-decoration: underline;">16</span>196     9     0
+#&gt; <span style="color: #555555;"> 3</span> 11737.D00M~  <span style="text-decoration: underline;">2</span>191 <span style="text-decoration: underline;">56</span>981   454 <span style="text-decoration: underline;">52</span>279 <span style="text-decoration: underline;">11</span>726   216    33     0 <span style="text-decoration: underline;">22</span>959     5     0
+#&gt; <span style="color: #555555;"> 4</span> 11737.D00M~  <span style="text-decoration: underline;">4</span>838 <span style="text-decoration: underline;">57</span>675   538 <span style="text-decoration: underline;">55</span>429 <span style="text-decoration: underline;">22</span>998    20    85     0 <span style="text-decoration: underline;">21</span>823    13     0
+#&gt; <span style="color: #555555;"> 5</span> 11737.D00M~  <span style="text-decoration: underline;">4</span>193 <span style="text-decoration: underline;">56</span>755  <span style="text-decoration: underline;">1</span>615 <span style="text-decoration: underline;">43</span>132 <span style="text-decoration: underline;">13</span>457    25    71     0 <span style="text-decoration: underline;">17</span>916     7     2
+#&gt; <span style="color: #555555;"> 6</span> 11737.D00M~  <span style="text-decoration: underline;">1</span>905 <span style="text-decoration: underline;">67</span>780     4 <span style="text-decoration: underline;">43</span>142 <span style="text-decoration: underline;">20</span>209   395    96     0 <span style="text-decoration: underline;">23</span>125   105     0
+#&gt; <span style="color: #555555;"> 7</span> 11737.D00M~  <span style="text-decoration: underline;">7</span>794 <span style="text-decoration: underline;">66</span>081  <span style="text-decoration: underline;">6</span>217 <span style="text-decoration: underline;">40</span>672  <span style="text-decoration: underline;">8</span>844    67    97     0 <span style="text-decoration: underline;">15</span>607     7     0
+#&gt; <span style="color: #555555;"> 8</span> 11737.D00M~  <span style="text-decoration: underline;">5</span>222 <span style="text-decoration: underline;">82</span>628  <span style="text-decoration: underline;">1</span>286 <span style="text-decoration: underline;">55</span>916 <span style="text-decoration: underline;">19</span>077   197    15     0 <span style="text-decoration: underline;">22</span>289    16     0
+#&gt; <span style="color: #555555;"> 9</span> 11737.D00M~  <span style="text-decoration: underline;">2</span>209 <span style="text-decoration: underline;">37</span>632   158 <span style="text-decoration: underline;">58</span>404 <span style="text-decoration: underline;">14</span>561  <span style="text-decoration: underline;">1</span>276    28     0 <span style="text-decoration: underline;">29</span>196   230    13
+#&gt; <span style="color: #555555;">10</span> 11737.D01M~   535 <span style="text-decoration: underline;">59</span>601  <span style="text-decoration: underline;">1</span>953 <span style="text-decoration: underline;">45</span>201 <span style="text-decoration: underline;">14</span>544   883   107     0 <span style="text-decoration: underline;">25</span>674    18     0
+#&gt; <span style="color: #555555;"># i 87 more rows</span>
+#&gt; <span style="color: #555555;"># i 39 more variables: ASV12 <dbl>, ASV13 <dbl>, ASV14 <dbl>, ASV15 <dbl>,</dbl></dbl></dbl></dbl></span>
+#&gt; <span style="color: #555555;">#   ASV16 <dbl>, ASV17 <dbl>, ASV18 <dbl>, ASV19 <dbl>, ASV20 <dbl>,</dbl></dbl></dbl></dbl></dbl></span>
+#&gt; <span style="color: #555555;">#   ASV21 <dbl>, ASV22 <dbl>, ASV23 <dbl>, ASV24 <dbl>, ASV25 <dbl>,</dbl></dbl></dbl></dbl></dbl></span>
+#&gt; <span style="color: #555555;">#   ASV26 <dbl>, ASV27 <dbl>, ASV28 <dbl>, ASV29 <dbl>, ASV30 <dbl>,</dbl></dbl></dbl></dbl></dbl></span>
+#&gt; <span style="color: #555555;">#   ASV31 <dbl>, ASV32 <dbl>, ASV33 <dbl>, ASV34 <dbl>, ASV35 <dbl>,</dbl></dbl></dbl></dbl></dbl></span>
+#&gt; <span style="color: #555555;">#   ASV36 <dbl>, ASV37 <dbl>, ASV38 <dbl>, ASV39 <dbl>, ASV40 <dbl>, ...</dbl></dbl></dbl></dbl></dbl></span>
+</code></pre>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/prepare-plot_33289d33567125edc04922349af74343">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>samples_long <span class="ot">&lt;-</span> samples <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>sample, <span class="at">names_to =</span> <span class="st">"ASV"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ASV <span class="sc">%in%</span> <span class="fu">glue</span>(<span class="st">"ASV{1:16}"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(mapping)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>samples_long</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; <span style="color: #555555;"># A tibble: 1,552 x 7</span>
+#&gt;    sample       ASV   value  time subject  phase Description              
+#&gt;    <span style="color: #555555; font-style: italic;"><chr></chr></span>        <span style="color: #555555; font-style: italic;"><chr></chr></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><chr></chr></span>    <span style="color: #555555; font-style: italic;"><chr></chr></span> <span style="color: #555555; font-style: italic;"><chr></chr></span>                    
+#&gt; <span style="color: #555555;"> 1</span> 11737.D00MA1 ASV1    166     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 2</span> 11737.D00MA1 ASV2  <span style="text-decoration: underline;">42</span>045     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 3</span> 11737.D00MA1 ASV3   <span style="text-decoration: underline;">3</span>693     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 4</span> 11737.D00MA1 ASV4  <span style="text-decoration: underline;">35</span>849     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 5</span> 11737.D00MA1 ASV5   <span style="text-decoration: underline;">7</span>675     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 6</span> 11737.D00MA1 ASV6    766     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 7</span> 11737.D00MA1 ASV7    144     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 8</span> 11737.D00MA1 ASV8      0     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"> 9</span> 11737.D00MA1 ASV9  <span style="text-decoration: underline;">14</span>809     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;">10</span> 11737.D00MA1 ASV10    30     0 mouse A1 naive naive mouse faecal sample
+#&gt; <span style="color: #555555;"># i 1,542 more rows</span>
+</code></pre>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-4_206a2eb636a5ea2ead0846e9dc292335">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(samples_long) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(time, value, <span class="at">col =</span> phase, <span class="at">group =</span> subject)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">reorder</span>(ASV, <span class="sc">-</span>value))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/setup_experiment_a7c214c851525f8afa3aa998bb375b27">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>exper <span class="ot">&lt;-</span> <span class="fu">SingleCellExperiment</span>(<span class="at">assays =</span> <span class="fu">list</span>(<span class="at">counts =</span> <span class="fu">t</span>(samples[, <span class="sc">-</span><span class="dv">1</span>])))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colData</span>(exper) <span class="ot">&lt;-</span> <span class="fu">DataFrame</span>(mapping)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colData</span>(exper)<span class="sc">$</span>celltype <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"A"</span>, <span class="fu">nrow</span>(mapping))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(<span class="fu">colData</span>(exper)) <span class="ot">&lt;-</span> mapping<span class="sc">$</span>sample</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-6_9fd2712415ed544ef7e1b093c20bbd9e">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>scdesign_result <span class="ot">&lt;-</span> <span class="fu">scdesign3</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  exper,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pseudotime =</span> <span class="st">"time"</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">celltype =</span> <span class="st">"celltype"</span>, </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">spatial =</span> <span class="cn">NULL</span>, </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">other_covariates =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu_formula =</span> <span class="st">"s(time, k = 10, bs = 'cr')"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sigma_formula =</span> <span class="st">"s(time, k = 5, bs = 'cr')"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">corr_formula =</span> <span class="st">"1"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-7_1b9930c18f50ec4d76313e4e3c7b2bc4">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="fu">t</span>(scdesign_result<span class="sc">$</span>new_count)) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"sample"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>sample, <span class="at">names_to =</span> <span class="st">"ASV"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ASV <span class="sc">%in%</span> <span class="fu">glue</span>(<span class="st">"ASV{1:16}"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(mapping) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(time, value, <span class="at">group =</span> subject)) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">reorder</span>(ASV, <span class="sc">-</span>value))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="scdesigner" class="level2">
+<h2 class="anchored" data-anchor-id="scdesigner">scDesigner</h2>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-8_b36aeedacdc375db4dda750fc36af86d">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>margins <span class="ot">&lt;-</span> <span class="fu">setup_margins</span>(exper, <span class="sc">~</span> phase, <span class="sc">~</span> <span class="fu">NBinomialLSS</span>())</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>margins</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; <span style="color: #BB00BB;">Plan:
+#&gt; </span><span style="color: #555555;"># A tibble: 6 x 3</span>
+#&gt;     feature                       family   link
+#&gt;   <span style="color: #555555; font-style: italic;"><gene_id></gene_id></span>                      <span style="color: #555555; font-style: italic;"><distn></distn></span> <span style="color: #555555; font-style: italic;"><link></span>
+#&gt; <span style="color: #555555;">1</span>      <span style="color: #00BBBB;">ASV1</span> Negative Binomial [mu,sigma] ~phase
+#&gt; <span style="color: #555555;">2</span>      <span style="color: #00BBBB;">ASV2</span> Negative Binomial [mu,sigma] ~phase
+#&gt; <span style="color: #555555;">3</span>      <span style="color: #00BBBB;">ASV3</span> Negative Binomial [mu,sigma] ~phase
+#&gt; <span style="color: #555555;">4</span>      <span style="color: #00BBBB;">ASV4</span> Negative Binomial [mu,sigma] ~phase
+#&gt; <span style="color: #555555;">5</span>      <span style="color: #00BBBB;">ASV5</span> Negative Binomial [mu,sigma] ~phase
+#&gt; <span style="color: #555555;">6</span>      <span style="color: #00BBBB;">ASV6</span> Negative Binomial [mu,sigma] ~phase
+#&gt; <span style="color: #00BBBB;">ASV1, ASV2, ASV3</span>, and <span style="color: #00BBBB;">47</span> <span style="color: #00BBBB;">other features</span> need fitting.<span style="color: #BB00BB;">
+#&gt; Estimates:
+#&gt; </span><span style="color: #555555;"># A tibble: 0 x 0</span>
+</code></pre>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-9_e8553f967201e9f6f8eb79742447f81f">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">estimate</span>(margins, exper)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_univariate</span>(fit, exper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-10_560b939990422907bfde14619c37b699">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>margins <span class="ot">&lt;-</span> margins <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">link =</span> <span class="fu">list</span>(<span class="at">mu =</span> <span class="sc">~</span> phase, <span class="at">sigma =</span> <span class="sc">~</span> <span class="dv">1</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>margins</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; <span style="color: #BB00BB;">Plan:
+#&gt; </span><span style="color: #555555;"># A tibble: 6 x 3</span>
+#&gt;     feature                       family              link
+#&gt;   <span style="color: #555555; font-style: italic;"><gene_id></gene_id></span>                      <span style="color: #555555; font-style: italic;"><distn></distn></span>            <span style="color: #555555; font-style: italic;"><link></span>
+#&gt; <span style="color: #555555;">1</span>      <span style="color: #00BBBB;">ASV1</span> Negative Binomial [mu,sigma] mu~phase, sigma~1
+#&gt; <span style="color: #555555;">2</span>      <span style="color: #00BBBB;">ASV2</span> Negative Binomial [mu,sigma] mu~phase, sigma~1
+#&gt; <span style="color: #555555;">3</span>      <span style="color: #00BBBB;">ASV3</span> Negative Binomial [mu,sigma] mu~phase, sigma~1
+#&gt; <span style="color: #555555;">4</span>      <span style="color: #00BBBB;">ASV4</span> Negative Binomial [mu,sigma] mu~phase, sigma~1
+#&gt; <span style="color: #555555;">5</span>      <span style="color: #00BBBB;">ASV5</span> Negative Binomial [mu,sigma] mu~phase, sigma~1
+#&gt; <span style="color: #555555;">6</span>      <span style="color: #00BBBB;">ASV6</span> Negative Binomial [mu,sigma] mu~phase, sigma~1
+#&gt; <span style="color: #00BBBB;">ASV1, ASV2, ASV3</span>, and <span style="color: #00BBBB;">47</span> <span style="color: #00BBBB;">other features</span> need fitting.<span style="color: #BB00BB;">
+#&gt; Estimates:
+#&gt; </span><span style="color: #555555;"># A tibble: 0 x 0</span>
+</code></pre>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-11_2f0315c459480d1bf680393c7dac4a75">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">estimate</span>(margins, exper)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_univariate</span>(fit, exper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> margins <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">link =</span> <span class="fu">list</span>(<span class="at">mu =</span> <span class="sc">~</span> <span class="fu">ns</span>(time, <span class="dv">10</span>), <span class="at">sigma =</span> <span class="sc">~</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">estimate</span>(exper)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_univariate</span>(fit, exper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-12_d9b7d7ea93e7c16e6590bd074574846f">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; class: SummarizedExperiment 
+#&gt; dim: 50 97 
+#&gt; metadata(0):
+#&gt; assays(1): counts_1
+#&gt; rownames(50): ASV1 ASV2 ... ASV49 ASV50
+#&gt; rowData names(0):
+#&gt; colnames: NULL
+#&gt; colData names(6): time sample ... Description celltype
+</code></pre>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>samples_df <span class="ot">&lt;-</span> <span class="fu">sample</span>(fit) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_experiment</span>()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>samples_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; <span style="color: #555555;"># A tibble: 4,850 x 10</span>
+#&gt;    replicate newdata_index feature value  time sample  subject phase Description
+#&gt;    <span style="color: #555555; font-style: italic;"><chr></chr></span>             <span style="color: #555555; font-style: italic;"><int></int></span> <span style="color: #555555; font-style: italic;"><fct></fct></span>   <span style="color: #555555; font-style: italic;"><int></int></span> <span style="color: #555555; font-style: italic;"><dbl></dbl></span> <span style="color: #555555; font-style: italic;"><fct></fct></span>   <span style="color: #555555; font-style: italic;"><fct></fct></span>   <span style="color: #555555; font-style: italic;"><fct></fct></span> <span style="color: #555555; font-style: italic;"><fct></fct></span>      
+#&gt; <span style="color: #555555;"> 1</span> counts_1              1 ASV1     <span style="text-decoration: underline;">4</span>666     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 2</span> counts_1              1 ASV2    <span style="text-decoration: underline;">13</span>056     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 3</span> counts_1              1 ASV3      796     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 4</span> counts_1              1 ASV4    <span style="text-decoration: underline;">14</span>731     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 5</span> counts_1              1 ASV5    <span style="text-decoration: underline;">21</span>594     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 6</span> counts_1              1 ASV6       49     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 7</span> counts_1              1 ASV7       94     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 8</span> counts_1              1 ASV8      100     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"> 9</span> counts_1              1 ASV9     <span style="text-decoration: underline;">6</span>121     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;">10</span> counts_1              1 ASV10       3     0 11737.~ mouse ~ naive naive mous~
+#&gt; <span style="color: #555555;"># i 4,840 more rows</span>
+#&gt; <span style="color: #555555;"># i 1 more variable: celltype <fct></fct></span>
+</code></pre>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-13_c4d0b87d2a22da7d1bfff3eda3526c7e">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(samples_df) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(time, <span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> value), <span class="at">col =</span> phase, <span class="at">group =</span> subject), <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">col =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="dv">1</span>))) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">reorder</span>(feature, <span class="sc">-</span>value), <span class="at">ncol =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can get more replicates 10 replicates.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-14_0c5acfbddc5570a0ac9c10eeacd00590">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(fit, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; class: SummarizedExperiment 
+#&gt; dim: 50 97 
+#&gt; metadata(0):
+#&gt; assays(10): counts_1 counts_2 ... counts_9 counts_10
+#&gt; rownames(50): ASV1 ASV2 ... ASV49 ASV50
+#&gt; rowData names(0):
+#&gt; colnames: NULL
+#&gt; colData names(6): time sample ... Description celltype
+</code></pre>
+</div>
+</section>
+<section id="microbiome-networks" class="level2">
+<h2 class="anchored" data-anchor-id="microbiome-networks">Microbiome Networks</h2>
+<p>Unlike human social networks, there is no simple way to observe microbe-microbe interactions – we have to make do with indirect evidence. One approach uses population profiles as a proxy for ecological interaction. Taxa that often co-occur are understood to have cooperative ecological interactions, while those that don’t are thought to compete for the same niche.</p>
+<p>Many algorithms have been designed around this intuition, all trying to go beyond simple co-occurrence and instead capture more complex types of dependence. A challenge in practice is that it’s hard to know which method to use when, since the problem is unsupervised. Even when thorough simulation benchmarking studies are available, it’s often not obvious how well those simulation setups match our problems of interest.</p>
+<p>Let’s use <code>scDesigner</code> to benchmark network estimation methods using data from rounds 1 and 2 of the <a href="https://journals.asm.org/doi/10.1128/msystems.00031-18">American Gut Project</a>. We will simulate data with known correlation structure and taxa-level marginals estimated from the study data. The block below reads in the data.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/read-data_a4889457af7558802314487d39fda17b">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/amgut-counts.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"taxon"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/amgut-metadata.csv"</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>exper <span class="ot">&lt;-</span> <span class="fu">SummarizedExperiment</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">assays =</span> <span class="fu">SimpleList</span>(<span class="at">counts =</span> <span class="fu">as.matrix</span>(counts)),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">colData =</span> metadata</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol type="a">
+<li>Estimate a simulator with the taxon-wise regression formula <code>~log(sequencing_depth) + BMI</code>. Comment on the quality of the fitted model.</li>
+</ol>
+<p>We’ve estimated a zero-inflated negative binomial location-shape-scale (<code>ZINBLSS</code>) models for each gene, using a gaussian copula to capture dependence. The data structure below captures all the simulator components, and we can swap pieces in and out to modify the form of the simulator. For example, if we wanted, we could <code>mutate</code> the family and link function associated with particular features.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/example-sim_addf20d8396f18c908bc4195ea6e08a9">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">setup_simulator</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  exper,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">log</span>(sequencing_depth) <span class="sc">+</span> BMI,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">ZINBLSS</span>()</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">estimate</span>(<span class="at">mstop =</span> <span class="dv">100</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>sim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; <span style="color: #555555;">[Marginals]
+#&gt; </span><span style="color: #BB00BB;">Plan:
+#&gt; </span><span style="color: #555555;"># A tibble: 6 x 3</span>
+#&gt;     feature              family                         link
+#&gt;   <span style="color: #555555; font-style: italic;"><gene_id></gene_id></span>             <span style="color: #555555; font-style: italic;"><distn></distn></span>                       <span style="color: #555555; font-style: italic;"><link></span>
+#&gt; <span style="color: #555555;">1</span>    326792 ZINBI [mu,sigma,nu] ~log(sequencing_depth) + BMI
+#&gt; <span style="color: #555555;">2</span>    181016 ZINBI [mu,sigma,nu] ~log(sequencing_depth) + BMI
+#&gt; <span style="color: #555555;">3</span>    191687 ZINBI [mu,sigma,nu] ~log(sequencing_depth) + BMI
+#&gt; <span style="color: #555555;">4</span>    326977 ZINBI [mu,sigma,nu] ~log(sequencing_depth) + BMI
+#&gt; <span style="color: #555555;">5</span>    194648 ZINBI [mu,sigma,nu] ~log(sequencing_depth) + BMI
+#&gt; <span style="color: #555555;">6</span>    541301 ZINBI [mu,sigma,nu] ~log(sequencing_depth) + BMI
+#&gt; <span style="color: #BB00BB;">
+#&gt; Estimates:
+#&gt; </span><span style="color: #555555;"># A tibble: 3 x 2</span>
+#&gt;   feature fit       
+#&gt;   <span style="color: #555555; font-style: italic;"><chr></chr></span>   <span style="color: #555555; font-style: italic;"><list></list></span>    
+#&gt; <span style="color: #555555;">1</span> 326792  <span style="color: #555555;"><glmbslss></glmbslss></span>
+#&gt; <span style="color: #555555;">2</span> 181016  <span style="color: #555555;"><glmbslss></glmbslss></span>
+#&gt; <span style="color: #555555;">3</span> 191687  <span style="color: #555555;"><glmbslss></glmbslss></span>
+#&gt; ... and 42 additional features.
+#&gt; <span style="color: #555555;">
+#&gt; [Dependence]
+#&gt; </span>1 normalCopula with 45 features
+#&gt; <span style="color: #555555;">
+#&gt; [Template Data]
+#&gt; </span>class: SummarizedExperiment 
+#&gt; dim: 45 261 
+#&gt; metadata(0):
+#&gt; assays(1): counts
+#&gt; rownames(45): 326792 181016 ... 364563 301645
+#&gt; rowData names(0):
+#&gt; colnames(261): 000001879.1076223 000002437.1076448 ...
+#&gt;   000002656.1076186 000001582.1076447
+#&gt; colData names(167): X.SampleID BarcodeSequence ... Description
+#&gt;   sequencing_depth
+</code></pre>
+</div>
+<p>The simulated data is always a <code>SummarizedExperiment</code>. This means that any workflow that applied to the original data can be applied to the simulated one without any changes. Notice also that <code>sample</code> defaults to drawing samples from the same design as the original input experiment (we’ll modify this using the <code>new_data</code> argument in a minute).</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-17_199c7aa07df3681a66b275fce64fc0f0">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>simulated <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>simulated</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; class: SummarizedExperiment 
+#&gt; dim: 45 261 
+#&gt; metadata(0):
+#&gt; assays(1): counts_1
+#&gt; rownames(45): 326792 181016 ... 364563 301645
+#&gt; rowData names(0):
+#&gt; colnames: NULL
+#&gt; colData names(167): X.SampleID BarcodeSequence ... Description
+#&gt;   sequencing_depth
+</code></pre>
+</div>
+<p>Let’s compare the marginal count distributions for the real and simulated data. We’ll need the data in “long” format to be able to make the ggplot2 figure. The <code>pivot_experiment</code> helper can transform the original <code>SummarizedExperiment</code> objects in this way. Notice that the simulated data tends to overestimate the number of zeros in the high-abundance taxa. To refine the simulator, we should probably replace the zero-inflated negative binomial with ordinary negative binomials for these poorly fitted taxa.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/histogram-critique_11f8491d3dff714462661b88d1e5d334">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">real =</span> <span class="fu">pivot_experiment</span>(exper),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">simulated =</span> <span class="fu">pivot_experiment</span>(simulated),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"source"</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(feature <span class="sc">%in%</span> <span class="fu">rownames</span>(simulated)[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> value), <span class="at">fill =</span> source),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">reorder</span>(feature, value), <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/histogram-critique-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Are the learned relationships with BMI plausible? We can compare scatterplots of the real and simulated data against this variable. Note that, by default, the ribbons will be evaluated along all variables, which makes for the jagged ribbons (neighboring values for BMI might have different sequencing depth, potentially leading to quite different predictions). To remove this artifact, we can assume that all samples had exactly the same sequencing depth.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/bmi-scatter_62d8febc5ee0d8c938d357f7b6986cde">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">colData</span>(exper) <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sequencing_depth =</span> <span class="fl">2e4</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim, <span class="st">"BMI"</span>, <span class="fu">sample</span>(sim, <span class="at">new_data =</span> new_data), <span class="at">new_data =</span> new_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/bmi-scatter-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="a">
+<li>Visualize the correlation matrix estimated by the simulator’s copula model. Pick a pair of taxa with high correlation under this model and visualize the joint distribution of their ranks. Is the model’s estimate appropriate?</li>
+</ol>
+<p>There are a few pairs of taxa that are very highly correlated, and there are also a few taxa that seem to have higher correlation across a large number of taxa (e.g., the taxon in row 34). There is no obvious banding or block structure in this real data, though.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/correlation-heatmap_545c416f83673f0201b8ab5180d4041a">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fu">copula_parameters</span>(sim)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(rho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/correlation-heatmap-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The pair below is one of those with high positive correlation. You can replace the selection with the commented out line to see what one of the anticorrelated pairs of taxa looks like.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/correlation-pairs_89b881ef64a3ba065be1f1f459004b67">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#taxa &lt;- rownames(exper)[c(33, 43)]</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">rownames</span>(exper)[<span class="fu">c</span>(<span class="dv">14</span>, <span class="dv">25</span>)]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_experiment</span>(exper) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(feature <span class="sc">%in%</span> taxa) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> feature) <span class="sc">|&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> .data[[taxa[<span class="dv">1</span>]]]), <span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> .data[[taxa[<span class="dv">2</span>]]])))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/correlation-pairs-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="a">
+<li>Replace the correlation matrix with a design of your own. Simulate data from this modified model and estimate the microbe interaction network using (i) the SpiecEasi algorithm and (ii) the Ledoit-Wolfe covariance estimator. According to your benchmark, which method is preferable? How might you refine your simulator to improve its faithfulness to the covariance you observed in (b)?</li>
+</ol>
+<p>Let’s replace the current copula correlation structure with one from a block diagonal matrix. In this example, the off-diagonal correlations are 0.6. We can use <code>mutate_correlation</code> to swap this new correlation matrix into our earlier simulator.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/mutate-correlation_ba6f557fa646f3200d6e14179749611c">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.4</span>, .<span class="dv">6</span>, <span class="fl">0.8</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">matrix</span>(., <span class="at">nrow =</span> <span class="dv">15</span>, <span class="at">ncol =</span> <span class="dv">15</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bdiag</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(rho) <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>simulated <span class="ot">&lt;-</span> sim <span class="sc">|&gt;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_correlation</span>(rho) <span class="sc">|&gt;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample</span>()</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">assay</span>(simulated))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Let’s first look at the <a href="https://github.com/zdk123/SpiecEasi"><code>SpiecEasi</code> covariance estimate</a>. This is a variant of the graphical lasso that is designed to be well-adapted to microbiome data. The good news is that it does warn that the default choices of <span class="math inline">\(\lambda\)</span> are too large, which is correct in this case. Unfortunately, it took a while to get this answer, and we had already been quite generous in allowing it to fit 10 choices of <span class="math inline">\(\lambda\)</span>.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/spieceasi_6507a6879f332edb7172c854f04e3d1f">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rho_se <span class="ot">&lt;-</span> <span class="fu">spiec.easi</span>(x, <span class="at">nlambda =</span> <span class="dv">10</span>, <span class="at">pulsar.params =</span> <span class="fu">list</span>(<span class="at">rep.num =</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span>  <span class="fu">getOptCov</span>() <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cov2cor</span>()</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(rho_se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/spieceasi-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s instead use the Ledoit-Wolfe estimator on the log-transformed data. The results make much more sense.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/lw_034daf7e1664ed83ccadc17b887d2d80">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rho_lw <span class="ot">&lt;-</span> <span class="fu">CovEst.2003LW</span>(<span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> x))<span class="sc">$</span>S <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cov2cor</span>()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(rho_lw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/lw-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Since color comparisons are difficult to evaluate precisely, we can also make a scatterplot comparing the different covariance estimators.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/covariance-metrics_263324cb0c75ab5b05161f19fcb4a308">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">truth =</span> <span class="fu">c</span>(rho), <span class="at">se =</span> <span class="fu">c</span>(rho_se), <span class="at">lw =</span> <span class="fu">c</span>(rho_lw)) <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>truth, <span class="at">values_to =</span> <span class="st">"estimate"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(truth, estimate, <span class="at">col =</span> name), <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">size =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/covariance-metrics-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This example shows that, when we start with real template data, it’s not too hard to setup a benchmarking experiment. It’s generally easier to reconfigure the components of an existing simulator than it is to specify all the simulation steps from scratch. There is the secondary bonus that the data tend to look close to real data of interest, at least up to the deliberate transformations needed to establish ground truth.</p>
+<p>We could imagine extending this example to include different data properties (sample sizes, variable block sizes and correlations, more general correlation structure) and estimation strategies (alternative transformations or estimators). Design changes could be implemented using <code>expand_colData</code>, changes in the signal can be specified as above with <code>mutate_correlation</code>, and any workflow can be used as long as it applies to a <code>SummarizedExperiment</code> object.</p>
+<section id="differential-testing-power-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="differential-testing-power-analysis">Differential Testing Power Analysis</h3>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-26_5eaff2ffe6b6596f2f86eeafdd4b331a">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>differential_test <span class="ot">&lt;-</span> <span class="cf">function</span>(dge, col_data, <span class="at">max_p =</span> <span class="dv">1</span>) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> disease, <span class="at">data =</span> col_data)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">voom</span>(dge, design) <span class="sc">|&gt;</span> <span class="co"># account for differences in uncertainty</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lmFit</span>(design) <span class="sc">|&gt;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">eBayes</span>() <span class="sc">|&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">topTable</span>(<span class="at">p.value =</span> max_p, <span class="at">number =</span> <span class="cn">Inf</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(adj.P.Val) <span class="sc">|&gt;</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">"ID"</span>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-27_d6a69253722029973c614a1c9e3d4d1a">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>yachida <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">url</span>(<span class="st">"https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/yachida.rds"</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dge <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(<span class="fu">assay</span>(yachida), <span class="at">group =</span> <span class="fu">colData</span>(yachida)<span class="sc">$</span>disease) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calcNormFactors</span>()</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">differential_test</span>(dge, <span class="fu">colData</span>(yachida))</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(results, <span class="fu">aes</span>(logFC, <span class="sc">-</span><span class="fu">log</span>(adj.P.Val, <span class="dv">10</span>))) <span class="sc">+</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> <span class="fu">filter</span>(results,  <span class="fu">abs</span>(logFC) <span class="sc">&gt;</span> <span class="dv">2</span>), <span class="fu">aes</span>(<span class="at">label =</span> ID), <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-28_dde10167db15613198adac821d0f52cb">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assays</span>(yachida, <span class="at">withDimnames =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>normalized <span class="ot">&lt;-</span> <span class="fu">cpm</span>(dge, <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">setup_simulator</span>(yachida,  <span class="sc">~</span> disease, <span class="sc">~</span> <span class="fu">GaussianLSS</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">estimate</span>(yachida, <span class="st">"normalized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-29_56dd01f7508c3e745b252fd5bec52c9d">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>nulls <span class="ot">&lt;-</span> <span class="fu">tail</span>(results<span class="sc">$</span>ID, <span class="dv">60</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> sim <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">any_of</span>(nulls), <span class="at">link =</span> <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">estimate</span>(yachida, <span class="st">"normalized"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/unnamed-chunk-30_496079d9c6958b13c992e2b2c7fec1be">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">250</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>assignments <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"CRC"</span>, N), <span class="fu">rep</span>(<span class="st">"healthy"</span>, N))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">disease =</span> <span class="fu">factor</span>(assignments, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"healthy"</span>, <span class="st">"CRC"</span>)))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>simulated <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim, <span class="at">new_data =</span> new_data)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>new_results <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(<span class="dv">2</span> <span class="sc">^</span> <span class="fu">assay</span>(simulated), <span class="at">group =</span> <span class="fu">colData</span>(simulated)<span class="sc">$</span>disease) <span class="sc">|&gt;</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">differential_test</span>(<span class="fu">colData</span>(simulated)) <span class="sc">|&gt;</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">null =</span> ID <span class="sc">%in%</span> nulls)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>new_results <span class="sc">|&gt;</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(logFC, <span class="sc">-</span><span class="fu">log</span>(adj.P.Val, <span class="dv">10</span>), <span class="at">col =</span> null)) <span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> <span class="fu">filter</span>(new_results,  <span class="fu">abs</span>(logFC) <span class="sc">&gt;</span> <span class="fl">1.5</span>), <span class="fu">aes</span>(<span class="at">label =</span> ID), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> null)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="augmenting-spatial-data" class="level3">
+<h3 class="anchored" data-anchor-id="augmenting-spatial-data">Augmenting Spatial Data</h3>
+<p>Modern molecular biology aims to build a map of the cell, its molecular machinery, and its relationships within larger systems (e.g., the circulatory system). Yet, until 2018 - 2020, this map had no sense of spatial orientation. This has changed with the advent of spatial sequencing technologies, where we can now measure the abundances of individual molecules together with their spatial location within tissue samples.</p>
+<p>In this exercise, we will build a model of spatial transcription in the dorsolateral prefrontal cortex (DLPFC). This model could then be used downstream to create negative controls and ensure properly calibrated spatial differential expression analysis. The block below reads a small subset of <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8095368/">DLPFC data</a> into an object of class <a href="https://github.com/drighelli/SpatialExperiment"><code>SpatialExperiment</code></a>.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/spatial-estimation_bd18c0679574e005e78902a5c03b335f">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>spatial_experiment <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">url</span>(<span class="st">"https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/dlpfc-v2.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol type="a">
+<li>Visualize the spatial gene expression pattern associated with a subset of genes of your choice. What is the extent of spatial smoothness? How skewed are the expression levels?</li>
+</ol>
+<p>For the genes that we’ve selected, there is a trend where the expression levels increase along individual rows but don’t change too much along a single column, once they’re within a certain closed region (though see the refinements below).</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/raw-data_ff728ddf13cba4dc3aba79283c197f37">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">spatialCoords</span>(spatial_experiment)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="fu">assay</span>(spatial_experiment)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, ]) <span class="sc">|&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() <span class="sc">|&gt;</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(coords) <span class="sc">|&gt;</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"pxl"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(pxl_col_in_fullres, pxl_row_in_fullres, <span class="at">col =</span> <span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> value))) <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/raw-data-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="a">
+<li>Estimate a simulator based on your observations from (a). Visualize the estimated mean functions across the tissue (not just at the observed locations).</li>
+</ol>
+<p>The simulator formulas can only refer to columns in the experiment’s <code>colData</code>. This makes this problem a bit tricky, since the relevant spatial predictors are not available in this way.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/original-names_79c07d124bc4e536d86102d3fe7888c0">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(<span class="fu">colData</span>(spatial_experiment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; [1] "barcode_id"   "sample_id"    "in_tissue"    "array_row"    "array_col"   
+#&gt; [6] "ground_truth" "cell_count"
+</code></pre>
+</div>
+<p>We could always manually input them using the same <code>spatialCoords</code> function that we used to make the plot above. There is a more direct way using <code>augment</code>, made possible because <code>scDesigner</code> can check experiment data classes in order to identify relevant variables for modeling:</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/augmented-names_01095636bab9179fae54cfd0677f715f">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>spatial_experiment <span class="ot">&lt;-</span> <span class="fu">augment</span>(spatial_experiment)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(<span class="fu">colData</span>(spatial_experiment))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<pre class="r-output"><code>#&gt; [1] "barcode_id"         "sample_id"          "in_tissue"         
+#&gt; [4] "array_row"          "array_col"          "ground_truth"      
+#&gt; [7] "cell_count"         "pxl_col_in_fullres" "pxl_row_in_fullres"
+</code></pre>
+</div>
+<p>We’ll just use the interaction between two univariate spline functions. We’re using negative binomial models – it’s educational to try out other families (e.g., <code>GaussianLSS</code>, <code>StudentTLSS</code>, or <code>ZIPoLSS</code>).</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/fit-spatial_d920f7dfcf47c98f62e9cb81923e5cd5">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>simulator <span class="ot">&lt;-</span> spatial_experiment <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setup_margins</span>(<span class="sc">~</span> <span class="fu">ns</span>(pxl_col_in_fullres, <span class="dv">3</span>) <span class="sc">*</span> <span class="fu">ns</span>(pxl_row_in_fullres, <span class="dv">3</span>), <span class="sc">~</span> <span class="fu">NBinomialLSS</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">estimate</span>(spatial_experiment, <span class="at">mstop =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We can visualize the results using <code>plot_bivariate</code>. The smoothed values reveal that there is a subtle increasing trend from lower to higher <code>pxl_row_in_fullres</code> values within the main expression blocks – this was hard to tease out from the original data and is one of the benefits of fitting a model.</p>
+<div class="cell" data-layout-align="center" data-hash="walkthrough_cache/html/vis-spatial_65a0154835c8cd21c1d41fc4a8f1b850">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>features <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"pxl_col_in_fullres"</span>, <span class="st">"pxl_row_in_fullres"</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_bivariate</span>(simulator, spatial_experiment, features, <span class="at">max_print =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fill"</span> <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> count)),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span> <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">log</span>(<span class="dv">1</span> <span class="sc">+</span> count))</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="walkthrough_files/figure-html/vis-spatial-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Given this simulator, we can imagine planting negative controls by removing the spatial structure for some genes. This can be helpful for calibrating spatial differential expression tests. Alternatively, we could evaluate spatial clustering methods by defining a ground truth where many genes are simulated from exactly the same probability model.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
