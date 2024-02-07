@@ -319,15 +319,13 @@ exper <- SummarizedExperiment(
 )
 ```
 
-a. Estimate a simulator with the taxon-wise regression formula
-`~log(sequencing_depth) + BMI`. Comment on the quality of the fitted model.
-
-We've estimated a zero-inflated negative binomial location-shape-scale
-(`ZINBLSS`) models for each gene, using a gaussian copula to capture dependence.
-The data structure below captures all the simulator components, and we can swap
-pieces in and out to modify the form of the simulator. For example, if we
-wanted, we could `mutate` the family and link function associated with
-particular features.
+First, let's estimate a simulator with the taxon-wise regression formula
+`~log(sequencing_depth) + BMI`. We will use a zero-inflated negative binomial
+location-shape-scale (`ZINBLSS`) models for each gene, using a gaussian copula
+to capture dependence. The data structure below captures all the simulator
+components, and we can swap pieces in and out to modify the form of the
+simulator. For example, if we wanted, we could `mutate` the family and link
+function associated with particular features.
 
 ```{r}
 #| label: example-sim
@@ -394,9 +392,7 @@ new_data <- colData(exper) |>
 plot(sim, "BMI", sample(sim, new_data = new_data), new_data = new_data)
 ```
 
-b. Visualize the correlation matrix estimated by the simulator's copula model.
-Pick a pair of taxa with high correlation under this model and visualize the
-joint distribution of their ranks. Is the model's estimate appropriate?
+Next, let's visualize the correlation matrix estimated by the simulator's copula model.
 
 There are a few pairs of taxa that are very highly correlated, and there are
 also a few taxa that seem to have higher correlation across a large number of
@@ -411,8 +407,10 @@ rho <- copula_parameters(sim)
 heatmap(rho)
 ```
 
-The pair below is one of those with high positive correlation. You can replace
-the selection with the commented out line to see what one of the anticorrelated
+Next, let's pick a pair of taxa with high correlation under this model and
+visualize the joint distribution of their ranks to see if they are plausible.
+I've picked one of the higher-correlation pairs, and you can replace the
+selection with the commented out line to see what one of the anticorrelated
 pairs of taxa looks like.
 
 ```{r}
@@ -428,16 +426,11 @@ pivot_experiment(exper) |>
   geom_point(aes(log(1 + .data[[taxa[1]]]), log(1 + .data[[taxa[2]]])))
 ```
 
-c. Replace the correlation matrix with a design of your own. Simulate data from
-this modified model and estimate the microbe interaction network using (i) the
-SpiecEasi algorithm and (ii) the Ledoit-Wolfe covariance estimator. According to
-your benchmark, which method is preferable? How might you refine your simulator
-to improve its faithfulness to the covariance you observed in (b)?
-
-Let's replace the current copula correlation structure with one from a block
-diagonal matrix. In this example, the off-diagonal correlations are 0.6. We can
-use `mutate_correlation` to swap this new correlation matrix into our earlier
-simulator.
+Finally, let's define a ground truth correlation structure that can be the basis
+of our benchmarking experiment. We'll replace the current copula correlation
+structure with one from a block diagonal matrix. In this example, the
+off-diagonal correlations are 0.6. We can use `mutate_correlation` to swap this
+new correlation matrix into our earlier simulator.
 
 ```{r}
 #| label: mutate-correlation
@@ -508,6 +501,42 @@ workflow can be used as long as it applies to a `SummarizedExperiment` object.
 
 ### Differential Testing Power Analysis
 
+In microbiome studies, the goal of differential testing is to look
+taxon-by-taxon (or, in metagenomics data, gene-by-gene) for associations with
+some sample-level characteristic of interest. We deliberately ignore dependence
+across taxa to clarify which marginal relationships are worth attending to more
+carefully. One advantage of this perspective is that it matches nicely with
+experimental capabilities: it's easier to manipulate individual taxa/genes in
+follow-up work than attempting to change the entire system.
+
+A common problem when first embarking on a difeferential testing study is to run
+a power analysis. A power analysis is about more than choosing the sample size.
+First, it can help guide allocation of a fixed sampling budget. For example, we
+might realize that a design that pairs pre-post samples might be more powerful
+than a cross-sectional one with the same total number of samples. Second, it can
+inform the testing approach -- power is impossible to disentangle from analysis
+strategy. A simulation experiment might suggest that a simpler analysis will
+actually have higher power, given sampling budget constraints.
+
+To explore the main ideas of power analysis, let's imagine that we are planning
+a new study to evaluate the relationship between the gut microbiome and colon
+cancer. Simulating from scratch is challenging, so we refer to the
+curatedMetagenomicsDatasets online database to download preprocessed data from
+Yachida et al. (2019). This will be the pilot data for our semisynthetic
+simulator. The download and filtering script can be found
+[here](https://github.com/krisrs1128/talks/blob/master/2024/20240207/data/yachida_preprocess.R).
+
+The block below encapsulates differential testing using `limma-voom`. This is a
+classic approach to differential testing in RNA-seq that has been found to be
+reasonably effective in microbiome studies (though, there are many
+microbiome-specific competitors to keep in mind these days, I recommend the
+benchmarks by Calgaro et al. 2020 and Cappellato et al. 2022). It's built on the
+ideas that (i) samples should be normalized to approximately the same scale
+(making an effort to avoid compositional biases), and (ii) considering
+feature-level mean-variance relationships can make classic linear modeling
+testing tools applicable, so that we can bypass fancier -- and often more
+finnicky -- count-based probabilistic models.
+
 ```{r}
 differential_test <- function(dge, col_data, max_p = 1) {
   design <- model.matrix(~ disease, data = col_data)
@@ -520,6 +549,10 @@ differential_test <- function(dge, col_data, max_p = 1) {
 }
 ```
 
+Let's run that differential testing pipeline and create a volcano plot of fold
+change vs. statistical significance. A few taxa seem clearly different group
+groups. The question now is how we can use the results from this pilot
+experiment to define a power analysis.
 
 ```{r}
 yachida <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/yachida.rds"))
@@ -532,11 +565,23 @@ ggplot(results, aes(logFC, -log(adj.P.Val, 10))) +
   geom_text_repel(data = filter(results,  abs(logFC) > 2), aes(label = ID), size = 3)
 ```
 
+To evaluate power, we need a sense in which some taxa are true signals/true
+nulls. We don't know the ground truth in the real data, but we can create ground
+truth in our simulation. Moreover, since our simulators are synthetic, we can
+ensure that the generated samples are plausible. To train the simulator, we'll
+work with the `limma-voom` normalized samples. This is the role of the call to
+`cpm`, which stands for "Counts-per-Million" and implements the normalization.
+
 ```{r}
 assays(yachida, withDimnames = FALSE)$normalized <- cpm(dge, log = TRUE)
 sim <- setup_simulator(yachida,  ~ disease, ~ GaussianLSS()) |>
   estimate(yachida, "normalized")
 ```
+
+Next, we'll create ground truth nulls. We'll use the 60 taxa that already seemed
+to have only weak effects in the pilot experiment. By making the link function
+`~ 1` instead of `~ disease`, we ensure that there is in fact no association
+between disease and abundance for those taxa.
 
 ```{r}
 nulls <- tail(results$ID, 60)
@@ -545,9 +590,19 @@ sim <- sim |>
   estimate(yachida, "normalized")
 ```
 
+From here, we can sample from the simulator and rerun our differential testing
+function. We can modify the sample size $N$ and see how power and the fraction
+of false positives vary. If we ran more replicates and choices of $N$, we would
+be able to draw a smooth curve of how these metrics vary as a function of $N$,
+like what we would expect theoretically. The advantage of this computational
+setup is that calculating this curve analytically would be impossible, given the
+complexity of microbiome data, and since our simulator has been trained to mimic
+a pilot dataset, we should be able generate more realistic samples than if we
+had defined the sampling mechanism from scratch.
+
 ```{r}
-N <- 250
-assignments <- c(rep("CRC", N), rep("healthy", N))
+N <- 500
+assignments <- c(rep("CRC", N / 2), rep("healthy", N / 2))
 new_data <- tibble(disease = factor(assignments, levels = c("healthy", "CRC")))
 simulated <- sample(sim, new_data = new_data)
 
@@ -558,6 +613,7 @@ new_results <- DGEList(2 ^ assay(simulated), group = colData(simulated)$disease)
 new_results |>
   ggplot(aes(logFC, -log(adj.P.Val, 10), col = null)) +
   geom_point() +
+  geom_hline(yintercept = -log(0.05, 10), col = "#ababab") +
   geom_text_repel(data = filter(new_results,  abs(logFC) > 1.5), aes(label = ID), size = 3) +
   facet_wrap(~ null)
 ```
@@ -583,13 +639,12 @@ class [`SpatialExperiment`](https://github.com/drighelli/SpatialExperiment).
 spatial_experiment <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/dlpfc-v2.rds"))
 ```
 
-a. Visualize the spatial gene expression pattern associated with a subset of
-genes of your choice. What is the extent of spatial smoothness? How skewed are
-the expression levels?
-
-For the genes that we've selected, there is a trend where the expression levels
-increase along individual rows but don't change too much along a single column,
-once they're within a certain closed region (though see the refinements below).
+First, let's visualize the spatial gene expression pattern associated with a subset of
+genes. We would like to understand the extent of spatial smoothness and skewness
+in expression levels. For the genes that we've selected, there is a trend where
+the expression levels increase along individual rows but don't change too much
+along a single column, once they're within a certain closed region (though see
+the refinements below).
 
 ```{r}
 #| label: raw-data
@@ -604,12 +659,10 @@ t(assay(spatial_experiment)[1:3, ]) |>
   facet_wrap(~ name)
 ```
 
-b. Estimate a simulator based on your observations from (a). Visualize the
-estimated mean functions across the tissue (not just at the observed locations).
-
-The simulator formulas can only refer to columns in the experiment's `colData`.
-This makes this problem a bit tricky, since the relevant spatial predictors are
-not available in this way.
+Next, let's estimate a simulator based on these observations. The simulator
+formulas can only refer to columns in the experiment's `colData`. This makes
+this problem a bit tricky, since the relevant spatial predictors are not
+available in this way.
 
 ```{r}
 #| label: original-names
@@ -663,6 +716,10 @@ clustering methods by defining a ground truth where many genes are simulated
 from exactly the same probability model.
 
 ## References
+
+Calgaro, Matteo, Chiara Romualdi, Levi Waldron, Davide Risso and Nicola Vitulo. Assessment of statistical methods from single cell, bulk RNA-seq, and metagenomics applied to microbiome data. Genome Biology 21 (2020): n. pag.
+
+Cappellato, Marco, Giacomo Baruzzo and Barbara Di Camillo. Investigating differential abundance methods in microbiome data: A benchmark study. PLoS Computational Biology 18 (2022): n. pag.
 
 Kodikara, Saritha, Susan Ellul, Kim-Anh Lê Cao, Statistical challenges in longitudinal microbiome data analysis, Briefings in Bioinformatics, Volume 23, Issue 4, July 2022, bbac273, https://doi.org/10.1093/bib/bbac273
 

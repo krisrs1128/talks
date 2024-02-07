@@ -15,32 +15,70 @@ output:
 css: custom.css
 ---
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(knitr)
+library(mvtnorm)
 library(tidyverse)
-opts_chunk$set(cache = TRUE)
-library(RefManageR)
-bib <- ReadBib("references.bib")
+opts_chunk$set(cache = FALSE)
 ```
 
 
 <div id="links">
 Methods for Biological Data Workshop<br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
+Slides: <a href="https://go.wisc.edu/v4hsh9">https://go.wisc.edu/v4hsh9</a> <br/>
+Code: <a href="https://go.wisc.edu/1lq21r">https://go.wisc.edu/1lq21r</a>
 </div>
 <div id="title">
 Simulation in Omics
 </div>
+<br/>
+<br/>
+
+<i>As the program notes say, "Dive into the gene pool to see evolution in action," and enjoy "genetic engineering in the privacy of your own home." 
+
+Requires: 2.5 megabytes of system memory or 3 megabytes under System 7, and a hard drive.</i>
+<br/>
+-- The New York Times, 1992, reviewing the newly released SimLife
 
 <br/>
+<br/>
+<br/>
+
+<i>Heard melodies are sweet, but those unheard <br/>
+Are sweeter; therefore, ye soft pipes, play on... <br/></i>
+-- Keats
+
 <div id="subtitle">
 Kris Sankaran <br/>
-<a href="https://go.wisc.edu/">go.wisc.edu/</a> <br/>
 07 | February | 2024 <br/>
 </div>
 
 ---
 
+### Learning Outcomes
+
+1. Discuss the role of semisynthetic simulation in guiding sequencing data
+analysis, including for power analysis and methods benchmarking.
+
+1. Create, modify, and critique simulators using the `scDesign3` and
+`scDesigner` packages.
+
+1. Explain and apply basic techniques for microbiome differential testing and
+network inference.
+
+1. Manipulate and explain the structure of `SummarizedExperiment` objects in the
+Bioconductor software ecosystem.
+
+---
+
+### Schedule
+
+1. Intro Presentation - 15 minutes
+1. Simulation Quick Start - 30 minutes
+1. Discussion - 10 minutes
+1. Advanced Example(s) - 35 minutes
+
+---
 
 ### Why Simulate?
 
@@ -112,6 +150,8 @@ Let's consider a microbiome case study: To block or not to block?
 
 <img src="figure/blocking_simplex.png"/>
 
+Figure from Sankaran and Holmes (2023).
+
 ---
 
 ### Simulation to the Rescue
@@ -137,18 +177,15 @@ systematically improve the assumed generative mechanism.
 
 ---
 
-### Philosophy
+### Discussion Prompts
 
-.pull-left[
-1. Simulation encourages careful thinking about what exactly we mean by null and
-alternative hypotheses.
-1. There is usually more variation present in data than is possible to estimate.
-Simulation clarifies what is possible to estimate well.
-]
+1. What are some of the data analyses that you care about the most? What are the
+questions you are trying to answer, and do you think there might be a role for
+simulation in your analysis workflow?
 
-.pull-right[
-<img src="figure/iterative_structuration.png"/>
-]
+1. What have been some of the bottlenecks or tradeoffs that you have encountered
+in managing, modeling, or drawing inferences from your data? How might
+simulation be used to navigate these issues?
 
 ---
 
@@ -226,7 +263,6 @@ First, let's generate some correlated Gaussians.
 
 .pull-left[
 ```{r}
-library(mvtnorm)
 Sigma <- matrix(
   c(1, 0.95, 0.95, 1), 
   nrow = 2
@@ -316,32 +352,7 @@ as_tibble(x_new) |>
 
 ---
 
-## Recipe + Examples
-
----
-
-### 
-
----
-
-## Demo + Setup
-
----
-
-### Crash Course: Experiment Classes
-
-
----
-
-### Crash Course: Visualization
-
-
----
-
 ### References
 
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 3)
-```
-
----
+Sankaran, Kris and Susan P. Holmes. “Generative Models: An Interdisciplinary
+Perspective.” Annual Review of Statistics and Its Application (2022): n. pag.
