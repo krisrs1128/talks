@@ -1,16 +1,55 @@
 ---
-title: "`scDesigner` Exercises"
+title: "Methods for Biological Data Workshop"
 format:
   html:
     code-fold: true
 date: "`r Sys.Date()`"
-title: "Untitled"
 ---
 
-```{r}
+```{r echo=FALSE, message = FALSE}
 #| label: setup
+knitr::opts_chunk$set(
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE, 
+  eval = TRUE,
+  cache = TRUE,
+  dev.args = list(bg = "transparent")
+)
+
+knitr::knit_hooks$set(output = scDesigner::ansi_aware_handler)
+options(crayon.enabled = TRUE)
+set.seed(20240207)
+
+library(tidyverse)
+options(
+  ggplot2.discrete.colour = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
+  ggplot2.discrete.fill = c("#9491D9", "#3F8C61", "#F24405", "#8C2E62", "#F2B705", "#11A0D9"),
+  ggplot2.continuous.colour = function(...) scale_color_distiller(palette = "Spectral", ...),
+  ggplot2.continuous.fill = function(...) scale_fill_distiller(palette = "Spectral", ...)
+)
+
+th <- theme_classic() +
+  theme(
+    panel.background = element_rect(fill="transparent"),
+    strip.background = element_rect(fill="transparent"),
+    plot.background = element_rect(fill="transparent", color=NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill="transparent"),
+    legend.box.background = element_rect(fill="transparent"),
+    legend.position = "bottom"
+  )
+
+theme_set(th)
+```
+
+```{r}
+#| label: packages
+library(Matrix)
 library(SingleCellExperiment)
-library(curatedMetagenomicData)
 library(edgeR)
 library(gamboostLSS)
 library(genefilter)
@@ -20,16 +59,6 @@ library(scDesign3)
 library(splines)
 library(tidyverse)
 library(scDesigner)
-set.seed(20240207)
-my_theme <- theme_classic() +
-  theme(
-    axis.text = element_text(size = 12),
-    legend.text = element_text(size = 12),
-    axis.title = element_text(size = 14),
-    legend.title = element_text(size = 14),
-    strip.text = element_text(size = 10)
-  )
-theme_set(my_theme)
 ```
 
 ## Traditional scDesign
@@ -60,9 +89,7 @@ ggplot(samples_long) +
 
 ```{r}
 #| label: setup_experiment
-exper <- SingleCellExperiment(
-  assays = list(counts = t(samples[, -1]))
-)
+exper <- SingleCellExperiment(assays = list(counts = t(samples[, -1])))
 colData(exper) <- DataFrame(mapping)
 colData(exper)$celltype <- rep("A", nrow(mapping))
 rownames(colData(exper)) <- mapping$sample
@@ -119,7 +146,7 @@ plot_univariate(fit, exper)
 fit <- margins |>
   mutate(link = list(mu = ~ ns(time, 10), sigma = ~ 1)) |>
   estimate(exper)
-plot_univariate(fit, exper, line_opts = list(linewidth = 2))
+plot_univariate(fit, exper)
 ```
 
 ```{r}
@@ -367,39 +394,41 @@ differential_test <- function(dge, col_data, max_p = 1) {
     arrange(adj.P.Val) |>
     rownames_to_column("ID")
 }
+```
 
-dge <- DGEList(counts = assay(yachida), group = colData(yachida)$disease) |>
-  calcNormFactors() # normalize across different depths
-test_results <- differential_test(dge, colData(yachida))
-ggplot(test_results, aes(logFC, -log(adj.P.Val, 10))) +
+
+```{r}
+yachida <- readRDS("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/yachida.rds")
+results <- DGEList(assay(yachida), colData(yachida)$disease) |>
+  calcNormFactors() |>
+  differential_test(colData(yachida))
+
+ggplot(results, aes(logFC, -log(adj.P.Val, 10))) +
   geom_point() +
   geom_text_repel(data = filter(test_results,  abs(logFC) > 2), aes(label = ID), size = 3)
 ```
 
 ```{r}
 assays(yachida, withDimnames = FALSE)$normalized <- cpm(dge, log = TRUE)
-sim <- setup_simulator(
-    yachida, 
-    ~ disease,
-    ~ GaussianLSS()
-  ) |>
+sim <- setup_simulator(yachida,  ~ disease, ~ GaussianLSS()) |>
   estimate(yachida, "normalized")
 ```
+
 ```{r}
-nulls <- tail(test_results$ID, 60)
+nulls <- tail(results$ID, 60)
 sim <- sim |>
   mutate(any_of(nulls), link = ~ 1) |>
   estimate(yachida, "normalized")
 ```
 
 ```{r}
-# vary the sample size
-n_per <- 250
-new_data <- tibble(disease = factor(c(rep("CRC", n_per), rep("healthy", n_per)), levels = c("healthy", "CRC")))
+N <- 250
+assignments <- c(rep("CRC", N), rep("healthy", N))
+new_data <- tibble(disease = factor(assignments, levels = c("healthy", "CRC")))
 simulated <- sample(sim, new_data = new_data)
 
-new_dge <- DGEList(counts = 2 ^ assay(simulated), group = colData(simulated)$disease)
-new_results <- differential_test(new_dge, colData(simulated)) |>
+new_results <- DGEList(2 ^ assay(simulated), colData(simulated)$disease) |>
+  differential_test(colData(simulated)) |>
   mutate(null = ID %in% nulls)
 
 new_results |>
