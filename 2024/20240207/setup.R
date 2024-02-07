@@ -41,6 +41,7 @@ heatmap <- function(...) {
 
 suppressPackageStartupMessages(library(Matrix))
 suppressPackageStartupMessages(library(SingleCellExperiment))
+suppressPackageStartupMessages(library(SpatialExperiment))
 suppressPackageStartupMessages(library(SpiecEasi))
 suppressPackageStartupMessages(library(edgeR))
 suppressPackageStartupMessages(library(gamboostLSS))

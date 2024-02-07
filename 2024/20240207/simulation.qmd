@@ -6,8 +6,10 @@ format:
 date: "`r Sys.Date()`"
 ---
 
-```{r echo = FALSE, message = FALSE}
+```{r}
 #| label: setup
+#| echo: false
+#| message: false
 knitr::opts_chunk$set(
   fig.align = "center",
   collapse = TRUE,
@@ -50,10 +52,10 @@ heatmap <- function(...) {
 }
 
 suppressPackageStartupMessages(library(Matrix))
-suppressPackageStartupMessages(library(SingleCellExperiment))
 suppressPackageStartupMessages(library(SpatialExperiment))
 suppressPackageStartupMessages(library(SpiecEasi))
 suppressPackageStartupMessages(library(edgeR))
+suppressPackageStartupMessages(library(CovTools))
 suppressPackageStartupMessages(library(gamboostLSS))
 suppressPackageStartupMessages(library(genefilter))
 suppressPackageStartupMessages(library(ggrepel))
@@ -64,7 +66,38 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(scDesigner))
 ```
 
-## Traditional scDesign
+Simulation is like visualization -- though it is usually not an end in itself,
+it can deepen our thinking about a wide variety of statistical problems. In this
+note, we'll specifically explore how simulation can guide microbiome analysis.
+At one level, we will encounter tools for microbiome network inference and
+differential hypothesis testing. At another, we'll see how to benchmarking
+studies and run power analysis based on those tools, leveraging the potential
+for simulation to generate realistic data.
+
+We should distinguish between pure and semisynthetic simulators. Pure simulators
+are completely specified by the designer. For example, they can include
+mechanistically-informed sequence of statistical sampling and transformation
+steps. These are often used in scientific and engineering domains where a small
+number of mathematical equations can faithfully represent a system of interest.
+In contrast, semisynthetic simulators are trained on an initial "pilot" dataset.
+They learn to mimic the key properties of that source data. In some sense, they
+are similar to generative models in AI, like GANs and GPTs. Unlike traditional
+generative models, to be useful, these models must also be controllable
+(otherwise, they would be difficult to use in downstream comparisons). Most
+semisynthetic simulators in biological data analysis allow users to modify
+properties of the underlying signal, dependence structure, and sample sizes.
+
+We'll concentrate on the `scDesign` family of simulators, with an emphasis on
+recent developments focused on improving interactivity. We note that 
+
+## Longitudinal Microbiome Study
+
+### Visualizing and Storing Data
+
+Let's begin our study of semisynthetic using Kodikara et al.'s (2022)
+longitudinal mouse microbiome dataset. The block below reads in a subset of
+taxa, and the filtering script can be found at [this
+link](https://github.com/krisrs1128/talks/blob/master/2024/20240207/data/longitudinal_preprocess.R).
 
 ```{r}
 #| label: read
@@ -72,29 +105,56 @@ mapping <- read_csv("https://github.com/krisrs1128/talks/raw/master/2024/2024020
 samples <- read_csv("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/filtered_samples.csv")
 ```
 
+Before fitting anything, let's visualize the series. We'll have to reshape the
+data into "long" format so that taxa names are stored explicitly as a variable.
+The timepoints have been colored in by the phase of experiment. It seems that
+most species have been affected by the antibiotic treatment and subsequent
+infection, though the direction and duration of the effect can vary
+substantially.
 
 ```{r}
 #| label: prepare-plot
-samples_long <- samples |>
+samples |>
   pivot_longer(-sample, names_to = "ASV") |>
   filter(ASV %in% glue("ASV{1:16}")) |>
-  left_join(mapping)
-```
-
-```{r}
-ggplot(samples_long) +
+  left_join(mapping) |>
+  ggplot() +
   geom_line(aes(time, value, col = phase, group = subject)) +
   scale_y_log10() +
   facet_wrap(~ reorder(ASV, -value))
 ```
 
+Working simply with `data.frames` can become unwieldy in this type of problem,
+because there is a qualitative difference between sample-level descriptors
+(e.g., sample collection time, experimental phase) and the high-throughput
+sequencing outputs. This means that we should avoid combing both sources into
+the same table. On the other hand, it would be nice to have a simple way of
+referring to the entire experiment in a single comment. The solution we'll use
+is to define a `SummarizedExperiment`. This is a special class that has slots
+for the high-throughput sequencing data (`assays`) and the sample descriptors
+(`colData`). Essentially, it's a container for the experiment.
+
 ```{r}
 #| label: setup_experiment
-exper <- SingleCellExperiment(assays = list(counts = t(samples[, -1])))
-colData(exper) <- DataFrame(mapping)
-colData(exper)$celltype <- rep("A", nrow(mapping))
+exper <- SummarizedExperiment(
+  assays = list(counts = t(samples[, -1])),
+  colData = DataFrame(mapping)
+)
+
 rownames(colData(exper)) <- mapping$sample
+colData(exper)$celltype <- rep("A", nrow(mapping)) # needed below
 ```
+
+### Simulation Quick-Start
+
+Let's begin with the `scdesign3` package. This package was originally developed
+for single cell experiment studies. It turns out that its probability model is
+usually able to accommodate microbiome data as well, and since the model is
+generative, we'll be able to evaluate this statement precisely by comparing the
+source with the simulated samples. In the call below, most of the arguments
+below are placeholders. The most important argument is `mu_formula`, which says
+that we should allow the mean function of the model to vary as a smoothly
+varying spline over the time variable in our `colData`.
 
 ```{r}
 scdesign_result <- scdesign3(
@@ -103,12 +163,20 @@ scdesign_result <- scdesign3(
   celltype = "celltype", 
   spatial = NULL, 
   other_covariates = NULL,
-  mu_formula = "s(time, k = 10, bs = 'cr')",
-  sigma_formula = "s(time, k = 5, bs = 'cr')",
-  corr_formula = "1",
-  trace = TRUE
+  mu_formula = "s(time, k = 10)",
+  corr_formula = "1"
 )
 ```
+
+The simulated data are stored in the `$new_count` slot of the `scDesign3`
+output. Let's visualize the simulated trajectories, keeping in mind our earlier
+plot as a point of reference. We're converting the data to long format just as
+before. The spline seems flexible enough to capture most of the real variation
+we were seeing in these (highly abundant) taxa. We shouldn't take this for
+granted! I've tried many microbiome simulators in the past, and this worked much
+more straightforwardly than what's usually encountered. To get a sense of the
+complexity, the sparseDOSSA2 paper of Ma et al. (2023) recommends fitting a
+separate simulator to every timepoint in a longitudinal dataset.
 
 ```{r}
 data.frame(t(scdesign_result$new_count)) |>
@@ -117,59 +185,106 @@ data.frame(t(scdesign_result$new_count)) |>
   filter(ASV %in% glue("ASV{1:16}")) |>
   left_join(mapping) |>
   ggplot() +
-  geom_line(aes(time, value, group = subject)) +
+  geom_line(aes(time, value, col = phase, group = subject)) +
   scale_y_log10() +
   facet_wrap(~ reorder(ASV, -value))
 ```
 
-## scDesigner
+### `scDesigner`
+
+`scDesign3` is well-documented and gives good results in many microbiome
+problems. It's a good default for any current simulation-based analysis.
+Nonetheless, we will introduce some of the main ideas of `scDesigner`, a
+follow-up project that's under active development. The main idea of `scDesigner`
+is to create a vocabulary for interactively building, using, and critiquing
+models from the `scDesign3` model. The `scDesign3` copula model is actually a
+very interpretable model, it would be a shame to treat the `scdesign3` function
+that we called above as if it were a black box.
+
+`scDesigner` supports the following operations:
+
+* Creation: We can use a formula interface to specify the relationship between experimental covariates and LSS/Copula model parameters.
+* Alteration: Given an existing simulator, we can modify the regression formula, probability family, and dependence structure, and re-estimate just those parts that have changed.
+* Sampling: We can sample synthetic `SummarizedExperiment` classes from the fitted model. 
+* Joining: Given a pair of previously defined simulators, we can unify them into a single simulator. This is especially helpful in multi-omics settings, because it lets us first refine our simulators separately on each omic before finally modeling their joint dependence structure.
+* Plotting: We can use visualization to compare original vs. simulated data, which is useful for refining and improving simulators.
+
+Let's see this in action. We'll first define the model for each taxon. We're
+using a negative binomial location-shape-scale model where the parameter can
+vary with experimental `phase`. This is more constrained than the full temporal
+model we defined above. The intent is to see to what extent `phase` is enough to
+describe the essential variation in the data (we should always prefer a more
+parsimonius explanation if possible).
 
 ```{r}
 margins <- setup_margins(exper, ~ phase, ~ NBinomialLSS())
 margins
 ```
 
-```{r}
-fit <- estimate(margins, exper)
-plot_univariate(fit, exper)
-```
-
-```{r}
-margins <- margins |>
-  mutate(link = list(mu = ~ phase, sigma = ~ 1))
-margins
-```
+`setup_margins` species the regression relationships without actually fitting
+the model. We can visualize the fitted regression together with the original
+training samples.
 
 ```{r}
 fit <- estimate(margins, exper)
-plot_univariate(fit, exper)
+plot(fit, exper)
+```
 
+We can generate a synthetic dataset using `sample`, and we can directly contrast
+them with the original data by using the `simulated` argument to `plot`. It
+seems like there are important variations over time that are not being captured
+by `phase` alone. For example, ASV8 has a decrease during the infection period,
+but our current model only allows for a fixed value over those last few days.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+fit <- estimate(margins, exper)
+plot(fit, exper, simulated = sample(fit))
+```
+
+To address this let's allow the mean to vary as a natural spline over time.
+We'll fix the variance over all timepoints. This is helps to stablize the
+estimated model, at the expense of less expressive fits. Overall, we're much
+better now at capturing trends, but still struggle in some of the very large
+positive values (ASV2, ASV3) and also zero-inflation (ASV1, ASV7, ASV8). It
+would be possible to improve the fit by switching from a `NBinomialLSS()` model
+to `ZINBLSS()`. This model takes a bit longer to fit, so we'll skip it in this
+note, though you're of course encouraged to try exploring the change yourself.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
 fit <- margins |>
   mutate(link = list(mu = ~ ns(time, 10), sigma = ~ 1)) |>
   estimate(exper)
-plot_univariate(fit, exper)
+plot(fit, exper, simulated = sample(fit))
 ```
+
+Let's visualize the full trajectories for all taxa. Here, we're using the
+`pivot_experiment()` function, which converts a `SummarizedExperiment` class
+into a long `data.frame` for easier plotting. In many ways, these samples
+convincingly capture many of the salient properties of the original data. The
+deficiencies are similar to what we noted before -- we have trouble capturing
+zeros and changes in variance. In lower-stakes applications, this might not be
+too much of a problem, and these data could still guide choices around
+methodology or experimental design. In higher-stakes settings, we could modify
+the probability model and regression family using the `mutate` function until we
+arrive at a more satisfying simulator. We emphasize again that it's the ability
+to simulate that's making it so easy to critique these models, because comparing
+real with simulated samples is a much simpler task than inspecting model
+parameters directly.
 
 ```{r}
-sample(fit)
-samples_df <- sample(fit) |>
-  pivot_experiment()
-samples_df
-```
-
-```{r, fig.width = 10, fig.height = 5}
-ggplot(samples_df) +
+#| fig-width: 10
+#| fig-height: 6
+sample(fit) |>
+  pivot_experiment() |>
+  ggplot() +
   geom_line(aes(time, log(1 + value), col = phase, group = subject), alpha = 0.4) +
   guides(col = guide_legend(override.aes = list(linewidth = 2, alpha = 1))) +
   facet_wrap(~ reorder(feature, -value), ncol = 10)
 ```
-
-We can get more replicates 10 replicates.
-
-```{r}
-sample(fit, 10)
-```
-
 
 ## Microbiome Networks
 
@@ -244,8 +359,10 @@ number of zeros in the high-abundance taxa. To refine the simulator, we should
 probably replace the zero-inflated negative binomial with ordinary negative
 binomials for these poorly fitted taxa.
 
-```{r, fig.width = 9, fig.height = 5}
+```{r}
 #| label: histogram-critique
+#| fig-width: 9
+#| fig-height: 5
 bind_rows(
   real = pivot_experiment(exper),
   simulated = pivot_experiment(simulated),
@@ -267,8 +384,10 @@ ribbons (neighboring values for BMI might have different sequencing depth,
 potentially leading to quite different predictions). To remove this artifact, we
 can assume that all samples had exactly the same sequencing depth.
 
-```{r, fig.width = 12, fig.height = 4}
+```{r}
 #| label: bmi-scatter
+#| fig-width: 12
+#| fig-height: 4
 new_data <- colData(exper) |>
   as_tibble() |>
   mutate(sequencing_depth = 2e4)
@@ -284,8 +403,10 @@ also a few taxa that seem to have higher correlation across a large number of
 taxa (e.g., the taxon in row 34). There is no obvious banding or block structure
 in this real data, though.
 
-```{r, fig.width = 5, fig.height = 5}
+```{r}
 #| label: correlation-heatmap
+#| fig-width: 5
+#| fig-heigth: 5
 rho <- copula_parameters(sim)
 heatmap(rho)
 ```
@@ -294,8 +415,10 @@ The pair below is one of those with high positive correlation. You can replace
 the selection with the commented out line to see what one of the anticorrelated
 pairs of taxa looks like.
 
-```{r, fig.width = 5, fig.height = 5}
+```{r}
 #| label: correlation-pairs
+#| fig-width: 5
+#| fig-heigth: 5
 #taxa <- rownames(exper)[c(33, 43)]
 taxa <- rownames(exper)[c(14, 25)]
 pivot_experiment(exper) |>
@@ -521,8 +644,10 @@ that there is a subtle increasing trend from lower to higher
 to tease out from the original data and is one of the benefits of fitting a
 model.
 
-```{r fig.height = 7, fig.width = 9}
+```{r}
 #| label: vis-spatial
+#| fig-height: 7
+#| fig-width: 9
 features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
 plot_bivariate(simulator, spatial_experiment, features, max_print = 20) +
   labs(
@@ -536,3 +661,9 @@ spatial structure for some genes. This can be helpful for calibrating spatial
 differential expression tests. Alternatively, we could evaluate spatial
 clustering methods by defining a ground truth where many genes are simulated
 from exactly the same probability model.
+
+## References
+
+Kodikara, Saritha, Susan Ellul, Kim-Anh Lê Cao, Statistical challenges in longitudinal microbiome data analysis, Briefings in Bioinformatics, Volume 23, Issue 4, July 2022, bbac273, https://doi.org/10.1093/bib/bbac273
+
+Ma, Siyuan, Boyu Ren, Himel Mallick, Yo Sup Moon, Emma H. Schwager, Sagun Maharjan, Timothy L. Tickle, Yiren Lu, Rachel N. Carmody, Eric A. Franzosa, Lucas Janson and Curtis Huttenhower. A statistical model for describing and simulating microbial community profiles. PLoS Computational Biology 17, 2021. https://doi.org/10.1371/journal.pcbi.1008913
