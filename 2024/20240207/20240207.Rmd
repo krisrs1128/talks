@@ -25,7 +25,7 @@ opts_chunk$set(cache = FALSE)
 <div id="links">
 Slides: <a href="https://go.wisc.edu/v4hsh9">https://go.wisc.edu/v4hsh9</a> <br/>
 Colab: <a href="https://go.wisc.edu/1lq21r">https://go.wisc.edu/1lq21r</a><br/>
-Quarto: <a href="https://go.wisc.edu/5met6d">https://go.wisc.edu/5met6d</a><br/>
+Quarto: <a href="https://go.wisc.edu/375gzk">https://go.wisc.edu/375gzk</a><br/>
 Compiled: <a href="https://go.wisc.edu/g63hy9">https://go.wisc.edu/g63hy9</a>
 </div>
 <div id="title">
