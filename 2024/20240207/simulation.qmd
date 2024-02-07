@@ -1,9 +1,9 @@
 ---
-title: "Simulation - Methods for Biological Data Workshop"
+title: "Methods for Biological Data Workshop [07 | February | 2024]"
+author: Kris Sankaran
 format:
   html:
     code-fold: true
-date: "`r Sys.Date()`"
 ---
 
 ```{r}
