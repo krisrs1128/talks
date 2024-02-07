@@ -177,6 +177,18 @@ systematically improve the assumed generative mechanism.
 
 ---
 
+### Live Demo
+
+Live Demo: https://go.wisc.edu/6hw050
+
+Colab: https://go.wisc.edu/1lq21r
+
+Quarto: https://go.wisc.edu/5met6d
+
+Compiled: https://go.wisc.edu/g63hy9
+
+---
+
 ### Discussion Prompts
 
 1. What are some of the data analyses that you care about the most? What are the

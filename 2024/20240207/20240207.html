@@ -169,6 +169,18 @@ systematically improve the assumed generative mechanism.
 
 ---
 
+### Live Demo
+
+Live Demo: https://go.wisc.edu/6hw050
+
+Colab: https://go.wisc.edu/1lq21r
+
+Quarto: https://go.wisc.edu/5met6d
+
+Compiled: https://go.wisc.edu/g63hy9
+
+---
+
 ### Discussion Prompts
 
 1. What are some of the data analyses that you care about the most? What are the
@@ -228,16 +240,24 @@ head(x)
 
 ```
 ##      [,1] [,2]
-## [1,]    8    9
-## [2,]   11    9
-## [3,]   11    6
-## [4,]    5    6
-## [5,]   13    5
-## [6,]   12   12
+## [1,]    7   12
+## [2,]   15   10
+## [3,]    9    8
+## [4,]   15    7
+## [5,]    7   13
+## [6,]   10    8
 ```
 ]
 
 .pull-right[
+
+```
+## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.
+## i Using compatibility `.name_repair`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+```
+
 &lt;img src="20240207_files/figure-html/unnamed-chunk-3-1.png" width="420" /&gt;
 ]
 
@@ -260,12 +280,12 @@ head(z)
 
 ```
 ##            [,1]        [,2]
-## [1,]  0.3788027  0.13322384
-## [2,]  0.2446291  0.03379665
-## [3,] -1.4204016 -1.04818956
-## [4,]  0.3470682  0.05926189
-## [5,]  1.2204730  1.27569449
-## [6,] -1.8960003 -1.77834455
+## [1,] -1.0776954 -1.26590243
+## [2,] -1.0604577 -1.00464119
+## [3,]  0.2211185 -0.20607284
+## [4,]  1.2465226  0.73634468
+## [5,] -0.7217266 -0.30546955
+## [6,]  0.3035781  0.08892461
 ```
 ]
 
@@ -287,13 +307,13 @@ head(u)
 ```
 
 ```
-##           [,1]       [,2]
-## [1,] 0.6475828 0.55299182
-## [2,] 0.5966282 0.51348035
-## [3,] 0.0777454 0.14727564
-## [4,] 0.6357300 0.52362824
-## [5,] 0.8888572 0.89896823
-## [6,] 0.0289800 0.03767364
+##           [,1]      [,2]
+## [1,] 0.1405849 0.1027740
+## [2,] 0.1444682 0.1575348
+## [3,] 0.5874999 0.4183670
+## [4,] 0.8937137 0.7692395
+## [5,] 0.2352313 0.3800043
+## [6,] 0.6192753 0.5354291
 ```
 ]
 
@@ -316,12 +336,12 @@ head(x_new)
 
 ```
 ##      [,1] [,2]
-## [1,]   11   10
-## [2,]   11   10
-## [3,]    6    7
-## [4,]   11   10
-## [5,]   14   14
-## [6,]    4    5
+## [1,]    7    6
+## [2,]    7    7
+## [3,]   11    9
+## [4,]   14   12
+## [5,]    8    9
+## [6,]   11   10
 ```
 ]
 
