@@ -1,12 +1,12 @@
 ---
-title: "Methods for Biological Data Workshop"
+title: "Simulation - Methods for Biological Data Workshop"
 format:
   html:
     code-fold: true
 date: "`r Sys.Date()`"
 ---
 
-```{r echo=FALSE, message = FALSE}
+```{r echo = FALSE, message = FALSE}
 #| label: setup
 knitr::opts_chunk$set(
   fig.align = "center",
@@ -44,21 +44,24 @@ th <- theme_classic() +
   )
 
 theme_set(th)
-```
 
-```{r}
-#| label: packages
-library(Matrix)
-library(SingleCellExperiment)
-library(edgeR)
-library(gamboostLSS)
-library(genefilter)
-library(ggrepel)
-library(glue)
-library(scDesign3)
-library(splines)
-library(tidyverse)
-library(scDesigner)
+heatmap <- function(...) {
+  stats::heatmap(..., col=hcl.colors(15, "Zissou"))
+}
+
+suppressPackageStartupMessages(library(Matrix))
+suppressPackageStartupMessages(library(SingleCellExperiment))
+suppressPackageStartupMessages(library(SpatialExperiment))
+suppressPackageStartupMessages(library(SpiecEasi))
+suppressPackageStartupMessages(library(edgeR))
+suppressPackageStartupMessages(library(gamboostLSS))
+suppressPackageStartupMessages(library(genefilter))
+suppressPackageStartupMessages(library(ggrepel))
+suppressPackageStartupMessages(library(glue))
+suppressPackageStartupMessages(library(scDesign3))
+suppressPackageStartupMessages(library(splines))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(scDesigner))
 ```
 
 ## Traditional scDesign
@@ -67,7 +70,6 @@ library(scDesigner)
 #| label: read
 mapping <- read_csv("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/mapping.csv")
 samples <- read_csv("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/filtered_samples.csv")
-samples
 ```
 
 
@@ -77,7 +79,6 @@ samples_long <- samples |>
   pivot_longer(-sample, names_to = "ASV") |>
   filter(ASV %in% glue("ASV{1:16}")) |>
   left_join(mapping)
-samples_long
 ```
 
 ```{r}
@@ -398,14 +399,14 @@ differential_test <- function(dge, col_data, max_p = 1) {
 
 
 ```{r}
-yachida <- readRDS("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/yachida.rds")
-results <- DGEList(assay(yachida), colData(yachida)$disease) |>
-  calcNormFactors() |>
-  differential_test(colData(yachida))
+yachida <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/yachida.rds"))
+dge <- DGEList(assay(yachida), group = colData(yachida)$disease) |>
+  calcNormFactors()
 
+results <- differential_test(dge, colData(yachida))
 ggplot(results, aes(logFC, -log(adj.P.Val, 10))) +
   geom_point() +
-  geom_text_repel(data = filter(test_results,  abs(logFC) > 2), aes(label = ID), size = 3)
+  geom_text_repel(data = filter(results,  abs(logFC) > 2), aes(label = ID), size = 3)
 ```
 
 ```{r}
@@ -427,7 +428,7 @@ assignments <- c(rep("CRC", N), rep("healthy", N))
 new_data <- tibble(disease = factor(assignments, levels = c("healthy", "CRC")))
 simulated <- sample(sim, new_data = new_data)
 
-new_results <- DGEList(2 ^ assay(simulated), colData(simulated)$disease) |>
+new_results <- DGEList(2 ^ assay(simulated), group = colData(simulated)$disease) |>
   differential_test(colData(simulated)) |>
   mutate(null = ID %in% nulls)
 
