@@ -1,0 +1,508 @@
+---
+title: "`scDesigner` Exercises"
+format:
+  html:
+    code-fold: true
+date: "`r Sys.Date()`"
+title: "Untitled"
+---
+
+```{r}
+#| label: setup
+library(SingleCellExperiment)
+library(curatedMetagenomicData)
+library(edgeR)
+library(gamboostLSS)
+library(genefilter)
+library(ggrepel)
+library(glue)
+library(scDesign3)
+library(splines)
+library(tidyverse)
+library(scDesigner)
+set.seed(20240207)
+my_theme <- theme_classic() +
+  theme(
+    axis.text = element_text(size = 12),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    legend.title = element_text(size = 14),
+    strip.text = element_text(size = 10)
+  )
+theme_set(my_theme)
+```
+
+## Traditional scDesign
+
+```{r}
+#| label: read
+mapping <- read_csv("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/mapping.csv")
+samples <- read_csv("https://github.com/krisrs1128/talks/raw/master/2024/20240207/data/filtered_samples.csv")
+samples
+```
+
+
+```{r}
+#| label: prepare-plot
+samples_long <- samples |>
+  pivot_longer(-sample, names_to = "ASV") |>
+  filter(ASV %in% glue("ASV{1:16}")) |>
+  left_join(mapping)
+samples_long
+```
+
+```{r}
+ggplot(samples_long) +
+  geom_line(aes(time, value, col = phase, group = subject)) +
+  scale_y_log10() +
+  facet_wrap(~ reorder(ASV, -value))
+```
+
+```{r}
+#| label: setup_experiment
+exper <- SingleCellExperiment(
+  assays = list(counts = t(samples[, -1]))
+)
+colData(exper) <- DataFrame(mapping)
+colData(exper)$celltype <- rep("A", nrow(mapping))
+rownames(colData(exper)) <- mapping$sample
+```
+
+```{r}
+scdesign_result <- scdesign3(
+  exper,
+  pseudotime = "time", 
+  celltype = "celltype", 
+  spatial = NULL, 
+  other_covariates = NULL,
+  mu_formula = "s(time, k = 10, bs = 'cr')",
+  sigma_formula = "s(time, k = 5, bs = 'cr')",
+  corr_formula = "1",
+  trace = TRUE
+)
+```
+
+```{r}
+data.frame(t(scdesign_result$new_count)) |>
+  rownames_to_column("sample") |>
+  pivot_longer(-sample, names_to = "ASV") |>
+  filter(ASV %in% glue("ASV{1:16}")) |>
+  left_join(mapping) |>
+  ggplot() +
+  geom_line(aes(time, value, group = subject)) +
+  scale_y_log10() +
+  facet_wrap(~ reorder(ASV, -value))
+```
+
+## scDesigner
+
+```{r}
+margins <- setup_margins(exper, ~ phase, ~ NBinomialLSS())
+margins
+```
+
+```{r}
+fit <- estimate(margins, exper)
+plot_univariate(fit, exper)
+```
+
+```{r}
+margins <- margins |>
+  mutate(link = list(mu = ~ phase, sigma = ~ 1))
+margins
+```
+
+```{r}
+fit <- estimate(margins, exper)
+plot_univariate(fit, exper)
+
+fit <- margins |>
+  mutate(link = list(mu = ~ ns(time, 10), sigma = ~ 1)) |>
+  estimate(exper)
+plot_univariate(fit, exper, line_opts = list(linewidth = 2))
+```
+
+```{r}
+sample(fit)
+samples_df <- sample(fit) |>
+  pivot_experiment()
+samples_df
+```
+
+```{r, fig.width = 10, fig.height = 5}
+ggplot(samples_df) +
+  geom_line(aes(time, log(1 + value), col = phase, group = subject), alpha = 0.4) +
+  guides(col = guide_legend(override.aes = list(linewidth = 2, alpha = 1))) +
+  facet_wrap(~ reorder(feature, -value), ncol = 10)
+```
+
+We can get more replicates 10 replicates.
+
+```{r}
+sample(fit, 10)
+```
+
+
+## Microbiome Networks
+
+Unlike human social networks, there is no simple way to observe microbe-microbe
+interactions -- we have to make do with indirect evidence. One approach uses
+population profiles as a proxy for ecological interaction. Taxa that often
+co-occur are understood to have cooperative ecological interactions, while those
+that don't are thought to compete for the same niche.
+
+Many algorithms have been designed around this intuition, all trying to go
+beyond simple co-occurrence and instead capture more complex types of
+dependence. A challenge in practice is that it's hard to know which method to
+use when, since the problem is unsupervised. Even when thorough simulation
+benchmarking studies are available, it's often not obvious how well those
+simulation setups match our problems of interest.
+
+Let's use `scDesigner` to benchmark network estimation methods using data from
+rounds 1 and 2 of the [American Gut
+Project](https://journals.asm.org/doi/10.1128/msystems.00031-18). We will
+simulate data with known correlation structure and taxa-level marginals
+estimated from the study data. The block below reads in the data.
+
+```{r}
+#| label: read-data
+counts <- read_csv("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/amgut-counts.csv") |>
+  column_to_rownames("taxon")
+metadata <- read_csv("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/amgut-metadata.csv")
+
+exper <- SummarizedExperiment(
+  assays = SimpleList(counts = as.matrix(counts)),
+  colData = metadata
+)
+```
+
+a. Estimate a simulator with the taxon-wise regression formula
+`~log(sequencing_depth) + BMI`. Comment on the quality of the fitted model.
+
+We've estimated a zero-inflated negative binomial location-shape-scale
+(`ZINBLSS`) models for each gene, using a gaussian copula to capture dependence.
+The data structure below captures all the simulator components, and we can swap
+pieces in and out to modify the form of the simulator. For example, if we
+wanted, we could `mutate` the family and link function associated with
+particular features.
+
+```{r}
+#| label: example-sim
+sim <- setup_simulator(
+  exper,
+  ~ log(sequencing_depth) + BMI,
+  ~ ZINBLSS()
+) |>
+  estimate(mstop = 100)
+sim
+```
+
+The simulated data is always a `SummarizedExperiment`. This means that any
+workflow that applied to the original data can be applied to the simulated one
+without any changes. Notice also that `sample` defaults to drawing samples from
+the same design as the original input experiment (we'll modify this using the
+`new_data` argument in a minute).
+
+```{r}
+simulated <- sample(sim)
+simulated
+```
+
+Let's compare the marginal count distributions for the real and simulated data.
+We'll need the data in "long" format to be able to make the ggplot2 figure. The
+`pivot_experiment` helper can transform the original `SummarizedExperiment`
+objects in this way. Notice that the simulated data tends to overestimate the
+number of zeros in the high-abundance taxa. To refine the simulator, we should
+probably replace the zero-inflated negative binomial with ordinary negative
+binomials for these poorly fitted taxa.
+
+```{r, fig.width = 9, fig.height = 5}
+#| label: histogram-critique
+bind_rows(
+  real = pivot_experiment(exper),
+  simulated = pivot_experiment(simulated),
+  .id = "source"
+) |>
+  filter(feature %in% rownames(simulated)[1:20]) |>
+  ggplot() +
+  geom_histogram(
+    aes(log(1 + value), fill = source),
+    position = "identity", alpha = 0.8
+  ) +
+  facet_wrap(~ reorder(feature, value), scales = "free")
+```
+
+Are the learned relationships with BMI plausible? We can compare scatterplots of
+the real and simulated data against this variable. Note that, by default, the
+ribbons will be evaluated along all variables, which makes for the jagged
+ribbons (neighboring values for BMI might have different sequencing depth,
+potentially leading to quite different predictions). To remove this artifact, we
+can assume that all samples had exactly the same sequencing depth.
+
+```{r, fig.width = 12, fig.height = 4}
+#| label: bmi-scatter
+new_data <- colData(exper) |>
+  as_tibble() |>
+  mutate(sequencing_depth = 2e4)
+plot(sim, "BMI", sample(sim, new_data = new_data), new_data = new_data)
+```
+
+b. Visualize the correlation matrix estimated by the simulator's copula model.
+Pick a pair of taxa with high correlation under this model and visualize the
+joint distribution of their ranks. Is the model's estimate appropriate?
+
+There are a few pairs of taxa that are very highly correlated, and there are
+also a few taxa that seem to have higher correlation across a large number of
+taxa (e.g., the taxon in row 34). There is no obvious banding or block structure
+in this real data, though.
+
+```{r, fig.width = 5, fig.height = 5}
+#| label: correlation-heatmap
+rho <- copula_parameters(sim)
+heatmap(rho)
+```
+
+The pair below is one of those with high positive correlation. You can replace
+the selection with the commented out line to see what one of the anticorrelated
+pairs of taxa looks like.
+
+```{r, fig.width = 5, fig.height = 5}
+#| label: correlation-pairs
+#taxa <- rownames(exper)[c(33, 43)]
+taxa <- rownames(exper)[c(14, 25)]
+pivot_experiment(exper) |>
+  filter(feature %in% taxa) |>
+  pivot_wider(names_from = feature) |>
+  ggplot() +
+  geom_point(aes(log(1 + .data[[taxa[1]]]), log(1 + .data[[taxa[2]]])))
+```
+
+c. Replace the correlation matrix with a design of your own. Simulate data from
+this modified model and estimate the microbe interaction network using (i) the
+SpiecEasi algorithm and (ii) the Ledoit-Wolfe covariance estimator. According to
+your benchmark, which method is preferable? How might you refine your simulator
+to improve its faithfulness to the covariance you observed in (b)?
+
+Let's replace the current copula correlation structure with one from a block
+diagonal matrix. In this example, the off-diagonal correlations are 0.6. We can
+use `mutate_correlation` to swap this new correlation matrix into our earlier
+simulator.
+
+```{r}
+#| label: mutate-correlation
+rho <- c(0.4, .6, 0.8) |>
+  map(~ matrix(., nrow = 15, ncol = 15)) |>
+  bdiag() |>
+  as.matrix()
+diag(rho) <- 1
+
+simulated <- sim |>
+  mutate_correlation(rho) |>
+  sample()
+
+x <- t(assay(simulated))
+```
+
+Let's first look at the [`SpiecEasi` covariance estimate](https://github.com/zdk123/SpiecEasi). This is a variant of the
+graphical lasso that is designed to be well-adapted to microbiome data. The good
+news is that it does warn that the default choices of $\lambda$ are too large,
+which is correct in this case. Unfortunately, it took a while to get this
+answer, and we had already been quite generous in allowing it to fit 10 choices
+of $\lambda$.
+
+```{r}
+#| label: spieceasi
+rho_se <- spiec.easi(x, nlambda = 10, pulsar.params = list(rep.num = 1)) |>  getOptCov() |>
+  as.matrix() |>
+  cov2cor()
+heatmap(rho_se)
+```
+
+Let's instead use the Ledoit-Wolfe estimator on the log-transformed data. The
+results make much more sense.
+
+```{r}
+#| label: lw
+rho_lw <- CovEst.2003LW(log(1 + x))$S |>
+  cov2cor()
+heatmap(rho_lw)
+```
+
+Since color comparisons are difficult to evaluate precisely, we can also make a
+scatterplot comparing the different covariance estimators.
+
+```{r}
+#| label: covariance-metrics
+data.frame(truth = c(rho), se = c(rho_se), lw = c(rho_lw)) |>
+  pivot_longer(-truth, values_to = "estimate") |>
+  ggplot() +
+  geom_jitter(aes(truth, estimate, col = name), alpha = 0.6, size = 0.4) +
+  geom_abline(slope = 1) +
+  facet_wrap(~name)
+```
+
+This example shows that, when we start with real template data, it's not too
+hard to setup a benchmarking experiment. It's generally easier to reconfigure
+the components of an existing simulator than it is to specify all the simulation
+steps from scratch. There is the secondary bonus that the data tend to look
+close to real data of interest, at least up to the deliberate transformations
+needed to establish ground truth.
+
+We could imagine extending this example to include different data properties
+(sample sizes, variable block sizes and correlations, more general correlation
+structure) and estimation strategies (alternative transformations or
+estimators). Design changes could be implemented using `expand_colData`, changes
+in the signal can be specified as above with `mutate_correlation`, and any
+workflow can be used as long as it applies to a `SummarizedExperiment` object.
+
+### Differential Testing Power Analysis
+
+```{r}
+differential_test <- function(dge, col_data, max_p = 1) {
+  design <- model.matrix(~ disease, data = col_data)
+  voom(dge, design) |> # account for differences in uncertainty
+    lmFit(design) |>
+    eBayes() |>
+    topTable(p.value = max_p, number = Inf) |>
+    arrange(adj.P.Val) |>
+    rownames_to_column("ID")
+}
+
+dge <- DGEList(counts = assay(yachida), group = colData(yachida)$disease) |>
+  calcNormFactors() # normalize across different depths
+test_results <- differential_test(dge, colData(yachida))
+ggplot(test_results, aes(logFC, -log(adj.P.Val, 10))) +
+  geom_point() +
+  geom_text_repel(data = filter(test_results,  abs(logFC) > 2), aes(label = ID), size = 3)
+```
+
+```{r}
+assays(yachida, withDimnames = FALSE)$normalized <- cpm(dge, log = TRUE)
+sim <- setup_simulator(
+    yachida, 
+    ~ disease,
+    ~ GaussianLSS()
+  ) |>
+  estimate(yachida, "normalized")
+```
+```{r}
+nulls <- tail(test_results$ID, 60)
+sim <- sim |>
+  mutate(any_of(nulls), link = ~ 1) |>
+  estimate(yachida, "normalized")
+```
+
+```{r}
+# vary the sample size
+n_per <- 250
+new_data <- tibble(disease = factor(c(rep("CRC", n_per), rep("healthy", n_per)), levels = c("healthy", "CRC")))
+simulated <- sample(sim, new_data = new_data)
+
+new_dge <- DGEList(counts = 2 ^ assay(simulated), group = colData(simulated)$disease)
+new_results <- differential_test(new_dge, colData(simulated)) |>
+  mutate(null = ID %in% nulls)
+
+new_results |>
+  ggplot(aes(logFC, -log(adj.P.Val, 10), col = null)) +
+  geom_point() +
+  geom_text_repel(data = filter(new_results,  abs(logFC) > 1.5), aes(label = ID), size = 3) +
+  facet_wrap(~ null)
+```
+
+### Augmenting Spatial Data
+
+Modern molecular biology aims to build a map of the cell, its molecular
+machinery, and its relationships within larger systems (e.g., the circulatory
+system). Yet, until 2018 - 2020, this map had no sense of spatial orientation.
+This has changed with the advent of spatial sequencing technologies, where we
+can now measure the abundances of individual molecules together with their
+spatial location within tissue samples.
+
+In this exercise, we will build a model of spatial transcription in the
+dorsolateral prefrontal cortex (DLPFC). This model could then be used downstream
+to create negative controls and ensure properly calibrated spatial differential
+expression analysis. The block below reads a small subset of [DLPFC
+data](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8095368/) into an object of
+class [`SpatialExperiment`](https://github.com/drighelli/SpatialExperiment). 
+
+```{r}
+#| label: spatial-estimation
+spatial_experiment <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2023/20231206/exercises/dlpfc-v2.rds"))
+```
+
+a. Visualize the spatial gene expression pattern associated with a subset of
+genes of your choice. What is the extent of spatial smoothness? How skewed are
+the expression levels?
+
+For the genes that we've selected, there is a trend where the expression levels
+increase along individual rows but don't change too much along a single column,
+once they're within a certain closed region (though see the refinements below).
+
+```{r}
+#| label: raw-data
+coords <- spatialCoords(spatial_experiment)
+
+t(assay(spatial_experiment)[1:3, ]) |>
+  as.matrix() |>
+  bind_cols(coords) |>
+  pivot_longer(-starts_with("pxl")) |>
+  ggplot() +
+  geom_point(aes(pxl_col_in_fullres, pxl_row_in_fullres, col = log(1 + value))) +
+  facet_wrap(~ name)
+```
+
+b. Estimate a simulator based on your observations from (a). Visualize the
+estimated mean functions across the tissue (not just at the observed locations).
+
+The simulator formulas can only refer to columns in the experiment's `colData`.
+This makes this problem a bit tricky, since the relevant spatial predictors are
+not available in this way.
+
+```{r}
+#| label: original-names
+colnames(colData(spatial_experiment))
+```
+
+We could always manually input them using the same `spatialCoords` function that
+we used to make the plot above. There is a more direct way using `augment`, made
+possible because `scDesigner` can check experiment data classes in order to
+identify relevant variables for modeling:
+
+```{r}
+#| label: augmented-names
+spatial_experiment <- augment(spatial_experiment)
+colnames(colData(spatial_experiment))
+```
+
+We'll just use the interaction between two univariate spline functions. We're
+using negative binomial models -- it's educational to try out other families
+(e.g., `GaussianLSS`, `StudentTLSS`, or `ZIPoLSS`).
+
+```{r}
+#| label: fit-spatial
+simulator <- spatial_experiment |>
+  setup_margins(~ ns(pxl_col_in_fullres, 3) * ns(pxl_row_in_fullres, 3), ~ NBinomialLSS()) |>
+  estimate(spatial_experiment, mstop = 50)
+```
+
+We can visualize the results using `plot_bivariate`. The smoothed values reveal
+that there is a subtle increasing trend from lower to higher
+`pxl_row_in_fullres` values within the main expression blocks -- this was hard
+to tease out from the original data and is one of the benefits of fitting a
+model.
+
+```{r fig.height = 7, fig.width = 9}
+#| label: vis-spatial
+features <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
+plot_bivariate(simulator, spatial_experiment, features, max_print = 20) +
+  labs(
+    "fill" = expression(log(1 + count)),
+    "color" = expression(log(1 + count))
+  )
+```
+
+Given this simulator, we can imagine planting negative controls by removing the
+spatial structure for some genes. This can be helpful for calibrating spatial
+differential expression tests. Alternatively, we could evaluate spatial
+clustering methods by defining a ground truth where many genes are simulated
+from exactly the same probability model.
