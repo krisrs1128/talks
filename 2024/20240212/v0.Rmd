@@ -1,0 +1,754 @@
+---
+title: Interpretability
+author: Kris Sankaran
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    fig_caption: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+css: custom.css
+---
+
+```{r, echo = FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE)
+library(RefManageR)
+bib <- ReadBib("references.bib")
+```
+
+
+<div id="links">
+Workshop on Trustworthy Machine Learning<br/>
+Slides: <a href="https://go.wisc.edu/4y9176">go.wisc.edu/4y9176</a>
+</div>
+<div id="title">
+Interpretable Machine Learning <br> 
+
+<span style="font-size: 30px">
+What's Possible? What's Next?
+</span>
+</div>
+
+<br/>
+<div id="subtitle">
+Kris Sankaran <br/>
+<a href="https://go.wisc.edu/">go.wisc.edu/</a> <br/>
+12 | February | 2023 <br/>
+</div>
+
+---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+.pull-left[
+Decisions: They can be automate or assist with judgments that previously would
+have been done entirely by people.
+]
+
+.pull-right[
+  Figures for advertisements (google)
+  and for diagnosis (X-ray)
+]
+
+---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+.pull-left[
+  Discovery: They can orient us within large data catalogs and can guide us
+  towards promising hypotheses.
+]
+
+.pull-right[
+ Figures of satellite imagery with greenhouse gas monitoring
+ Figure of next generation sequencing data, maybe visium
+]
+
+---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+.pull-left[
+  Creativity: They can make it easier for those without technical training to
+  explore ideas and express themselves.
+]
+
+.pull-right[
+  AI assisted artwork
+  AI assisted font design
+  Gmail autoreplies...
+]
+
+---
+
+### The Challenge
+
+Each class of problems comes with subtle objectives. We should...
+
+* [Decision-Making] Respect the right-to-explanation.
+* [Decision-Making] Promote socially-agreed-upon ideas of fairness.
+* [Decision-Making] Avoid introducing new types of mistakes [cite Lipton]
+* [Discovery] Ensure that analysis are reproducible.
+* [Discovery] Highlight parsimonious and testable explanations.
+* [Creativity] Allow user interaction and control.
+* [Creativity] Avoid the homogeneization of perspectives.
+
+---
+
+### The Challenge
+
+Yet, for so much of model development, practitioners still focus on
+out-of-sample prediction error.
+
+We need ways to encode the less obvious objectives as well.
+
+---
+
+# What Makes a Model Interpretable?
+<br/>
+.center[
+<img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/>
+]
+
+---
+
+# What Makes a Model Interpretable?
+<br/>
+.center[
+<img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/>
+]
+
+<p style="font-size: 30px; position: absolute; left: 20px; top: 200px; width: 450px">
+This is a difficult questions....
+let's start with an easier one.
+</p>
+
+---
+
+# What Makes a Visualization Good?
+<br/>
+.center[
+<img src="figures/visualization.png" width=350 style="position: absolute; left: 450px"/>
+]
+
+---
+
+### At-the-Surface
+
+A good visualization is:
+
+1. Legible: It knows to omit extraneous, distracting elements.
+1. Annotated: All axes and graphical encodings should be described.
+1. Information-Dense: A large amount of variation should be communicated
+efficiently.
+
+---
+
+### Below-the-Surface
+
+More subtlely, it should pay attention to:
+
+1. Data Provenance: If we don't know the data sources, we should be skeptical or
+anything that's shown, no matter how compelling.
+1. Audience: The effectiveness of a visualization is dependent on the visual
+vocabulary of its audience.
+1. Prioritization: Every design emphasizes some comparisons over others. Are the
+comparisons honest, and are the "important" patterns visible?
+1. Interactivity: Does it engage the reader's problem solving capacity or
+spoonfeed them trivialities?
+
+---
+
+### Analogy
+
+The nuance with which we can think about visualization can be translated to
+interpretability.
+
+*  Legibility $\to$ Parsimony, Modularity
+*  Annotation $\to$ Explanations, Simulatability
+*  Information Density $\to$ Variance Explained, Prediction Performance
+
+Whether or not a model is interpretable is as subtle as whether a visualization
+is effective.
+
+---
+
+### Historical Context
+
+1. **Initial Wave**: Early ML systems required expert-crafted features. Deep learning
+removed this requirement, creating a new need for post-hoc expalnations.
+
+1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
+and commentaries attempt to establish shared vocabulary (Lipton 2018, Adebayo
+2018, Murdoch 2019, Rudin 2019).
+
+1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
+evaluation, and substantive theory -- these are beginning to emerge.
+
+.center[
+  <img src="timeline"/>
+]
+
+---
+
+### Vocabulary
+
+1. **Interpretable Model**: A model that, by virtue of its design, is easy for
+its stakeholders to accurately describe and alter.
+1. **Explainability Technique**: A method that shapes our mental models about
+black box systems.
+
+.center[
+  <img src="figures/black_box_flashlight.png" width=720/>
+]
+
+---
+
+### Vocabulary
+
+1. **Local Explanation**: An artifact for reasoning about individual predictions.
+
+1. **Global Explanation**: An artifact for reasoning about an entire model.
+
+.center[
+<img src="figures/explanation_types.png" width=800/>
+]
+
+---
+
+## Methods
+
+---
+
+### Running Example
+
+Problem: Imagine sampling longitudinal microbiome profiles from 500 study
+participants, some of whom eventually developed a disease. Can we discovery any
+microbiome-related risk factors?  This simulation is motivated by studies of HIV risk
+in the FRESH cohort `r Citep(bib, 'Gosmann2017LactobacillusDeficientCB')`.
+
+.center[
+  <img src="figures/simulated-data.svg"/>
+]
+
+---
+
+### Data Organization
+
+We can frame this as a regression problem where all 50 timepoints and 144
+species are stacked horizontally.
+
+.center[
+  <img src="figures/widened_data.jpeg" width=600/>
+]
+---
+
+### Directly Interpretable Models
+
+More interpretable models tend to support,
+
+1. Parsimony: Predictions can be traced to a few input features, low-order
+interactions, or latent factors.
+2. Simulatability: Given a new input and a description of the model, a model
+user can make a prediction with relatively little effort.
+
+.center[
+<img src="figures/parsimony_types.png" width=800/>
+]
+
+---
+
+### Sparse Logistic Regression
+
+.pull-left[
+1. We can reach ~ 77% accuracy using only 38 of the original 7200 features.
+
+1. Each coefficient has a simple species $\times$ time interpretation.
+```
+# A tibble: 7,201 x 2
+   term      estimate
+   <chr>        <dbl>
+ 1 tax13_24     0.593
+ 2 tax114_26    0.555
+ 3 tax66_50     0.457
+ 4 tax105_36    0.289
+ 5 tax46_30     0.261
+ 6 tax46_19     0.232
+```
+]
+
+.pull-right[
+<img src="figures/lasso_estimates.svg" width=320/>
+]
+
+---
+
+### Decision Trees
+
+Using a decision tree, we can reach ~ 74% accuracy. We only need 17 splits!
+
+.pull-three-quarters-left[
+<img src="figures/final_rpart_tree.svg" width=700/>
+]
+.pull-three-quarters-right[
+<img src="figures/tree_tuning.svg"/>
+]
+
+---
+
+### Instability
+
+.pull-left[
+1. Troublingly, the outputs from both approaches are unstable. We should not
+trust these interpretations, no matter how "directly interpretable" the model
+class.
+2. In the simulation, this is a consequence of correlated features -- adjacent
+timepoints have similar values.
+]
+
+.pull-right[
+<img src="figures/lasso_instability.svg"/>
+]
+
+---
+
+### Feature Engineering
+
+To address this, we decide to reduce dimensionality by handcrafting some
+features: overall slope and curvature for each taxon.
+
+.center[
+  <img src="figures/widened_data.jpeg" width=600/>
+]
+
+---
+
+### Feature Engineering
+
+.pull-left[
+1. The best performing lasso model achieves a performance of ~ 86% using 55 of
+the 289 derived features. The best tree achieves ~ 71% accuracy from two splits.
+
+1. Lesson: In the original feature space, there was an interpretability-accuracy
+trade. However, it's possible to choose *more interpretable and more predictive
+representatives.*
+]
+
+.pull-right[
+  <img src="figures/lasso_derived_estimates.svg" width=390/>
+  <!-- <img src="figures/rpart_final_derived.svg"/> -->
+]
+
+---
+
+### Feature Engineering
+
+.pull-left[
+1. The best performing lasso model achieves a performance of ~ 86% using 55 of
+the 289 derived features. The best tree achieves ~ 71% accuracy from two splits.
+
+1. Lesson: In the original feature space, there was an interpretability-accuracy
+trade. However, it's possible to choose *more interpretable and more predictive
+representatives.*
+]
+
+.pull-right[
+  <img src="figures/final_rpart_derived.svg"/>
+]
+
+---
+
+### Transformers
+
+1. One driving principle of deep learning is that, with sufficiently many examples,
+end-to-end optimization should be preferred to expert design.
+  - Easier to implement, more accurate.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+  - We expect this to automatically learn predictive features.
+
+---
+
+### Transformers
+
+.pull-left[
+Applying a transformer model to the raw series, we reach a hold-out performance
+of ~ 84%, which is nearly as good as the lasso with hand-derived features.
+]
+
+.pull-right[
+<img src="figures/transformer_probs.png"/>
+]
+
+---
+
+### Aside: Transformers Mechanics
+
+---
+
+### Aside: Transformers Mechanics
+
+---
+
+### Embeddings
+
+We can obtain a global explanation by analyzing intermediate representations
+("embeddings") within the deep learning architecture. This is the result of the
+PCA applied to the original data and transformer-derived embeddings.
+
+.center[
+<img src="figures/pca_comparison.svg"/>
+]
+
+---
+
+### Interactions via Embeddings
+
+In text data, we can understand context-dependent meaning by looking for
+clusters after applying PCA to the embeddings. These represent a type of
+interaction between features.
+
+.center[
+<img src="figures/bert_context.png"/>
+]
+
+---
+
+### Interaction via Embeddings
+
+We can build the analogous visualization for our microbiome problem.
+
+* Word $\to$ Microbe
+* Clusters of Meaning $\to$ Subcommunities containing that microbe
+
+.center[
+<img src="figures/species_21_series.svg" width=800/>
+]
+
+---
+
+### Interpolations
+
+Another common technique is to analyze linear interpolations in this space (ref.
+Latent Space Cartography).  Here, I have traced out the microbiome profiles
+lying between two groups.
+
+.center[
+<img src="figures/species_21_interpolation.svg" width=940/>
+]
+
+---
+
+### Distillation
+
+1. Distillation is another form of global summarization. It uses a transparent
+model to approximate a black box.
+
+1. For example, Tan et al. (2018) audited proprietary policing and loan models
+using iterative generalized additive models.
+
+.center[
+  <img src="figures/distillation-details.png"/>
+]
+
+---
+
+### Distillation
+
+.pull-left[
+If we fit a Decision Tree to the predicted probabilities from our transformer,
+we obtain slightly better performance than if we had fit the Decision Tree
+originally.
+
+\begin{align}
+\hat{p}^{\text{transformer}}_{i} \sim f\left(x_{i}\right) + \epsilon_{i}
+\end{align}
+
+]
+
+.pull-right[
+  <img src="figures/distillation_example.png"/>
+]
+
+---
+
+### Iterative Structuration
+
+.pull-left[
+1. One perspective is that we are treating the black box itself as the object of
+data analysis.
+
+1. Like in any data analysis, it is important to assess the quality of the
+approximation.
+]
+
+.pull-right[
+<img src="figures/iterative_structuration.png"/>
+]
+
+---
+
+### Perturbation
+
+If you want an explanation for a generic model’s decision on an instance, one
+approach is to perturb that input and see how the prediction could have changed.
+
+<img src="figures/perturbation_types.png"/>
+
+---
+
+### Integrated Gradients
+
+For example, we can compute the gradient of each class as we perturb a reference
+towards a sample of interest.
+
+\begin{align*}
+\left(x_{i} - x_{i}'\right) \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right)\right)}{\partial x_{i}} d\alpha
+\end{align*}
+
+---
+
+### Integrated Gradients
+
+For example, we can compute the gradient of each class as we perturb a reference
+towards a sample of interest.
+
+.center[
+  <img src="figures/integrated_gradients_animation.gif" width=1200/>
+]
+
+---
+
+### Integrated Gradients
+
+In our microbiome example, this can highlight the species and timepoints that
+are most responsible for the disease vs. healthy classification of each example.
+
+.center[
+<img src="figures/microbiome_integrated_gradients.svg"/>
+]
+
+---
+
+### Sanity Checks
+
+Evaluating local explanations is notoriously subjective. Some researchers have
+proposed automatic "sanity checks" (Adebayo et al. 2018).
+
+.center[
+  <img src="figures/sanity_checks.png" width=680/>
+]
+
+There have also been theoretical results that identify situations where feature
+attribution is unidentified (Bilodeau et al. 2023).
+
+---
+
+### Concept Bottlenecks
+
+Alternatively, we can explain a decision by reducing the arbitrary feature space
+to a set of human-interpretable concepts (Koh, 2020). This requires dense,
+concept-level annotations for every sample.
+
+.center[
+<img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
+]
+
+---
+
+### Concept Bottlenecks
+
+In the microbiome example, we could define interpretable "concepts" by looking
+at the taxa trends for commonly co-varying groups of species.
+
+.center[
+<img src="figures/concept_1.svg"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+In the microbiome example, we could define interpretable "concepts" by looking
+at the taxa trends for commonly co-varying groups of species.
+
+.center[
+<img src="figures/concept_2.svg"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+We reconfigure our transformer model to first predict the concept label before
+making a final classification.
+
+.center[
+  Modified architecture
+]
+
+---
+
+### Concept Bottlenecks
+
+.pull-left[
+Performance is in fact slightly better than before (85%), and we also obtain
+concept labels to help us explain each instance's prediction. 
+]
+
+.pull-right[
+<img src="figures/concept_probs.png"/>
+]
+
+---
+
+### Simulation Mechanism
+
+Here is the simulation mechanism that we used.
+
+.center[
+  Come up with a visual representation of this mechanism, starting with
+  increasing/decreasing, continuing to nearest neighbors in the concept space
+]
+
+---
+
+## Discussion
+
+---
+
+### Generalist Models
+
+.pull-left[
+1. **Modern deep learning models are being designed to solve many problems
+simultaneously.**
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+
+1. We are also seeing increasingly rich ways to communicate with them.
+]
+
+.pull-right[
+  <img src="figures/generalist_models.png"/>
+]
+
+---
+
+### Generalist Models
+
+.pull-left[
+1. Modern deep learning models are being designed to solve many problems
+simultaneously.
+
+1. **Since deep learning architectures are composable, they can handle multimodal
+settings easily.**
+
+1. We are also seeing increasingly rich ways to communicate with them.
+]
+
+.pull-right[
+  <img src="figures/open_vocabulary.gif"/>
+]
+---
+
+### Generalist Models
+
+.pull-left[
+1. Modern deep learning models are being designed to solve many problems
+simultaneously.
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+
+1. **We are also seeing increasingly rich ways to communicate with them.**
+
+]
+
+.pull-right[
+  <img src="figures/image_editing.gif"/>
+]
+
+---
+
+### Shared Language
+
+However, this communication has been essentially one-way. Models don't always
+behave in the ways we expect, and they do not offer artifacts to guide
+interpretation.
+
+---
+
+### Visualization Metaphor
+
+We can look to data visualization for inspiration. 
+
+1. People from many backgrounds are comfortable reading and creating data
+visualizations.
+
+1. Visualization tools provide shared representations between code and thought,
+and they encourage critical evaluation of data.
+
+---
+
+### Visualization Metaphor
+
+Model interpretability still seems quite far from this potential.
+
+1. How will interpretable ML appear in future news and scientific reports?
+
+1. What interpretable ML tools will be taught to undergraduates across
+disciplines?
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 6)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 7, end = 10)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 11, end = 14)
+```
+
+
+---
+
+### Attributions
+
+explainable reinforcement learning by iconpro86 from <a href="https://thenounproject.com/browse/icons/term/explainable-reinforcement-learning/" target="_blank" title="explainable reinforcement learning Icons">Noun Project</a> (CC BY 3.0)
+
+data visualization by Iconiqu from <a href="https://thenounproject.com/browse/icons/term/data-visualization/" target="_blank" title="data visualization Icons">Noun Project</a> (CC BY 3.0)
