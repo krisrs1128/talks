@@ -526,6 +526,60 @@ An example of unpredictable effects during deployment `r Citep(bib, "Bansal2020D
 
 ---
 
+### Generalist Models
+
+.pull-left[
+1. **Modern deep learning models are being designed to solve many problems
+simultaneously.**
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+
+1. We are also seeing increasingly rich ways to communicate with them.
+]
+
+.pull-right[
+  <img src="figures/generalist_models.png"/>
+]
+
+---
+
+### Generalist Models
+
+.pull-left[
+1. Modern deep learning models are being designed to solve many problems
+simultaneously.
+
+1. **Since deep learning architectures are composable, they can handle multimodal
+settings easily.**
+
+1. We are also seeing increasingly rich ways to communicate with them.
+]
+
+.pull-right[
+  <img src="figures/open_vocabulary.gif"/>
+]
+---
+
+### Generalist Models
+
+.pull-left[
+1. Modern deep learning models are being designed to solve many problems
+simultaneously.
+
+1. Since deep learning architectures are composable, they can handle multimodal
+settings easily.
+
+1. **We are also seeing increasingly rich ways to communicate with them.**
+
+]
+
+.pull-right[
+  <img src="figures/image_editing.gif"/>
+]
+
+---
+
 ### Visualization Metaphor
 
 .pull-left[
