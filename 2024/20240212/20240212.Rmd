@@ -1,5 +1,5 @@
 ---
-title: Interpretability
+title: Interpretable Machine Learning - What's Possible? What's Next?
 author: Kris Sankaran
 output:
   xaringan::moon_reader:
@@ -26,7 +26,8 @@ BibOptions(cite.style = "numeric")
 
 <div id="links">
 Workshop on Trustworthy Machine Learning<br/>
-Slides: <a href="https://go.wisc.edu/4y9176">go.wisc.edu/4y9176</a>
+Slides: <a href="https://go.wisc.edu/5h522y">https://go.wisc.edu/5h522y</a>
+Code: <a href="https://go.wisc.edu/2m20f9">https://go.wisc.edu/2m20f9</a>
 </div>
 <div id="title">
 Interpretable Machine Learning <br> 
@@ -39,7 +40,7 @@ What's Possible? What's Next?
 <br/>
 <div id="subtitle">
 Kris Sankaran <br/>
-<a href="https://go.wisc.edu/">go.wisc.edu/</a> <br/>
+<a href="https://go.wisc.edu/pgb8n">https://go.wisc.edu/pgb8n</a> <br/>
 12 | February | 2023 <br/>
 </div>
 
@@ -377,7 +378,7 @@ between two samples.
 
 ---
 
-### Perturbation [Local Explanations]
+### Perturbation
 
 To explain a generic model’s decision on an instance, we can perturb it and see
 how the prediction changes.
@@ -503,77 +504,64 @@ performance across diverse audiences.
 .pull-right[
 <img src="figures/polyjuice.png"/>
 
-Example  evaluation task from `r Citep(bib, "Wu2021PolyjuiceGC")`.
+An example task from an interpretability study  `r Citep(bib, "Wu2021PolyjuiceGC")`.
 ]
 
 ---
 
-### Generalist Models
+
+### Human Studies
 
 .pull-left[
-1. **Modern deep learning models are being designed to solve many problems
-simultaneously.**
+1. These studies can quantify how explanations influence human judgment.
 
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
+1. Common tasks include editing inputs to influence prediction and guessing
+  model results from explanations.
 
-1. We are also seeing increasingly rich ways to communicate with them.
+1. Good explanations don't necessary improve Human-AI collaboration.
 ]
 
 .pull-right[
-  <img src="figures/generalist_models.png"/>
-]
+<img src="figures/complementarity.png"/>
 
----
-
-### Generalist Models
-
-.pull-left[
-1. Modern deep learning models are being designed to solve many problems
-simultaneously.
-
-1. **Since deep learning architectures are composable, they can handle multimodal
-settings easily.**
-
-1. We are also seeing increasingly rich ways to communicate with them.
-]
-
-.pull-right[
-  <img src="figures/open_vocabulary.gif"/>
-]
----
-
-### Generalist Models
-
-.pull-left[
-1. Modern deep learning models are being designed to solve many problems
-simultaneously.
-
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
-
-1. **We are also seeing increasingly rich ways to communicate with them.**
-
-]
-
-.pull-right[
-  <img src="figures/image_editing.gif"/>
+An example of unpredictable effects during deployment `r Citep(bib, "Wu2021PolyjuiceGC")`.
 ]
 
 ---
 
 ### Visualization Metaphor
 
-We can look to data visualization for inspiration. 
-
+.pull-left[
 1. People from many backgrounds are comfortable reading and creating data
 visualizations.
 
-1. Visualization tools provide shared representations between code and thought,
-and they encourage critical evaluation of data.
+1. Visualization software provide shared representations between computer hardware
+and human thought.
 
 1. How will interpretable ML appear in future scientific reports, newspaper
 articles, and undergraduate classrooms?
+]
+
+.pull-right[
+  <img src="figures/nyt-covid.png"/>
+]
+
+---
+
+
+### Session Preview
+
+Today's sessions will give us more nuanced language for making progress in ML
+interpretability,
+
+1. [Cynthia Rudin, Hongtu Zhu, Yuan Ji] Making it easier to specify accurate,
+directly interpretable models in challenging scientific, medical, and social
+problems.
+
+1. [Hubert Baniecki, Debashis Mondal] Enrich our language for auditing machine
+learning models and workflows, from input data to downstream decisions.
+
+<img src="figures/logo.png"/>
 
 ---
 
@@ -629,12 +617,3 @@ bacterium by Maria Zamchy from <a href="https://thenounproject.com/browse/icons/
 ---
 
 ### Simulation Mechanism
-
-Here is the simulation mechanism that we used.
-
-.center[
-  Come up with a visual representation of this mechanism, starting with
-  increasing/decreasing, continuing to nearest neighbors in the concept space
-]
-
----
