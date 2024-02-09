@@ -20,6 +20,7 @@ library(knitr)
 opts_chunk$set(cache = TRUE)
 library(RefManageR)
 bib <- ReadBib("references.bib")
+BibOptions(cite.style = "numeric")
 ```
 
 
@@ -180,12 +181,15 @@ black box systems.
 
 ---
 
-Let's review a few practical techniques for model interpretation and explanation.
+### Roadmap
 
-1. Directly interpretable model [Sparse Linear Regression]
-1. Latent representation analysis [Visualizing Embeddings]
-1. Local explainability method [Integrated Gradients]
-1. Shared representation method [Concept Bottleneck]
+These techniques are representative of larger classes of techniques for model
+interpretability and explainability.
+
+1. Direct interpretability $\to$ Sparse Regression, Featurization
+1. Latent representations $\to$ Visualizing Embeddings
+1. Local explainability $\to$ Integrated Gradients
+1. Shared representations $\to$ Concept Bottleneck
 
 ---
 
@@ -298,14 +302,14 @@ representatives.*
 
 ### Transformers
 
-1. One driving principle of deep learning is that, with sufficiently many examples,
-end-to-end optimization should be preferred to expert design.
-  - Easier to implement, more accurate.
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
 1. We can apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
-  - We expect this to automatically learn predictive features.
+]
 
-.center[
+.pull-right[
 <img src="figures/transformers-analogy-2.png"/>
 ]
 
@@ -313,15 +317,16 @@ microbiome profiles like a sequence of words.
 
 ### Transformers
 
-1. One driving principle of deep learning is that, with sufficiently many examples,
-end-to-end optimization should be preferred to expert design.
-  - Easier to implement, more accurate.
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
 1. We can apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
-  - We expect this to automatically learn predictive features.
+]
 
-.center[
-<img src="figures/transformers_analogy.png"/>
+.pull-right[
+<img src="figures/transformer_analogy.png"/>
 ]
 
 ---
@@ -342,11 +347,10 @@ of ~ 84%, which is nearly as good as the lasso with handcrafted features.
 ### Embeddings [Global Explanation]
 
 In text data, we can understand context-dependent meaning by looking for
-clusters after applying PCA to the embeddings. These represent a type of
-interaction between features.
-
+clusters in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
+These represent a type of interaction.
 .center[
-<img src="figures/bert_context.png"/>
+<img src="figures/bert_context.png" width=900/>
 ]
 
 ---
@@ -364,8 +368,8 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space `r Citep(bib, "Liu2019LatentSC")`.  Here, I have traced out the microbiome profiles
-lying between two groups.
+Another common technique is to analyze linear interpolations in this space `r Citep(bib, "Liu2019LatentSC")`.  This figure traces out the microbiome profiles
+between two samples.
 
 .center[
 <img src="figures/species_21_interpolation.svg" width=940/>
@@ -411,22 +415,23 @@ are most responsible for the disease vs. healthy classification of each example.
 ### Sanity Checks
 
 Evaluating local explanations is notoriously subjective. Some researchers have
-proposed automatic "sanity checks" (Adebayo et al. 2018).
+proposed automatic "sanity checks" `r Citep(bib, "Adebayo2018SanityCF")`.
 
 .center[
   <img src="figures/sanity_checks.png" width=680/>
 ]
 
 There have also been theoretical results that identify situations where feature
-attribution is unidentified (Bilodeau et al. 2023).
+attribution is unidentified `r Citep(bib, "Bilodeau2022ImpossibilityTF")`.
 
 ---
 
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts (Koh, 2020). This requires dense,
-concept-level annotations for every sample.
+to a set of human-interpretable concepts `r Citep(bib, "Koh2020ConceptBM")`.
+This is part of a larger body of work that attempts to establish shared
+language/representations for interacting with models.
 
 .center[
 <img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
@@ -451,7 +456,7 @@ We reconfigure our transformer model to first predict the concept label before
 making a final classification.
 
 .center[
-  Modified architecture
+<img src="figures/concept_architecture.png"/>
 ]
 
 ---
@@ -497,6 +502,8 @@ performance across diverse audiences.
 
 .pull-right[
 <img src="figures/polyjuice.png"/>
+
+Example  evaluation task from `r Citep(bib, "Wu2021PolyjuiceGC")`.
 ]
 
 ---
@@ -552,14 +559,6 @@ settings easily.
 .pull-right[
   <img src="figures/image_editing.gif"/>
 ]
-
----
-
-### Shared Language
-
-However, this communication has been essentially one-way. Models don't always
-behave in the ways we expect, and they do not offer artifacts to guide
-interpretation.
 
 ---
 
