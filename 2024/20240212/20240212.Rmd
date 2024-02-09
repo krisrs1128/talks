@@ -17,7 +17,7 @@ css: custom.css
 
 ```{r, echo = FALSE}
 library(knitr)
-opts_chunk$set(cache = TRUE)
+opts_chunk$set(cache = FALSE)
 library(RefManageR)
 bib <- ReadBib("references.bib")
 BibOptions(cite.style = "numeric")
@@ -26,9 +26,11 @@ BibOptions(cite.style = "numeric")
 
 <div id="links">
 Workshop on Trustworthy Machine Learning<br/>
-Slides: <a href="https://go.wisc.edu/5h522y">https://go.wisc.edu/5h522y</a>
+Slides: <a href="https://go.wisc.edu/5h522y">https://go.wisc.edu/5h522y</a></br>
 Code: <a href="https://go.wisc.edu/2m20f9">https://go.wisc.edu/2m20f9</a>
 </div>
+<br/>
+<br/>
 <div id="title">
 Interpretable Machine Learning <br> 
 
@@ -141,15 +143,10 @@ about data visualization.
 removed this requirement, creating a new need for post-hoc expalnations.
 
 1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
-and commentaries attempt to establish shared vocabulary (Lipton 2018, Adebayo
-2018, Murdoch 2019, Rudin 2019).
+and commentaries attempt to establish shared vocabulary `r Citep(bib, c("Lipton2016TheMO", "Adebayo2018SanityCF", "Rudin2018StopEB", "Murdoch2019DefinitionsMA"))`.
 
 1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
 evaluation, and substantive theory -- these are beginning to emerge.
-
-.center[
-  <img src="timeline"/>
-]
 
 ---
 
@@ -524,7 +521,7 @@ An example task from an interpretability study  `r Citep(bib, "Wu2021PolyjuiceGC
 .pull-right[
 <img src="figures/complementarity.png"/>
 
-An example of unpredictable effects during deployment `r Citep(bib, "Wu2021PolyjuiceGC")`.
+An example of unpredictable effects during deployment `r Citep(bib, "Bansal2020DoesTW")`.
 ]
 
 ---
@@ -568,7 +565,7 @@ learning models and workflows, from input data to downstream decisions.
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 3)
+PrintBibliography(bib, start = 1, end = 4)
 ```
 
 ---
@@ -576,7 +573,7 @@ PrintBibliography(bib, start = 1, end = 3)
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 4, end = 6)
+PrintBibliography(bib, start = 5, end = 7)
 ```
 
 ---
@@ -584,17 +581,8 @@ PrintBibliography(bib, start = 4, end = 6)
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 7, end = 10)
+PrintBibliography(bib, start = 8, end = 10)
 ```
-
----
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 11, end = 14)
-```
-
 
 ---
 
