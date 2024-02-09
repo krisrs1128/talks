@@ -48,14 +48,12 @@ Kris Sankaran <br/>
 
 Models are woven into the fabric of modern life,
 
-.pull-left[
-* Decisions: They can be automate or assist with judgments that previously would have been done entirely by people.
-* Discovery: They can orient us within large data catalogs and can guide us towards promising hypotheses.
-* Creativity: They can make it easier for those without technical training to explore ideas and express themselves.
-]
+* **Decisions**: They can be automate or assist with judgments that previously would have been done entirely by people.
+* **Discovery**: They can orient us within large data catalogs and can guide us towards promising hypotheses.
+* **Creativity**: They can make it easier for those without technical training to explore ideas and express themselves.
 
-For human welfare, it's important to create mechanisms for interpreting and
-having agency over these models.
+In all these areas, it's important to have agency over these models, and
+interpretability is an important part of that.
 
 ---
 
@@ -88,14 +86,33 @@ let's start with an easier one.
 
 ---
 
-### At-the-Surface
+### Key Properties
+
+.pull-left[
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+]
+
+.pull-right[
+<img src="figures/tufte.png" width=330/>
+]
+
+---
+
+### Key Properties
 
 A good visualization is:
 
-1. Legible: It knows to omit extraneous, distracting elements.
-1. Annotated: All axes and graphical encodings should be described.
-1. Information-Dense: A large amount of variation should be communicated
-efficiently.
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+
+.center[
+<img src="figures/tufte-2.png"/>
+]
 
 ---
 
@@ -103,16 +120,16 @@ efficiently.
 
 More subtly, it should pay attention to:
 
-1. Data Provenance: If we don't know the data sources, we should be skeptical or
+1. **Data Provenance**: If we don't know the data sources, we should be skeptical or
 anything that's shown, no matter how compelling.
-1. Audience: The effectiveness of a visualization is dependent on the visual
+1. **Audience**: The effectiveness of a visualization is dependent on the visual
 vocabulary of its audience.
-1. Prioritization: Every design emphasizes some comparisons over others. Are the
-comparisons honest, and are the "important" patterns visible?
-1. Interactivity: Does it engage the reader's problem solving capacity or
-spoonfeed them trivialities?
+1. **Prioritization**: Every design emphasizes some comparisons over others. Are the
+"important" patterns visible?
+1. **Interactivity**: Does it engage the reader's problem solving capacity?
 
-The nuance with which we can think about visualization can be translated to interpretability.
+We should think about model interpretability with the same nuance that we think
+about data visualization.
 
 ---
 
@@ -163,15 +180,24 @@ black box systems.
 
 ---
 
+Let's review a few practical techniques for model interpretation and explanation.
+
+1. Directly interpretable model [Sparse Linear Regression]
+1. Latent representation analysis [Visualizing Embeddings]
+1. Local explainability method [Integrated Gradients]
+1. Shared representation method [Concept Bottleneck]
+
+---
+
 ### Running Example
 
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
-microbiome-related risk factors?  This simulation is motivated by studies of HIV risk
-in the FRESH cohort `r Citep(bib, 'Gosmann2017LactobacillusDeficientCB')`.
+microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
+`r Citep(bib, 'Gosmann2017LactobacillusDeficientCB')`.
 
 .center[
-  <img src="figures/simulated-data.svg"/>
+  <img src="figures/simulated-data.svg" width=830/>
 ]
 
 ---
@@ -182,7 +208,7 @@ We can frame this as a regression problem where all 50 timepoints and 144
 species are stacked horizontally.
 
 .center[
-  <img src="figures/widened_data.jpeg" width=600/>
+  <img src="figures/taxon_regression.png" width=650/>
 ]
 ---
 ### Sparse Logistic Regression
@@ -248,7 +274,7 @@ To address this, we decide to reduce dimensionality by handcrafting some
 features: overall slope and curvature for each taxon.
 
 .center[
-  <img src="figures/widened_data.jpeg" width=600/>
+  <img src="figures/featurizations.png" width=800/>
 ]
 
 ---
@@ -266,7 +292,6 @@ representatives.*
 
 .pull-right[
   <img src="figures/lasso_derived_estimates.svg" width=390/>
-  <!-- <img src="figures/rpart_final_derived.svg"/> -->
 ]
 
 ---
@@ -280,13 +305,32 @@ end-to-end optimization should be preferred to expert design.
 microbiome profiles like a sequence of words.
   - We expect this to automatically learn predictive features.
 
+.center[
+<img src="figures/transformers-analogy-2.png"/>
+]
+
+---
+
+### Transformers
+
+1. One driving principle of deep learning is that, with sufficiently many examples,
+end-to-end optimization should be preferred to expert design.
+  - Easier to implement, more accurate.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+  - We expect this to automatically learn predictive features.
+
+.center[
+<img src="figures/transformers_analogy.png"/>
+]
+
 ---
 
 ### Transformers
 
 .pull-left[
 Applying a transformer model to the raw series, we reach a hold-out performance
-of ~ 84%, which is nearly as good as the lasso with hand-derived features.
+of ~ 84%, which is nearly as good as the lasso with handcrafted features.
 ]
 
 .pull-right[
@@ -295,7 +339,7 @@ of ~ 84%, which is nearly as good as the lasso with hand-derived features.
 
 ---
 
-### Interactions via Embeddings
+### Embeddings [Global Explanation]
 
 In text data, we can understand context-dependent meaning by looking for
 clusters after applying PCA to the embeddings. These represent a type of
@@ -307,23 +351,21 @@ interaction between features.
 
 ---
 
-### Interaction via Embeddings
+### Embeddings
 
 We can build the analogous visualization for our microbiome problem. Samples
-that are nearby in the embedding space have similarly shaped trajectories and
-community contexts.
+that are nearby in the embedding space are similar w.r.t. predictive features.
 
 .center[
-<img src="figures/species_21_series.svg" width=800/>
+<img src="figures/pca_comparison.svg" width=1400/>
 ]
 
 ---
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space (ref.
-Latent Space Cartography). Here, I have traced out the microbiome profiles lying
-between two groups.
+Another common technique is to analyze linear interpolations in this space `r Citep(bib, "Liu2019LatentSC")`.  Here, I have traced out the microbiome profiles
+lying between two groups.
 
 .center[
 <img src="figures/species_21_interpolation.svg" width=940/>
@@ -331,10 +373,10 @@ between two groups.
 
 ---
 
-### Perturbation
+### Perturbation [Local Explanations]
 
-If you want an explanation for a generic model’s decision on an instance, one
-approach is to perturb that input and see how the prediction could have changed.
+To explain a generic model’s decision on an instance, we can perturb it and see
+how the prediction changes.
 
 <img src="figures/perturbation_types.png"/>
 
@@ -348,13 +390,6 @@ towards a sample of interest.
 \begin{align*}
 \left(x_{i} - x_{i}'\right) \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right)\right)}{\partial x_{i}} d\alpha
 \end{align*}
-
----
-
-### Integrated Gradients
-
-For example, we can compute the gradient of each class as we perturb a reference
-towards a sample of interest.
 
 .center[
   <img src="figures/integrated_gradients_animation.gif" width=1200/>
@@ -434,7 +469,7 @@ concept labels to help us explain each instance's prediction.
 
 ---
 
-## Evaluation
+## Discussion
 
 ---
 
@@ -444,35 +479,25 @@ concept labels to help us explain each instance's prediction.
 quantitative benchmarks.
 1. Interpretability depends on criteria that are difficult to encode in the
 standard Data $\to$ Model $\to$ Loss workflow.
-   - Is it using features that will generalize to new contexts?
 1. The data visualization community has relevant precedents for measuring task
 performance across diverse audiences.
 
 ---
 
-### Human + AI Performance
+### Human Studies
 
 .pull-left[
-It's possible to create both realistic and simplified tasks and measure how
-system (Human + AI) level performance is affected by model explanations.
+1. These studies can quantify how explanations influence human judgment.
+
+1. Common tasks include editing inputs to influence prediction and guessing
+  model results from explanations.
+
+1. Good explanations don't necessary improve Human-AI collaboration.
 ]
 
 .pull-right[
-<img src="figures/human_ai.png"/>
+<img src="figures/polyjuice.png"/>
 ]
-
----
-
-### Editing
-
-.pull-left[
-A direct approach to evaluating local explanations is to see whether it helps
-study participants to edit instances in a way that changes their prediction.
-]
-
----
-
-## Discussion
 
 ---
 
@@ -548,16 +573,8 @@ visualizations.
 1. Visualization tools provide shared representations between code and thought,
 and they encourage critical evaluation of data.
 
----
-
-### Visualization Metaphor
-
-Model interpretability still seems quite far from this potential.
-
-1. How will interpretable ML appear in future news and scientific reports?
-
-1. What interpretable ML tools will be taught to undergraduates across
-disciplines?
+1. How will interpretable ML appear in future scientific reports, newspaper
+articles, and undergraduate classrooms?
 
 ---
 
@@ -599,6 +616,16 @@ PrintBibliography(bib, start = 11, end = 14)
 explainable reinforcement learning by iconpro86 from <a href="https://thenounproject.com/browse/icons/term/explainable-reinforcement-learning/" target="_blank" title="explainable reinforcement learning Icons">Noun Project</a> (CC BY 3.0)
 
 data visualization by Iconiqu from <a href="https://thenounproject.com/browse/icons/term/data-visualization/" target="_blank" title="data visualization Icons">Noun Project</a> (CC BY 3.0)
+
+Ruler by Dhipwise Store from <a href="https://thenounproject.com/browse/icons/term/ruler/" target="_blank" title="Ruler Icons">Noun Project</a> (CC BY 3.0)
+
+bacillus by Cécile Lanza Parker from <a href="https://thenounproject.com/browse/icons/term/bacillus/" target="_blank" title="bacillus Icons">Noun Project</a> (CC BY 3.0)
+
+Microbe by Prettycons from <a href="https://thenounproject.com/browse/icons/term/microbe/" target="_blank" title="Microbe Icons">Noun Project</a> (CC BY 3.0)
+
+bacterium by HideMaru from <a href="https://thenounproject.com/browse/icons/term/bacterium/" target="_blank" title="bacterium Icons">Noun Project</a> (CC BY 3.0)
+
+bacterium by Maria Zamchy from <a href="https://thenounproject.com/browse/icons/term/bacterium/" target="_blank" title="bacterium Icons">Noun Project</a> (CC BY 3.0)
 
 ---
 
