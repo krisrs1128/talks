@@ -172,12 +172,15 @@ black box systems.
 
 ---
 
-Let's review a few practical techniques for model interpretation and explanation.
+### Roadmap
 
-1. Directly interpretable model [Sparse Linear Regression]
-1. Latent representation analysis [Visualizing Embeddings]
-1. Local explainability method [Integrated Gradients]
-1. Shared representation method [Concept Bottleneck]
+These techniques are representative of larger classes of techniques for model
+interpretability and explainability.
+
+1. Direct interpretability `\(\to\)` Sparse Regression, Featurization
+1. Latent representations `\(\to\)` Visualizing Embeddings
+1. Local explainability `\(\to\)` Integrated Gradients
+1. Shared representations `\(\to\)` Concept Bottleneck
 
 ---
 
@@ -186,7 +189,7 @@ Let's review a few practical techniques for model interpretation and explanation
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
 microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
-(Gosmann, Anahtar, Handley et al., 2017).
+[1].
 
 .center[
   &lt;img src="figures/simulated-data.svg" width=830/&gt;
@@ -290,14 +293,14 @@ representatives.*
 
 ### Transformers
 
-1. One driving principle of deep learning is that, with sufficiently many examples,
-end-to-end optimization should be preferred to expert design.
-  - Easier to implement, more accurate.
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
 1. We can apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
-  - We expect this to automatically learn predictive features.
+]
 
-.center[
+.pull-right[
 &lt;img src="figures/transformers-analogy-2.png"/&gt;
 ]
 
@@ -305,15 +308,16 @@ microbiome profiles like a sequence of words.
 
 ### Transformers
 
-1. One driving principle of deep learning is that, with sufficiently many examples,
-end-to-end optimization should be preferred to expert design.
-  - Easier to implement, more accurate.
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
 1. We can apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
-  - We expect this to automatically learn predictive features.
+]
 
-.center[
-&lt;img src="figures/transformers_analogy.png"/&gt;
+.pull-right[
+&lt;img src="figures/transformer_analogy.png"/&gt;
 ]
 
 ---
@@ -334,11 +338,10 @@ of ~ 84%, which is nearly as good as the lasso with handcrafted features.
 ### Embeddings [Global Explanation]
 
 In text data, we can understand context-dependent meaning by looking for
-clusters after applying PCA to the embeddings. These represent a type of
-interaction between features.
-
+clusters in the PCA of embeddings [2].
+These represent a type of interaction.
 .center[
-&lt;img src="figures/bert_context.png"/&gt;
+&lt;img src="figures/bert_context.png" width=900/&gt;
 ]
 
 ---
@@ -356,8 +359,8 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space .  Here, I have traced out the microbiome profiles
-lying between two groups.
+Another common technique is to analyze linear interpolations in this space [3].  This figure traces out the microbiome profiles
+between two samples.
 
 .center[
 &lt;img src="figures/species_21_interpolation.svg" width=940/&gt;
@@ -365,7 +368,7 @@ lying between two groups.
 
 ---
 
-### Perturbation [Local Explanations]
+### Perturbation
 
 To explain a generic model’s decision on an instance, we can perturb it and see
 how the prediction changes.
@@ -403,22 +406,23 @@ are most responsible for the disease vs. healthy classification of each example.
 ### Sanity Checks
 
 Evaluating local explanations is notoriously subjective. Some researchers have
-proposed automatic "sanity checks" (Adebayo et al. 2018).
+proposed automatic "sanity checks" [4].
 
 .center[
   &lt;img src="figures/sanity_checks.png" width=680/&gt;
 ]
 
 There have also been theoretical results that identify situations where feature
-attribution is unidentified (Bilodeau et al. 2023).
+attribution is unidentified [5].
 
 ---
 
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts (Koh, 2020). This requires dense,
-concept-level annotations for every sample.
+to a set of human-interpretable concepts [6].
+This is part of a larger body of work that attempts to establish shared
+language/representations for interacting with models.
 
 .center[
 &lt;img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/&gt; 
@@ -443,7 +447,7 @@ We reconfigure our transformer model to first predict the concept label before
 making a final classification.
 
 .center[
-  Modified architecture
+&lt;img src="figures/concept_architecture.png"/&gt;
 ]
 
 ---
@@ -489,84 +493,65 @@ performance across diverse audiences.
 
 .pull-right[
 &lt;img src="figures/polyjuice.png"/&gt;
+
+An example task from an interpretability study  [7].
 ]
 
 ---
 
-### Generalist Models
+
+### Human Studies
 
 .pull-left[
-1. **Modern deep learning models are being designed to solve many problems
-simultaneously.**
+1. These studies can quantify how explanations influence human judgment.
 
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
+1. Common tasks include editing inputs to influence prediction and guessing
+  model results from explanations.
 
-1. We are also seeing increasingly rich ways to communicate with them.
+1. Good explanations don't necessary improve Human-AI collaboration.
 ]
 
 .pull-right[
-  &lt;img src="figures/generalist_models.png"/&gt;
+&lt;img src="figures/complementarity.png"/&gt;
+
+An example of unpredictable effects during deployment [7].
 ]
-
----
-
-### Generalist Models
-
-.pull-left[
-1. Modern deep learning models are being designed to solve many problems
-simultaneously.
-
-1. **Since deep learning architectures are composable, they can handle multimodal
-settings easily.**
-
-1. We are also seeing increasingly rich ways to communicate with them.
-]
-
-.pull-right[
-  &lt;img src="figures/open_vocabulary.gif"/&gt;
-]
----
-
-### Generalist Models
-
-.pull-left[
-1. Modern deep learning models are being designed to solve many problems
-simultaneously.
-
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
-
-1. **We are also seeing increasingly rich ways to communicate with them.**
-
-]
-
-.pull-right[
-  &lt;img src="figures/image_editing.gif"/&gt;
-]
-
----
-
-### Shared Language
-
-However, this communication has been essentially one-way. Models don't always
-behave in the ways we expect, and they do not offer artifacts to guide
-interpretation.
 
 ---
 
 ### Visualization Metaphor
 
-We can look to data visualization for inspiration. 
-
+.pull-left[
 1. People from many backgrounds are comfortable reading and creating data
 visualizations.
 
-1. Visualization tools provide shared representations between code and thought,
-and they encourage critical evaluation of data.
+1. Visualization software provide shared representations between computer hardware
+and human thought.
 
 1. How will interpretable ML appear in future scientific reports, newspaper
 articles, and undergraduate classrooms?
+]
+
+.pull-right[
+  &lt;img src="figures/nyt-covid.png"/&gt;
+]
+
+---
+
+
+### Session Preview
+
+Today's sessions will give us more nuanced language for making progress in ML
+interpretability,
+
+1. [Cynthia Rudin, Hongtu Zhu, Yuan Ji] Making it easier to specify accurate,
+directly interpretable models in challenging scientific, medical, and social
+problems.
+
+1. [Hubert Baniecki, Debashis Mondal] Enrich our language for auditing machine
+learning models and workflows, from input data to downstream decisions.
+
+&lt;img src="figures/logo.png"/&gt;
 
 ---
 
@@ -632,15 +617,6 @@ bacterium by Maria Zamchy from &lt;a href="https://thenounproject.com/browse/ico
 ---
 
 ### Simulation Mechanism
-
-Here is the simulation mechanism that we used.
-
-.center[
-  Come up with a visual representation of this mechanism, starting with
-  increasing/decreasing, continuing to nearest neighbors in the concept space
-]
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
