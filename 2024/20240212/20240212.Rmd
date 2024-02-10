@@ -62,6 +62,12 @@ backgrounds, we need interpretability.
 
 ---
 
+### What can go wrong?
+
+
+
+---
+
 # What Makes a Model Interpretable?
 <br/>
 .center[
@@ -166,7 +172,6 @@ black box systems.
 ]
 
 ---
-
 
 ### Running Example
 
@@ -293,7 +298,6 @@ microbiome profiles like a sequence of words.
 ---
 
 ### Transformers
-
 
 .pull-left[
 1. A principle of deep learning is that end-to-end optimization is more general
@@ -451,7 +455,7 @@ concept labels to help us explain each instance's prediction.
 
 ---
 
-## Discussion
+## Challenges
 
 ---
 
@@ -461,8 +465,9 @@ concept labels to help us explain each instance's prediction.
 quantitative benchmarks.
 1. Interpretability depends on criteria that are difficult to encode in the
 standard Data $\to$ Model $\to$ Loss workflow.
-1. The data visualization community has relevant precedents for measuring task
-performance across diverse audiences.
+1. This is one area where statisticians can excel: We have a history of
+critically interrogating assumptions and understanding methods within their
+problem context.
 
 ---
 
@@ -559,25 +564,6 @@ settings easily.
 
 ---
 
-### Visualization Metaphor
-
-.pull-left[
-1. People from many backgrounds are comfortable reading and creating data
-visualizations.
-
-1. Visualization software provide shared representations between computer hardware
-and human thought.
-
-1. How will interpretable ML appear in future scientific reports, newspaper
-articles, and undergraduate classrooms?
-]
-
-.pull-right[
-  <img src="figures/nyt-covid.png"/>
-]
-
----
-
 
 ### Session Preview
 
@@ -663,5 +649,24 @@ interpretability and explainability.
 1. Latent representations $\to$ Visualizing Embeddings
 1. Local explainability $\to$ Integrated Gradients
 1. Shared representations $\to$ Concept Bottleneck
+
+---
+
+### Visualization Metaphor
+
+.pull-left[
+1. People from many backgrounds are comfortable reading and creating data
+visualizations.
+
+1. Visualization software provide shared representations between computer hardware
+and human thought.
+
+1. How will interpretable ML appear in future scientific reports, newspaper
+articles, and undergraduate classrooms?
+]
+
+.pull-right[
+  <img src="figures/nyt-covid.png"/>
+]
 
 ---

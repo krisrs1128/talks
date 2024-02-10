@@ -53,6 +53,12 @@ backgrounds, we need interpretability.
 
 ---
 
+### What can go wrong?
+
+
+
+---
+
 # What Makes a Model Interpretable?
 &lt;br/&gt;
 .center[
@@ -158,13 +164,12 @@ black box systems.
 
 ---
 
-
 ### Running Example
 
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
 microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
-[5].
+[1].
 
 .center[
   &lt;img src="figures/simulated-data.svg" width=830/&gt;
@@ -285,7 +290,6 @@ microbiome profiles like a sequence of words.
 
 ### Transformers
 
-
 .pull-left[
 1. A principle of deep learning is that end-to-end optimization is more general
 than expert design.
@@ -315,7 +319,7 @@ of ~ 84%, which is nearly as good as the lasso with handcrafted features.
 ### Embeddings
 
 In text data, we can understand context-dependent meaning by looking for
-clusters in the PCA of embeddings [6].
+clusters in the PCA of embeddings [2].
 These represent a type of interaction.
 .center[
 &lt;img src="figures/bert_context.png" width=900/&gt;
@@ -336,7 +340,7 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space [7].  This figure traces out the microbiome profiles
+Another common technique is to analyze linear interpolations in this space [3].  This figure traces out the microbiome profiles
 between two samples.
 
 .center[
@@ -383,21 +387,21 @@ are most responsible for the disease vs. healthy classification of each example.
 ### Sanity Checks
 
 Evaluating local explanations is notoriously subjective. Some researchers have
-proposed automatic "sanity checks" [2].
+proposed automatic "sanity checks" [4].
 
 .center[
   &lt;img src="figures/sanity_checks.png" width=680/&gt;
 ]
 
 There have also been theoretical results that identify situations where feature
-attribution is unidentified [8].
+attribution is unidentified [5].
 
 ---
 
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts [9].
+to a set of human-interpretable concepts [6].
 This is part of a larger body of work that attempts to establish shared
 language/representations for interacting with models.
 
@@ -442,7 +446,7 @@ concept labels to help us explain each instance's prediction.
 
 ---
 
-## Discussion
+## Challenges
 
 ---
 
@@ -452,8 +456,9 @@ concept labels to help us explain each instance's prediction.
 quantitative benchmarks.
 1. Interpretability depends on criteria that are difficult to encode in the
 standard Data `\(\to\)` Model `\(\to\)` Loss workflow.
-1. The data visualization community has relevant precedents for measuring task
-performance across diverse audiences.
+1. This is one area where statisticians can excel: We have a history of
+critically interrogating assumptions and understanding methods within their
+problem context.
 
 ---
 
@@ -471,7 +476,7 @@ performance across diverse audiences.
 .pull-right[
 &lt;img src="figures/polyjuice.png"/&gt;
 
-An example task from an interpretability study  [10].
+An example task from an interpretability study  [7].
 ]
 
 ---
@@ -491,7 +496,7 @@ An example task from an interpretability study  [10].
 .pull-right[
 &lt;img src="figures/complementarity.png"/&gt;
 
-An example of unpredictable effects during deployment [11].
+An example of unpredictable effects during deployment [8].
 ]
 
 ---
@@ -550,25 +555,6 @@ settings easily.
 
 ---
 
-### Visualization Metaphor
-
-.pull-left[
-1. People from many backgrounds are comfortable reading and creating data
-visualizations.
-
-1. Visualization software provide shared representations between computer hardware
-and human thought.
-
-1. How will interpretable ML appear in future scientific reports, newspaper
-articles, and undergraduate classrooms?
-]
-
-.pull-right[
-  &lt;img src="figures/nyt-covid.png"/&gt;
-]
-
----
-
 
 ### Session Preview
 
@@ -588,52 +574,51 @@ learning models and workflows, from input data to downstream decisions.
 
 ### References
 
-[1] Z. C. Lipton. "The mythos of model interpretability". In:
-_Communications of the ACM_ 61 (2016), pp. 36 - 43.
-
-[2] J. Adebayo, J. Gilmer, M. Muelly, et al. "Sanity Checks for
-Saliency Maps". In: _Neural Information Processing Systems_. 2018.
-
-[3] C. Rudin. "Stop explaining black box machine learning models for
-high stakes decisions and use interpretable models instead". In:
-_Nature Machine Intelligence_ 1 (2018), pp. 206 - 215.
-
-[4] W. J. Murdoch, C. Singh, K. Kumbier, et al. "Definitions, methods,
-and applications in interpretable machine learning". In: _Proceedings
-of the National Academy of Sciences_ 116 (2019), pp. 22071 - 22080.
-
----
-
-### References
-
-[5] C. Gosmann, M. N. Anahtar, S. A. Handley, et al.
+[1] C. Gosmann, M. N. Anahtar, S. A. Handley, et al.
 "Lactobacillus&lt;U+2010&gt;Deficient Cervicovaginal Bacterial Communities
 Are Associated with Increased HIV Acquisition in Young South African
 Women". In: _Immunity_ 46 (2017), p. 29&lt;U+2013&gt;37.
 
-[6] A. Coenen, E. Reif, A. Yuan, et al. "Visualizing and Measuring the
+[2] A. Coenen, E. Reif, A. Yuan, et al. "Visualizing and Measuring the
 Geometry of BERT". In: _ArXiv_ abs/1906.02715 (2019).
 
-[7] Y. Liu, E. Jun, Q. Li, et al. "Latent Space Cartography: Visual
+[3] Y. Liu, E. Jun, Q. Li, et al. "Latent Space Cartography: Visual
 Analysis of Vector Space Embeddings". In: _Computer Graphics Forum_ 38
 (2019).
+
+[4] J. Adebayo, J. Gilmer, M. Muelly, et al. "Sanity Checks for
+Saliency Maps". In: _Neural Information Processing Systems_. 2018.
 
 ---
 
 ### References
 
-[8] B. Bilodeau, N. Jaques, P. W. Koh, et al. "Impossibility Theorems
+[5] B. Bilodeau, N. Jaques, P. W. Koh, et al. "Impossibility Theorems
 for Feature Attribution". In: _Proceedings of the National Academy of
 Sciences of the United States of America_ 121 2 (2022), p.  e2304406120
 .
 
-[9] P. W. Koh, T. Nguyen, Y. S. Tang, et al. "Concept Bottleneck
+[6] P. W. Koh, T. Nguyen, Y. S. Tang, et al. "Concept Bottleneck
 Models". In: _ArXiv_ abs/2007.04612 (2020).
 
-[10] T. S. Wu, M. T. Ribeiro, J. Heer, et al. "Polyjuice: Generating
+[7] T. S. Wu, M. T. Ribeiro, J. Heer, et al. "Polyjuice: Generating
 Counterfactuals for Explaining, Evaluating, and Improving Models". In:
 _Annual Meeting of the Association for Computational Linguistics_.
 2021.
+
+---
+
+### References
+
+
+```
+## Warning in `[[.BibEntry`(x, ind): subscript out of bounds
+```
+
+[8] G. Bansal, T. S. Wu, J. Zhou, et al. "Does the Whole Exceed its
+Parts? The Effect of AI Explanations on Complementary Team
+Performance". In: _Proceedings of the 2021 CHI Conference on Human
+Factors in Computing Systems_ (2020).
 
 ---
 
@@ -665,7 +650,7 @@ bacterium by Maria Zamchy from &lt;a href="https://thenounproject.com/browse/ico
 removed this requirement, creating a new need for post-hoc expalnations.
 
 1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
-and commentaries attempt to establish shared vocabulary [1; 2; 3; 4].
+and commentaries attempt to establish shared vocabulary [9; 4; 10; 11].
 
 1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
 evaluation, and substantive theory -- these are beginning to emerge.
@@ -681,6 +666,25 @@ interpretability and explainability.
 1. Latent representations `\(\to\)` Visualizing Embeddings
 1. Local explainability `\(\to\)` Integrated Gradients
 1. Shared representations `\(\to\)` Concept Bottleneck
+
+---
+
+### Visualization Metaphor
+
+.pull-left[
+1. People from many backgrounds are comfortable reading and creating data
+visualizations.
+
+1. Visualization software provide shared representations between computer hardware
+and human thought.
+
+1. How will interpretable ML appear in future scientific reports, newspaper
+articles, and undergraduate classrooms?
+]
+
+.pull-right[
+  &lt;img src="figures/nyt-covid.png"/&gt;
+]
 
 ---
     </textarea>
