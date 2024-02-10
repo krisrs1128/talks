@@ -25,7 +25,8 @@ BibOptions(cite.style = "numeric")
 
 
 <div id="links">
-Workshop on Trustworthy Machine Learning<br/>
+Banff International Research Station <br/>
+Trustworthy Machine Learning<br/>
 Slides: <a href="https://go.wisc.edu/5h522y">https://go.wisc.edu/5h522y</a></br>
 Code: <a href="https://go.wisc.edu/2m20f9">https://go.wisc.edu/2m20f9</a>
 </div>
@@ -34,11 +35,15 @@ Code: <a href="https://go.wisc.edu/2m20f9">https://go.wisc.edu/2m20f9</a>
 <div id="title">
 Interpretable Machine Learning <br> 
 
+
 <span style="font-size: 30px">
 What's Possible? What's Next?
 </span>
 </div>
 
+.center[
+<img src="figures/machine_learning_2x.png" width=400/>
+]
 <br/>
 <div id="subtitle">
 Kris Sankaran <br/>
