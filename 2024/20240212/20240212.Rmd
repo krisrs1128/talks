@@ -40,10 +40,6 @@ Interpretable Machine Learning <br>
 What's Possible? What's Next?
 </span>
 </div>
-
-.center[
-<img src="figures/machine_learning_2x.png" width=400/>
-]
 <br/>
 <div id="subtitle">
 Kris Sankaran <br/>
