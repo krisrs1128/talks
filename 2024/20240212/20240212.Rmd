@@ -57,8 +57,8 @@ Models are woven into the fabric of modern life,
 * **Discovery**: They can orient us within large data catalogs and can guide us towards promising hypotheses.
 * **Creativity**: They can make it easier for those without technical training to explore ideas and express themselves.
 
-In all these areas, it's important to have agency over these models, and
-interpretability is an important part of that.
+For these models to be understood and beneficial for people from many
+backgrounds, we need interpretability.
 
 ---
 
@@ -138,16 +138,7 @@ about data visualization.
 
 ---
 
-### Historical Context
-
-1. **Initial Wave**: Early ML systems required expert-crafted features. Deep learning
-removed this requirement, creating a new need for post-hoc expalnations.
-
-1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
-and commentaries attempt to establish shared vocabulary `r Citep(bib, c("Lipton2016TheMO", "Adebayo2018SanityCF", "Rudin2018StopEB", "Murdoch2019DefinitionsMA"))`.
-
-1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
-evaluation, and substantive theory -- these are beginning to emerge.
+## Methods
 
 ---
 
@@ -176,21 +167,6 @@ black box systems.
 
 ---
 
-## Methods
-
----
-
-### Roadmap
-
-These techniques are representative of larger classes of techniques for model
-interpretability and explainability.
-
-1. Direct interpretability $\to$ Sparse Regression, Featurization
-1. Latent representations $\to$ Visualizing Embeddings
-1. Local explainability $\to$ Integrated Gradients
-1. Shared representations $\to$ Concept Bottleneck
-
----
 
 ### Running Example
 
@@ -213,7 +189,9 @@ species are stacked horizontally.
 .center[
   <img src="figures/taxon_regression.png" width=650/>
 ]
+
 ---
+
 ### Sparse Logistic Regression
 
 .pull-left[
@@ -343,7 +321,7 @@ of ~ 84%, which is nearly as good as the lasso with handcrafted features.
 
 ---
 
-### Embeddings [Global Explanation]
+### Embeddings
 
 In text data, we can understand context-dependent meaning by looking for
 clusters in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
@@ -660,3 +638,30 @@ bacterium by Maria Zamchy from <a href="https://thenounproject.com/browse/icons/
 ---
 
 ### Simulation Mechanism
+
+---
+
+### Historical Context
+
+1. **Initial Wave**: Early ML systems required expert-crafted features. Deep learning
+removed this requirement, creating a new need for post-hoc expalnations.
+
+1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
+and commentaries attempt to establish shared vocabulary `r Citep(bib, c("Lipton2016TheMO", "Adebayo2018SanityCF", "Rudin2018StopEB", "Murdoch2019DefinitionsMA"))`.
+
+1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
+evaluation, and substantive theory -- these are beginning to emerge.
+
+---
+
+### Roadmap
+
+These techniques are representative of larger classes of techniques for model
+interpretability and explainability.
+
+1. Direct interpretability $\to$ Sparse Regression, Featurization
+1. Latent representations $\to$ Visualizing Embeddings
+1. Local explainability $\to$ Integrated Gradients
+1. Shared representations $\to$ Concept Bottleneck
+
+---
