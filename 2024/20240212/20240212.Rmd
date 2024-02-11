@@ -64,7 +64,31 @@ backgrounds, we need interpretability.
 
 ### What can go wrong?
 
+.center[
+<img src="figures/asthma.png" width=1000/>
 
+Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
+]
+
+
+---
+
+### What can go wrong?
+
+.center[
+<img src="figures/adversarial-stopsign.webp" width = 600/>
+
+Example from `r Citep(bib, "Gu2017BadNetsIV")`.
+]
+
+
+---
+
+### What can go wrong?
+
+.center[
+<img src="figures/bard-hallucination.webp" width=900/>
+]
 
 ---
 
@@ -465,9 +489,13 @@ concept labels to help us explain each instance's prediction.
 quantitative benchmarks.
 1. Interpretability depends on criteria that are difficult to encode in the
 standard Data $\to$ Model $\to$ Loss workflow.
-1. This is one area where statisticians can excel: We have a history of
-critically interrogating assumptions and understanding methods within their
-problem context.
+1. This is one area where statisticians can excel:
+  - We critically interrogate the situations where methods can be applied.
+  - We study methods within their problem contexts.
+
+.center[
+<img src="figures/future_da.png" width=700/>
+]
 
 ---
 
