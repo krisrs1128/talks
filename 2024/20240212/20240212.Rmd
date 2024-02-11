@@ -354,7 +354,7 @@ In text data, we can understand context-dependent meaning by looking for
 clusters in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
 These represent a type of interaction.
 .center[
-<img src="figures/bert_context.png" width=900/>
+<img src="figures/bert_context.png" width=670/>
 ]
 
 ---
@@ -515,7 +515,6 @@ An example task from an interpretability study  `r Citep(bib, "Wu2021PolyjuiceGC
 
 ---
 
-
 ### Human Studies
 
 .pull-left[
@@ -538,11 +537,9 @@ An example of unpredictable effects during deployment `r Citep(bib, "Bansal2020D
 ### Generalist Models
 
 .pull-left[
-1. **Modern deep learning models are being designed to solve many problems
-simultaneously.**
+1. **Modern machine learning models are being designed to solve many problems simultaneously.**
 
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
+1. Multimodal datasets are becoming the norm, and we need methods to learn from them in an interpretable/explainable way.
 
 1. We are also seeing increasingly rich ways to interact with them.
 ]
@@ -556,11 +553,10 @@ settings easily.
 ### Generalist Models
 
 .pull-left[
-1. Modern deep learning models are being designed to solve many problems
+1. Modern machine learning models are being designed to solve many problems
 simultaneously.
 
-1. **Since deep learning architectures are composable, they can handle multimodal
-settings easily.**
+1. **Multimodal datasets are becoming the norm, and we need methods to learn from them in an interpretable/explainable way.**
 
 1. We are also seeing increasingly rich ways to interact with them.
 ]
@@ -573,11 +569,11 @@ settings easily.**
 ### Generalist Models
 
 .pull-left[
-1. Modern deep learning models are being designed to solve many problems
+1. Modern machine learning models are being designed to solve many problems
 simultaneously.
 
-1. Since deep learning architectures are composable, they can handle multimodal
-settings easily.
+1. Multimodal datasets are becoming the norm, and we need methods to learn from
+them in an interpretable/explainable way.
 
 1. **We are also seeing increasingly rich ways to interact with them.**
 
