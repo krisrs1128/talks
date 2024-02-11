@@ -58,7 +58,7 @@ backgrounds, we need interpretability.
 .center[
 &lt;img src="figures/asthma.png" width=1000/&gt;
 
-Example from [12].
+Example from [1].
 ]
 
 
@@ -69,7 +69,7 @@ Example from [12].
 .center[
 &lt;img src="figures/adversarial-stopsign.webp" width = 600/&gt;
 
-Example from [13].
+Example from [2].
 ]
 
 
@@ -193,7 +193,7 @@ black box systems.
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
 microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
-[1].
+[3].
 
 .center[
   &lt;img src="figures/simulated-data.svg" width=830/&gt;
@@ -286,9 +286,8 @@ features: overall slope and curvature for each taxon.
 1. The best performing lasso model achieves a performance of ~ 86% using 55 of
 the 289 derived features.
 
-1. Lesson: In the original feature space, there was an interpretability-accuracy
-trade. However, it's possible to choose *more interpretable and more predictive
-representatives.*
+1. Lesson: Interpretability and accuracy are not necessarily at odds with one
+another.
 ]
 
 .pull-right[
@@ -343,7 +342,7 @@ of ~ 84%, which is nearly as good as the lasso with handcrafted features.
 ### Embeddings
 
 In text data, we can understand context-dependent meaning by looking for
-clusters in the PCA of embeddings [2].
+clusters in the PCA of embeddings [4].
 These represent a type of interaction.
 .center[
 &lt;img src="figures/bert_context.png" width=900/&gt;
@@ -364,7 +363,7 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space [3].  This figure traces out the microbiome profiles
+Another common technique is to analyze linear interpolations in this space [5].  This figure traces out the microbiome profiles
 between two samples.
 
 .center[
@@ -411,21 +410,21 @@ are most responsible for the disease vs. healthy classification of each example.
 ### Sanity Checks
 
 Evaluating local explanations is notoriously subjective. Some researchers have
-proposed automatic "sanity checks" [4].
+proposed automatic "sanity checks" [6].
 
 .center[
   &lt;img src="figures/sanity_checks.png" width=680/&gt;
 ]
 
 There have also been theoretical results that identify situations where feature
-attribution is unidentified [5].
+attribution is unidentified [7].
 
 ---
 
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts [6].
+to a set of human-interpretable concepts [8].
 This is part of a larger body of work that attempts to establish shared
 language/representations for interacting with models.
 
@@ -502,7 +501,7 @@ standard ML quantitative benchmarks.
 .pull-right[
 &lt;img src="figures/polyjuice.png"/&gt;
 
-An example task from an interpretability study  [7].
+An example task from an interpretability study  [9].
 ]
 
 ---
@@ -522,7 +521,7 @@ An example task from an interpretability study  [7].
 .pull-right[
 &lt;img src="figures/complementarity.png"/&gt;
 
-An example of unpredictable effects during deployment [8].
+An example of unpredictable effects during deployment [10].
 ]
 
 ---
@@ -600,70 +599,70 @@ learning models and workflows, from input data to downstream decisions.
 
 ### References
 
-[1] C. Gosmann, M. N. Anahtar, S. A. Handley, et al.
-"Lactobacillus&lt;U+2010&gt;Deficient Cervicovaginal Bacterial Communities
-Are Associated with Increased HIV Acquisition in Young South African
-Women". In: _Immunity_ 46 (2017), p. 29&lt;U+2013&gt;37.
-
-[2] A. Coenen, E. Reif, A. Yuan, et al. "Visualizing and Measuring the
-Geometry of BERT". In: _ArXiv_ abs/1906.02715 (2019).
-
-[3] Y. Liu, E. Jun, Q. Li, et al. "Latent Space Cartography: Visual
-Analysis of Vector Space Embeddings". In: _Computer Graphics Forum_ 38
-(2019).
-
-[4] J. Adebayo, J. Gilmer, M. Muelly, et al. "Sanity Checks for
-Saliency Maps". In: _Neural Information Processing Systems_. 2018.
-
----
-
-### References
-
-[5] B. Bilodeau, N. Jaques, P. W. Koh, et al. "Impossibility Theorems
-for Feature Attribution". In: _Proceedings of the National Academy of
-Sciences of the United States of America_ 121 2 (2022), p.  e2304406120
-.
-
-[6] P. W. Koh, T. Nguyen, Y. S. Tang, et al. "Concept Bottleneck
-Models". In: _ArXiv_ abs/2007.04612 (2020).
-
-[7] T. S. Wu, M. T. Ribeiro, J. Heer, et al. "Polyjuice: Generating
-Counterfactuals for Explaining, Evaluating, and Improving Models". In:
-_Annual Meeting of the Association for Computational Linguistics_.
-2021.
-
----
-
-### References
-
-[8] G. Bansal, T. S. Wu, J. Zhou, et al. "Does the Whole Exceed its
-Parts? The Effect of AI Explanations on Complementary Team
-Performance". In: _Proceedings of the 2021 CHI Conference on Human
-Factors in Computing Systems_ (2020).
-
-[9] Z. C. Lipton. "The mythos of model interpretability". In:
-_Communications of the ACM_ 61 (2016), pp. 36 - 43.
-
-[10] C. Rudin. "Stop explaining black box machine learning models for
-high stakes decisions and use interpretable models instead". In:
-_Nature Machine Intelligence_ 1 (2018), pp. 206 - 215.
-
----
-
-### References
-
-[11] W. J. Murdoch, C. Singh, K. Kumbier, et al. "Definitions, methods,
-and applications in interpretable machine learning". In: _Proceedings
-of the National Academy of Sciences_ 116 (2019), pp. 22071 - 22080.
-
-[12] R. Caruana, Y. Lou, J. Gehrke, et al. "Intelligible Models for
+[1] R. Caruana, Y. Lou, J. Gehrke, et al. "Intelligible Models for
 HealthCare: Predicting Pneumonia Risk and Hospital 30-day Readmission".
 In: _Proceedings of the 21th ACM SIGKDD International Conference on
 Knowledge Discovery and Data Mining_ (2015).
 
-[13] T. Gu, B. Dolan-Gavitt, and S. Garg. "BadNets: Identifying
+[2] T. Gu, B. Dolan-Gavitt, and S. Garg. "BadNets: Identifying
 Vulnerabilities in the Machine Learning Model Supply Chain". In:
 _ArXiv_ abs/1708.06733 (2017).
+
+[3] C. Gosmann, M. N. Anahtar, S. A. Handley, et al.
+"Lactobacillus&lt;U+2010&gt;Deficient Cervicovaginal Bacterial Communities
+Are Associated with Increased HIV Acquisition in Young South African
+Women". In: _Immunity_ 46 (2017), p. 29&lt;U+2013&gt;37.
+
+[4] A. Coenen, E. Reif, A. Yuan, et al. "Visualizing and Measuring the
+Geometry of BERT". In: _ArXiv_ abs/1906.02715 (2019).
+
+---
+
+### References
+
+[5] Y. Liu, E. Jun, Q. Li, et al. "Latent Space Cartography: Visual
+Analysis of Vector Space Embeddings". In: _Computer Graphics Forum_ 38
+(2019).
+
+[6] J. Adebayo, J. Gilmer, M. Muelly, et al. "Sanity Checks for
+Saliency Maps". In: _Neural Information Processing Systems_. 2018.
+
+[7] B. Bilodeau, N. Jaques, P. W. Koh, et al. "Impossibility Theorems
+for Feature Attribution". In: _Proceedings of the National Academy of
+Sciences of the United States of America_ 121 2 (2022), p.  e2304406120
+.
+
+---
+
+### References
+
+[8] P. W. Koh, T. Nguyen, Y. S. Tang, et al. "Concept Bottleneck
+Models". In: _ArXiv_ abs/2007.04612 (2020).
+
+[9] T. S. Wu, M. T. Ribeiro, J. Heer, et al. "Polyjuice: Generating
+Counterfactuals for Explaining, Evaluating, and Improving Models". In:
+_Annual Meeting of the Association for Computational Linguistics_.
+2021.
+
+[10] G. Bansal, T. S. Wu, J. Zhou, et al. "Does the Whole Exceed its
+Parts? The Effect of AI Explanations on Complementary Team
+Performance". In: _Proceedings of the 2021 CHI Conference on Human
+Factors in Computing Systems_ (2020).
+
+---
+
+### References
+
+[11] Z. C. Lipton. "The mythos of model interpretability". In:
+_Communications of the ACM_ 61 (2016), pp. 36 - 43.
+
+[12] C. Rudin. "Stop explaining black box machine learning models for
+high stakes decisions and use interpretable models instead". In:
+_Nature Machine Intelligence_ 1 (2018), pp. 206 - 215.
+
+[13] W. J. Murdoch, C. Singh, K. Kumbier, et al. "Definitions, methods,
+and applications in interpretable machine learning". In: _Proceedings
+of the National Academy of Sciences_ 116 (2019), pp. 22071 - 22080.
 
 ---
 
@@ -695,7 +694,7 @@ bacterium by Maria Zamchy from &lt;a href="https://thenounproject.com/browse/ico
 removed this requirement, creating a new need for post-hoc expalnations.
 
 1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
-and commentaries attempt to establish shared vocabulary [9; 4; 10; 11].
+and commentaries attempt to establish shared vocabulary [11; 6; 12; 13].
 
 1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
 evaluation, and substantive theory -- these are beginning to emerge.

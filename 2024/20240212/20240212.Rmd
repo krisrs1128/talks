@@ -295,9 +295,8 @@ features: overall slope and curvature for each taxon.
 1. The best performing lasso model achieves a performance of ~ 86% using 55 of
 the 289 derived features.
 
-1. Lesson: In the original feature space, there was an interpretability-accuracy
-trade. However, it's possible to choose *more interpretable and more predictive
-representatives.*
+1. Lesson: Interpretability and accuracy are not necessarily at odds with one
+another.
 ]
 
 .pull-right[
