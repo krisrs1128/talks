@@ -485,10 +485,8 @@ concept labels to help us explain each instance's prediction.
 
 ### Gauging Progress
 
-1. ML has made significant progress through shared tasks and objective,
-quantitative benchmarks.
 1. Interpretability depends on criteria that are difficult to encode in the
-standard Data $\to$ Model $\to$ Loss workflow.
+standard ML quantitative benchmarks.
 1. This is one area where statisticians can excel:
   - We critically interrogate the situations where methods can be applied.
   - We study methods within their problem contexts.
@@ -629,6 +627,14 @@ PrintBibliography(bib, start = 5, end = 7)
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 8, end = 10)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 11, end = 13)
 ```
 
 ---
