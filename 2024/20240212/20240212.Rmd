@@ -539,7 +539,7 @@ An example of unpredictable effects during deployment `r Citep(bib, "Bansal2020D
 .pull-left[
 1. **Modern machine learning models are being designed to solve many problems simultaneously.**
 
-1. Multimodal datasets are becoming the norm, and we need methods to learn from them in an interpretable/explainable way.
+1. Multimodal datasets are becoming the norm, and we need methods to learn from them in an interpretable way.
 
 1. We are also seeing increasingly rich ways to interact with them.
 ]
@@ -556,7 +556,7 @@ An example of unpredictable effects during deployment `r Citep(bib, "Bansal2020D
 1. Modern machine learning models are being designed to solve many problems
 simultaneously.
 
-1. **Multimodal datasets are becoming the norm, and we need methods to learn from them in an interpretable/explainable way.**
+1. **Multimodal datasets are becoming the norm, and we need methods to learn from them in an interpretable way.**
 
 1. We are also seeing increasingly rich ways to interact with them.
 ]
@@ -573,7 +573,7 @@ simultaneously.
 simultaneously.
 
 1. Multimodal datasets are becoming the norm, and we need methods to learn from
-them in an interpretable/explainable way.
+them in an interpretable way.
 
 1. **We are also seeing increasingly rich ways to interact with them.**
 
