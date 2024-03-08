@@ -601,9 +601,10 @@ a pilot dataset, we should be able generate more realistic samples than if we
 had defined the sampling mechanism from scratch.
 
 ```{r}
-N <- 500
+N <- 1000
 assignments <- c(rep("CRC", N / 2), rep("healthy", N / 2))
-new_data <- tibble(disease = factor(assignments, levels = c("healthy", "CRC")))
+new_data <- tibble(disease = factor(assignments, levels = c("healthy", "CRC"))) |>
+  mutate(newdata_index = row_number())
 simulated <- sample(sim, new_data = new_data)
 
 new_results <- DGEList(2 ^ assay(simulated), group = colData(simulated)$disease) |>
