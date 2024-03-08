@@ -30,7 +30,7 @@ bib <- ReadBib("references.bib")
 ]
 
 <div id="links">
-Slides: https://go.wisc.edu/uhka79 <br>
+Slides: https://go.wisc.edu/9vn5rg <br>
 Lab Site: https://go.wisc.edu/pgb8nl
 </div>
 
