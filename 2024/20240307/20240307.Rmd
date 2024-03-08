@@ -113,7 +113,7 @@ samples <- sample(simulator)
 
 ---
 
-## Example 2: Interactivity for Calibration
+### Example 2: Interactivity for Calibration
 
 ```{r, eval = FALSE}
 simulator <- simulator |>
