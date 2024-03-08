@@ -93,7 +93,7 @@ longitudinal multi-omics data visualization `r Citep(bib, "Ma2023MolPadAR")`.
 
 ---
 
-### Example 2: Interactivity for Calibration
+### Example 2: Interactivity for Simulation
 
 1. Simulation can guide experimental design, methods benchmarking, and
 comparison with synthetic nulls.
@@ -113,7 +113,7 @@ samples <- sample(simulator)
 
 ---
 
-### Example 2: Interactivity for Calibration
+### Example 2: Interactivity for Simulation
 
 ```{r, eval = FALSE}
 simulator <- simulator |>
@@ -130,7 +130,7 @@ simulator <- simulator |>
 
 ---
 
-### Example 2: Interactivity for Calibration
+### Example 2: Interactivity for Simulation
 
 ```{r, eval = FALSE}
 simulator <- simulator |>
@@ -158,6 +158,26 @@ sims <- experiments |>
 ```
 
 <img src="figures/simulator_join.png" width=1300/>
+
+---
+
+### Reaching Out
+
+* You can learn more at [go.wisc.edu/pgb8nl](go.wisc.edu/pgb8nl).
+
+* I enjoy working with students with a variety of backgrounds.
+
+* I encourage you to reach out for any reason before or after your decision -- I'm always happy to talk about statistics.
+
+* Email: [ksankaran@wisc.edu](mailto:ksankaran@wisc.edu)
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib)
+```
 
 ---
 
@@ -215,23 +235,3 @@ new_results <- DGEList(2 ^ assay(simulated), group = colData(simulated)$disease)
 .pull-right[
 <img src="figures/de_power_1000.svg"/>
 ]
-
----
-
-### Reaching Out
-
-* You can learn more at [go.wisc.edu/pgb8nl](go.wisc.edu/pgb8nl).
-
-* I enjoy working with students with a variety of backgrounds.
-
-* I encourage you to reach out for any reason before or after your decision -- I'm always happy to talk about statistics.
-
-* Email: [ksankaran@wisc.edu](mailto:ksankaran@wisc.edu)
-
----
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib)
-```
