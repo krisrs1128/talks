@@ -562,7 +562,9 @@ dge <- DGEList(assay(yachida), group = colData(yachida)$disease) |>
 results <- differential_test(dge, colData(yachida))
 ggplot(results, aes(logFC, -log(adj.P.Val, 10))) +
   geom_point() +
-  geom_text_repel(data = filter(results,  abs(logFC) > 2), aes(label = ID), size = 3)
+  geom_text_repel(data = filter(results,  abs(logFC) > 2), aes(label = ID), size = 4) +
+  labs(x = expression(FC[j]), y = expression(-log(p[j])))
+ggsave("~/Desktop/laboratory/talks/2024/20240307/figures/de_power_original.svg", height = 5.58, width = 5.68)
 ```
 
 To evaluate power, we need a sense in which some taxa are true signals/true
@@ -601,7 +603,7 @@ a pilot dataset, we should be able generate more realistic samples than if we
 had defined the sampling mechanism from scratch.
 
 ```{r}
-N <- 1000
+N <- 250
 assignments <- c(rep("CRC", N / 2), rep("healthy", N / 2))
 new_data <- tibble(disease = factor(assignments, levels = c("healthy", "CRC"))) |>
   mutate(newdata_index = row_number())
@@ -614,9 +616,21 @@ new_results <- DGEList(2 ^ assay(simulated), group = colData(simulated)$disease)
 new_results |>
   ggplot(aes(logFC, -log(adj.P.Val, 10), col = null)) +
   geom_point() +
-  geom_hline(yintercept = -log(0.05, 10), col = "#ababab") +
-  geom_text_repel(data = filter(new_results,  abs(logFC) > 1.5), aes(label = ID), size = 3) +
-  facet_wrap(~ null)
+  geom_hline(yintercept = -log(0.05, 10), col = "#ababab", linewidth = 4) +
+  geom_text_repel(data = filter(new_results,  abs(logFC) > 1.5), aes(label = ID), size = 4) +
+  facet_wrap(~ null) +
+  theme(
+    panel.background = element_rect(color = NA, fill = "transparent"),
+    plot.background = element_rect(color = NA, fill = "transparent"),
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 16),
+    legend.title = element_text(size = 16),
+    legend.text = element_text(size = 14),
+    strip.text = element_text(size = 14)
+  ) +
+  labs(x = expression(FC[j]), y = expression(-log(p[j])))
+
+ggsave("~/Desktop/laboratory/talks/2024/20240307/figures/de_power_250.svg", height = 5.58, width = 5.68)
 ```
 
 ### Augmenting Spatial Data
