@@ -299,7 +299,7 @@ If the resulting grammar is expressive enough, then researchers will be able to
 solve problems we may not have anticipated.
 
 ```{r, read_data, echo = FALSE}
-sce <- readRDS("data/PANCREAS_sce.rds")[1:10, ]
+sce <- readRDS(url("https://go.wisc.edu/77uf3h"))[1:10, ]
 ```
 
 ---
@@ -443,8 +443,8 @@ margins |>
 
 We should make it possible to combine simulators like Lego blocks.
 ```{r, echo = FALSE}
-SCGEMMETH_sce <- readRDS("data/SCGEMMETH_sce.rds")
-SCGEMRNA_sce <-readRDS("data/SCGEMRNA_sce.rds")
+SCGEMMETH_sce <- readRDS(url("https://go.wisc.edu/q712e3"))
+SCGEMRNA_sce <-readRDS(url("https://go.wisc.edu/9n6u1y"))
 
 rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
 rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
@@ -521,81 +521,7 @@ Compiled Quarto: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62eh3
 
 ---
 
-### Example: Multi-Study Comparison
-
-From `r Citep(bib, "Goodman2001OfPA")` by Steve Goodman:
-
-> Imagine a number that does not tell us what we know, but how much we have learned… [W]e should incorporate a Bayesian framework into our writing, and not just our speaking. We should describe our data as one source of information among many that make a relationship either plausible or unlikely. The use of summaries such as the Bayes factor encourages that, while use of the P-value makes it nearly impossible. 
-
----
-
-### Example: Multi-Study Comparison
-
-1. Simulators offer a way of encoding community consensus. We are interested in how evidence accumulates and consensus evolves.
-2. We will work with the `curatedMetagenomicData` `r Citep(bib, "Pasolli2017AccessibleCM")`, which includes 12 colorectal
-cancer (CRC) studies processed with the same pipeline.
-
----
-
-### Association from first study
-
-For each taxon $j$, we fit two $\text{ZINB}\left(\mu_{j}, \sigma_{j}, \nu_{j}\right)$ models:
-
-\begin{align}
-H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) \\
-H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{CRC}
-\end{align}
-
-Given data $X^{(1)}$ from study 1, we compute $P\left(H_{j1} \vert X^{(1)}\right)$, assuming $P\left(H_{j1}\right) = 0.1$ a priori and that $H_{j1}$ and $H_{j0}$ are the only possible states of the world.
-
----
-
-### Association from first study
-
-These are the taxa with the largest value of $P\left(H_{j1} \vert X^{(1)}\right)$.
-
-.center[
-<img src="figures/initial_selection.png" width=750/>
-]
-
----
-
-### Remaining Studies
-
-We can see how this changes as the number of studies is increased. We now consider,
-\begin{align}
-H_{j0}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID} \\
-H_{j1}: \left(\mu_j, \sigma_j,\nu_j\right) &\sim \log\left(\text{Sequencing Depth}\right) + \text{Study ID} + \text{CRC}
-\end{align}
-and fit associated ZINB models using all data from studies $X^{(1)}, \dots, X^{(K)}$.
-
-This lets us track $P\left(H_{j1} \vert X^{(1)}, \dots, X^{(K)}\right)$.
-
----
-
-### Remaining Studies
-
-This provides a simple summary of how evidence has evolved as more studies are
-completed.
-
-.center[
-<img src="figures/hypothesis_evolution.png" width = 900/>
-]
-
----
-
-### Remaining Studies
-
-We can focus on some of the more interesting curves, and the low-level data seem
-consistent with the high-level summary.
-
-.center[
-<img src="figures/hypothesis_evolution_example.png" width = 900/>
-]
-
----
-
-### Bonus: <span style="color:#D94E4E">Interactive Plot</span>
+### <span style="color:#D94E4E">Interactive Plot</span>
 
 We have an experimental interactive visualization that can be used for model criticism. You can check out the code: https://go.wisc.edu/q43ol3
 
@@ -607,11 +533,52 @@ We have an experimental interactive visualization that can be used for model cri
 
 ---
 
+### Future Directions: Improving Generators
+
+GAMLSS models are simple and interpretable. However,
+
+* They can oversmooth sharp transitions.
+* Fitting each feature separately is both statistically and computationally inefficient.
+
+---
+
+### Future Directions: Quantitative Evaluation
+
+We need formal ways for gauging the quality of a simulator.
+
+* Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
+* GAN precision-recall measures can offer a more systematic approach.
+
+---
+
+### Future Directions: Autocompletion
+
+scDesigner offers freedom, but not guidance.
+
+* Many parameters can influence simulation quality: Preprocessing, distributional assumptions, covariates to include, spline basis
+* Can we "recommend" the next step of simulator construction, based on initial user specification?
+
+---
+
+### History
+
+`r Citep(bib, "scott1954")` is the earliest example I know of using computer
+simulated data to guide scientific data analysis.
+
+.pull-left[
+  <img src="figures/galaxies-real.png"/>
+]
+
+.pull-right[
+  <img src="figures/galaxies-synthetic.png"/>
+]
+
+---
 
 ### Thank you!
 
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, and Kaiyan Ma
-* Discussions with Jingyi Jessica Li (UCLA)
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
+* Discussions with Jingyi Jessica Li (UCLA) and Andres Colubri (UMass)
 * Funding: NIGMS R01GM152744.
 
 ---
