@@ -505,6 +505,21 @@ sim_joined
 ---
 
 .section[
+## Examples
+]
+
+---
+
+### Multivariate Power Analysis
+
+Statistical Power: With a given sample size and experimental design, what types of signals will be recoverable?
+
+  * This step is required by every NIH grant.
+  * In practice, 
+
+---
+
+.section[
 ## Interactive Demo
 ]
 <br/>
@@ -535,28 +550,60 @@ We have an experimental interactive visualization that can be used for model cri
 
 ### Future Directions: Improving Generators
 
+.pull-right[
 GAMLSS models are simple and interpretable. However,
 
 * They can oversmooth sharp transitions.
 * Fitting each feature separately is both statistically and computationally inefficient.
+]
+
+.pull-left[
+<img src="figures/spatial_example_smoothness.png"/>
+]
 
 ---
 
 ### Future Directions: Quantitative Evaluation
 
+.pull-left[
 We need formal ways for gauging the quality of a simulator.
 
 * Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
 * GAN precision-recall measures can offer a more systematic approach.
+]
+
+.pull-right[
+  <img src="figures/gan-eval1.png"/>
+]
 
 ---
 
+### Future Directions: Quantitative Evaluation
+
+.pull-left[
+We need formal ways for gauging the quality of a simulator.
+
+* Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
+* GAN precision-recall measures can offer a more systematic approach.
+]
+
+.pull-right[
+  <img src="figures/gan-eval2.png"/>
+]
+
+---
 ### Future Directions: Autocompletion
 
-scDesigner offers freedom, but not guidance.
+.pull-left[
+scDesigner offers freedom, but no guidance.
 
 * Many parameters can influence simulation quality: Preprocessing, distributional assumptions, covariates to include, spline basis
 * Can we "recommend" the next step of simulator construction, based on initial user specification?
+]
+
+.pull-right[
+<img src="figures/wrangler.png"/>
+]
 
 ---
 
