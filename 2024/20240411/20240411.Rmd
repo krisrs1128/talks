@@ -26,7 +26,7 @@ library(splines)
 library(scDesigner)
 library(gamlss)
 library(gamboostLSS)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
 knit_hooks$set(output = scDesigner::ansi_aware_handler)
 options(crayon.enabled = TRUE)
 set.seed(20230120)
@@ -55,7 +55,6 @@ theme_set(th)
 BibOptions(cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
-
 
 <div id="links">
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
@@ -325,8 +324,8 @@ We can tie together a collection of marginals using a copula model.
 
 ```{r join_into_copula}
 simulator <- new(
-  "JointDistribution", 
-  margins = margins, 
+  "JointDistribution",
+  margins = margins,
   dependence = copula_gaussian()
 )
 ```
@@ -523,8 +522,7 @@ We can use simulation to guide power analysis that reflects realistic data analy
 
 ### Problem Context
 
-Gavin et al. (2018) studied the metaproteomics of Type I Diabetes (T1D).
-<!-- * Use Tandem Mass Spectrometry to measure abundances of human and microbiome-derived proteins in stool samples -->
+`r Citep(bib, "Gavin2018")` studied the metaproteomics of Type I Diabetes (T1D).
 .pull-left[
 * Sample participants at several stages of T1D progression (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
 * Analyzed with sparse Partial Least Squares Discriminant Analysis (sPLS-DA), a variant of linear discriminant analysis.
@@ -675,8 +673,6 @@ We need formal ways for gauging the quality of a simulator.
 ---
 ### Future Directions: Autocompletion
 
-<!-- scDesigner offers freedom, but no guidance. -->
-
 * Many parameters can influence simulation quality: Preprocessing, distributional assumptions, covariates to include, spline basis
 * Can we "recommend" the next step of simulator construction, based on initial user specification?
 
@@ -688,7 +684,7 @@ We need formal ways for gauging the quality of a simulator.
 
 ### History
 
-`r Citep(bib, "scott1954")` is the earliest example I've found that uses
+`r Citep(bib, "Scott1954")` is the earliest example I've found that uses
 computer simulated data to guide data analysis.
 
 .pull-left[
