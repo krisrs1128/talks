@@ -504,12 +504,23 @@ sim_joined
 ---
 
 .section[
-## Examples
+## Interactive Demo
 ]
+<br/>
+<br/>
+<br/>
+
+<div style="font-size: 34px;">
+Live Code: <a href="https://go.wisc.edu/">https://go.wisc.edu/</a>
+<br/>
+Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
+<br/>
+Compiled Notebook: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62eh36</a>
+</div>
 
 ---
 
-### Power Analysis
+### Example 2: Power Analysis
 
 With a given sample size and experimental design, what types of signals will be recoverable?
 
@@ -595,23 +606,6 @@ The default sPLS-DA visualization output can separate classes even when no signa
 .center[
 <img src="figures/t1D-null-overfit.png" width=400/>
 ]
-
----
-
-.section[
-## Interactive Demo
-]
-<br/>
-<br/>
-<br/>
-
-<div style="font-size: 34px;">
-Live Code: <a href="https://go.wisc.edu/411090/">https://go.wisc.edu/411090/</a>
-<br/>
-Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
-<br/>
-Compiled Quarto: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62eh36</a>
-</div>
 
 ---
 
