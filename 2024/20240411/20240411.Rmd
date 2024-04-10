@@ -510,12 +510,93 @@ sim_joined
 
 ---
 
+### Power Analysis
+
+With a given sample size and experimental design, what types of signals will be recoverable?
+
+  * This guards against wasting effort on underpowered studies, and is required by almost every NIH grant proposal.
+  * In practice, researchers often report power for tests with analytical power curves (e.g., $t$-tests), even if this is not the intended analysis!
+
+We can use simulation to guide power analysis that reflects realistic data analysis.
+
+---
+
+### Problem Context
+
+Gavin et al. (2018) studied the metaproteomics of Type I Diabetes (T1D).
+<!-- * Use Tandem Mass Spectrometry to measure abundances of human and microbiome-derived proteins in stool samples -->
+.pull-left[
+* Sample participants at several stages of T1D progression (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
+* Analyzed with sparse Partial Least Squares Discriminant Analysis (sPLS-DA), a variant of linear discriminant analysis.
+]
+
+.pull-right[
+<img src="figures/gavin_t1d_summary.png" width=500/>
+]
+
+Their findings suggest that intestinal and pancreas function are altered even before the onset of full T1D.
+
+
+---
+
 ### Multivariate Power Analysis
 
-Statistical Power: With a given sample size and experimental design, what types of signals will be recoverable?
+What would be a good power analysis for a follow-up study?
 
-  * This step is required by every NIH grant.
-  * In practice, 
+1. Estimation: Learn a simulator from the 101 available samples.
+2. Perturbation: Generate data with varying sample sizes and signals.
+3. Evaluation: Compute the average sPLS-DA performance across replicates.
+
+.center[
+<img src="figures/power_overview.png" width=700/>
+]
+
+---
+
+### Estimation
+
+1. We fit Gaussian LSS models to log-ratio transformed measurements of the 427 proteins found in $\geq$ 70% of subjects.
+2. Means and variances are allowed to vary across low and high risk groups.
+3. Main difficulty: The real data have long left tails.
+
+.center[
+<img src="figures/t1D-multivariate-0.png", width=800/>
+]
+
+---
+
+### Perturbation
+
+.pull-left[
+* We `mutate` the simulators so that the true number of T1D-associated proteins is $s \in \{10, 30, 50, \dots, 110\}$
+* We choose the true non-nulls from among proteins with with observed strong effects
+  - 32 are found significant at $\alpha = 0.05$ in the original data
+]
+
+.pull-right[
+<img src="figures/p_values.png"/>
+]
+
+---
+
+### Evaluation
+
+* The AUC for tuned sPLS-DA models varies from 0.5 (random guess) to over 0.9 in the high-signal regime.
+
+* Potential Extension: Model patient heterogeneity (age, finer risk levels).
+
+.center[
+<img src="figures/t1D-multivariate-2.png" width=550/>
+]
+
+---
+
+### Aside: Negative Control
+The default sPLS-DA visualization output can separate classes even when no signals exist. This is a consequence of overfitting.
+
+.center[
+<img src="figures/t1D-null-overfit.png" width=400/>
+]
 
 ---
 
@@ -550,30 +631,15 @@ We have an experimental interactive visualization that can be used for model cri
 
 ### Future Directions: Improving Generators
 
-.pull-right[
+.pull-left[
 GAMLSS models are simple and interpretable. However,
 
 * They can oversmooth sharp transitions.
 * Fitting each feature separately is both statistically and computationally inefficient.
 ]
 
-.pull-left[
-<img src="figures/spatial_example_smoothness.png"/>
-]
-
----
-
-### Future Directions: Quantitative Evaluation
-
-.pull-left[
-We need formal ways for gauging the quality of a simulator.
-
-* Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
-* GAN precision-recall measures can offer a more systematic approach.
-]
-
 .pull-right[
-  <img src="figures/gan-eval1.png"/>
+<img src="figures/spatial_example_smoothness.png"/>
 ]
 
 ---
@@ -592,32 +658,45 @@ We need formal ways for gauging the quality of a simulator.
 ]
 
 ---
-### Future Directions: Autocompletion
+
+### Future Directions: Quantitative Evaluation
 
 .pull-left[
-scDesigner offers freedom, but no guidance.
+We need formal ways for gauging the quality of a simulator.
 
-* Many parameters can influence simulation quality: Preprocessing, distributional assumptions, covariates to include, spline basis
-* Can we "recommend" the next step of simulator construction, based on initial user specification?
+* Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
+* GAN precision-recall measures can offer a more systematic approach.
 ]
 
 .pull-right[
-<img src="figures/wrangler.png"/>
+  <img src="figures/gan-eval1.png"/>
+]
+
+---
+### Future Directions: Autocompletion
+
+<!-- scDesigner offers freedom, but no guidance. -->
+
+* Many parameters can influence simulation quality: Preprocessing, distributional assumptions, covariates to include, spline basis
+* Can we "recommend" the next step of simulator construction, based on initial user specification?
+
+.center[
+<img src="figures/wrangler.png" width=500/>
 ]
 
 ---
 
 ### History
 
-`r Citep(bib, "scott1954")` is the earliest example I know of using computer
-simulated data to guide scientific data analysis.
+`r Citep(bib, "scott1954")` is the earliest example I've found that uses
+computer simulated data to guide data analysis.
 
 .pull-left[
-  <img src="figures/galaxies-real.png"/>
+  <img src="figures/galaxies-real.png" width=400/>
 ]
 
 .pull-right[
-  <img src="figures/galaxies-synthetic.png"/>
+  <img src="figures/galaxies-synthetic.png" width=400/>
 ]
 
 ---
