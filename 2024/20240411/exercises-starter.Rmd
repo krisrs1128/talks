@@ -11,12 +11,11 @@ source("setup.R")
 
 ## Microbiome Networks
 
-Which microbes are friends with one another? Unlike human social networks, there
-is no simple way to observe microbe-microbe interactions -- we have to make do
-with indirect evidence. One approach uses population profiles as a proxy for
-ecological interaction. Taxa that often co-occur are understood to have
-cooperative ecological interactions, while those that don't are thought to
-compete for the same niche.
+Unlike human social networks, there is no simple way to observe microbe-microbe
+interactions -- we have to make do with indirect evidence. One approach uses
+population profiles as a proxy for ecological interaction. Taxa that often
+co-occur are understood to have cooperative ecological interactions, while those
+that don't are thought to compete for the same niche.
 
 Many algorithms have been designed around this intuition, all trying to go
 beyond simple co-occurrence and instead capture more complex types of
