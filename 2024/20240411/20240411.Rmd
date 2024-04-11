@@ -16,7 +16,7 @@ output:
 class: title
 background-size: cover
 
-```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE}
+```{r, packages, echo = FALSE, warnings = FALSE, message = FALSE, cache = FALSE}
 library(RefManageR)
 library(STexampleData)
 library(knitr)
@@ -26,7 +26,7 @@ library(splines)
 library(scDesigner)
 library(gamlss)
 library(gamboostLSS)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval = TRUE, eval.after = "fig.cap")
 knit_hooks$set(output = scDesigner::ansi_aware_handler)
 options(crayon.enabled = TRUE)
 set.seed(20230120)
@@ -52,7 +52,7 @@ th <- theme_classic() +
 
 theme_set(th)
 
-BibOptions(cite.style = "numeric")
+BibOptions(cite.style = "authoryear", max.names = 1)#cite.style = "numeric")
 bib <- ReadBib("references.bib")
 ```
 
@@ -354,7 +354,7 @@ simulator <- setup_simulator(
 
 ### Extensibility
 
-For the marginals, we can borrow from existing LSS packages (gamlss `r Citep(bib, "Rigby2005GeneralizedAM")`, gamboostLSS `r Citep(bib, "Hofner2014gamboostLSSAR")`) to implement gene-wise regressions,
+For the marginals, we can borrow from existing LSS packages `r Citep(bib, c("Rigby2005GeneralizedAM", "Hofner2014gamboostLSSAR"))` to implement gene-wise regressions,
 
 * Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
 
@@ -524,10 +524,10 @@ Compiled Notebook: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62e
 
 With a given sample size and experimental design, what types of signals will be recoverable?
 
-  * This guards against wasting effort on underpowered studies, and is required by almost every NIH grant proposal.
-  * In practice, researchers often report power for tests with analytical power curves (e.g., $t$-tests), even if this is not the intended analysis!
+  * This prevents wasting effort on underpowered studies.
+  * In practice, researchers often report power for tests with analytical power curves (e.g., $t$-tests), even if that is not the planned analysis.
 
-We can use simulation to guide power analysis that reflects realistic data analysis.
+Simulation can guide power analysis that reflects the planned analysis approach.
 
 ---
 
@@ -535,15 +535,15 @@ We can use simulation to guide power analysis that reflects realistic data analy
 
 `r Citep(bib, "Gavin2018")` studied the metaproteomics of Type I Diabetes (T1D).
 .pull-left[
-* Sample participants at several stages of T1D progression (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
-* Analyzed with sparse Partial Least Squares Discriminant Analysis (sPLS-DA), a variant of linear discriminant analysis.
+* They sampled participants at several disease stages (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
+* Their analysis used sPLS-DA `r Citep(bib, "LCao2011")`, a variant of linear discriminant analysis.
 ]
 
 .pull-right[
 <img src="figures/gavin_t1d_summary.png" width=500/>
 ]
 
-Their findings suggest that intestinal and pancreas function are altered even before the onset of full T1D.
+They found that intestinal and pancreas function are altered even before the onset of full T1D.
 
 
 ---
@@ -642,7 +642,7 @@ GAMLSS models are simple and interpretable. However,
 We need formal ways for gauging the quality of a simulator.
 
 * Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
-* GAN precision-recall measures can offer a more systematic approach.
+* GAN precision-recall measures can offer a more systematic approach `r Citep(bib, "Sajjadi2018AssessingGM")`.
 ]
 
 .pull-right[
@@ -657,7 +657,7 @@ We need formal ways for gauging the quality of a simulator.
 We need formal ways for gauging the quality of a simulator.
 
 * Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
-* GAN precision-recall measures can offer a more systematic approach.
+* GAN precision-recall measures can offer a more systematic approach `r Citep(bib, "Sajjadi2018AssessingGM")`.
 ]
 
 .pull-right[
@@ -668,7 +668,7 @@ We need formal ways for gauging the quality of a simulator.
 ### Future Directions: Autocompletion
 
 * Many parameters can influence simulation quality: Preprocessing, distributional assumptions, covariates to include, spline basis
-* Can we "recommend" the next step of simulator construction, based on initial user specification?
+* Can we "recommend" the next step of simulator construction, based on initial user specification `r Citep(bib, "Heer2019")`?
 
 .center[
 <img src="figures/wrangler.png" width=500/>
@@ -718,7 +718,7 @@ PrintBibliography(bib, start = 4, end = 6)
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 7, end = 10)
+PrintBibliography(bib, start = 7, end = 9)
 ```
 
 ---
@@ -726,7 +726,15 @@ PrintBibliography(bib, start = 7, end = 10)
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 11, end = 14)
+PrintBibliography(bib, start = 10, end = 12)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 13, end = 16)
 ```
 
 ---
@@ -793,14 +801,14 @@ exper <- augment_mds(exper, K = 4) |>
 
 ---
 
-### Example 1: Multi-omics Power Analysis
+### Example: Multi-omics Power Analysis
 
 1. In practice, most power analyses are univariate, e.g., to guide differential expression.
 2. How should we do multivariate power analysis, especially with several tables?
 
 ---
 
-### Example 1
+### Example
 
 Let’s consider the microbiome + metabolome mouse study from `r Citep(bib, "Callahan2016BioconductorWF")`. This had 12 samples.
 1. How does estimation quality improve with sample size?
@@ -812,7 +820,7 @@ Let’s consider the microbiome + metabolome mouse study from `r Citep(bib, "Cal
 
 ---
 
-### Example 1: Estimate Simulators
+### Example: Estimate Simulators
 
 1. Fit ZINB models to the microbiome.
 2. Fit Gaussian models to the metabolome.
