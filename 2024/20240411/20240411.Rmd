@@ -511,7 +511,7 @@ sim_joined
 <br/>
 
 <div style="font-size: 34px;">
-Live Code: <a href="https://go.wisc.edu/">https://go.wisc.edu/</a>
+Live Code: <a href="https://go.wisc.edu/9n0w7t/">https://go.wisc.edu/9n0w7t/</a>
 <br/>
 Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
 <br/>
