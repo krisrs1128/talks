@@ -577,7 +577,7 @@ What would be a good power analysis for a follow-up study?
 ### Perturbation
 
 .pull-left[
-* We `mutate` the simulators so that the true number of T1D-associated proteins is $s \in \{10, 30, 50, \dots, 110\}$
+* We `mutate` the simulators so that the true number of T1D-associated proteins is $s \in \{10, 30, \dots, 90\}$
 * We choose the true non-nulls from among proteins with with observed strong effects
   - 32 are found significant at $\alpha = 0.05$ in the original data
 ]
@@ -596,15 +596,6 @@ What would be a good power analysis for a follow-up study?
 
 .center[
 <img src="figures/t1D-multivariate-2.png" width=550/>
-]
-
----
-
-### Aside: Negative Control
-The default sPLS-DA visualization output can separate classes even when no signals exist. This is a consequence of overfitting.
-
-.center[
-<img src="figures/t1D-null-overfit.png" width=400/>
 ]
 
 ---
@@ -876,3 +867,14 @@ CCA on an imputed table.
 .center[
 <img src="figures/mosaic_example.png" width=750/>
 ]
+
+---
+
+### Aside: Negative Control
+The default sPLS-DA visualization output can separate classes even when no signals exist. This is a consequence of overfitting.
+
+.center[
+<img src="figures/t1D-null-overfit.png" width=400/>
+]
+
+---
