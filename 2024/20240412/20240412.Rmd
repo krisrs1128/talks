@@ -317,7 +317,7 @@ DIABLO is a sparse, generalized CCA.
 
 .pull-left[
 \begin{align*}
-\text{maximize}_{a_{1}, \dots, a_{k}} &\sum_{k \neq k'} w_{kk'} \text{Cov}\left(X^{(k)}a_k, X^{(k')}a_{k'}\right) \\
+\max\limits_{a_{1}, \dots, a_{k}} &\sum_{k \neq k'} w_{kk'} \text{Cov}\left(X^{(k)}a_k, X^{(k')}a_{k'}\right) \\
 \text{such that } &\|a_k\|_{2} = 1 \text{ for all } k\\
 & \|a_k\|_{1} \leq \lambda_k \text{ for all }k
 \end{align*}
@@ -328,7 +328,8 @@ DIABLO is a sparse, generalized CCA.
 ]
 
 The main difference is that classes of $y$ are one-hot encoded into one of the
-matrices $X^{(k)}$ (like in Optimal Scoring). For later components, residualize: $X^{(k)} \leftarrow X^{(k)}\left(I - a_{k}a_{k}^{T}\right)$.
+matrices $X^{(k)}$, like in Optimal Scoring `r Citep(bib, "Hastie1994")`. For
+later components, residualize: $X^{(k)} \leftarrow X^{(k)}\left(I - a_{k}a_{k}^{T}\right)$.
 
 ---
 
@@ -340,7 +341,7 @@ matrices $X^{(k)}$ (like in Optimal Scoring). For later components, residualize:
 out-of-sample inflammation/HIV acquisition?
   - Prediction compares scores $X^{(k)}a_{k}$ to class centroids for $y$.
 
-Hopefully this process gives us disease-associated profiles.
+This process should give us interpretable acquisition-relevant profiles.
 
 ---
 
@@ -358,7 +359,7 @@ empirically validated using organ-on-a-chip and mouse models.
 ### Random Intersection Trees
 
 1. Imagine our data are $X_{i} \subset \{1, \dots, D\}$ and $y_{i} \in \{0, 1\}$
-1. Random Intersection Trees help us find subsets $S$ that frequently occur when $y_{i} = 1$.
+1. Random Intersection Trees `r Citep(bib, "shah2014")` can find subsets $S$ that frequently occur when $y_{i} = 1$.
   - Avoids expensive enumeration of all possible subsets.
 1. Application: Which microbiological "programs" are active in the HIV acquisition group?
 

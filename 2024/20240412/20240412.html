@@ -286,7 +286,7 @@ DIABLO is a sparse, generalized CCA.
 
 .pull-left[
 `\begin{align*}
-\text{maximize}_{a_{1}, \dots, a_{k}} &amp;\sum_{k \neq k'} w_{kk'} \text{Cov}\left(X^{(k)}a_k, X^{(k')}a_{k'}\right) \\
+\max\limits_{a_{1}, \dots, a_{k}} &amp;\sum_{k \neq k'} w_{kk'} \text{Cov}\left(X^{(k)}a_k, X^{(k')}a_{k'}\right) \\
 \text{such that } &amp;\|a_k\|_{2} = 1 \text{ for all } k\\
 &amp; \|a_k\|_{1} \leq \lambda_k \text{ for all }k
 \end{align*}`
@@ -297,7 +297,8 @@ DIABLO is a sparse, generalized CCA.
 ]
 
 The main difference is that classes of `\(y\)` are one-hot encoded into one of the
-matrices `\(X^{(k)}\)` (like in Optimal Scoring). For later components, residualize: `\(X^{(k)} \leftarrow X^{(k)}\left(I - a_{k}a_{k}^{T}\right)\)`.
+matrices `\(X^{(k)}\)`, like in Optimal Scoring (Hastie et al., 1994). For
+later components, residualize: `\(X^{(k)} \leftarrow X^{(k)}\left(I - a_{k}a_{k}^{T}\right)\)`.
 
 ---
 
@@ -309,7 +310,7 @@ matrices `\(X^{(k)}\)` (like in Optimal Scoring). For later components, residual
 out-of-sample inflammation/HIV acquisition?
   - Prediction compares scores `\(X^{(k)}a_{k}\)` to class centroids for `\(y\)`.
 
-Hopefully this process gives us disease-associated profiles.
+This process should give us interpretable acquisition-relevant profiles.
 
 ---
 
@@ -327,7 +328,7 @@ empirically validated using organ-on-a-chip and mouse models.
 ### Random Intersection Trees
 
 1. Imagine our data are `\(X_{i} \subset \{1, \dots, D\}\)` and `\(y_{i} \in \{0, 1\}\)`
-1. Random Intersection Trees help us find subsets `\(S\)` that frequently occur when `\(y_{i} = 1\)`.
+1. Random Intersection Trees (Shah et al., 2014) can find subsets `\(S\)` that frequently occur when `\(y_{i} = 1\)`.
   - Avoids expensive enumeration of all possible subsets.
 1. Application: Which microbiological "programs" are active in the HIV acquisition group?
 
@@ -399,37 +400,40 @@ South African Women". In: _Immunity_ 46.1 (Jan. 2017), p. 29–37. ISSN:
 
 ### References
 
-[1] M. I. Love et al. "Moderated estimation of fold change and
+[1] T. Hastie et al. "Flexible Discriminant Analysis by Optimal
+Scoring". In: _Journal of the American Statistical Association_ 89.428
+(Dec. 1994), p. 1255–1270. ISSN: 1537-274X. DOI:
+10.1080/01621459.1994.10476866.
+&lt;http://dx.doi.org/10.1080/01621459.1994.10476866&gt;.
+
+[2] M. I. Love et al. "Moderated estimation of fold change and
 dispersion for RNA-seq data with DESeq2". In: _Genome Biology_ 15.12
 (Dec. 2014). ISSN: 1474-760X. DOI: 10.1186/s13059-014-0550-8.
 &lt;http://dx.doi.org/10.1186/s13059-014-0550-8&gt;.
 
-[2] D. J. McCarthy et al. "Scater: pre-processing, quality control,
+[3] D. J. McCarthy et al. "Scater: pre-processing, quality control,
 normalization and visualization of single-cell RNA-seq data in R". In:
 _Bioinformatics_ 33.8 (Jan. 2017). Ed. by I. Hofacker, p. 1179–1186.
 ISSN: 1367-4811. DOI: 10.1093/bioinformatics/btw777.
 &lt;http://dx.doi.org/10.1093/bioinformatics/btw777&gt;.
 
-[3] M. C. Schatz et al. "Inverting the model of genomics data sharing
+---
+
+### References
+
+[1] M. C. Schatz et al. "Inverting the model of genomics data sharing
 with the NHGRI Genomic Data Science Analysis, Visualization, and
 Informatics Lab-space". In: _Cell Genomics_ 2.1 (Jan. 2022), p. 100085.
 ISSN: 2666-979X. DOI: 10.1016/j.xgen.2021.100085.
 &lt;http://dx.doi.org/10.1016/j.xgen.2021.100085&gt;.
 
----
-
-### References
-
-[1] E. L. Scott et al. "Comparison of the Synthetic and Actual
+[2] E. L. Scott et al. "Comparison of the Synthetic and Actual
 Distribution of Galaxies on a Photographic Plate." In: _The
 Astrophysical Journal_ 119 (Jan. 1954), p. 91. ISSN: 1538-4357. DOI:
 10.1086/145799. &lt;http://dx.doi.org/10.1086/145799&gt;.
 
-[2] A. Singh et al. "DIABLO: an integrative approach for identifying
-key molecular drivers from multi-omics assays". In: _Bioinformatics_
-35.17 (Jan. 2019). Ed. by I. Birol, p. 3055–3062. ISSN: 1367-4811. DOI:
-10.1093/bioinformatics/bty1054.
-&lt;http://dx.doi.org/10.1093/bioinformatics/bty1054&gt;.
+[3] R. D. Shah et al. "Random intersection trees". In: _J. Mach. Learn.
+Res._ 15.1 (Jan. 2014), p. 629–654. ISSN: 1532-4435.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
