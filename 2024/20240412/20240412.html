@@ -17,7 +17,7 @@ background-size: cover
 
 
 &lt;div id="links"&gt;
-Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;
+Slides: &lt;a href="https://go.wisc.edu/wi1952"&gt;go.wisc.edu/wi1952&lt;/a&gt;
 &lt;/div&gt;
 &lt;div id="title"&gt;
 Integrated Views of HIV Acquisition Risk
@@ -63,31 +63,36 @@ Comparison between real and synthetic data from (Scott et al., 1954).
 
 ### Outline
 
-1. Review (Gosmann et al., 2017) -- vaginal microbiome’s role in HIV acquisition.
-1. Explain goals and experimental design of the upcoming FRESH cohort study.
-	1. How are we guarding against technical issues? 
-  1. How are we matching analysis goals with algorithms?
+1. Review (Gosmann et al., 2017) -- motivating study of the vaginal
+microbiome’s role in HIV acquisition.
+1. Explain design and goals the upcoming FRESH cohort study.
+	- How are we guarding against technical issues? 
+  - How are we matching analysis goals with statistical algorithms?
 
 ---
 
-## Review
-
-.center[
-&lt;img src="figures/gosman-cover.png" width=570/&gt;
+.section[
+  Scientific Context
 ]
 
 ---
 
 ### Motivation
 
+.pull-left[
 1. Connecting the dots:
   * Elevated inflammation is known to increased HIV risk.
   * Cervicovaginal bacteria are known to influence inflammation.
 1. Earlier studies had only isolated individual bacteria (e.g., Gram-stained vaginal spears) and were not from representative, healthy populations.
+]
+
+.pull-right[
+&lt;img src="figures/gosman-cover.png" width=500/&gt;
+]
 
 ---
 
-### Study Design: Participant Burden
+### Study Design: Cohort Profile
 
 1. **236** women age 18 - 23 from the FRESH cohort in Umlazi, South Africa. They take a 9 month course, meeting 6 hours a week.
 2. Mucosal samples are collected during pre/post pelvic exams (336 days median follow-up time).
@@ -155,6 +160,12 @@ There is also evidence of inflammation in CT4. Given CT status, inflammation lev
 
 .center[
 &lt;img src="figures/gosman-inflammation.jpeg" width=1100/&gt;
+]
+
+---
+
+.section[
+  Data Management
 ]
 
 ---
@@ -245,6 +256,12 @@ Careful chosen initial transformations can improve performance of generic method
 1. Host raw and processed data on figshare.
 2. Copy notebooks into a GitHub repo and NHGRI AnVIL (Schatz et al., 2022).
 3. For potentially reusable steps, an R Colab notebook.
+]
+
+---
+
+.section[
+  Data Analysis
 ]
 
 ---
