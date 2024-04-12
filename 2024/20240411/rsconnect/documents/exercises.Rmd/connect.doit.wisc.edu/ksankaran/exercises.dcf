@@ -1,0 +1,12 @@
+name: exercises
+title: exercises
+username: ksankaran
+account: ksankaran
+server: connect.doit.wisc.edu
+hostUrl: https://connect.doit.wisc.edu/__api__
+appId: 233
+bundleId:
+url: https://connect.doit.wisc.edu/content/217bb12f-f2cc-4ab8-8779-42b2aeddd198/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
