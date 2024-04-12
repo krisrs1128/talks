@@ -94,7 +94,7 @@ Comparison between real and synthetic data from `r Citep(bib, "Scott1954")`.
 
 ### Outline
 
-1. Review Gosmann et al. (2017) - vaginal microbiome’s role in HIV acquisition.
+1. Review `r Citep(bib, "Gosmann2017")` -- vaginal microbiome’s role in HIV acquisition.
 1. Explain goals and experimental design of the upcoming FRESH cohort study.
 	1. How are we guarding against technical issues? 
   1. How are we matching analysis goals with algorithms?
@@ -103,7 +103,9 @@ Comparison between real and synthetic data from `r Citep(bib, "Scott1954")`.
 
 ## Review
 
-[Gosmann, Christina et al. “Lactobacillus‐Deficient Cervicovaginal Bacterial Communities Are Associated with Increased HIV Acquisition in Young South African Women.” Immunity 46 (2017): 29–37.](http://dx.doi.org/10.1016/j.immuni.2016.12.013)
+.center[
+<img src="figures/gosman-cover.png" width=570/>
+]
 
 ---
 
@@ -259,50 +261,69 @@ Careful chosen initial transformations can improve performance of generic method
 ### Implementation Details
 
 .pull-left[
-Packages
+**Packages**
 
-1. Batch Effects: RUV4, CellAnova
-2. Normalization: Scater, DESeq2 size factors
-3. Featurization: feasts
+1. Batch Effects: RUV4 `r Citep(bib, "gagnon-bartsch2013")`, CellAnova `r Citep(bib, "Zhang2023")`
+2. Normalization: Scater `r Citep(bib, "McCarthy2017")`, DESeq2 size factors `r Citep(bib, "Love2014")`
+3. Featurization: feasts `r Citep(bib, "Hyndman2013ForecastingPA")`
 4. Transformation: VST, asinh
 5. Missingness: MAI `r Citep(bib, "Dekermanjian2022")`
 ]
 
 .pull-right[
-Reproducibility
+**Reproducibility**
 
 1. Host raw and processed data on figshare.
-2. Copy notebooks into a GitHub repo and NHGRI AnVIL.
+2. Copy notebooks into a GitHub repo and NHGRI AnVIL `r Citep(bib, "Schatz2022")`.
 3. For potentially reusable steps, an R Colab notebook.
 ]
-
 
 ---
 
 ### Multi-Omics Profiles
 
 We are planning to use multiblock sparse Partial Least Squares Discriminant
-Analysis ("DIABLO") after featurizing all data sources to the subject level.
+Analysis ("DIABLO") after featurizing all data sources to the subject level `r Citep(bib, "Singh2019")`.
 
-* $x_{i}^{(k)}$: Data from modality $k$, after transformation and featurization to the subject level.
-* $y_{i}$: Either HIV acquisition status or number of CD4+ T cells with CCR5 co-receptors.
+* $X^{(k)} \in \mathbf{R}^{N \times D_{k}}$: Transformed and featurized data for $N$ subjects from modality $k$.
+* $y \in \{0, 1\}^{N}$ or $\mathbf{R}_{+}^{N}$: HIV acquisition or number of target T cells.
 
----
-
-### multiblock sPLS  - Outputs
-
-1. For each modality $k$, subject-level scores $z_{k}$ 
-2. For each modality $k$, a sparse subset of features for each PLS dimension.
-3. CV performance: Using the subject-level scores, how well can we predict
-out-of-sample inflammation/HIV acquisition?
-4. Block importances: How much does performance drop when we leave the block
-out?
+.center[
+<img src="figures/multiblock.png" width=600/>
+]
 
 ---
 
 ### Algorithm
 
-(Give a concise algorithmic description)
+DIABLO is a sparse, generalized CCA.
+
+.pull-left[
+\begin{align*}
+\text{maximize}_{a_{1}, \dots, a_{k}} &\sum_{k \neq k'} w_{kk'} \text{Cov}\left(X^{(k)}a_k, X^{(k')}a_{k'}\right) \\
+\text{such that } &\|a_k\|_{2} = 1 \text{ for all } k\\
+& \|a_k\|_{1} \leq \lambda_k \text{ for all }k
+\end{align*}
+]
+
+.pull-right[
+<img src="https://github.com/krisrs1128/dsn/blob/main/extra_figures/cca_angle.png?raw=true" width=400/>
+]
+
+The main difference is that classes of $y$ are one-hot encoded into one of the
+matrices $X^{(k)}$ (like in Optimal Scoring). For later components, residualize: $X^{(k)} \leftarrow X^{(k)}\left(I - a_{k}a_{k}^{T}\right)$.
+
+---
+
+### multiblock sPLS  - Outputs
+
+1. For each modality $k$, subject-level scores $X^{(k)}a_{k}$ 
+2. For each modality $k$, a sparse subset of relevant features $\{k : a_{k} \neq 0\}$
+3. CV performance: Using the subject-level scores, how well can we predict
+out-of-sample inflammation/HIV acquisition?
+  - Prediction compares scores $X^{(k)}a_{k}$ to class centroids for $y$.
+
+Hopefully this process gives us disease-associated profiles.
 
 ---
 
@@ -310,7 +331,11 @@ out?
 
 We view this as a problem of interaction discovery.
 
-For example, a bacterial taxon (16S data) may increase the levels of an immune cell type (scRNAseq data or cell phenotyping) that is targeted by HIV, ultimately resulting in increased disease risk...The feature pair defines a predictive association rule and hence can be learned by iRF. 
+> For example, a bacterial taxon (16S data) may increase the levels of an immune cell type (scRNAseq data or cell phenotyping) that is targeted by HIV, ultimately resulting in increased disease risk...The feature pair defines a
+predictive association rule
+
+Interactions between individual microbial and immunological features can be
+empirically validated using organ-on-a-chip and mouse models.
 
 ---
 
@@ -328,9 +353,7 @@ Pseudocode
 
 ### Conclusion
 
-That is essentially our plan.h
-
-
+That is essentially our plan.
 
 ---
 
