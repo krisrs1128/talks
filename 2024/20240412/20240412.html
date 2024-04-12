@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Integrated Views of HIV Acquisition Risk</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.26/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+background-size: cover
+
+
+
+&lt;div id="links"&gt;
+Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;
+&lt;/div&gt;
+&lt;div id="title"&gt;
+Integrated Views of HIV Acquisition Risk
+&lt;/div&gt;
+
+&lt;br/&gt;
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+&lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+12 | April | 2024 &lt;br/&gt;
+Susan Holmes Group Meeting&lt;br/&gt;
+&lt;/div&gt;
+
+---
+
+### Prelude I 
+
+We have a new package for mediation analysis!
+
+* [https://github.com/krisrs1128/multimedia](https://github.com/krisrs1128/multimedia)
+* Biorxiv - [multimedia: Multimodal Mediation Analysis of Microbiome Data.](https://www.biorxiv.org/content/10.1101/2024.03.27.587024v1)
+
+.center[
+&lt;img src="https://krisrs1128.github.io/multimedia/articles/IBD_files/figure-html/lasso_mediators_plot-1.png"/ width=600&gt;
+]
+
+---
+
+### Prelude II
+
+Comparison between real and synthetic data from (Scott et al., 1954).
+
+.pull-left[
+  &lt;img src="figures/galaxies-real.png" width=400/&gt;
+]
+
+.pull-right[
+  &lt;img src="figures/galaxies-synthetic.png" width=400/&gt;
+]
+
+---
+
+### Outline
+
+1. Review (Gosmann et al., 2017) -- vaginal microbiome’s role in HIV acquisition.
+1. Explain goals and experimental design of the upcoming FRESH cohort study.
+	1. How are we guarding against technical issues? 
+  1. How are we matching analysis goals with algorithms?
+
+---
+
+## Review
+
+.center[
+&lt;img src="figures/gosman-cover.png" width=570/&gt;
+]
+
+---
+
+### Motivation
+
+1. Connecting the dots:
+  * Elevated inflammation is known to increased HIV risk.
+  * Cervicovaginal bacteria are known to influence inflammation.
+1. Earlier studies had only isolated individual bacteria (e.g., Gram-stained vaginal spears) and were not from representative, healthy populations.
+
+---
+
+### Study Design: Participant Burden
+
+1. **236** women age 18 - 23 from the FRESH cohort in Umlazi, South Africa. They take a 9 month course, meeting 6 hours a week.
+2. Mucosal samples are collected during pre/post pelvic exams (336 days median follow-up time).
+3. HIV testing twice weekly. **31** women acquired HIV during the course.
+
+---
+
+### Study Design: Data Generation
+
+1. Microbiome Profiling
+	1. 16S rRNA sequencing
+	2. Virome (metagenomic sequencing)
+2. Host Profiling
+	1. Cytokines and chemokines (Multiplexed Bead Assay)
+	2. Immune cell co-receptors (Flow Cytometry)
+	3. Sexual behavior/vaginal hygiene survey
+
+---
+
+### CT and HIV Risk
+
+They define 4 cervicotypes. 
+  * _L. crispatus_ dominant (CT1, `\(n = 23\)`), _L. iners_ dominant (CT2, `\(n = 74\)`), _G. vaginalis_ dominant (CT3, `\(n = 68\)`), other dominant (CT4, `\(n = 70\)`).
+  * None were related to host behavioral data.
+
+&lt;img src="figures/gosman-cts.jpeg"/&gt;
+
+---
+
+### CT and HIV Risk
+
+1. None of the CT1 women acquired HIV
+2. CT4 was at higher risk. 95% interval was `\(HR \in \left[1.14, 17.27\right]\)`.
+
+.center[
+&lt;img src="figures/gosman-hr.jpeg" width=520/&gt;
+]
+
+---
+
+### Immunological Mechanism
+
+HIV targets CD4+ T cells with the CCR5 co-receptor. These cells were more common
+in CT4.
+
+.center[
+&lt;img src="figures/gosman-corecepters.jpg" width=420/&gt;
+]
+
+---
+
+### Immunological Mechanism
+
+These "target" T cells are attracted by certain chemokines. These are elevated in CT4.
+
+.center[
+&lt;img src="figures/gosman-chemokines.jpg" width=400/&gt;
+]
+
+---
+
+### Immunological Mechanism
+
+There is also evidence of inflammation in CT4. Given CT status, inflammation level was not strongly associated with HIV acquisition.
+
+.center[
+&lt;img src="figures/gosman-inflammation.jpeg" width=1100/&gt;
+]
+
+---
+
+### Follow-up Study
+
+The goals of the upcoming study are:
+
+1. Generate disease profiles using data from **1200** past FRESH participants.
+	* 3 samples per participant, `\(\approx\)` 90 days apart
+2. Discover and validate a multi-omics view of HIV acquisition.
+
+---
+
+### Follow-up Study
+
+We will have 10 data sources! We will need to vertically integrate them.
+
+.pull-left[
+1. Microbiome
+  * 16S
+  * Fungal ITS
+  * metagenomics
+  * metatranscriptomics
+  * metabolomics
+]
+
+.pull-right[
+2. Host
+	* Immunology
+      - Luminex (28 cytokines)
+      - Flow cytometry of receptor status 
+      - SeqWell (5K cervical cells)
+	* Other 
+      - Reproductive hormones from plasma
+      - Behavioral data from surveys
+]
+
+---
+
+### Data Analysis Goals
+
+_Due Diligence_
+1. Preprocess the data to remove technical artifacts and enhance power.
+2. Facilitate clear communication of results and reproducibility.
+
+_Discovery_
+1. Define multi-omics profiles associated with elevated HIV acquisition risk.
+2. Identify experimentally testable microbial/immunological interventions that alter HIV acquisition risk.
+
+---
+
+### Data Management
+
+1. The Handley and Kwon labs put raw data into their dropbox folders, and we
+back the raw data up on our private, university servers.
+2. We use the [pins package](https://pins.rstudio.com/) to store intermediate, preprocessed versions.
+
+---
+
+### Preprocessing Checklist
+
+Careful chosen initial transformations can improve performance of generic methods downstream.
+
+1. Batch Effects: We expect systematic differences resulting simply from sequencing run.
+2. Normalization: We never observe the actual number of molecules in a system, only the number of reads that eventually matched our reference.
+3. Featurization: We have several timepoints, and subject-level trends mean more than isolated timepoints.
+4. Transformation: Extreme sparsity/nonnormality may invalidate some methods that might have wanted to use.
+5. Missingness: Some data sources will exhibit nonrandom missingness mechanisms, and this can bias our conclusions.
+
+---
+
+### Implementation Details
+
+.pull-left[
+**Packages**
+
+1. Batch Effects: RUV4 , CellAnova 
+2. Normalization: Scater (McCarthy et al., 2017), DESeq2 size factors (Love et al., 2014)
+3. Featurization: feasts 
+4. Transformation: VST, asinh
+5. Missingness: MAI (Dekermanjian et al., 2022)
+]
+
+.pull-right[
+**Reproducibility**
+
+1. Host raw and processed data on figshare.
+2. Copy notebooks into a GitHub repo and NHGRI AnVIL (Schatz et al., 2022).
+3. For potentially reusable steps, an R Colab notebook.
+]
+
+---
+
+### Multi-Omics Profiles
+
+We are planning to use multiblock sparse Partial Least Squares Discriminant
+Analysis ("DIABLO") after featurizing all data sources to the subject level (Singh et al., 2019).
+
+* `\(X^{(k)} \in \mathbf{R}^{N \times D_{k}}\)`: Transformed and featurized data for `\(N\)` subjects from modality `\(k\)`.
+* `\(y \in \{0, 1\}^{N}\)` or `\(\mathbf{R}_{+}^{N}\)`: HIV acquisition or number of target T cells.
+
+.center[
+&lt;img src="figures/multiblock.png" width=600/&gt;
+]
+
+---
+
+### Algorithm
+
+DIABLO is a sparse, generalized CCA.
+
+.pull-left[
+`\begin{align*}
+\text{maximize}_{a_{1}, \dots, a_{k}} &amp;\sum_{k \neq k'} w_{kk'} \text{Cov}\left(X^{(k)}a_k, X^{(k')}a_{k'}\right) \\
+\text{such that } &amp;\|a_k\|_{2} = 1 \text{ for all } k\\
+&amp; \|a_k\|_{1} \leq \lambda_k \text{ for all }k
+\end{align*}`
+]
+
+.pull-right[
+&lt;img src="https://github.com/krisrs1128/dsn/blob/main/extra_figures/cca_angle.png?raw=true" width=400/&gt;
+]
+
+The main difference is that classes of `\(y\)` are one-hot encoded into one of the
+matrices `\(X^{(k)}\)` (like in Optimal Scoring). For later components, residualize: `\(X^{(k)} \leftarrow X^{(k)}\left(I - a_{k}a_{k}^{T}\right)\)`.
+
+---
+
+### multiblock sPLS  - Outputs
+
+1. For each modality `\(k\)`, subject-level scores `\(X^{(k)}a_{k}\)` 
+2. For each modality `\(k\)`, a sparse subset of relevant features `\(\{k : a_{k} \neq 0\}\)`
+3. CV performance: Using the subject-level scores, how well can we predict
+out-of-sample inflammation/HIV acquisition?
+  - Prediction compares scores `\(X^{(k)}a_{k}\)` to class centroids for `\(y\)`.
+
+Hopefully this process gives us disease-associated profiles.
+
+---
+
+### Designing Interventions
+
+We view this as a problem of interaction discovery.
+
+&gt; For example, a bacterial taxon (16S data) may increase the levels of an immune cell type (scRNAseq data or cell phenotyping) that is targeted by HIV, ultimately resulting in increased disease risk... The feature pair defines a predictive association rule
+
+Interactions between individual microbial and immunological features can be
+empirically validated using organ-on-a-chip and mouse models.
+
+---
+
+### Random Intersection Trees
+
+1. Imagine our data are `\(X_{i} \subset \{1, \dots, D\}\)` and `\(y_{i} \in \{0, 1\}\)`
+1. Random Intersection Trees help us find subsets `\(S\)` that frequently occur when `\(y_{i} = 1\)`.
+  - Avoids expensive enumeration of all possible subsets.
+1. Application: Which microbiological "programs" are active in the HIV acquisition group?
+
+---
+
+### Algorithm
+
+Arrange a randomly subset of examples `\(X_{i}\)` along a depth `\(D\)` tree.  Consider
+only `\(i\)` where `\(y_{i} = 1\)`.
+
+1. Let `\(S_{1} = X_{i\left(\text{root}\right)}\)`
+1. For all descendant notes `\(j\)`,
+  - `\(S_{j} = X_{i\left(j\right)} \cap S_{\text{parent}\left(j\right)}\)`
+1. Return the union of all `\(S_{j}\)` at the leaves.
+
+---
+
+### Tic Tac Toe Data
+
+Here, all `\(X_{i}\)` are examples where `\(y_{i} = \{\text{Black Wins}\}\)`.
+
+.center[
+&lt;img src="figures/rit-tictactoe.png" width=400/&gt;
+]
+
+---
+
+### Beyond Binary Data
+
+1. (Basu et al., 2018) apply RIT to weighted random forest.
+
+1. For each decision tree that makes up the random forest, pick random samples
+and look at which features lie on the path leading to its classification. These
+features define the set `\(X_{i}\)`.
+
+.center[
+&lt;img src="figures/example_tree.png" width=600/&gt;
+]
+
+---
+
+### Thank you!
+
+This project is in its early stages -- all feedback is welcome.
+
+---
+
+### References
+
+[1] S. Basu et al. "Iterative random forests to discover predictive and
+stable high-order interactions". In: _Proceedings of the National
+Academy of Sciences_ 115.8 (Jan. 2018), p. 1943–1948. ISSN: 1091-6490.
+DOI: 10.1073/pnas.1711236115.
+&lt;http://dx.doi.org/10.1073/pnas.1711236115&gt;.
+
+[2] J. P. Dekermanjian et al. "Mechanism-aware imputation: a two-step
+approach in handling missing values in metabolomics". In: _BMC
+Bioinformatics_ 23.1 (May. 2022). ISSN: 1471-2105. DOI:
+10.1186/s12859-022-04659-1.
+&lt;http://dx.doi.org/10.1186/s12859-022-04659-1&gt;.
+
+[3] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial
+Communities Are Associated with Increased HIV Acquisition in Young
+South African Women". In: _Immunity_ 46.1 (Jan. 2017), p. 29–37. ISSN:
+1074-7613. DOI: 10.1016/j.immuni.2016.12.013.
+&lt;http://dx.doi.org/10.1016/j.immuni.2016.12.013&gt;.
+
+---
+
+### References
+
+[1] M. I. Love et al. "Moderated estimation of fold change and
+dispersion for RNA-seq data with DESeq2". In: _Genome Biology_ 15.12
+(Dec. 2014). ISSN: 1474-760X. DOI: 10.1186/s13059-014-0550-8.
+&lt;http://dx.doi.org/10.1186/s13059-014-0550-8&gt;.
+
+[2] D. J. McCarthy et al. "Scater: pre-processing, quality control,
+normalization and visualization of single-cell RNA-seq data in R". In:
+_Bioinformatics_ 33.8 (Jan. 2017). Ed. by I. Hofacker, p. 1179–1186.
+ISSN: 1367-4811. DOI: 10.1093/bioinformatics/btw777.
+&lt;http://dx.doi.org/10.1093/bioinformatics/btw777&gt;.
+
+[3] M. C. Schatz et al. "Inverting the model of genomics data sharing
+with the NHGRI Genomic Data Science Analysis, Visualization, and
+Informatics Lab-space". In: _Cell Genomics_ 2.1 (Jan. 2022), p. 100085.
+ISSN: 2666-979X. DOI: 10.1016/j.xgen.2021.100085.
+&lt;http://dx.doi.org/10.1016/j.xgen.2021.100085&gt;.
+
+---
+
+### References
+
+[1] E. L. Scott et al. "Comparison of the Synthetic and Actual
+Distribution of Galaxies on a Photographic Plate." In: _The
+Astrophysical Journal_ 119 (Jan. 1954), p. 91. ISSN: 1538-4357. DOI:
+10.1086/145799. &lt;http://dx.doi.org/10.1086/145799&gt;.
+
+[2] A. Singh et al. "DIABLO: an integrative approach for identifying
+key molecular drivers from multi-omics assays". In: _Bioinformatics_
+35.17 (Jan. 2019). Ed. by I. Birol, p. 3055–3062. ISSN: 1367-4811. DOI:
+10.1093/bioinformatics/bty1054.
+&lt;http://dx.doi.org/10.1093/bioinformatics/bty1054&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

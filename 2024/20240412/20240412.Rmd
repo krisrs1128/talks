@@ -1,5 +1,5 @@
 ---
-title: "Understanding HIV Acquisition through Data Integration"
+title: "Integrated Views of HIV Acquisition Risk"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -51,7 +51,7 @@ bib <- ReadBib("references.bib")
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
 </div>
 <div id="title">
-Understanding HIV Acquisition through Data Integration
+Integrated Views of HIV Acquisition Risk
 </div>
 
 <br/>
@@ -331,29 +331,61 @@ Hopefully this process gives us disease-associated profiles.
 
 We view this as a problem of interaction discovery.
 
-> For example, a bacterial taxon (16S data) may increase the levels of an immune cell type (scRNAseq data or cell phenotyping) that is targeted by HIV, ultimately resulting in increased disease risk...The feature pair defines a
-predictive association rule
+> For example, a bacterial taxon (16S data) may increase the levels of an immune cell type (scRNAseq data or cell phenotyping) that is targeted by HIV, ultimately resulting in increased disease risk... The feature pair defines a predictive association rule
 
 Interactions between individual microbial and immunological features can be
 empirically validated using organ-on-a-chip and mouse models.
 
 ---
 
-### iRF Pseudocode
+### Random Intersection Trees
 
-This algorithm was designed for gene regulatory networks. We are going to try extending it to the multimodal setting.
-
-Pseudocode
-
----
-
-### iRF Visualization
+1. Imagine our data are $X_{i} \subset \{1, \dots, D\}$ and $y_{i} \in \{0, 1\}$
+1. Random Intersection Trees help us find subsets $S$ that frequently occur when $y_{i} = 1$.
+  - Avoids expensive enumeration of all possible subsets.
+1. Application: Which microbiological "programs" are active in the HIV acquisition group?
 
 ---
 
-### Conclusion
+### Algorithm
 
-That is essentially our plan.
+Arrange a randomly subset of examples $X_{i}$ along a depth $D$ tree.  Consider
+only $i$ where $y_{i} = 1$.
+
+1. Let $S_{1} = X_{i\left(\text{root}\right)}$
+1. For all descendant notes $j$,
+  - $S_{j} = X_{i\left(j\right)} \cap S_{\text{parent}\left(j\right)}$
+1. Return the union of all $S_{j}$ at the leaves.
+
+---
+
+### Tic Tac Toe Data
+
+Here, all $X_{i}$ are examples where $y_{i} = \{\text{Black Wins}\}$.
+
+.center[
+<img src="figures/rit-tictactoe.png" width=400/>
+]
+
+---
+
+### Beyond Binary Data
+
+1. `r Citep(bib, "Basu2018")` apply RIT to weighted random forest.
+
+1. For each decision tree that makes up the random forest, pick random samples
+and look at which features lie on the path leading to its classification. These
+features define the set $X_{i}$.
+
+.center[
+<img src="figures/example_tree.png" width=600/>
+]
+
+---
+
+### Thank you!
+
+This project is in its early stages -- all feedback is welcome.
 
 ---
 
@@ -372,3 +404,9 @@ PrintBibliography(bib, start = 4, end = 6)
 ```
 
 ---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 7, end = 9)
+```
