@@ -1,7 +1,6 @@
 ---
-title: "Revisiting Iterative Data Structuration"
+title: "Multiscale Analysis of Microbiome Data with Alto"
 author: "Kris Sankaran"
-date: "April 6, 2022"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -13,8 +12,6 @@ output:
       ratio: "16:9"
     seal: false
 ---
-
-class: bottom, my_title
 
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
@@ -30,7 +27,7 @@ library(MASS)
 library(knitr)
 library(RefManageR)
 library(tidyverse)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = T, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 min_theme <- theme_minimal() + 
   theme(
     panel.grid.minor = element_blank(),
@@ -55,9 +52,10 @@ BibOptions(
   cite.style = "authoryear", 
   style = "markdown",
   hyperlink = FALSE, 
-  dashed = FALSE
+  dashed = FALSE,
+  max.names = 1
 )
-#bib <- ReadBib("20220407.bib")
+bib <- ReadBib("references.bib")
 ```
 
 
@@ -66,34 +64,21 @@ BibOptions(
 <div id="subtitle">
 Kris Sankaran <br/>
 <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
-11 | April | 2024 <br/>
-STATGEN - Statistical and computational advances in microbiome data analysis
+03 | May | 2024 <br/>
 </div>
 
----
-
-### Challenges
-
-Scientists are curious about sources of biological variation but are aware of a
-range of potential technical artifacts.
-
-| Real | Nuisance |
-|--|---|
-| Variation across treatments | Sequencing protocol (batch effects) |
-| Variation across subjects | Sequencing depth |
-| Changes over time | Amplification biases
-| Complementary technologies| |
+<div id="subtitle_right">
+STATGEN 2024 <br/>
+Microbiome Data Analysis
+</div>
 
 ---
 
 ### Iterative Data Structuration
 
 .pull-left[
-* Iterative data structuration is the idea of forming a sequence of increasingly
-realistic models `r Citep(bib, c("holmes1993comment", "mallows1982overview"))`
-* It bridges low and high-complexity descriptions
-* It is the statistical analog of the Focus-plus-Context principle in data
-visualization `r Citep(bib, c("hauser2004interactive"))`
+* Iterative data structuration creates a sequence of simple $\to$ complex models`r Citep(bib, c("holmes1993comment", "mallows1982overview"))`
+* It is the statistical analog of the Focus-plus-Context data visualization principle `r Citep(bib, c("hauser2004interactive", "2004-doitrees-revisited"))`
 ]
 
 .pull-right[
@@ -122,66 +107,10 @@ include_graphics("figure/structuration.png")
 
 ---
 
-### Setting
-
-* Imagine we want an initial overview of the data, without referring to any
-supplemental variables (subject ID, time, ...)
-* Clustering is often used at this point in the microbiome analysis workflow
-  - The resulting cluster profiles are easy to explain
-  
-```{r, out.width = 580}
-include_graphics("figure/species-matrix.png")
-```
-
-  
----
-
-### Setting
-
-* Imagine we want an initial overview of the data, without referring to any
-supplemental variables (subject ID, time, ...)
-* Clustering is often used at this point in the microbiome analysis workflow
-  - The resulting cluster profiles are easy to explain
-  
-```{r, out.width = 580}
-include_graphics("figure/microbiome_clustering_conceptual.png")
-```
-
----
-
-### Setting
-  
-If the data follow a gradient, then clustering is artificial. A more
-parsimonious description uses either
-  - A projection onto a 1D subspace
-  - A mixture between two extremes
-
-```{r, fig.height = 3.5, fig.width = 12}
-mu <- cbind(seq(-10, 10, .05), seq(-10, 10, .05))
-x <- (mu + mvrnorm(nrow(mu), rep(0, 2), diag(2))) %>%
-  as.data.frame()
-
-cluster_res <- hclust(dist(x))
-scales <- seq(2, 8, 2)
-x_clusters <- map_dfr(scales, ~ cbind(x, cluster = cutree(cluster_res, .)), .id = "scale") %>%
-  mutate(
-    cluster = as.factor(cluster),
-    scale = scales[as.integer(scale)]
-  )
-
-ggplot(x_clusters) +
-  geom_point(aes(V1, V2, col = cluster)) +
-  facet_grid(. ~ scale) +
-  guides(col = guide_legend(override.aes = list(size = 5))) +
-  labs(x = "x", y = "y")
-```
-
----
-
 ### Latent Dirichlet Allocation
 
-A natural alternative is Latent Dirichlet Allocation (LDA), which supposes that
-samples $x_i \in \mathbb{R}^{D}$ are drawn independently from,
+Latent Dirichlet Allocation `r Citep(bib, "blei_lda")` supposes that samples $x_i \in \mathbb{R}^{D}$
+are drawn independently from,
 
 \begin{align*}
 x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
@@ -347,30 +276,9 @@ include_graphics("figure/alto_sketches_diagnotics.png")
 
 ---
 
-### Diagnostics
-
-It is possible to have high coherence but low refinement, and vice versa.
-
-.pull-left[
-high refinement but low coherence
-```{r, out.width = 440}
-include_graphics("figure/cr2.png")
-```
-]
-
-.pull-right[
-high coherence but low refinement
-```{r}
-include_graphics("figure/cr1.png")
-```
-]
-
----
-
 ### True LDA Model
 
-A sanity check is computing the alignment of data that are generated by an LDA
-model. Can you guess the true $K$?
+Sanity check - What is the alignment when data are generated from LDA? Can you guess the true $K$?
 
 * $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
 
@@ -453,7 +361,7 @@ include_graphics("figure/gradient-combined.png")
 
 ### Strain switching
 
-The last simulation mimics the strain switching problem.
+The final simulation mimics the strain switching problem.
   * Small subsets of species switch between two otherwise similar topics
   * Multiple resolutions are required to detect the difference
 
@@ -462,7 +370,7 @@ The last simulation mimics the strain switching problem.
 ### Mechanism
 
 We first construct equivalence classes of similar topics $\tilde{\beta}_k^r$.
-Then, for each sample $i$ and each $k$, we draw one member from the class
+Then, for each sample $i$ and each $k$, we draw one member from the class,
 
 \begin{align*}
 \beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
@@ -523,19 +431,10 @@ include_graphics("figure/community_state_types.jpg")
 
 ---
 
-### Vaginal Microbiome Research Consortium
-
-* What mechanisms drive the development of community state types?
-* The Vaginal Microbiome Research Consortium (VMRC) collected data to shed light
-on this question
-  * Long-term goal: Design interventions to restore Lactobacillus dominance
-  
----
-
 ### Dataset
 
+Consider the 16S modality from the follow-up study `r Citep(bib, "Symul2023")`.
 .pull-left[
-* We will only consider one modality from the full VMRC study
 * 135 individuals followed through pregnancy
 * 2179 samples and 2699 species
 ]
@@ -571,7 +470,7 @@ include_graphics("figure/microbiome_betas.png")
  
 ---
 
-Our approach was used by collaborators in the study, _Sub-communities of the vaginal ecosystem in pregnant and non-pregnant women_.
+These are the results presented in `r Citep(bib, "Symul2023")`.
 
 ```{r}
 include_graphics("figure/example_study.png")
@@ -581,7 +480,7 @@ include_graphics("figure/example_study.png")
 
 ### Software
 
-Topic alignment is implemented in the R package [alto](lasy.github.io/alto) (lasy.github.io/alto).
+Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
  
 .pull-left[
 ```{r, echo = TRUE, warning = FALSE}
@@ -613,27 +512,6 @@ All the simulations discussed today are vignettes in the package.
 
 ---
 
-### Package Details
-
-* Can rerun scripts at the binder link: [https://tinyurl.com/59k67sde](https://tinyurl.com/59k67sde)
-  - No installation is necessary
-* All source code available on github
-* Write if you have any questions!
-
-.pull-left[
-```{r, out.width = 440}
-include_graphics("figure/docs.png")
-```
-]
-
-.pull-right[
-```{r}
-include_graphics("figure/github.png")
-```
-]
-
----
-
 ### Takeaways
 
 * Iterative data structuration is a versatile problem-solving device
@@ -641,7 +519,7 @@ include_graphics("figure/github.png")
 	- Model comparison deserves attention, not just model selection
 * Some relevant links,
 	- `alto` documentation: [lasy.github.io/alto](https://lasy.github.io/alto/)
-	- `alto` paper: [arXiv:2109.05541](https://arxiv.org/abs/2109.05541)
+	- `alto` paper: [ https://go.wisc.edu/tify36]( https://go.wisc.edu/tify36)
 
 .pull-left[
 ```{r, out.width = 200}
@@ -670,7 +548,7 @@ For each $v$, identify the incoming edge with the highest normalized weight,
 \end{align*}
 
 * Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
-* The number of identified paths is a useful property of an alignment
+* The number of unique paths is a useful property of an alignment
 
 ```{r, out.width=270}
 include_graphics("figure/refinement-branches-1.png")
@@ -793,5 +671,3 @@ each corresponding to an arbitrary split of a true topic
 \begin{align*}
   r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} w_{\mathrm{out}}\left(v, v_{m^{\prime}}^{\prime}\right) w_{\text {in }}\left(v, v_{m^{\prime}}^{\prime}\right)
 \end{align*}
-
----
