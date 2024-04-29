@@ -43,26 +43,8 @@ Microbiome Data Analysis
 
 .pull-left[
 * Iterative data structuration creates a sequence of simple `\(\to\)` complex models(Holmes, 1993; Mallows et al., 1982)
-* It is the statistical analog of the Focus-plus-Context data visualization principle (Hauser et al., 2004; Heer et al., 2004)
-]
-
-.pull-right[
-&lt;div class="figure" style="text-align: left"&gt;
-&lt;img src="figure/structuration.png" alt="A metaphor for structuration, from (Holmes, 1993)." width="340" /&gt;
-&lt;p class="caption"&gt;A metaphor for structuration, from (Holmes, 1993).&lt;/p&gt;
-&lt;/div&gt;
-]
-
----
-
-### Iterative Data Structuration
-
-.pull-left[
-* Breaks larger microbiome data analysis problems into more manageable
-components
-  - Begin with the overview
-  - Then focus on explaining residual variation
-* An alternative to one-size-fits-all modeling packages
+* It is the statistical analog of the Focus-plus-Context visualization principle (Hauser et al., 2004; Heer et al., 2004)
+* Begin with the overview (context), then focus on residual variation (focus)
 ]
 
 .pull-right[
@@ -83,13 +65,12 @@ are drawn independently from,
 x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 \gamma_{i} &amp;\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
 \end{align*}`
-where the columns `\(\beta_{k}\)` of `\(\*B \in \Delta^{D}\)` lie in the `\(D\)`
-dimensional simplex and are themselves drawn independently from,
+where the columns `\(\beta_{k}\)` of `\(\*B \in \Delta^{K}_{D}\)` lie in the `\(D\)`-dimensional simplex and are themselves drawn independently from,
 `\begin{align*}
 \beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
 \end{align*}`
 
-We vertically stack the `\(N\)` `\(\gamma_i\)`'s into an `\(N \times K\)` matrix `\(\Gamma\)`.
+We vertically stack the `\(N\)` `\(\gamma_i\)`'s into `\(\gamma \in \Delta^{N}_{K}\)`.
 
 ---
 
@@ -113,24 +94,6 @@ estimated parameters can be interpreted as,
   - This is guided by iterative data structuration
 
 &lt;img src="figure/latent_dirichlet_v2.png" width="430" style="display: block; margin: auto;" /&gt;
-
----
-
-### Ideal Approach
-
-How can we formalize this heuristic? Our ideal approach would support,
-  * Navigation: Varying `\(K\)` allows us to trade between richness and
-  interpretability
-  * Parsimony: Mixed-membership `\(\to\)` fewer prototypes
-  
- 
-.pull-left[
-&lt;img src="figure/hclust_example.png" width="340" style="display: block; margin: auto;" /&gt;
-]
-
-.pull-right[
-&lt;img src="figure/latent_dirichlet_v2.png" width="400" style="display: block; margin: auto;" /&gt;
-]
 
 ---
 
@@ -280,7 +243,7 @@ LDA structure is not present.
 ### Diagnostics
 
 .pull-left-small[
-This structure is consistent across simulation runs, and the diagnostic measures
+This structure is consistent across simulation runs, and the diagnostics 
 quantify topic deterioration
 ]
   
@@ -437,7 +400,7 @@ result &lt;- align_topics(lda_models)
 plot(result)
 ```
 
-&lt;img src="20240503_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="20240503_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto auto auto 0;" /&gt;
 ]
 
 All the simulations discussed today are vignettes in the package. 
@@ -464,7 +427,11 @@ All the simulations discussed today are vignettes in the package.
 
 ---
 
-# Thank You! &lt;br&gt; Questions?
+### Thank you!
+
+* Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
+* Funding: NIGMS R01GM152744.
 
 ---
 

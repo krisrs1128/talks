@@ -78,25 +78,8 @@ Microbiome Data Analysis
 
 .pull-left[
 * Iterative data structuration creates a sequence of simple $\to$ complex models`r Citep(bib, c("holmes1993comment", "mallows1982overview"))`
-* It is the statistical analog of the Focus-plus-Context data visualization principle `r Citep(bib, c("hauser2004interactive", "2004-doitrees-revisited"))`
-]
-
-.pull-right[
-```{r, out.width = 340, fig.cap = "A metaphor for structuration, from (Holmes, 1993).", fig.align = "left"}
-include_graphics("figure/structuration.png")
-```
-]
-
----
-
-### Iterative Data Structuration
-
-.pull-left[
-* Breaks larger microbiome data analysis problems into more manageable
-components
-  - Begin with the overview
-  - Then focus on explaining residual variation
-* An alternative to one-size-fits-all modeling packages
+* It is the statistical analog of the Focus-plus-Context visualization principle `r Citep(bib, c("hauser2004interactive", "2004-doitrees-revisited"))`
+* Begin with the overview (context), then focus on residual variation (focus)
 ]
 
 .pull-right[
@@ -116,13 +99,12 @@ are drawn independently from,
 x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 \gamma_{i} &\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
 \end{align*}
-where the columns $\beta_{k}$ of $\*B \in \Delta^{D}$ lie in the $D$
-dimensional simplex and are themselves drawn independently from,
+where the columns $\beta_{k}$ of $\*B \in \Delta^{K}_{D}$ lie in the $D$-dimensional simplex and are themselves drawn independently from,
 \begin{align*}
 \beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
 \end{align*}
 
-We vertically stack the $N$ $\gamma_i$'s into an $N \times K$ matrix $\Gamma$.
+We vertically stack the $N$ $\gamma_i$'s into $\gamma \in \Delta^{N}_{K}$.
 
 ---
 
@@ -150,28 +132,6 @@ include_graphics("figure/latent_dirichlet_v2.png")
 ```{r, out.width = 430}
 include_graphics("figure/latent_dirichlet_v2.png")
 ```
-
----
-
-### Ideal Approach
-
-How can we formalize this heuristic? Our ideal approach would support,
-  * Navigation: Varying $K$ allows us to trade between richness and
-  interpretability
-  * Parsimony: Mixed-membership $\to$ fewer prototypes
-  
- 
-.pull-left[
-```{r, out.width = 340}
-include_graphics("figure/hclust_example.png")
-```
-]
-
-.pull-right[
-```{r, out.width = 400}
-include_graphics("figure/latent_dirichlet_v2.png")
-```
-]
 
 ---
 
@@ -347,7 +307,7 @@ include_graphics("figure/gradient_flow-4.png")
 ### Diagnostics
 
 .pull-left-small[
-This structure is consistent across simulation runs, and the diagnostic measures
+This structure is consistent across simulation runs, and the diagnostics 
 quantify topic deterioration
 ]
   
@@ -536,7 +496,11 @@ include_graphics("figure/alto_sketches_annotated alignment.png")
 
 ---
 
-# Thank You! <br> Questions?
+### Thank you!
+
+* Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
+* Funding: NIGMS R01GM152744.
 
 ---
 
