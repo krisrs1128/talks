@@ -13,6 +13,8 @@ output:
     seal: false
 ---
 
+class: title
+
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
 $\def\*#1{\mathbf{#1}}$
@@ -63,14 +65,21 @@ bib <- ReadBib("references.bib")
 
 <div id="subtitle">
 Kris Sankaran <br/>
-<a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 03 | May | 2024 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
 STATGEN 2024 <br/>
-Microbiome Data Analysis
+Microbiome Data Analysis <br/>
+Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a> 
 </div>
+
+---
+
+.section[
+_"How did you choose $K$?"_
+]
 
 ---
 
@@ -78,8 +87,8 @@ Microbiome Data Analysis
 
 .pull-left[
 * Iterative data structuration creates a sequence of simple $\to$ complex models`r Citep(bib, c("holmes1993comment", "mallows1982overview"))`
-* It is the statistical analog of the Focus-plus-Context visualization principle `r Citep(bib, c("hauser2004interactive", "2004-doitrees-revisited"))`
-* Begin with the overview (context), then focus on residual variation (focus)
+* It makes it easy to navigate the interpretability/expressivity tradeoff
+  - Begin with the overview (context), then focus on residual variation (focus)
 ]
 
 .pull-right[
@@ -92,9 +101,9 @@ include_graphics("figure/structuration.png")
 
 ### Latent Dirichlet Allocation
 
-Latent Dirichlet Allocation `r Citep(bib, "blei_lda")` supposes that samples $x_i \in \mathbb{R}^{D}$
-are drawn independently from,
-
+Latent Dirichlet Allocation `r Citep(bib, "blei_lda")` is often useful for
+dimensionality reduction for microbiome data `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023"))`.
+It supposes that samples $x_i \in \mathbb{R}^{D}$ are drawn independently:
 \begin{align*}
 x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 \gamma_{i} &\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
@@ -329,8 +338,9 @@ The final simulation mimics the strain switching problem.
 
 ### Mechanism
 
-We first construct equivalence classes of similar topics $\tilde{\beta}_k^r$.
-Then, for each sample $i$ and each $k$, we draw one member from the class,
+We construct related topics $\tilde{\beta}_k^r$ by perturbing an underlying
+collection of $\beta_{k}$. Then, for each sample $i$ and each $k$, we draw one
+member from the class,
 
 \begin{align*}
 \beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
@@ -377,10 +387,11 @@ include_graphics("figure/equivalence_similarity_hm.png")
 ### Data Analysis
 
 .pull-left[
-* What role does the microbiome play in preterm birth?
-* Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
+Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs) in
+the vaginal microbiome
   - Four healthy CSTs are dominated by Lactobacillus variants
-  - A fifth dysbiotic CST is more compositionally diverse
+  - A fifth dysbiotic CST is more compositionally diverse and has been
+  implicated in preterm birth `r Citep(bib, c("Fettweis2019", "Gudnadottir2022"))` and HIV transmission `r Citep(bib, "Gosmann2017")`.
 ]
 
 .pull-right[
@@ -412,9 +423,10 @@ map(vm_data, dim)
 
 ### Interpretations
 
-* At $K = 7$, the four Lactobacillus CSTs are already present
-* The remaining three topics correspond to the dysbiotic CST
-(green, brown, and pink)
+* Using the paths diagnostic, either $K = 7$ or $12$ give justifiable models
+  - We can also distinguish high and low coherence topics
+* At $K = 7$, the four Lactobacillus CSTs are already present, and the remaining
+represent coherent subtypes in the dysbiotic CSTs
  
 .pull-left[
 ```{r out.width=280}
@@ -430,11 +442,21 @@ include_graphics("figure/microbiome_betas.png")
  
 ---
 
-These are the results presented in `r Citep(bib, "Symul2023")`.
+.pull-left[
+**Test set perplexity**
+  - Similar: Helps to choose $K$.
+  - Different (-): Doesn't give topic-level quality.
+  - Different (+): Evaluates generalization ability.
+]
 
-```{r}
-include_graphics("figure/example_study.png")
-```
+.pull-right[
+**Hierarchical Topic Models `r Citep(bib, "")`**
+  - Similar: Learns topics at multiple levels of resolution
+  - Different (+/-): Samples belong to individual subtrees
+  - Different (-): Requires word-level representations.
+]
+
+<img src="figure/hlda.png"/>
 
 ---
 
@@ -474,12 +496,11 @@ All the simulations discussed today are vignettes in the package.
 
 ### Takeaways
 
-* Iterative data structuration is a versatile problem-solving device
-* In the topic modeling context, it can be worthwhile to compare $K$
-	- Model comparison deserves attention, not just model selection
-* Some relevant links,
-	- `alto` documentation: [lasy.github.io/alto](https://lasy.github.io/alto/)
-	- `alto` paper: [ https://go.wisc.edu/tify36]( https://go.wisc.edu/tify36)
+- `alto` paper: [ https://go.wisc.edu/tify36]( https://go.wisc.edu/tify36)
+- `alto` documentation: [lasy.github.io/alto](https://lasy.github.io/alto/)
+
+> Exploratory analysis can guide critical examination of complex problems, and
+topic alignment is a simple but useful addition to the toolbox for count data.
 
 .pull-left[
 ```{r, out.width = 200}
@@ -496,11 +517,19 @@ include_graphics("figure/alto_sketches_annotated alignment.png")
 
 ---
 
+class: background-rivers
+
+.center[
 ### Thank you!
+]
 
 * Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
-* Funding: NIGMS R01GM152744.
+* Lab Members: Margaret Thairu, Hanying Jiang, Mason Garza, Yuliang Peng, Kai Cui, and Kobe Uko
+* Funding: NIGMS R01GM152744
+
+.center[
+<img src="figure/Lena__credit_row_0.jpg"/>
+]
 
 ---
 

@@ -12,6 +12,8 @@
     <textarea id="source">
 
 
+class: title
+
 `\(\def\Dir{\text{Dir}}\)`
 `\(\def\Mult{\text{Mult}}\)`
 `\(\def\*#1{\mathbf{#1}}\)`
@@ -28,14 +30,21 @@
 
 &lt;div id="subtitle"&gt;
 Kris Sankaran &lt;br/&gt;
-&lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
 03 | May | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
 &lt;/div&gt;
 
 &lt;div id="subtitle_right"&gt;
 STATGEN 2024 &lt;br/&gt;
-Microbiome Data Analysis
+Microbiome Data Analysis &lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/u10492"&gt;go.wisc.edu/u10492&lt;/a&gt; 
 &lt;/div&gt;
+
+---
+
+.section[
+_"How did you choose `\(K\)`?"_
+]
 
 ---
 
@@ -43,8 +52,8 @@ Microbiome Data Analysis
 
 .pull-left[
 * Iterative data structuration creates a sequence of simple `\(\to\)` complex models(Holmes, 1993; Mallows et al., 1982)
-* It is the statistical analog of the Focus-plus-Context visualization principle (Hauser et al., 2004; Heer et al., 2004)
-* Begin with the overview (context), then focus on residual variation (focus)
+* It makes it easy to navigate the interpretability/expressivity tradeoff
+  - Begin with the overview (context), then focus on residual variation (focus)
 ]
 
 .pull-right[
@@ -58,9 +67,9 @@ Microbiome Data Analysis
 
 ### Latent Dirichlet Allocation
 
-Latent Dirichlet Allocation (Blei et al., 2003) supposes that samples `\(x_i \in \mathbb{R}^{D}\)`
-are drawn independently from,
-
+Latent Dirichlet Allocation (Blei et al., 2003) is often useful for
+dimensionality reduction for microbiome data (Sankaran et al., 2018; Kim et al., 2023; Tataru et al., 2023).
+It supposes that samples `\(x_i \in \mathbb{R}^{D}\)` are drawn independently:
 `\begin{align*}
 x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 \gamma_{i} &amp;\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
@@ -263,8 +272,9 @@ The final simulation mimics the strain switching problem.
 
 ### Mechanism
 
-We first construct equivalence classes of similar topics `\(\tilde{\beta}_k^r\)`.
-Then, for each sample `\(i\)` and each `\(k\)`, we draw one member from the class,
+We construct related topics `\(\tilde{\beta}_k^r\)` by perturbing an underlying
+collection of `\(\beta_{k}\)`. Then, for each sample `\(i\)` and each `\(k\)`, we draw one
+member from the class,
 
 `\begin{align*}
 \beta_{k}^{i} &amp;\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
@@ -305,10 +315,11 @@ as in standard LDA.
 ### Data Analysis
 
 .pull-left[
-* What role does the microbiome play in preterm birth?
-* Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs)
+Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs) in
+the vaginal microbiome
   - Four healthy CSTs are dominated by Lactobacillus variants
-  - A fifth dysbiotic CST is more compositionally diverse
+  - A fifth dysbiotic CST is more compositionally diverse and has been
+  implicated in preterm birth (Fettweis et al., 2019; Gudnadottir et al., 2022) and HIV transmission (Gosmann et al., 2017).
 ]
 
 .pull-right[
@@ -353,9 +364,10 @@ map(vm_data, dim)
 
 ### Interpretations
 
-* At `\(K = 7\)`, the four Lactobacillus CSTs are already present
-* The remaining three topics correspond to the dysbiotic CST
-(green, brown, and pink)
+* Using the paths diagnostic, either `\(K = 7\)` or `\(12\)` give justifiable models
+  - We can also distinguish high and low coherence topics
+* At `\(K = 7\)`, the four Lactobacillus CSTs are already present, and the remaining
+represent coherent subtypes in the dysbiotic CSTs
  
 .pull-left[
 &lt;img src="figure/microbiome_flow.png" width="280" style="display: block; margin: auto;" /&gt;
@@ -367,9 +379,21 @@ map(vm_data, dim)
  
 ---
 
-These are the results presented in (Symul et al., 2023).
+.pull-left[
+**Test set perplexity**
+  - Similar: Helps to choose `\(K\)`.
+  - Different (-): Doesn't give topic-level quality.
+  - Different (+): Evaluates generalization ability.
+]
 
-&lt;img src="figure/example_study.png" width="897" style="display: block; margin: auto;" /&gt;
+.pull-right[
+**Hierarchical Topic Models **
+  - Similar: Learns topics at multiple levels of resolution
+  - Different (+/-): Samples belong to individual subtrees
+  - Different (-): Requires word-level representations.
+]
+
+&lt;img src="figure/hlda.png"/&gt;
 
 ---
 
@@ -400,7 +424,7 @@ result &lt;- align_topics(lda_models)
 plot(result)
 ```
 
-&lt;img src="20240503_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="20240503_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto auto auto 0;" /&gt;
 ]
 
 All the simulations discussed today are vignettes in the package. 
@@ -409,12 +433,11 @@ All the simulations discussed today are vignettes in the package.
 
 ### Takeaways
 
-* Iterative data structuration is a versatile problem-solving device
-* In the topic modeling context, it can be worthwhile to compare `\(K\)`
-	- Model comparison deserves attention, not just model selection
-* Some relevant links,
-	- `alto` documentation: [lasy.github.io/alto](https://lasy.github.io/alto/)
-	- `alto` paper: [ https://go.wisc.edu/tify36]( https://go.wisc.edu/tify36)
+- `alto` paper: [ https://go.wisc.edu/tify36]( https://go.wisc.edu/tify36)
+- `alto` documentation: [lasy.github.io/alto](https://lasy.github.io/alto/)
+
+&gt; Exploratory analysis can guide critical examination of complex problems, and
+topic alignment is a simple but useful addition to the toolbox for count data.
 
 .pull-left[
 &lt;img src="figure/structuration.png" width="200" style="display: block; margin: auto;" /&gt;
@@ -427,11 +450,19 @@ All the simulations discussed today are vignettes in the package.
 
 ---
 
+class: background-rivers
+
+.center[
 ### Thank you!
+]
 
 * Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
-* Funding: NIGMS R01GM152744.
+* Lab Members: Margaret Thairu, Hanying Jiang, Mason Garza, Yuliang Peng, Kai Cui, and Kobe Uko
+* Funding: NIGMS R01GM152744
+
+.center[
+&lt;img src="figure/Lena__credit_row_0.jpg"/&gt;
+]
 
 ---
 
