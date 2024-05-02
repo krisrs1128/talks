@@ -21,6 +21,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
 
+.title {
+  position: relative;
+  z-index: 1;
+}
+
+.title h2 {
+  padding-left: 50px;
+}
+
+.title::before {    
+      content: "";
+      background-image: url("../figure/background_figure.png");
+      background-size: cover;
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      opacity: 0.4;
+      z-index: -1;
+}
+
 body {
   font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
   font-weight: ;
@@ -216,8 +238,8 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.8);
   padding-left: 10px;
-  font-size: 20px;
-  width: 350px;
+  font-size: 24px;
+  width: 300px;
   color: #5f558e;
   text-align: right;
   right: 20px;
@@ -228,7 +250,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.8);
   padding-left: 10px;
-  font-size: 20px;
+  font-size: 24px;
   width: 350px;
   color: #5f558e;
   text-align: left;
