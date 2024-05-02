@@ -27,7 +27,8 @@
 }
 
 .title h2 {
-  padding-left: 50px;
+  padding-left: 40px;
+  width: 800px;
 }
 
 .title::before {    
