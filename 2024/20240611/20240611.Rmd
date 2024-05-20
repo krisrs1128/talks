@@ -173,22 +173,6 @@ where we can control the ground truth associations and experimental design.
 
 ---
 
-### Discussion
-
-Discuss in groups of 2 - 4: In your own research, what is one situation where simulation might be helpful?
-
-Google Doc: 
-
----
-
-class: middle
-
-.center[
-## Concepts
-]
-
----
-
 ### Simulator Taxonomy
 
 There are three main types of simulator.
@@ -267,3 +251,139 @@ Disadvantages: Fitting high-quality generative models can be challenging.
 ]
 
 ---
+
+### Discussion
+
+Discuss in groups of 2 - 4: 
+
+* In your own research, what is one situation where simulation might be helpful? 
+* Pick one of the simulator types and explain how it might be applied.
+
+Google Doc: 
+
+---
+
+class: middle
+
+.center[
+## Marginal Simulation - Concepts
+]
+
+---
+
+### Approach
+
+The richer our vocabulary for generative models, the better chance we'll have of
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
+
+1. A few types of probability distributions -- both count and continuous.
+1. Ways of linking these distributions with external information (e.g., disease status)
+
+---
+
+### Count Distributions: Poisson
+
+This distribution arises when we count the number of successes from many trials
+when the probability of success is very low.
+
+* The number of heads after flipping a biased $p = 0.0001$ coin a $N = $ million times
+* In a library with 10 million reads, the number that align to the sequence ATCCCTGGACCG...
+
+```{r}
+library(tidyverse)
+data.frame(x = rpois(1000, 10)) |>
+  ggplot() +
+  geom_histogram(aes(x), bins = 100)
+```
+
+---
+
+### Count Distributions: Negative Binomial
+
+This distribution arises when the Poisson's mean parameter is itself random.
+
+* The number of heads after flipping many biased coins $N = $ million times, where the coins have probability $p = 0.000215, 0.001313, 0.000841, \dots$
+* The number of reads aligning to a sequence across many runs where temperature might influence binding
+
+This additional variability induces _overdispersion_ relative to the Poisson.
+
+```{r}
+data.frame(x = rnbinom(1000, 1, .1)) |>
+  ggplot() +
+  geom_histogram(aes(x), bins = 200)
+```
+
+---
+
+### Count Distributions: Zero-Inflation
+
+Genomic data often have many more zeros than these distributions alone would
+capture. For this reason, it's common to define zero-inflated versions of the
+previous distributions:
+
+```{r}
+x <- rpois(1000, 10) # generate poissons
+z <- rbinom(1000, 1, 0.5) # generates 0/1
+z * x # zero inflated poisson
+```
+
+---
+
+### Continuous Distributions: Gaussian
+
+The purpose of many normalization and imputation algorithms in genomics is to
+_Gaussianize_ the data. It can often be reasonable to apply a Gaussian simulator
+to the transformed data.
+
+---
+
+### Other Distributions
+
+We won't be using the course, but it's worth knowing,
+
+* Gamma Distribution: Continuous, only positive values
+* Student's T Distribution: Continuous, allows large outliers
+* Tweedie Distribution: Interpolates between count and continuous distributions
+
+---
+
+### Incorporating Covariates
+
+On their own, these distributions may not seem like much, but when we allow them
+to depend on other features, we can capture a wide range of distributions.
+
+---
+
+### GAMLSS
+
+The main idea is to allow each parameter of a distribution to depend on
+predictors in a smooth way.
+
+```{r}
+N <- 1000
+x <- runif(N)
+
+f <- multimedia:::spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0)
+theta <- f(x)
+y <- rnorm(N, mean = theta[, 1], sd = abs(theta[, 2]))
+plot(x, y)
+```
+
+(maybe make this a gganimate animation?)
+
+---
+
+### Marginal Simulation Practice
+
+---
+
+Go back to your original dataset for this...
+
+```{r}
+scDesigner::setup_margins()
+```
+
+---
+
+
