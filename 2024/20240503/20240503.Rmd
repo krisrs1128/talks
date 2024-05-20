@@ -77,8 +77,18 @@ Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>
 
 ---
 
-.section[
-_"How did you choose $K$?"_
+### Motivation: Microbiome Data Analysis
+
+.pull-left[
+* How should we describe the bacterial ecosystems that surround (and
+inhabit) us?
+* An improved understanding would support human and environmental health
+]
+
+.pull-right[
+```{r, fig.cap = "A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
+include_graphics("https://whatislife.stanford.edu/images/spatial.png")
+```
 ]
 
 ---
@@ -86,7 +96,7 @@ _"How did you choose $K$?"_
 ### Iterative Data Structuration
 
 .pull-left[
-* Iterative data structuration creates a sequence of simple $\to$ complex models`r Citep(bib, c("holmes1993comment", "mallows1982overview"))`
+* Iterative data structuration creates a sequence of simple $\to$ complex models `r Citep(bib, c("holmes1993comment", "mallows1982overview"))`
 * It makes it easy to navigate the interpretability/expressivity tradeoff
   - Begin with the overview (context), then focus on residual variation (focus)
 ]
@@ -113,7 +123,7 @@ where the columns $\beta_{k}$ of $\*B \in \Delta^{K}_{D}$ lie in the $D$-dimensi
 \beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
 \end{align*}
 
-We vertically stack the $N$ $\gamma_i$'s into $\gamma \in \Delta^{N}_{K}$.
+We vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ---
 
@@ -131,7 +141,7 @@ include_graphics("figure/latent_dirichlet_v2.png")
 
 ---
 
-### Managing Large $K$
+### How to Choose $K$?
 
 * It is often difficult to interpret these models when $K$ is large
 * Heuristic: Look at smaller $K$ to build intuition about topics
@@ -146,8 +156,8 @@ include_graphics("figure/latent_dirichlet_v2.png")
 
 ### Main Idea
 
-* We will fit an ensemble of models of varying complexities (Parsimony)
-* We will build a compact representation of the result (Navigation)
+* We will fit an ensemble of models of varying complexities.
+* Post-estimation, we will build a compact representation of the result.
 * In the Sankey diagram, columns are models and rectangles are topics
 
 ```{r, out.width = 750}
@@ -452,8 +462,8 @@ include_graphics("figure/microbiome_betas.png")
 .pull-right[
 **Hierarchical Topic Models `r Citep(bib, "")`**
   - Similar: Learns topics at multiple levels of resolution
-  - Different (+/-): Samples belong to individual subtrees
   - Different (-): Requires word-level representations.
+  - Different (+/-): Words belong to individual subtrees
 ]
 
 <img src="figure/hlda.png"/>

@@ -1,0 +1,269 @@
+---
+title: ""
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+
+BibOptions(
+  check.entries = FALSE, 
+  bib.style = "authoryear", 
+  cite.style = "authoryear", 
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+
+<div id="subtitle">
+Kris Sankaran <br/>
+11 | June | 2024 <br/>
+Melbourne Integrative Genomics<br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+<!-- Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>  -->
+</div>
+
+---
+
+### Overall Learning Outcomes
+
+By the end of this course, you will be able to...
+
+1. Describe the main components of an omics data simulator.
+1. Apply simulators to practical power analysis and benchmarking problems.
+1. Compare and critique emerging approaches to multi-omics simulation
+
+---
+
+### Course Plan
+
+Marginal $\to$ Joint $\to$ Integrative
+
+(Picture for marginal)
+
+---
+
+### Course Plan
+
+Marginal $\to$ Joint $\to$ Integrative
+
+(Picture for joint)
+
+---
+
+### Course Plan
+
+Marginal $\to$ Joint $\to$ Integrative
+
+(Picture for integrative)
+
+---
+
+### Logistics: Materials
+
+* All the data and code are available here:
+* You can follow-along my coding session here: 
+
+---
+
+### Logistics: Communication
+
+* It is normal to run into bugs! Part of the learning process is knowing how to analyze and resolve them.
+* Please ask a tutor to help resolve problems at any point -- no need to wait for a pause in lecture.
+* We will have breaks and group discussions -- get to know the others in the course!
+
+---
+
+### Learning Outcomes: Session 1
+
+By the end of this session, you will be able to...
+
+1. Design and implement a power analysis for a differential expression analysis
+2. Discuss the building blocks of marginal simulation: Classes of distributions (Poisson, NB, gaussian), types of marginal regression models.
+3. Distinguish between types of simulation: De Novo, Resampling, and Semisynthetic
+4. Identify areas of your own research where simulation could help better allocate limited resources
+
+---
+class: middle
+
+.center[
+## Introduction
+]
+
+---
+
+### Story: The Grant Proposal
+
+How many samples should your team gather? How many from healthy vs. disease?
+
+* It's important that that study isn't underpowered
+* We want to use the budget as wisely as possible
+
+---
+
+### Story: The Grant Proposal
+
+You look at one of their past grant proposals, and they just used a $t$-test
+calculator...
+
+You know that the team is interested in differential analysis, so you decide
+you'll compare a few microbiome differential analysis methods on simulated data.
+
+---
+
+### Approach: Simulation
+
+By simulating data, you can,
+
+* Control the ground truth associations $\to$ Compute ground truth false discovery rates (FDR) and power
+* Compare power as a function of sample size, class balance, and testing strategy
+
+---
+
+### Foundation: The Atlas Study
+
+You decide that the most similar dataset to your proposal is the dataset in `r Citep(bib, "")`.
+
+---
+
+### Foundation: The Atlas Study
+
+Our goal for today will be to simulate data that look similar to that data, but
+where we can control the ground truth associations and experimental design.
+
+---
+
+### Discussion
+
+Discuss in groups of 2 - 4: In your own research, what is one situation where simulation might be helpful?
+
+Google Doc: 
+
+---
+
+class: middle
+
+.center[
+## Concepts
+]
+
+---
+
+### Simulator Taxonomy
+
+There are three main types of simulator.
+
+* De Novo: Define the generative mechanism without referring to any real data.
+* Resampling: Take a real dataset and perturb it in a systematic way.
+* Semisynthetic: Fit a controllable, generative model to a dataset.
+
+---
+
+### De Novo Simulators
+
+Example: (maybe draw pictures for each of these examples)
+
+\begin{align}
+x_{i} \leftarrow \begin{cases}
+\mathcal{N}\left(\mu_{0}, \Sigma \right) \text{ for Control} \\
+\mathcal{N}\left(\mu_{1}, \Sigma \right) \text{ for Treatment}
+\end{cases}
+\end{align}
+
+.pull-left[
+Advantages: Fully transparent mechanism.
+]
+
+.pull-right[
+Disadvantages: No point of reference. Hard to evaluate how close it is to real
+data -- can result in lots of wasted time tinkering without clear sense of
+progress.
+]
+
+---
+
+### Resampling Simulators
+
+Example: Let $z_i$ be a sample from the real dataset. Then, simulate new samples:
+
+\begin{align}
+y_{i} \leftarrow \begin{cases} 
+z_i \text{ for Control} \\
+\exp{\beta} z_i \text{ for Treatment}
+\end{cases}
+\end{align}
+
+.pull-left[
+
+Advantages: Fully nonparametric, can match arbitrarily complex data distributions.
+]
+
+.pull-right[
+Disadvantages: Can be difficult to control. For example, how to remove effect
+from one covariate but not another?
+]
+
+---
+
+### Semisynthetic Simulators
+
+Example: Fit a model,
+\begin{align*}
+z_{i} = m_{i}^{T} \beta + \epsilon_{i}
+\end{align*}
+given previously observed samples $z_i$ and design $m_{i}$.
+
+Given target design $m_i$, simulate new samples:
+\begin{align*}
+y_{i} \leftarrow m_{i} \hat{\beta} + \epsilon_{i}
+\end{align}
+
+.pull-left[
+Advantages: Compromise between De Novo and Resampling based simulators -- both realistic and controllable.
+]
+
+.pull-right[
+Disadvantages: Fitting high-quality generative models can be challenging.
+]
+
+---

@@ -1,0 +1,227 @@
+---
+title: ""
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+
+BibOptions(
+  check.entries = FALSE, 
+  bib.style = "authoryear", 
+  cite.style = "authoryear", 
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+### Multimodal and Muticohort Data Integration
+*Microbial Mechanisms underlying Mental Health*
+
+<div id="subtitle">
+Kris Sankaran <br/>
+23 | May | 2024 <br/>
+WisSing Project Meeting<br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+<!-- Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>  -->
+</div>
+
+---
+
+### Motivation: Microbiome and Mental Health
+
+.pull-left[
+* We now understand that the microbiome is closely related to depression and mental health disturbances
+* To move beyond descriptive analysis and towards potential interventions, we need to understand mechanisms that relate microbiome composition to mental health
+]
+
+.pull-right[
+```{r, fig.cap = "A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
+include_graphics("https://whatislife.stanford.edu/images/spatial.png")
+```
+]
+
+---
+
+### Mechanisms via Data Integration
+
+The strength of WisSing is its experimental design: Clinical, behavioral,
+genetic, and microbiome assays simultaneously across two populations 
+
+.pull-left[
+- The relationships across data modalities gives a window into mechanism
+- Effects that are stable across populations are less likely to be influenced
+by confounding
+]
+
+.pull-right[
+```{r, out.width = 500}
+include_graphics("figure/wissing-integration.png")
+```
+]
+
+---
+
+### Overal Statistical Approach
+
+1. Quality control and preprocessing
+1. Identify shared structure 
+  - Project different sources into a common latent space `r Citep(bib, "Sankaran2019")`
+1. Identify interactions that predict depression
+  - Use tree-based models `r Citep(bib, "Basu2021")`
+
+[Create a schematic to summarize this approach]
+
+---
+
+### Quality Control and Normalization
+
+We will quality check the data as it is collected, allowing for corrections
+before all the data have been generated.
+  * Removal of sequencing batch effects
+  * Filter samples with outlier quality control metrics (e.g., sequencing depth)
+
+We will normalize the data to enhance power:
+  * Variance stabilization
+  * Imputation of sampling zeros
+
+---
+
+### Population-Level Effects
+
+1. We will adapt previous methods for batch effect removal to support inference
+of country-level effects
+1. Following `r Citep(bib, c("CellAnova", "RUV4"))`, we will use linear models
+with latent factors to isolate how molecular, clinical, and behavioral features
+vary across sites
+1. If an association is stable across populations, then that is evidence for a
+potential causal role
+
+---
+
+### Integration via Latent Spaces
+
+.pull-left[
+1. Our first approach to integration is to search for shared latent structure
+across the data sources `r Citep(bib, "Sankaran2019")`.
+1. This identifies shared risk factor signatures across all data sources.
+]
+
+.pull-right[
+<img src="figure/latent_approaches.png" width=300/>
+]
+
+---
+
+### Integration via Latent Spaces
+
+This is an example analysis applied to a body fat distribution dataset.
+  - The right hand plot shows a gradient across body fat types.
+  - The left hand plot shows variables across multiple tables that are related
+  with this gradient.
+
+<img src="figure/cca_lab_measures.jpeg" width=1000/>
+
+---
+
+### Integration via Interaction Networks
+
+1. We will learn cross-modality interactions using iterative Random Forests (iRF).
+
+1. Since this is a predictive model, it will focus on those features that are
+associated with depression. Further, since the predictive features include
+interactions, it can learn to relate features across sources.
+
+<img src="figure/tree_approaches.png" width=800/>
+
+---
+
+### Integration via Interaction Networks
+
+1. iRF has succeeded in several benchmarks of regulatory network inference --
+likely due to its ability to handle nonlinear effects and non-gaussian data
+distributions.
+
+1. We extend cross-omics integration to incorporate clincial and behavioral
+measurements.
+
+---
+
+### Management and Reproducibility
+
+1. We will prepare data, model outputs, adn code notebooks so that they can
+become a resource for the gut-brain axis research community.
+1. We will host both raw and preprocessed data through the SRA, a library
+permanent URL, and an R Bioconductor ExperimentData package.
+1. GitHub-hosted notebooks will ensures transparency and re-usability of our
+data analysis approach.
+
+---
+
+### Conclusion
+
+1. Data integration is often presented as a technical challenge. However, for
+WisSing, the rich experimental design drives our statistical power.
+
+1. The team has the type of complementary experience necessary to enable
+thoughtful integration.
+
+---
+
+.center[
+### Thank you!
+]
+
+* Lab Members: Margaret Thairu, Hanying Jiang, Mason Garza, Yuliang Peng, Kai Cui, Sam Merten, and Kobe Uko
+* Funding: NIGMS R01GM152744
+
+.center[
+<img src="figure/Lena__credit_row_0.jpg"/>
+]
+
+---
+
+```{r}
+PrintBibliography(bib)
+```
+
+---
