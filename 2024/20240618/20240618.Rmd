@@ -192,8 +192,6 @@ accomplished by setting separate $\Sigma_{k}$ across groups $k$.
 
 ---
 
-
-
 ### Factor Models
 
 ---
@@ -273,6 +271,40 @@ class: middle
 .center[
 ## Exercise
 ]
+
+---
+
+class: middle
+
+.center[
+## Evaluation
+]
+
+---
+
+### Motivation
+
+
+---
+
+### Qualitative Checks
+
+---
+
+### Quantitative Summaries
+
+
+
+---
+
+### Classification-Guided
+
+1. An idea explored in `r Citep(bib, c("Sankaran2020", "Sajjadi2019",
+"Friedman2002"))` is to evaluate a simulator by how well a classifier can
+distinguish real vs. synthetic samples.
+
+1. By interpreting the fitted model, it's also possible to identify real-data
+properties that the simulator doesn't accurately capture.
 
 ---
 
