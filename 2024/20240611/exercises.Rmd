@@ -29,6 +29,34 @@ mean(colData(atlas)$age)
 mean(atlas$age)
 ```
 
+### Gaussian Mixture
+
+```{r}
+exper_grouped <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2024/20240611/data/exper_group.rds"))
+exper_histogram(exper_grouped)
+```
+
+* Explain how the simulation code below works. 
+* Modify it so that it accurate reflects the difference between groups for the first three genes.
+
+```{r}
+sim <- setup_simulator(exper_grouped, ~ 1, ~ GaussianLSS()) |>
+  estimate()
+
+sample(sim) |>
+  exper_histogram()
+```
+
+```{r}
+sim <- sim |>
+  mutate(1:3, link = ~ group) |>
+  estimate()
+
+sample(sim) |>
+  exper_histogram()
+
+```
+
 ### Gaussian over Time
 
 ```{r}
@@ -57,33 +85,6 @@ sample(sim) |>
   exper_lineplot()
 ```
 
-### Gaussian Mixture
-
-```{r}
-exper_grouped <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2024/20240611/data/exper_group.rds"))
-exper_histogram(exper_grouped)
-```
-
-* Explain how the simulation code below works. 
-* Modify it so that it accurate reflects the difference between groups for the first three genes.
-
-```{r}
-sim <- setup_simulator(exper_grouped, ~ 1, ~ GaussianLSS()) |>
-  estimate()
-
-sample(sim) |>
-  exper_histogram()
-```
-
-```{r}
-sim <- sim |>
-  mutate(1:3, link = ~ group) |>
-  estimate()
-
-sample(sim) |>
-  exper_histogram()
-
-```
 
 ### Using a Simulator
 

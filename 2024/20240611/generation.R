@@ -29,4 +29,4 @@ exper_ts <- SummarizedExperiment(
   colData = data.frame(group = rep(c("A", "B"), each = N / 2), time = c(u, u))
 )
 rownames(exper_ts) <- 1:6
-saveRDS(exper_ts, "exper_ts.rds")
+#saveRDS(exper_ts, "exper_ts.rds")

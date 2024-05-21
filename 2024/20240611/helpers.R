@@ -10,7 +10,7 @@ exper_histogram <- function(exper) {
       facet_wrap(~ feature)
 }
 
-# Plot time series for toy data
+# Plot time for toy data
 exper_lineplot <- function(exper) {
   pivot_experiment(exper) |>
     ggplot() +
