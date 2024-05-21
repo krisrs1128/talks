@@ -51,8 +51,12 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-### Multimodal and Muticohort Data Integration
-*Microbial Mechanisms underlying Mental Health*
+<div id="title">
+Multimodal and Muticohort Data Integration
+</div>
+<div id="under_title">
+Microbial Mechanisms underlying Mental Health
+</div>
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -101,28 +105,24 @@ include_graphics("figure/wissing-integration.png")
 
 ---
 
-### Overal Statistical Approach
+### Quality Control and Normalization
 
-1. Quality control and preprocessing
-1. Identify shared structure 
-  - Project different sources into a common latent space `r Citep(bib, "Sankaran2019")`
-1. Identify interactions that predict depression
-  - Use tree-based models `r Citep(bib, "Basu2021")`
+We will quality check the data as it is collected, allowing for corrections
+before all the data have been generated.
+  * Removal batch effects across sequencing runs
+  * Filter samples with outlier quality control metrics (e.g., sequencing depth)
 
-[Create a schematic to summarize this approach]
+<img src="figure/batch_effects.png"/>
 
 ---
 
 ### Quality Control and Normalization
 
-We will quality check the data as it is collected, allowing for corrections
-before all the data have been generated.
-  * Removal of sequencing batch effects
-  * Filter samples with outlier quality control metrics (e.g., sequencing depth)
-
 We will normalize the data to enhance power:
-  * Variance stabilization
-  * Imputation of sampling zeros
+  * Variance stabilization minimizes the impact of highly skewed data.
+  * Imputation of sampling zeros makes linear modeling assumptions viable
+
+<img src="figure/normalization.png"/>
 
 ---
 
@@ -147,53 +147,92 @@ across the data sources `r Citep(bib, "Sankaran2019")`.
 ]
 
 .pull-right[
-<img src="figure/latent_approaches.png" width=300/>
+<img src="figure/latent_approaches.png" width=400/>
 ]
 
 ---
 
 ### Integration via Latent Spaces
 
-This is an example analysis applied to a body fat distribution dataset.
-  - The right hand plot shows a gradient across body fat types.
+This is an example analysis applied to a gut microbiome study related body fat distribution.
+  - The right hand plot shows a gradient across body types.
   - The left hand plot shows variables across multiple tables that are related
   with this gradient.
 
-<img src="figure/cca_lab_measures.jpeg" width=1000/>
+<img src="figure/cca_lab_measures.jpeg" width=900/>
 
 ---
 
 ### Integration via Interaction Networks
 
-1. We will learn cross-modality interactions using iterative Random Forests (iRF).
+.pull-left[
+1. We will learn cross-modality interactions with iterative Random Forests (iRF).
 
-1. Since this is a predictive model, it will focus on those features that are
-associated with depression. Further, since the predictive features include
-interactions, it can learn to relate features across sources.
+1. Since this is a predictive model, it focuses on depression-associated
+features. Further, since the predictive features include interactions, it can
+learn to relate features across sources.
+]
 
-<img src="figure/tree_approaches.png" width=800/>
+.pull-right[
+<img src="figure/tree_approaches.png" width=440/>
+]
 
 ---
 
 ### Integration via Interaction Networks
 
-1. iRF has succeeded in several benchmarks of regulatory network inference --
-likely due to its ability to handle nonlinear effects and non-gaussian data
-distributions.
+1. iRF has succeeded in several benchmarks of regulatory network inference -- it
+successfully handles nonlinear effects and non-gaussian data `r Citep(bib, "wilson")`.
 
-1. We extend cross-omics integration to incorporate clincial and behavioral
-measurements.
+1. Based on the tree's branching pattern, we can learn reliable interactions
+between omics, clinical, and behavioral measurements.
+
+.center[
+<img src="figure/tree1.png" width=680/>
+]
+
+---
+
+### Integration via Interaction Networks
+
+1. iRF has succeeded in several benchmarks of regulatory network inference -- it
+successfully handles nonlinear effects and non-gaussian data `r Citep(bib, "wilson")`.
+
+1. Based on the tree's branching pattern, we can learn reliable interactions
+between omics, clinical, and behavioral measurements.
+
+.center[
+<img src="figure/tree2.png" width=680/>
+]
+
+---
+
+### Integration via Interaction Networks
+
+1. iRF has succeeded in several benchmarks of regulatory network inference -- it
+successfully handles nonlinear effects and non-gaussian data `r Citep(bib, "wilson")`.
+
+1. Based on the tree's branching pattern, we can learn reliable interactions
+between omics, clinical, and behavioral measurements.
+
+.center[
+<img src="figure/tree3.png" width=500/>
+]
 
 ---
 
 ### Management and Reproducibility
 
-1. We will prepare data, model outputs, adn code notebooks so that they can
+1. We will prepare data, model outputs, and code notebooks so that they can
 become a resource for the gut-brain axis research community.
 1. We will host both raw and preprocessed data through the SRA, a library
 permanent URL, and an R Bioconductor ExperimentData package.
-1. GitHub-hosted notebooks will ensures transparency and re-usability of our
-data analysis approach.
+1. An example of one of our reproducible analysis for a pilot study can be found
+here: go.wisc.edu/tg16za
+
+.center[
+<img src="figure/reproducibility.png" width=900/>
+]
 
 ---
 
@@ -214,13 +253,9 @@ thoughtful integration.
 * Lab Members: Margaret Thairu, Hanying Jiang, Mason Garza, Yuliang Peng, Kai Cui, Sam Merten, and Kobe Uko
 * Funding: NIGMS R01GM152744
 
-.center[
-<img src="figure/Lena__credit_row_0.jpg"/>
-]
-
 ---
 
-```{r}
+```{r, results='asis', echo = FALSE}
 PrintBibliography(bib)
 ```
 
