@@ -64,3 +64,15 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 ---
+
+
+### Session 3: Integrative Simulation
+
+1. Discuss the building blocks of simulation for P and N-integrative data analysis
+  * How to induce correlation across different assay types
+  * How to define batch effects across multiple studies
+2. Apply an integrative simulator to support power analysis and benchmarking in the presence of multiple batches or assays
+3. Critically evaluate novel simulators across omic types: microbiome, single-cell, spatial, reads.
+
+
+---

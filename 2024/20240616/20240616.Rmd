@@ -64,10 +64,3 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 ---
-
-
-### Session 2: Joint Simulation
-1. Design and carry out a power analysis or benchmarking study for a multivariate (e.g., network or dimensionality reduction) analysis
-2. Discuss the building blocks of joint simulation: Latent variables and copulas
-3. Evaluate the faithfulness of a simulator using summary metrics and discriminator classification
-4. Discuss how simulation can inform calibration and reduce false positive rates

@@ -65,13 +65,219 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 ---
 
-### Session 3: Integrative Simulation
+### Learning Outcomes: Session 2
 
-1. Discuss the building blocks of simulation for P and N-integrative data analysis
-  * How to induce correlation across different assay types
-  * How to define batch effects across multiple studies
-2. Apply an integrative simulator to support power analysis and benchmarking in the presence of multiple batches or assays
-3. Critically evaluate novel simulators across omic types: microbiome, single-cell, spatial, reads.
+By the end of this session, you will be able to...
+
+1. Design and carry out a power analysis or benchmarking study for a multivariate (e.g., network or dimensionality reduction) analysis
+2. Discuss the building blocks of joint simulation: Latent variables and copulas
+3. Evaluate the faithfulness of a simulator using summary metrics and discriminator classification
+4. Discuss how simulation can inform calibration and reduce false positive rates
+
+---
+
+class: middle
+
+.center[
+## Introduction
+]
+
+---
+
+### Story: Another Grant Proposal
+
+Remember that last time, we had to help our team decide on a study's sample size
+when we were using a differential testing analysis.
+
+* But what if you are planning to use mixOmics instead?
+* It's important that the power analysis and data analysis plan be closely coupled
+
+---
+
+### Foundation: The T1D Study
+
+This time, we decide that our study can closely follow `r Citep(bib, "gavin2018")`.
+
+* Studied metaproteomics of Type I diabetes
+* tk features across tk samples
+
+---
+
+### Foundation: The T1D Study
+
+* How many samples would we need before we can accurately distinguish T1D from
+healthy samples? 
+
+* How enriched would the signal need to be before we can achieve
+that accuracy?
+
+---
+
+### sPLS-DA
+
+**Sparse** Partial Least Squares Discriminant Analysis is a good fit for this analysis.
+
+* **Not all features are necessarily predictive**
+* We imagine that many features are correlated with one another
+* The response is one of two classes
+
+Since sPLS-DA is a multivariate approach, we need to model the _joint_
+distribution across features. The marginals alone will not suffice.
+
+---
+
+### sPLS-DA
+
+Sparse **Partial Least Squares** Discriminant Analysis is a good fit for this analysis.
+
+* Not all features are necessarily predictive
+* We imagine that many **features are correlated** with one another
+* The response is one of two classes
+
+Since sPLS-DA is a multivariate approach, we need to model the _joint_
+distribution across features. The marginals alone will not suffice.
+
+---
+
+### sPLS-DA
+
+Sparse Partial Least Squares **Discriminant Analysis** is a good fit for this analysis.
+
+* Not all features are necessarily predictive 
+* We imagine that many features are correlated with one another 
+* The response is **one of two classes**
+
+Since sPLS-DA is a multivariate approach, we need to model the _joint_
+distribution across features. The marginals alone will not suffice.
+
+---
+
+class: middle
+.center[
+  ## Joint Simulation - Concepts
+]
+
+---
+
+### Copula Models
+
+* These are a type of model that "couple" a collection of known marginal
+distributions.
+
+(draw a figure)
+Intuition:
+
+Original Data $\iff$ Gaussianized Data
+
+* In the gaussianized space, it's easy to model correlation.
+* The mapping back and forth is possible because we know the marginal distributions' quantile functions
+
+---
+
+### Copula Models
 
 
 ---
+
+
+### Copula Conditioning
+
+We might expect the corelation structure to vary across groups. This can be
+accomplished by setting separate $\Sigma_{k}$ across groups $k$.
+
+---
+
+### High-Dimensional Covariance Estimation
+
+
+---
+
+
+
+### Factor Models
+
+---
+
+class: middle
+
+.center[
+## Joint Simulation - Practice
+]
+
+---
+
+### Definition
+
+Last session's code actually estimated Gaussian copulas in the background by default.
+
+```{r, eval = FALSE}
+setup_simulator(
+  exper, 
+  ~ group, 
+  ~ GaussianLSS(),
+  copula_gaussian()
+)
+```
+
+---
+
+### High-Dimensional Estimation
+
+We can use a high-dimensional covariance estimator using `copula_adaptive()`:
+
+```{r, eval = FALSE}
+setup_simulator(
+  exper, 
+  ~ group, 
+  ~ GaussianLSS(),
+  copula_adaptive()
+)
+```
+
+---
+
+### Conditioned Copulas
+
+We can allow the covariance to depend on group membership using the same formula
+syntax we used for the marginals.
+
+```{r, eval = FALSE}
+setup_simulator(
+  exper, 
+  ~ group, 
+  ~ GaussianLSS(),
+  copula_gaussian(~ group)
+)
+```
+
+---
+
+### Vine Copulas
+
+We can model higher-order moments between combinations of features using vine
+copulas.
+
+```{r, eval = FALSE}
+setup_simulator(
+  exper, 
+  ~ group, 
+  ~ GaussianLSS(),
+  copula_vine()
+)
+```
+
+---
+
+class: middle
+
+.center[
+## Exercise
+]
+
+---
+
+class: middle
+
+.center[
+## Application
+]
