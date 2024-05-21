@@ -4,123 +4,95 @@ output: readthedown::html_document
 ---
 
 ```{r}
-library(tidyverse)
-library(scDesigner)
 library(gamboostLSS)
+library(scDesigner)
+library(splines)
+library(glue)
+library(tidyverse)
 ```
 
 ### Using SummarizedExperiment
 
-### Gaussian Simulator
+* How many genera are available in this experiment object?
+* What was the most common phylum in this dataset?
+* What was the average participant age?
 
 ```{r}
-N <- 1000
-x <- matrix(rnorm(6 * N), 6, N)
-x[1:3, 1:(N / 2)] <- x[1:3, 1:(N / 2)] + 2
+atlas <- readRDS("data/atlas.rds")
 
-exper <- SummarizedExperiment(
-  SimpleList(counts = x),
-  colData = data.frame(group = rep(c("A", "B"), each = N / 2))
-)
-rownames(exper) <- 1:6
-```
+dim(exper) # 125 genera
+table(rowData(atlas)$Phylum)
 
-```{r}
-pivot_experiment(exper) |>
-  ggplot() +
-    geom_histogram(aes(value, fill = group)) +
-    facet_wrap(~ feature)
-```
+mean(colData(atlas)$age)
 
-
-```{r}
-sim <- setup_simulator(exper, ~ 1, ~ GaussianLSS()) |>
-#sim <- setup_simulator(exper, ~ group, ~ GaussianLSS()) |>
-  estimate()
-
-sample(sim) |>
-  pivot_experiment() |>
-  ggplot() +
-    geom_histogram(aes(value, fill = group)) +
-    facet_wrap(~ feature)
+# or just,
+mean(atlas$age)
 ```
 
 ### Gaussian over Time
 
 ```{r}
-N <- 500
-u <- runif(N / 2)
-x <- matrix(nrow = 6, ncol = N)
-
-for (j in 1:6) {
-  f <- multimedia:::spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0, D = 1)
-  if (j > 3) {
-    x[j, ] <- c(f(u), f(u)) + rnorm(N, sd = 0.1)
-  } else {
-    f2 <- multimedia:::spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0, D = 1)
-    x[j, ] <- c(f(u), exp(-1) * f(u)) + rnorm(N, sd = 0.1)
-  }
-}
-
-exper2 <- SummarizedExperiment(
-  SimpleList(counts = x),
-  colData = data.frame(group = rep(c("A", "B"), each = N / 2), time = c(u, u))
-)
-rownames(exper2) <- 1:6
-
-
-pivot_experiment(exper2) |>
-  ggplot() +
-  geom_point(aes(time, value, col = group)) +
-  facet_wrap(~ feature)
+exper_ts <- readRDS("data/exper_ts.rds")
+exper_lineplot(exper_ts)
 ```
 
 ```{r}
-library(splines)
 sim <- setup_simulator(
-  exper2,
+  exper_ts,
   ~ ns(time, df = 7) * group,
   ~ GaussianLSS()
 ) |>
   estimate(nu = 0.01, mstop = 1000)
 
 sample(sim) |>
-  pivot_experiment() |>
-  ggplot() +
-    geom_point(aes(time, value, color = group)) +
-    facet_wrap(~ feature)
+  exper_lineplot() +
 ```
 
 ```{r}
-sim <- setup_simulator(
-  exper2,
-  ~ ns(time, df = 7) * group,
-  ~ GaussianLSS()
-)
-
 sim <- sim |>
-  mutate(3:6, link = ~ ns(time, df = 7)) |>
+  mutate(4:6, link = ~ ns(time, df = 7)) |>
   estimate(nu = 0.01, mstop = 1000)
 
 sample(sim) |>
-  pivot_experiment() |>
-  ggplot() +
-    geom_point(aes(time, value, color = group)) +
-    facet_wrap(~ feature)
+  exper_lineplot()
+```
+
+### Gaussian Mixture
+
+```{r}
+exper_grouped <- readRDS(url("https://github.com/krisrs1128/talks/raw/master/2024/20240611/data/exper_group.rds"))
+exper_histogram(exper_grouped)
+```
+
+* Explain how the simulation code below works. 
+* Modify it so that it accurate reflects the difference between groups for the first three genes.
+
+```{r}
+sim <- setup_simulator(exper_grouped, ~ 1, ~ GaussianLSS()) |>
+  estimate()
+
+sample(sim) |>
+  exper_histogram()
+```
+
+```{r}
+sim <- sim |>
+  mutate(1:3, link = ~ group) |>
+  estimate()
+
+sample(sim) |>
+  exper_histogram()
 
 ```
 
 ### Using a Simulator
 
 ```{r}
-exper <- readRDS("~/Downloads/atlas.rds")
+exper <- readRDS("data/atlas.rds")
 sim <- setup_simulator(
   exper,
   ~ bmi_group + age + log_depth,
   ~ ZINBLSS()
 ) |>
   estimate(nu = 0.001, mstop = 100)
-```
-
-```{r}
 ```

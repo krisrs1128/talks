@@ -374,7 +374,29 @@ plot(x, y)
 
 ---
 
-## Marginal Simulation Practice
+## Marginal Simulation - Practice
+
+---
+
+### Aside: SummarizedExperiment
+
+Estimation and simulation in `scDesigner` will work at the level of
+`SummarizedExperiment` objects. These are containers that store:
+
+* Feature $\times$ sample measurements in the `assay()` slot
+* Feature annotation in the `rowData` slot
+* Sample annotation in the `colData` slot
+
+```{r}
+atlas <- readRDS("data/atlas.rds")
+atlas
+```
+
+---
+
+### Aside: SummarizedExperiment
+
+<img src="figures/summarized_experiment.svg" width=800/>
 
 ---
 
@@ -387,7 +409,22 @@ We will usually use `setup_simulator()` to define a new simulator. This requires
 * The probability model to use (e.g,. Gaussian or Poisson)
 
 ```{r}
-sim <- setup_simulator(exper, ~ group, ~ GaussianLSS())
+exper_ts <- readRDS("data/exper_ts.RDS")
+exper_ts
+```
+
+---
+
+### Definition
+
+We will usually use `setup_simulator()` to define a new simulator. This requires:
+
+* The `SummarizedExperiment` template data
+* A regression formula relating colData features to the parameters
+* The probability model to use (e.g,. Gaussian or Poisson)
+
+```{r}
+sim <- setup_simulator(exper_ts, ~ group, ~ GaussianLSS())
 ```
 
 ---
@@ -411,7 +448,8 @@ sim |>
   mutate(1:3, link = ~ group + time)
 ```
 
-Change to zero inflated negative binomial for features features within a vector:
+A more realistic example would be to switch to a zero inflated negative binomial
+for rare species:
 
 ```{r, eval = FALSE}
 sim |>
