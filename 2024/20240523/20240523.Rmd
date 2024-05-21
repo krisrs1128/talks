@@ -41,8 +41,8 @@ scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(
 
 BibOptions(
   check.entries = FALSE, 
-  bib.style = "authoryear", 
-  cite.style = "authoryear", 
+  bib.style = "numeric", 
+  cite.style = "numeric", 
   style = "markdown",
   hyperlink = FALSE, 
   dashed = FALSE,
@@ -52,7 +52,7 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="title">
-Multimodal and Muticohort Data Integration
+Multimodal and Multicohort Data Integration
 </div>
 <div id="under_title">
 Microbial Mechanisms underlying Mental Health
@@ -74,12 +74,12 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 ### Motivation: Microbiome and Mental Health
 
 .pull-left[
-* We now understand that the microbiome is closely related to depression and mental health disturbances
-* To move beyond descriptive analysis and towards potential interventions, we need to understand mechanisms that relate microbiome composition to mental health
+* We now understand that the microbiome is closely related to depression and mental health disturbances `r Citep(bib, c("winter2018gut", "Bosch2022"))`.
+* To move beyond descriptive analysis and towards potential interventions, we need to understand mechanisms that underlie this relationship.
 ]
 
 .pull-right[
-```{r, fig.cap = "A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.", fig.align = "left"}
+```{r, fig.cap = "The microbiome along the gut lining, from Earle et al. 2015.", fig.align = "center"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -109,8 +109,8 @@ include_graphics("figure/wissing-integration.png")
 
 We will quality check the data as it is collected, allowing for corrections
 before all the data have been generated.
-  * Removal batch effects across sequencing runs
-  * Filter samples with outlier quality control metrics (e.g., sequencing depth)
+  * Removal batch effects across sequencing runs `r Citep(bib, c("Gagnon-Bartsch2012-dq", "Wang2020-iy"))`.
+  * Filter samples with outlier quality control metrics `r Citep(bib, "McCarthy2017-hx")`.
 
 <img src="figure/batch_effects.png"/>
 
@@ -119,8 +119,8 @@ before all the data have been generated.
 ### Quality Control and Normalization
 
 We will normalize the data to enhance power:
-  * Variance stabilization minimizes the impact of highly skewed data.
-  * Imputation of sampling zeros makes linear modeling assumptions viable
+  * Variance stabilization minimizes the impact of highly skewed data `r Citep(bib, "Law2014-qj")`.
+  * Imputation procedures make linear model assumptions viable `r Citep(bib,"Jiang2022-jt")`.
 
 <img src="figure/normalization.png"/>
 
@@ -129,12 +129,16 @@ We will normalize the data to enhance power:
 ### Population-Level Effects
 
 1. We will adapt previous methods for batch effect removal to support inference
-of country-level effects
-1. Following `r Citep(bib, c("CellAnova", "RUV4"))`, we will use linear models
+of country-level effects.
+1. Following `r Citep(bib, c("Zhang2023-rr"))`, we will use linear models
 with latent factors to isolate how molecular, clinical, and behavioral features
-vary across sites
+vary across sites.
 1. If an association is stable across populations, then that is evidence for a
-potential causal role
+potential causal role.
+
+.center[
+<img src="figure/batch_effect_estimates.png" width=350/>
+]
 
 ---
 
@@ -142,7 +146,7 @@ potential causal role
 
 .pull-left[
 1. Our first approach to integration is to search for shared latent structure
-across the data sources `r Citep(bib, "Sankaran2019")`.
+across the data sources `r Citep(bib, "Sankaran2019-bf")`.
 1. This identifies shared risk factor signatures across all data sources.
 ]
 
@@ -154,9 +158,9 @@ across the data sources `r Citep(bib, "Sankaran2019")`.
 
 ### Integration via Latent Spaces
 
-This is an example analysis applied to a gut microbiome study related body fat distribution.
+This is an example analysis applied to a study relating the microbiome to body fat distribution `r Citep(bib, "Min2019-gf")`.
   - The right hand plot shows a gradient across body types.
-  - The left hand plot shows variables across multiple tables that are related
+  - The left-hand plot shows variables across multiple tables that are related
   with this gradient.
 
 <img src="figure/cca_lab_measures.jpeg" width=900/>
@@ -166,7 +170,7 @@ This is an example analysis applied to a gut microbiome study related body fat d
 ### Integration via Interaction Networks
 
 .pull-left[
-1. We will learn cross-modality interactions with iterative Random Forests (iRF).
+1. We will learn cross-modality interactions with iterative Random Forests (iRF) `r Citep(bib, "Basu2018-tg")`.
 
 1. Since this is a predictive model, it focuses on depression-associated
 features. Further, since the predictive features include interactions, it can
@@ -182,7 +186,7 @@ learn to relate features across sources.
 ### Integration via Interaction Networks
 
 1. iRF has succeeded in several benchmarks of regulatory network inference -- it
-successfully handles nonlinear effects and non-gaussian data `r Citep(bib, "wilson")`.
+successfully handles nonlinear effects and non-Gaussian data `r Citep(bib, "Walker2022-ri")`.
 
 1. Based on the tree's branching pattern, we can learn reliable interactions
 between omics, clinical, and behavioral measurements.
@@ -196,7 +200,7 @@ between omics, clinical, and behavioral measurements.
 ### Integration via Interaction Networks
 
 1. iRF has succeeded in several benchmarks of regulatory network inference -- it
-successfully handles nonlinear effects and non-gaussian data `r Citep(bib, "wilson")`.
+successfully handles nonlinear effects and non-Gaussian data `r Citep(bib, "Walker2022-ri")`.
 
 1. Based on the tree's branching pattern, we can learn reliable interactions
 between omics, clinical, and behavioral measurements.
@@ -210,7 +214,7 @@ between omics, clinical, and behavioral measurements.
 ### Integration via Interaction Networks
 
 1. iRF has succeeded in several benchmarks of regulatory network inference -- it
-successfully handles nonlinear effects and non-gaussian data `r Citep(bib, "wilson")`.
+successfully handles nonlinear effects and non-Gaussian data `r Citep(bib, "Walker2022-ri")`.
 
 1. Based on the tree's branching pattern, we can learn reliable interactions
 between omics, clinical, and behavioral measurements.
@@ -225,13 +229,22 @@ between omics, clinical, and behavioral measurements.
 
 1. We will prepare data, model outputs, and code notebooks so that they can
 become a resource for the gut-brain axis research community.
-1. We will host both raw and preprocessed data through the SRA, a library
-permanent URL, and an R Bioconductor ExperimentData package.
-1. An example of one of our reproducible analysis for a pilot study can be found
-here: go.wisc.edu/tg16za
+1. We will host both raw and preprocessed data through the SRA, a permant
+library URL, and an R Bioconductor ExperimentData package.
 
 .center[
 <img src="figure/reproducibility.png" width=900/>
+]
+
+---
+
+### Management and Reproducibility
+
+An example of one of our reproducible analysis for a pilot study can be found
+at: [https://go.wisc.edu/tg16za](https://go.wisc.edu/tg16za)
+
+.center[
+<img src="figure/multimedia.png" width=750/>
 ]
 
 ---
@@ -243,6 +256,10 @@ WisSing, the rich experimental design drives our statistical power.
 
 1. The team has the type of complementary experience necessary to enable
 thoughtful integration.
+
+.center[
+<img src="figure/combined_logos.png" width=800/>
+]
 
 ---
 
@@ -256,7 +273,17 @@ thoughtful integration.
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib)
+PrintBibliography(bib, start = 1, end = 5)
 ```
 
 ---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 6, end = 10)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 11, end = 16)
+```
