@@ -1,0 +1,126 @@
+title: "Marginal Analysis Example"
+author: kris Sankaran
+output: readthedown::html_document
+---
+
+```{r}
+library(tidyverse)
+library(scDesigner)
+library(gamboostLSS)
+```
+
+### Using SummarizedExperiment
+
+### Gaussian Simulator
+
+```{r}
+N <- 1000
+x <- matrix(rnorm(6 * N), 6, N)
+x[1:3, 1:(N / 2)] <- x[1:3, 1:(N / 2)] + 2
+
+exper <- SummarizedExperiment(
+  SimpleList(counts = x),
+  colData = data.frame(group = rep(c("A", "B"), each = N / 2))
+)
+rownames(exper) <- 1:6
+```
+
+```{r}
+pivot_experiment(exper) |>
+  ggplot() +
+    geom_histogram(aes(value, fill = group)) +
+    facet_wrap(~ feature)
+```
+
+
+```{r}
+sim <- setup_simulator(exper, ~ 1, ~ GaussianLSS()) |>
+#sim <- setup_simulator(exper, ~ group, ~ GaussianLSS()) |>
+  estimate()
+
+sample(sim) |>
+  pivot_experiment() |>
+  ggplot() +
+    geom_histogram(aes(value, fill = group)) +
+    facet_wrap(~ feature)
+```
+
+### Gaussian over Time
+
+```{r}
+N <- 500
+u <- runif(N / 2)
+x <- matrix(nrow = 6, ncol = N)
+
+for (j in 1:6) {
+  f <- multimedia:::spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0, D = 1)
+  if (j > 3) {
+    x[j, ] <- c(f(u), f(u)) + rnorm(N, sd = 0.1)
+  } else {
+    f2 <- multimedia:::spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0, D = 1)
+    x[j, ] <- c(f(u), exp(-1) * f(u)) + rnorm(N, sd = 0.1)
+  }
+}
+
+exper2 <- SummarizedExperiment(
+  SimpleList(counts = x),
+  colData = data.frame(group = rep(c("A", "B"), each = N / 2), time = c(u, u))
+)
+rownames(exper2) <- 1:6
+
+
+pivot_experiment(exper2) |>
+  ggplot() +
+  geom_point(aes(time, value, col = group)) +
+  facet_wrap(~ feature)
+```
+
+```{r}
+library(splines)
+sim <- setup_simulator(
+  exper2,
+  ~ ns(time, df = 7) * group,
+  ~ GaussianLSS()
+) |>
+  estimate(nu = 0.01, mstop = 1000)
+
+sample(sim) |>
+  pivot_experiment() |>
+  ggplot() +
+    geom_point(aes(time, value, color = group)) +
+    facet_wrap(~ feature)
+```
+
+```{r}
+sim <- setup_simulator(
+  exper2,
+  ~ ns(time, df = 7) * group,
+  ~ GaussianLSS()
+)
+
+sim <- sim |>
+  mutate(3:6, link = ~ ns(time, df = 7)) |>
+  estimate(nu = 0.01, mstop = 1000)
+
+sample(sim) |>
+  pivot_experiment() |>
+  ggplot() +
+    geom_point(aes(time, value, color = group)) +
+    facet_wrap(~ feature)
+
+```
+
+### Using a Simulator
+
+```{r}
+exper <- readRDS("~/Downloads/atlas.rds")
+sim <- setup_simulator(
+  exper,
+  ~ bmi_group + age + log_depth,
+  ~ ZINBLSS()
+) |>
+  estimate(nu = 0.001, mstop = 100)
+```
+
+```{r}
+```

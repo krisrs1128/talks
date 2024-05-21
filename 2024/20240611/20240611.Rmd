@@ -374,16 +374,97 @@ plot(x, y)
 
 ---
 
-### Marginal Simulation Practice
+## Marginal Simulation Practice
 
 ---
 
-Go back to your original dataset for this...
+### Definition
+
+We will usually use `setup_simulator()` to define a new simulator. This requires:
+
+* The `SummarizedExperiment` template data
+* A regression formula relating colData features to the parameters
+* The probability model to use (e.g,. Gaussian or Poisson)
 
 ```{r}
-scDesigner::setup_margins()
+sim <- setup_simulator(exper, ~ group, ~ GaussianLSS())
 ```
 
 ---
 
+### Definition
 
+```{r}
+sim
+```
+
+---
+
+### Alteration
+
+We can modify a simulator using the `mutate` command. 
+
+Add a time effect for three features:
+
+```{r}
+sim |>
+  mutate(1:3, link = ~ group + time)
+```
+
+Change to zero inflated negative binomial for features features within a vector:
+
+```{r, eval = FALSE}
+sim |>
+  mutate(any_of(rare_taxa), family = ~ ZINBLSS())
+```
+
+---
+
+### Estimation
+
+Once a simulator is defined, it can be estimated using the `estimate` function.
+It can refer to any parameters used in the original LSS estimation package.
+
+```{r, eval = FALSE}
+sim <- sim |>
+  estimate(nu = 0.1) # learning rate = 0.1
+```
+
+---
+
+### Sampling
+
+Once we've estimated a simulator, we can sample from it using the `sample`
+command. It returns a `SummarizedExperiment` with the same dimensions as the
+original data.
+
+```{r}
+sample(sim)
+```
+
+---
+
+### Sampling
+
+Alternatively, we can create a new `colData` design and ask to sample at that
+configuration. This is useful for comparing sample sizes and experimental
+designs.
+
+```{r}
+new_design <- expand.grid(
+  group = c("A", "B"), 
+  time = seq(0, 1, 0.1)
+)
+
+sample(sim, new_data = new_design)
+```
+
+---
+
+### Exercise
+
+---
+
+### Application
+
+---
