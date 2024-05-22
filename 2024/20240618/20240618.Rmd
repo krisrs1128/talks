@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Semisynthetic Simulation for Biological Data Analysis"
 author: "Kris Sankaran"
 output:
   xaringan::moon_reader:
