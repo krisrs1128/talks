@@ -218,60 +218,95 @@ We need to make sure the budget is wisely while ensuring the study isn't underpo
 
 ### Problem Setup
 
+.pull-left[
 This is a differential abundance problem. Which species are more abundant in the
-low vs. high fat groups?
+malnourished vs. control groups?
+]
+
+.pull-right[
+```{r, echo = FALSE, fig.width = 4, fig.height = 5}
+library(tidyverse)
+library(ggdist)
+N <- 10
+D <- 20
+df <- matrix(rnorm(N * D), N, D)
+ix <- sample(1:D, 0.2 * D)
+df[1:nrow(df)/2, ix] <- 1 + df[1:nrow(df)/2, 1:2] 
+df |>
+  as_tibble() |>
+  mutate(group = rep(c("malnourished", "control"), each = n() / 2)) |>
+  pivot_longer(-group) |>
+  mutate(name = str_replace(name, "V", "")) |>
+  ggplot() +
+    stat_pointinterval(aes(value, name, col = group, fill = group)) +
+    labs(x = "Value", y = "Genus")
+```
+]
 
 ---
 
 ### Problem Setup
 
-1. We know that many methods have been proposed for microbiome differential
-abundance testing.
+Many methods have been proposed for microbiome differential abundance testing. They account for:
 
-1. Standard $t$-tests are insufficient because:
+* Potentially extreme sparsity and non-Gaussianity.
+* Uneven sequencing depth across samples.
+* The large number of tests (and the potential to borrow strength).
 
-* The original data are sparse and far from normal
-* Some samples have been sequenced more deeply than others
-
-So we can't rely on $t$-tests power calculators.
+This is good news but also means we can't just use $t$-test power calculators.
 
 ---
 
 ### Approach: Simulation
 
-Instead, we consider simulation. We will simulate experiments and see what our
-power and false discovery rate (FDR) look like in those hypothetical datasets.
+Instead, we simulate. We will simulate experiments and see what our power and
+false discovery rate (FDR) look like in those hypothetical datasets.
 
-This transforms abstract power calculation $\to$ concrete simulation experimentation.
+Abstract power calculation $\to$ Concrete computational experimentation.
+
+.center[
+<img src="figure/concrete_power.png" width=800/>
+]
 
 ---
 
 ### Simulation using Templates
 
-* The challenge, of course, is simulating data that look realistic.
+* The challenge is making realistic simulated data.
 
-* Instead of doing this from scratch, we can train a generative
+* Instead of doing this from scratch, we train a generative
 model to existing experimental data ("template data").
+
 
 ---
 
 ### Generative Models
 
 Generative models can _generate_ new, hypothetical samples, not just fit
-observed ones `r Citep(bib, "Sankaran 2020")`.
+observed ones `r Citep(bib, "Sankaran2023")`.
+
+.center[
+<img src="figure/discriminative_vs_generative.png" width=900/>
+]
+
+---
+
+### Generative Models
+
+Generative models can _generate_ new, hypothetical samples, not just fit
+observed ones `r Citep(bib, "Sankaran2023")`.
+
+.center[
+<img src="figure/generative_example.png" width=900/>
+]
 
 ---
 
 ### Foundation: The Atlas Study
 
-We decide that the most similar dataset to our proposal is the dataset in `r Citep(bib, "")`.
+* We decide that the most similar dataset to our proposal is the dataset in `r Citep(bib, "Lahti2014")`.
 
----
-
-### Foundation: The Atlas Study
-
-Our goal for today will be to simulate data that look similar to that data, but
-where we can control the ground truth associations and experimental design.
+* Our goal today will be to simulate data that look similar to that data, but where we can control the ground truth associations and experimental design.
 
 ---
 
