@@ -118,10 +118,9 @@ Marginal $\to$ Joint $\to$ Integrative
 
 By the end of this session, you will be able to...
 
-1. Design and implement a power analysis for a differential expression analysis
-2. Discuss the building blocks of marginal simulation: Classes of distributions (Poisson, NB, gaussian), types of marginal regression models.
-3. Distinguish between types of simulation: De Novo, Resampling, and Semisynthetic
-4. Identify areas of your own research where simulation could help better allocate limited resources
+1. Design and implement a power analysis for a differential expression analysis.
+1. Discuss the building blocks of marginal simulation: Classes of distributions (Poisson, NB, gaussian), types of marginal regression models.
+1. Identify areas of your own research where simulation could help better allocate limited resources.
 
 ---
 class: middle
@@ -132,37 +131,88 @@ class: middle
 
 ---
 
-### Story: The Grant Proposal
+### Microbiome Context
 
-How many samples should your team gather? How many from healthy vs. disease?
+We have begun a collaboration with researchers who study the human gut
+microbiome -- the ecosystem of microorganisms that live in the gut. Like in
+ordinary ecology, they are curious about:
 
-* It's important that that study isn't underpowered
-* We want to use the budget as wisely as possible
+.pull-left[
+* Who is present?
+* How do they interact with one another?
+* What are they doing? Which genes are active?
+* How does this depend on the environmental context?
+]
+
+.pull-right[
+```{r, fig.cap = "The microbiome along the gut lining, from Earle et al. 2015.", fig.align = "center"}
+include_graphics("https://whatislife.stanford.edu/images/spatial.png")
+```
+]
 
 ---
 
-### Story: The Grant Proposal
+### Power Analysis
 
-You look at one of their past grant proposals, and they just used a $t$-test
-calculator...
+They are preparing a grant proposal about how community composition is related
+to nutrition. The want to compare the microbiomes of people with low and high
+fat diets. 
 
-You know that the team is interested in differential analysis, so you decide
-you'll compare a few microbiome differential analysis methods on simulated data.
+Since we have the most statistical experience on the team, they ask us:
+
+.center[
+**How many samples are needed?**
+]
+
+* It's important that that study isn't underpowered
+* The budget should be used as wisely as possible
+
+---
+
+### Problem Setup
+
+This is a differential abundance problem. Which species are more abundant in the
+low vs. high fat groups?
+
+
+---
+
+### Problem Setup
+
+1. We know that many methods have been proposed for microbiome differential
+abundance testing.
+
+1. Standard $t$-tests are insufficient because:
+
+* The original data are sparse and far from normal
+* Some samples have been sequenced more deeply than others
+
+So we can't rely on $t$-tests power calculators.
 
 ---
 
 ### Approach: Simulation
 
-By simulating data, you can,
+Instead, we can consider simulation. We will simulate experiments and see what
+our power and false discovery rate (FDR) look like in those hypothetical
+datasets.
 
-* Control the ground truth associations $\to$ Compute ground truth false discovery rates (FDR) and power
-* Compare power as a function of sample size, class balance, and testing strategy
+This transforms abstract power calculation $\to$ concrete simulation experimentation.
+
+---
+
+### Simulation using Templates
+
+* Instead of simulating data from scratch, it's easier to train a generative
+model to existing experimental data (``template data'').
+
+* Generative models can _generate_ new, hypothetical samples, not just fit observed ones `r Citep(bib, "Sankaran 2020")`.
 
 ---
 
 ### Foundation: The Atlas Study
 
-You decide that the most similar dataset to your proposal is the dataset in `r Citep(bib, "")`.
+We decide that the most similar dataset to our proposal is the dataset in `r Citep(bib, "")`.
 
 ---
 
@@ -173,93 +223,14 @@ where we can control the ground truth associations and experimental design.
 
 ---
 
-### Simulator Taxonomy
-
-There are three main types of simulator.
-
-* De Novo: Define the generative mechanism without referring to any real data.
-* Resampling: Take a real dataset and perturb it in a systematic way.
-* Semisynthetic: Fit a controllable, generative model to a dataset.
-
----
-
-### De Novo Simulators
-
-Example: (maybe draw pictures for each of these examples)
-
-\begin{align}
-x_{i} \leftarrow \begin{cases}
-\mathcal{N}\left(\mu_{0}, \Sigma \right) \text{ for Control} \\
-\mathcal{N}\left(\mu_{1}, \Sigma \right) \text{ for Treatment}
-\end{cases}
-\end{align}
-
-.pull-left[
-Advantages: Fully transparent mechanism.
-]
-
-.pull-right[
-Disadvantages: No point of reference. Hard to evaluate how close it is to real
-data -- can result in lots of wasted time tinkering without clear sense of
-progress.
-]
-
----
-
-### Resampling Simulators
-
-Example: Let $z_i$ be a sample from the real dataset. Then, simulate new samples:
-
-\begin{align}
-y_{i} \leftarrow \begin{cases} 
-z_i \text{ for Control} \\
-\exp{\beta} z_i \text{ for Treatment}
-\end{cases}
-\end{align}
-
-.pull-left[
-
-Advantages: Fully nonparametric, can match arbitrarily complex data distributions.
-]
-
-.pull-right[
-Disadvantages: Can be difficult to control. For example, how to remove effect
-from one covariate but not another?
-]
-
----
-
-### Semisynthetic Simulators
-
-Example: Fit a model,
-\begin{align*}
-z_{i} = m_{i}^{T} \beta + \epsilon_{i}
-\end{align*}
-given previously observed samples $z_i$ and design $m_{i}$.
-
-Given target design $m_i$, simulate new samples:
-\begin{align*}
-y_{i} \leftarrow m_{i} \hat{\beta} + \epsilon_{i}
-\end{align}
-
-.pull-left[
-Advantages: Compromise between De Novo and Resampling based simulators -- both realistic and controllable.
-]
-
-.pull-right[
-Disadvantages: Fitting high-quality generative models can be challenging.
-]
-
----
-
 ### Discussion
 
-Discuss in groups of 2 - 4: 
+Please discuss in groups of 2 - 4: 
 
 * In your own research, what is one situation where simulation might be helpful? 
-* Pick one of the simulator types and explain how it might be applied.
+* What would be a template dataset you could use to guide your simulation?
 
-Google Doc: 
+We will debrief responses as a group.
 
 ---
 
@@ -291,7 +262,7 @@ when the probability of success is very low.
 * In a library with 10 million reads, the number that align to the sequence ATCCCTGGACCG...
 
 ```{r}
-library(tidyverse)
+library(ggplot2)
 data.frame(x = rpois(1000, 10)) |>
   ggplot() +
   geom_histogram(aes(x), bins = 100)
@@ -506,3 +477,84 @@ sample(sim, new_data = new_design)
 ### Application
 
 ---
+
+## Bonus Slides
+
+---
+
+### Simulator Taxonomy
+
+There are three main types of simulator.
+
+* De Novo: Define the generative mechanism without referring to any real data.
+* Resampling: Take a real dataset and perturb it in a systematic way.
+* Semisynthetic: Fit a controllable, generative model to a dataset.
+
+---
+
+### De Novo Simulators
+
+Example: (maybe draw pictures for each of these examples)
+
+\begin{align}
+x_{i} \leftarrow \begin{cases}
+\mathcal{N}\left(\mu_{0}, \Sigma \right) \text{ for Control} \\
+\mathcal{N}\left(\mu_{1}, \Sigma \right) \text{ for Treatment}
+\end{cases}
+\end{align}
+
+.pull-left[
+Advantages: Fully transparent mechanism.
+]
+
+.pull-right[
+Disadvantages: No point of reference. Hard to evaluate how close it is to real
+data -- can result in lots of wasted time tinkering without clear sense of
+progress.
+]
+
+---
+
+### Resampling Simulators
+
+Example: Let $z_i$ be a sample from the real dataset. Then, simulate new samples:
+
+\begin{align}
+y_{i} \leftarrow \begin{cases} 
+z_i \text{ for Control} \\
+\exp{\beta} z_i \text{ for Treatment}
+\end{cases}
+\end{align}
+
+.pull-left[
+
+Advantages: Fully nonparametric, can match arbitrarily complex data distributions.
+]
+
+.pull-right[
+Disadvantages: Can be difficult to control. For example, how to remove effect
+from one covariate but not another?
+]
+
+---
+
+### Semisynthetic Simulators
+
+Example: Fit a model,
+\begin{align*}
+z_{i} = m_{i}^{T} \beta + \epsilon_{i}
+\end{align*}
+given previously observed samples $z_i$ and design $m_{i}$.
+
+Given target design $m_i$, simulate new samples:
+\begin{align*}
+y_{i} \leftarrow m_{i} \hat{\beta} + \epsilon_{i}
+\end{align}
+
+.pull-left[
+Advantages: Compromise between De Novo and Resampling based simulators -- both realistic and controllable.
+]
+
+.pull-right[
+Disadvantages: Fitting high-quality generative models can be challenging.
+]
