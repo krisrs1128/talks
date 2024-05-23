@@ -1,5 +1,5 @@
-
 library(SummarizedExperiment)
+library(tidyverse)
 
 N <- 500
 x <- matrix(rnorm(6 * N), 6, N)
@@ -31,7 +31,10 @@ exper_ts <- SummarizedExperiment(
 rownames(exper_ts) <- 1:6
 #saveRDS(exper_ts, "exper_ts.rds")
 
-library(tidyverse)
+###############################################################################
+# Code for generating some figures on some of the slides
+###############################################################################
+
 u <- seq(-4, 4, length.out = 300)
 tibble(
   u = u,
@@ -40,7 +43,7 @@ tibble(
   ggplot() +
     geom_area(aes(u, density)) +
     theme_void()
-ggsave("figure/gaussian.svg", width=8, height = 3)
+#ggsave("figure/gaussian.svg", width=8, height = 3)
 
 tibble(
   u = seq(0, 15),
@@ -49,7 +52,7 @@ tibble(
   ggplot() +
     geom_col(aes(u, density)) +
     theme_void()
-ggsave("figure/poisson.svg", width=8, height = 3)
+#ggsave("figure/poisson.svg", width=8, height = 3)
 
 tibble(
   u = seq(0, 40),
@@ -58,4 +61,4 @@ tibble(
   ggplot() +
     geom_col(aes(u, density)) +
     theme_void()
-ggsave("figure/nbinom.svg", width=8, height = 3)
+#ggsave("figure/nbinom.svg", width=8, height = 3)

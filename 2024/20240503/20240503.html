@@ -42,8 +42,19 @@ Slides: &lt;a href="https://go.wisc.edu/u10492"&gt;go.wisc.edu/u10492&lt;/a&gt;
 
 ---
 
-.section[
-_"How did you choose `\(K\)`?"_
+### Motivation: Microbiome Data Analysis
+
+.pull-left[
+* How should we describe the bacterial ecosystems that surround (and
+inhabit) us?
+* An improved understanding would support human and environmental health
+]
+
+.pull-right[
+&lt;div class="figure" style="text-align: left"&gt;
+&lt;img src="https://whatislife.stanford.edu/images/spatial.png" alt="A 'photo' of the microbiome along the gut lining, from Earle et al. 2015."  /&gt;
+&lt;p class="caption"&gt;A 'photo' of the microbiome along the gut lining, from Earle et al. 2015.&lt;/p&gt;
+&lt;/div&gt;
 ]
 
 ---
@@ -51,7 +62,7 @@ _"How did you choose `\(K\)`?"_
 ### Iterative Data Structuration
 
 .pull-left[
-* Iterative data structuration creates a sequence of simple `\(\to\)` complex models(Holmes, 1993; Mallows et al., 1982)
+* Iterative data structuration creates a sequence of simple `\(\to\)` complex models (Holmes, 1993; Mallows et al., 1982)
 * It makes it easy to navigate the interpretability/expressivity tradeoff
   - Begin with the overview (context), then focus on residual variation (focus)
 ]
@@ -79,7 +90,7 @@ where the columns `\(\beta_{k}\)` of `\(\*B \in \Delta^{K}_{D}\)` lie in the `\(
 \beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
 \end{align*}`
 
-We vertically stack the `\(N\)` `\(\gamma_i\)`'s into `\(\gamma \in \Delta^{N}_{K}\)`.
+We vertically stack the `\(N\)` `\(\gamma_i\)`'s into `\(\Gamma \in \Delta^{N}_{K}\)`.
 
 ---
 
@@ -95,7 +106,7 @@ estimated parameters can be interpreted as,
 
 ---
 
-### Managing Large `\(K\)`
+### How to Choose `\(K\)`?
 
 * It is often difficult to interpret these models when `\(K\)` is large
 * Heuristic: Look at smaller `\(K\)` to build intuition about topics
@@ -108,8 +119,8 @@ estimated parameters can be interpreted as,
 
 ### Main Idea
 
-* We will fit an ensemble of models of varying complexities (Parsimony)
-* We will build a compact representation of the result (Navigation)
+* We will fit an ensemble of models of varying complexities.
+* Post-estimation, we will build a compact representation of the result.
 * In the Sankey diagram, columns are models and rectangles are topics
 
 &lt;img src="figure/alto_sketches_annotated alignment.png" width="750" style="display: block; margin: auto;" /&gt;
@@ -389,8 +400,8 @@ represent coherent subtypes in the dysbiotic CSTs
 .pull-right[
 **Hierarchical Topic Models **
   - Similar: Learns topics at multiple levels of resolution
-  - Different (+/-): Samples belong to individual subtrees
   - Different (-): Requires word-level representations.
+  - Different (+/-): Words belong to individual subtrees
 ]
 
 &lt;img src="figure/hlda.png"/&gt;
@@ -424,7 +435,7 @@ result &lt;- align_topics(lda_models)
 plot(result)
 ```
 
-&lt;img src="20240503_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="20240503_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto auto auto 0;" /&gt;
 ]
 
 All the simulations discussed today are vignettes in the package. 

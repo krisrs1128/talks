@@ -20,7 +20,7 @@ library(MASS)
 library(knitr)
 library(RefManageR)
 library(tidyverse)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3, eval.after = "fig.cap")
 min_theme <- theme_minimal() + 
   theme(
     panel.grid.minor = element_blank(),
@@ -75,11 +75,11 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 .pull-left[
 * We now understand that the microbiome is closely related to depression and mental health disturbances `r Citep(bib, c("winter2018gut", "Bosch2022"))`.
-* To move beyond descriptive analysis and towards potential interventions, we need to understand mechanisms that underlie this relationship.
+* To move beyond descriptive analysis and towards potential interventions, we need to understand mechanisms underlying this relationship.
 ]
 
 .pull-right[
-```{r, fig.cap = "The microbiome along the gut lining, from Earle et al. 2015.", fig.align = "center"}
+```{r, fig.cap = paste0("The microbiome along the gut lining, from ", Citep(bib, 'Earle2015'), "."), fig.align = "center"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -88,13 +88,12 @@ include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 
 ### Mechanisms via Data Integration
 
-The strength of WisSing is its experimental design: Clinical, behavioral,
-genetic, and microbiome assays simultaneously across two populations 
+A strength of WisSing is its experimental design: Clinical, behavioral, genetic,
+and microbiome assays simultaneously across two populations.
 
 .pull-left[
-- The relationships across data modalities gives a window into mechanism
-- Effects that are stable across populations are less likely to be influenced
-by confounding
+- The relationships across data modalities give a window into mechanism.
+- Stable effects across populations are less likely to be confoundd.
 ]
 
 .pull-right[
@@ -251,8 +250,7 @@ at: [https://go.wisc.edu/tg16za](https://go.wisc.edu/tg16za)
 
 ### Conclusion
 
-1. Data integration is often presented as a technical challenge. However, for
-WisSing, the rich experimental design drives our statistical power.
+1. For WisSing, an integrative analysis can drive scientific insight.
 
 1. The team has the type of complementary experience necessary to enable
 thoughtful integration.
