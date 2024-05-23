@@ -306,7 +306,8 @@ observed ones `r Citep(bib, "Sankaran2023")`.
 
 * We decide that the most similar dataset to our proposal is the dataset in `r Citep(bib, "Lahti2014")`.
 
-* Our goal today will be to simulate data that look similar to that data, but where we can control the ground truth associations and experimental design.
+* Our goal today will be to simulate data that look similar to that data, but where we control the ground truth associations and experimental design.
+
 
 ---
 
@@ -314,8 +315,8 @@ observed ones `r Citep(bib, "Sankaran2023")`.
 
 Please discuss in groups of 2 - 4: 
 
-* In your own research, what is one situation where simulation might be helpful? 
-* What would be a template dataset you could use to guide your simulation?
+* In your own research, what is one place where simulation might help? 
+* What template dataset would you use to guide the simulation?
 
 We will debrief responses as a group.
 
@@ -338,6 +339,10 @@ ourselves with:
 1. A few types of probability distributions -- both count and continuous.
 1. Ways of linking these distributions with external information (e.g., disease status)
 
+.center[
+  <img src="figure/marginal_goals.png" width=700/>
+]
+
 ---
 
 ### Count Distributions: $\text{Poi}\left(\lambda\right)$
@@ -349,6 +354,10 @@ trials, each with low probability $p$ of success.
 * Count a million reads' alignment to a rare DNA sequence.
 
 The Poisson parameter $\lambda \approx N p$.
+
+.center[
+<img src="figure/poisson_reads.png" width=600/>
+]
 
 ---
 
@@ -398,12 +407,9 @@ data.frame(x = rpois(1000, 100)) |>
 
 ### Count Distributions: Negative Binomial
 
-This distribution arises when the Poisson's mean parameter is itself random.
-
-* The number of heads after flipping many biased coins $N = $ million times, where the coins have probability $p = 0.000215, 0.001313, 0.000841, \dots$
-* The number of reads aligning to a sequence across many runs where temperature might influence binding
-
-This additional variability induces _overdispersion_ relative to the Poisson.
+* This distribution arises when the Poisson's mean parameter is itself random.
+* This additional variability induces _overdispersion_ relative to the Poisson.
+* E.g., in the coin flipping example, the coin's probability of heads is no longer constant
 
 ```{r}
 data.frame(x = rnbinom(1000, 1, .1)) |>
@@ -419,10 +425,16 @@ Genomic data often have many more zeros than these distributions alone would
 capture. For this reason, it's common to define zero-inflated versions of the
 previous distributions:
 
-```{r}
+```{r, echo = FALSE}
 x <- rpois(1000, 10) # generate poissons
 z <- rbinom(1000, 1, 0.5) # generates 0/1
 z * x # zero inflated poisson
+
+data.frame(x = z * x) |>
+  group_by(x) |>
+  dplyr::count() |>
+  ggplot() +
+  geom_col(aes(x, n))
 ```
 
 ---
@@ -431,30 +443,29 @@ z * x # zero inflated poisson
 
 The purpose of many normalization and imputation algorithms in genomics is to
 _Gaussianize_ the data. It can often be reasonable to apply a Gaussian simulator
-to the transformed data `r Citep(bib, "Law2014-qj")`.
+to the transformed data `r Citep(bib, c("Law2014-qj", "Jiang2021-jt"))`.
+
+.center[
+  <img src="figures/gaussian.svg" width=800/>
+]
 
 ---
 
-### Other Distributions
-
-We won't be using the course, but it's worth knowing,
-
-* Gamma Distribution: Continuous, only positive values
-* Student's T Distribution: Continuous, allows large outliers
-* Tweedie Distribution: Interpolates between count and continuous distributions
-
----
 
 ### Incorporating Covariates
 
-On their own, these distributions may not seem like much, but when we allow them
+1. On their own, these distributions may not seem like much, but when we allow them
 to depend on other features, we can capture a wide range of distributions.
+
+1. Manipulating the relationship between covariates and response will allow us
+to control the simulation more finely.
 
 ---
 
 ### GAMLSS
 
-The main idea is to allow each parameter of a distribution to depend on
+We will focus on using Generalized Additive Models of Location Shape and Scale
+(GAMLSS).  These models allow each parameter of a distribution to depend on
 predictors in a smooth way.
 
 ```{r, echo = FALSE, out.width = 900}
@@ -464,12 +475,17 @@ x <- runif(N)
 f <- multimedia:::spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0)
 theta <- f(x)
 y <- rnorm(N, mean = theta[, 1], sd = abs(theta[, 2]))
-data.frame(x, y) |>
+data.frame(
+  x, y,
+  mu = theta[, 1], sigma = abs(theta[, 2])
+  ) |>
   ggplot() +
-  geom_point(aes(x, y))
+  geom_ribbon(aes(x, ymin = mu - 1.9 * sigma, ymax = mu + 1.9 * sigma), fill = "#d3d3d3") +
+  geom_line(aes(x, mu), col = "#A2004A", linewidth = 2) +
+  geom_point(aes(x, y)) +
+  theme_void()
 ```
 
-(maybe make this a gganimate animation?)
 
 ---
 
@@ -622,8 +638,45 @@ sample(sim, new_data = new_design)
 
 ---
 
-### Exercise
+## Application
 
 ---
 
-### Application
+### Reminders
+
+1. How many samples are needed for differential abundance analysis using Limma?
+1. We use can the Atlas dataset as a template.
+1. Main Steps:
+  - Estimate a simulator from the template
+  - Remove any association for true negative taxa
+  - Simulate different sample sizes and evaluate hypothesis test results.
+
+Let's run this in the exercise sheet.
+
+---
+class: middle
+
+.center[
+## Bonus Slides
+]
+
+---
+
+### Other Distributions
+
+We won't be using the course, but it's worth knowing,
+
+* Gamma Distribution: Continuous, only positive values
+* Student's T Distribution: Continuous, allows large outliers
+* Tweedie Distribution: Interpolates between count and continuous distributions
+
+---
+
+### What about GANs?
+
+1. These can give good generative models out-of-the-box.
+
+1. The main challenge in practice is supporting manipulation. Most
+implementations don't make it easy to draw samples at new experimental designs.
+
+---

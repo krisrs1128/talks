@@ -30,3 +30,32 @@ exper_ts <- SummarizedExperiment(
 )
 rownames(exper_ts) <- 1:6
 #saveRDS(exper_ts, "exper_ts.rds")
+
+library(tidyverse)
+u <- seq(-4, 4, length.out = 300)
+tibble(
+  u = u,
+  density = dnorm(u)
+) |>
+  ggplot() +
+    geom_area(aes(u, density)) +
+    theme_void()
+ggsave("figure/gaussian.svg", width=8, height = 3)
+
+tibble(
+  u = seq(0, 15),
+  density = dpois(u, 4)
+) |>
+  ggplot() +
+    geom_col(aes(u, density)) +
+    theme_void()
+ggsave("figure/poisson.svg", width=8, height = 3)
+
+tibble(
+  u = seq(0, 40),
+  density = dnbinom(u, 1, 0.1)
+) |>
+  ggplot() +
+    geom_col(aes(u, density)) +
+    theme_void()
+ggsave("figure/nbinom.svg", width=8, height = 3)
