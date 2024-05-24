@@ -119,7 +119,7 @@ before all the data have been generated.
 
 We will normalize the data to enhance power:
   * Variance stabilization minimizes the impact of highly skewed data `r Citep(bib, "Law2014-qj")`.
-  * Imputation procedures make linear model assumptions viable `r Citep(bib,"Jiang2022-jt")`.
+  * Imputation procedures make linear model assumptions viable `r Citep(bib,"Jiang2021-jt")`.
 
 <img src="figure/normalization.png"/>
 
@@ -129,7 +129,7 @@ We will normalize the data to enhance power:
 
 1. We will adapt previous methods for batch effect removal to support inference
 of country-level effects.
-1. Following `r Citep(bib, c("Zhang2023-rr"))`, we will use linear models
+1. Following `r Citep(bib, c("Zhang2023-rr", "Gagnon-Bartsch2012-dq"))`, we will use linear models
 with latent factors to isolate how molecular, clinical, and behavioral features
 vary across sites.
 1. If an association is stable across populations, then that is evidence for a
@@ -145,8 +145,8 @@ potential causal role.
 
 .pull-left[
 1. Our first approach to integration is to search for shared latent structure
-across the data sources `r Citep(bib, "Sankaran2019-bf")`.
-1. This identifies shared risk factor signatures across all data sources.
+across the data modalities `r Citep(bib, "Sankaran2019-bf")`.
+1. This identifies shared risk factor signatures across all sources.
 ]
 
 .pull-right[
@@ -265,7 +265,7 @@ thoughtful integration.
 ### Thank you!
 ]
 
-* Lab Members: Margaret Thairu, Hanying Jiang, Mason Garza, Yuliang Peng, Kai Cui, Sam Merten, and Kobe Uko
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kai Cui, Sam Merten, and Kobe Uko
 * Funding: NIGMS R01GM152744
 
 ---
