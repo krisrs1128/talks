@@ -49,6 +49,7 @@ BibOptions(
   max.names = 1
 )
 bib <- ReadBib("references.bib")
+set.seed(20240611)
 ```
 
 <div id="title">
@@ -62,12 +63,13 @@ Session 1: Marginal Modeling
 <div id="subtitle">
 Kris Sankaran <br/>
 11 | June | 2024 <br/>
-Melbourne Integrative Genomics<br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-<!-- Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>  -->
+Melbourne Integrative Genomics<br/>
+Slides: <a href="https://go.wisc.edu/gfj36r">go.wisc.edu/gfj36r</a><br/>
+Code: <a href="https://go.wisc.edu/o5sn6w">go.wisc.edu/o5sn6w</a>
 </div>
 
 ---
@@ -76,13 +78,16 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 By the end of this course, you will be able to...
 
-1. Describe the main components of an omics data simulator.
-1. Apply simulators to practical power analysis and benchmarking problems.
-1. Compare and critique emerging approaches to multi-omics simulation
+1. Describe simulators: What are their building blocks and core properties?
+
+1. Apply simulators: How can we use them to efficiently solve power
+analysis and benchmarking problems in biostatistics and computational biology?
+
+1. Compare simulators: What are current trends and their implications?
 
 ---
 
-### Course Plan
+### Tody: Marginal Simulation
 
 <span style="color:#8C1F33">Marginal</span> $\to$ Joint $\to$ Integrative
 
@@ -92,7 +97,7 @@ By the end of this course, you will be able to...
 
 ---
 
-### Course Plan
+### Tody: Marginal Simulation
 
 <span style="color:#8C1F33">Marginal</span> $\to$ Joint $\to$ Integrative
 
@@ -102,7 +107,7 @@ By the end of this course, you will be able to...
 
 ---
 
-### Course Plan
+### Tody: Marginal Simulation
 
 <span style="color:#8C1F33">Marginal</span> $\to$ Joint $\to$ Integrative
 
@@ -112,36 +117,19 @@ By the end of this course, you will be able to...
 
 ---
 
-### Course Plan
+### Today's Learning Outcomes
 
-Marginal $\to$ <span style="color:#8C1F33">Joint</span> $\to$ Integrative
+By the end of this session, you will be able to...
 
-.center[
-<img src="figure/integration_types_2.png" width=600/>
-]
-
----
-
-### Course Plan
-
-Marginal $\to$ Joint $\to$ <span style="color:#8C1F33">Integrative</span>
-
-.center[
-<img src="figure/integration_types_3.png" width=600/>
-]
+1. Manipulate and interpret `SummarizedExperiment` experiment objects. 
+1. Discuss the building blocks of marginal simulation: Probability distributions
+and regression models.
+1. Design a power analysis for differential testing and accurately communicate its results.
+1. Identify areas of your own research where simulation could help better allocate limited resources.
 
 ---
 
-### Logistics: Materials
-
-You should be able to follow along by referring to these resources:
-
-* Code repository:
-* Live Demo: 
-
----
-
-### Logistics: Communication
+### Course Expectations
 
 * Bugs are normal! Resolving them is a skill you will develop.
 * Please ask a tutor to help at any point. Don't worry about interrupting.
@@ -149,24 +137,15 @@ You should be able to follow along by referring to these resources:
 
 ---
 
-### Learning Outcomes: Session 1
-
-By the end of this session, you will be able to...
-
-1. Design and interpret a power analysis for differential abundance testing.
-1. Discuss the building blocks of marginal simulation: Classes of distributions (Poisson, NB, gaussian), types of marginal regression models.
-1. Identify areas of your own research where simulation could help better allocate limited resources.
-
----
 class: middle
 
 .center[
-## Introduction
+## Scientific Context
 ]
 
 ---
 
-### Microbiome Context
+### The Microbiome
 
 Imagine a collaboration with researchers who study the human gut microbiome --
 the ecosystem of microorganisms that live in the gut. Like ordinary ecology,
@@ -253,7 +232,7 @@ Many methods have been proposed for microbiome differential abundance testing. T
 * Uneven sequencing depth across samples.
 * The large number of tests (and the potential to borrow strength).
 
-This is good news but also means we can't just use $t$-test power calculators.
+This is great news but means we can't just use $t$-test power calculators.
 
 ---
 
@@ -270,44 +249,31 @@ Abstract power calculation $\to$ Concrete computational experimentation.
 
 ---
 
-### Simulation using Templates
-
-* The challenge is making realistic simulated data.
+### Simulation with Templates
 
 * Instead of doing this from scratch, we train a generative
 model to existing experimental data ("template data").
 
-
----
-
-### Generative Models
-
-Generative models can _generate_ new, hypothetical samples, not just fit
+* Generative models can _generate_ new, hypothetical samples, not just fit
 observed ones `r Citep(bib, "Sankaran2023")`.
 
 .center[
-<img src="figure/discriminative_vs_generative.png" width=900/>
+<img src="figure/discriminative_vs_generative.png" width=700/>
 ]
 
 ---
 
-### Generative Models
+### Simulation with Templates
 
-Generative models can _generate_ new, hypothetical samples, not just fit
+* Instead of doing this from scratch, we train a generative
+model to existing experimental data ("template data").
+
+* Generative models can _generate_ new, hypothetical samples, not just fit
 observed ones `r Citep(bib, "Sankaran2023")`.
 
 .center[
 <img src="figure/generative_example.png" width=900/>
 ]
-
----
-
-### Foundation: The Atlas Study
-
-* We decide that the most similar dataset to our proposal is the dataset in `r Citep(bib, "Lahti2014")`.
-
-* Our goal today will be to simulate data that look similar to that data, but where we control the ground truth associations and experimental design.
-
 
 ---
 
@@ -325,7 +291,7 @@ We will debrief responses as a group.
 class: middle
 
 .center[
-## Marginal Simulation - Concepts
+## Statistical Approach
 ]
 
 ---
@@ -336,12 +302,68 @@ The richer our vocabulary for generative models, the better chance we'll have of
 finding a realistic simulation mechanism. To this end, we need to familiarize
 ourselves with:
 
-1. A few types of probability distributions -- both count and continuous.
-1. Ways of linking these distributions with external information (e.g., disease status)
+1. **Types of data that can serve as templates.**
+1. Probability and regression concepts that allow us to fit generative models.
 
 .center[
-  <img src="figure/marginal_goals.png" width=700/>
+<img src="figure/summarized_experiment_focus.png" width=150/>
 ]
+
+---
+
+### Approach
+
+The richer our vocabulary for generative models, the better chance we'll have of
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
+
+1. Types of data that can serve as templates.
+1. **Probability and regression concepts that allow us to fit generative models.**
+
+.center[
+  <img src="figure/marginal_goals.png" width=800/>
+]
+
+---
+
+### Representing Data
+
+.pull-left[
+We can tie together sequencing output, experimental design, and biological
+annotation using `SummarizedExperiment` objects. This will let us concisely
+learn how `design + biology -> sequencing`. 
+]
+
+.pull-right[
+<img src="figure/summarized_experiment.svg" width=880/>
+]
+
+---
+
+### Code Logistics
+
+Follow along here,
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Live Demo: 
+
+---
+
+### Important Functions
+
+To work with `SummarizedExperiment` objects, we can use:
+
+* `assay`: Returns a matrix whose rows are sequencing features (e.g., genes, taxa, ...) and whose columns are samples.
+* `rowData`: Returns a data.frame that annotates each sequencing features.
+* `colData`: Returns a data.frame that annotates each sample.
+
+
+```{r}
+library(MIGsim)
+
+data(atlas)
+head(colData(atlas))
+```
 
 ---
 
@@ -361,60 +383,19 @@ The Poisson parameter $\lambda \approx N p$.
 
 ---
 
-### Count Distributions: $\text{Poi}\left(\lambda\right)$
-
-$\lambda = 2$
-
-```{r, out.width = 800, echo = FALSE}
-library(ggplot2)
-data.frame(x = rpois(1000, 2)) |>
-  group_by(x) |>
-  dplyr::count() |>
-  ggplot() +
-  geom_col(aes(x, n))
-```
-
----
-### Count Distributions: $\text{Poi}\left(\lambda\right)$
-
-$\lambda = 10$
-
-```{r, out.width = 800, echo = FALSE}
-library(ggplot2)
-data.frame(x = rpois(1000, 10)) |>
-  group_by(x) |>
-  dplyr::count() |>
-  ggplot() +
-  geom_col(aes(x, n))
-```
-
----
-
-### Count Distributions: $\text{Poi}\left(\lambda\right)$
-
-$\lambda = 100$
-
-```{r, out.width = 800, echo = FALSE}
-library(ggplot2)
-data.frame(x = rpois(1000, 100)) |>
-  group_by(x) |>
-  dplyr::count() |>
-  ggplot() +
-  geom_col(aes(x, n))
-```
-
----
-
 ### Count Distributions: Negative Binomial
 
-* This distribution arises when the Poisson's mean parameter is itself random.
-* This additional variability induces _overdispersion_ relative to the Poisson.
-* E.g., in the coin flipping example, the coin's probability of heads is no longer constant
+* This distribution arises when the Poisson parameter is itself random.
+* E.g., the coin's probability of heads is no longer constant
 
-```{r}
-data.frame(x = rnbinom(1000, 1, .1)) |>
+$\text{NB}(\mu = 100, \varphi = 5)$
+
+```{r, echo = FALSE, out.width = 700, dpi=400}
+data.frame(x = rnbinom(1000, mu = 100, size = 5)) |>
+  group_by(x) |>
+  dplyr::count() |>
   ggplot() +
-  geom_histogram(aes(x), bins = 200)
+  geom_col(aes(x, n))
 ```
 
 ---
@@ -422,13 +403,14 @@ data.frame(x = rnbinom(1000, 1, .1)) |>
 ### Count Distributions: Zero-Inflation
 
 Genomic data often have many more zeros than these distributions alone would
-capture. For this reason, it's common to define zero-inflated versions of the
-previous distributions:
+capture, so it's common to define zero-inflated versions of the previous
+distributions.
 
-```{r, echo = FALSE}
+$\text{Poi}(\lambda = 10)$ with $\nu = 0.5$ zero inflation:
+
+```{r, echo = FALSE, out.width = 650}
 x <- rpois(1000, 10) # generate poissons
 z <- rbinom(1000, 1, 0.5) # generates 0/1
-z * x # zero inflated poisson
 
 data.frame(x = z * x) |>
   group_by(x) |>
@@ -439,40 +421,17 @@ data.frame(x = z * x) |>
 
 ---
 
-### Continuous Distributions: Gaussian
-
-The purpose of many normalization and imputation algorithms in genomics is to
-_Gaussianize_ the data. It can often be reasonable to apply a Gaussian simulator
-to the transformed data `r Citep(bib, c("Law2014-qj", "Jiang2021-jt"))`.
-
-.center[
-  <img src="figures/gaussian.svg" width=800/>
-]
-
----
-
-
-### Incorporating Covariates
-
-1. On their own, these distributions may not seem like much, but when we allow them
-to depend on other features, we can capture a wide range of distributions.
-
-1. Manipulating the relationship between covariates and response will allow us
-to control the simulation more finely.
-
----
-
 ### GAMLSS
 
 We will focus on using Generalized Additive Models of Location Shape and Scale
 (GAMLSS).  These models allow each parameter of a distribution to depend on
 predictors in a smooth way.
 
-```{r, echo = FALSE, out.width = 900}
+```{r, echo = FALSE, out.width = 750}
 N <- 1000
 x <- runif(N)
 
-f <- multimedia:::spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0)
+f <- spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0)
 theta <- f(x)
 y <- rnorm(N, mean = theta[, 1], sd = abs(theta[, 2]))
 data.frame(
@@ -484,69 +443,6 @@ data.frame(
   geom_line(aes(x, mu), col = "#A2004A", linewidth = 2) +
   geom_point(aes(x, y)) +
   theme_void()
-```
-
-
----
-
-## Marginal Simulation - Practice
-
----
-
-### Aside: SummarizedExperiment
-
-Estimation and simulation in `scDesigner` will work at the level of
-`SummarizedExperiment` objects.
-
-.pull-left[
-These containers have three slots:
-* `assay`: Feature-by-sample measurements
-* `rowData`: Feature annotation
-* `colData`: Sample annotation
-]
-
-.pull-right[
-<img src="figure/summarized_experiment.svg" width=800/>
-]
-
-
-### Aside: SummarizedExperiment
-
-```{r}
-atlas <- readRDS("data/atlas.rds")
-atlas
-```
-
-```{r, echo = FALSE}
-exper_ts <- readRDS("data/exper_ts.rds")
-```
-
----
-
-### Definition
-
-We can use `setup_simulator()` to define a new simulator. This requires:
-
-* The `SummarizedExperiment` template data
-* A regression formula relating colData features to the parameters
-* The probability model to use (e.g,. Gaussian or Poisson)
-
-```{r}
-exper_ts
-```
-
----
-
-### Definition
-
-We can use `setup_simulator()` to define a new simulator. This requires:
-
-* The `SummarizedExperiment` template data
-* A regression formula relating colData features to the parameters
-* The probability model to use (e.g,. Gaussian or Poisson)
-
-```{r}
-colData(exper_ts)
 ```
 
 ---
@@ -567,18 +463,9 @@ sim <- setup_simulator(exper_ts, ~ group, ~ GaussianLSS())
 
 ---
 
-### Definition
-
-```{r}
-sim
-```
-
----
-
 ### Alteration
 
-We can modify a simulator using the `mutate` command.  This adds temporal
-dependence.
+We can modify a simulator using the `mutate` command.
 
 ```{r}
 sim |>
@@ -595,26 +482,18 @@ sim |>
 
 ---
 
-### Estimation
+### Estimation & Sampling
 
 
-.pull-left[
-Once a simulator is defined, it can be estimated using the `estimate` function.
-It can refer to any parameters used in the original LSS estimation package.
+Once a simulator is defined, it can be estimated with `estimate`.
 
 ```{r}
 sim <- sim |>
   estimate(nu = 0.1) # learning rate = 0.1
 ```
-]
 
----
 
-### Sampling
-
-Once we've estimated a simulator, we can sample from it using the `sample`
-command. It returns a `SummarizedExperiment` with the same dimensions as the
-original data.
+We can simulate new experiments using `sample`.
 
 ```{r}
 sample(sim)
@@ -622,7 +501,7 @@ sample(sim)
 
 ---
 
-### Sampling
+### New Data
 
 Alternatively, we can use a new `colData` object.  This is useful for comparing
 sample sizes and experimental designs.
@@ -638,26 +517,28 @@ sample(sim, new_data = new_design)
 
 ---
 
-## Application
-
----
-
-### Reminders
-
-1. How many samples are needed for differential abundance analysis using Limma?
-1. We use can the Atlas dataset as a template.
-1. Main Steps:
-  - Estimate a simulator from the template
-  - Remove any association for true negative taxa
-  - Simulate different sample sizes and evaluate hypothesis test results.
-
-Let's run this in the exercise sheet.
-
----
 class: middle
 
 .center[
-## Bonus Slides
+## Application
+]
+
+---
+
+### Next Time: Joint Simulation
+
+Marginal $\to$ <span style="color:#8C1F33">Joint</span> $\to$ Integrative
+
+.center[
+<img src="figure/integration_types_2.png" width=600/>
+]
+
+---
+
+class: middle
+
+.center[
+## Backup Slides
 ]
 
 ---
@@ -680,3 +561,68 @@ We won't be using the course, but it's worth knowing,
 implementations don't make it easy to draw samples at new experimental designs.
 
 ---
+
+### Normalization
+
+The purpose of many normalization and imputation algorithms in genomics is to
+_Gaussianize_ the data. It can often be reasonable to apply a Gaussian simulator
+to the transformed data `r Citep(bib, c("Law2014-qj", "Jiang2021-jt"))`.
+
+.center[
+  <img src="figure/gaussian.svg" width=800/>
+]
+
+---
+
+### Count Distributions: $\text{Poi}\left(\lambda\right)$
+
+$\text{Poi}\left(\lambda = 2\right)$
+
+```{r, out.width = 800, echo = FALSE}
+library(ggplot2)
+data.frame(x = rpois(1000, 2)) |>
+  group_by(x) |>
+  dplyr::count() |>
+  ggplot() +
+  geom_col(aes(x, n))
+```
+
+---
+### Count Distributions: $\text{Poi}\left(\lambda\right)$
+
+$\text{Poi}\left(\lambda = 10\right)$
+
+```{r, out.width = 800, echo = FALSE}
+library(ggplot2)
+data.frame(x = rpois(1000, 10)) |>
+  group_by(x) |>
+  dplyr::count() |>
+  ggplot() +
+  geom_col(aes(x, n))
+```
+
+---
+
+### Count Distributions: $\text{Poi}\left(\lambda\right)$
+
+$\text{Poi}\left(\lambda = 100\right)$
+
+```{r, out.width = 800, echo = FALSE}
+library(ggplot2)
+data.frame(x = rpois(1000, 100)) |>
+  group_by(x) |>
+  dplyr::count() |>
+  ggplot() +
+  geom_col(aes(x, n))
+```
+
+---
+
+### Incorporating Covariates
+
+1. On their own, the probability distributions we reviewed may not seem like
+much, but when we allow them to depend on other features, we can capture a wide
+range of distributions.
+
+1. Manipulating the relationship between covariates and response will allow us
+to control the simulation more finely.
