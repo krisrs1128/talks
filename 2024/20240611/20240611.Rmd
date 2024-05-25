@@ -89,7 +89,7 @@ analysis and benchmarking problems in biostatistics and computational biology?
 
 ### Tody: Marginal Simulation
 
-<span style="color:#8C1F33">Marginal</span> $\to$ Joint $\to$ Integrative
+<span style="color:#8C1F33">Marginal</span> $\to$ Multivariate $\to$ Integrative
 
 .center[
 <img src="figure/integration_types_1a.png" width=600/>
@@ -99,7 +99,7 @@ analysis and benchmarking problems in biostatistics and computational biology?
 
 ### Tody: Marginal Simulation
 
-<span style="color:#8C1F33">Marginal</span> $\to$ Joint $\to$ Integrative
+<span style="color:#8C1F33">Marginal</span> $\to$ Multivariate $\to$ Integrative
 
 .center[
 <img src="figure/integration_types_1b.png" width=600/>
@@ -109,7 +109,7 @@ analysis and benchmarking problems in biostatistics and computational biology?
 
 ### Tody: Marginal Simulation
 
-<span style="color:#8C1F33">Marginal</span> $\to$ Joint $\to$ Integrative
+<span style="color:#8C1F33">Marginal</span> $\to$ Multivariate $\to$ Integrative
 
 .center[
 <img src="figure/integration_types_1c.png" width=600/>
@@ -525,9 +525,13 @@ class: middle
 
 ---
 
-### Next Time: Joint Simulation
+### Summary
 
-Marginal $\to$ <span style="color:#8C1F33">Joint</span> $\to$ Integrative
+---
+
+### Next Time: Multivariate Simulation
+
+Marginal $\to$ <span style="color:#8C1F33">Multivariate</span> $\to$ Integrative
 
 .center[
 <img src="figure/integration_types_2.png" width=600/>

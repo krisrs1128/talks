@@ -85,29 +85,51 @@ class: middle
 
 ---
 
-### Testing to Prediction
+### Multivariate Modeling
 
-Last time, we helped our team decide on study sample size when the downstream
-analysis is differential testing.
+* Features in high-throughput biological data are strongly correlated. Focus on
+marginals alone can keep us from understanding important relationships.
 
-(Figure: Testing to Prediction)
-
-An alternative, more ``machine learning''' approach is to predict the
-differentiating factor and interpret the resulting model.
+* Multivariate thinking can inform higher-level conceptual categories:
+regulatory modules, microbial communities, cell types,  ...
 
 ---
 
-### sPLS-DA
+### Examples Analyses
 
-To make this concrete, let's consider running a power analysis for Sparse
-Parital Least Squares Discriminant Analysis (sPLS-DA).
+These methods are often based on some form of matrix factorization, and they are
+ubiquitous in modern genomics:
 
-* s: Not all features are necessarily predictive
-* PLS: We imagine that many features are correlated with one another
-* DA: The response is one of $K$ classes
+* Clustering: Cancer subtypes, cell atlases
+* Dimensionality Reduction: Microbiome community structure, pseudotime analysis
+* Network Analysis: Gene regulatory networks
 
-Since sPLS-DA is a multivariate approach, we need to model the _joint_
-distribution across features. The marginals alone will not suffice.
+Example Methods: Multidimensional Scaling, Principal Components Analysis,
+Uniform Manifold Approximation and Projection, Nonnegative Matrix Factorization,
+Mixed-Membership Modeling, Stochastic Blockmodel, ...
+
+---
+
+### Role of Simulation
+
+Simulation can be valuable even in this multivariate setting.
+
+* Power Analysis
+
+* Benchmarking
+
+* Calibration
+
+---
+
+### Discussion
+
+Please discuss in groups of 2 - 4: 
+
+* In your own research, what is one place where you have used multivariate analysis?
+* How might simulation assist that analysis?
+
+We will debrief responses as a group.
 
 ---
 
@@ -122,6 +144,10 @@ class: middle
 
 ---
 
+### Factor Models
+
+---
+
 ### Copula Models
 
 These are a type of model that "couple" a collection of known marginal
@@ -132,9 +158,29 @@ distributions.
 
 ---
 
-### Copula Models
+### Starting Point
 
-Intuition:
+**Question**: If we were asked to simulate a vector of five correlated variables on
+our computers right now, what would be the easiest thing to do?
+
+---
+
+### Starting Point
+
+**Question**: If we were asked to simulate a vector of five correlated variables on
+our computers right now, what would be the easiest thing to do?
+
+```{r}
+library(mvtnorm)
+D <- 5
+ones <- rep(1, D)
+Sigma <- 0.01 * diag(D) + 0.99 * ones %*% t(ones)
+rmvnorm(3, rep(0, D), Sigma)
+```
+
+---
+
+### Intuition
 
 Original Data $\iff$ Gaussianized Data
 
@@ -144,7 +190,6 @@ Original Data $\iff$ Gaussianized Data
 ---
 
 ### Copula Models
-
 
 ---
 
@@ -158,11 +203,6 @@ accomplished by setting separate $\Sigma_{k}$ across groups $k$.
 
 ### High-Dimensional Covariance Estimation
 
-
----
-
-### Factor Models
-
 ---
 
 ### Definition
@@ -175,21 +215,6 @@ setup_simulator(
   ~ group, 
   ~ GaussianLSS(),
   copula_gaussian()
-)
-```
-
----
-
-### High-Dimensional Estimation
-
-We can use a high-dimensional covariance estimator using `copula_adaptive()`:
-
-```{r, eval = FALSE}
-setup_simulator(
-  exper, 
-  ~ group, 
-  ~ GaussianLSS(),
-  copula_adaptive()
 )
 ```
 
@@ -211,6 +236,28 @@ setup_simulator(
 
 ---
 
+### Available Copulas
+
+* `copula_adaptive()`
+* `copula_vine()`
+* `copula_glasso()`: Graphical Lasso for sparse covariance estimation.
+* `copula_t`
+* `copula_*_t`
+
+---
+
+
+### sPLS-DA
+
+Our power analysis case study will use Sparse Parital Least Squares Discriminant
+Analysis (sPLS-DA). Let's review how it works.
+
+* s: Not all features are necessarily predictive
+* PLS: We imagine that many features are correlated with one another
+* DA: The response is one of $K$ classes
+
+---
+
 class: middle
 
 .center[
@@ -218,36 +265,6 @@ class: middle
 ]
 
 ---
-
-class: middle
-
-.center[
-## Evaluation
-]
-
----
-
-### Motivation
-
-
----
-
-### Qualitative Checks
-
----
-
-### Quantitative Summaries
-
----
-
-### Classification-Guided
-
-1. An idea explored in `r Citep(bib, c("Sankaran2020", "Sajjadi2019",
-"Friedman2002"))` is to evaluate a simulator by how well a classifier can
-distinguish real vs. synthetic samples.
-
-1. By interpreting the fitted model, it's also possible to identify real-data
-properties that the simulator doesn't accurately capture.
 
 ---
 
@@ -259,6 +276,11 @@ class: middle
 
 ---
 
+### Summary
+
+
+---
+
 ### Next Time
 
 Marginal $\to$ Joint $\to$ <span style="color:#8C1F33">Integrative</span>
@@ -266,3 +288,32 @@ Marginal $\to$ Joint $\to$ <span style="color:#8C1F33">Integrative</span>
 .center[
 <img src="figure/integration_types_3.png" width=600/>
 ]
+
+
+
+
+1. Scientific Context (15 min lecture + 10 min exercises)
+	1. Multivariate modeling (15 min lecture)
+		1. Scientifically, why do we care about it?
+		2. Statistically, what are important classes of models?
+		3. What is the role of simulation here?
+			1. Perspective, it forces the kind of precision provided by mathematical thinking, but in a way that’s accessible to a wider audience
+		4. Discussion: How might you plan to use multivariate models? (Pairs discussion - 10 minutes)
+2. Statistical Background (30 min lecture)
+	1. Concepts for joint simulation (10 minutes)
+		1. Factor models
+		2. Copula models
+			1. If I asked you to simulate a collection of correlated variables in R, what would be the easiest thing to do?
+	2. Implementation in scDesigner (10 minutes)
+	3.  PLS-DA (10 minutes)
+3. Application (20 min lecture  + 30 min exercises)
+	1. PLS-DA application 
+		1. Introduce problem and run (5 minutes)
+		2. (pairs discussion - 5 minutess)
+	2. Estimate and evaluate simulator
+		1. Run the demo code (5 minutes)
+		2. Exercise — try at least one other copula estimation routine. (10 minutes)
+	3. Implement the power analysis
+		1. Exercise — fill in the block with the code to update the simulator and establish ground truth (20 minutes)
+	4. Interpretation and discussion (10 minutes)
+4. Summary (5 minutes)
