@@ -1,0 +1,72 @@
+#sidebar {
+  background-image: url("figure/background.jpg");
+  background-size: cover;
+}
+
+#sidebar h2 {
+  background-color: #AFD9AD;
+  color: #0B1C26;
+}
+
+#sidebar a {
+  color: #F2F2F2;
+}
+
+#main .nav-pills > li.active > a,
+#main .nav-pills > li.active > a:hover,
+#main .nav-pills > li.active > a:focus {
+    background-color: #184059;
+}
+
+#main .nav-pills > li > a:hover {
+    background-color: #184059;
+}
+
+h1, h2, h3, h4, h5, h6, legend {
+    color: #0B1C26;
+}
+
+#nav-top span.glyphicon {
+    color: #184059;
+}
+
+#table-of-contents header {
+    color: #184059;
+}
+
+#table-of-contents h2 {
+    background-color: #184059;
+}
+
+#main a {
+    background-image: #AFD9AD;
+    color: #AFD9AD;
+}
+
+a:hover {
+    color: #63CAF2;
+}
+
+#cb24-8 {
+  background-color: yellow;
+}
+
+#cb25-10 {
+  background-color: yellow;
+}
+
+#cb26-7 {
+  background-color: yellow;
+}
+
+#cb28-14 {
+  background-color: yellow;
+}
+
+#cb28-17 {
+  background-color: yellow;
+}
+
+#cb28-21 {
+  background-color: yellow;
+}
