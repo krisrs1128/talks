@@ -74,6 +74,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 2. Apply an integrative simulator to support power analysis and benchmarking in the presence of multiple batches or assays
 3. Critically evaluate novel simulators across omic types: microbiome, single-cell, spatial, reads.
 
+3. Discuss how to evaluate a simulator using summary metrics and discriminator classification
 
 ---
 

@@ -52,6 +52,14 @@ bib <- ReadBib("references.bib")
 ```
 
 
+<div id="title">
+Semisynthetic Simulation for Biological Data Analysis
+</div>
+<div id="under_title">
+Session 2: Multivariate Modeling
+</div>
+
+
 <div id="subtitle">
 Kris Sankaran <br/>
 18 | June | 2024 <br/>
@@ -67,13 +75,14 @@ Code: <a href="https://go.wisc.edu/o5sn6w">go.wisc.edu/o5sn6w</a>
 
 ---
 
-### Learning Outcomes: Session 2
+### Today's Learning Outcomes
 
 By the end of this session, you will be able to...
 
-1. Design and carry out a power analysis or benchmarking study for a multivariate (e.g., network or dimensionality reduction) analysis
-2. Discuss the building blocks of joint simulation: Latent variables and copulas
-3. Discuss how to evaluate a simulator using summary metrics and discriminator classification
+1. Design and implement power and benchmarking analyses for multivariate models.
+1. Discuss factor models and at least two copula variants for simulating correlated data.
+1. Compare and contrast the scientific contexts where multivariate and
+univariate models are more appropriate.
 
 ---
 
@@ -87,7 +96,7 @@ class: middle
 
 ### Multivariate Modeling
 
-* Features in high-throughput biological data are strongly correlated. Focus on
+* Features in high-throughput biological data are strongly correlated. Focusing on
 marginals alone can keep us from understanding important relationships.
 
 * Multivariate thinking can inform higher-level conceptual categories:
@@ -114,11 +123,12 @@ Mixed-Membership Modeling, Stochastic Blockmodel, ...
 
 Simulation can be valuable even in this multivariate setting.
 
-* Power Analysis
+* Power Analysis: How does the likely number of discoveries vary as we vary the sample size and experimental design?
 
-* Benchmarking
+* Benchmarking: For a given multivariate analysis output, what are tradeoffs between candidate methods?
 
-* Calibration
+* Calibration: Can conclusions be adjusted to ensure that target false discovery rates
+are closely met on synthetic data?
 
 ---
 
@@ -140,11 +150,33 @@ class: middle
 
 ---
 
+### Latent Variables
+
+This approaches identifies low-dimensional profiles that underlie all observed
+variation. This can often be accomplished using a form of matrix factorization.
+
 <img src="figure/latent_approaches.png"/>
 
 ---
 
+### Clustering
+
+Methods that assign samples to one of $K$ latent types have this form, where the
+memberships are a matrix of one-hot encodings. 
+
+---
+
 ### Factor Models
+
+When we relax the requirement $\theta_{ik} \in \{0, 1\}$ to $\theta_{ik} \in
+\mathbb{R}$, then we arrive at a form of factor model.
+
+---
+
+### implications
+
+Therefore, if we separately estimate per-sample scores $\theta_{i}$, then we can
+use these as covariates to guide simulation.
 
 ---
 
