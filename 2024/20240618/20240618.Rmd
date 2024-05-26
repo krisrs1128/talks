@@ -20,7 +20,7 @@ library(MASS)
 library(knitr)
 library(RefManageR)
 library(tidyverse)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 min_theme <- theme_minimal() + 
   theme(
     panel.grid.minor = element_blank(),
@@ -153,40 +153,42 @@ class: middle
 ### Latent Variables
 
 This approaches identifies low-dimensional profiles that underlie all observed
-variation. This can often be accomplished using a form of matrix factorization.
+variation. 
 
-<img src="figure/latent_approaches.png"/>
-
----
-
-### Clustering
-
-Methods that assign samples to one of $K$ latent types have this form, where the
-memberships are a matrix of one-hot encodings. 
+.center[
+<img src="figure/latent_approaches.png" width=400/>
+]
 
 ---
 
-### Factor Models
+### Matrix Factorization
 
-When we relax the requirement $\theta_{ik} \in \{0, 1\}$ to $\theta_{ik} \in
-\mathbb{R}$, then we arrive at a form of factor model.
+Formally, this can often be accomplished using a form of matrix factorization: $x_{i} \approx A z_{i}$.
+
+Examples: 
+  * In clustering, $z_{i}$ encode which cluster sample $i$ belongs to.
+  * In PCA, $z_i$ are scores with respect to components $A$.
 
 ---
 
-### implications
+### Implications
 
-Therefore, if we separately estimate per-sample scores $\theta_{i}$, then we can
-use these as covariates to guide simulation.
+This suggests a simulation strategy:
+
+* Learn memberships $z_{i}$ on real data
+* Learn the relationship $x_{id} \sim z_{i}$
+* Simulate $z^\ast$ to generate $x^\ast$.
 
 ---
 
 ### Copula Models
 
 These are a type of model that "couple" a collection of known marginal
-distributions.
+distributions. It doesn't require any latent variable.
 
-
-<img src="figure/tree_approaches.png"/>
+.center[
+<img src="figure/integration_types_2.png" width=450/>
+]
 
 ---
 
@@ -210,30 +212,44 @@ Sigma <- 0.01 * diag(D) + 0.99 * ones %*% t(ones)
 rmvnorm(3, rep(0, D), Sigma)
 ```
 
+The difficulty is that we usually want non-Gaussian margins $F_{1}, \dots, F_{D}$.
+
 ---
 
 ### Intuition
 
 Original Data $\iff$ Gaussianized Data
 
-* In the gaussianized space, it's easy to model correlation.
-* The mapping back and forth is possible because we know the marginal distributions' quantile functions
+* In the Gaussianized space, it's easy to model correlation.
+* The mapping back and forth is possible because we know the margins $F_{d}$.
 
 ---
 
 ### Copula Models
 
+More formally, let $F_{1}, \dots, F_{D}$ be the target margins and let $\Phi$ be
+the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
+
+Estimate:
+
+1. Gaussianize the observed $x_{i}$ to $z_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{D}\right)\right)\right]$
+1. Estimate the covariance $\hat{\Sigma}$ associated with $z_{i}$
+
+Simulate:
+
+1. Draw $z^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
+1. Transform back $x^\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{D}^\ast\right)\right)\right]$
+
 ---
 
 
-### Copula Conditioning
+### Variations
 
-We might expect the corelation structure to vary across groups. This can be
+1. We might expect the corelation structure to vary across groups. This can be
 accomplished by setting separate $\Sigma_{k}$ across groups $k$.
 
----
-
-### High-Dimensional Covariance Estimation
+1. In high-dimensions, the sample covariance $\hat{\Sigma}$ can destabilize. In
+this case, we should use high-dimensional covariance estimators.
 
 ---
 
@@ -270,11 +286,11 @@ setup_simulator(
 
 ### Available Copulas
 
-* `copula_adaptive()`
-* `copula_vine()`
-* `copula_glasso()`: Graphical Lasso for sparse covariance estimation.
-* `copula_t`
-* `copula_*_t`
+* `copula_adaptive`: Adaptive lasso for high-dimensional covariance estimation.
+* `copula_vine`: Vine copula for matching higher-order moments.
+* `copula_glasso`: Graphical Lasso for sparse covariance estimation.
+* `copula_t`: Student's $t$ Copula for better modeling of tail-dependence
+* `copula_*_t`: Modified covariance estimators applied to $t$ Copula
 
 ---
 
