@@ -297,14 +297,44 @@ setup_simulator(
 
 ### sPLS-DA
 
-Our power analysis case study will use Sparse Parital Least Squares Discriminant
-Analysis (sPLS-DA). Let's review how it works.
+Our power analysis uses Sparse Parital Least Squares Discriminant
+Analysis (sPLS-DA). This topic is it's own full workshop, but let's review the
+core ideas.
+
+We can use sPLS-DA for prediction when,
 
 * s: Not all features are necessarily predictive
-* PLS: We imagine that many features are correlated with one another
+* PLS: Many features are correlated with one another
 * DA: The response is one of $K$ classes
 
+(Matrix figure)
+
 ---
+
+### sPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+
+Formally, maximize the correlation between $\mathbf{X} \mathbf{a}$ and
+$\mathbf{Y} \mathbf{b}$.
+
+---
+
+### sPLS-DA Intuition
+
+We can repeat this after removing any correlation with the previous pattern.
+
+---
+
+### sPLS-DA: Outputs
+
+1. Samples from the blended tables can be compared in a shared space. 
+1. The blending coefficients tell you how to interpret axes in this space.
+  - E.g., $a_{d} = 0$ means feature $d$ wasn't used at all.
+
+---
+
 
 class: middle
 
@@ -336,32 +366,3 @@ Marginal $\to$ Joint $\to$ <span style="color:#8C1F33">Integrative</span>
 .center[
 <img src="figure/integration_types_3.png" width=600/>
 ]
-
-
-
-
-1. Scientific Context (15 min lecture + 10 min exercises)
-	1. Multivariate modeling (15 min lecture)
-		1. Scientifically, why do we care about it?
-		2. Statistically, what are important classes of models?
-		3. What is the role of simulation here?
-			1. Perspective, it forces the kind of precision provided by mathematical thinking, but in a way that’s accessible to a wider audience
-		4. Discussion: How might you plan to use multivariate models? (Pairs discussion - 10 minutes)
-2. Statistical Background (30 min lecture)
-	1. Concepts for joint simulation (10 minutes)
-		1. Factor models
-		2. Copula models
-			1. If I asked you to simulate a collection of correlated variables in R, what would be the easiest thing to do?
-	2. Implementation in scDesigner (10 minutes)
-	3.  PLS-DA (10 minutes)
-3. Application (20 min lecture  + 30 min exercises)
-	1. PLS-DA application 
-		1. Introduce problem and run (5 minutes)
-		2. (pairs discussion - 5 minutess)
-	2. Estimate and evaluate simulator
-		1. Run the demo code (5 minutes)
-		2. Exercise — try at least one other copula estimation routine. (10 minutes)
-	3. Implement the power analysis
-		1. Exercise — fill in the block with the code to update the simulator and establish ground truth (20 minutes)
-	4. Interpretation and discussion (10 minutes)
-4. Summary (5 minutes)
