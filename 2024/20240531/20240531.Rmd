@@ -58,7 +58,7 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="links">
-Slides: <a href="https://go.wisc.edu/694o2e">go.wisc.edu/694o2e</a>
+Slides: <a href="https://go.wisc.edu/ux3oc1">go.wisc.edu/ux3oc1</a>
 </div>
 <div id="title">
 Transparent Synthetic Data Generation
