@@ -58,6 +58,7 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="links">
+Melbourne Integrative Genomics Seminar <br/>
 Slides: <a href="https://go.wisc.edu/ux3oc1">go.wisc.edu/ux3oc1</a>
 </div>
 <div id="title">
@@ -82,7 +83,6 @@ Are sweeter; therefore, ye soft pipes, play on... <br/></i>
 Kris Sankaran <br/>
 <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 31 | May | 2024 <br/>
-Melbourne Integrative Genomics Seminar<br/>
 </div>
 
 ---
