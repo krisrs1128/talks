@@ -63,7 +63,6 @@ Session 2: Multivariate Modeling
 <div id="subtitle">
 Kris Sankaran <br/>
 18 | June | 2024 <br/>
-Melbourne Integrative Genomics<br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
@@ -97,10 +96,18 @@ class: middle
 ### Multivariate Modeling
 
 * Features in high-throughput biological data are strongly correlated. Focusing on
-marginals alone can keep us from understanding important relationships.
+marginals alone would keep us from understanding important relationships.
 
 * Multivariate thinking can inform higher-level conceptual categories:
 regulatory modules, microbial communities, cell types,  ...
+
+.center[
+<img src="figure/eisen.png" width=650/>
+<br/>
+  <span style="font-size: 20px">
+    A heatmap of microarray data from `r Citep(bib, "Eisen1998-zl")`
+  </span>
+]
 
 ---
 
@@ -110,12 +117,14 @@ These methods are often based on some form of matrix factorization, and they are
 ubiquitous in modern genomics:
 
 * Clustering: Cancer subtypes, cell atlases
-* Dimensionality Reduction: Microbiome community structure, pseudotime analysis
+* Dimensionality Reduction: Microbiome communities, pseudotime analysis
 * Network Analysis: Gene regulatory networks
 
+<span style="font-size: 20px"/>
 Example Methods: Multidimensional Scaling, Principal Components Analysis,
 Uniform Manifold Approximation and Projection, Nonnegative Matrix Factorization,
 Mixed-Membership Modeling, Stochastic Blockmodel, ...
+</span>
 
 ---
 
@@ -123,11 +132,11 @@ Mixed-Membership Modeling, Stochastic Blockmodel, ...
 
 Simulation can be valuable even in this multivariate setting.
 
-* Power Analysis: How does the likely number of discoveries vary as we vary the sample size and experimental design?
+* **Power Analysis**: How does the likely number of discoveries vary as we vary the sample size and experimental design?
 
-* Benchmarking: For a given multivariate analysis output, what are tradeoffs between candidate methods?
+* **Benchmarking**: For a given multivariate analysis output, what are tradeoffs between candidate methods?
 
-* Calibration: Can conclusions be adjusted to ensure that target false discovery rates
+* **Calibration**: Can conclusions be adjusted to ensure that target false discovery rates
 are closely met on synthetic data?
 
 ---
@@ -165,9 +174,38 @@ variation.
 
 Formally, this can often be accomplished using a form of matrix factorization: $x_{i} \approx A z_{i}$.
 
-Examples: 
   * In clustering, $z_{i}$ encode which cluster sample $i$ belongs to.
   * In PCA, $z_i$ are scores with respect to components $A$.
+
+.center[
+<img src="figure/matrix_factorization.png" width=580/>
+]
+
+---
+
+### Matrix Factorization
+
+Formally, this can often be accomplished using a form of matrix factorization: $x_{i} \approx A z_{i}$.
+
+  * In clustering, $z_{i}$ encode which cluster sample $i$ belongs to.
+  * In PCA, $z_i$ are scores with respect to components $A$.
+
+.center[
+<img src="figure/clustering.png" width=580/>
+]
+
+---
+
+### Matrix Factorization
+
+Formally, this can often be accomplished using a form of matrix factorization: $x_{i} \approx A z_{i}$.
+
+  * In clustering, $z_{i}$ encode which cluster sample $i$ belongs to.
+  * In PCA, $z_i$ are scores with respect to components $A$.
+
+.center[
+<img src="figure/factorization.png" width=580/>
+]
 
 ---
 
@@ -344,18 +382,14 @@ class: middle
 
 ---
 
----
-
-class: middle
-
-.center[
-## Application
-]
-
----
-
 ### Summary
 
+1. Multivariate analysis is essential for reasoning about higher-level concepts
+in biological data.
+1. Copula and factor models are general approaches to inducing correlation in
+simulated data.
+1. The `coupla_*` functions in `scDesigner` give a few approaches to copula-based simulation
+1. Power analysis can be tightly coupled with multivariate algorithms.
 
 ---
 
