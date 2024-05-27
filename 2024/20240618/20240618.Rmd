@@ -56,7 +56,7 @@ bib <- ReadBib("references.bib")
 Semisynthetic Simulation for Biological Data Analysis
 </div>
 <div id="under_title">
-Session 2: Multivariate Modeling
+Session 2: Multivariate Analysis
 </div>
 
 
@@ -222,10 +222,10 @@ This suggests a simulation strategy:
 ### Copula Models
 
 These are a type of model that "couple" a collection of known marginal
-distributions. It doesn't require any latent variable.
+distributions.
 
 .center[
-<img src="figure/integration_types_2.png" width=450/>
+<img src="figure/gene-gene_dependence.png" width=900/>
 ]
 
 ---
@@ -256,10 +256,15 @@ The difficulty is that we usually want non-Gaussian margins $F_{1}, \dots, F_{D}
 
 ### Intuition
 
-Original Data $\iff$ Gaussianized Data
-
 * In the Gaussianized space, it's easy to model correlation.
-* The mapping back and forth is possible because we know the margins $F_{d}$.
+* The mapping back and forth is possible because we know the margins $F$.
+  - $\Phi$ represents the Gaussian CDF applied componentwise
+<br/>
+<br/>
+
+.center[
+<img src="figure/copula_transformation.png" width=700/>
+]
 
 ---
 
@@ -270,16 +275,15 @@ the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
 
 Estimate:
 
-1. Gaussianize the observed $x_{i}$ to $z_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{D}\right)\right)\right]$
+1. Gaussianize the observed $\mathbf{x}_{i}$ to $\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]$
 1. Estimate the covariance $\hat{\Sigma}$ associated with $z_{i}$
 
 Simulate:
 
-1. Draw $z^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
-1. Transform back $x^\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{D}^\ast\right)\right)\right]$
+1. Draw $\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
+1. Transform back $\mathbf{x}\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]$
 
 ---
-
 
 ### Variations
 
@@ -288,6 +292,10 @@ accomplished by setting separate $\Sigma_{k}$ across groups $k$.
 
 1. In high-dimensions, the sample covariance $\hat{\Sigma}$ can destabilize. In
 this case, we should use high-dimensional covariance estimators.
+
+.center[
+<img src="figure/copula_groups.png" width=700/>
+]
 
 ---
 
@@ -333,19 +341,23 @@ setup_simulator(
 ---
 
 
-### sPLS-DA
+### sPLS-DA Setting
 
 Our power analysis uses Sparse Parital Least Squares Discriminant
 Analysis (sPLS-DA). This topic is it's own full workshop, but let's review the
 core ideas.
 
-We can use sPLS-DA for prediction when,
+.pull-left[
+sPLS-DA helps with prediction when, 
 
-* s: Not all features are necessarily predictive
+* s: Not all features are predictive
 * PLS: Many features are correlated with one another
 * DA: The response is one of $K$ classes
+]
 
-(Matrix figure)
+.pull-right[
+<img src="figure/PLS-setup.png" width=500/>
+]
 
 ---
 
@@ -353,15 +365,83 @@ We can use sPLS-DA for prediction when,
 
 We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
 
+.center[
+<img src="figure/PLS-step1.png" width=500/>
+]
 
-Formally, maximize the correlation between $\mathbf{X} \mathbf{a}$ and
-$\mathbf{Y} \mathbf{b}$.
+Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---
 
 ### sPLS-DA Intuition
 
-We can repeat this after removing any correlation with the previous pattern.
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figure/PLS-step2.png" width=240/>
+]
+
+Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figure/PLS-step3.png" width=400/>
+]
+
+Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figure/PLS-step4.png" width=150/>
+]
+
+Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### sPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figure/PLS-step5.png" width=800/>
+]
+
+---
+
+### sPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figure/PLS-step6.png" width=800/>
+]
+
+---
+
+### sPLS-DA Intuition
+
+To get more than one dimension, we can repeat this process after removing any
+correlation with previously found patterns.
+
+.center[
+<img src="figure/PLS-step7.png" width=800/>
+]
 
 ---
 
@@ -369,7 +449,8 @@ We can repeat this after removing any correlation with the previous pattern.
 
 1. Samples from the blended tables can be compared in a shared space. 
 1. The blending coefficients tell you how to interpret axes in this space.
-  - E.g., $a_{d} = 0$ means feature $d$ wasn't used at all.
+  - E.g., $a^{(1)}_{d} = 0$ means feature $d$ wasn't used for the first
+  dimension.
 
 ---
 

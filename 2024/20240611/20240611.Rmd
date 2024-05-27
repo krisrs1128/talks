@@ -303,7 +303,8 @@ finding a realistic simulation mechanism. To this end, we need to familiarize
 ourselves with:
 
 1. **Types of data that can serve as templates.**
-1. Probability and regression concepts that allow us to fit generative models.
+1. Flexible families of probability distributions.
+1. Regression concepts that allow us to fit generative models.
 
 .center[
 <img src="figure/summarized_experiment_focus.png" width=150/>
@@ -318,10 +319,27 @@ finding a realistic simulation mechanism. To this end, we need to familiarize
 ourselves with:
 
 1. Types of data that can serve as templates.
-1. **Probability and regression concepts that allow us to fit generative models.**
+1. **Flexible families of probability distributions.**
+1. Regression concepts that allow us to fit generative models.
 
 .center[
-  <img src="figure/marginal_goals.png" width=800/>
+  <img src="figure/distributions.png" width=700/>
+]
+
+---
+
+### Approach
+
+The richer our vocabulary for generative models, the better chance we'll have of
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
+
+1. Types of data that can serve as templates.
+1. Flexible families of probability distributions.
+1. **Regression concepts that allow us to fit generative models.**
+
+.center[
+  <img src="figure/marginal_dependence.png" width=500/>
 ]
 
 ---
@@ -538,95 +556,3 @@ Marginal $\to$ <span style="color:#8C1F33">Multivariate</span> $\to$ Integrative
 ]
 
 ---
-
-class: middle
-
-.center[
-## Backup Slides
-]
-
----
-
-### Other Distributions
-
-We won't be using the course, but it's worth knowing,
-
-* Gamma Distribution: Continuous, only positive values
-* Student's T Distribution: Continuous, allows large outliers
-* Tweedie Distribution: Interpolates between count and continuous distributions
-
----
-
-### What about GANs?
-
-1. These can give good generative models out-of-the-box.
-
-1. The main challenge in practice is supporting manipulation. Most
-implementations don't make it easy to draw samples at new experimental designs.
-
----
-
-### Normalization
-
-The purpose of many normalization and imputation algorithms in genomics is to
-_Gaussianize_ the data. It can often be reasonable to apply a Gaussian simulator
-to the transformed data `r Citep(bib, c("Law2014-qj", "Jiang2021-jt"))`.
-
-.center[
-  <img src="figure/gaussian.svg" width=800/>
-]
-
----
-
-### Count Distributions: $\text{Poi}\left(\lambda\right)$
-
-$\text{Poi}\left(\lambda = 2\right)$
-
-```{r, out.width = 800, echo = FALSE}
-library(ggplot2)
-data.frame(x = rpois(1000, 2)) |>
-  group_by(x) |>
-  dplyr::count() |>
-  ggplot() +
-  geom_col(aes(x, n))
-```
-
----
-### Count Distributions: $\text{Poi}\left(\lambda\right)$
-
-$\text{Poi}\left(\lambda = 10\right)$
-
-```{r, out.width = 800, echo = FALSE}
-library(ggplot2)
-data.frame(x = rpois(1000, 10)) |>
-  group_by(x) |>
-  dplyr::count() |>
-  ggplot() +
-  geom_col(aes(x, n))
-```
-
----
-
-### Count Distributions: $\text{Poi}\left(\lambda\right)$
-
-$\text{Poi}\left(\lambda = 100\right)$
-
-```{r, out.width = 800, echo = FALSE}
-library(ggplot2)
-data.frame(x = rpois(1000, 100)) |>
-  group_by(x) |>
-  dplyr::count() |>
-  ggplot() +
-  geom_col(aes(x, n))
-```
-
----
-
-### Incorporating Covariates
-
-1. On their own, the probability distributions we reviewed may not seem like
-much, but when we allow them to depend on other features, we can capture a wide
-range of distributions.
-
-1. Manipulating the relationship between covariates and response will allow us
-to control the simulation more finely.
