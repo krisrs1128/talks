@@ -213,9 +213,15 @@ Formally, this can often be accomplished using a form of matrix factorization: $
 
 This suggests a simulation strategy:
 
-* Learn memberships $z_{i}$ on real data
-* Learn the relationship $x_{id} \sim z_{i}$
-* Simulate $z^\ast$ to generate $x^\ast$.
+.pull-left[
+* Learn $\mathbf{z}_{i}$ from real data.
+* For each $d$, learn the marginal $F_{d}\left(x_{id} \vert \mathbf{z}_{i}\right)$ using GAMLSS.
+* To generate new $\mathbf{x}^{\ast}$, first simulate $\mathbf{z}^\ast$ and sample from $\left[F_{1}\left(\cdot \vert \mathbf{z}^\ast\right), \dots, F_{D}\left(\cdot \vert \mathbf{z}^\ast\right)\right]$
+]
+
+.pull-right[
+<img src="figure/clustering_pushforward.png" width=500/>
+]
 
 ---
 
@@ -447,10 +453,29 @@ correlation with previously found patterns.
 
 ### sPLS-DA: Outputs
 
-1. Samples from the blended tables can be compared in a shared space. 
-1. The blending coefficients tell you how to interpret axes in this space.
-  - E.g., $a^{(1)}_{d} = 0$ means feature $d$ wasn't used for the first
-  dimension.
+The blending coefficients tell you how to interpret axes in this space.  For
+example, $a^{(1)}_{d} = 0$ means feature $d$ wasn't used for the first
+dimension.
+
+.pull-left[
+```{r, echo = FALSE, fig.height = 3, fig.width = 4.5}
+library(mixOmics)
+set.seed(5249)
+data(srbct) # extract the small round bull cell tumour data
+X <- srbct$gene # use the gene expression data as the X matrix
+Y <- srbct$class # use the class data as the Y matrix
+srbct.splsda <- splsda(X, Y, ncomp = 10)  # set ncomp to 10 for performance assessment later
+plotIndiv(srbct.splsda)
+```
+]
+
+.pull-right[
+```{r, echo = FALSE, fig.height = 3, fig.width = 4.5}
+var.name.short <- substr(srbct$gene.name[, 2], 1, 10) # form simplified gene names
+plotVar(srbct.splsda, var.names = list(var.name.short), cex = 3, cutoff = 0.6)
+```
+]
+Example sPLS-DA output from the `mixOmics` package.
 
 ---
 
@@ -458,9 +483,11 @@ correlation with previously found patterns.
 class: middle
 
 .center[
-## Exercise
+## Demo + Exercises
 ]
 
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Live Link: 
 ---
 
 ### Summary

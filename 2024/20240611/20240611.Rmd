@@ -358,12 +358,12 @@ learn how `design + biology -> sequencing`.
 
 ---
 
-### Code Logistics
+### Demo
 
-Follow along here,
+You can follow along here,
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
-* Live Demo: 
+* Live Link: 
 
 ---
 
@@ -538,12 +538,22 @@ sample(sim, new_data = new_design)
 class: middle
 
 .center[
-## Application
+## Demo + Exercises
 ]
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Live Demo: 
 
 ---
 
 ### Summary
+
+1. Power and FDR rates from simulated experiments can guide concrete, computational power analysis.
+1. The Poisson, Negative Binomial, and Zero-Inflated Poisson/Negative Binomial
+can be used to generate count data.
+1. The `SummarizedExperiment` class streamlines interaction with biological experiemnts.
+1. To define a simulator in `scDesigner`, use `setup_simulator()` with R's formula syntax.
+1. The main operations on a simulator object are: `estimate(), mutate()`, and `sample()`.
 
 ---
 
@@ -554,5 +564,3 @@ Marginal $\to$ <span style="color:#8C1F33">Multivariate</span> $\to$ Integrative
 .center[
 <img src="figure/integration_types_2.png" width=600/>
 ]
-
----
