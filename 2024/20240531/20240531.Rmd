@@ -537,7 +537,7 @@ Live Code: <a href="https://go.wisc.edu//">https://go.wisc.edu//</a>
 <br/>
 Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
 <br/>
-Compiled Notebook: <a href="https://go.wisc.edu/62eh36"> https://go.wisc.edu/62eh36</a>
+Compiled Notebook: <a href="https://go.wisc.edu/q59g0j"> https://go.wisc.edu/q59g0j</a>
 </div>
 
 ---

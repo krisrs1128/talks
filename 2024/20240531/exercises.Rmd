@@ -212,7 +212,7 @@ estimators). Design changes could be implemented using `expand_colData`, changes
 in the signal can be specified as above with `mutate_correlation`, and any
 workflow can be used as long as it applies to a `SummarizedExperiment` object.
 
-### Augmenting Spatial Data
+## Augmenting Spatial Data
 
 Modern molecular biology aims to build a map of the cell, its molecular
 machinery, and its relationships within larger systems (e.g., the circulatory
