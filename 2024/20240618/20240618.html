@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Semisynthetic Simulation for Biological Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+
+
+
+&lt;div id="title"&gt;
+Semisynthetic Simulation for Biological Data Analysis
+&lt;/div&gt;
+&lt;div id="under_title"&gt;
+Session 2: Multivariate Analysis
+&lt;/div&gt;
+
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+18 | June | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+Melbourne Integrative Genomics&lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/rc776i"&gt;go.wisc.edu/rc776i/&lt;/a&gt;&lt;br/&gt;
+Code: &lt;a href="https://go.wisc.edu/o5sn6w"&gt;go.wisc.edu/o5sn6w&lt;/a&gt;
+&lt;/div&gt;
+
+---
+
+### Today's Learning Outcomes
+
+By the end of this session, you will be able to...
+
+1. Design and implement power and benchmarking analyses for multivariate models.
+1. Discuss factor models and at least two copula variants for simulating correlated data.
+1. Compare and contrast the scientific contexts where multivariate and
+univariate models are more appropriate.
+
+---
+
+class: middle
+
+.center[
+## Scientific Context
+]
+
+---
+
+### Multivariate Modeling
+
+* Features in high-throughput biological data are strongly correlated. Focusing on
+marginals alone would keep us from understanding important relationships.
+
+* Multivariate thinking can inform higher-level conceptual categories:
+regulatory modules, microbial communities, cell types,  ...
+
+.center[
+&lt;img src="figure/eisen.png" width=650/&gt;
+&lt;br/&gt;
+  &lt;span style="font-size: 20px"&gt;
+    A heatmap of microarray data from [1]
+  &lt;/span&gt;
+]
+
+---
+
+### Examples Analyses
+
+These methods are often based on some form of matrix factorization, and they are
+ubiquitous in modern genomics:
+
+* Clustering: Cancer subtypes, cell atlases [2; 3].
+* Dimensionality Reduction: Microbiome communities [4; 5], pseudotime analysis [6; 7]
+* Network Analysis: Gene regulatory networks [8; 9].
+
+&lt;span style="font-size: 20px"/&gt;
+Example Methods: Multidimensional Scaling, Principal Components Analysis,
+Uniform Manifold Approximation and Projection, Nonnegative Matrix Factorization,
+Mixed-Membership Modeling, Stochastic Blockmodel, ...
+&lt;/span&gt;
+
+---
+
+### Role of Simulation
+
+Simulation can be valuable even in this multivariate setting.
+
+* **Power Analysis**: How does the likely number of discoveries vary as we vary the sample size and experimental design?
+
+* **Benchmarking**: For a given multivariate analysis output, what are tradeoffs between candidate methods?
+
+* **Calibration**: Can conclusions be adjusted to ensure that target false discovery rates
+are closely met on synthetic data?
+
+---
+
+### Discussion
+
+Please discuss in groups of 2 - 4: 
+
+* In your research, where can you use multivariate methods?
+* How might simulation assist that analysis?
+
+We will debrief responses as a group.
+
+---
+
+class: middle
+.center[
+  ## Statistical Background
+]
+
+---
+
+### Latent Variables
+
+This approaches identifies low-dimensional profiles that underlie all observed
+variation. 
+
+.center[
+&lt;img src="figure/latent_approaches.png" width=400/&gt;
+]
+
+---
+
+### Matrix Factorization
+
+This can be accomplished using a form of matrix factorization [10; 11]: 
+`\begin{align*}
+x_{i} \approx A z_{i}
+\end{align*}`
+
+  * In clustering, `\(z_{i}\)` encode which cluster sample `\(i\)` belongs to.
+  * In PCA, `\(z_i\)` are scores with respect to components `\(A\)`.
+
+.center[
+&lt;img src="figure/matrix_factorization.png" width=550/&gt;
+]
+
+---
+
+### Matrix Factorization
+
+This can be accomplished using a form of matrix factorization [10; 11]: 
+`\begin{align*}
+x_{i} \approx A z_{i}
+\end{align*}`
+
+  * In clustering, `\(z_{i}\)` encode which cluster sample `\(i\)` belongs to.
+  * In PCA, `\(z_i\)` are scores with respect to components `\(A\)`.
+
+.center[
+&lt;img src="figure/clustering.png" width=550/&gt;
+]
+
+---
+
+### Matrix Factorization
+
+This can be accomplished using a form of matrix factorization [10; 11]: 
+`\begin{align*}
+x_{i} \approx A z_{i}
+\end{align*}`
+
+
+  * In clustering, `\(z_{i}\)` encode which cluster sample `\(i\)` belongs to.
+  * In PCA, `\(z_i\)` are scores with respect to components `\(A\)`.
+
+.center[
+&lt;img src="figure/factorization.png" width=550/&gt;
+]
+
+---
+
+### Implications
+
+This suggests a simulation strategy:
+
+.pull-left[
+* Learn `\(\mathbf{z}_{i}\)` from real data.
+* For each `\(d\)`, learn the marginal `\(F_{d}\left(x_{id} \vert \mathbf{z}_{i}\right)\)` using GAMLSS.
+* To generate new `\(\mathbf{x}^{\ast}\)`, first simulate `\(\mathbf{z}^\ast\)` and sample from `\(\left[F_{1}\left(\cdot \vert \mathbf{z}^\ast\right), \dots, F_{D}\left(\cdot \vert \mathbf{z}^\ast\right)\right]\)`
+]
+
+.pull-right[
+&lt;img src="figure/clustering_pushforward.png" width=500/&gt;
+]
+
+---
+
+### Copula Models
+
+These are a type of model that "couple" a collection of known marginal
+distributions [12; 13; 14].
+
+.center[
+&lt;img src="figure/gene-gene_dependence.png" width=900/&gt;
+]
+
+---
+
+### Starting Point
+
+**Question**: If we were asked to simulate a vector of five correlated variables on
+our computers right now, what would be the easiest thing to do?
+
+---
+
+### Starting Point
+
+**Question**: If we were asked to simulate a vector of five correlated variables on
+our computers right now, what would be the easiest thing to do?
+
+
+``` r
+library(mvtnorm)
+D &lt;- 5
+ones &lt;- rep(1, D)
+Sigma &lt;- 0.01 * diag(D) + 0.99 * ones %*% t(ones)
+rmvnorm(3, rep(0, D), Sigma)
+```
+
+```
+##            [,1]        [,2]        [,3]       [,4]       [,5]
+## [1,]  0.2544116  0.04518359  0.02897948  0.1923613  0.3077339
+## [2,] -1.0490297 -1.12966841 -1.17720452 -1.1092278 -1.0342353
+## [3,]  2.0110732  1.79775001  1.90916890  1.9663306  1.8636426
+```
+
+The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
+
+---
+
+### Intuition
+
+* In the Gaussianized space, it's easy to model correlation.
+* The mapping back and forth is possible because we know the margins `\(F\)`.
+  - `\(\Phi\)` represents the Gaussian CDF applied componentwise
+&lt;br/&gt;
+&lt;br/&gt;
+
+.center[
+&lt;img src="figure/copula_transformation.png" width=700/&gt;
+]
+
+---
+
+### Copula Models
+
+More formally, let `\(F_{1}, \dots, F_{D}\)` be the target margins and let `\(\Phi\)` be
+the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
+
+Estimate:
+
+1. Gaussianize the observed `\(\mathbf{x}_{i}\)` to `\(\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]\)`
+1. Estimate the covariance `\(\hat{\Sigma}\)` associated with `\(z_{i}\)`
+
+Simulate:
+
+1. Draw `\(\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)\)` 
+1. Transform back `\(\mathbf{x}\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]\)`
+
+---
+
+### Variations
+
+1. We might expect the corelation structure to vary across groups. This can be
+accomplished by setting separate `\(\Sigma_{k}\)` across groups `\(k\)`.
+
+1. In high-dimensions, the sample covariance `\(\hat{\Sigma}\)` can destabilize. In
+this case, we should use high-dimensional covariance estimators [15; 16].
+
+.center[
+&lt;img src="figure/copula_groups.png" width=700/&gt;
+]
+
+---
+
+### Definition
+
+Last session's code actually estimated Gaussian copulas in the background by default.
+
+
+``` r
+setup_simulator(
+  exper, 
+  ~ group, 
+  ~ GaussianLSS(),
+  copula_gaussian()
+)
+```
+
+---
+
+### Conditioned Copulas
+
+We can allow the covariance to depend on group membership using the same formula
+syntax we used for the marginals.
+
+
+``` r
+setup_simulator(
+  exper, 
+  ~ group, 
+  ~ GaussianLSS(),
+  copula_gaussian(~ group)
+)
+```
+
+---
+
+### Available Copulas
+
+* `copula_adaptive`: Adaptive estimation of high-dimensional covariance estimation [16].
+* `copula_vine`: Vine copula for matching higher-order moments [17].
+* `copula_glasso`: Graphical Lasso for sparse covariance estimation [15].
+* `copula_t`: Student's `\(t\)` Copula for better modeling of tail-dependence
+* `copula_*_t`: Modified covariance estimators applied to `\(t\)` Copula
+
+---
+
+
+### sPLS-DA Setting
+
+Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
+(sPLS-DA) [18; 19; 20]. This topic is it's
+own full workshop, but let's review the core ideas.
+
+.pull-left[
+sPLS-DA helps with prediction when, 
+
+* s: Not all features are predictive
+* PLS: Many features are correlated with one another
+* DA: The response is one of `\(K\)` classes
+]
+
+.pull-right[
+&lt;img src="figure/PLS-setup.png" width=500/&gt;
+]
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figure/PLS-step1.png" width=500/&gt;
+]
+
+Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figure/PLS-step2.png" width=240/&gt;
+]
+
+Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figure/PLS-step3.png" width=400/&gt;
+]
+
+Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figure/PLS-step4.png" width=150/&gt;
+]
+
+Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### sPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+&lt;img src="figure/PLS-step5.png" width=800/&gt;
+]
+
+---
+
+### sPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+&lt;img src="figure/PLS-step6.png" width=800/&gt;
+]
+
+---
+
+### sPLS-DA Intuition
+
+To get more than one dimension, we can repeat this process after removing any
+correlation with previously found patterns.
+
+.center[
+&lt;img src="figure/PLS-step7.png" width=800/&gt;
+]
+
+---
+
+### sPLS-DA: Outputs
+
+The blending coefficients tell you how to interpret axes in this space.  For
+example, `\(a^{(1)}_{d} = 0\)` means feature `\(d\)` wasn't used for the first
+dimension.
+
+.pull-left[
+&lt;img src="20240618_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="20240618_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+]
+Example sPLS-DA output from the `mixOmics` package [20].
+
+---
+
+
+class: middle
+
+.center[
+## Demo + Exercises
+]
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Live Link: 
+---
+
+### Summary
+
+1. Multivariate analysis is essential for reasoning about higher-level concepts
+in biological data.
+1. Copula and factor models are general approaches to inducing correlation in
+simulated data.
+1. The `coupla_*` functions in `scDesigner` give a few approaches to copula-based simulation
+1. Power analysis can be tightly coupled with multivariate algorithms.
+
+---
+
+### Next Time
+
+Marginal `\(\to\)` Joint `\(\to\)` &lt;span style="color:#8C1F33"&gt;Integrative&lt;/span&gt;
+
+.center[
+&lt;img src="figure/integration_types_3.png" width=600/&gt;
+]
+
+---
+
+### References
+
+[1] M. B. Eisen, P. T. Spellman, P. O. Brown, et al. "Cluster analysis
+and display of genome-wide expression patterns". En. In: _Proc. Natl.
+Acad. Sci. U. S. A._ 95.25 (Dec. 1998), pp. 14863-14868.
+
+[2] S. R. Quake. "A decade of molecular cell atlases". En. In: _Trends
+Genet._ 38.8 (Aug. 2022), pp. 805-810.
+
+[3] M. D. Luecken, M. Büttner, K. Chaichoompu, et al. "Benchmarking
+atlas-level data integration in single-cell genomics". En. In: _Nat.
+Methods_ 19.1 (Jan. 2022), pp. 41-50.
+
+[4] K. Sankaran and S. P. Holmes. "Latent variable modeling for the
+microbiome". En. In: _Biostatistics_ 20.4 (Oct. 2019), pp. 599-614.
+
+---
+
+[5] R. A. Deek and H. Li. "A zero-inflated Latent Dirichlet Allocation
+model for microbiome studies". En. In: _Front. Genet._ 11 (2020), p.
+602594.
+
+[6] K. Street, D. Risso, R. B. Fletcher, et al. "Slingshot: cell
+lineage and pseudotime inference for single-cell transcriptomics". En.
+In: _BMC Genomics_ 19.1 (Dec. 2018).
+
+[7] C. Xia, J. Fan, G. Emanuel, et al. "Spatial transcriptome profiling
+by MERFISH reveals subcellular RNA compartmentalization and cell
+cycle-dependent gene expression". En. In: _Proc. Natl. Acad. Sci. U. S.
+A._ 116.39 (Sep. 2019), pp. 19490-19499.
+
+[8] S. Wu, A. Joseph, A. S. Hammonds, et al. "Stability-driven
+nonnegative matrix factorization to interpret spatial gene expression
+and build local gene networks". En. In: _Proc. Natl. Acad. Sci. U. S.
+A._ 113.16 (Apr. 2016), pp. 4290-4295.
+
+---
+
+[9] Z. Duren, X. Chen, M. Zamanighomi, et al. "Integrative analysis of
+single-cell genomics data by coupled nonnegative matrix
+factorizations". En. In: _Proc. Natl. Acad. Sci. U. S. A._ 115.30 (Jul.
+2018), pp. 7723-7728.
+
+[10] G. L. Stein-O'Brien, R. Arora, A. C. Culhane, et al. "Enter the
+matrix: Factorization uncovers knowledge from omics". En. In: _Trends
+Genet._ 34.10 (Oct. 2018), pp. 790-805.
+
+[11] K. P. Murphy. _Probabilistic machine learning_. En. London,
+England: MIT Press, Aug. 2023.
+
+[12] H. Joe. _Dependence modeling with copulas_. En. Chapman &amp; Hall/CRC
+Monographs on Statistics and Applied Probability. London, England: CRC
+Press, Jan. 2023.
+
+---
+
+[13] R. A. Deek and H. Li. "Inference of microbial covariation networks
+using copula models with mixture margins". En. In: _Bioinformatics_
+39.7 (Jul. 2023).
+
+[14] T. Sun, D. Song, W. V. Li, et al. "scDesign2: a transparent
+simulator that generates high-fidelity single-cell gene expression
+count data with gene correlations captured". En. In: _Genome Biol._
+22.1 (May. 2021), p. 163.
+
+[15] J. Friedman, T. Hastie, and R. Tibshirani. "Sparse inverse
+covariance estimation with the graphical lasso". En. In:
+_Biostatistics_ 9.3 (Jul. 2008), pp. 432-441.
+
+[16] T. Cai and W. Liu. "Adaptive Thresholding for Sparse Covariance
+Matrix Estimation". In: _J. Am. Stat. Assoc._ 106.494 (Jun. 2011), pp.
+672-684.
+
+[17] C. Czado and T. Nagler. "Vine copula based modeling". En. In:
+_Annu. Rev. Stat. Appl._ 9.1 (Mar. 2022), pp. 453-477.
+
+[18] K. Lê Cao, D. Rossouw, C. Robert-Granié, et al. "A sparse PLS for
+variable selection when integrating omics data". En. In: _Stat. Appl.
+Genet. Mol. Biol._ 7.1 (Nov. 2008), p. Article 35.
+
+[19] K. Lê Cao, S. Boitard, and P. Besse. "Sparse PLS discriminant
+analysis: biologically relevant feature selection and graphical
+displays for multiclass problems". En. In: _BMC Bioinformatics_ 12.1
+(Jun. 2011), p. 253.
+
+[20] F. Rohart, B. Gautier, A. Singh, et al. "mixOmics: An R package
+for 'omics feature selection and multiple data integration". En. In:
+_PLoS Comput. Biol._ 13.11 (Nov. 2017), p. e1005752.
+
+---
+
+[18] K. Lê Cao, D. Rossouw, C. Robert-Granié, et al. "A sparse PLS for
+variable selection when integrating omics data". En. In: _Stat. Appl.
+Genet. Mol. Biol._ 7.1 (Nov. 2008), p. Article 35.
+
+[19] K. Lê Cao, S. Boitard, and P. Besse. "Sparse PLS discriminant
+analysis: biologically relevant feature selection and graphical
+displays for multiclass problems". En. In: _BMC Bioinformatics_ 12.1
+(Jun. 2011), p. 253.
+
+[20] F. Rohart, B. Gautier, A. Singh, et al. "mixOmics: An R package
+for 'omics feature selection and multiple data integration". En. In:
+_PLoS Comput. Biol._ 13.11 (Nov. 2017), p. e1005752.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
