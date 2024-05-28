@@ -62,7 +62,7 @@ Melbourne Integrative Genomics Seminar <br/>
 Slides: <a href="https://go.wisc.edu/ux3oc1">go.wisc.edu/ux3oc1</a>
 </div>
 <div id="title">
-Transparent Synthetic Data Generation
+Expressive Interfaces for Multi-omics Simulation
 </div>
 
 <br/>
