@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Semisynthetic Simulation for Biological Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+
+
+&lt;div id="title"&gt;
+Semisynthetic Simulation for Biological Data Analysis
+&lt;/div&gt;
+&lt;div id="under_title"&gt;
+Session 1: Marginal Modeling
+&lt;/div&gt;
+
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+11 | June | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+Melbourne Integrative Genomics&lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/gfj36r"&gt;go.wisc.edu/gfj36r&lt;/a&gt;&lt;br/&gt;
+Code: &lt;a href="https://go.wisc.edu/o5sn6w"&gt;go.wisc.edu/o5sn6w&lt;/a&gt;
+&lt;/div&gt;
+
+---
+
+### Overall Learning Outcomes
+
+By the end of this course, you will be able to...
+
+1. Describe simulators: What are their building blocks and core properties?
+
+1. Apply simulators: How can we use them to efficiently solve power
+analysis and benchmarking problems in biostatistics and computational biology?
+
+1. Compare simulators: What are current trends and their implications?
+
+---
+
+### Tody: Marginal Simulation
+
+&lt;span style="color:#8C1F33"&gt;Marginal&lt;/span&gt; `\(\to\)` Multivariate `\(\to\)` Integrative
+
+.center[
+&lt;img src="figure/integration_types_1a.png" width=600/&gt;
+]
+
+---
+
+### Tody: Marginal Simulation
+
+&lt;span style="color:#8C1F33"&gt;Marginal&lt;/span&gt; `\(\to\)` Multivariate `\(\to\)` Integrative
+
+.center[
+&lt;img src="figure/integration_types_1b.png" width=600/&gt;
+]
+
+---
+
+### Tody: Marginal Simulation
+
+&lt;span style="color:#8C1F33"&gt;Marginal&lt;/span&gt; `\(\to\)` Multivariate `\(\to\)` Integrative
+
+.center[
+&lt;img src="figure/integration_types_1c.png" width=600/&gt;
+]
+
+---
+
+### Today's Learning Outcomes
+
+By the end of this session, you will be able to...
+
+1. Manipulate and interpret `SummarizedExperiment` experiment objects. 
+1. Discuss the building blocks of marginal simulation: Probability distributions
+and regression models.
+1. Design a power analysis for differential testing and accurately communicate its results.
+1. Identify areas of your own research where simulation could help better allocate limited resources.
+
+---
+
+### Course Expectations
+
+* Bugs are normal! Resolving them is a skill you will develop.
+* Please ask a tutor to help at any point. Don't worry about interrupting.
+* We will have breaks and discussions. Get to know the others in the course!
+
+---
+
+class: middle
+
+.center[
+## Scientific Context
+]
+
+---
+
+### The Microbiome
+
+Imagine a collaboration with researchers who study the human gut microbiome --
+the ecosystem of microorganisms that live in the gut [1]. Like ordinary
+ecology, they want to know:
+
+.pull-left[
+* Who is present?
+* How do they interact with one another?
+* What are they doing? Which genes are active?
+* How does this depend on the environmental context?
+]
+
+.pull-right[
+
+``` r
+include_graphics("https://whatislife.stanford.edu/images/spatial.png")
+```
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="https://whatislife.stanford.edu/images/spatial.png" alt="The microbiome along the gut lining, from ."  /&gt;
+&lt;p class="caption"&gt;The microbiome along the gut lining, from .&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+### Study Goals
+
+They are preparing a grant proposal about how community composition is related
+to nutrition. The want to compare the microbiomes associated with malnutrition
+and health.
+
+&lt;img src="figure/nutrition.png"/&gt;
+
+---
+
+### Power Analysis
+
+Since we have the most statistical experience on the team, they ask us:
+
+.center[
+&lt;span style="font-family:'Poetsen One'; font-size: 48px;"&gt;
+How many samples are needed?
+&lt;/span&gt;
+
+&lt;img src="figure/power_curve.png" width=600px/&gt;
+
+]
+
+&lt;span style="position: absolute; bottom: 20px"&gt;
+We need to make sure the budget is wisely while ensuring the study isn't underpowered.
+&lt;/span&gt;
+
+---
+
+### Problem Setup
+
+.pull-left[
+This is a differential abundance problem [2; 3]. Which species are more abundant in the
+malnourished vs. control groups?
+]
+
+.pull-right[
+&lt;img src="20240611_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Problem Setup
+
+Many methods have been proposed for microbiome differential abundance testing [4; 5; 6]. They account for:
+
+* Potentially extreme sparsity and non-Gaussianity.
+* Uneven sequencing depth across samples.
+* The large number of tests (and the potential to borrow strength).
+
+This is great news but means we can't just use `\(t\)`-test power calculators.
+
+---
+
+### Approach: Simulation
+
+Instead, we simulate. We will simulate experiments and see what our power and
+false discovery rate (FDR) look like in those hypothetical datasets.
+
+Abstract power calculation `\(\to\)` Concrete computational experimentation.
+
+.center[
+&lt;img src="figure/concrete_power.png" width=800/&gt;
+]
+
+---
+
+### Simulation with Templates
+
+* Instead of doing this from scratch, we train a generative
+model to existing experimental data ("template data") [7; 8].
+
+* Generative models can _generate_ new, hypothetical samples, not just fit
+observed ones [9].
+
+.center[
+&lt;img src="figure/discriminative_vs_generative.png" width=700/&gt;
+]
+
+---
+
+### Simulation with Templates
+
+
+* Instead of doing this from scratch, we train a generative
+model to existing experimental data ("template data") [7; 8].
+
+* Generative models can _generate_ new, hypothetical samples, not just fit
+observed ones [9].
+
+.center[
+&lt;img src="figure/generative_example.png" width=900/&gt;
+]
+
+---
+
+### Simulation with Templates
+
+Abstract power calculation `\(\to\)` Concrete computational experimentation.
+
+.center[
+&lt;img src="figure/power_overview.png" width=890/&gt;
+]
+
+---
+
+### Discussion
+
+Please discuss in groups of 2 - 4: 
+
+* In your own research, what is one place where simulation might help? 
+* What template dataset would you use to guide the simulation?
+
+We will debrief responses as a group.
+
+---
+
+class: middle
+
+.center[
+## Statistical Approach
+]
+
+---
+
+### Approach
+
+The richer our vocabulary for generative models, the better chance we'll have of
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
+
+1. **Types of data that can serve as templates.**
+1. Flexible families of probability distributions.
+1. Regression concepts that allow us to fit generative models.
+
+.center[
+&lt;img src="figure/summarized_experiment_focus.png" width=150/&gt;
+]
+
+---
+
+### Approach
+
+The richer our vocabulary for generative models, the better chance we'll have of
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
+
+1. Types of data that can serve as templates.
+1. **Flexible families of probability distributions.**
+1. Regression concepts that allow us to fit generative models.
+
+.center[
+  &lt;img src="figure/distributions.png" width=700/&gt;
+]
+
+---
+
+### Approach
+
+The richer our vocabulary for generative models, the better chance we'll have of
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
+
+1. Types of data that can serve as templates.
+1. Flexible families of probability distributions.
+1. **Regression concepts that allow us to fit generative models.**
+
+.center[
+  &lt;img src="figure/marginal_dependence.png" width=500/&gt;
+]
+
+---
+
+### Representing Data
+
+.pull-left[
+We can tie together sequencing output, experimental design, and biological
+annotation using `SummarizedExperiment` objects [10]. This will
+let us concisely learn: Design + Biology `\(\to\)` Sequencing.
+]
+
+.pull-right[
+&lt;img src="figure/summarized_experiment.svg" width=880/&gt;
+]
+
+---
+
+### Demo
+
+You can follow along here,
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Live Link: 
+
+---
+
+### Important Functions
+
+To work with `SummarizedExperiment` objects, we can use:
+
+* `assay`: Returns a matrix whose rows are sequencing features (e.g., genes, taxa, ...) and whose columns are samples.
+* `rowData`: Returns a data.frame that annotates each sequencing features.
+* `colData`: Returns a data.frame that annotates each sample.
+
+
+
+``` r
+library(MIGsim)
+
+data(atlas)
+head(colData(atlas))
+```
+
+```
+## DataFrame with 6 rows and 11 columns
+##                age      sex nationality DNA_extraction_method  project
+##          &lt;integer&gt; &lt;factor&gt;    &lt;factor&gt;              &lt;factor&gt; &lt;factor&gt;
+## Sample-1        28   male            US                    NA        1
+## Sample-2        24   female          US                    NA        1
+## Sample-3        52   male            US                    NA        1
+## Sample-5        25   female          US                    NA        1
+## Sample-6        42   male            US                    NA        1
+## Sample-8        27   female          US                    NA        1
+##          diversity bmi_group  subject      time      sample log_depth
+##          &lt;numeric&gt;  &lt;factor&gt; &lt;factor&gt; &lt;numeric&gt; &lt;character&gt; &lt;numeric&gt;
+## Sample-1      5.76     obese        1         0    Sample-1   8.93498
+## Sample-2      6.06     obese        2         0    Sample-2   9.22503
+## Sample-3      5.50     lean         3         0    Sample-3   8.87221
+## Sample-5      5.89     lean         5         0    Sample-5   9.39266
+## Sample-6      5.53     lean         6         0    Sample-6   8.97639
+## Sample-8      5.38     lean         8         0    Sample-8   9.07154
+```
+
+---
+
+### Count Distributions: `\(\text{Poi}\left(\lambda\right)\)`
+
+This distribution arises when we count the number of successes from a large `\(N\)`
+trials, each with low probability `\(p\)` of success [11].
+
+* Flip a very low probability coin a million times.
+* Count a million reads' alignment to a rare DNA sequence.
+
+The Poisson parameter `\(\lambda \approx N p\)`.
+
+.center[
+&lt;img src="figure/poisson_reads.png" width=600/&gt;
+]
+
+---
+
+### Count Distributions: Negative Binomial
+
+* This distribution arises when the Poisson parameter is itself random.
+* E.g., the coin's probability of heads is no longer constant
+
+`\(\text{NB}(\mu = 100, \varphi = 5)\)`
+
+&lt;img src="20240611_files/figure-html/unnamed-chunk-5-1.png" width="700" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Count Distributions: Zero-Inflation
+
+Genomic data often have many more zeros than these distributions alone would
+capture, so it's common to define zero-inflated versions of the previous
+distributions [12].
+
+`\(\text{Poi}(\lambda = 10)\)` with `\(\nu = 0.5\)` zero inflation:
+
+&lt;img src="20240611_files/figure-html/unnamed-chunk-6-1.png" width="650" style="display: block; margin: auto;" /&gt;
+
+---
+
+### GAMLSS
+
+We will focus on using Generalized Additive Models of Location Shape and Scale
+(GAMLSS) [13; 14].  These
+models allow each parameter of a distribution to depend on predictors in a
+smooth way.
+
+&lt;img src="20240611_files/figure-html/unnamed-chunk-7-1.png" width="750" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Definition
+
+We can use `setup_simulator()` to define a new simulator. This requires:
+
+* The `SummarizedExperiment` template data
+* A regression formula relating colData features to the parameters
+* The probability model to use (e.g,. Gaussian or Poisson)
+
+
+``` r
+library(scDesigner)
+library(gamboostLSS)
+sim &lt;- setup_simulator(exper_ts, ~ group, ~ GaussianLSS())
+```
+
+---
+
+### Alteration
+
+We can modify a simulator using the `mutate` command.
+
+
+``` r
+sim |&gt;
+  mutate(1:3, link = ~ group + time)
+```
+
+```
+## [Marginals]
+## Plan:
+## # A tibble: 6 × 3
+##     feature              family          link
+##   &lt;gene_id&gt;             &lt;distn&gt;        &lt;link&gt;
+## 1         1 Gaussian [mu,sigma] ~group + time
+## 2         2 Gaussian [mu,sigma] ~group + time
+## 3         3 Gaussian [mu,sigma] ~group + time
+## 4         4 Gaussian [mu,sigma]        ~group
+## 5         5 Gaussian [mu,sigma]        ~group
+## 6         6 Gaussian [mu,sigma]        ~group
+## 1, 2, 3, and 3 other features need fitting.
+## Estimates:
+## # A tibble: 0 × 0
+## 
+## [Dependence]
+## 0 NULLs with  features
+## 
+## [Template Data]
+## class: SummarizedExperiment 
+## dim: 6 500 
+## metadata(0):
+## assays(1): counts
+## rownames(6): 1 2 ... 5 6
+## rowData names(0):
+## colnames: NULL
+## colData names(2): group time
+```
+
+A more realistic example would be to switch to a zero inflated negative binomial
+for rare species:
+
+
+``` r
+sim |&gt;
+  mutate(any_of(rare_taxa), family = ~ ZINBLSS())
+```
+
+---
+
+### Estimation &amp; Sampling
+
+
+Once a simulator is defined, it can be estimated with `estimate`.
+
+
+``` r
+sim &lt;- sim |&gt;
+  estimate(nu = 0.1) # learning rate = 0.1
+```
+
+
+We can simulate new experiments using `sample`.
+
+
+``` r
+sample(sim)
+```
+
+```
+## class: SummarizedExperiment 
+## dim: 6 500 
+## metadata(0):
+## assays(1): counts_1
+## rownames(6): 1 2 ... 5 6
+## rowData names(0):
+## colnames: NULL
+## colData names(2): group time
+```
+
+---
+
+### New Data
+
+Alternatively, we can use a new `colData` object.  This is useful for comparing
+sample sizes and experimental designs.
+
+
+``` r
+new_design &lt;- expand.grid(
+  group = c("A", "B"), 
+  time = seq(0, 1, 0.1)
+)
+
+sample(sim, new_data = new_design)
+```
+
+```
+## class: SummarizedExperiment 
+## dim: 6 22 
+## metadata(0):
+## assays(1): counts_1
+## rownames(6): 1 2 ... 5 6
+## rowData names(0):
+## colnames: NULL
+## colData names(2): group time
+```
+
+---
+
+class: middle
+
+.center[
+## Demo + Exercises
+]
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Live Demo: 
+
+---
+
+### Summary
+
+1. Power and FDR rates from simulated experiments can guide concrete, computational power analysis.
+1. We have several probability families available for marginal simulation.
+1. `SummarizedExperiment` streamlines interaction with experimental data. `assay()`, `rowData()`, and `colData()` are useful accessors.
+1. To define a simulator in `scDesigner`, use `setup_simulator()` with R's formula syntax, like `~ treatment + time`.
+1. The main operations on a simulator object are: `estimate(), mutate()`, and `sample()`.
+
+---
+
+### Next Time: Multivariate Simulation
+
+Marginal `\(\to\)` &lt;span style="color:#8C1F33"&gt;Multivariate&lt;/span&gt; `\(\to\)` Integrative
+
+.center[
+&lt;img src="figure/integration_types_2.png" width=600/&gt;
+]
+
+---
+
+### References
+
+[1] J. A. Gilbert, M. J. Blaser, J. G. Caporaso, J. K. Jansson, S. V.
+Lynch, and R. Knight. "Current understanding of the human microbiome".
+En. In: _Nat. Med._ 24.4 (Apr. 2018), pp. 392-400.
+
+[2] H. Li and H. Li. "Introduction to special issue on statistics in
+microbiome and metagenomics". En. In: _Stat. Biosci._ 13.2 (Jul. 2021),
+pp. 197-199.
+
+[3] L. Waldron. "Data and statistical methods to analyze the human
+microbiome". En. In: _mSystems_ 3.2 (Apr. 2018).
+
+[4] M. Cappellato, G. Baruzzo, and B. Di Camillo. "Investigating
+differential abundance methods in microbiome data: A benchmark study".
+En. In: _PLoS Comput. Biol._ 18.9 (Sep. 2022), p. e1010467.
+
+---
+
+[5] M. Calgaro, C. Romualdi, L. Waldron, D. Risso, and N. Vitulo.
+"Assessment of statistical methods from single cell, bulk RNA-seq, and
+metagenomics applied to microbiome data". En. In: _Genome Biol._ 21.1
+(Aug. 2020), p. 191.
+
+[6] L. Yang and J. Chen. "A comprehensive evaluation of microbial
+differential abundance analysis methods: current status and potential
+solutions". En. In: _Microbiome_ 10.1 (Aug. 2022), p. 130.
+
+[7] T. Sun, D. Song, W. V. Li, and J. J. Li. "scDesign2: a transparent
+simulator that generates high-fidelity single-cell gene expression
+count data with gene correlations captured". En. In: _Genome Biol._
+22.1 (May. 2021), p. 163.
+
+[8] D. Song, Q. Wang, G. Yan, T. Liu, T. Sun, and J. J. Li. "scDesign3
+generates realistic in silico data for multimodal single-cell and
+spatial omics". En. In: _Nat. Biotechnol._ 42.2 (Feb. 2024), pp.
+247-252.
+
+---
+
+[9] K. Sankaran and S. P. Holmes. "Generative Models: An
+Interdisciplinary Perspective". In: _Annual Review of Statistics and
+Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN: 2326-831X. DOI:
+[10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134).
+
+[10] W. Huber, V. J. Carey, R. Gentleman, S. Anders, M. Carlson, B. S.
+Carvalho, H. C. Bravo, S. Davis, L. Gatto, T. Girke, et al.
+"Orchestrating high-throughput genomic analysis with Bioconductor". En.
+In: _Nat. Methods_ 12.2 (Feb. 2015), pp. 115-121.
+
+[11] S. Holmes and W. Huber. _Modern statistics for modern biology_.
+En. Cambridge, England: Cambridge University Press, Feb. 2019.
+
+[12] A. Sarkar and M. Stephens. "Separating measurement and expression
+models clarifies confusion in single-cell RNA sequencing analysis". En.
+In: _Nat. Genet._ 53.6 (Jun. 2021), pp. 770-777.
+
+---
+
+[13] R. A. Rigby and D. M. Stasinopoulos. "Generalized additive models
+for location, scale and shape". En. In: _J. R. Stat. Soc. Ser. C. Appl.
+Stat._ 54.3 (Jun. 2005), pp. 507-554.
+
+[14] D. M. Stasinopoulos and R. A. Rigby. "Generalized additive models
+for location scale and shape (GAMLSS) inR". In: _J. Stat. Softw._ 23.7
+(2007).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
