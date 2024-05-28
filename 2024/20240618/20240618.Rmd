@@ -41,12 +41,11 @@ scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(
 
 BibOptions(
   check.entries = FALSE, 
-  bib.style = "authoryear", 
-  cite.style = "authoryear", 
+  bib.style = "numeric", 
+  cite.style = "numeric", 
   style = "markdown",
   hyperlink = FALSE, 
-  dashed = FALSE,
-  max.names = 1
+  dashed = FALSE
 )
 bib <- ReadBib("references.bib")
 ```
@@ -116,9 +115,9 @@ regulatory modules, microbial communities, cell types,  ...
 These methods are often based on some form of matrix factorization, and they are
 ubiquitous in modern genomics:
 
-* Clustering: Cancer subtypes, cell atlases
-* Dimensionality Reduction: Microbiome communities, pseudotime analysis
-* Network Analysis: Gene regulatory networks
+* Clustering: Cancer subtypes, cell atlases `r Citep(bib, c("Quake2022-qv", "Luecken2022-tj"))`.
+* Dimensionality Reduction: Microbiome communities `r Citep(bib, c("Sankaran2019-tw", "Deek2020-zo"))`, pseudotime analysis `r Citep(bib, c("Street2018-pf", "Xia2019-ei"))`
+* Network Analysis: Gene regulatory networks `r Citep(bib, c("Wu2016-gf", "Duren2018-ik"))`.
 
 <span style="font-size: 20px"/>
 Example Methods: Multidimensional Scaling, Principal Components Analysis,
@@ -145,7 +144,7 @@ are closely met on synthetic data?
 
 Please discuss in groups of 2 - 4: 
 
-* In your own research, what is one place where you have used multivariate analysis?
+* In your research, where can you use multivariate methods?
 * How might simulation assist that analysis?
 
 We will debrief responses as a group.
@@ -172,39 +171,49 @@ variation.
 
 ### Matrix Factorization
 
-Formally, this can often be accomplished using a form of matrix factorization: $x_{i} \approx A z_{i}$.
+This can be accomplished using a form of matrix factorization `r Citep(bib, c("Stein-OBrien2018-pu", "Murphy2023-ej"))`: 
+\begin{align*}
+x_{i} \approx A z_{i}
+\end{align*}
 
   * In clustering, $z_{i}$ encode which cluster sample $i$ belongs to.
   * In PCA, $z_i$ are scores with respect to components $A$.
 
 .center[
-<img src="figure/matrix_factorization.png" width=580/>
+<img src="figure/matrix_factorization.png" width=550/>
 ]
 
 ---
 
 ### Matrix Factorization
 
-Formally, this can often be accomplished using a form of matrix factorization: $x_{i} \approx A z_{i}$.
+This can be accomplished using a form of matrix factorization `r Citep(bib, c("Stein-OBrien2018-pu", "Murphy2023-ej"))`: 
+\begin{align*}
+x_{i} \approx A z_{i}
+\end{align*}
 
   * In clustering, $z_{i}$ encode which cluster sample $i$ belongs to.
   * In PCA, $z_i$ are scores with respect to components $A$.
 
 .center[
-<img src="figure/clustering.png" width=580/>
+<img src="figure/clustering.png" width=550/>
 ]
 
 ---
 
 ### Matrix Factorization
 
-Formally, this can often be accomplished using a form of matrix factorization: $x_{i} \approx A z_{i}$.
+This can be accomplished using a form of matrix factorization `r Citep(bib, c("Stein-OBrien2018-pu", "Murphy2023-ej"))`: 
+\begin{align*}
+x_{i} \approx A z_{i}
+\end{align*}
+
 
   * In clustering, $z_{i}$ encode which cluster sample $i$ belongs to.
   * In PCA, $z_i$ are scores with respect to components $A$.
 
 .center[
-<img src="figure/factorization.png" width=580/>
+<img src="figure/factorization.png" width=550/>
 ]
 
 ---
@@ -228,7 +237,7 @@ This suggests a simulation strategy:
 ### Copula Models
 
 These are a type of model that "couple" a collection of known marginal
-distributions.
+distributions `r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))`.
 
 .center[
 <img src="figure/gene-gene_dependence.png" width=900/>
@@ -297,7 +306,7 @@ Simulate:
 accomplished by setting separate $\Sigma_{k}$ across groups $k$.
 
 1. In high-dimensions, the sample covariance $\hat{\Sigma}$ can destabilize. In
-this case, we should use high-dimensional covariance estimators.
+this case, we should use high-dimensional covariance estimators `r Citep(bib, c("Meinshausen2006-cg,", "Friedman2008-cw", "Cai2011-ja"))`.
 
 .center[
 <img src="figure/copula_groups.png" width=700/>
@@ -338,9 +347,9 @@ setup_simulator(
 
 ### Available Copulas
 
-* `copula_adaptive`: Adaptive lasso for high-dimensional covariance estimation.
-* `copula_vine`: Vine copula for matching higher-order moments.
-* `copula_glasso`: Graphical Lasso for sparse covariance estimation.
+* `copula_adaptive`: Adaptive estimation of high-dimensional covariance estimation `r Citep(bib, "Cai2011-ja")`.
+* `copula_vine`: Vine copula for matching higher-order moments `r Citep(bib, "Czado2022-zn")`.
+* `copula_glasso`: Graphical Lasso for sparse covariance estimation `r Citep(bib, "Friedman2008-cw")`.
 * `copula_t`: Student's $t$ Copula for better modeling of tail-dependence
 * `copula_*_t`: Modified covariance estimators applied to $t$ Copula
 
@@ -349,9 +358,9 @@ setup_simulator(
 
 ### sPLS-DA Setting
 
-Our power analysis uses Sparse Parital Least Squares Discriminant
-Analysis (sPLS-DA). This topic is it's own full workshop, but let's review the
-core ideas.
+Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
+(sPLS-DA) `r Citep(bib, c("Le_Cao2008-zz", "Le_Cao2011-kn", "Rohart2017-sa"))`. This topic is it's
+own full workshop, but let's review the core ideas.
 
 .pull-left[
 sPLS-DA helps with prediction when, 
@@ -475,7 +484,7 @@ var.name.short <- substr(srbct$gene.name[, 2], 1, 10) # form simplified gene nam
 plotVar(srbct.splsda, var.names = list(var.name.short), cex = 3, cutoff = 0.6)
 ```
 ]
-Example sPLS-DA output from the `mixOmics` package.
+Example sPLS-DA output from the `mixOmics` package `r Citep(bib, "Rohart2017-sa")`.
 
 ---
 
@@ -508,3 +517,35 @@ Marginal $\to$ Joint $\to$ <span style="color:#8C1F33">Integrative</span>
 .center[
 <img src="figure/integration_types_3.png" width=600/>
 ]
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 4)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 5, end = 8)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 9, end = 12)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 13, end = 20)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 18, end = 22)
+```
