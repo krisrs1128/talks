@@ -1,5 +1,5 @@
 ---
-title: "Transparent Synthetic Data Generation"
+title: "Expressive Interfaces for Multi-Omics Simulation"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
