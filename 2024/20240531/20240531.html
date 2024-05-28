@@ -226,7 +226,7 @@ researchers agency in designing, evaluating, and modifying statistical
 hypotheses.
 
 &lt;img src="figures/speech_bubbles.png" width=70/&gt; &lt;span style="color:#378C5C"&gt;Communication&lt;/span&gt;: Model-building is a social
-activity, and well-designed tools encourage substantive community engagement.
+activity, and well-designed tools encourage substantive community discussion.
 
 ---
 
@@ -596,86 +596,6 @@ Compiled Notebook: &lt;a href="https://go.wisc.edu/q59g0j"&gt; https://go.wisc.e
 
 ---
 
-### Example 2: Power Analysis
-
-With a given sample size and experimental design, what types of signals will be recoverable?
-
-  * This prevents wasting effort on underpowered studies.
-  * In practice, researchers often report power for tests with analytical power curves (e.g., `\(t\)`-tests), even if that is not the planned analysis.
-
-Simulation can guide power analysis that reflects the planned analysis approach.
-
----
-
-### Problem Context
-
-(Gavin et al., 2018) studied the metaproteomics of Type I Diabetes (T1D).
-.pull-left[
-* They sampled participants at several disease stages (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
-* Their analysis used sPLS-DA (Lê Cao et al., 2011), a variant of linear discriminant analysis.
-]
-
-.pull-right[
-&lt;img src="figures/gavin_t1d_summary.png" width=500/&gt;
-]
-
-They found that intestinal and pancreas function are altered even before the onset of full T1D.
-
-
----
-
-### Multivariate Power Analysis
-
-What would be a good power analysis for a follow-up study?
-
-1. Estimation: Learn a simulator from the 101 available samples.
-2. Perturbation: Generate data with varying sample sizes and signals.
-3. Evaluation: Compute the average sPLS-DA performance across replicates.
-
-.center[
-&lt;img src="figures/power_overview.png" width=700/&gt;
-]
-
----
-
-### Estimation
-
-1. We fit Gaussian LSS models to log-ratio transformed measurements of the 427 proteins found in `\(\geq\)` 70% of subjects.
-2. Means and variances are allowed to vary across low- and high-risk groups.
-3. Main difficulty: The real data have long left tails.
-
-.center[
-&lt;img src="figures/t1D-multivariate-0.png", width=800/&gt;
-]
-
----
-
-### Perturbation
-
-.pull-left[
-* We `mutate` the simulators so that the true number of T1D-associated proteins is `\(s \in \{10, 30, \dots, 90\}\)`
-* We choose the true non-nulls from among proteins with observed strong effects
-  - 32 are found significant at `\(\alpha = 0.05\)` in the original data
-]
-
-.pull-right[
-&lt;img src="figures/p_values.png"/&gt;
-]
-
----
-
-### Evaluation
-
-* The AUC for tuned sPLS-DA models varies from 0.5 (random guess) to over 0.9 in the high-signal regime.
-
-* Potential Extension: Model patient heterogeneity (age, finer risk levels).
-
-.center[
-&lt;img src="figures/t1D-multivariate-2.png" width=550/&gt;
-]
-
----
-
 ### &lt;span style="color:#D94E4E"&gt;Interactive Plot&lt;/span&gt;
 
 We have an experimental interactive visualization that can be used for model criticism.
@@ -705,7 +625,7 @@ computer simulated data to guide data analysis.
 
 ### Upcoming Short Course
 
-**Registration**: [go.wisc.edu/jfxc9v](https://go.wisc.edu/jfxc9v) (Free, but limited seats)
+**Registration**: [go.wisc.edu/vsn1ix](https://go.wisc.edu/vsn1ix) (Free, but limited seats)
 
 When: June 11, 18, 25 from 10am - 12pm
 
@@ -838,6 +758,89 @@ sequencing data". In: _Genome Biology_ 18 (2017).
 
 
 ---
+
+### Example 2: Power Analysis
+
+1. With a given sample size and experimental design, what types of signals will be recoverable?
+
+1. Even when we don't have access to analytical power formulas, we can draw
+conclusions using computational experiments.
+
+.center[
+&lt;img src="figures/concrete_power.png" width=700/&gt;
+]
+
+---
+
+### Problem Context
+
+(Gavin et al., 2018) studied the metaproteomics of Type I Diabetes (T1D).
+.pull-left[
+* They sampled participants at several disease stages (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
+* Their analysis used sPLS-DA (Lê Cao et al., 2011), a variant of linear discriminant analysis.
+]
+
+.pull-right[
+&lt;img src="figures/gavin_t1d_summary.png" width=500/&gt;
+]
+
+They found that intestinal and pancreas function are altered even before the onset of full T1D.
+
+
+---
+
+### Multivariate Power Analysis
+
+What would be a good power analysis for a follow-up study?
+
+1. Estimation: Learn a simulator from the 101 available samples.
+2. Perturbation: Generate data with varying sample sizes and signals.
+3. Evaluation: Compute the average sPLS-DA performance across replicates.
+
+.center[
+&lt;img src="figures/power_overview.png" width=700/&gt;
+]
+
+---
+
+### Estimation
+
+1. We fit Gaussian LSS models to log-ratio transformed measurements of the 427 proteins found in `\(\geq\)` 70% of subjects.
+2. Means and variances are allowed to vary across low- and high-risk groups.
+3. Main difficulty: The real data have long left tails.
+
+.center[
+&lt;img src="figures/t1D-multivariate-0.png", width=800/&gt;
+]
+
+---
+
+### Perturbation
+
+.pull-left[
+* We `mutate` the simulators so that the true number of T1D-associated proteins is `\(s \in \{10, 30, \dots, 90\}\)`
+* We choose the true non-nulls from among proteins with observed strong effects
+  - 32 are found significant at `\(\alpha = 0.05\)` in the original data
+]
+
+.pull-right[
+&lt;img src="figures/p_values.png"/&gt;
+]
+
+---
+
+### Evaluation
+
+* The AUC for tuned sPLS-DA models varies from 0.5 (random guess) to over 0.9 in the high-signal regime.
+
+* Potential Extension: Model patient heterogeneity (age, finer risk levels).
+
+.center[
+&lt;img src="figures/t1D-multivariate-2.png" width=550/&gt;
+]
+
+---
+
 
 ### Verbs: Plot
 
