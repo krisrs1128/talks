@@ -20,7 +20,7 @@ library(MASS)
 library(knitr)
 library(RefManageR)
 library(tidyverse)
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 min_theme <- theme_minimal() + 
   theme(
     panel.grid.minor = element_blank(),
@@ -41,12 +41,11 @@ scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(
 
 BibOptions(
   check.entries = FALSE, 
-  bib.style = "authoryear", 
-  cite.style = "authoryear", 
+  bib.style = "numeric", 
+  cite.style = "numeric", 
   style = "markdown",
-  hyperlink = FALSE, 
-  dashed = FALSE,
-  max.names = 1
+  max.names = 10,
+  hyperlink = FALSE
 )
 bib <- ReadBib("references.bib")
 set.seed(20240611)
@@ -148,8 +147,8 @@ class: middle
 ### The Microbiome
 
 Imagine a collaboration with researchers who study the human gut microbiome --
-the ecosystem of microorganisms that live in the gut. Like ordinary ecology,
-they want to know:
+the ecosystem of microorganisms that live in the gut `r Citep(bib, c("Gilbert2018-gy", "Integrative_HMP_iHMP_Research_Network_Consortium2019-jv,"))`. Like ordinary
+ecology, they want to know:
 
 .pull-left[
 * Who is present?
@@ -159,7 +158,7 @@ they want to know:
 ]
 
 .pull-right[
-```{r, fig.cap = "The microbiome along the gut lining, from Earle et al. 2015.", fig.align = "center", echo = FALSE, out.width = 280}
+```{r, fig.cap = paste0("The microbiome along the gut lining, from ", Citep(bib, 'Earle2015'), "."), fig.align = "center"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -169,8 +168,8 @@ include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ### Study Goals
 
 They are preparing a grant proposal about how community composition is related
-to nutrition. The want to compare the microbiomes of malnourished children with
-healthy controls.
+to nutrition. The want to compare the microbiomes associated with malnutrition
+and health.
 
 <img src="figure/nutrition.png"/>
 
@@ -198,7 +197,7 @@ We need to make sure the budget is wisely while ensuring the study isn't underpo
 ### Problem Setup
 
 .pull-left[
-This is a differential abundance problem. Which species are more abundant in the
+This is a differential abundance problem `r Citep(bib, "Li2021-uu","Waldron2018-dx")`. Which species are more abundant in the
 malnourished vs. control groups?
 ]
 
@@ -226,7 +225,7 @@ df |>
 
 ### Problem Setup
 
-Many methods have been proposed for microbiome differential abundance testing. They account for:
+Many methods have been proposed for microbiome differential abundance testing `r Citep(bib, c( "Cappellato2022-lr", "Calgaro2020-tq", "Yang2022-gc"))`. They account for:
 
 * Potentially extreme sparsity and non-Gaussianity.
 * Uneven sequencing depth across samples.
@@ -252,7 +251,7 @@ Abstract power calculation $\to$ Concrete computational experimentation.
 ### Simulation with Templates
 
 * Instead of doing this from scratch, we train a generative
-model to existing experimental data ("template data").
+model to existing experimental data ("template data") `r Citep(bib, c("Sun2021-lg", "Song2024-lq"))`.
 
 * Generative models can _generate_ new, hypothetical samples, not just fit
 observed ones `r Citep(bib, "Sankaran2023")`.
@@ -265,14 +264,25 @@ observed ones `r Citep(bib, "Sankaran2023")`.
 
 ### Simulation with Templates
 
+
 * Instead of doing this from scratch, we train a generative
-model to existing experimental data ("template data").
+model to existing experimental data ("template data") `r Citep(bib, c("Sun2021-lg", "Song2024-lq"))`.
 
 * Generative models can _generate_ new, hypothetical samples, not just fit
 observed ones `r Citep(bib, "Sankaran2023")`.
 
 .center[
 <img src="figure/generative_example.png" width=900/>
+]
+
+---
+
+### Simulation with Templates
+
+Abstract power calculation $\to$ Concrete computational experimentation.
+
+.center[
+<img src="figure/power_overview.png" width=890/>
 ]
 
 ---
@@ -348,8 +358,8 @@ ourselves with:
 
 .pull-left[
 We can tie together sequencing output, experimental design, and biological
-annotation using `SummarizedExperiment` objects. This will let us concisely
-learn how `design + biology -> sequencing`. 
+annotation using `SummarizedExperiment` objects `r Citep(bib, c("Huber2015-ef", "Martin_Morgan_Valerie_Obenchain_Jim_Hester_Herve_Pages2017-ak"))`. This will
+let us concisely learn: Design + Biology $\to$ Sequencing.
 ]
 
 .pull-right[
@@ -388,7 +398,7 @@ head(colData(atlas))
 ### Count Distributions: $\text{Poi}\left(\lambda\right)$
 
 This distribution arises when we count the number of successes from a large $N$
-trials, each with low probability $p$ of success.
+trials, each with low probability $p$ of success `r Citep(bib, "Holmes2019-jr")`.
 
 * Flip a very low probability coin a million times.
 * Count a million reads' alignment to a rare DNA sequence.
@@ -422,7 +432,7 @@ data.frame(x = rnbinom(1000, mu = 100, size = 5)) |>
 
 Genomic data often have many more zeros than these distributions alone would
 capture, so it's common to define zero-inflated versions of the previous
-distributions.
+distributions `r Citep(bib, "Sarkar2021-gk")`.
 
 $\text{Poi}(\lambda = 10)$ with $\nu = 0.5$ zero inflation:
 
@@ -442,8 +452,9 @@ data.frame(x = z * x) |>
 ### GAMLSS
 
 We will focus on using Generalized Additive Models of Location Shape and Scale
-(GAMLSS).  These models allow each parameter of a distribution to depend on
-predictors in a smooth way.
+(GAMLSS) `r Citep(bib, c("Rigby2005-oe", "Stasinopoulos2007-lk"))`.  These
+models allow each parameter of a distribution to depend on predictors in a
+smooth way.
 
 ```{r, echo = FALSE, out.width = 750}
 N <- 1000
@@ -549,10 +560,9 @@ class: middle
 ### Summary
 
 1. Power and FDR rates from simulated experiments can guide concrete, computational power analysis.
-1. The Poisson, Negative Binomial, and Zero-Inflated Poisson/Negative Binomial
-can be used to generate count data.
-1. The `SummarizedExperiment` class streamlines interaction with biological experiemnts.
-1. To define a simulator in `scDesigner`, use `setup_simulator()` with R's formula syntax.
+1. We have several probability families available for marginal simulation.
+1. `SummarizedExperiment` streamlines interaction with experimental data. `assay()`, `rowData()`, and `colData()` are useful accessors.
+1. To define a simulator in `scDesigner`, use `setup_simulator()` with R's formula syntax, like `~ treatment + time`.
 1. The main operations on a simulator object are: `estimate(), mutate()`, and `sample()`.
 
 ---
@@ -564,3 +574,29 @@ Marginal $\to$ <span style="color:#8C1F33">Multivariate</span> $\to$ Integrative
 .center[
 <img src="figure/integration_types_2.png" width=600/>
 ]
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 4)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 5, end = 8)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 9, end = 12)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 13, end = 20)
+```
