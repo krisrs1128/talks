@@ -67,7 +67,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 Melbourne Integrative Genomics<br/>
-Slides: <a href="https://go.wisc.edu/gfj36r">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/rc776i">go.wisc.edu/rc776i/</a><br/>
 Code: <a href="https://go.wisc.edu/o5sn6w">go.wisc.edu/o5sn6w</a>
 </div>
 
