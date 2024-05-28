@@ -111,7 +111,9 @@ zingeR, ...
 
 *Many single-cell data analysis packages include their own ad hoc data simulators [111, 211, 241, 264, 349–353]. However, these simulators are usually not available as separate tools or even as a source code, tailored to specific problems studied in corresponding papers and sometimes not comprehensively documented, thus limiting their utility for the broad research community.*
 
--- Challenge 11 from "Eleven grand challenges in single-cell data science" (Lahnemann et al., 2020).
+-- Challenge 11 from "Eleven grand challenges in single-cell data science" (Lahnemann, Koster, Szczurek, McCarthy, Hicks, Robinson, Vallejos, Campbell, Beerenwinkel, Mahfouz, Pinello, Skums, Stamatakis, Attolini, Aparicio, Baaijens, Balvert, de
+Barbanson, Cappuccio, Corleone, Dutilh, Florescu, Guryev, Holmer, Jahn, Lobo, Keizer, Khatri, Kiełbasa, Korbel, Kozlov, Kuo, Lelieveldt, Măndoiu, Marioni, Marschall, Molder, Niknejad, Raczkowski, Reinders, de
+Ridder, Saliba, Somarakis, Stegle, Theis, Yang, Zelikovsky, Mchardy, Raphael, Shah, and Schönhuth, 2020).
 
 ---
 
@@ -122,7 +124,7 @@ isn't sloppiness in sharing or documenting code, though.
 
 1. The deeper issues are:
 
-  * Interfaces often suffer from large interaction gulfs (Hutchins et al., 1985). It is hard to specify simulators and iterate.
+  * Interfaces often suffer from large interaction gulfs (Hutchins, Hollan, and Norman, 1985). It is hard to specify simulators and iterate.
 
 .center[
 &lt;img src="figures/interaction_gulfs.png" width=600/&gt;
@@ -152,7 +154,7 @@ Modular decomposition of a plot according to the grammar of graphics (Wilkinson,
 
 ### Existing Interfaces
 
-This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) (Zappia et al., 2017). 
+This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) (Zappia, Phipson, and Oshlack, 2017). 
 Of the packages I've listed, it has most thoughtful interface.
 
 
@@ -183,7 +185,7 @@ params
 ### Existing Interfaces
 
 .pull-left[
-Here is an example from the [`scDesign3` Quick Start](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) (Song et al., 2023).
+Here is an example from the [`scDesign3` Quick Start](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) (Song, Wang, Yan, Liu, Sun, and Li, 2023).
 This package has the most generally applicable statistical methodology.
 ]
 
@@ -343,7 +345,7 @@ simulator &lt;- new(
 
 ### Extensibility
 
-For the marginals, we can borrow from existing LSS packages (Rigby et al., 2005; Hofner et al., 2014) to implement gene-wise regressions,
+For the marginals, we can borrow from existing LSS packages (Rigby and Stasinopoulos, 2005; Hofner, Mayr, and Schmid, 2014) to implement gene-wise regressions,
 
 * Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
 
@@ -503,7 +505,7 @@ sim_joined &lt;- join_pamona(sims)
 
 ### Verbs: &lt;span style="color:#025E73"&gt;Join&lt;/span&gt; (Conditioning)
 
-This used partial manifold alignment (Cao et al., 2020) to
+This used partial manifold alignment (Cao, Hong, and Wan, 2020) to
 learn shared latent variables across assays and works even in the diagonal
 integration setting.
 
@@ -596,6 +598,88 @@ Compiled Notebook: &lt;a href="https://go.wisc.edu/q59g0j"&gt; https://go.wisc.e
 
 ---
 
+### Example 2: Power Analysis
+
+1. With a given sample size and experimental design, what types of signals will be recoverable?
+
+1. Even when we don't have access to analytical power formulas, we can draw
+conclusions using computational experiments.
+
+.center[
+&lt;img src="figures/concrete_power.png" width=700/&gt;
+]
+
+---
+
+### Problem Context
+
+(Gavin, Mullaney, Loo, Cao, Gottlieb, Hill, Zipris, and Hamilton-Williams, 2018) studied the metaproteomics of Type I Diabetes (T1D).
+.pull-left[
+* They sampled participants at several disease stages (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
+* Their analysis used sPLS-DA (Lê Cao, Boitard, and Besse, 2011), a variant of linear discriminant analysis.
+]
+
+.pull-right[
+&lt;img src="figures/gavin_t1d_summary.png" width=500/&gt;
+]
+
+They found that intestinal and pancreas function are altered even before the onset of full T1D.
+
+
+---
+
+### Multivariate Power Analysis
+
+What would be a good power analysis for a follow-up study?
+
+1. Estimation: Learn a simulator from the 101 available samples.
+2. Perturbation: Generate data with varying sample sizes and signals.
+3. Evaluation: Compute the average sPLS-DA performance across replicates.
+
+.center[
+&lt;img src="figures/power_overview.png" width=700/&gt;
+]
+
+---
+
+### Estimation
+
+1. We fit Gaussian LSS models to log-ratio transformed measurements of the 427 proteins found in `\(\geq\)` 70% of subjects.
+2. Means and variances are allowed to vary across low- and high-risk groups.
+3. Main difficulty: The real data have long left tails.
+
+.center[
+&lt;img src="figures/t1D-multivariate-0.png", width=800/&gt;
+]
+
+---
+
+### Perturbation
+
+.pull-left[
+* We `mutate` the simulators so that the true number of T1D-associated proteins is `\(s \in \{10, 30, \dots, 90\}\)`
+* We choose the true non-nulls from among proteins with observed strong effects
+  - 32 are found significant at `\(\alpha = 0.05\)` in the original data
+]
+
+.pull-right[
+&lt;img src="figures/p_values.png"/&gt;
+]
+
+---
+
+### Evaluation
+
+* The AUC for tuned sPLS-DA models varies from 0.5 (random guess) to over 0.9 in the high-signal regime.
+
+* Potential Extension: Model patient heterogeneity (age, finer risk levels).
+
+.center[
+&lt;img src="figures/t1D-multivariate-2.png" width=550/&gt;
+]
+
+---
+
 ### &lt;span style="color:#D94E4E"&gt;Interactive Plot&lt;/span&gt;
 
 We have an experimental interactive visualization that can be used for model criticism.
@@ -610,7 +694,7 @@ We have an experimental interactive visualization that can be used for model cri
 
 ### History
 
-(Scott et al., 1954) is the earliest example I've found that uses
+(Scott, Shane, and Swanson, 1954) is the earliest example I've found that uses
 computer simulated data to guide data analysis.
 
 .pull-left[
@@ -753,95 +837,6 @@ sequencing data". In: _Genome Biology_ 18 (2017).
 
 ---
 
-### References
-
-
-
----
-
-### Example 2: Power Analysis
-
-1. With a given sample size and experimental design, what types of signals will be recoverable?
-
-1. Even when we don't have access to analytical power formulas, we can draw
-conclusions using computational experiments.
-
-.center[
-&lt;img src="figures/concrete_power.png" width=700/&gt;
-]
-
----
-
-### Problem Context
-
-(Gavin et al., 2018) studied the metaproteomics of Type I Diabetes (T1D).
-.pull-left[
-* They sampled participants at several disease stages (33 with T1D, 17 at high risk, 29 at low risk, 22 healthy)
-* Their analysis used sPLS-DA (Lê Cao et al., 2011), a variant of linear discriminant analysis.
-]
-
-.pull-right[
-&lt;img src="figures/gavin_t1d_summary.png" width=500/&gt;
-]
-
-They found that intestinal and pancreas function are altered even before the onset of full T1D.
-
-
----
-
-### Multivariate Power Analysis
-
-What would be a good power analysis for a follow-up study?
-
-1. Estimation: Learn a simulator from the 101 available samples.
-2. Perturbation: Generate data with varying sample sizes and signals.
-3. Evaluation: Compute the average sPLS-DA performance across replicates.
-
-.center[
-&lt;img src="figures/power_overview.png" width=700/&gt;
-]
-
----
-
-### Estimation
-
-1. We fit Gaussian LSS models to log-ratio transformed measurements of the 427 proteins found in `\(\geq\)` 70% of subjects.
-2. Means and variances are allowed to vary across low- and high-risk groups.
-3. Main difficulty: The real data have long left tails.
-
-.center[
-&lt;img src="figures/t1D-multivariate-0.png", width=800/&gt;
-]
-
----
-
-### Perturbation
-
-.pull-left[
-* We `mutate` the simulators so that the true number of T1D-associated proteins is `\(s \in \{10, 30, \dots, 90\}\)`
-* We choose the true non-nulls from among proteins with observed strong effects
-  - 32 are found significant at `\(\alpha = 0.05\)` in the original data
-]
-
-.pull-right[
-&lt;img src="figures/p_values.png"/&gt;
-]
-
----
-
-### Evaluation
-
-* The AUC for tuned sPLS-DA models varies from 0.5 (random guess) to over 0.9 in the high-signal regime.
-
-* Potential Extension: Model patient heterogeneity (age, finer risk levels).
-
-.center[
-&lt;img src="figures/t1D-multivariate-2.png" width=550/&gt;
-]
-
----
-
-
 ### Verbs: Plot
 
 
@@ -917,7 +912,7 @@ exper &lt;- augment_mds(exper, K = 4) |&gt;
 
 ### Example
 
-Let’s consider the microbiome + metabolome mouse study from (Callahan et al., 2016). This had 12 samples.
+Let’s consider the microbiome + metabolome mouse study from (Callahan, Sankaran, Fukuyama, McMurdie, and Holmes, 2016). This had 12 samples.
 1. How does estimation quality improve with sample size?
 2. Is it worth gathering unpaired samples? (mosaic designs)
 
@@ -955,7 +950,7 @@ Let’s consider the microbiome + metabolome mouse study from (Callahan et al., 
 .pull-left[
 1. Across sample sizes `\(n\)`, we simulate new data, fit sparse CCA, and identify a
 basis `\(\hat{V}_{n}\)` spanning the `\(K = 5\)` left and right sparse CCA factors
-1. We use `\(\hat{V}_{5000}\)` as a reference and compute canonical angles (Golub et al., 1994) with all smaller sample sizes.
+1. We use `\(\hat{V}_{5000}\)` as a reference and compute canonical angles (Golub and Zha, 1994) with all smaller sample sizes.
 ]
 
 .pull-right[
@@ -1016,7 +1011,7 @@ GAMLSS models are simple and interpretable. However,
 We need formal ways for gauging the quality of a simulator.
 
 * Existing evaluation criteria for simulated omics data rely on ad-hoc summaries.
-* GAN precision-recall measures can offer a more systematic approach (Sajjadi et al., 2018).
+* GAN precision-recall measures can offer a more systematic approach (Sajjadi, Bachem, Lucic, Bousquet, and Gelly, 2018).
 ]
 
 .pull-right[
