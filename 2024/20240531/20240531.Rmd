@@ -110,7 +110,8 @@ Kris Sankaran <br/>
 * **Calibration**: Statistical performance on simulated data can help us calibrate workflows to improve power and control the false discovery rate.
 
 <g style="font-size: 20px; margin: 0; line-height: 30px; display: block;">
-Examples: BASICS,
+Examples: 
+BEERS2,
 compcodeR,
 deconvR,
 dropsim,
@@ -120,12 +121,13 @@ FreeHiCLite,
 hierarchicell,
 kersplat,
 metaART,
-MOSim,
-MSstatsSampleSize,
 MIDAS,
 Mimesys,
+MOSim,
+MSstatsSampleSize,
 multiomics_networks_simulation,
 muscat,
+polyester,
 powsimR,
 POWSC,
 SCDD,
@@ -137,13 +139,13 @@ SimFFPE,
 sismonr,
 spaSim,
 sparseDOSSA,
-Splat,
+SparseDC,
 SPARSim,
 SPsimSeq,
-SparseDC,
+Splat,
 SymSim,
 ZINB-WaVE,
-zingeR, ...
+zingeR
 </g>
 
 ---
@@ -533,7 +535,7 @@ sim_joined
 <br/>
 
 <div style="font-size: 34px;">
-Live Code: <a href="https://go.wisc.edu//">https://go.wisc.edu//</a>
+Live Code: <a href="https://go.wisc.edu/8zi3v9/">https://go.wisc.edu/8zi3v9/</a>
 <br/>
 Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
 <br/>
