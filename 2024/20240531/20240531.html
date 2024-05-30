@@ -111,7 +111,7 @@ zingeR
 
 ### A Grand Challenge
 
-*Many single-cell data analysis packages include their own ad hoc data simulators [111, 211, 241, 264, 349–353]. However, these simulators are usually not available as separate tools or even as a source code, tailored to specific problems studied in corresponding papers and sometimes not comprehensively documented, thus limiting their utility for the broad research community.*
+*Many single-cell data analysis packages include their own ad hoc data simulators. However, these simulators are usually not available as separate tools or even as a source code, tailored to specific problems studied in corresponding papers and sometimes not comprehensively documented, thus limiting their utility for the broad research community.*
 
 -- Challenge 11 from "Eleven grand challenges in single-cell data science" (Lahnemann et al., 2020).
 
@@ -185,7 +185,7 @@ params
 ### Existing Interfaces
 
 .pull-left[
-Here is an example from the [`scDesign3` Quick Start](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) (Song et al., 2023).
+Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) (Song et al., 2023).
 This package has the most generally applicable statistical methodology.
 ]
 
@@ -319,25 +319,10 @@ margins
 
 We can tie together a collection of marginals using a copula model.
 
+.center[
+  &lt;img src="figures/gene-gene_dependence.png" width=900/&gt;
+]
 
-``` r
-simulator &lt;- new(
-  "JointDistribution",
-  margins = margins,
-  dependence = copula_gaussian()
-)
-```
-
-We can support different correlation structures across groups.
-
-
-``` r
-simulator &lt;- new(
-  "JointDistribution", 
-  margins = margins, 
-  dependence = copula_gaussian(~ cell_type)
-)
-```
 
 
 
@@ -353,18 +338,11 @@ We can also build a unified interface to various copula estimation routines,
 
 * Vine copulas for capturing higher-order moments.
 * Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
-* `copula_vine(), copula_adaptive(), copula_glasso(), ...`
 
 ---
 
 ### Verbs: &lt;span style="color: #D94E4E"&gt;Plot&lt;/span&gt;
 
-
-
-``` r
-plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
-  facet_wrap(~ feature, ncol = 4)
-```
 
 &lt;img src="20240531_files/figure-html/example_plot-1.png" width="800" style="display: block; margin: auto;" /&gt;
 
@@ -380,43 +358,6 @@ altered &lt;- mutate(margins, Chga:Ins1, link = ~ pseudotime) |&gt;
   estimate(sce)
 ```
 &lt;img src="20240531_files/figure-html/plot_alteration-1.png" width="800" style="display: block; margin: auto;" /&gt;
-
----
-
-### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
-
-We can layer several changes on top of one another. Syntax color highlights
-modifications that haven’t been re-fit.
-
-
-
-``` r
-margins |&gt;
-  mutate(Chga:Ins1, link = ~ pseudotime) |&gt;
-  mutate(c("Pyy", "Rbp4"), family = ~ GaussianLSS()) |&gt;
-  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 5), sigma = ~ 1, nu = ~ 1))
-```
-
-&lt;pre class="r-output"&gt;&lt;code&gt;## &lt;span style='color: #BB00BB;'&gt;Plan:
-## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 6 × 3&lt;/span&gt;
-##     feature              family                                     link
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;gene_id&gt;&lt;/span&gt;             &lt;span style='color: #555555; font-style: italic;'&gt;&lt;distn&gt;&lt;/span&gt;                                   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;link&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt;       &lt;span style='color: #00BBBB;'&gt;Pyy&lt;/span&gt; Gaussian [mu,sigma]                       ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Iapp&lt;/span&gt; ZINBI [mu,sigma,nu] mu~ns(pseudotime, df = 5), sigma~1, nu~1
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt;      Chgb ZINBI [mu,sigma,nu]                       ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;4&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Rbp4&lt;/span&gt; Gaussian [mu,sigma]                       ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;5&lt;/span&gt;      Spp1 ZINBI [mu,sigma,nu]                       ~ns(pseudotime, 3)
-## &lt;span style='color: #555555;'&gt;6&lt;/span&gt;      &lt;span style='color: #00BBBB;'&gt;Chga&lt;/span&gt; ZINBI [mu,sigma,nu]                              ~pseudotime
-## &lt;span style='color: #00BBBB;'&gt;Pyy, Iapp, Rbp4&lt;/span&gt;, and &lt;span style='color: #00BBBB;'&gt;3&lt;/span&gt; &lt;span style='color: #00BBBB;'&gt;other features&lt;/span&gt; need fitting.&lt;span style='color: #BB00BB;'&gt;
-## Estimates:
-## &lt;/span&gt;&lt;span style='color: #555555;'&gt;# A tibble: 3 × 2&lt;/span&gt;
-##   feature fit       
-##   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;chr&gt;&lt;/span&gt;   &lt;span style='color: #555555; font-style: italic;'&gt;&lt;list&gt;&lt;/span&gt;    
-## &lt;span style='color: #555555;'&gt;1&lt;/span&gt; Pyy     &lt;span style='color: #555555;'&gt;&lt;glmbsLSS&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;2&lt;/span&gt; Iapp    &lt;span style='color: #555555;'&gt;&lt;glmbsLSS&gt;&lt;/span&gt;
-## &lt;span style='color: #555555;'&gt;3&lt;/span&gt; Chgb    &lt;span style='color: #555555;'&gt;&lt;glmbsLSS&gt;&lt;/span&gt;
-## ... and 7 additional features.
-&lt;/code&gt;&lt;/pre&gt;
 
 ---
 
@@ -657,7 +598,7 @@ What would be a good power analysis for a follow-up study?
 ### Perturbation
 
 .pull-left[
-* We `mutate` the simulators so that the true number of T1D-associated proteins is `\(s \in \{10, 30, \dots, 90\}\)`
+* We `mutate` the simulators so that the true number of T1D-associated proteins is `\(10, 30, \dots, 90\)`
 * We choose the true non-nulls from among proteins with observed strong effects
   - 32 are found significant at `\(\alpha = 0.05\)` in the original data
 ]
@@ -731,29 +672,7 @@ experts.
 
 
 June 11 - Data Structures; Marginal Testing and Simulation
-
-.center[
-&lt;img src="figures/da_trajectory_all.png" width=650/&gt;
-]
-
----
-
-### Upcoming Short Course
-
-**Registration**: [go.wisc.edu/vsn1ix](https://go.wisc.edu/vsn1ix) (Free, but limited seats)
-
 June 18 - Multivariate Analysis and Simulation
-
-.center[
-&lt;img src="figures/gene-gene_dependence.png" width=800/&gt;
-]
-
----
-
-### Upcoming Short Course
-
-**Registration**: [go.wisc.edu/vsn1ix](https://go.wisc.edu/vsn1ix) (Free, but limited seats)
-
 June 25 - Visual Evaluation; Multi-omics Integration and Simulation
 
 .center[

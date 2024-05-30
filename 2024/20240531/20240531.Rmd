@@ -152,7 +152,7 @@ zingeR
 
 ### A Grand Challenge
 
-*Many single-cell data analysis packages include their own ad hoc data simulators [111, 211, 241, 264, 349–353]. However, these simulators are usually not available as separate tools or even as a source code, tailored to specific problems studied in corresponding papers and sometimes not comprehensively documented, thus limiting their utility for the broad research community.*
+*Many single-cell data analysis packages include their own ad hoc data simulators. However, these simulators are usually not available as separate tools or even as a source code, tailored to specific problems studied in corresponding papers and sometimes not comprehensively documented, thus limiting their utility for the broad research community.*
 
 -- Challenge 11 from "Eleven grand challenges in single-cell data science" `r Citep(bib, "Lhnemann2020ElevenGC")`.
 
@@ -225,7 +225,7 @@ params
 ### Existing Interfaces
 
 .pull-left[
-Here is an example from the [`scDesign3` Quick Start](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) `r Citep(bib, "Song2023scDesign3GR")`.
+Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) `r Citep(bib, "Song2023scDesign3GR")`.
 This package has the most generally applicable statistical methodology.
 ]
 
@@ -346,23 +346,10 @@ margins <- estimate(margins, sce)
 
 We can tie together a collection of marginals using a copula model.
 
-```{r join_into_copula}
-simulator <- new(
-  "JointDistribution",
-  margins = margins,
-  dependence = copula_gaussian()
-)
-```
+.center[
+  <img src="figures/gene-gene_dependence.png" width=900/>
+]
 
-We can support different correlation structures across groups.
-
-```{r modified_copula}
-simulator <- new(
-  "JointDistribution", 
-  margins = margins, 
-  dependence = copula_gaussian(~ cell_type)
-)
-```
 
 ```{r wrap_into_simulator, echo = FALSE}
 simulator <- setup_simulator(
@@ -386,7 +373,6 @@ We can also build a unified interface to various copula estimation routines,
 
 * Vine copulas for capturing higher-order moments.
 * Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
-* `copula_vine(), copula_adaptive(), copula_glasso(), ...`
 
 ---
 
@@ -397,7 +383,7 @@ ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
 point_opts <- list(size = 0.4, alpha = 0.3)
 ```
 
-```{r example_plot, out.width = 800}
+```{r example_plot, out.width = 800, echo = FALSE}
 plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4)
 ```
@@ -415,21 +401,6 @@ altered <- mutate(margins, Chga:Ins1, link = ~ pseudotime) |>
 ```{r plot_alteration, out.width = 800, echo = FALSE}
 plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4)
-```
-
----
-
-### Verbs: <span style="color:#025E73">Mutate</span>
-
-We can layer several changes on top of one another. Syntax color highlights
-modifications that haven’t been re-fit.
-
-
-```{r, layered_alteration}
-margins |>
-  mutate(Chga:Ins1, link = ~ pseudotime) |>
-  mutate(c("Pyy", "Rbp4"), family = ~ GaussianLSS()) |>
-  mutate(Iapp, link = list(mu = ~ ns(pseudotime, df = 5), sigma = ~ 1, nu = ~ 1))
 ```
 
 ---
@@ -603,7 +574,7 @@ What would be a good power analysis for a follow-up study?
 ### Perturbation
 
 .pull-left[
-* We `mutate` the simulators so that the true number of T1D-associated proteins is $s \in \{10, 30, \dots, 90\}$
+* We `mutate` the simulators so that the true number of T1D-associated proteins is $10, 30, \dots, 90$
 * We choose the true non-nulls from among proteins with observed strong effects
   - 32 are found significant at $\alpha = 0.05$ in the original data
 ]
@@ -677,29 +648,7 @@ experts.
 
 
 June 11 - Data Structures; Marginal Testing and Simulation
-
-.center[
-<img src="figures/da_trajectory_all.png" width=650/>
-]
-
----
-
-### Upcoming Short Course
-
-**Registration**: [go.wisc.edu/vsn1ix](https://go.wisc.edu/vsn1ix) (Free, but limited seats)
-
 June 18 - Multivariate Analysis and Simulation
-
-.center[
-<img src="figures/gene-gene_dependence.png" width=800/>
-]
-
----
-
-### Upcoming Short Course
-
-**Registration**: [go.wisc.edu/vsn1ix](https://go.wisc.edu/vsn1ix) (Free, but limited seats)
-
 June 25 - Visual Evaluation; Multi-omics Integration and Simulation
 
 .center[
