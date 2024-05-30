@@ -501,17 +501,9 @@ sim_joined
 .section[
 ## Interactive Demo
 ]
-<br/>
-<br/>
-<br/>
-
-<div style="font-size: 34px;">
-Live Code: <a href="https://go.wisc.edu/8zi3v9/">https://go.wisc.edu/8zi3v9/</a>
-<br/>
-Colab Notebook: <a href="https://go.wisc.edu/u5a94m">https://go.wisc.edu/u5a94m</a>
-<br/>
-Compiled Notebook: <a href="https://go.wisc.edu/q59g0j"> https://go.wisc.edu/q59g0j</a>
-</div>
+.center[
+<img src="figures/demo_link.png" width=450/>
+]
 
 ---
 
