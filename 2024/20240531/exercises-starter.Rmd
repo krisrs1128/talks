@@ -9,6 +9,9 @@ date: "`r Sys.Date()`"
 source("setup.R")
 ```
 
+Compiled Notebook: https://go.wisc.edu/q59g0j
+Colab Notebook: https://go.wisc.edu/u5a94m
+
 ## Microbiome Networks
 
 Unlike human social networks, there is no simple way to observe microbe-microbe
