@@ -501,8 +501,13 @@ sim_joined
 .section[
 ## Interactive Demo
 ]
+
 .center[
-<img src="figures/demo_link.png" width=450/>
+  <span style="font-size: 48px">
+    [go.wisc.edu/992c78](https://go.wisc.edu/992c78)
+  </span>
+
+<img src="figures/demo_link.png" width=380/>
 ]
 
 ---
