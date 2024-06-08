@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Semisynthetic Simulation for Biological Data Analysis"
 author: "Kris Sankaran"
 output:
   xaringan::moon_reader:
@@ -71,13 +71,12 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 ---
 
+### Learning Outcomes:
 
-### Session 3: Integrative Simulation
-
-Learning Outcomes:
-
-1. Explain and distinguish between the horizontal and vertical integration problems.
-1. Discuss how simulation can improve validity and power in horizontal and vertical integration workflows.
+1. Explain and distinguish between the horizontal and vertical integration
+problems.
+1. Discuss how simulation can improve validity and power in horizontal and
+vertical integration workflows.
 1. Design simulators that respect batch or multi-omics structure to support
 integration applications.
 
@@ -91,15 +90,16 @@ class: middle
 
 ---
 
-### Problem
+### Motivation
 
-1. To maximize power, it helps to combine as many relevant datasets as possible.
+1. We can learn a lot by paying attention to as many relevant datasets as
+possible. We shouldn't pretend that we haven't seen related data before!
 
 1. Unfortunately, technical factors can cause systematic differences between
 groups of samples. These are often called "batch effects."
 
 .center[
-  Horizontal Integration figure from NUS slides
+<img src="figures/horizontal_integration.png" width=900/>
 ]
 
 ---
@@ -226,7 +226,64 @@ class: middle
 
 ---
 
-### Problem
+### Motivation
+
+1. Horizontal integration looks at the same features across many related datasets.
+
+1. Vertical integration looks at the same dataset using many related assays.
+
+.center[
+<img src="figures/vertical_integration.png" width=900/>
+]
+
+---
+
+### Motivation
+
+.pull-left[
+Why is multi-omics helpful? If a living system is a symphony, then each data
+source lets us hear a new set of instruments.
+]
+
+.pull-right[
+<img src="figures/symphony-score-2.png"/>
+]
+<br/>
+<br/>
+.microbiome-figure-bottom[
+<img src="figures/microbiome-header-2.png"></img>
+]
+
+---
+
+### General Approaches: Latent Variables
+
+Latent variable methods $Z$ reveal shared structure across data modalities.
+
+<img src="figures/latent_integration.png"/>
+
+---
+
+### General Approaches: Network Inference
+
+Network inference methods define edges within and between tables, showing how
+measurements are related to one another.
+
+<img src="figures/tree_integration.png"/>
+
+---
+
+### Challenges
+
+1. Alignability: If one modality has little in common with the rest, then
+including it forces us to ignore real shared variation in the other modalities.
+
+1. Benchmarking: Directly validating associations is costly, so methods have to
+be compared through proxies or simulation.
+
+---
+
+### Exercise
 
 ---
 
