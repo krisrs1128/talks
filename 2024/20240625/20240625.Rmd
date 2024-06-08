@@ -99,7 +99,7 @@ possible. We shouldn't pretend that we haven't seen related data before!
 groups of samples. These are often called "batch effects."
 
 .center[
-<img src="figures/horizontal_integration.png" width=900/>
+<img src="figures/horizontal_integration.png" width=600/>
 ]
 
 ---
@@ -130,17 +130,11 @@ categories,
 1. Correct: Normalize the data before any downstream analysis.
 1. Account: Directly model batch-to-batch variation in the downstream analysis.
 
----
 
-### General Approaches
-
-We'll focus on correction methods, since they can benefit most directly from
-simulation.
-
-|--|---|---|
 |  | Pros | Cons |
+|--|---|---|
 | Correct | Generality. Allows for any downstream analysis. | Can introduce its own artifacts. |
-| Account | Cohesion. Only one method needed for everything.  | Time consuming. Analysis becomes "to big to fail." |
+| Account | Cohesion. Only one method needed for everything.  | Time consuming. Methods become "to big to fail." |
 
 ---
 
@@ -151,9 +145,11 @@ A powerful idea in correction methods is to make proper use of controls:
 * Replication: At specific stages of analysis, you can create replicates to clarify the nature of subsequent variation.
 * Negative Controls: The experiment can be designed so that some features will not vary with interesting biological variation.
 
-Effective replication and controls can help distinguish between biological
-variation that happens upstream (in the original sample) and technical variation
-that is introduced downstream (during the sample preparation and sequencing).
+Effective replication and controls can help distinguish between upstream
+biological variation (from the original sample) and technical variation
+introduced later (during the sample preparation and sequencing).
+
+<img src="figures/variation_stages.png" width=600/>
 
 ---
 <!-- 
