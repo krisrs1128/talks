@@ -51,6 +51,12 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
+<div id="title">
+Semisynthetic Simulation for Biological Data Analysis
+</div>
+<div id="under_title">
+Session 3: Integrative Analysis
+</div>
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -68,42 +74,182 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 ### Session 3: Integrative Simulation
 
-1. Discuss the building blocks of simulation for P and N-integrative data analysis
-  * How to induce correlation across different assay types
-  * How to define batch effects across multiple studies
-2. Apply an integrative simulator to support power analysis and benchmarking in the presence of multiple batches or assays
-3. Critically evaluate novel simulators across omic types: microbiome, single-cell, spatial, reads.
+Learning Outcomes:
 
-3. Discuss how to evaluate a simulator using summary metrics and discriminator classification
+1. Explain and distinguish between the horizontal and vertical integration problems.
+1. Discuss how simulation can improve validity and power in horizontal and vertical integration workflows.
+1. Design simulators that respect batch or multi-omics structure to support
+integration applications.
 
 ---
 
 class: middle
 
 .center[
-## Evaluation
+## Horizontal Integration
 ]
 
 ---
 
-### Motivation
+### Problem
 
+1. To maximize power, it helps to combine as many relevant datasets as possible.
+
+1. Unfortunately, technical factors can cause systematic differences between
+groups of samples. These are often called "batch effects."
+
+.center[
+  Horizontal Integration figure from NUS slides
+]
 
 ---
 
-### Qualitative Checks
+### Sources of Batch Variation
+
+These kind of unwanted variation can result from:
+
+* Variation in experimental or sequencing protocols.
+
+* Differences in library size.
+
+* Variation in dataset storage methods.
+
+* Uninteresting, but real, biological variation: situation in cell cycle,
+differing proportions of dead cells.
+
+.center[
+]
 
 ---
 
-### Quantitative Summaries
+### General Approaches
+
+Many methods have been proposed to do this. They mostly fall into one of two
+categories,
+
+1. Correct: Normalize the data before any downstream analysis.
+1. Account: Directly model batch-to-batch variation in the downstream analysis.
 
 ---
 
-### Classification-Guided
+### General Approaches
 
-1. An idea explored in `r Citep(bib, c("Sankaran2020", "Sajjadi2019",
-"Friedman2002"))` is to evaluate a simulator by how well a classifier can
-distinguish real vs. synthetic samples.
+We'll focus on correction methods, since they can benefit most directly from
+simulation.
 
-1. By interpreting the fitted model, it's also possible to identify real-data
-properties that the simulator doesn't accurately capture.
+|--|---|---|
+|  | Pros | Cons |
+| Correct | Generality. Allows for any downstream analysis. | Can introduce its own artifacts. |
+| Account | Cohesion. Only one method needed for everything.  | Time consuming. Analysis becomes "to big to fail." |
+
+---
+
+### Controls
+
+A powerful idea in correction methods is to make proper use of controls:
+
+* Replication: At specific stages of analysis, you can create replicates to clarify the nature of subsequent variation.
+* Negative Controls: The experiment can be designed so that some features will not vary with interesting biological variation.
+
+Effective replication and controls can help distinguish between biological
+variation that happens upstream (in the original sample) and technical variation
+that is introduced downstream (during the sample preparation and sequencing).
+
+---
+<!-- 
+### Analogy: Agriculture
+
+These ideas have classical analogs in agricultural field trials.
+
+Replication $\iff$ Growing the same variety in separate fields
+Negative Controls $\iff$ Growing a variety with no agricultural inputs
+
+?
+ -->
+
+<!-- --- -->
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Overcorrection: Real biological variation can be masked by overly aggressive
+batch effect correction methods.
+]
+
+.pull-right[
+
+]
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated $p$-values. 
+]
+
+.pull-right[
+
+]
+
+---
+
+### Simulation
+
+Simulation can give insight into the behavior of correction methods and their
+influence on downstream analysis. 
+
+1. Overcorrection: We can simulate possible forms of biological and batch
+variation and benchmark using this as ground truth.
+
+1. Miscalibration: We can create data with known null and nonnull genes and
+calculate power and false discovery rates.
+
+---
+
+### Exercise
+
+---
+
+class: middle
+
+.center[
+## Vertical Integration
+]
+
+---
+
+### Problem
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 4)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 5, end = 8)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 9, end = 12)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 13, end = 20)
+```
