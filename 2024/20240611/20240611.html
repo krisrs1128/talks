@@ -44,10 +44,11 @@ By the end of this course, you will be able to...
 
 1. Describe simulators: What are their building blocks and core properties?
 
-1. Apply simulators: How can we use them to efficiently solve power
-analysis and benchmarking problems in biostatistics and computational biology?
+1. Apply simulators: Know how to use simulation at different stages of the
+multi-omics data analysis to guide workflow design and interpretation.
 
-1. Compare simulators: What are current trends and their implications?
+1. Critique simulators: Compare and contrast real with simulated data using
+effective data visualizations.
 
 ---
 
@@ -86,10 +87,10 @@ analysis and benchmarking problems in biostatistics and computational biology?
 By the end of this session, you will be able to...
 
 1. Manipulate and interpret `SummarizedExperiment` experiment objects. 
-1. Discuss the building blocks of marginal simulation: Probability distributions
-and regression models.
-1. Design a power analysis for differential testing and accurately communicate its results.
-1. Identify areas of your own research where simulation could help better allocate limited resources.
+1. Design a power analysis for differential testing and accurately communicate
+its results.
+1. Identify areas of your own research where simulation could help better
+allocate limited resources.
 
 ---
 
@@ -123,11 +124,6 @@ ecology, they want to know:
 ]
 
 .pull-right[
-
-``` r
-include_graphics("https://whatislife.stanford.edu/images/spatial.png")
-```
-
 &lt;div class="figure" style="text-align: center"&gt;
 &lt;img src="https://whatislife.stanford.edu/images/spatial.png" alt="The microbiome along the gut lining, from ."  /&gt;
 &lt;p class="caption"&gt;The microbiome along the gut lining, from .&lt;/p&gt;
@@ -256,7 +252,7 @@ We will debrief responses as a group.
 class: middle
 
 .center[
-## Statistical Approach
+## Statistical Concepts
 ]
 
 ---
@@ -264,12 +260,11 @@ class: middle
 ### Approach
 
 The richer our vocabulary for generative models, the better chance we'll have of
-finding a realistic simulation mechanism. To this end, we need to familiarize
-ourselves with:
+finding a realistic simulation mechanism. Most modern methods have three parts.
 
-1. **Types of data that can serve as templates.**
+1. **A template dataset on which to base the simulator.**
 1. Flexible families of probability distributions.
-1. Regression concepts that allow us to fit generative models.
+1. Regressions to relate samples to experimental or biological factors.
 
 .center[
 &lt;img src="figure/summarized_experiment_focus.png" width=150/&gt;
@@ -280,12 +275,11 @@ ourselves with:
 ### Approach
 
 The richer our vocabulary for generative models, the better chance we'll have of
-finding a realistic simulation mechanism. To this end, we need to familiarize
-ourselves with:
+finding a realistic simulation mechanism. Most modern methods have three parts.
 
-1. Types of data that can serve as templates.
+1. A template dataset on which to base the simulator.
 1. **Flexible families of probability distributions.**
-1. Regression concepts that allow us to fit generative models.
+1. Regressions to relate samples to experimental or biological factors.
 
 .center[
   &lt;img src="figure/distributions.png" width=700/&gt;
@@ -296,12 +290,12 @@ ourselves with:
 ### Approach
 
 The richer our vocabulary for generative models, the better chance we'll have of
-finding a realistic simulation mechanism. To this end, we need to familiarize
-ourselves with:
+finding a realistic simulation mechanism. Most modern methods have three parts.
 
-1. Types of data that can serve as templates.
+1. A template dataset on which to base the simulator.
 1. Flexible families of probability distributions.
-1. **Regression concepts that allow us to fit generative models.**
+1. **Regressions to relate samples to experimental or biological factors.**
+
 
 .center[
   &lt;img src="figure/marginal_dependence.png" width=500/&gt;
@@ -320,15 +314,6 @@ let us concisely learn: Design + Biology `\(\to\)` Sequencing.
 .pull-right[
 &lt;img src="figure/summarized_experiment.svg" width=880/&gt;
 ]
-
----
-
-### Demo
-
-You can follow along here,
-
-* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
-* Live Link: 
 
 ---
 
@@ -351,73 +336,15 @@ head(colData(atlas))
 
 ```
 ## DataFrame with 6 rows and 11 columns
-##                age      sex nationality DNA_extraction_method  project
-##          &lt;integer&gt; &lt;factor&gt;    &lt;factor&gt;              &lt;factor&gt; &lt;factor&gt;
-## Sample-1        28   male            US                    NA        1
-## Sample-2        24   female          US                    NA        1
-## Sample-3        52   male            US                    NA        1
-## Sample-5        25   female          US                    NA        1
-## Sample-6        42   male            US                    NA        1
-## Sample-8        27   female          US                    NA        1
-##          diversity bmi_group  subject      time      sample log_depth
-##          &lt;numeric&gt;  &lt;factor&gt; &lt;factor&gt; &lt;numeric&gt; &lt;character&gt; &lt;numeric&gt;
-## Sample-1      5.76     obese        1         0    Sample-1   8.93498
-## Sample-2      6.06     obese        2         0    Sample-2   9.22503
-## Sample-3      5.50     lean         3         0    Sample-3   8.87221
-## Sample-5      5.89     lean         5         0    Sample-5   9.39266
-## Sample-6      5.53     lean         6         0    Sample-6   8.97639
-## Sample-8      5.38     lean         8         0    Sample-8   9.07154
+##                age      sex nationality DNA_extraction_method  project diversity bmi_group  subject      time      sample log_depth
+##          &lt;integer&gt; &lt;factor&gt;    &lt;factor&gt;              &lt;factor&gt; &lt;factor&gt; &lt;numeric&gt;  &lt;factor&gt; &lt;factor&gt; &lt;numeric&gt; &lt;character&gt; &lt;numeric&gt;
+## Sample-1        28   male            US                    NA        1      5.76     obese        1         0    Sample-1   8.93498
+## Sample-2        24   female          US                    NA        1      6.06     obese        2         0    Sample-2   9.22503
+## Sample-3        52   male            US                    NA        1      5.50     lean         3         0    Sample-3   8.87221
+## Sample-5        25   female          US                    NA        1      5.89     lean         5         0    Sample-5   9.39266
+## Sample-6        42   male            US                    NA        1      5.53     lean         6         0    Sample-6   8.97639
+## Sample-8        27   female          US                    NA        1      5.38     lean         8         0    Sample-8   9.07154
 ```
-
----
-
-### Count Distributions: `\(\text{Poi}\left(\lambda\right)\)`
-
-This distribution arises when we count the number of successes from a large `\(N\)`
-trials, each with low probability `\(p\)` of success [11].
-
-* Flip a very low probability coin a million times.
-* Count a million reads' alignment to a rare DNA sequence.
-
-The Poisson parameter `\(\lambda \approx N p\)`.
-
-.center[
-&lt;img src="figure/poisson_reads.png" width=600/&gt;
-]
-
----
-
-### Count Distributions: Negative Binomial
-
-* This distribution arises when the Poisson parameter is itself random.
-* E.g., the coin's probability of heads is no longer constant
-
-`\(\text{NB}(\mu = 100, \varphi = 5)\)`
-
-&lt;img src="20240611_files/figure-html/unnamed-chunk-5-1.png" width="700" style="display: block; margin: auto;" /&gt;
-
----
-
-### Count Distributions: Zero-Inflation
-
-Genomic data often have many more zeros than these distributions alone would
-capture, so it's common to define zero-inflated versions of the previous
-distributions [12].
-
-`\(\text{Poi}(\lambda = 10)\)` with `\(\nu = 0.5\)` zero inflation:
-
-&lt;img src="20240611_files/figure-html/unnamed-chunk-6-1.png" width="650" style="display: block; margin: auto;" /&gt;
-
----
-
-### GAMLSS
-
-We will focus on using Generalized Additive Models of Location Shape and Scale
-(GAMLSS) [13; 14].  These
-models allow each parameter of a distribution to depend on predictors in a
-smooth way.
-
-&lt;img src="20240611_files/figure-html/unnamed-chunk-7-1.png" width="750" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -491,7 +418,6 @@ sim |&gt;
 
 ### Estimation &amp; Sampling
 
-
 Once a simulator is defined, it can be estimated with `estimate`.
 
 
@@ -556,17 +482,23 @@ class: middle
 ]
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Complete Solutions: 
 * Live Demo: 
 
 ---
 
 ### Summary
 
+1. Guiding philosophy:
+
+  * In experimental biology, controls can be used to validate data generation.
+  * In computational biology, simulation can be used to validate statistical claims.
+
 1. Power and FDR rates from simulated experiments can guide concrete, computational power analysis.
-1. We have several probability families available for marginal simulation.
+
 1. `SummarizedExperiment` streamlines interaction with experimental data. `assay()`, `rowData()`, and `colData()` are useful accessors.
+
 1. To define a simulator in `scDesigner`, use `setup_simulator()` with R's formula syntax, like `~ treatment + time`.
-1. The main operations on a simulator object are: `estimate(), mutate()`, and `sample()`.
 
 ---
 
@@ -582,70 +514,49 @@ Marginal `\(\to\)` &lt;span style="color:#8C1F33"&gt;Multivariate&lt;/span&gt; `
 
 ### References
 
-[1] J. A. Gilbert, M. J. Blaser, J. G. Caporaso, J. K. Jansson, S. V.
-Lynch, and R. Knight. "Current understanding of the human microbiome".
-En. In: _Nat. Med._ 24.4 (Apr. 2018), pp. 392-400.
+[1] J. A. Gilbert, M. J. Blaser, J. G. Caporaso, J. K. Jansson, S. V. Lynch, and R. Knight. "Current understanding of the human microbiome". En. In: _Nat. Med._ 24.4
+(Apr. 2018), pp. 392-400.
 
-[2] H. Li and H. Li. "Introduction to special issue on statistics in
-microbiome and metagenomics". En. In: _Stat. Biosci._ 13.2 (Jul. 2021),
-pp. 197-199.
+[2] H. Li and H. Li. "Introduction to special issue on statistics in microbiome and metagenomics". En. In: _Stat. Biosci._ 13.2 (Jul. 2021), pp. 197-199.
 
-[3] L. Waldron. "Data and statistical methods to analyze the human
-microbiome". En. In: _mSystems_ 3.2 (Apr. 2018).
+[3] L. Waldron. "Data and statistical methods to analyze the human microbiome". En. In: _mSystems_ 3.2 (Apr. 2018).
 
-[4] M. Cappellato, G. Baruzzo, and B. Di Camillo. "Investigating
-differential abundance methods in microbiome data: A benchmark study".
-En. In: _PLoS Comput. Biol._ 18.9 (Sep. 2022), p. e1010467.
+[4] M. Cappellato, G. Baruzzo, and B. Di Camillo. "Investigating differential abundance methods in microbiome data: A benchmark study". En. In: _PLoS Comput. Biol._
+18.9 (Sep. 2022), p. e1010467.
 
 ---
 
-[5] M. Calgaro, C. Romualdi, L. Waldron, D. Risso, and N. Vitulo.
-"Assessment of statistical methods from single cell, bulk RNA-seq, and
-metagenomics applied to microbiome data". En. In: _Genome Biol._ 21.1
-(Aug. 2020), p. 191.
+[5] M. Calgaro, C. Romualdi, L. Waldron, D. Risso, and N. Vitulo. "Assessment of statistical methods from single cell, bulk RNA-seq, and metagenomics applied to
+microbiome data". En. In: _Genome Biol._ 21.1 (Aug. 2020), p. 191.
 
-[6] L. Yang and J. Chen. "A comprehensive evaluation of microbial
-differential abundance analysis methods: current status and potential
-solutions". En. In: _Microbiome_ 10.1 (Aug. 2022), p. 130.
+[6] L. Yang and J. Chen. "A comprehensive evaluation of microbial differential abundance analysis methods: current status and potential solutions". En. In: _Microbiome_
+10.1 (Aug. 2022), p. 130.
 
-[7] T. Sun, D. Song, W. V. Li, and J. J. Li. "scDesign2: a transparent
-simulator that generates high-fidelity single-cell gene expression
-count data with gene correlations captured". En. In: _Genome Biol._
-22.1 (May. 2021), p. 163.
+[7] T. Sun, D. Song, W. V. Li, and J. J. Li. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene
+correlations captured". En. In: _Genome Biol._ 22.1 (May. 2021), p. 163.
 
-[8] D. Song, Q. Wang, G. Yan, T. Liu, T. Sun, and J. J. Li. "scDesign3
-generates realistic in silico data for multimodal single-cell and
-spatial omics". En. In: _Nat. Biotechnol._ 42.2 (Feb. 2024), pp.
-247-252.
+[8] D. Song, Q. Wang, G. Yan, T. Liu, T. Sun, and J. J. Li. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nat.
+Biotechnol._ 42.2 (Feb. 2024), pp. 247-252.
 
 ---
 
-[9] K. Sankaran and S. P. Holmes. "Generative Models: An
-Interdisciplinary Perspective". In: _Annual Review of Statistics and
-Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN: 2326-831X. DOI:
-[10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134).
+[9] K. Sankaran and S. P. Holmes. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p.
+325–352. ISSN: 2326-831X. DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134).
 
-[10] W. Huber, V. J. Carey, R. Gentleman, S. Anders, M. Carlson, B. S.
-Carvalho, H. C. Bravo, S. Davis, L. Gatto, T. Girke, et al.
-"Orchestrating high-throughput genomic analysis with Bioconductor". En.
-In: _Nat. Methods_ 12.2 (Feb. 2015), pp. 115-121.
+[10] W. Huber, V. J. Carey, R. Gentleman, S. Anders, M. Carlson, B. S. Carvalho, H. C. Bravo, S. Davis, L. Gatto, T. Girke, et al. "Orchestrating high-throughput
+genomic analysis with Bioconductor". En. In: _Nat. Methods_ 12.2 (Feb. 2015), pp. 115-121.
 
-[11] S. Holmes and W. Huber. _Modern statistics for modern biology_.
-En. Cambridge, England: Cambridge University Press, Feb. 2019.
+[11] S. Holmes and W. Huber. _Modern statistics for modern biology_. En. Cambridge, England: Cambridge University Press, Feb. 2019.
 
-[12] A. Sarkar and M. Stephens. "Separating measurement and expression
-models clarifies confusion in single-cell RNA sequencing analysis". En.
-In: _Nat. Genet._ 53.6 (Jun. 2021), pp. 770-777.
+[12] A. Sarkar and M. Stephens. "Separating measurement and expression models clarifies confusion in single-cell RNA sequencing analysis". En. In: _Nat. Genet._ 53.6
+(Jun. 2021), pp. 770-777.
 
 ---
 
-[13] R. A. Rigby and D. M. Stasinopoulos. "Generalized additive models
-for location, scale and shape". En. In: _J. R. Stat. Soc. Ser. C. Appl.
-Stat._ 54.3 (Jun. 2005), pp. 507-554.
+[13] R. A. Rigby and D. M. Stasinopoulos. "Generalized additive models for location, scale and shape". En. In: _J. R. Stat. Soc. Ser. C. Appl. Stat._ 54.3 (Jun. 2005),
+pp. 507-554.
 
-[14] D. M. Stasinopoulos and R. A. Rigby. "Generalized additive models
-for location scale and shape (GAMLSS) inR". In: _J. Stat. Softw._ 23.7
-(2007).
+[14] D. M. Stasinopoulos and R. A. Rigby. "Generalized additive models for location scale and shape (GAMLSS) inR". In: _J. Stat. Softw._ 23.7 (2007).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

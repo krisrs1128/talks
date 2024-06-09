@@ -123,10 +123,10 @@ effective data visualizations.
 By the end of this session, you will be able to...
 
 1. Manipulate and interpret `SummarizedExperiment` experiment objects. 
-1. Design a power analysis for differential testing and accurately communicate
-its results.
-1. Identify areas of your own research where simulation could help better
-allocate limited resources.
+1. Discuss the building blocks of marginal simulation: Probability distributions
+and regression models.
+1. Design a power analysis for differential testing and accurately communicate its results.
+1. Identify areas of your own research where simulation could help better allocate limited resources.
 
 ---
 
@@ -160,7 +160,7 @@ ecology, they want to know:
 ]
 
 .pull-right[
-```{r, fig.cap = paste0("The microbiome along the gut lining, from ", Citep(bib, 'Earle2015'), "."), fig.align = "center", echo = FALSE}
+```{r, fig.cap = paste0("The microbiome along the gut lining, from ", Citep(bib, 'Earle2015'), "."), fig.align = "center"}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -303,7 +303,7 @@ We will debrief responses as a group.
 class: middle
 
 .center[
-## Statistical Concepts
+## Statistical Approach
 ]
 
 ---
@@ -311,11 +311,12 @@ class: middle
 ### Approach
 
 The richer our vocabulary for generative models, the better chance we'll have of
-finding a realistic simulation mechanism. Most modern methods have three parts.
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
 
-1. **A template dataset on which to base the simulator.**
+1. **Types of data that can serve as templates.**
 1. Flexible families of probability distributions.
-1. Regressions to relate samples to experimental or biological factors.
+1. Regression concepts that allow us to fit generative models.
 
 .center[
 <img src="figure/summarized_experiment_focus.png" width=150/>
@@ -326,11 +327,12 @@ finding a realistic simulation mechanism. Most modern methods have three parts.
 ### Approach
 
 The richer our vocabulary for generative models, the better chance we'll have of
-finding a realistic simulation mechanism. Most modern methods have three parts.
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
 
-1. A template dataset on which to base the simulator.
+1. Types of data that can serve as templates.
 1. **Flexible families of probability distributions.**
-1. Regressions to relate samples to experimental or biological factors.
+1. Regression concepts that allow us to fit generative models.
 
 .center[
   <img src="figure/distributions.png" width=700/>
@@ -341,12 +343,12 @@ finding a realistic simulation mechanism. Most modern methods have three parts.
 ### Approach
 
 The richer our vocabulary for generative models, the better chance we'll have of
-finding a realistic simulation mechanism. Most modern methods have three parts.
+finding a realistic simulation mechanism. To this end, we need to familiarize
+ourselves with:
 
-1. A template dataset on which to base the simulator.
+1. Types of data that can serve as templates.
 1. Flexible families of probability distributions.
-1. **Regressions to relate samples to experimental or biological factors.**
-
+1. **Regression concepts that allow us to fit generative models.**
 
 .center[
   <img src="figure/marginal_dependence.png" width=500/>
@@ -368,6 +370,15 @@ let us concisely learn: Design + Biology $\to$ Sequencing.
 
 ---
 
+### Demo
+
+You can follow along here,
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Live Link: 
+
+---
+
 ### Important Functions
 
 To work with `SummarizedExperiment` objects, we can use:
@@ -382,6 +393,87 @@ library(MIGsim)
 
 data(atlas)
 head(colData(atlas))
+```
+
+---
+
+### Count Distributions: $\text{Poi}\left(\lambda\right)$
+
+This distribution arises when we count the number of successes from a large $N$
+trials, each with low probability $p$ of success `r Citep(bib, "Holmes2019-jr")`.
+
+* Flip a very low probability coin a million times.
+* Count a million reads' alignment to a rare DNA sequence.
+
+The Poisson parameter $\lambda \approx N p$.
+
+.center[
+<img src="figure/poisson_reads.png" width=600/>
+]
+
+---
+
+### Count Distributions: Negative Binomial
+
+* This distribution arises when the Poisson parameter is itself random.
+* E.g., the coin's probability of heads is no longer constant
+
+$\text{NB}(\mu = 100, \varphi = 5)$
+
+```{r, echo = FALSE, out.width = 700, dpi=400}
+data.frame(x = rnbinom(1000, mu = 100, size = 5)) |>
+  group_by(x) |>
+  dplyr::count() |>
+  ggplot() +
+  geom_col(aes(x, n))
+```
+
+---
+
+### Count Distributions: Zero-Inflation
+
+Genomic data often have many more zeros than these distributions alone would
+capture, so it's common to define zero-inflated versions of the previous
+distributions `r Citep(bib, "Sarkar2021-gk")`.
+
+$\text{Poi}(\lambda = 10)$ with $\nu = 0.5$ zero inflation:
+
+```{r, echo = FALSE, out.width = 650}
+x <- rpois(1000, 10) # generate poissons
+z <- rbinom(1000, 1, 0.5) # generates 0/1
+
+data.frame(x = z * x) |>
+  group_by(x) |>
+  dplyr::count() |>
+  ggplot() +
+  geom_col(aes(x, n))
+```
+
+---
+
+### GAMLSS
+
+We will focus on using Generalized Additive Models of Location Shape and Scale
+(GAMLSS) `r Citep(bib, c("Rigby2005-oe", "Stasinopoulos2007-lk"))`.  These
+models allow each parameter of a distribution to depend on predictors in a
+smooth way.
+
+```{r, echo = FALSE, out.width = 750}
+N <- 1000
+x <- runif(N)
+
+f <- spline_fun(knots = seq(0.1, 0.9, 0.2), sd = 0)
+theta <- f(x)
+y <- rnorm(N, mean = theta[, 1], sd = abs(theta[, 2]))
+data.frame(
+  x, y,
+  mu = theta[, 1], sigma = abs(theta[, 2])
+  ) |>
+  ggplot() +
+  geom_ribbon(aes(x, ymin = mu - 1.9 * sigma, ymax = mu + 1.9 * sigma), fill = "#d3d3d3") +
+  geom_line(aes(x, mu), col = "#A2004A", linewidth = 2) +
+  geom_point(aes(x, y)) +
+  theme_void()
 ```
 
 ---
@@ -423,6 +515,7 @@ sim |>
 
 ### Estimation & Sampling
 
+
 Once a simulator is defined, it can be estimated with `estimate`.
 
 ```{r}
@@ -462,23 +555,17 @@ class: middle
 ]
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
-* Complete Solutions: 
 * Live Demo: 
 
 ---
 
 ### Summary
 
-1. Guiding philosophy:
-
-  * In experimental biology, controls can be used to validate data generation.
-  * In computational biology, simulation can be used to validate statistical claims.
-
 1. Power and FDR rates from simulated experiments can guide concrete, computational power analysis.
-
+1. We have several probability families available for marginal simulation.
 1. `SummarizedExperiment` streamlines interaction with experimental data. `assay()`, `rowData()`, and `colData()` are useful accessors.
-
 1. To define a simulator in `scDesigner`, use `setup_simulator()` with R's formula syntax, like `~ treatment + time`.
+1. The main operations on a simulator object are: `estimate(), mutate()`, and `sample()`.
 
 ---
 
