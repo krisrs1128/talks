@@ -118,9 +118,8 @@ ecology, they want to know:
 
 .pull-left[
 * Who is present?
-* How do they interact with one another?
 * What are they doing? Which genes are active?
-* How does this depend on the environmental context?
+* How does this depend on the host or environmental context?
 ]
 
 .pull-right[
@@ -132,27 +131,14 @@ ecology, they want to know:
 
 ---
 
-### Study Goals
+### Hypothetical Proposal
 
 They are preparing a grant proposal about how community composition is related
 to nutrition. The want to compare the microbiomes associated with malnutrition
 and health.
 
-&lt;img src="figure/nutrition.png"/&gt;
-
----
-
-### Power Analysis
-
-Since we have the most statistical experience on the team, they ask us:
-
 .center[
-&lt;span style="font-family:'Poetsen One'; font-size: 48px;"&gt;
-How many samples are needed?
-&lt;/span&gt;
-
 &lt;img src="figure/power_curve.png" width=600px/&gt;
-
 ]
 
 &lt;span style="position: absolute; bottom: 20px"&gt;
@@ -163,20 +149,8 @@ We need to make sure the budget is wisely while ensuring the study isn't underpo
 
 ### Problem Setup
 
-.pull-left[
-This is a differential abundance problem [2; 3]. Which species are more abundant in the
-malnourished vs. control groups?
-]
-
-.pull-right[
-&lt;img src="20240611_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-### Problem Setup
-
-Many methods have been proposed for microbiome differential abundance testing [4; 5; 6]. They account for:
+This is a differential abundance problem [2; 3]. There are many methods out there that account
+for:
 
 * Potentially extreme sparsity and non-Gaussianity.
 * Uneven sequencing depth across samples.
@@ -491,8 +465,8 @@ class: middle
 
 1. Guiding philosophy:
 
-  * In experimental biology, controls can be used to validate data generation.
-  * In computational biology, simulation can be used to validate statistical claims.
+  * In experimental biology, controls can help validate data generation.
+  * In computational biology, simulation can help validate statistical claims.
 
 1. Power and FDR rates from simulated experiments can guide concrete, computational power analysis.
 

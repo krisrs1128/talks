@@ -154,9 +154,8 @@ ecology, they want to know:
 
 .pull-left[
 * Who is present?
-* How do they interact with one another?
 * What are they doing? Which genes are active?
-* How does this depend on the environmental context?
+* How does this depend on the host or environmental context?
 ]
 
 .pull-right[
@@ -167,27 +166,14 @@ include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 
 ---
 
-### Study Goals
+### Hypothetical Proposal
 
 They are preparing a grant proposal about how community composition is related
 to nutrition. The want to compare the microbiomes associated with malnutrition
 and health.
 
-<img src="figure/nutrition.png"/>
-
----
-
-### Power Analysis
-
-Since we have the most statistical experience on the team, they ask us:
-
 .center[
-<span style="font-family:'Poetsen One'; font-size: 48px;">
-How many samples are needed?
-</span>
-
 <img src="figure/power_curve.png" width=600px/>
-
 ]
 
 <span style="position: absolute; bottom: 20px">
@@ -198,36 +184,8 @@ We need to make sure the budget is wisely while ensuring the study isn't underpo
 
 ### Problem Setup
 
-.pull-left[
-This is a differential abundance problem `r Citep(bib, "Li2021-uu","Waldron2018-dx")`. Which species are more abundant in the
-malnourished vs. control groups?
-]
-
-.pull-right[
-```{r, echo = FALSE, fig.width = 4, fig.height = 5}
-library(tidyverse)
-library(ggdist)
-N <- 10
-D <- 20
-df <- matrix(rnorm(N * D), N, D)
-ix <- sample(1:D, 0.2 * D)
-df[1:nrow(df)/2, ix] <- 1 + df[1:nrow(df)/2, 1:2] 
-df |>
-  as_tibble() |>
-  mutate(group = rep(c("malnourished", "control"), each = n() / 2)) |>
-  pivot_longer(-group) |>
-  mutate(name = str_replace(name, "V", "")) |>
-  ggplot() +
-    stat_pointinterval(aes(value, name, col = group, fill = group)) +
-    labs(x = "Value", y = "Genus")
-```
-]
-
----
-
-### Problem Setup
-
-Many methods have been proposed for microbiome differential abundance testing `r Citep(bib, c( "Cappellato2022-lr", "Calgaro2020-tq", "Yang2022-gc"))`. They account for:
+This is a differential abundance problem `r Citep(bib, "Li2021-uu","Waldron2018-dx")`. There are many methods out there that account
+for:
 
 * Potentially extreme sparsity and non-Gaussianity.
 * Uneven sequencing depth across samples.
@@ -471,8 +429,8 @@ class: middle
 
 1. Guiding philosophy:
 
-  * In experimental biology, controls can be used to validate data generation.
-  * In computational biology, simulation can be used to validate statistical claims.
+  * In experimental biology, controls can help validate data generation.
+  * In computational biology, simulation can help validate statistical claims.
 
 1. Power and FDR rates from simulated experiments can guide concrete, computational power analysis.
 
