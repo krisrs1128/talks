@@ -160,7 +160,7 @@ ecology, they want to know:
 ]
 
 .pull-right[
-```{r, fig.cap = paste0("The microbiome along the gut lining, from ", Citep(bib, 'Earle2015'), "."), fig.align = "center", echo = FALSE}
+```{r, out.width = 250, fig.cap = paste0("The microbiome along the gut lining, from ", Citep(bib, 'Earle2015-wt'), "."), fig.align = "center", echo = FALSE}
 include_graphics("https://whatislife.stanford.edu/images/spatial.png")
 ```
 ]
@@ -462,7 +462,7 @@ class: middle
 ]
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
-* Complete Solutions: 
+* Complete Solutions: [go.wisc.edu/v986n5](https://go.wisc.edu/v986n5)
 * Live Demo: 
 
 ---
