@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Semisynthetic Simulation for Biological Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+
+
+&lt;div id="title"&gt;
+Semisynthetic Simulation for Biological Data Analysis
+&lt;/div&gt;
+&lt;div id="under_title"&gt;
+Session 3: Integrative Analysis
+&lt;/div&gt;
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+25 | June | 2024 &lt;br/&gt;
+Melbourne Integrative Genomics&lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+&lt;!-- Slides: &lt;a href="https://go.wisc.edu/u10492"&gt;go.wisc.edu/u10492&lt;/a&gt;  --&gt;
+&lt;/div&gt;
+
+---
+
+### Learning Outcomes:
+
+1. Explain and distinguish between the horizontal and vertical integration
+problems.
+1. Discuss how simulation can improve validity and power in horizontal and
+vertical integration workflows.
+1. Design simulators that respect batch or multi-omics structure to support
+integration applications.
+
+---
+
+class: middle
+
+.center[
+## Horizontal Integration
+]
+
+---
+
+### Motivation
+
+1. We can learn a lot by paying attention to as many relevant datasets as
+possible. We shouldn't pretend that we haven't seen related data before!
+
+1. Unfortunately, technical factors can cause systematic differences between
+groups of samples. These are often called "batch effects."
+
+.center[
+&lt;img src="figures/horizontal_integration.png" width=600/&gt;
+]
+
+---
+
+### Sources of Batch Variation
+
+These kind of unwanted variation can result from:
+
+* Variation in experimental or sequencing protocols.
+
+* Differences in library size.
+
+* Variation in dataset storage methods.
+
+* Uninteresting, but real, biological variation: situation in cell cycle,
+differing proportions of dead cells.
+
+.center[
+]
+
+---
+
+### General Approaches
+
+Many methods have been proposed to do this. They mostly fall into one of two
+categories,
+
+1. Correct: Normalize the data before any downstream analysis.
+1. Account: Directly model batch-to-batch variation in the downstream analysis.
+
+
+|  | Pros | Cons |
+|--|---|---|
+| Correct | Generality. Allows for any downstream analysis. | Can introduce its own artifacts. |
+| Account | Cohesion. Only one method needed for everything.  | Time consuming. Methods become "to big to fail." |
+
+---
+
+### Controls
+
+A powerful idea in correction methods is to make proper use of controls:
+
+* Replication: At specific stages of analysis, you can create replicates to clarify the nature of subsequent variation.
+* Negative Controls: The experiment can be designed so that some features will not vary with interesting biological variation.
+
+Effective replication and controls can help distinguish between upstream
+biological variation (from the original sample) and technical variation
+introduced later (during the sample preparation and sequencing).
+
+---
+&lt;!-- 
+### Analogy: Agriculture
+
+These ideas have classical analogs in agricultural field trials.
+
+Replication `\(\iff\)` Growing the same variety in separate fields
+Negative Controls `\(\iff\)` Growing a variety with no agricultural inputs
+
+?
+ --&gt;
+
+&lt;!-- --- --&gt;
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Overcorrection: Real biological variation can be masked by overly aggressive
+batch effect correction methods.
+]
+
+.pull-right[
+
+]
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated `\(p\)`-values. 
+]
+
+.pull-right[
+
+]
+
+---
+
+### Simulation
+
+Simulation can give insight into the behavior of correction methods and their
+influence on downstream analysis. 
+
+1. Overcorrection: We can simulate possible forms of biological and batch
+variation and benchmark using this as ground truth.
+
+1. Miscalibration: We can create data with known null and nonnull genes and
+calculate power and false discovery rates.
+
+---
+
+### Exercise
+
+---
+
+class: middle
+
+.center[
+## Vertical Integration
+]
+
+---
+
+### Motivation
+
+1. Horizontal integration looks at the same features across many related datasets.
+
+1. Vertical integration looks at the same dataset using many related assays.
+
+.center[
+&lt;img src="figures/vertical_integration.png" width=900/&gt;
+]
+
+---
+
+### Motivation
+
+.pull-left[
+Why is multi-omics helpful? If a living system is a symphony, then each data
+source lets us hear a new set of instruments.
+]
+
+.pull-right[
+&lt;img src="figures/symphony-score-2.png"/&gt;
+]
+&lt;br/&gt;
+&lt;br/&gt;
+.microbiome-figure-bottom[
+&lt;img src="figures/microbiome-header-2.png"&gt;&lt;/img&gt;
+]
+
+---
+
+### General Approaches: Latent Variables
+
+Latent variable methods `\(Z\)` reveal shared structure across data modalities.
+
+&lt;img src="figures/latent_integration.png"/&gt;
+
+---
+
+### General Approaches: Network Inference
+
+Network inference methods define edges within and between tables, showing how
+measurements are related to one another.
+
+&lt;img src="figures/tree_integration.png"/&gt;
+
+---
+
+### Challenges
+
+1. Alignability: If one modality has little in common with the rest, then
+including it forces us to ignore real shared variation in the other modalities.
+
+1. Benchmarking: Directly validating associations is costly, so methods have to
+be compared through proxies or simulation.
+
+---
+
+### Exercise
+
+---
+
+### References
+
+NULL
+
+---
+
+NULL
+
+---
+
+NULL
+
+---
+
+NULL
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
