@@ -51,16 +51,390 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
+<div id="title">
+Interactivity, Interpretability, and Generative Models
+</div>
 
 <div id="subtitle">
 Kris Sankaran <br/>
 16 | June | 2024 <br/>
-Melbourne Integrative Genomics<br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-<!-- Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>  -->
+Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>
 </div>
 
 ---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+* **Decisions**: They can be automate or assist with judgments that previously would have been done entirely by people.
+* **Discovery**: They can orient us within large data catalogs and can guide us towards promising hypotheses.
+* **Creativity**: They can make it easier for those without technical training to explore ideas and express themselves.
+
+For these models to be understood and beneficial for people from many
+backgrounds, we need interpretability.
+
+---
+
+### What can go wrong?
+
+.center[
+<img src="figures/asthma.png" width=1000/>
+
+Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
+]
+
+
+---
+
+### What can go wrong?
+
+.center[
+<img src="figures/adversarial-stopsign.webp" width = 600/>
+
+Example from `r Citep(bib, "Gu2017BadNetsIV")`.
+]
+
+
+---
+
+### What can go wrong?
+
+.center[
+<img src="figures/bard-hallucination.webp" width=900/>
+]
+
+---
+
+# What Makes a Model Interpretable?
+<br/>
+.center[
+<img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/>
+]
+
+---
+
+# What Makes a Model Interpretable?
+<br/>
+.center[
+<img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/>
+]
+
+<p style="font-size: 30px; position: absolute; left: 20px; top: 200px; width: 450px">
+This is a difficult questions....
+let's start with an easier one.
+</p>
+
+---
+
+# What Makes a Visualization Good?
+<br/>
+.center[
+<img src="figures/visualization.png" width=350 style="position: absolute; left: 450px"/>
+]
+
+---
+
+### Key Properties
+
+.pull-left[
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+]
+
+.pull-right[
+<img src="figures/tufte.png" width=330/>
+]
+
+---
+
+### Key Properties
+
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+
+.center[
+<img src="figures/tufte-2.png"/>
+]
+
+---
+
+### Below-the-Surface
+
+More subtly, it should pay attention to:
+
+1. **Data Provenance**: If we don't know the data sources, we should be skeptical or
+anything that's shown, no matter how compelling.
+1. **Audience**: The effectiveness of a visualization is dependent on the visual
+vocabulary of its audience.
+1. **Prioritization**: Every design emphasizes some comparisons over others. Are the
+"important" patterns visible?
+1. **Interactivity**: Does it engage the reader's problem solving capacity?
+
+We should think about model interpretability with the same nuance that we think
+about data visualization.
+
+---
+
+.center[
+## Methods
+]
+
+---
+
+### Vocabulary
+
+1. **Interpretable Model**: A model that, by virtue of its design, is easy for
+its stakeholders to accurately describe and alter.
+1. **Explainability Technique**: A method that shapes our mental models about
+black box systems.
+
+.center[
+  <img src="figures/black_box_flashlight.png" width=720/>
+]
+
+---
+
+### Vocabulary
+
+1. **Local Explanation**: An artifact for reasoning about individual predictions.
+
+1. **Global Explanation**: An artifact for reasoning about an entire model.
+
+.center[
+<img src="figures/explanation_types.png" width=800/>
+]
+
+---
+
+### Running Example
+
+Problem: Imagine sampling longitudinal microbiome profiles from 500 study
+participants, some of whom eventually developed a disease. Can we discovery any
+microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
+`r Citep(bib, 'Gosmann2017LactobacillusDeficientCB')`.
+
+.center[
+  <img src="figures/simulated-data.svg" width=830/>
+]
+
+---
+
+### Embeddings
+
+In text data, we can understand context-dependent meaning by looking for
+clusters in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
+These represent a type of interaction.
+.center[
+<img src="figures/bert_context.png" width=670/>
+]
+
+---
+
+### Embeddings
+
+We can build the analogous visualization for our microbiome problem. Samples
+that are nearby in the embedding space are similar w.r.t. predictive features.
+
+.center[
+<img src="figures/pca_comparison.svg" width=1400/>
+]
+
+---
+
+### Interpolations
+
+Another common technique is to analyze linear interpolations in this space `r Citep(bib, "Liu2019LatentSC")`.  This figure traces out the microbiome profiles
+between two samples.
+
+.center[
+<img src="figures/species_21_interpolation.svg" width=940/>
+]
+
+---
+
+
+### Concept Bottlenecks
+
+Alternatively, we can explain a decision by reducing the arbitrary feature space
+to a set of human-interpretable concepts `r Citep(bib, "Koh2020ConceptBM")`.
+This is part of a larger body of work that attempts to establish shared
+language/representations for interacting with models.
+
+.center[
+<img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
+]
+
+---
+
+### Concept Bottlenecks
+
+In the microbiome example, we could define interpretable "concepts" by looking
+at the taxa trends for commonly co-varying groups of species.
+
+.center[
+<img src="figures/concept_1.svg"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+We reconfigure our transformer model to first predict the concept label before
+making a final classification.
+
+.center[
+<img src="figures/concept_architecture.png"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+.pull-left[
+Performance is in fact slightly better than before (85%), and we also obtain
+concept labels to help us explain each instance's prediction.
+]
+
+.pull-right[
+<img src="figures/concept_probs.png"/>
+]
+
+---
+
+.center[
+  ## Current Developments
+]
+
+---
+
+### New Lingua Franca of Science
+
+.pull-left[
+1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
+2. Where is the interface with statistics?
+	- Experimental design, model building, and decision-making.
+]
+
+.pull-right[
+.center[
+<img src="figures/esm.png"/>
+]
+
+The E3SM is used for long-term climate projections.
+]
+
+---
+
+### New Lingua Franca of Science
+
+.pull-left[
+1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
+2. Where is the interface with statistics?
+	- Experimental design, model building, and decision-making.
+]
+
+.pull-right[
+.center[
+<img src="figures/splatter.png"/>
+]
+
+Splatter generates synthetic single-cell genomics data.
+]
+
+---
+
+### Grammar of Generative Models
+
+Transparent simulators can be built by interactively composing simple modules. Probabilistic programming has simplified the process.
+
+.pull-three-left[
+<img src="figures/modules.jpeg" width=700/>
+]
+
+.pull-three-right[
+a. Regression <br/>
+b: Hierarchy <br/>
+c: Latent Structure <br/>
+d: Temporal Variation
+]
+
+---
+
+### Discrepancy and Iterability
+
+By learning a discriminator to contrast real vs. simulated data, we can systematically improve the assumed generative mechanism.
+
+.center[
+<img src="figures/iterability.jpeg" width=730/>
+]
+
+---
+
+### Experimental Design Renaissance
+
+Let's consider a microbiomics case study: To block or not to block?
+
+* Blocking removes person-level effects...
+* ...but increases participant burden.
+
+<img src="figures/blocking_simplex.png"/>
+
+---
+
+### Simulation to the Rescue
+
+How can we navigate trade-offs like this? Simulate!
+
+.center[
+<img src="figures/blocking.jpeg" width=840/>
+]
+
+Simulators provide data for more precise decision-making.
+
+---
+
+### Covasim
+
+Following the outbreak of COVID-19, the research community came together to build simulators that could inform pandemic response.
+* E.g., "What would happen if we held classes remotely for two weeks?"
+	
+.center[
+<img src="figures/covasim.png" width=700/>
+]
+
+---
+
+### Covasim
+
+Covasim is an example of an agent-based model. Starting from local interaction
+rules, it lets us draw global inferences.
+
+<img src="figures/emulation.jpeg"/>
+
+Statistical emulators mimic the relationship between input hyperparameters and
+output data, substantially reducing the computational burden.
+
+---
+
+### Conclusion
+
+This talk is based on:
+* [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134) (doi:10.1146/annurev-statistics-033121-110134)
+* [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552) (arxiv.org/abs/2405.10552)
+
+Acknowledgments: 
+
+---
+
+### References
