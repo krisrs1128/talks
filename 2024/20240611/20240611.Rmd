@@ -421,7 +421,7 @@ class: middle
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
 * Complete Solutions: [go.wisc.edu/v986n5](https://go.wisc.edu/v986n5)
-* Live Demo: 
+* Live Demo: [go.wisc.edu/0vr50d](https://go.wisc.edu/0vr50d)
 
 ---
 
