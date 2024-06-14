@@ -27,7 +27,7 @@ Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt
 &lt;/div&gt;
 
 &lt;div id="subtitle_right"&gt;
-Slides: &lt;a href="https://go.wisc.edu/u10492"&gt;go.wisc.edu/u10492&lt;/a&gt;
+Slides: &lt;a href="https://go.wisc.edu/3u4m16"&gt;go.wisc.edu/3u4m16&lt;/a&gt;
 &lt;/div&gt;
 
 ---
@@ -50,7 +50,7 @@ backgrounds, we need interpretability.
 .center[
 &lt;img src="figures/asthma.png" width=1000/&gt;
 
-Example from (Caruana et al., 2015).
+Example from (Caruana, Lou, Gehrke, Koch, Sturm, and Elhadad, 2015).
 ]
 
 
@@ -61,7 +61,7 @@ Example from (Caruana et al., 2015).
 .center[
 &lt;img src="figures/adversarial-stopsign.webp" width = 600/&gt;
 
-Example from (Gu et al., 2017).
+Example from (Gu, Dolan-Gavitt, and Garg, 2017).
 ]
 
 
@@ -151,7 +151,9 @@ about data visualization.
 
 ---
 
+.center[
 ## Methods
+]
 
 ---
 
@@ -180,6 +182,106 @@ black box systems.
 
 ---
 
+### Running Example
+
+Problem: Imagine sampling longitudinal microbiome profiles from 500 study
+participants, some of whom eventually developed a disease. Can we discovery any
+microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
+(Gosmann, Anahtar, Handley, Farcasanu, Abu-Ali, Bowman, Padavattan, Desai, Droit, Moodley, Dong, Chen, Ismail, Ndung’u, Ghebremichael, Wesemann, Mitchell, Dong, Huttenhower, Walker, Virgin, and Kwon, 2017).
+
+.center[
+  &lt;img src="figures/simulated-data.svg" width=830/&gt;
+]
+
+---
+
+### Embeddings
+
+In text data, we can understand context-dependent meaning by looking for
+clusters in the PCA of embeddings (Coenen, Reif, Yuan, Kim, Pearce, Viégas, and Wattenberg, 2019).
+These represent a type of interaction.
+.center[
+&lt;img src="figures/bert_context.png" width=670/&gt;
+]
+
+---
+
+### Embeddings
+
+We can build the analogous visualization for our microbiome problem. Samples
+that are nearby in the embedding space are similar w.r.t. predictive features.
+
+.center[
+&lt;img src="figures/pca_comparison.svg" width=1400/&gt;
+]
+
+---
+
+### Interpolations
+
+Another common technique is to analyze linear interpolations in this space (Liu, Jun, Li, and Heer, 2019).  This figure traces out the microbiome profiles
+between two samples.
+
+.center[
+&lt;img src="figures/species_21_interpolation.svg" width=940/&gt;
+]
+
+---
+
+
+### Concept Bottlenecks
+
+Alternatively, we can explain a decision by reducing the arbitrary feature space
+to a set of human-interpretable concepts (Koh, Nguyen, Tang, Mussmann, Pierson, Kim, and Liang, 2020).
+This is part of a larger body of work that attempts to establish shared
+language/representations for interacting with models.
+
+.center[
+&lt;img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/&gt; 
+]
+
+---
+
+### Concept Bottlenecks
+
+In the microbiome example, we could define interpretable "concepts" by looking
+at the taxa trends for commonly co-varying groups of species.
+
+.center[
+&lt;img src="figures/concept_1.svg"/&gt;
+]
+
+---
+
+### Concept Bottlenecks
+
+We reconfigure our transformer model to first predict the concept label before
+making a final classification.
+
+.center[
+&lt;img src="figures/concept_architecture.png"/&gt;
+]
+
+---
+
+### Concept Bottlenecks
+
+.pull-left[
+Performance is in fact slightly better than before (85%), and we also obtain
+concept labels to help us explain each instance's prediction.
+]
+
+.pull-right[
+&lt;img src="figures/concept_probs.png"/&gt;
+]
+
+---
+
+.center[
+  ## Current Developments
+]
+
+---
 
 ### New Lingua Franca of Science
 
@@ -275,7 +377,6 @@ Following the outbreak of COVID-19, the research community came together to buil
 .center[
 &lt;img src="figures/covasim.png" width=700/&gt;
 ]
-	
 
 ---
 
@@ -291,8 +392,19 @@ output data, substantially reducing the computational burden.
 
 ---
 
-### Conclusion
+### Thank you!
 
+*This talk is based on*,
+* [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134) (doi:10.1146/annurev-statistics-033121-110134)
+* [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552) (arxiv.org/abs/2405.10552)
+
+*Acknowledgments*
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
+* Funding: NIGMS R01GM152744.
+
+---
+
+### References
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

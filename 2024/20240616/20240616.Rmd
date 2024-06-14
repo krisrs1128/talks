@@ -62,7 +62,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>
+Slides: <a href="https://go.wisc.edu/3u4m16">go.wisc.edu/3u4m16</a>
 </div>
 
 ---
@@ -427,13 +427,15 @@ output data, substantially reducing the computational burden.
 
 ---
 
-### Conclusion
+### Thank you!
 
-This talk is based on:
+*This talk is based on*,
 * [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134) (doi:10.1146/annurev-statistics-033121-110134)
 * [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552) (arxiv.org/abs/2405.10552)
 
-Acknowledgments: 
+*Acknowledgments*
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
+* Funding: NIGMS R01GM152744.
 
 ---
 
