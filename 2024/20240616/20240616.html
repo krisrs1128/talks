@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>20240616.knit</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+
+
+&lt;div id="title"&gt;
+Interactivity, Interpretability, and Generative Models
+&lt;/div&gt;
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+16 | June | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+Slides: &lt;a href="https://go.wisc.edu/u10492"&gt;go.wisc.edu/u10492&lt;/a&gt;
+&lt;/div&gt;
+
+---
+
+### The Context
+
+Models are woven into the fabric of modern life,
+
+* **Decisions**: They can be automate or assist with judgments that previously would have been done entirely by people.
+* **Discovery**: They can orient us within large data catalogs and can guide us towards promising hypotheses.
+* **Creativity**: They can make it easier for those without technical training to explore ideas and express themselves.
+
+For these models to be understood and beneficial for people from many
+backgrounds, we need interpretability.
+
+---
+
+### What can go wrong?
+
+.center[
+&lt;img src="figures/asthma.png" width=1000/&gt;
+
+Example from (Caruana et al., 2015).
+]
+
+
+---
+
+### What can go wrong?
+
+.center[
+&lt;img src="figures/adversarial-stopsign.webp" width = 600/&gt;
+
+Example from (Gu et al., 2017).
+]
+
+
+---
+
+### What can go wrong?
+
+.center[
+&lt;img src="figures/bard-hallucination.webp" width=900/&gt;
+]
+
+---
+
+# What Makes a Model Interpretable?
+&lt;br/&gt;
+.center[
+&lt;img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/&gt;
+]
+
+---
+
+# What Makes a Model Interpretable?
+&lt;br/&gt;
+.center[
+&lt;img src="figures/computer.png" width=350 style="position: absolute; left: 500px"/&gt;
+]
+
+&lt;p style="font-size: 30px; position: absolute; left: 20px; top: 200px; width: 450px"&gt;
+This is a difficult questions....
+let's start with an easier one.
+&lt;/p&gt;
+
+---
+
+# What Makes a Visualization Good?
+&lt;br/&gt;
+.center[
+&lt;img src="figures/visualization.png" width=350 style="position: absolute; left: 450px"/&gt;
+]
+
+---
+
+### Key Properties
+
+.pull-left[
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+]
+
+.pull-right[
+&lt;img src="figures/tufte.png" width=330/&gt;
+]
+
+---
+
+### Key Properties
+
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+
+.center[
+&lt;img src="figures/tufte-2.png"/&gt;
+]
+
+---
+
+### Below-the-Surface
+
+More subtly, it should pay attention to:
+
+1. **Data Provenance**: If we don't know the data sources, we should be skeptical or
+anything that's shown, no matter how compelling.
+1. **Audience**: The effectiveness of a visualization is dependent on the visual
+vocabulary of its audience.
+1. **Prioritization**: Every design emphasizes some comparisons over others. Are the
+"important" patterns visible?
+1. **Interactivity**: Does it engage the reader's problem solving capacity?
+
+We should think about model interpretability with the same nuance that we think
+about data visualization.
+
+---
+
+## Methods
+
+---
+
+### Vocabulary
+
+1. **Interpretable Model**: A model that, by virtue of its design, is easy for
+its stakeholders to accurately describe and alter.
+1. **Explainability Technique**: A method that shapes our mental models about
+black box systems.
+
+.center[
+  &lt;img src="figures/black_box_flashlight.png" width=720/&gt;
+]
+
+---
+
+### Vocabulary
+
+1. **Local Explanation**: An artifact for reasoning about individual predictions.
+
+1. **Global Explanation**: An artifact for reasoning about an entire model.
+
+.center[
+&lt;img src="figures/explanation_types.png" width=800/&gt;
+]
+
+---
+
+
+### New Lingua Franca of Science
+
+.pull-left[
+1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
+2. Where is the interface with statistics?
+	- Experimental design, model building, and decision-making.
+]
+
+.pull-right[
+.center[
+&lt;img src="figures/esm.png"/&gt;
+]
+
+The E3SM is used for long-term climate projections.
+]
+
+---
+
+### New Lingua Franca of Science
+
+.pull-left[
+1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
+2. Where is the interface with statistics?
+	- Experimental design, model building, and decision-making.
+]
+
+.pull-right[
+.center[
+&lt;img src="figures/splatter.png"/&gt;
+]
+
+Splatter generates synthetic single-cell genomics data.
+]
+
+---
+
+### Grammar of Generative Models
+
+Transparent simulators can be built by interactively composing simple modules. Probabilistic programming has simplified the process.
+
+.pull-three-left[
+&lt;img src="figures/modules.jpeg" width=700/&gt;
+]
+
+.pull-three-right[
+a. Regression &lt;br/&gt;
+b: Hierarchy &lt;br/&gt;
+c: Latent Structure &lt;br/&gt;
+d: Temporal Variation
+]
+
+---
+
+### Discrepancy and Iterability
+
+By learning a discriminator to contrast real vs. simulated data, we can systematically improve the assumed generative mechanism.
+
+.center[
+&lt;img src="figures/iterability.jpeg" width=730/&gt;
+]
+
+---
+
+### Experimental Design Renaissance
+
+Let's consider a microbiomics case study: To block or not to block?
+
+* Blocking removes person-level effects...
+* ...but increases participant burden.
+
+&lt;img src="figures/blocking_simplex.png"/&gt;
+
+---
+
+### Simulation to the Rescue
+
+How can we navigate trade-offs like this? Simulate!
+
+.center[
+&lt;img src="figures/blocking.jpeg" width=840/&gt;
+]
+
+Simulators provide data for more precise decision-making.
+
+---
+
+### Covasim
+
+Following the outbreak of COVID-19, the research community came together to build simulators that could inform pandemic response.
+* E.g., "What would happen if we held classes remotely for two weeks?"
+	
+.center[
+&lt;img src="figures/covasim.png" width=700/&gt;
+]
+	
+
+---
+
+### Covasim
+
+Covasim is an example of an agent-based model. Starting from local interaction
+rules, it lets us draw global inferences.
+
+&lt;img src="figures/emulation.jpeg"/&gt;
+
+Statistical emulators mimic the relationship between input hyperparameters and
+output data, substantially reducing the computational burden.
+
+---
+
+### Conclusion
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
