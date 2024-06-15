@@ -57,11 +57,13 @@ Interactivity, Interpretability, and Generative Models
 
 <div id="subtitle">
 Kris Sankaran <br/>
-16 | June | 2024 <br/>
+UW Madison <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
+16 | June | 2024 <br/>
+INFORMS ALIO-ASOCIO <br/>
 Slides: <a href="https://go.wisc.edu/3u4m16">go.wisc.edu/3u4m16</a>
 </div>
 
@@ -337,17 +339,6 @@ language/representations for interacting with models.
 
 ### Concept Bottlenecks
 
-In the microbiome example, we could define interpretable "concepts" by looking
-at the taxa trends for commonly co-varying groups of species.
-
-.center[
-<img src="figures/concept_1.svg"/>
-]
-
----
-
-### Concept Bottlenecks
-
 We reconfigure our transformer model to first predict the concept label before
 making a final classification.
 
@@ -414,7 +405,8 @@ Splatter generates synthetic single-cell genomics data.
 
 ### Grammar of Generative Models
 
-Transparent simulators can be built by interactively composing simple modules. Probabilistic programming has simplified the process.
+Transparent simulators can be built by interactively composing simple modules.
+Probabilistic programming has streamlined the process.
 
 .pull-three-left[
 <img src="figures/modules.jpeg" width=700/>
@@ -462,7 +454,7 @@ output data, substantially reducing the computational burden.
 
 ---
 
-### Related Papers
+### Learn More
 
 * [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134)
 * [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552)
