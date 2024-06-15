@@ -67,38 +67,52 @@ Slides: <a href="https://go.wisc.edu/3u4m16">go.wisc.edu/3u4m16</a>
 
 ---
 
-### The Context
+### Generalist Models
 
-Models are woven into the fabric of modern life,
+.pull-left[
+1. **Modern machine learning models are being designed to solve many problems simultaneously.**
 
-* **Decisions**: They can be automate or assist with judgments that previously would have been done entirely by people.
-* **Discovery**: They can orient us within large data catalogs and can guide us towards promising hypotheses.
-* **Creativity**: They can make it easier for those without technical training to explore ideas and express themselves.
+1. Multimodal datasets are becoming the norm, and new systems allow navigation across many sources.
 
-For these models to be understood and beneficial for people from many
-backgrounds, we need interpretability.
+1. We are also seeing increasingly rich ways to interact with them.
+]
+
+.pull-right[
+  <img src="figures/generalist_models.png"/>
+]
 
 ---
 
-### What can go wrong?
+### Generalist Models
 
-.center[
-<img src="figures/asthma.png" width=1000/>
+.pull-left[
+1. Modern machine learning models are being designed to solve many problems
+simultaneously.
 
-Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
+1. **Multimodal datasets are becoming the norm, and new systems allow navigation across many sources.**
+
+1. We are also seeing increasingly rich ways to interact with them.
 ]
 
-
+.pull-right[
+  <img src="figures/open_vocabulary.gif"/>
+]
 ---
 
-### What can go wrong?
+### Generalist Models
 
-.center[
-<img src="figures/adversarial-stopsign.webp" width = 600/>
+.pull-left[
+1. Modern machine learning models are being designed to solve many problems
+simultaneously.
 
-Example from `r Citep(bib, "Gu2017BadNetsIV")`.
+1. Multimodal datasets are becoming the norm, and new systems allow navigation across many sources.
+
+1. **We are also seeing increasingly rich ways to interact with them.**
 ]
 
+.pull-right[
+  <img src="figures/image_editing.gif"/>
+]
 
 ---
 
@@ -186,12 +200,6 @@ about data visualization.
 
 ---
 
-.center[
-## Methods
-]
-
----
-
 ### Vocabulary
 
 1. **Interpretable Model**: A model that, by virtue of its design, is easy for
@@ -217,7 +225,13 @@ black box systems.
 
 ---
 
-### Running Example
+.center[
+## Interpretability Examples
+]
+
+---
+
+### Hypothetical Study
 
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
@@ -226,6 +240,50 @@ microbiome-related risk factors?  This simulation is motivated by microbiome stu
 
 .center[
   <img src="figures/simulated-data.svg" width=830/>
+]
+
+---
+
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+<img src="figures/transformers-analogy-2.png"/>
+]
+
+---
+
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+<img src="figures/transformer_analogy.png"/>
+]
+
+---
+
+### Transformers
+
+.pull-left[
+Applying a transformer model to the raw series, we reach a hold-out performance
+of ~ 83.2%, which is nearly as good as a model with knowledge of the true
+underlying features.
+]
+
+.pull-right[
+<img src="figures/transformer_probs.png"/>
 ]
 
 ---
@@ -294,7 +352,7 @@ We reconfigure our transformer model to first predict the concept label before
 making a final classification.
 
 .center[
-<img src="figures/concept_architecture.png"/>
+<img src="figures/transformer-v-concepts.png" width=700/>
 ]
 
 ---
@@ -302,7 +360,7 @@ making a final classification.
 ### Concept Bottlenecks
 
 .pull-left[
-Performance is in fact slightly better than before (85%), and we also obtain
+Performance is in fact slightly better than before (84%), and we also obtain
 concept labels to help us explain each instance's prediction.
 ]
 
@@ -313,12 +371,12 @@ concept labels to help us explain each instance's prediction.
 ---
 
 .center[
-  ## Current Developments
+  ## Interactivity
 ]
 
 ---
 
-### New Lingua Franca of Science
+### Scientific Generative Models
 
 .pull-left[
 1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
@@ -336,7 +394,7 @@ The E3SM is used for long-term climate projections.
 
 ---
 
-### New Lingua Franca of Science
+### Scientific Generative Models
 
 .pull-left[
 1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
@@ -381,29 +439,6 @@ By learning a discriminator to contrast real vs. simulated data, we can systemat
 
 ---
 
-### Experimental Design Renaissance
-
-Let's consider a microbiomics case study: To block or not to block?
-
-* Blocking removes person-level effects...
-* ...but increases participant burden.
-
-<img src="figures/blocking_simplex.png"/>
-
----
-
-### Simulation to the Rescue
-
-How can we navigate trade-offs like this? Simulate!
-
-.center[
-<img src="figures/blocking.jpeg" width=840/>
-]
-
-Simulators provide data for more precise decision-making.
-
----
-
 ### Covasim
 
 Following the outbreak of COVID-19, the research community came together to build simulators that could inform pandemic response.
@@ -427,16 +462,49 @@ output data, substantially reducing the computational burden.
 
 ---
 
+### Related Papers
+
+* [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134)
+* [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552)
+
+.pull-left[
+  <img src="figures/generative-qr.png" width=400/>
+]
+
+.pull-right[
+  <img src="figures/interpretability-qr.png" width=375/>
+]
+
+---
+
 ### Thank you!
 
-*This talk is based on*,
-* [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134) (doi:10.1146/annurev-statistics-033121-110134)
-* [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552) (arxiv.org/abs/2405.10552)
+Contact: [ksankaran@wisc.edu]()
 
 *Acknowledgments*
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kaiyan Ma, Kai Cui, Sam Merten, and Kobe Uko
 * Funding: NIGMS R01GM152744.
 
 ---
 
 ### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 6)
+```
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 7, end = 9)
+```

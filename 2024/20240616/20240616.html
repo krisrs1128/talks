@@ -32,38 +32,52 @@ Slides: &lt;a href="https://go.wisc.edu/3u4m16"&gt;go.wisc.edu/3u4m16&lt;/a&gt;
 
 ---
 
-### The Context
+### Generalist Models
 
-Models are woven into the fabric of modern life,
+.pull-left[
+1. **Modern machine learning models are being designed to solve many problems simultaneously.**
 
-* **Decisions**: They can be automate or assist with judgments that previously would have been done entirely by people.
-* **Discovery**: They can orient us within large data catalogs and can guide us towards promising hypotheses.
-* **Creativity**: They can make it easier for those without technical training to explore ideas and express themselves.
+1. Multimodal datasets are becoming the norm, and new systems allow navigation across many sources.
 
-For these models to be understood and beneficial for people from many
-backgrounds, we need interpretability.
+1. We are also seeing increasingly rich ways to interact with them.
+]
+
+.pull-right[
+  &lt;img src="figures/generalist_models.png"/&gt;
+]
 
 ---
 
-### What can go wrong?
+### Generalist Models
 
-.center[
-&lt;img src="figures/asthma.png" width=1000/&gt;
+.pull-left[
+1. Modern machine learning models are being designed to solve many problems
+simultaneously.
 
-Example from (Caruana, Lou, Gehrke, Koch, Sturm, and Elhadad, 2015).
+1. **Multimodal datasets are becoming the norm, and new systems allow navigation across many sources.**
+
+1. We are also seeing increasingly rich ways to interact with them.
 ]
 
-
+.pull-right[
+  &lt;img src="figures/open_vocabulary.gif"/&gt;
+]
 ---
 
-### What can go wrong?
+### Generalist Models
 
-.center[
-&lt;img src="figures/adversarial-stopsign.webp" width = 600/&gt;
+.pull-left[
+1. Modern machine learning models are being designed to solve many problems
+simultaneously.
 
-Example from (Gu, Dolan-Gavitt, and Garg, 2017).
+1. Multimodal datasets are becoming the norm, and new systems allow navigation across many sources.
+
+1. **We are also seeing increasingly rich ways to interact with them.**
 ]
 
+.pull-right[
+  &lt;img src="figures/image_editing.gif"/&gt;
+]
 
 ---
 
@@ -151,12 +165,6 @@ about data visualization.
 
 ---
 
-.center[
-## Methods
-]
-
----
-
 ### Vocabulary
 
 1. **Interpretable Model**: A model that, by virtue of its design, is easy for
@@ -182,12 +190,18 @@ black box systems.
 
 ---
 
-### Running Example
+.center[
+## Interpretability Examples
+]
+
+---
+
+### Hypothetical Study
 
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
 microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
-(Gosmann, Anahtar, Handley, Farcasanu, Abu-Ali, Bowman, Padavattan, Desai, Droit, Moodley, Dong, Chen, Ismail, Ndung’u, Ghebremichael, Wesemann, Mitchell, Dong, Huttenhower, Walker, Virgin, and Kwon, 2017).
+(Gosmann et al., 2017).
 
 .center[
   &lt;img src="figures/simulated-data.svg" width=830/&gt;
@@ -195,10 +209,54 @@ microbiome-related risk factors?  This simulation is motivated by microbiome stu
 
 ---
 
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+&lt;img src="figures/transformers-analogy-2.png"/&gt;
+]
+
+---
+
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+&lt;img src="figures/transformer_analogy.png"/&gt;
+]
+
+---
+
+### Transformers
+
+.pull-left[
+Applying a transformer model to the raw series, we reach a hold-out performance
+of ~ 83.2%, which is nearly as good as a model with knowledge of the true
+underlying features.
+]
+
+.pull-right[
+&lt;img src="figures/transformer_probs.png"/&gt;
+]
+
+---
+
 ### Embeddings
 
 In text data, we can understand context-dependent meaning by looking for
-clusters in the PCA of embeddings (Coenen, Reif, Yuan, Kim, Pearce, Viégas, and Wattenberg, 2019).
+clusters in the PCA of embeddings (Coenen et al., 2019).
 These represent a type of interaction.
 .center[
 &lt;img src="figures/bert_context.png" width=670/&gt;
@@ -219,7 +277,7 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space (Liu, Jun, Li, and Heer, 2019).  This figure traces out the microbiome profiles
+Another common technique is to analyze linear interpolations in this space (Liu et al., 2019).  This figure traces out the microbiome profiles
 between two samples.
 
 .center[
@@ -232,7 +290,7 @@ between two samples.
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts (Koh, Nguyen, Tang, Mussmann, Pierson, Kim, and Liang, 2020).
+to a set of human-interpretable concepts (Koh et al., 2020).
 This is part of a larger body of work that attempts to establish shared
 language/representations for interacting with models.
 
@@ -259,7 +317,7 @@ We reconfigure our transformer model to first predict the concept label before
 making a final classification.
 
 .center[
-&lt;img src="figures/concept_architecture.png"/&gt;
+&lt;img src="figures/transformer-v-concepts.png" width=700/&gt;
 ]
 
 ---
@@ -267,7 +325,7 @@ making a final classification.
 ### Concept Bottlenecks
 
 .pull-left[
-Performance is in fact slightly better than before (85%), and we also obtain
+Performance is in fact slightly better than before (84%), and we also obtain
 concept labels to help us explain each instance's prediction.
 ]
 
@@ -278,12 +336,12 @@ concept labels to help us explain each instance's prediction.
 ---
 
 .center[
-  ## Current Developments
+  ## Interactivity
 ]
 
 ---
 
-### New Lingua Franca of Science
+### Scientific Generative Models
 
 .pull-left[
 1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
@@ -301,7 +359,7 @@ The E3SM is used for long-term climate projections.
 
 ---
 
-### New Lingua Franca of Science
+### Scientific Generative Models
 
 .pull-left[
 1. Simulators have emerged as a general problem-solving device across various domains, many of which now have rich, open-source libraries.
@@ -346,29 +404,6 @@ By learning a discriminator to contrast real vs. simulated data, we can systemat
 
 ---
 
-### Experimental Design Renaissance
-
-Let's consider a microbiomics case study: To block or not to block?
-
-* Blocking removes person-level effects...
-* ...but increases participant burden.
-
-&lt;img src="figures/blocking_simplex.png"/&gt;
-
----
-
-### Simulation to the Rescue
-
-How can we navigate trade-offs like this? Simulate!
-
-.center[
-&lt;img src="figures/blocking.jpeg" width=840/&gt;
-]
-
-Simulators provide data for more precise decision-making.
-
----
-
 ### Covasim
 
 Following the outbreak of COVID-19, the research community came together to build simulators that could inform pandemic response.
@@ -392,19 +427,51 @@ output data, substantially reducing the computational burden.
 
 ---
 
+### Related Papers
+
+* [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134)
+* [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552)
+
+.pull-left[
+  &lt;img src="figures/generative-qr.png" width=400/&gt;
+]
+
+.pull-right[
+  &lt;img src="figures/interpretability-qr.png" width=375/&gt;
+]
+
+---
+
 ### Thank you!
 
-*This talk is based on*,
-* [Generative Models: An Interdisciplinary Perspective](https://doi.org/10.1146/annurev-statistics-033121-110134) (doi:10.1146/annurev-statistics-033121-110134)
-* [Data Science Principles for Interpretable and Explainable AI](arxiv.org/abs/2405.10552) (arxiv.org/abs/2405.10552)
+Contact: [ksankaran@wisc.edu]()
 
 *Acknowledgments*
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kaiyan Ma, Kai Cui, Sam Merten, and Kobe Uko
 * Funding: NIGMS R01GM152744.
 
 ---
 
 ### References
+
+Coenen, A. et al. (2019). "Visualizing and Measuring the Geometry of BERT". In: _ArXiv_ abs/1906.02715.
+
+Gosmann, C. et al. (2017). "Lactobacillus‐Deficient Cervicovaginal Bacterial Communities Are Associated with Increased HIV Acquisition in Young South
+African Women". In: _Immunity_ 46, p. 29–37.
+
+Koh, P. W. et al. (2020). "Concept Bottleneck Models". In: _ArXiv_ abs/2007.04612.
+
+---
+
+### References
+
+Liu, Y. et al. (2019). "Latent Space Cartography: Visual Analysis of Vector Space Embeddings". In: _Computer Graphics Forum_ 38.
+
+---
+
+### References
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
