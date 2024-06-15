@@ -490,7 +490,7 @@ Contact: [ksankaran@wisc.edu]()
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 3)
+PrintBibliography(bib, start = 1, end = 4)
 ```
 
 ---
@@ -499,12 +499,4 @@ PrintBibliography(bib, start = 1, end = 3)
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 4, end = 6)
-```
-
----
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 7, end = 9)
 ```
