@@ -57,7 +57,7 @@ Interactivity, Interpretability, and Generative Models
 
 <div id="subtitle">
 Kris Sankaran <br/>
-UW Madison <br/>
+ksankaran@wisc.edu <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
