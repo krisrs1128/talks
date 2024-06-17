@@ -67,7 +67,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 Melbourne Integrative Genomics<br/>
-Slides: <a href="https://go.wisc.edu/rc776i">go.wisc.edu/rc776i/</a><br/>
+Slides: <a href="https://go.wisc.edu/rc776i">go.wisc.edu/rc776i</a><br/>
 Code: <a href="https://go.wisc.edu/o5sn6w">go.wisc.edu/o5sn6w</a>
 </div>
 
@@ -496,6 +496,7 @@ class: middle
 ]
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Exercise solutions: [go.wisc.edu/441a60](https://go.wisc.edu/441a60)
 * Live Link: 
 ---
 
@@ -505,7 +506,7 @@ class: middle
 in biological data.
 1. Copula and factor models are general approaches to inducing correlation in
 simulated data.
-1. The `coupla_*` functions in `scDesigner` give a few approaches to copula-based simulation
+1. The `copula_*` functions in `scDesigner` give a few approaches to copula-based simulation
 1. Power analysis can be tightly coupled with multivariate algorithms.
 
 ---
