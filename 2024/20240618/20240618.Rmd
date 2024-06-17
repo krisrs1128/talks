@@ -77,7 +77,7 @@ Code: <a href="https://go.wisc.edu/o5sn6w">go.wisc.edu/o5sn6w</a>
 
 By the end of this session, you will be able to...
 
-1. Identify situations in your own research where (i) multivariate methods can be used and (ii) simulation can help.
+1. Identify situations in your own research where multivariate methods can be used and simulation can help.
 1. Discuss how latent variable and copula models induce correlation across collections of features.
 1. Design and implement power and benchmarking analyses for multivariate models.
 
@@ -496,7 +496,7 @@ class: middle
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
 * Exercise solutions: [go.wisc.edu/441a60](https://go.wisc.edu/441a60)
-* Live Link: 
+* Live Link: [go.wisc.edu/mis697](https://go.wisc.edu/mis697)
 ---
 
 ### Summary
