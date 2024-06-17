@@ -77,10 +77,9 @@ Code: <a href="https://go.wisc.edu/o5sn6w">go.wisc.edu/o5sn6w</a>
 
 By the end of this session, you will be able to...
 
+1. Identify situations in your own research where (i) multivariate methods can be used and (ii) simulation can help.
+1. Discuss how latent variable and copula models induce correlation across collections of features.
 1. Design and implement power and benchmarking analyses for multivariate models.
-1. Discuss factor models and at least two copula variants for simulating correlated data.
-1. Compare and contrast the scientific contexts where multivariate and
-univariate models are more appropriate.
 
 ---
 
@@ -384,7 +383,7 @@ We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patt
 <img src="figure/PLS-step1.png" width=500/>
 ]
 
-Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
 $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---
@@ -397,7 +396,7 @@ We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patt
 <img src="figure/PLS-step2.png" width=240/>
 ]
 
-Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
 $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 
@@ -411,7 +410,7 @@ We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patt
 <img src="figure/PLS-step3.png" width=400/>
 ]
 
-Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
 $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---
@@ -424,7 +423,7 @@ We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patt
 <img src="figure/PLS-step4.png" width=150/>
 ]
 
-Formally, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
 $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---

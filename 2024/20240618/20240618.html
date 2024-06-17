@@ -43,10 +43,9 @@ Code: &lt;a href="https://go.wisc.edu/o5sn6w"&gt;go.wisc.edu/o5sn6w&lt;/a&gt;
 
 By the end of this session, you will be able to...
 
+1. Identify situations in your own research where (i) multivariate methods can be used and (ii) simulation can help.
+1. Discuss how latent variable and copula models induce correlation across collections of features.
 1. Design and implement power and benchmarking analyses for multivariate models.
-1. Discuss factor models and at least two copula variants for simulating correlated data.
-1. Compare and contrast the scientific contexts where multivariate and
-univariate models are more appropriate.
 
 ---
 
@@ -233,10 +232,10 @@ rmvnorm(3, rep(0, D), Sigma)
 ```
 
 ```
-##             [,1]       [,2]      [,3]       [,4]      [,5]
-## [1,] -0.05128618 0.02939303 0.2694163 0.05786031 0.2231191
-## [2,]  1.85668084 1.82337500 1.7823374 1.70445525 1.7986916
-## [3,]  0.92226671 0.98705622 0.9111933 0.97140671 0.8419147
+##              [,1]       [,2]      [,3]      [,4]       [,5]
+## [1,] 0.0009511073 0.09897214 0.2344859 0.2382537 0.08975082
+## [2,] 1.2676617829 1.30234917 1.2477393 1.3278895 1.29604245
+## [3,] 2.2345516427 2.23787330 2.3443253 2.1891693 2.39399368
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -360,7 +359,7 @@ We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until 
 &lt;img src="figure/PLS-step1.png" width=500/&gt;
 ]
 
-Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 `\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 ---
@@ -373,7 +372,7 @@ We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until 
 &lt;img src="figure/PLS-step2.png" width=240/&gt;
 ]
 
-Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 `\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 
@@ -387,7 +386,7 @@ We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until 
 &lt;img src="figure/PLS-step3.png" width=400/&gt;
 ]
 
-Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 `\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 ---
@@ -400,7 +399,7 @@ We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until 
 &lt;img src="figure/PLS-step4.png" width=150/&gt;
 ]
 
-Formally, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 `\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 ---
@@ -461,6 +460,7 @@ class: middle
 ]
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Exercise solutions: [go.wisc.edu/441a60](https://go.wisc.edu/441a60)
 * Live Link: 
 ---
 
@@ -470,7 +470,7 @@ class: middle
 in biological data.
 1. Copula and factor models are general approaches to inducing correlation in
 simulated data.
-1. The `coupla_*` functions in `scDesigner` give a few approaches to copula-based simulation
+1. The `copula_*` functions in `scDesigner` give a few approaches to copula-based simulation
 1. Power analysis can be tightly coupled with multivariate algorithms.
 
 ---
