@@ -40,20 +40,6 @@
   month = jul 
 }
 
-@article{Sankaran2023,
-  title = {Generative Models: An Interdisciplinary Perspective},
-  volume = {10},
-  ISSN = {2326-831X},
-  DOI = {10.1146/annurev-statistics-033121-110134},
-  number = {1},
-  journal = {Annual Review of Statistics and Its Application},
-  publisher = {Annual Reviews},
-  author = {Sankaran,  Kris and Holmes,  Susan P.},
-  year = {2023},
-  month = mar,
-  pages = {325–352}
-}
-
 @ARTICLE{Jiang2021-jt,
   title     = "mbImpute: an accurate and robust imputation method for
                microbiome data",
@@ -570,51 +556,6 @@
   language  = "en"
 }
 
-@ARTICLE{Bodein2019-bq,
-  title     = "A generic multivariate framework for the integration of
-               microbiome longitudinal studies with other data types",
-  author    = "Bodein, Antoine and Chapleur, Olivier and Droit, Arnaud and
-               L{\^e} Cao, Kim-Anh",
-  abstract  = "Simultaneous profiling of biospecimens using different
-               technological platforms enables the study of many data types,
-               encompassing microbial communities, omics, and meta-omics as
-               well as clinical or chemistry variables. Reduction in costs now
-               enables longitudinal or time course studies on the same
-               biological material or system. The overall aim of such studies
-               is to investigate relationships between these longitudinal
-               measures in a holistic manner to further decipher the link
-               between molecular mechanisms and microbial community structures,
-               or host-microbiota interactions. However, analytical frameworks
-               enabling an integrated analysis between microbial communities
-               and other types of biological, clinical, or phenotypic data are
-               still in their infancy. The challenges include few time points
-               that may be unevenly spaced and unmatched between different data
-               types, a small number of unique individual biospecimens, and
-               high individual variability. Those challenges are further
-               exacerbated by the inherent characteristics of microbial
-               communities-derived data (e.g., sparse, compositional). We
-               propose a generic data-driven framework to integrate different
-               types of longitudinal data measured on the same biological
-               specimens with microbial community data and select key temporal
-               features with strong associations within the same sample group.
-               The framework ranges from filtering and modeling to integration
-               using smoothing splines and multivariate dimension reduction
-               methods to address some of the analytical challenges of
-               microbiome-derived data. We illustrate our framework on
-               different types of multi-omics case studies in bioreactor
-               experiments as well as human studies.",
-  journal   = "Front. Genet.",
-  publisher = "Frontiers Media SA",
-  volume    =  10,
-  pages     = "963",
-  month     =  nov,
-  year      =  2019,
-  keywords  = "data integration; dimension reduction; feature selection;
-               multi-omics; splines; time course",
-  copyright = "https://creativecommons.org/licenses/by/4.0/",
-  language  = "en"
-}
-
 @ARTICLE{Le_Cao2011-kn,
   title     = "Sparse {PLS} discriminant analysis: biologically relevant
                feature selection and graphical displays for multiclass problems",
@@ -1125,5 +1066,97 @@
   year      =  2014,
   keywords  = "Generalized canonical correlation analysis; Multiblock data
                analysis; Variable selection",
+  language  = "en"
+}
+
+@ARTICLE{Escofier1994-ak,
+  title     = "Multiple factor analysis ({AFMULT} package)",
+  author    = "Escofier, B and Pag{\`e}s, J",
+  abstract  = "Multiple Factor Analysis (MFA) studies several groups of
+               variables (numerical and/or categorical) defined on the same set
+               of individuals. MFA approaches this kind of data according to
+               many points of view already used in others methods as: factor
+               analysis in which groups of variables are weighted, canonical
+               analysis, Procrustes analysis, STATIS, INDSCAL. In MFA, these
+               points of view are considered in a unique framework. This paper
+               presents the different outputs provided by MFA and an example
+               about sensory analysis of wines.",
+  journal   = "Comput. Stat. Data Anal.",
+  publisher = "Elsevier BV",
+  volume    =  18,
+  number    =  1,
+  pages     = "121--140",
+  month     =  aug,
+  year      =  1994,
+  language  = "en"
+}
+
+@ARTICLE{Crowell2020-lr,
+  title     = "Muscat detects subpopulation-specific state transitions from
+               multi-sample multi-condition single-cell transcriptomics data",
+  author    = "Crowell, Helena L and Soneson, Charlotte and Germain, Pierre-Luc
+               and Calini, Daniela and Collin, Ludovic and Raposo, Catarina and
+               Malhotra, Dheeraj and Robinson, Mark D",
+  abstract  = "Single-cell RNA sequencing (scRNA-seq) has become an empowering
+               technology to profile the transcriptomes of individual cells on
+               a large scale. Early analyses of differential expression have
+               aimed at identifying differences between subpopulations to
+               identify subpopulation markers. More generally, such methods
+               compare expression levels across sets of cells, thus leading to
+               cross-condition analyses. Given the emergence of replicated
+               multi-condition scRNA-seq datasets, an area of increasing focus
+               is making sample-level inferences, termed here as differential
+               state analysis; however, it is not clear which statistical
+               framework best handles this situation. Here, we surveyed methods
+               to perform cross-condition differential state analyses,
+               including cell-level mixed models and methods based on
+               aggregated pseudobulk data. To evaluate method performance, we
+               developed a flexible simulation that mimics multi-sample
+               scRNA-seq data. We analyzed scRNA-seq data from mouse cortex
+               cells to uncover subpopulation-specific responses to
+               lipopolysaccharide treatment, and provide robust tools for
+               multi-condition analysis within the muscat R package.",
+  journal   = "Nat. Commun.",
+  publisher = "Springer Science and Business Media LLC",
+  volume    =  11,
+  number    =  1,
+  pages     = "6077",
+  month     =  nov,
+  year      =  2020,
+  copyright = "https://creativecommons.org/licenses/by/4.0",
+  language  = "en"
+}
+
+@ARTICLE{Cao2021-kx,
+  title     = "A benchmark study of simulation methods for single-cell {RNA}
+               sequencing data",
+  author    = "Cao, Yue and Yang, Pengyi and Yang, Jean Yee Hwa",
+  abstract  = "Single-cell RNA-seq (scRNA-seq) data simulation is critical for
+               evaluating computational methods for analysing scRNA-seq data
+               especially when ground truth is experimentally unattainable. The
+               reliability of evaluation depends on the ability of simulation
+               methods to capture properties of experimental data. However,
+               while many scRNA-seq data simulation methods have been proposed,
+               a systematic evaluation of these methods is lacking. We develop
+               a comprehensive evaluation framework, SimBench, including a
+               kernel density estimation measure to benchmark 12 simulation
+               methods through 35 scRNA-seq experimental datasets. We evaluate
+               the simulation methods on a panel of data properties, ability to
+               maintain biological signals, scalability and applicability. Our
+               benchmark uncovers performance differences among the methods and
+               highlights the varying difficulties in simulating data
+               characteristics. Furthermore, we identify several limitations
+               including maintaining heterogeneity of distribution. These
+               results, together with the framework and datasets made publicly
+               available as R packages, will guide simulation methods selection
+               and their future development.",
+  journal   = "Nat. Commun.",
+  publisher = "Springer Science and Business Media LLC",
+  volume    =  12,
+  number    =  1,
+  pages     = "6911",
+  month     =  nov,
+  year      =  2021,
+  copyright = "https://creativecommons.org/licenses/by/4.0",
   language  = "en"
 }

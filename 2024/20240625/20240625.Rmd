@@ -40,7 +40,7 @@ scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(
 scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 
 BibOptions(
-  check.entries = FALSE, 
+  check.entries = TRUE, 
   bib.style = "authoryear", 
   cite.style = "authoryear", 
   style = "markdown",
@@ -73,12 +73,12 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 ### Learning Outcomes:
 
-1. Explain and distinguish between the horizontal and vertical integration
-problems.
-1. Discuss how simulation can improve validity and power in horizontal and
-vertical integration workflows.
+1. Provide examples of horizontal and vertical integration problems and identify
+issues that can complicate their analysis.
+1. Discuss how simulation can help in assessing the validity and power in
+horizontal and vertical integration workflows.
 1. Design simulators that respect batch or multi-omics structure to support
-integration applications.
+integration use cases.
 
 ---
 
@@ -154,7 +154,7 @@ biological variation (from the original sample) and technical variation
 introduced later (during sample preparation and sequencing).
 
 .center[
-<img src="figures/variation_stages.png" width=600/>
+<img src="figures/variation_stages.png" width=900/>
 ]
 
 ---
@@ -249,6 +249,23 @@ variation and benchmark using this as ground truth.
 
 1. Miscalibration: We can create data with known null and nonnull genes and
 calculate power and false discovery rates.
+
+---
+
+### Simulator Definition
+
+We will assume that the batches are known and stored in the experiment's
+`colData`. These will be allowed to influence estimation of GAMLSS parameters
+like any other covariate.
+
+```{r, eval = FALSE, echo = TRUE}
+simulator <- setup_simulator(
+  exper,
+  ~ batch + ...,
+  ...
+) |>
+  estimate()
+```
 
 ---
 
@@ -396,17 +413,20 @@ R Packages: `FSInteract`, `iRF`.
 
 ---
 
-### Challenges
+### Simulator Definition
 
-1. Alignability: If one modality has little in common with the rest, then
-including it forces us to ignore real shared variation in the other modalities.
-We may be better off analyzing each dataset separately `r Citep(bib, "Ma2024-vk")`.
+Today, we will re-estimate a copula covariance matrix across modalities,
+```{r, echo = TRUE, eval = FALSE}
+merged_sim <- sim1 |>
+  join_copula(sim2)
+```
 
-1. Differential Costs: Since modalities differ in their ease and cost of
-collection, we cannot expect the same technologies to be applied to all samples.
-
-1. Validation: Except in a few well-studied model organisms like yeast or E.
-coli, ground truth molecular interactions are generally unknown `r Citep(bib, "Walker2022-ho")`.
+We could instead condition on a shared learned latent variable,
+```{r, echo = TRUE, eval = FALSE}
+merged_sim <- sim1 |>
+  join_pamona(sim2)
+```
+but this requires the `reticulate` package, which can be tricky to set up.
 
 ---
 
@@ -419,6 +439,67 @@ coli, ground truth molecular interactions are generally unknown `r Citep(bib, "W
 * Live Link: [go.wisc.edu/](https://go.wisc.edu/)
 
 ---
+
+.center[
+  ## Take Home Messages
+]
+
+---
+
+### Why Simulate?
+
+Simulators can be a sandbox for testing out analysis and research ideas.
+
+1. **Power Analysis**: How many samples do we need? How can we best allocate our
+samples across populations, timepoints, and technologies?
+
+1. **Benchmarking**: Which methods work best under which conditions, and how
+sensitive are they to changes in the simulation?
+
+1. **Calibration**: Are we correctly interpreting the output of our workflows?
+
+You can use simulation for more than proving your methods are the best...
+
+---
+
+### Building a Simulator
+
+There are many simulation packages being released. They don't have to be black
+boxes. Pay attention to:
+
+  - Can it use a template dataset? What types?
+  - How does it model individual features?
+  - How does it model relationships beween features?
+  - How is experimental or biological variation introduced?
+
+When building a simulator, there will be trade-offs between faithfulness,
+controllability, and generality of application. What matters for your use case?
+
+---
+
+### Evaluating a Simulator
+
+We can visually check different aspects of simulator quality,
+
+1. Featurewise visualization: Box plots, histograms, ECDFs.
+1. Bivariate visualization: Pairs plots.
+1. Multivariate visualization: PCA, heatmaps.
+
+Use these to decide on new covariates or estimation routines, and note that they
+can be translated into quantitative metrics (e.g., `r Citep(bib, c("Cao2021-kx", "Crowell2020-lr"))`).
+
+---
+
+### Conclusion
+
+1. Consider sharing your simulation code. There is a lot of effort that goes
+into building simulators (for grant proposals, data analysis, and methods
+development) that is unnecessarily duplicated across the community.
+
+1. If you learn about or create a new type of simulator, let me know!
+
+---
+
 
 ### References
 
@@ -441,5 +522,41 @@ PrintBibliography(bib, start = 9, end = 12)
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 13, end = 20)
+PrintBibliography(bib, start = 13, end = 16)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 17, end = 20)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 21, end = 24)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 25, end = 28)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 29, end = 32)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 33, end = 36)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 37, end = 40)
 ```
