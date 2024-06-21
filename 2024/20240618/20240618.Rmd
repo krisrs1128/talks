@@ -487,7 +487,6 @@ Example sPLS-DA output from the `mixOmics` package `r Citep(bib, "Rohart2017-sa"
 
 ---
 
-
 class: middle
 
 .center[
@@ -497,6 +496,7 @@ class: middle
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
 * Exercise solutions: [go.wisc.edu/441a60](https://go.wisc.edu/441a60)
 * Live Link: [go.wisc.edu/mis697](https://go.wisc.edu/mis697)
+
 ---
 
 ### Summary

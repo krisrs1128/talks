@@ -917,3 +917,213 @@
   copyright = "https://creativecommons.org/licenses/by-nc-nd/4.0/",
   language  = "en"
 }
+
+@ARTICLE{Zhang2023-ps,
+  title    = "Signal recovery in single cell batch integration",
+  author   = "Zhang, Zhaojun and Mathew, Divij and Lim, Tristan and Mason,
+              Kaishu and Martinez, Clara Morral and Huang, Sijia and Wherry, E
+              John and Susztak, Katalin and Minn, Andy J and Ma, Zongming and
+              Zhang, Nancy R",
+  abstract = "Data integration to align cells across batches has become a
+              cornerstone of single cell data analysis, critically affecting
+              downstream results. Yet, how much biological signal is erased
+              during integration? Currently, there are no guidelines for when
+              the biological differences between samples are separable from
+              batch effects, and thus, data integration usually involve a lot
+              of guesswork: Cells across batches should be aligned to be
+              ``appropriately'' mixed, while preserving ``main cell type
+              clusters''. We show evidence that current paradigms for single
+              cell data integration are unnecessarily aggressive, removing
+              biologically meaningful variation. To remedy this, we present a
+              novel statistical model and computationally scalable algorithm,
+              CellANOVA, to recover biological signal that is lost during
+              single cell data integration. CellANOVA utilizes a
+              ``pool-of-controls'' design concept, applicable across diverse
+              settings, to separate unwanted variation from biological
+              variation of interest. When applied with existing integration
+              methods, CellANOVA allows the recovery of subtle biological
+              signals and corrects, to a large extent, the data distortion
+              introduced by integration. Further, CellANOVA explicitly
+              estimates cell- and gene-specific batch effect terms which can be
+              used to identify the cell types and pathways exhibiting the
+              largest batch variations, providing clarity as to which
+              biological signals can be recovered. These concepts are
+              illustrated on studies of diverse designs, where the biological
+              signals that are recovered by CellANOVA are shown to be validated
+              by orthogonal assays. In particular, we show that CellANOVA is
+              effective in the challenging case of single-cell and
+              single-nuclei data integration, where the recovered biological
+              signals are replicated in an independent study.",
+  journal  = "bioRxiv.org",
+  month    =  sep,
+  year     =  2023,
+  keywords = "Batch effect; Data alignment; Data integration; Experimental
+              design; RNA; Removing unwanted variation; Single cell",
+  language = "en"
+}
+
+@ARTICLE{Nygaard2016-cv,
+  title     = "Methods that remove batch effects while retaining group
+               differences may lead to exaggerated confidence in downstream
+               analyses",
+  author    = "Nygaard, Vegard and R{\o}dland, Einar Andreas and Hovig, Eivind",
+  abstract  = "Removal of, or adjustment for, batch effects or center
+               differences is generally required when such effects are present
+               in data. In particular, when preparing microarray gene
+               expression data from multiple cohorts, array platforms, or
+               batches for later analyses, batch effects can have confounding
+               effects, inducing spurious differences between study groups.
+               Many methods and tools exist for removing batch effects from
+               data. However, when study groups are not evenly distributed
+               across batches, actual group differences may induce apparent
+               batch differences, in which case batch adjustments may bias,
+               usually deflate, group differences. Some tools therefore have
+               the option of preserving the difference between study groups,
+               e.g. using a two-way ANOVA model to simultaneously estimate both
+               group and batch effects. Unfortunately, this approach may
+               systematically induce incorrect group differences in downstream
+               analyses when groups are distributed between the batches in an
+               unbalanced manner. The scientific community seems to be largely
+               unaware of how this approach may lead to false discoveries.",
+  journal   = "Biostatistics",
+  publisher = "Oxford University Press (OUP)",
+  volume    =  17,
+  number    =  1,
+  pages     = "29--39",
+  month     =  jan,
+  year      =  2016,
+  keywords  = "Batch effects; Data normalization; Microarrays; Reproducible
+               research",
+  copyright = "http://creativecommons.org/licenses/by/4.0/",
+  language  = "en"
+}
+
+@misc{githubGitHubGtonkinhillTCGA_analysis,
+	author = {Gerry Tonkin-Hill},
+	title = {{G}it{H}ub - gtonkinhill/{T}{C}{G}{A}\_analysis --- github.com},
+	howpublished = {\url{https://github.com/gtonkinhill/TCGA_analysis}},
+	year = {2023},
+	note = {[Accessed 21-06-2024]},
+}
+
+@ARTICLE{Ma2024-vk,
+  title     = "Principled and interpretable alignability testing and
+               integration of single-cell data",
+  author    = "Ma, Rong and Sun, Eric D and Donoho, David and Zou, James",
+  abstract  = "Single-cell data integration can provide a comprehensive
+               molecular view of cells, and many algorithms have been developed
+               to remove unwanted technical or biological variations and
+               integrate heterogeneous single-cell datasets. Despite their wide
+               usage, existing methods suffer from several fundamental
+               limitations. In particular, we lack a rigorous statistical test
+               for whether two high-dimensional single-cell datasets are
+               alignable (and therefore should even be aligned). Moreover,
+               popular methods can substantially distort the data during
+               alignment, making the aligned data and downstream analysis
+               difficult to interpret. To overcome these limitations, we
+               present a spectral manifold alignment and inference (SMAI)
+               framework, which enables principled and interpretable
+               alignability testing and structure-preserving integration of
+               single-cell data with the same type of features. SMAI provides a
+               statistical test to robustly assess the alignability between
+               datasets to avoid misleading inference and is justified by
+               high-dimensional statistical theory. On a diverse range of real
+               and simulated benchmark datasets, it outperforms commonly used
+               alignment methods. Moreover, we show that SMAI improves various
+               downstream analyses such as identification of differentially
+               expressed genes and imputation of single-cell spatial
+               transcriptomics, providing further biological insights. SMAI's
+               interpretability also enables quantification and a deeper
+               understanding of the sources of technical confounders in
+               single-cell data.",
+  journal   = "Proc. Natl. Acad. Sci. U. S. A.",
+  publisher = "Proceedings of the National Academy of Sciences",
+  volume    =  121,
+  number    =  10,
+  pages     = "e2313719121",
+  month     =  mar,
+  year      =  2024,
+  keywords  = "Procrustes analysis; data alignment; random matrix theory;
+               single-cell omics; spectral method",
+  copyright = "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+  language  = "en"
+}
+
+@ARTICLE{Walker2022-ho,
+  title     = "Evaluating the performance of random forest and iterative random
+               forest based methods when applied to gene expression data",
+  author    = "Walker, Angelica M and Cliff, Ashley and Romero, Jonathon and
+               Shah, Manesh B and Jones, Piet and Felipe Machado Gazolla, Joao
+               Gabriel and Jacobson, Daniel A and Kainer, David",
+  abstract  = "Gene-to-gene networks, such as Gene Regulatory Networks (GRN)
+               and Predictive Expression Networks (PEN) capture relationships
+               between genes and are beneficial for use in downstream
+               biological analyses. There exists multiple network inference
+               tools to produce these gene-to-gene networks from matrices of
+               gene expression data. Random Forest-Leave One Out Prediction
+               (RF-LOOP) is a method that has been shown to be efficient at
+               producing these gene-to-gene networks, frequently known as GEne
+               Network Inference with Ensemble of trees (GENIE3). Random Forest
+               can be replaced in this process by iterative Random Forest
+               (iRF), which performs variable selection and boosting. Here we
+               validate that iterative Random Forest-Leave One Out Prediction
+               (iRF-LOOP) produces higher quality networks than GENIE3
+               (RF-LOOP). We use both synthetic and empirical networks from the
+               Dialogue for Reverse Engineering Assessment and Methods (DREAM)
+               Challenges by Sage Bionetworks, as well as two additional
+               empirical networks created from Arabidopsis thaliana and Populus
+               trichocarpa expression data.",
+  journal   = "Comput. Struct. Biotechnol. J.",
+  publisher = "Elsevier BV",
+  volume    =  20,
+  pages     = "3372--3386",
+  month     =  jun,
+  year      =  2022,
+  keywords  = "GENIE3, GEne Network Inference with Ensemble of trees; GRN, Gene
+               Regulatory Network; Gene expression networks; Iterative random
+               forest; Network biology; PEN, Predictive Expression Network; RF,
+               Random Forest; RF-LOOP, Random Forest Leave One Out Prediction;
+               Random forest; iRF, iterative Random Forest; iRF-LOOP,
+               iterativeRandom Forest Leave One Out Prediction",
+  copyright = "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+  language  = "en"
+}
+
+@ARTICLE{Tenenhaus2014-zx,
+  title     = "Variable selection for generalized canonical correlation
+               analysis",
+  author    = "Tenenhaus, Arthur and Philippe, Cathy and Guillemot, Vincent and
+               Le Cao, Kim-Anh and Grill, Jacques and Frouin, Vincent",
+  abstract  = "Regularized generalized canonical correlation analysis (RGCCA)
+               is a generalization of regularized canonical correlation
+               analysis to 3 or more sets of variables. RGCCA is a
+               component-based approach which aims to study the relationships
+               between several sets of variables. The quality and
+               interpretability of the RGCCA components are likely to be
+               affected by the usefulness and relevance of the variables in
+               each block. Therefore, it is an important issue to identify
+               within each block which subsets of significant variables are
+               active in the relationships between blocks. In this paper, RGCCA
+               is extended to address the issue of variable selection.
+               Specifically, sparse generalized canonical correlation analysis
+               (SGCCA) is proposed to combine RGCCA with an [Formula: see
+               text]-penalty in a unified framework. Within this framework,
+               blocks are not necessarily fully connected, which makes SGCCA a
+               flexible method for analyzing a wide variety of practical
+               problems. Finally, the versatility and usefulness of SGCCA are
+               illustrated on a simulated dataset and on a 3-block dataset
+               which combine gene expression, comparative genomic
+               hybridization, and a qualitative phenotype measured on a set of
+               53 children with glioma. SGCCA is available on CRAN as part of
+               the RGCCA package.",
+  journal   = "Biostatistics",
+  publisher = "Oxford University Press (OUP)",
+  volume    =  15,
+  number    =  3,
+  pages     = "569--583",
+  month     =  jul,
+  year      =  2014,
+  keywords  = "Generalized canonical correlation analysis; Multiblock data
+               analysis; Variable selection",
+  language  = "en"
+}

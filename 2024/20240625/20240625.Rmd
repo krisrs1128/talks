@@ -145,25 +145,17 @@ A powerful idea in correction methods is to make proper use of controls:
 * Replication: At specific stages of analysis, you can create replicates to clarify the nature of subsequent variation.
 * Negative Controls: The experiment can be designed so that some features will not vary with interesting biological variation.
 
+---
+
+### Controls
+
 Effective replication and controls can help distinguish between upstream
 biological variation (from the original sample) and technical variation
-introduced later (during the sample preparation and sequencing).
+introduced later (during sample preparation and sequencing).
 
+.center[
 <img src="figures/variation_stages.png" width=600/>
-
----
-<!-- 
-### Analogy: Agriculture
-
-These ideas have classical analogs in agricultural field trials.
-
-Replication $\iff$ Growing the same variety in separate fields
-Negative Controls $\iff$ Growing a variety with no agricultural inputs
-
-?
- -->
-
-<!-- --- -->
+]
 
 ---
 
@@ -177,7 +169,8 @@ batch effect correction methods.
 ]
 
 .pull-right[
-
+<img src="figures/cell-anova.png" width=500/>
+Figure from `r Citep(bib, "Zhang2023-ps")`.
 ]
 
 ---
@@ -192,7 +185,56 @@ analysis workflows can lead to miscalibrated $p$-values.
 ]
 
 .pull-right[
+<img src="figures/correction-1.png"/>
+Figure from `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.  See also `r Citep(bib, "Nygaard2016-cv")`.
+]
 
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated $p$-values. 
+]
+
+.pull-right[
+<img src="figures/correction-2.png"/>
+Figure from `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.  See also `r Citep(bib, "Nygaard2016-cv")`.
+]
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated $p$-values. 
+]
+
+.pull-right[
+<img src="figures/correction-3.png"/>
+Figure from `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.  See also `r Citep(bib, "Nygaard2016-cv")`.
+]
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated $p$-values. 
+]
+
+.pull-right[
+<img src="figures/correction-4.png"/>
+Figure from `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.  See also `r Citep(bib, "Nygaard2016-cv")`.
 ]
 
 ---
@@ -210,7 +252,14 @@ calculate power and false discovery rates.
 
 ---
 
-### Exercise
+.center[
+## Demo + Exercises
+]
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Exercise solutions: [go.wisc.edu/oz91zf](https://go.wisc.edu/oz91zf)
+* Live Link: [go.wisc.edu/](https://go.wisc.edu/)
+
 
 ---
 
@@ -229,43 +278,121 @@ class: middle
 1. Vertical integration looks at the same dataset using many related assays.
 
 .center[
-<img src="figures/vertical_integration.png" width=900/>
+<img src="figures/vertical_integration.png" width=500/>
 ]
 
 ---
 
-### Motivation
+### Example
 
 .pull-left[
-Why is multi-omics helpful? If a living system is a symphony, then each data
-source lets us hear a new set of instruments.
+1. Connecting the dots:
+  * Elevated inflammation is known to increased HIV risk.
+  * Cervicovaginal bacteria are known to influence inflammation.
+1. Earlier studies had only isolated individual bacteria (e.g., Gram-stained vaginal spears) and were not from representative, healthy populations.
 ]
 
 .pull-right[
-<img src="figures/symphony-score-2.png"/>
-]
-<br/>
-<br/>
-.microbiome-figure-bottom[
-<img src="figures/microbiome-header-2.png"></img>
+<img src="figures/gosman-cover.png" width=500/>
 ]
 
 ---
 
-### General Approaches: Latent Variables
+### Study Design: Cohort Profile
 
-Latent variable methods $Z$ reveal shared structure across data modalities.
-
-<img src="figures/latent_integration.png"/>
+1. **236** women age 18 - 23 from the FRESH cohort in Umlazi, South Africa. They take a 9 month course, meeting 6 hours a week.
+2. Mucosal samples are collected during pre/post pelvic exams (336 days median follow-up time).
+3. HIV testing twice weekly. **31** women acquired HIV during the course.
 
 ---
 
-### General Approaches: Network Inference
+### Study Design: Data Generation
+
+* **236** women age 18 - 23 from the FRESH cohort in Umlazi, South Africa. 
+* **31** women acquired HIV during the 9 month course.
+
+1. Microbiome Profiling
+	1. 16S rRNA sequencing
+	2. Virome (metagenomic sequencing)
+2. Host Profiling
+	1. Cytokines and chemokines (Multiplexed Bead Assay)
+	2. Immune cell co-receptors (Flow Cytometry)
+	3. Sexual behavior/vaginal hygiene survey
+
+---
+
+### CT and HIV Risk
+
+They define 4 cervicotypes. 
+  * _L. crispatus_ dominant (CT1, $n = 23$), _L. iners_ dominant (CT2, $n = 74$), _G. vaginalis_ dominant (CT3, $n = 68$), other dominant (CT4, $n = 70$).
+  * None were related to host behavioral data.
+
+<img src="figures/gosman-cts.jpeg"/>
+
+---
+
+### CT and HIV Risk
+
+1. None of the CT1 women acquired HIV
+2. CT4 was at higher risk. 95% interval was $HR \in \left[1.14, 17.27\right]$.
+
+.center[
+<img src="figures/gosman-hr.jpeg" width=520/>
+]
+
+---
+
+### Immunological Mechanism
+
+HIV targets CD4+ T cells with the CCR5 co-receptor. These cells were more common
+in CT4.
+
+.center[
+<img src="figures/gosman-corecepters.jpg" width=420/>
+]
+
+---
+
+### Immunological Mechanism
+
+These "target" T cells are attracted by certain chemokines. These are elevated in CT4.
+
+.center[
+<img src="figures/gosman-chemokines.jpg" width=400/>
+]
+
+---
+
+### Analysis Methods: Latent Variables
+
+Latent variable methods seek shared structure $Z$ across data modalities.
+
+.pull-left[
+<img src="figures/latent_integration.png" width=550/>
+]
+
+.pull-right[
+Examples: Canonical Correlation Analysis, Multiple Factor Analysis, Partial Least Squares, Co-operative Learning
+
+R Packages: `FactoMineR`, `mixOmics`, `multiview`.
+]
+
+---
+
+### Analysis Methods: Network Inference
 
 Network inference methods define edges within and between tables, showing how
 measurements are related to one another.
 
-<img src="figures/tree_integration.png"/>
+.pull-left[
+<img src="figures/tree_integration.png" width=550/>
+]
+
+.pull-right[
+Examples: Random Intersection Trees, Iterative Random Forests.
+
+R Packages: `FSInteract`, `iRF`.
+]
 
 ---
 
@@ -273,13 +400,23 @@ measurements are related to one another.
 
 1. Alignability: If one modality has little in common with the rest, then
 including it forces us to ignore real shared variation in the other modalities.
+We may be better off analyzing each dataset separately `r Citep(bib, "Ma2024-vk")`.
 
-1. Benchmarking: Directly validating associations is costly, so methods have to
-be compared through proxies or simulation.
+1. Differential Costs: Since modalities differ in their ease and cost of
+collection, we cannot expect the same technologies to be applied to all samples.
+
+1. Validation: Except in a few well-studied model organisms like yeast or E.
+coli, ground truth molecular interactions are generally unknown `r Citep(bib, "Walker2022-ho")`.
 
 ---
 
-### Exercise
+.center[
+## Demo + Exercises
+]
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Exercise solutions: [go.wisc.edu/oz91zf](https://go.wisc.edu/oz91zf)
+* Live Link: [go.wisc.edu/](https://go.wisc.edu/)
 
 ---
 

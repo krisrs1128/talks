@@ -110,23 +110,17 @@ A powerful idea in correction methods is to make proper use of controls:
 * Replication: At specific stages of analysis, you can create replicates to clarify the nature of subsequent variation.
 * Negative Controls: The experiment can be designed so that some features will not vary with interesting biological variation.
 
+---
+
+### Controls
+
 Effective replication and controls can help distinguish between upstream
 biological variation (from the original sample) and technical variation
-introduced later (during the sample preparation and sequencing).
+introduced later (during sample preparation and sequencing).
 
----
-&lt;!-- 
-### Analogy: Agriculture
-
-These ideas have classical analogs in agricultural field trials.
-
-Replication `\(\iff\)` Growing the same variety in separate fields
-Negative Controls `\(\iff\)` Growing a variety with no agricultural inputs
-
-?
- --&gt;
-
-&lt;!-- --- --&gt;
+.center[
+&lt;img src="figures/variation_stages.png" width=600/&gt;
+]
 
 ---
 
@@ -140,7 +134,8 @@ batch effect correction methods.
 ]
 
 .pull-right[
-
+&lt;img src="figures/cell-anova.png" width=500/&gt;
+Figure from (Zhang et al., 2023).
 ]
 
 ---
@@ -155,7 +150,56 @@ analysis workflows can lead to miscalibrated `\(p\)`-values.
 ]
 
 .pull-right[
+&lt;img src="figures/correction-1.png"/&gt;
+Figure from (Tonkin-Hill, 2023).  See also (Nygaard et al., 2016).
+]
 
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated `\(p\)`-values. 
+]
+
+.pull-right[
+&lt;img src="figures/correction-2.png"/&gt;
+Figure from (Tonkin-Hill, 2023).  See also (Nygaard et al., 2016).
+]
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated `\(p\)`-values. 
+]
+
+.pull-right[
+&lt;img src="figures/correction-3.png"/&gt;
+Figure from (Tonkin-Hill, 2023).  See also (Nygaard et al., 2016).
+]
+
+---
+
+### Challenges
+
+Correction needs to be applied with care. It's easy for problems to arise.
+
+.pull-left[
+Miscalibration: Plugging in batch-effect corrected outputs into differential
+analysis workflows can lead to miscalibrated `\(p\)`-values. 
+]
+
+.pull-right[
+&lt;img src="figures/correction-4.png"/&gt;
+Figure from (Tonkin-Hill, 2023).  See also (Nygaard et al., 2016).
 ]
 
 ---
@@ -173,7 +217,14 @@ calculate power and false discovery rates.
 
 ---
 
-### Exercise
+.center[
+## Demo + Exercises
+]
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Exercise solutions: [go.wisc.edu/oz91zf](https://go.wisc.edu/oz91zf)
+* Live Link: [go.wisc.edu/](https://go.wisc.edu/)
+
 
 ---
 
@@ -192,43 +243,121 @@ class: middle
 1. Vertical integration looks at the same dataset using many related assays.
 
 .center[
-&lt;img src="figures/vertical_integration.png" width=900/&gt;
+&lt;img src="figures/vertical_integration.png" width=500/&gt;
 ]
 
 ---
 
-### Motivation
+### Example
 
 .pull-left[
-Why is multi-omics helpful? If a living system is a symphony, then each data
-source lets us hear a new set of instruments.
+1. Connecting the dots:
+  * Elevated inflammation is known to increased HIV risk.
+  * Cervicovaginal bacteria are known to influence inflammation.
+1. Earlier studies had only isolated individual bacteria (e.g., Gram-stained vaginal spears) and were not from representative, healthy populations.
 ]
 
 .pull-right[
-&lt;img src="figures/symphony-score-2.png"/&gt;
-]
-&lt;br/&gt;
-&lt;br/&gt;
-.microbiome-figure-bottom[
-&lt;img src="figures/microbiome-header-2.png"&gt;&lt;/img&gt;
+&lt;img src="figures/gosman-cover.png" width=500/&gt;
 ]
 
 ---
 
-### General Approaches: Latent Variables
+### Study Design: Cohort Profile
 
-Latent variable methods `\(Z\)` reveal shared structure across data modalities.
-
-&lt;img src="figures/latent_integration.png"/&gt;
+1. **236** women age 18 - 23 from the FRESH cohort in Umlazi, South Africa. They take a 9 month course, meeting 6 hours a week.
+2. Mucosal samples are collected during pre/post pelvic exams (336 days median follow-up time).
+3. HIV testing twice weekly. **31** women acquired HIV during the course.
 
 ---
 
-### General Approaches: Network Inference
+### Study Design: Data Generation
+
+* **236** women age 18 - 23 from the FRESH cohort in Umlazi, South Africa. 
+* **31** women acquired HIV during the 9 month course.
+
+1. Microbiome Profiling
+	1. 16S rRNA sequencing
+	2. Virome (metagenomic sequencing)
+2. Host Profiling
+	1. Cytokines and chemokines (Multiplexed Bead Assay)
+	2. Immune cell co-receptors (Flow Cytometry)
+	3. Sexual behavior/vaginal hygiene survey
+
+---
+
+### CT and HIV Risk
+
+They define 4 cervicotypes. 
+  * _L. crispatus_ dominant (CT1, `\(n = 23\)`), _L. iners_ dominant (CT2, `\(n = 74\)`), _G. vaginalis_ dominant (CT3, `\(n = 68\)`), other dominant (CT4, `\(n = 70\)`).
+  * None were related to host behavioral data.
+
+&lt;img src="figures/gosman-cts.jpeg"/&gt;
+
+---
+
+### CT and HIV Risk
+
+1. None of the CT1 women acquired HIV
+2. CT4 was at higher risk. 95% interval was `\(HR \in \left[1.14, 17.27\right]\)`.
+
+.center[
+&lt;img src="figures/gosman-hr.jpeg" width=520/&gt;
+]
+
+---
+
+### Immunological Mechanism
+
+HIV targets CD4+ T cells with the CCR5 co-receptor. These cells were more common
+in CT4.
+
+.center[
+&lt;img src="figures/gosman-corecepters.jpg" width=420/&gt;
+]
+
+---
+
+### Immunological Mechanism
+
+These "target" T cells are attracted by certain chemokines. These are elevated in CT4.
+
+.center[
+&lt;img src="figures/gosman-chemokines.jpg" width=400/&gt;
+]
+
+---
+
+### Analysis Methods: Latent Variables
+
+Latent variable methods seek shared structure `\(Z\)` across data modalities.
+
+.pull-left[
+&lt;img src="figures/latent_integration.png" width=550/&gt;
+]
+
+.pull-right[
+Examples: Canonical Correlation Analysis, Multiple Factor Analysis, Partial Least Squares, Co-operative Learning
+
+R Packages: `FactoMineR`, `mixOmics`, `multiview`.
+]
+
+---
+
+### Analysis Methods: Network Inference
 
 Network inference methods define edges within and between tables, showing how
 measurements are related to one another.
 
-&lt;img src="figures/tree_integration.png"/&gt;
+.pull-left[
+&lt;img src="figures/tree_integration.png" width=550/&gt;
+]
+
+.pull-right[
+Examples: Random Intersection Trees, Iterative Random Forests.
+
+R Packages: `FSInteract`, `iRF`.
+]
 
 ---
 
@@ -236,31 +365,101 @@ measurements are related to one another.
 
 1. Alignability: If one modality has little in common with the rest, then
 including it forces us to ignore real shared variation in the other modalities.
+We may be better off analyzing each dataset separately .
 
-1. Benchmarking: Directly validating associations is costly, so methods have to
-be compared through proxies or simulation.
+1. Differential Costs: Since modalities differ in their ease and cost of
+collection, we cannot expect the same technologies to be applied to all samples.
+
+1. Validation: Except in a few well-studied model organisms like yeast or E.
+coli, ground truth molecular interactions are generally unknown .
 
 ---
 
-### Exercise
+.center[
+## Demo + Exercises
+]
+
+* Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
+* Exercise solutions: [go.wisc.edu/oz91zf](https://go.wisc.edu/oz91zf)
+* Live Link: [go.wisc.edu/](https://go.wisc.edu/)
 
 ---
 
 ### References
 
-NULL
+Bodein, A. et al. (2019a). "A generic multivariate framework for the integration of
+microbiome longitudinal studies with other data types". En. In: _Front. Genet._ 10,
+p. 963.
+
+Bodein, A. et al. (2019b). "A generic multivariate framework for the integration of
+microbiome longitudinal studies with other data types". En. In: _Front. Genet._ 10,
+p. 963.
+
+Cai, T. et al. (2011). "Adaptive Thresholding for Sparse Covariance Matrix
+Estimation". In: _J. Am. Stat. Assoc._ 106.494, pp. 672-684.
+
+Czado, C. et al. (2022). "Vine copula based modeling". En. In: _Annu. Rev. Stat.
+Appl._ 9.1, pp. 453-477.
 
 ---
 
-NULL
+Deek, R. A. et al. (2020). "A zero-inflated Latent Dirichlet Allocation model for
+microbiome studies". En. In: _Front. Genet._ 11, p. 602594.
+
+Deek, R. A. et al. (2023). "Inference of microbial covariation networks using
+copula models with mixture margins". En. In: _Bioinformatics_ 39.7.
+
+Duren, Z. et al. (2018). "Integrative analysis of single-cell genomics data by
+coupled nonnegative matrix factorizations". En. In: _Proc. Natl. Acad. Sci. U. S.
+A._ 115.30, pp. 7723-7728.
+
+Eisen, M. B. et al. (1998). "Cluster analysis and display of genome-wide expression
+patterns". En. In: _Proc. Natl. Acad. Sci. U. S. A._ 95.25, pp. 14863-14868.
 
 ---
 
-NULL
+Friedman, J. et al. (2008). "Sparse inverse covariance estimation with the
+graphical lasso". En. In: _Biostatistics_ 9.3, pp. 432-441.
+
+Holmes, S. et al. (2019). _Modern statistics for modern biology_. En. Cambridge,
+England: Cambridge University Press.
+
+Jiang, R. et al. (2021). "mbImpute: an accurate and robust imputation method for
+microbiome data". En. In: _Genome Biol._ 22.1, p. 192.
+
+Joe, H. (2023). _Dependence modeling with copulas_. En. Chapman &amp; Hall/CRC
+Monographs on Statistics and Applied Probability. London, England: CRC Press.
 
 ---
 
-NULL
+Lahti, L. et al. (2014). "Tipping elements in the human intestinal ecosystem". In:
+_Nature Communications_ 5.1. ISSN: 2041-1723. DOI:
+[10.1038/ncomms5344](https://doi.org/10.1038%2Fncomms5344). URL:
+[http://dx.doi.org/10.1038/ncomms5344](http://dx.doi.org/10.1038/ncomms5344).
+
+Law, C. W. et al. (2014). "voom: Precision weights unlock linear model analysis
+tools for RNA-seq read counts". En. In: _Genome Biol._ 15.2, p. R29.
+
+Lê Cao, K. et al. (2011). "Sparse PLS discriminant analysis: biologically relevant
+feature selection and graphical displays for multiclass problems". En. In: _BMC
+Bioinformatics_ 12.1, p. 253.
+
+Lê Cao, K. et al. (2008a). "A sparse PLS for variable selection when integrating
+omics data". En. In: _Stat. Appl. Genet. Mol. Biol._ 7.1, p. Article 35.
+
+Lê Cao, K. et al. (2008b). "A sparse PLS for variable selection when integrating
+omics data". En. In: _Stat. Appl. Genet. Mol. Biol._ 7.1, p. Article 35.
+
+Liu, H. et al. (2009). "The Nonparanormal: Semiparametric Estimation of High
+Dimensional Undirected Graphs". In: _Journal of Machine Learning Research_ 10.80,
+pp. 2295-2328. URL:
+[http://jmlr.org/papers/v10/liu09a.html](http://jmlr.org/papers/v10/liu09a.html).
+
+Luecken, M. D. et al. (2022). "Benchmarking atlas-level data integration in
+single-cell genomics". En. In: _Nat. Methods_ 19.1, pp. 41-50.
+
+Meinshausen, N. et al. (2006). "High-dimensional graphs and variable selection with
+the Lasso". In: _Ann. Stat._ 34.3, pp. 1436-1462.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
