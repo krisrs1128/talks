@@ -406,6 +406,17 @@ R Packages: `FSInteract`, `iRF`.
 
 ---
 
+### Challenges
+
+1. Alignability: If one modality has little in common with the rest, then
+including it forces us to ignore real shared variation in the other modalities.
+We may be better off analyzing each dataset separately `r Citep(bib, "Ma2024-vk")`.
+
+1. Differential Costs: Experimental design becomes especially complex when there
+are multiple modalities and some are easier to collect than others.
+
+---
+
 ### Simulator Definition
 
 Today, we will re-estimate a copula covariance matrix across modalities,
