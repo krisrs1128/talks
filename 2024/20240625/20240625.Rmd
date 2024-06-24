@@ -61,12 +61,13 @@ Session 3: Integrative Analysis
 <div id="subtitle">
 Kris Sankaran <br/>
 25 | June | 2024 <br/>
-Melbourne Integrative Genomics<br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-<!-- Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/u10492</a>  -->
+Melbourne Integrative Genomics<br/>
+Slides: <a href="https://go.wisc.edu/54tmr9">go.wisc.edu/54tmr9</a><br/>
+Code: <a href="https://go.wisc.edu/yd3yz9">go.wisc.edu/yd3yz9</a>
 </div>
 
 ---
@@ -274,7 +275,7 @@ simulator <- setup_simulator(
 ]
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
-* Exercise solutions: [go.wisc.edu/oz91zf](https://go.wisc.edu/oz91zf)
+* Exercise solutions: [go.wisc.edu/yd3yz9](https://go.wisc.edu/yd3yz9)
 * Live Link: [go.wisc.edu/](https://go.wisc.edu/)
 
 
@@ -312,14 +313,6 @@ class: middle
 .pull-right[
 <img src="figures/gosman-cover.png" width=500/>
 ]
-
----
-
-### Study Design: Cohort Profile
-
-1. **236** women age 18 - 23 from the FRESH cohort in Umlazi, South Africa. They take a 9 month course, meeting 6 hours a week.
-2. Mucosal samples are collected during pre/post pelvic exams (336 days median follow-up time).
-3. HIV testing twice weekly. **31** women acquired HIV during the course.
 
 ---
 
@@ -435,7 +428,7 @@ but this requires the `reticulate` package, which can be tricky to set up.
 ]
 
 * Code repository: [go.wisc.edu/o5sn6w](https://go.wisc.edu/o5sn6w)
-* Exercise solutions: [go.wisc.edu/oz91zf](https://go.wisc.edu/oz91zf)
+* Exercise solutions: [go.wisc.edu/yd3yz9](https://go.wisc.edu/yd3yz9)
 * Live Link: [go.wisc.edu/](https://go.wisc.edu/)
 
 ---
@@ -511,52 +504,4 @@ PrintBibliography(bib, start = 1, end = 4)
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 5, end = 8)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 9, end = 12)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 13, end = 16)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 17, end = 20)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 21, end = 24)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 25, end = 28)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 29, end = 32)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 33, end = 36)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 37, end = 40)
 ```
