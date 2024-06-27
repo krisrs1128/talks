@@ -84,7 +84,7 @@ Bibhas Chakraborty, Bee Choo Tai
 .pull-right[
 **Structure**
 
-1. Goals
+1. Values
 1. Audience
 1. Program
 ]
@@ -182,10 +182,12 @@ class: middle
 
 Theoretical analysis has driven advances in biological data integration,
 
+.pull-left[
 1. **Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.**
 
-1. Consolidation: Theory can create coherent framework from which to compare
-various available methods.
+1. Consolidation: Theory can create coherent framework from which to evaluate
+available methods.
+]
 
 .pull-right[
   High-Dimensional CCA
@@ -197,22 +199,11 @@ various available methods.
 
 Theoretical analysis has driven advances in biological data integration,
 
-1. **Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.**
-
-1. Consolidation: Theory can create coherent framework from which to compare various available methods.
-
-.pull-right[
-]
-
----
-
-### Motivation
-
-Theoretical analysis has driven advances in biological data integration,
-
+.pull-left[
 1. Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.
 
-1. **Consolidation: Theory can create coherent framework from which to compare various available methods.**
+1. **Consolidation: Theory can create coherent framework from which to evaluate available methods.**
+]
 
 .pull-right[
   Tensor methods for network integration
@@ -224,9 +215,11 @@ Theoretical analysis has driven advances in biological data integration,
 
 Modern data can also inspire developments in theory,
 
-1. **Expanded Abstractions: As the collection of derived applications grows, theoretical concepts can be enriched.**
+.pull-left[
+1. **Expanded Abstractions: As the collection of applications grows, theoretical concepts can be enriched.**
 
 1. Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.
+]
 
 .pull-right[
   Empirical Bayes PCA
@@ -237,8 +230,10 @@ Modern data can also inspire developments in theory,
 
 Modern data can also inspire developments in theory,
 
-1. Expanded Abstractions: As the collection of derived applications grows, theoretical concepts can be enriched.
+.pull-left[
+1. Expanded Abstractions: As the collection of applications grows, theoretical concepts can be enriched.
 1. **Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.**
+]
 
 .pull-right[
   Testing for the alignability of multiple tables
@@ -256,16 +251,89 @@ class: middle
 
 ### Goals
 
+1. Support discussions that could lead to methodological and conceptual
+breakthroughs in biological data integration.
+
+1. Provide training on current best practices for researchers who are entering
+the field either from statistical or biological backgrounds.
+
 ---
 
-### Audience
+### Values: Communication
 
+Our workshop aims to promote effective communication between researchers working
+on complementary biological and statistical aspects of the data integration
+problem.
+
+1. Focused discussions will clarify challenges and identify strategies for
+interdisciplinary research.
+
+1. Tutorials will help establish shared vocabulary that can serve as a reference
+throughout the workshop.
 
 ---
 
+### Values: Hands-on Learning
+
+We want workshop participants with varying levels of expertise to leave with a
+concrete understanding of the current theory and practice of data integration.
+
+1. We will curate a collection of problems, datasets, and methods for data
+integration which can serve as a resource for the wider community.
+
+1. We will create opportunities for participants to present short research demos
+and talks.
+
+---
+
+### Schedule
+
+The program will span roughly three weeks, divided into two main components.
+
+Draw a timeline with:
+
+2 x 4 days: Tutorials
+
+8 days: Talks and Discussion 
+Talks + Demo
+Talks + Discussion
+
+---
 
 ### Tutorials
 
+1. Biological Data management and Visualization [Kris Sankaran]
+
+1. Introduction to Regression Trees [Wei-Yin Loh]
+
+1. Generative Models for Multi-omics [Kris Sankaran]
+
+1. Case Studies from the CPTAC Project [Xiaoyu Song]
+
+
+---
+
+### Talks
+
+---
+
+### Recruitment
+
+1. 
+
+The data integration problem is faced by researchers in academic, hospital, and
+industry settings, and we want to make our workshop accessible to 
+
+
+
+
+Our team will recruit students, scientists, and researchers locally and abroad
+who have the potential to benefit from one another's expertise.
+
+1. University Campuses
+1. Research Institutes
+1. Industry Scientists
+1. Hospitals 
 
 ---
 
