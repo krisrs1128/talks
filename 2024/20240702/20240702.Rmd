@@ -303,21 +303,30 @@ Talks + Discussion
 
 ### Tutorials: Biological Data Management and Visualization
 
+**Kris Sankaran** will provide an introduction to managing and visualizing
+multi-omics data using tools from the Bioconductor ecosystem.
+
 ---
 
 ### Tutorials: Introduction to Regression Trees
 
+**Wei-Yin Loh** will offer a course on tree-based methods and their application
+*to mixed data types that arise in biomedical settings.
 
 ---
 
 ### Tutorials: Generative Models for Multi-omics
 
+**Kris Sankaran** will review concepts from probabilistic modeling, evaluation,
+and interpretation that are the basis for many data integration methods.
+
 ---
 
 ### Tutorials: Case Studies from the CPTAC Project
 
-**Xiaoyu Song** will lead a session illustrating how integration problems are
-formulated and solved in the 
+**Xiaoyu Song** will lead a session describing how problems have been formulated
+*and solved in her expeience with the Clinical Proteomic Tumor Analsyis
+*Consortium (CPTAC).
 
 ---
 
@@ -325,15 +334,19 @@ formulated and solved in the
 
 Talks will be grouped according to methodological themes.
 
+.pull-left[
 1. Robust and Reproducible Integration
 
 1. Spatial and Single-Cell Analysis
 
 1. Efficient and Scalable Models
+]
 
+.pull-right[
 1. Emerging Sequencing Technologies
 
 1. AI for Biological Foundation Models
+]
 
 ---
 
@@ -347,9 +360,25 @@ Talks will be grouped according to methodological themes.
 Our team will recruit students, scientists, and researchers locally and abroad
 who have the potential to benefit from one another's expertise.
 
-1. University Campuses
-1. Research Institutes
-1. Hospitals and Companies
+1. (50\%) University Campuses
+1. (20\%) Research Institutes
+1. (20\%) Hospitals
+1. (10\%) Industry
+
+---
+
+### Why IMS-NUS?
+
+1. Interdisciplinary emphasis: The workshop relies on an environment that allows
+researchers from multiple backgrounds to feel welcome.
+
+1. Statistics reputation: Unlike related workshops, we hope to emphasize the
+role of statistical thinking in integration, so the IMS - NUS connection will
+help.
+
+1. Location: The strength of both the statistics and bioinformatics communities
+in Singapore will ensure that the workshop balances theoretical and applied
+perspectives.
 
 ---
 
