@@ -335,42 +335,51 @@ and interpretation that are the basis for many data integration methods.
 Talks will be grouped according to methodological themes.
 
 .pull-left[
-1. Robust and Reproducible Integration
+* Robust and Reproducible Integration
 
-1. Spatial and Single-Cell Analysis
+* Spatial and Single-Cell Analysis
 
-1. Efficient and Scalable Models
+* Efficient and Scalable Models
 ]
 
 .pull-right[
-1. Emerging Sequencing Technologies
+* Emerging Sequencing Technologies
 
-1. AI for Biological Foundation Models
+* AI for Biological Foundation Models
 ]
 
 ---
 
-### Talk Discussions
+### Interaction
 
+Beyond the featured talks, we will create opportunities for both formal and
+informal interaction among all participants.
+
+1. Facilitated discussion
+1. Lightning research talks
+1. Data analysis demos 
+
+Depending on speaker preferences, we will curate resources from these activities
+onto public/private links on a workshop website.
 
 ---
 
 ### Recruitment
 
-Our team will recruit students, scientists, and researchers locally and abroad
-who have the potential to benefit from one another's expertise.
+The organizing team will recruit students, scientists, and researchers locally
+and abroad who have the potential to benefit from one another's expertise.
 
-1. (50\%) University Campuses
-1. (20\%) Research Institutes
-1. (20\%) Hospitals
-1. (10\%) Industry
+1. University Campuses (50%)
+1. Research Institutes (20%)
+1. Hospitals (20%)
+1. Industry (10%)
 
 ---
 
 ### Why IMS-NUS?
 
 1. Interdisciplinary emphasis: The workshop relies on an environment that allows
-researchers from multiple backgrounds to feel welcome.
+researchers from multiple backgounds to feel welcome.
 
 1. Statistics reputation: Unlike related workshops, we hope to emphasize the
 role of statistical thinking in integration, so the IMS - NUS connection will
@@ -384,6 +393,12 @@ perspectives.
 
 ### Conclusion
 
+1. We believe that this topic has the potential both to demonstrate the value of
+statistics to the wider scientific community and to bring exciting, new problems
+into statistical discussion.
+
+1. Our team is excited by the possibility of contributing to the IMS - NUS
+workshop series.
 
 ---
 
