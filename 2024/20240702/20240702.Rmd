@@ -294,49 +294,69 @@ Draw a timeline with:
 
 2 x 4 days: Tutorials
 
+Facilitator training
+
 8 days: Talks and Discussion 
-Talks + Demo
 Talks + Discussion
 
 ---
 
-### Tutorials
+### Tutorials: Biological Data Management and Visualization
 
-1. Biological Data management and Visualization [Kris Sankaran]
+---
 
-1. Introduction to Regression Trees [Wei-Yin Loh]
-
-1. Generative Models for Multi-omics [Kris Sankaran]
-
-1. Case Studies from the CPTAC Project [Xiaoyu Song]
+### Tutorials: Introduction to Regression Trees
 
 
 ---
 
-### Talks
+### Tutorials: Generative Models for Multi-omics
+
+---
+
+### Tutorials: Case Studies from the CPTAC Project
+
+**Xiaoyu Song** will lead a session illustrating how integration problems are
+formulated and solved in the 
+
+---
+
+### Talk Themes
+
+Talks will be grouped according to methodological themes.
+
+1. Robust and Reproducible Integration
+
+1. Spatial and Single-Cell Analysis
+
+1. Efficient and Scalable Models
+
+1. Emerging Sequencing Technologies
+
+1. AI for Biological Foundation Models
+
+---
+
+### Talk Discussions
+
 
 ---
 
 ### Recruitment
-
-1. 
-
-The data integration problem is faced by researchers in academic, hospital, and
-industry settings, and we want to make our workshop accessible to 
-
-
-
 
 Our team will recruit students, scientists, and researchers locally and abroad
 who have the potential to benefit from one another's expertise.
 
 1. University Campuses
 1. Research Institutes
-1. Industry Scientists
-1. Hospitals 
+1. Hospitals and Companies
 
 ---
 
+### Conclusion
+
+
+---
 
 ### References
 
