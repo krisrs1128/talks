@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Trustworthy and Adaptable Data Integration</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+
+
+&lt;div id="title"&gt;
+Trustworthy and Adaptable Data Integration&lt;br/&gt;
+&lt;br/&gt;
+&lt;span style="font-size: 30px"&gt;
+IMS - NUS Workshop Proposal 
+&lt;/span&gt;
+&lt;/div&gt;
+&lt;div id="under_title"&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+03 | July | 2024 &lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/54tmr9"&gt;go.wisc.edu/54tmr9&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran, Wei-Yin Loh &lt;br/&gt; 
+Susan Holmes Wanjie Wang &lt;br/&gt;
+Bibhas Chakraborty, Bee Choo Tai
+&lt;/div&gt;
+
+---
+
+class: middle
+
+.center[
+## Scientific Context
+]
+
+---
+
+### Data Integration
+
+For many biological problems, researchers gather multiple views,
+
+.center[
+&lt;img src="figures/integration_types.png" width=1000/&gt;
+]
+
+Data integration makes it easier to answer questions using all relevant data.
+
+---
+
+### Example: Long COVID
+
+1. Molecular data have shed light on the immune system mechanisms behind long
+COVID-19.
+
+1. Multiple high-dimensional sources can be integrated to identify the immune
+cell types and interactions that are important.
+
+https://www.npr.org/sections/health-shots/2023/09/09/1198342040/long-covid-causes-treatment-research
+
+---
+
+### Example: Cancer
+
+.pull-left[
+1. Data about the molecular activity and cellular organization has clarified
+when treatments are more likely to be effective. 
+
+1. Data from several technologies and levels of resolution -- population,
+person, tissue, cell -- need to be studied together.
+]
+
+.pull-right[
+&lt;img src="figures/oncology_multi-omics-2.png" width=450/&gt;
+]
+
+
+---
+
+class: middle
+
+.center[
+## Statistical Challenges
+]
+
+---
+
+### Adaptability
+
+How can we enable careful data analysis when each problem might involve diverse
+data types and experimental designs?
+
+1. General-purpose techniques
+1. Effective diagnostics
+1. Scalability
+
+Biological insights can be hindered by inappropriate assumptions or the failure
+to use all of the data.
+
+---
+
+### Reproducibility
+
+Complex workflows which have many interlocking steps and may use black boxes
+challenge scientific reproducibility and interpretability. The community needs
+methods for,
+
+1. Assessing stability
+1. Addressing selection baises
+1. Supporting re-usable software
+
+---
+
+### Community Resources
+
+Larger community databases can be informative, but may be noisier or only
+indirectly related to questions of interest. How should they be brought into a
+specific analysis?
+
+1. Cell type atlases
+1. Gene function annotation
+1. Electronic health records
+
+---
+
+class: middle
+
+.center[
+## Mathematical Opportunities
+]
+
+---
+
+### Motivation
+
+Theoretical analysis has driven advances in biological data integration,
+
+.pull-left[
+1. **Improved Algorithms: Theory creates language for forming and answering novel questions.**
+
+1. Consolidation: Theory can create coherent framework from which to evaluate
+available methods.
+]
+
+.pull-right[
+  &lt;img src="figures/cfit.jpg" width=700/&gt;
+]
+
+---
+
+### Motivation
+
+Theoretical analysis has driven advances in biological data integration,
+
+.pull-left[
+1. Improved Algorithms: Theory creates language for forming and answering novel questions.
+
+1. **Consolidation: Theory can create coherent framework from which to evaluate available methods.**
+]
+
+.pull-right[
+  &lt;img src="figures/cnv.png"/&gt;
+]
+
+---
+
+### Motivation
+
+Modern data can also inspire developments in theory,
+
+.pull-left[
+1. **Expanded Abstractions: As more applications emerge, theoretical concepts can be enriched.**
+
+1. Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.
+]
+
+.pull-right[
+  Empirical Bayes PCA
+]
+---
+
+### Motivation
+
+Modern data can also inspire developments in theory,
+
+.pull-left[
+1. Expanded Abstractions: As more applications emerge, theoretical concepts can be enriched.
+
+1. **Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.**
+]
+
+.pull-right[
+&lt;img src="figures/sparse_gca.png"/&gt;
+
+* CCA extended to `\(K\)` tables
+* `\(\ell^{1}\)`-regularization to handle high-dimensional settings
+]
+
+---
+
+class: middle
+
+.center[
+## Workshop Structure
+]
+
+---
+
+### Goals
+
+1. Support discussions that could lead to methodological and conceptual
+breakthroughs in biological data integration.
+
+1. Provide training on current best practices for researchers who are entering
+the field either from statistical or biological backgrounds.
+
+---
+
+### Values: Communication
+
+Our workshop aims to promote effective communication between researchers working
+on complementary biological and statistical aspects of the data integration
+problem.
+
+1. Focused discussions will clarify challenges and identify strategies for
+interdisciplinary research.
+
+1. Tutorials will help establish shared vocabulary that can serve as a reference
+throughout the workshop.
+
+---
+
+### Values: Hands-on Learning
+
+We want workshop participants with varying levels of expertise to leave with a
+concrete understanding of the current theory and practice of data integration.
+
+1. We will curate a collection of problems, datasets, and methods for data
+integration which can serve as a resource for the wider community.
+
+1. We will create opportunities for participants to present short research demos
+and talks.
+
+---
+
+### Schedule
+
+The program will span roughly three weeks, divided into two main components.
+
+Draw a timeline with:
+
+2 x 4 days: Tutorials
+
+Facilitator training
+
+8 days: Talks and Discussion 
+Talks + Discussion
+
+---
+
+### Tutorials: Biological Data Management and Visualization
+
+**Kris Sankaran** will provide an introduction to managing and visualizing
+multi-omics data using tools from the Bioconductor ecosystem.
+
+---
+
+### Tutorials: Introduction to Regression Trees
+
+**Wei-Yin Loh** will offer a course on tree-based methods and their application
+to mixed data types that arise in biomedical settings.
+
+.center[
+&lt;img src="figures/guide_1.png" width=700/&gt;
+]
+
+---
+### Tutorials: Introduction to Regression Trees
+
+**Wei-Yin Loh** will offer a course on tree-based methods and their application
+to mixed data types that arise in biomedical settings.
+
+.center[
+&lt;img src="figures/genie3_overview.png" width=720/&gt;
+
+Figure from .
+]
+
+---
+
+### Tutorials: Generative Models for Multi-omics
+
+**Kris Sankaran** will review concepts from probabilistic modeling, evaluation,
+and interpretation that are the basis for many data integration methods.
+
+---
+
+### Tutorials: Case Studies from CPTAC
+
+**Xiaoyu Song** will lead a tutorial describing how problems have been
+formulated
+and solved in her expeience with the Clinical Proteomic Tumor Analsyis
+Consortium (CPTAC).
+
+.center[
+&lt;img src="figures/CPTAC_overview.jpg" width=700/&gt;
+]
+
+---
+
+### Tutorials: Case Studies from CPTAC
+
+**Xiaoyu Song** will lead a tutorial describing how problems have been
+formulated
+and solved in her expeience with the Clinical Proteomic Tumor Analsyis
+Consortium (CPTAC).
+
+.center[
+&lt;img src="figures/CPTAC_multiomics.png" width=800/&gt;
+]
+
+---
+
+### Talks Criteria
+
+We will invite speakers based on complementary criteria,
+
+1. **Compelling Applications**: Work that shows what is possible by carefully analyzing modern data.
+
+1. **Statistical Foundations**: Research that draws deeply from the statistical canon and highlights opportunities for the field.
+
+1. **Creative Perspectives**: Studies that have discovered surprising connections across fields.
+
+
+---
+
+### Interaction
+
+Beyond the featured talks, we will create opportunities for both formal and
+informal interaction among all participants.
+
+1. Facilitated discussion
+1. Lightning research talks
+1. Data analysis demos 
+
+Depending on speaker preferences, we will curate resources from these activities
+onto public/private links on a workshop website.
+
+---
+
+### Recruitment
+
+The organizing team will recruit students, scientists, and researchers locally
+and abroad who have the potential to benefit from one another's expertise.
+
+1. University Campuses (50%)
+1. Research Institutes (20%)
+1. Hospitals (20%)
+1. Industry (10%)
+
+---
+
+### Why IMS-NUS?
+
+1. Interdisciplinary emphasis: The workshop relies on an environment that allows
+researchers from multiple backgounds to feel welcome.
+
+1. Statistics reputation: Unlike related workshops on integration, we emphasize
+the role of statistics, and the IMS - NUS connection will help.
+
+1. Location: The strength of both the statistics and bioinformatics communities
+in Singapore will ensure that the workshop balances theoretical and applied
+perspectives.
+
+---
+
+### Conclusion
+
+1. We believe that this topic has the potential both to demonstrate the value of
+statistics to the wider scientific community and to bring exciting, new problems
+into statistical discussion.
+
+1. Our team is excited by the possibility of contributing to the IMS - NUS
+workshop series.
+
+---
+
+### References
+
+NULL
+
+---
+
+NULL
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
