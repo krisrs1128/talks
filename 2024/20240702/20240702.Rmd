@@ -1,0 +1,283 @@
+---
+title: "Trustworthy and Adaptable Data Integration"
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+min_theme <- theme_minimal() + 
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+
+BibOptions(
+  check.entries = TRUE, 
+  bib.style = "authoryear", 
+  cite.style = "authoryear", 
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+<div id="title">
+Trustworthy and Adaptable Data Integration
+</div>
+<div id="under_title">
+</div>
+
+<div id="subtitle_right">
+IMS - NUS Workshop Proposal <br/>
+03 | July | 2024 <br/>
+Slides: <a href="https://go.wisc.edu/54tmr9">go.wisc.edu/54tmr9</a>
+</div>
+
+<div id="subtitle">
+Kris Sankaran, Wei-Yin Loh <br/> 
+Susan Holmes Wanjie Wang <br/>
+Bibhas Chakraborty, Bee Choo Tai
+</div>
+
+---
+
+### Outline
+
+.pull-left[
+**Setting**
+
+1. Scientific Context
+1. Statistical Challenges
+1. Mathematical Opportunities
+]
+
+.pull-right[
+**Structure**
+
+1. Goals
+1. Audience
+1. Program
+]
+
+---
+
+class: middle
+
+.center[
+## Scientific Context
+]
+
+---
+
+### Data Integration
+
+For many biological problems, it is necessary to gather complementary views,
+
+1. Horizontal: Gather the same type of measurements across related, but not
+identical cohorts.
+1. Vertical: Gather multiple types of measurements from the same biological systems.
+
+Research in data integration should make it easier to answer questions that need
+data from all these sources.
+
+---
+
+### Example: Cancer Research
+
+Information about the molecular activity and global organization of cells has
+helped advance understanding and personalized treatment of cancer.
+
+---
+
+### Example: Gene Editing
+
+(?)
+
+---
+
+class: middle
+
+.center[
+## Statistical Challenges
+]
+
+---
+
+### Adaptability
+
+How can we enable careful data analysis when each problem might involve diverse
+data types and experimental designs?
+
+1. General-purpose techniques
+1. Effective diagnostics
+1. Strategies for scalability
+
+Biological insights can be hindered by inappropriate assumptions or the failure
+to use all of the data.
+
+---
+
+### Reproducibility
+
+Complex workflows -- which have many interlocking steps and may use black boxes
+-- challenge scientific reproducibility and interpretability.
+
+1. Assessing stability
+1. Addressing selection baises
+1. Supporting re-usable software
+
+---
+
+### Community Resources
+
+Larger community databases can be informative, but may be noisier or only
+indirectly related to questions of interest. How should they be brought into a
+specific analysis?
+
+1. Cell type atlases
+1. Gene function annotation
+1. Electronic health records
+
+---
+
+class: middle
+
+.center[
+## Mathematical Opportunities
+]
+
+---
+
+### Motivation
+
+Theoretical analysis has driven advances in biological data integration,
+
+1. **Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.**
+
+1. Consolidation: Theory can create coherent framework from which to compare
+various available methods.
+
+.pull-right[
+  High-Dimensional CCA
+]
+
+---
+
+### Motivation
+
+Theoretical analysis has driven advances in biological data integration,
+
+1. **Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.**
+
+1. Consolidation: Theory can create coherent framework from which to compare various available methods.
+
+.pull-right[
+]
+
+---
+
+### Motivation
+
+Theoretical analysis has driven advances in biological data integration,
+
+1. Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.
+
+1. **Consolidation: Theory can create coherent framework from which to compare various available methods.**
+
+.pull-right[
+  Tensor methods for network integration
+]
+
+---
+
+### Motivation
+
+Modern data can also inspire developments in theory,
+
+1. **Expanded Abstractions: As the collection of derived applications grows, theoretical concepts can be enriched.**
+
+1. Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.
+
+.pull-right[
+  Empirical Bayes PCA
+]
+---
+
+### Motivation
+
+Modern data can also inspire developments in theory,
+
+1. Expanded Abstractions: As the collection of derived applications grows, theoretical concepts can be enriched.
+1. **Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.**
+
+.pull-right[
+  Testing for the alignability of multiple tables
+]
+
+---
+
+class: middle
+
+.center[
+## Workshop Structure
+]
+
+---
+
+### Goals
+
+---
+
+### Audience
+
+
+---
+
+
+### Tutorials
+
+
+---
+
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 4)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 5, end = 8)
+```
