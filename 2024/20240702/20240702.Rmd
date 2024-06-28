@@ -52,15 +52,16 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="title">
-Trustworthy and Adaptable Data Integration
+Trustworthy and Adaptable Data Integration<br/>
+<br/>
 </div>
 <div id="under_title">
+IMS - NUS Workshop Proposal 
 </div>
 
 <div id="subtitle_right">
-IMS - NUS Workshop Proposal <br/>
 03 | July | 2024 <br/>
-Slides: <a href="https://go.wisc.edu/54tmr9">go.wisc.edu/54tmr9</a>
+Slides: <a href="https://go.wisc.edu/8k8r2q">go.wisc.edu/8k8r2q</a>
 </div>
 
 <div id="subtitle">
@@ -68,26 +69,6 @@ Kris Sankaran, Wei-Yin Loh <br/>
 Susan Holmes Wanjie Wang <br/>
 Bibhas Chakraborty, Bee Choo Tai
 </div>
-
----
-
-### Outline
-
-.pull-left[
-**Setting**
-
-1. Scientific Context
-1. Statistical Challenges
-1. Mathematical Opportunities
-]
-
-.pull-right[
-**Structure**
-
-1. Values
-1. Audience
-1. Program
-]
 
 ---
 
@@ -101,27 +82,41 @@ class: middle
 
 ### Data Integration
 
-For many biological problems, it is necessary to gather complementary views,
+For many biological problems, researchers gather multiple views,
 
-1. Horizontal: Gather the same type of measurements across related, but not
-identical cohorts.
-1. Vertical: Gather multiple types of measurements from the same biological systems.
+.center[
+<img src="figures/integration_types.png" width=1000/>
+]
 
-Research in data integration should make it easier to answer questions that need
-data from all these sources.
-
----
-
-### Example: Cancer Research
-
-Information about the molecular activity and global organization of cells has
-helped advance understanding and personalized treatment of cancer.
+Data integration makes it easier to answer questions using all relevant data.
 
 ---
 
-### Example: Gene Editing
+### Example: Long COVID
 
-(?)
+1. Molecular data have shed light on the immune system mechanisms behind long
+COVID-19.
+
+1. Multiple high-dimensional sources can be integrated to identify the immune
+cell types and interactions that are important.
+
+https://www.npr.org/sections/health-shots/2023/09/09/1198342040/long-covid-causes-treatment-research
+
+---
+
+### Example: Cancer
+
+.pull-left[
+1. Data about the molecular activity and cellular organization has clarified
+when treatments are more likely to be effective. 
+
+1. Data from several technologies and levels of resolution -- population,
+person, tissue, cell -- need to be studied together.
+]
+
+.pull-right[
+<img src="figures/Lung_cancer_HAVCR2.jpg" width=450/>
+]
 
 ---
 
@@ -135,12 +130,18 @@ class: middle
 
 ### Adaptability
 
-How can we enable careful data analysis when each problem might involve diverse
-data types and experimental designs?
+How can we enable careful statistical analysis across diverse data types and
+experimental designs?
 
+.pull-left[
 1. General-purpose techniques
 1. Effective diagnostics
-1. Strategies for scalability
+1. Scalability
+]
+
+.pull-right[
+<img src="figures/data_types.png" width=500/>
+]
 
 Biological insights can be hindered by inappropriate assumptions or the failure
 to use all of the data.
@@ -149,12 +150,19 @@ to use all of the data.
 
 ### Reproducibility
 
-Complex workflows -- which have many interlocking steps and may use black boxes
--- challenge scientific reproducibility and interpretability.
+Complex workflows which have many interlocking steps and may use black boxes
+challenge scientific reproducibility and interpretability. The community needs
+methods for,
 
+.pull-left[
 1. Assessing stability
 1. Addressing selection baises
 1. Supporting re-usable software
+]
+
+.pull-right[
+<img src="figures/multimodal_flow.png" width=500/>
+]
 
 ---
 
@@ -164,9 +172,15 @@ Larger community databases can be informative, but may be noisier or only
 indirectly related to questions of interest. How should they be brought into a
 specific analysis?
 
+.pull-left[
 1. Cell type atlases
 1. Gene function annotation
 1. Electronic health records
+]
+
+.pull-right[
+<img src="figures/NeuronsGraphic-Lee_Dalley.png" width=700/>
+]
 
 ---
 
@@ -183,14 +197,18 @@ class: middle
 Theoretical analysis has driven advances in biological data integration,
 
 .pull-left[
-1. **Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.**
+1. **Improved Algorithms: Theory creates language for forming and answering novel questions.**
 
 1. Consolidation: Theory can create coherent framework from which to evaluate
 available methods.
 ]
 
 .pull-right[
-  High-Dimensional CCA
+  <img src="figures/cfit.jpg" width=480/>
+  <span style="font-size: 18px;">
+  Low-rank models are ubiquitous in integration across high-dimensional genomics
+  data.
+  </span>
 ]
 
 ---
@@ -200,13 +218,16 @@ available methods.
 Theoretical analysis has driven advances in biological data integration,
 
 .pull-left[
-1. Improved Algorithms: Theory can provide richer vocabulary for formulating and answering quantitative questions based on biological data.
+1. Improved Algorithms: Theory creates language for forming and answering novel questions.
 
 1. **Consolidation: Theory can create coherent framework from which to evaluate available methods.**
 ]
 
 .pull-right[
-  Tensor methods for network integration
+  <img src="figures/cnv.png" width=440/>
+  <span style="font-size: 18px;">
+  Changepoint detection offers a useful lens for analyzing copy number variation.
+  </span>
 ]
 
 ---
@@ -216,13 +237,19 @@ Theoretical analysis has driven advances in biological data integration,
 Modern data can also inspire developments in theory,
 
 .pull-left[
-1. **Expanded Abstractions: As the collection of applications grows, theoretical concepts can be enriched.**
+1. **Expanded Abstractions: As more applications emerge, theoretical concepts can be enriched.**
 
 1. Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.
 ]
 
 .pull-right[
-  Empirical Bayes PCA
+  .center[
+<img src="figures/lfdr.png" width=240/>
+]
+
+<span style="font-size: 18px;">
+Microarray analysis sparked developments in empirical bayes and hypothesis testing.
+</span>
 ]
 ---
 
@@ -231,12 +258,17 @@ Modern data can also inspire developments in theory,
 Modern data can also inspire developments in theory,
 
 .pull-left[
-1. Expanded Abstractions: As the collection of applications grows, theoretical concepts can be enriched.
+1. Expanded Abstractions: As more applications emerge, theoretical concepts can be enriched.
+
 1. **Revised Assumptions: Properties that are taken for granted in narrower analysis settings may no longer apply.**
 ]
 
 .pull-right[
-  Testing for the alignability of multiple tables
+<img src="figures/sparse_gca.png"/>
+<span style="font-size: 18px;">
+Problems from data integration can help inspire research in high-dimensional
+statistics.
+</span>
 ]
 
 ---
@@ -251,8 +283,8 @@ class: middle
 
 ### Goals
 
-1. Support discussions that could lead to methodological and conceptual
-breakthroughs in biological data integration.
+1. Support discussions that could lead to methodological breakthroughs in
+biological data integration.
 
 1. Provide training on current best practices for researchers who are entering
 the field either from statistical or biological backgrounds.
@@ -306,12 +338,32 @@ Talks + Discussion
 **Kris Sankaran** will provide an introduction to managing and visualizing
 multi-omics data using tools from the Bioconductor ecosystem.
 
+.center[
+<img src="figures/visualization-1.png" width=800/>
+]
+
 ---
 
 ### Tutorials: Introduction to Regression Trees
 
 **Wei-Yin Loh** will offer a course on tree-based methods and their application
-*to mixed data types that arise in biomedical settings.
+to mixed data types that arise in biomedical settings.
+
+.center[
+<img src="figures/guide_1.png" width=700/>
+]
+
+---
+### Tutorials: Introduction to Regression Trees
+
+**Wei-Yin Loh** will offer a course on tree-based methods and their application
+to mixed data types that arise in biomedical settings.
+
+.center[
+<img src="figures/genie3_overview.png" width=720/>
+
+Figure from `r Citep(bib, "")`.
+]
 
 ---
 
@@ -320,33 +372,47 @@ multi-omics data using tools from the Bioconductor ecosystem.
 **Kris Sankaran** will review concepts from probabilistic modeling, evaluation,
 and interpretation that are the basis for many data integration methods.
 
----
-
-### Tutorials: Case Studies from the CPTAC Project
-
-**Xiaoyu Song** will lead a session describing how problems have been formulated
-*and solved in her expeience with the Clinical Proteomic Tumor Analsyis
-*Consortium (CPTAC).
+.center[
+<img src="figures/blocking_omics.gif" width=800/>
+]
 
 ---
 
-### Talk Themes
+### Tutorials: Case Studies from CPTAC
 
-Talks will be grouped according to methodological themes.
+**Xiaoyu Song** will lead a tutorial describing how problems have been
+formulated
+and solved in her expeience with the Clinical Proteomic Tumor Analsyis
+Consortium (CPTAC).
 
-.pull-left[
-* Robust and Reproducible Integration
-
-* Spatial and Single-Cell Analysis
-
-* Efficient and Scalable Models
+.center[
+<img src="figures/CPTAC_overview.jpg" width=700/>
 ]
 
-.pull-right[
-* Emerging Sequencing Technologies
+---
 
-* AI for Biological Foundation Models
+### Tutorials: Case Studies from CPTAC
+
+**Xiaoyu Song** will lead a tutorial describing how problems have been
+formulated
+and solved in her expeience with the Clinical Proteomic Tumor Analsyis
+Consortium (CPTAC).
+
+.center[
+<img src="figures/CPTAC_multiomics.png" width=800/>
 ]
+
+---
+
+### Talks Criteria
+
+We will invite speakers based on complementary criteria,
+
+1. **Compelling Applications**: Work that shows what is possible by carefully analyzing modern data.
+
+1. **Statistical Foundations**: Research that draws deeply from the statistical canon and highlights opportunities for the field.
+
+1. **Creative Perspectives**: Studies that have discovered surprising connections across fields.
 
 ---
 
@@ -359,8 +425,8 @@ informal interaction among all participants.
 1. Lightning research talks
 1. Data analysis demos 
 
-Depending on speaker preferences, we will curate resources from these activities
-onto public/private links on a workshop website.
+We will curate resources from these activities onto public/private links
+(depending on speaker preference) on a website dedicated to the workshop.
 
 ---
 
@@ -369,25 +435,26 @@ onto public/private links on a workshop website.
 The organizing team will recruit students, scientists, and researchers locally
 and abroad who have the potential to benefit from one another's expertise.
 
-1. University Campuses (50%)
-1. Research Institutes (20%)
-1. Hospitals (20%)
-1. Industry (10%)
+1. University Campuses: National University of Singapore, Nanyang Technological University
+1. Research Institutes: Genome Research of Singapore, The Bioinformatics Institute
+1. Medical Schools/Hospitals: Duke - NUS Medical School, Yong Loo Lin School of Medicine
 
 ---
 
 ### Why IMS-NUS?
 
-1. Interdisciplinary emphasis: The workshop relies on an environment that allows
-researchers from multiple backgounds to feel welcome.
+1. **Interdisciplinary emphasis**: The workshop relies on an environment that
+allows researchers from multiple backgounds to feel welcome.
 
-1. Statistics reputation: Unlike related workshops, we hope to emphasize the
-role of statistical thinking in integration, so the IMS - NUS connection will
-help.
+1. **Statistics reputation**: Unlike related workshops on integration, we
+emphasize the role of statistics, and the IMS - NUS connection will help.
 
-1. Location: The strength of both the statistics and bioinformatics communities
-in Singapore will ensure that the workshop balances theoretical and applied
-perspectives.
+1. **Location**: The strength of both the statistics and bioinformatics
+communities in Singapore will ensure that the workshop balances theoretical applied perspectives.
+
+.center[
+<img src="figures/nus_ims_full.png" width=650/>
+]
 
 ---
 
