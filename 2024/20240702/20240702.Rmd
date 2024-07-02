@@ -452,7 +452,7 @@ We will invite speakers based on complementary criteria,
 
 1. **Statistical Foundations**: Research that draws deeply from the statistical canon and highlights opportunities for the field.
 
-1. **Creative Perspectives**: Studies that are able to get more out of their data by taking a new perpsective.
+1. **Creative Perspectives**: Studies that are able to get more out of their data by taking a new approach.
 ]
 
 .pull-three-quarters-right[
