@@ -383,21 +383,7 @@ to mixed data types that arise in biomedical settings.
 <img src="figures/guide_1.png" width=680/><br/>
 <span style="font-size: 18px;">
 An example regression tree, from the tutorial `r Citep(bib, "loh-tutorial")`.
-<span>
-]
-
----
-### Tutorials: Introduction to Regression Trees
-
-**Wei-Yin Loh** will offer a course on tree-based methods and their application
-to mixed data types that arise in biomedical settings.
-
-.center[
-<img src="figures/genie3_overview.png" width=720/>
-
-<span style="font-size: 18px;">
-Trees are often used for integration `r Citep(bib, "Huynh-Thu2010-di")`.
-<span>
+</span>
 ]
 
 ---
@@ -409,6 +395,24 @@ and interpretation that are the basis for many data integration methods.
 
 .center[
 <img src="figures/blocking_omics.gif" width=800/>
+]
+<span style="font-size: 18px;">
+Simulation for power analysis from `r Citep(bib, "Sankaran2023")`.
+</span>
+
+---
+
+### Tutorials: Introduction to Regression Trees
+
+**Wei-Yin Loh** will offer a course on tree-based methods and their application
+to mixed data types that arise in biomedical settings.
+
+.center[
+<img src="figures/genie3_overview.png" width=720/>
+
+<span style="font-size: 18px;">
+Trees are often used for integration `r Citep(bib, "Huynh-Thu2010-di")`.
+</span>
 ]
 
 ---
@@ -522,13 +526,19 @@ PrintBibliography(bib, start = 1, end = 3)
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 4, end = 8)
+PrintBibliography(bib, start = 4, end = 7)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 9, end = 12)
+PrintBibliography(bib, start = 8, end = 11)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 12, end = 16)
 ```
 
 ---
