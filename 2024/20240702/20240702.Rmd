@@ -171,7 +171,7 @@ methods for,
 
 .pull-left[
 1. Assessing stability
-1. Addressing selection baises
+1. Addressing selection biases
 1. Supporting re-usable software
 ]
 
@@ -374,20 +374,6 @@ multi-omics data using tools from the Bioconductor ecosystem.
 
 ---
 
-### Tutorials: Introduction to Regression Trees
-
-**Wei-Yin Loh** will offer a course on tree-based methods and their application
-to mixed data types that arise in biomedical settings.
-
-.center[
-<img src="figures/guide_1.png" width=680/><br/>
-<span style="font-size: 18px;">
-An example regression tree, from the tutorial `r Citep(bib, "loh-tutorial")`.
-</span>
-]
-
----
-
 ### Tutorials: Generative Models for Multi-omics
 
 **Kris Sankaran** will review concepts from probabilistic modeling, evaluation,
@@ -399,6 +385,20 @@ and interpretation that are the basis for many data integration methods.
 <span style="font-size: 18px;">
 Simulation for power analysis from `r Citep(bib, "Sankaran2023")`.
 </span>
+
+---
+
+### Tutorials: Introduction to Regression Trees
+
+**Wei-Yin Loh** will offer a course on tree-based methods and their application
+to mixed data types that arise in biomedical settings.
+
+.center[
+<img src="figures/guide_1.png" width=680/><br/>
+<span style="font-size: 18px;">
+An example regression tree, from the tutorial `r Citep(bib, "loh-tutorial")`.
+</span>
+]
 
 ---
 
@@ -452,7 +452,7 @@ We will invite speakers based on complementary criteria,
 
 1. **Statistical Foundations**: Research that draws deeply from the statistical canon and highlights opportunities for the field.
 
-1. **Creative Perspectives**: Studies that have discovered surprising connections across fields.
+1. **Creative Perspectives**: Studies that are able to get more out of their data by taking a new perpsective.
 ]
 
 .pull-three-quarters-right[
