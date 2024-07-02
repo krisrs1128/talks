@@ -98,20 +98,18 @@ Data integration makes it easier to answer questions using all relevant data.
 
 ---
 
-### Example: Long COVID
+### Example: COVID
 
-.pull-left[
-1. Molecular data have shed light on the immune system mechanisms behind long
-COVID.
+1. Molecular data have shed light on the immune system mechanisms responsible
+for variable COVID severity.
 
-1. Multiple high-dimensional sources can be integrated to identify key immune
-cell types and interactions.
-]
+1. Multiple high-dimensional sources can be integrated to identify key molecular
+interactions.
 
-.pull-right[
-<img src="figures/long-covid.jpg" width=450/>
+.center[
+<img src="figures/covid_multiomics.jpg" width=550/> <br/>
 <span style="font-size: 22px;">
-Summary of research from `r Citep(bib, c("stanfordStanfordMedicine", "Martinez-Colon2022-zw"))`.
+Graphical summary from `r Citep(bib, "Gygi2024")`.
 </span>
 ]
 
