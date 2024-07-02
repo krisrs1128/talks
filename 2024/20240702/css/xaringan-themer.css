@@ -28,8 +28,8 @@
 }
 
 .title h2 {
-  padding-left: 40px;
-  width: 800px;
+  padding-left: 25px;
+  width: 1000px;
 }
 
 .title::before {    
@@ -130,7 +130,7 @@ a, a > code {
   position: absolute;
   color: #10040f;
   font-family: 'Lora';
-  font-size: 50px;
+  font-size: 40px;
   width: 1100px;
   left: 60px;
   top: 200px;

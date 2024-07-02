@@ -1,5 +1,5 @@
 ---
-title: "Trustworthy and Adaptable Data Integration"
+title: "Trustworthy and Adaptable Biological Data Integration"
 author: "Kris Sankaran"
 output:
   xaringan::moon_reader:
@@ -52,7 +52,7 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="title">
-Trustworthy and Adaptable Data Integration<br/>
+Trustworthy and Adaptable Biological Data Integration<br/>
 <br/>
 </div>
 <div id="under_title">
