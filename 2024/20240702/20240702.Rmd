@@ -98,23 +98,6 @@ Data integration makes it easier to answer questions using all relevant data.
 
 ---
 
-### Example: COVID
-
-1. Molecular data have shed light on the immune system mechanisms responsible
-for variable COVID severity.
-
-1. Multiple high-dimensional sources can be integrated to identify key molecular
-interactions.
-
-.center[
-<img src="figures/covid_multiomics.jpg" width=550/> <br/>
-<span style="font-size: 22px;">
-Graphical summary from `r Citep(bib, "Gygi2024")`.
-</span>
-]
-
----
-
 ### Example: Cancer
 
 .pull-left[
@@ -131,6 +114,24 @@ person, tissue, cell -- need to be studied together.
 Cancer cells in liver tissue, from `r Citep(bib, "wikimediaFileLungCancer")`.
 </span>
 ]
+
+---
+
+### Example: COVID-19
+
+1. Molecular data have shed light on the immune system mechanisms responsible
+for variable COVID-19 severity.
+
+1. Multiple high-dimensional sources can be integrated to identify key molecular
+interactions.
+
+.center[
+<img src="figures/covid_multiomics.jpg" width=550/> <br/>
+<span style="font-size: 22px;">
+Graphical summary from `r Citep(bib, "Gygi2024")`.
+</span>
+]
+
 
 ---
 
@@ -213,15 +214,14 @@ Theoretical analysis has driven advances in biological data integration,
 .pull-left[
 1. **Improved Algorithms: Theory creates language for forming and answering novel questions.**
 
-1. Consolidation: Theory can create coherent framework from which to evaluate
+1. Consolidation: Theory can create coherent framework from which to view
 available methods.
 ]
 
 .pull-right[
-  <img src="figures/cfit.jpg" width=480/>
+  <img src="figures/cnv.png" width=440/>
   <span style="font-size: 18px;">
-  Low-rank models are ubiquitous in integration across high-dimensional genomics
-  data `r Citep(bib, "Peng2021-wr")`.
+  Scan statistics offer a useful lens for analyzing copy number variation `r Citep(bib, "Zhang2007-gi")`.
   </span>
 ]
 
@@ -234,15 +234,17 @@ Theoretical analysis has driven advances in biological data integration,
 .pull-left[
 1. Improved Algorithms: Theory creates language for forming and answering novel questions.
 
-1. **Consolidation: Theory can create coherent framework from which to evaluate available methods.**
+1. **Consolidation: Theory can create coherent framework from which to view available methods.**
 ]
 
 .pull-right[
-  <img src="figures/cnv.png" width=440/>
+  <img src="figures/cfit.jpg" width=480/>
   <span style="font-size: 18px;">
-  Scan statisitcs offer a useful lens for analyzing copy number variation `r Citep(bib, "Zhang2007-gi")`.
+  Low-rank models are ubiquitous in integration across high-dimensional genomics
+  data `r Citep(bib, "Peng2021-wr")`.
   </span>
 ]
+
 
 ---
 
@@ -415,7 +417,7 @@ and interpretation that are the basis for many data integration methods.
 
 **Xiaoyu Song** will lead a tutorial describing how problems have been
 formulated
-and solved in her expeience with the Clinical Proteomic Tumor Analsyis
+and solved in her expeience with the Clinical Proteomic Tumor Analysis
 Consortium (CPTAC).
 
 .center[
@@ -428,7 +430,7 @@ Consortium (CPTAC).
 
 **Xiaoyu Song** will lead a tutorial describing how problems have been
 formulated
-and solved in her expeience with the Clinical Proteomic Tumor Analsyis
+and solved in her expeience with the Clinical Proteomic Tumor Analysis
 Consortium (CPTAC).
 
 .center[
@@ -469,18 +471,7 @@ informal interaction among all participants.
   <img src="figures/speech-bubbles.png"/>
 ]
 
-We will curate resources from these activities on a website dedicated to the
-
----
-
-### Recruitment
-
-The organizing team will recruit students, scientists, and researchers locally
-and abroad who have the potential to benefit from one another's expertise.
-
-1. University Campuses: National University of Singapore, Nanyang Technological University
-1. Research Institutes: Genome Institute of Singapore, The Bioinformatics Institute
-1. Medical Schools/Hospitals: Duke - NUS Medical School, NUS Medicine, LKC Medicine
+We will curate resources from these activities on a website dedicated to the workshop.
 
 ---
 
@@ -498,6 +489,17 @@ communities in Singapore will ensure that the workshop balances theoretical and 
 .center[
 <img src="figures/nus_ims_full.png" width=550/>
 ]
+
+---
+
+### Recruitment
+
+The organizing team will recruit students, scientists, and researchers locally
+and abroad who have the potential to benefit from one another's expertise.
+
+1. University Campuses: National University of Singapore, Nanyang Technological University
+1. Research Institutes: Genome Institute of Singapore, The Bioinformatics Institute
+1. Medical Schools/Hospitals: Duke - NUS Medical School, NUS Medicine, LKC Medicine
 
 ---
 
