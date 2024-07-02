@@ -41,8 +41,8 @@ scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(
 
 BibOptions(
   check.entries = TRUE, 
-  bib.style = "authoryear", 
-  cite.style = "authoryear", 
+  bib.style = "numeric", 
+  cite.style = "numeric", 
   style = "markdown",
   hyperlink = FALSE, 
   dashed = FALSE,
@@ -65,9 +65,15 @@ Slides: <a href="https://go.wisc.edu/8k8r2q">go.wisc.edu/8k8r2q</a>
 </div>
 
 <div id="subtitle">
-Kris Sankaran, Wei-Yin Loh <br/> 
-Susan Holmes Wanjie Wang <br/>
-Bibhas Chakraborty, Bee Choo Tai
+<i>Organizing Team</i><br/>
+<span style="font-size: 18px;">
+Kris Sankaran, UWM<br/>
+Wei-Yin Loh, UWM<br/> 
+Susan Holmes, Stanford<br/>
+Bibhas Chakraborty, Duke-NUS<br/>
+Bee Choo Tai, NUS <br/>
+Wanjie Wang, NUS <br/>
+</span>
 </div>
 
 ---
@@ -82,7 +88,7 @@ class: middle
 
 ### Data Integration
 
-For many biological problems, researchers gather multiple views,
+For many biological problems, researchers gather data from multiple views,
 
 .center[
 <img src="figures/integration_types.png" width=1000/>
@@ -94,28 +100,38 @@ Data integration makes it easier to answer questions using all relevant data.
 
 ### Example: Long COVID
 
+.pull-left[
 1. Molecular data have shed light on the immune system mechanisms behind long
-COVID-19.
+COVID.
 
-1. Multiple high-dimensional sources can be integrated to identify the immune
-cell types and interactions that are important.
+1. Multiple high-dimensional sources can be integrated to identify key immune
+cell types and interactions.
+]
 
-https://www.npr.org/sections/health-shots/2023/09/09/1198342040/long-covid-causes-treatment-research
+.pull-right[
+<img src="figures/long-covid.jpg" width=450/>
+<span style="font-size: 22px;">
+Summary of research from `r Citep(bib, c("stanfordStanfordMedicine", "Martinez-Colon2022-zw"))`.
+</span>
+]
 
 ---
 
 ### Example: Cancer
 
 .pull-left[
-1. Data about the molecular activity and cellular organization has clarified
+1. Data about molecular activity and cellular organization has clarified
 when treatments are more likely to be effective. 
 
-1. Data from several technologies and levels of resolution -- population,
+1. Several technologies and levels of resolution -- population,
 person, tissue, cell -- need to be studied together.
 ]
 
 .pull-right[
 <img src="figures/Lung_cancer_HAVCR2.jpg" width=450/>
+<span style="font-size: 22px;">
+Cancer cells in liver tissue, from `r Citep(bib, "wikimediaFileLungCancer")`.
+</span>
 ]
 
 ---
@@ -175,7 +191,7 @@ specific analysis?
 .pull-left[
 1. Cell type atlases
 1. Gene function annotation
-1. Electronic health records
+1. DNA foundation models
 ]
 
 .pull-right[
@@ -207,7 +223,7 @@ available methods.
   <img src="figures/cfit.jpg" width=480/>
   <span style="font-size: 18px;">
   Low-rank models are ubiquitous in integration across high-dimensional genomics
-  data.
+  data `r Citep(bib, "Peng2021-wr")`.
   </span>
 ]
 
@@ -226,7 +242,7 @@ Theoretical analysis has driven advances in biological data integration,
 .pull-right[
   <img src="figures/cnv.png" width=440/>
   <span style="font-size: 18px;">
-  Changepoint detection offers a useful lens for analyzing copy number variation.
+  Scan statisitcs offer a useful lens for analyzing copy number variation `r Citep(bib, "Zhang2007-gi")`.
   </span>
 ]
 
@@ -248,7 +264,7 @@ Modern data can also inspire developments in theory,
 ]
 
 <span style="font-size: 18px;">
-Microarray analysis sparked developments in empirical bayes and hypothesis testing.
+Microarray analysis sparked developments in empirical bayes and hypothesis testing `r Citep(bib, "Efron2007-pe")`.
 </span>
 ]
 ---
@@ -267,7 +283,7 @@ Modern data can also inspire developments in theory,
 <img src="figures/sparse_gca.png"/>
 <span style="font-size: 18px;">
 Problems from data integration can help inspire research in high-dimensional
-statistics.
+statistics `r Citep(bib, "JMLR:v24:21-0745")`.
 </span>
 ]
 
@@ -364,7 +380,10 @@ multi-omics data using tools from the Bioconductor ecosystem.
 to mixed data types that arise in biomedical settings.
 
 .center[
-<img src="figures/guide_1.png" width=700/>
+<img src="figures/guide_1.png" width=680/><br/>
+<span style="font-size: 18px;">
+An example regression tree, from the tutorial `r Citep(bib, "loh-tutorial")`.
+<span>
 ]
 
 ---
@@ -376,7 +395,9 @@ to mixed data types that arise in biomedical settings.
 .center[
 <img src="figures/genie3_overview.png" width=720/>
 
-Figure from `r Citep(bib, "")`.
+<span style="font-size: 18px;">
+Trees are often used for integration `r Citep(bib, "Huynh-Thu2010-di")`.
+<span>
 ]
 
 ---
@@ -468,13 +489,13 @@ and abroad who have the potential to benefit from one another's expertise.
 ### Why IMS-NUS?
 
 1. **Interdisciplinary emphasis**: The workshop relies on an environment that
-allows researchers from multiple backgounds to feel welcome.
+allows researchers from multiple backgrounds to feel welcome.
 
 1. **Statistics reputation**: Unlike related workshops on integration, we
 emphasize the role of statistics, and the IMS - NUS connection will help.
 
 1. **Location**: The strength of both the statistics and bioinformatics
-communities in Singapore will ensure that the workshop balances theoretical applied perspectives.
+communities in Singapore will ensure that the workshop balances theoretical and applied perspectives.
 
 .center[
 <img src="figures/nus_ims_full.png" width=550/>
@@ -495,13 +516,19 @@ Thank you for your attention and we are happy to take any questions.
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 4)
+PrintBibliography(bib, start = 1, end = 3)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 5, end = 8)
+PrintBibliography(bib, start = 4, end = 8)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 9, end = 12)
 ```
 
 ---

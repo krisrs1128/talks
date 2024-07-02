@@ -30,9 +30,15 @@ Slides: &lt;a href="https://go.wisc.edu/8k8r2q"&gt;go.wisc.edu/8k8r2q&lt;/a&gt;
 &lt;/div&gt;
 
 &lt;div id="subtitle"&gt;
-Kris Sankaran, Wei-Yin Loh &lt;br/&gt; 
-Susan Holmes Wanjie Wang &lt;br/&gt;
-Bibhas Chakraborty, Bee Choo Tai
+&lt;i&gt;Organizing Team&lt;/i&gt;&lt;br/&gt;
+&lt;span style="font-size: 18px;"&gt;
+Kris Sankaran, UWM&lt;br/&gt;
+Wei-Yin Loh, UWM&lt;br/&gt; 
+Susan Holmes, Stanford&lt;br/&gt;
+Bibhas Chakraborty, Duke-NUS&lt;br/&gt;
+Bee Choo Tai, NUS &lt;br/&gt;
+Wanjie Wang, NUS &lt;br/&gt;
+&lt;/span&gt;
 &lt;/div&gt;
 
 ---
@@ -47,7 +53,7 @@ class: middle
 
 ### Data Integration
 
-For many biological problems, researchers gather multiple views,
+For many biological problems, researchers gather data from multiple views,
 
 .center[
 &lt;img src="figures/integration_types.png" width=1000/&gt;
@@ -59,28 +65,38 @@ Data integration makes it easier to answer questions using all relevant data.
 
 ### Example: Long COVID
 
+.pull-left[
 1. Molecular data have shed light on the immune system mechanisms behind long
-COVID-19.
+COVID.
 
-1. Multiple high-dimensional sources can be integrated to identify the immune
-cell types and interactions that are important.
+1. Multiple high-dimensional sources can be integrated to identify key immune
+cell types and interactions.
+]
 
-https://www.npr.org/sections/health-shots/2023/09/09/1198342040/long-covid-causes-treatment-research
+.pull-right[
+&lt;img src="figures/long-covid.jpg" width=450/&gt;
+&lt;span style="font-size: 22px;"&gt;
+Summary of research from [1; 2].
+&lt;/span&gt;
+]
 
 ---
 
 ### Example: Cancer
 
 .pull-left[
-1. Data about the molecular activity and cellular organization has clarified
+1. Data about molecular activity and cellular organization has clarified
 when treatments are more likely to be effective. 
 
-1. Data from several technologies and levels of resolution -- population,
+1. Several technologies and levels of resolution -- population,
 person, tissue, cell -- need to be studied together.
 ]
 
 .pull-right[
 &lt;img src="figures/Lung_cancer_HAVCR2.jpg" width=450/&gt;
+&lt;span style="font-size: 22px;"&gt;
+Cancer cells in liver tissue, from [3].
+&lt;/span&gt;
 ]
 
 ---
@@ -140,7 +156,7 @@ specific analysis?
 .pull-left[
 1. Cell type atlases
 1. Gene function annotation
-1. Electronic health records
+1. DNA foundation models
 ]
 
 .pull-right[
@@ -172,7 +188,7 @@ available methods.
   &lt;img src="figures/cfit.jpg" width=480/&gt;
   &lt;span style="font-size: 18px;"&gt;
   Low-rank models are ubiquitous in integration across high-dimensional genomics
-  data.
+  data [4].
   &lt;/span&gt;
 ]
 
@@ -191,7 +207,7 @@ Theoretical analysis has driven advances in biological data integration,
 .pull-right[
   &lt;img src="figures/cnv.png" width=440/&gt;
   &lt;span style="font-size: 18px;"&gt;
-  Changepoint detection offers a useful lens for analyzing copy number variation.
+  Scan statisitcs offer a useful lens for analyzing copy number variation [5].
   &lt;/span&gt;
 ]
 
@@ -213,7 +229,7 @@ Modern data can also inspire developments in theory,
 ]
 
 &lt;span style="font-size: 18px;"&gt;
-Microarray analysis sparked developments in empirical bayes and hypothesis testing.
+Microarray analysis sparked developments in empirical bayes and hypothesis testing [6].
 &lt;/span&gt;
 ]
 ---
@@ -232,7 +248,7 @@ Modern data can also inspire developments in theory,
 &lt;img src="figures/sparse_gca.png"/&gt;
 &lt;span style="font-size: 18px;"&gt;
 Problems from data integration can help inspire research in high-dimensional
-statistics.
+statistics [7].
 &lt;/span&gt;
 ]
 
@@ -329,7 +345,10 @@ multi-omics data using tools from the Bioconductor ecosystem.
 to mixed data types that arise in biomedical settings.
 
 .center[
-&lt;img src="figures/guide_1.png" width=700/&gt;
+&lt;img src="figures/guide_1.png" width=680/&gt;&lt;br/&gt;
+&lt;span style="font-size: 18px;"&gt;
+An example regression tree, from the tutorial [8].
+&lt;span&gt;
 ]
 
 ---
@@ -341,7 +360,9 @@ to mixed data types that arise in biomedical settings.
 .center[
 &lt;img src="figures/genie3_overview.png" width=720/&gt;
 
-Figure from .
+&lt;span style="font-size: 18px;"&gt;
+Trees are often used for integration [9].
+&lt;span&gt;
 ]
 
 ---
@@ -433,13 +454,13 @@ and abroad who have the potential to benefit from one another's expertise.
 ### Why IMS-NUS?
 
 1. **Interdisciplinary emphasis**: The workshop relies on an environment that
-allows researchers from multiple backgounds to feel welcome.
+allows researchers from multiple backgrounds to feel welcome.
 
 1. **Statistics reputation**: Unlike related workshops on integration, we
 emphasize the role of statistics, and the IMS - NUS connection will help.
 
 1. **Location**: The strength of both the statistics and bioinformatics
-communities in Singapore will ensure that the workshop balances theoretical applied perspectives.
+communities in Singapore will ensure that the workshop balances theoretical and applied perspectives.
 
 .center[
 &lt;img src="figures/nus_ims_full.png" width=550/&gt;
@@ -459,11 +480,32 @@ Thank you for your attention and we are happy to take any questions.
 
 ### References
 
-NULL
+[1] SoM. _Stanford MediciSoMne study: SARS-CoV-2 infects fat tissue, creates inflammatory storm cloud_.
+&lt;https://med.stanford.edu/news/all-news/2022/09/stanford-medicine-study--sars-cov-2-infects-fat-tissue--creates-.html&gt;. [Accessed 28-06-2024].
+
+[2] G. J. Martínez-Colón et al. "SARS-CoV-2 infection drives an inflammatory response in human adipose tissue through infection of adipocytes and macrophages". En. In: _Sci. Transl.
+Med._ 14.674 (Dec. 2022), p. eabm9151.
+
+[3] Wikimedia. _File:Lung cancer HAVCR2.jpg - Wikimedia Commons - commons.wikimedia.org_. &lt;https://commons.wikimedia.org/wiki/File:Lung_cancer_HAVCR2.jpg&gt;. [Accessed 28-06-2024].
 
 ---
 
-NULL
+[4] M. Peng et al. "Integration and transfer learning of single-cell transcriptomes via cFIT". En. In: _Proc. Natl. Acad. Sci. U. S. A._ 118.10 (Mar. 2021).
+
+[5] N. R. Zhang et al. "A modified Bayes information criterion with applications to the analysis of comparative genomic hybridization data". En. In: _Biometrics_ 63.1 (Mar. 2007), pp.
+22-32.
+
+[6] B. Efron. "Size, power and false discovery rates". En. In: _Ann. Stat._ 35.4 (Aug. 2007), pp. 1351-1377.
+
+[7] S. Gao et al. "Sparse GCA and Thresholded Gradient Descent". In: _Journal of Machine Learning Research_ 24.135 (2023), pp. 1-61. URL:
+[http://jmlr.org/papers/v24/21-0745.html](http://jmlr.org/papers/v24/21-0745.html).
+
+[8] W. Loh. _Classification and Regression Trees by Example_. &lt;https://pages.stat.wisc.edu/~loh/ims21.pdf&gt;. Tutorial at the 2021 Cuasal Inference with Big Data Workshop hosted by IMS
+- NUS. [Accessed 28-06-2024]. 2021.
+
+---
+
+[9] V. A. Huynh-Thu et al. "Inferring regulatory networks from expression data using tree-based methods". En. In: _PLoS One_ 5.9 (Sep. 2010), p. e12776.
 
 ---
 

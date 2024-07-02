@@ -49,15 +49,17 @@ body {
   font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
   font-weight: ;
   color: #0c0c0c;
+  background-color: #f7f7f7;
 }
 
 h1, h3 {
   font-weight: normal;
   color: #5f558e;
+  background-color: #f7f7f7;
 }
 
 h2 {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #f7f7f7;
   font-weight: normal;
   color: #0c0c0c;
 }
@@ -65,6 +67,7 @@ h2 {
 .remark-slide-content {
   font-size: 26px;
   padding: 1em 4em 1em 4em;
+  background-color: #f7f7f7;
 }
 
 .remark-slide-content h1 {
@@ -123,7 +126,7 @@ a, a > code {
 }
 
 #title {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #f7f7f7;
   position: absolute;
   color: #10040f;
   font-family: 'Lora';
@@ -238,7 +241,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 
 #subtitle {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
   width: 500px;
@@ -260,7 +263,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 
 #subtitle_right {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
   width: 400px;
