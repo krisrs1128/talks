@@ -1,11 +1,11 @@
 ---
-title: "Interactivity for Interpretable Machine Learning""
-author: "Kris Sankaran"
+title: "Interactivity for Interpretable Machine Learning"
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
     lib_dir: libs
     self_contained: false
+    fig_caption: true
     nature:
       highlightStyle: github
       highlightLines: true
@@ -48,13 +48,290 @@ Kris Sankaran, UW - Madison<br/>
 
 ---
 
+### Introduction
+
+1. 
+
+---
+
 class: middle
 
 .center[
-## 
+## What is Interpretability?
 ]
 
 ---
+
+### Key Properties
+
+.pull-left[
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+]
+
+.pull-right[
+<img src="figures/tufte.png" width=330/>
+]
+
+---
+
+### Key Properties
+
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+
+.center[
+<img src="figures/tufte-2.png"/>
+]
+
+---
+
+### Below-the-Surface
+
+More subtly, it should pay attention to:
+
+1. **Data Provenance**: If we don't know the data sources, we should be skeptical or
+anything that's shown, no matter how compelling.
+1. **Audience**: The effectiveness of a visualization is dependent on the visual
+vocabulary of its audience.
+1. **Prioritization**: Every design emphasizes some comparisons over others. Are the
+"important" patterns visible?
+1. **Interactivity**: Does it engage the reader's problem solving capacity?
+
+We should think about model interpretability with the same nuance that we think
+about data visualization.
+
+---
+
+class: middle
+
+.center[
+## Interpretability Techniques
+]
+
+---
+
+### Vocabulary
+
+1. **Interpretable Model**: A model that, by virtue of its design, is easy for
+its stakeholders to accurately describe and alter.
+1. **Explainability Technique**: A method that shapes our mental models about
+black box systems.
+
+.center[
+  <img src="figures/black_box_flashlight.png" width=720/>
+]
+
+---
+
+### Vocabulary
+
+1. **Local Explanation**: An artifact for reasoning about individual predictions.
+1. **Global Explanation**: An artifact for reasoning about an entire model.
+
+.center[
+<img src="figures/explanation_types.png" width=800/>
+]
+
+---
+
+### Running Example
+
+Problem: Imagine sampling longitudinal microbiome profiles from 500 study
+participants, some of whom eventually developed a disease. Can we discovery any
+microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
+`r Citep(bib, 'Gosmann2017LactobacillusDeficientCB')`.
+
+.center[
+  <img src="figures/simulated-data.svg" width=830/>
+]
+
+---
+
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+<img src="figures/transformers-analogy-2.png"/>
+]
+
+---
+
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is more general
+than expert design.
+1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+<img src="figures/transformer_analogy.png"/>
+]
+
+---
+
+### Embeddings
+
+In text data, we can understand context-dependent meaning by looking for
+clusters in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
+These represent a type of interaction.
+.center[
+<img src="figures/bert_context.png" width=670/>
+]
+
+---
+
+### Embeddings
+
+We can build the analogous visualization for our microbiome problem. Samples
+that are nearby in the embedding space are similar w.r.t. predictive features.
+
+.center[
+<img src="figures/pca_comparison.svg" width=1400/>
+]
+
+---
+
+### Interpolations
+
+Another common technique is to analyze linear interpolations in this space `r Citep(bib, "Liu2019LatentSC")`.  This figure traces out the microbiome profiles
+between two samples.
+
+.center[
+<img src="figures/species_21_interpolation.svg" width=940/>
+]
+
+---
+
+### Perturbation
+
+To explain a generic model’s decision on an instance, we can perturb it and see
+how the prediction changes.
+
+<img src="figures/perturbation_types.png"/>
+
+---
+
+### Integrated Gradients
+
+For example, we can compute the gradient of each class as we perturb a reference
+towards a sample of interest.
+
+\begin{align*}
+\left(x_{i} - x_{i}'\right) \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right)\right)}{\partial x_{i}} d\alpha
+\end{align*}
+
+.center[
+  <img src="figures/integrated_gradients_animation.gif" width=1200/>
+]
+
+---
+
+### Integrated Gradients
+
+In our microbiome example, this can highlight the species and timepoints that
+are most responsible for the disease vs. healthy classification of each example.
+
+.center[
+<img src="figures/microbiome_integrated_gradients.svg"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+Alternatively, we can explain a decision by reducing the arbitrary feature space
+to a set of human-interpretable concepts `r Citep(bib, "Koh2020ConceptBM")`.
+This is part of a larger body of work that attempts to establish shared
+language/representations for interacting with models.
+
+.center[
+<img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
+]
+
+---
+
+### Concept Bottlenecks
+
+In the microbiome example, we could define interpretable "concepts" by looking
+at the taxa trends for commonly co-varying groups of species.
+
+.center[
+<img src="figures/concept_1.svg"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+We reconfigure our transformer model to first predict the concept label before
+making a final classification.
+
+.center[
+<img src="figures/concept_architecture.png"/>
+]
+
+---
+
+### Concept Bottlenecks
+
+---
+
+.center[
+## Interactivity
+]
+
+---
+
+### Linked Brushing
+
+---
+
+### Example: Multiple Testing
+
+
+---
+
+### Example: Model Evaluation
+
+---
+
+### <span style="col: #D93611;">Focus-plus-Context</span>
+
+The focus-plus-context principle is to allow readers to zoom into patterns of
+interest without losing relevant context `r Citep(bib, "Heer2004DOITreesRS")`.
+
+> "Overview first, details-on-demand."
+
+.center[
+<img src="figures/doitree_dmoz.gif" width=800/>
+]
+
+---
+
+### Example: Dimensionality Reduction
+
+---
+
+class: middle
+
+.center[
+## Summary
+]
 
 ---
 
