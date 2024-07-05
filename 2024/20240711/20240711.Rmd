@@ -1,0 +1,87 @@
+---
+title: "Interactivity for Interpretable Machine Learning""
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(knitr)
+library(RefManageR)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+BibOptions(
+  check.entries = TRUE, 
+  bib.style = "numeric", 
+  cite.style = "numeric", 
+  style = "markdown",
+  hyperlink = FALSE, 
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+<div id="title">
+Interactivity for Interpretable Machine Learning<br/>
+<br/>
+</div>
+
+<div id="subtitle_right">
+CGSI Retreat 2024
+11 | July | 2024 <br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
+</div>
+
+<div id="subtitle">
+Kris Sankaran, UW - Madison<br/>
+</div>
+
+---
+
+class: middle
+
+.center[
+## 
+]
+
+---
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 3)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 4, end = 7)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 8, end = 11)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 12, end = 16)
+```
+
+---
+
+### Figure Attribution
