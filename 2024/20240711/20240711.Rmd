@@ -67,6 +67,22 @@ class: middle
 
 ### What is Interpretability?
 
+Models with these properties tend to be more interpretable:
+
+1. Parsimony: The model has relatively few components.
+1. Simulatability: A user can predict how the model will behave on a new sample.
+1. Modularity: The model can be broken into simpler components.
+
+---
+
+### Nuances
+
+1. It is not helpful to discuss interpretability in isolation. It is better to
+consider how it helps achieve goals that are difficult to encode in the initial
+training objective (scientific discovery, generalizability, fairness).
+
+1. Even a linear model can be uninterpretable if there are many predictors.
+
 ---
 
 ### Distinctions
@@ -252,9 +268,17 @@ making a final classification.
 
 ### What is Interactivity?
 
-An interface is interactive if it can respond to user inputs. 
+An interactive interface responds to user inputs. We can use selection menus,
+text entry, or graphical queries to request changes in what information is
+displayed and how.
 
-* 
+.pull-left[
+  Figure of selection menu
+]
+
+.pull-right[
+  Figure of brushing. Maybe from upshot?
+]
 
 ---
 
@@ -264,11 +288,16 @@ An interface is interactive if it can respond to user inputs.
 The focus-plus-context principle is to allow readers to zoom into patterns of
 interest without losing relevant context `r Citep(bib, "Heer2004DOITreesRS")`.
 
-> "Overview first, details-on-demand."
+"OVerview, select and filter, then details on demand"
+"Overview first, then details-on-demand."
 
 ---
 
-### Example: Degree-of-Interest
+### Example: Tree Navigation
+
+Large trees can be difficult to explore. We can compute an "interest
+distribution" over nodes and update the tree layout accordingly 
+`r Citep(bib, "Heer2004DOITreesRS")`.
 
 <!-- You may have to install this again -->
 <iframe src="krisrs1128.github.io/treelapse/"
@@ -297,13 +326,17 @@ increases information density.
 
 ---
 
-### Example: Multiple Testing
+### Example: Multiple Testing (I)
 
 We can use linked views to navigate a collection of hypothesis tests. Each
 letter corresponds to an experimental factor.
 
 <iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400>
 </iframe>
+
+---
+
+### Example: Multiple Testing (II)
 
 ---
 
@@ -376,6 +409,10 @@ and backends.
 
 We'll see throughout this retreat ways in which models can help generate useful
 catalogs, streamline design processes, and uncover the truth.
+
+.center[
+  Include a figure that summarizes a few of these talks
+]
 
 These problems are not solved by models in isolation. There is usually some
 human labor involved either for specification or oversight. Interpretability and
