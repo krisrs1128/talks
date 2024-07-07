@@ -36,21 +36,45 @@ Interactivity for Interpretable Machine Learning<br/>
 <br/>
 </div>
 
-<div id="subtitle_right">
-CGSI Retreat 2024
-11 | July | 2024 <br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
+<div id="subtitle">
+Kris Sankaran <br/>
+UW - Madison <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
-<div id="subtitle">
-Kris Sankaran, UW - Madison<br/>
+<div id="subtitle_right">
+11 | July | 2024 <br/>
+Computational Genomics Summer Institute <br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a> 
 </div>
 
 ---
 
-### Introduction
+This feels too abstract!!
 
-1. 
+Can you begin with some actual examples. The Asthma and Bard examples are nice.
+
+---
+
+### Motivation: Hypothesis Generation
+
+The most important features in a model may guide follow-up experimentation and
+theory building.
+
+---
+
+### Motivation: Validation and Improvement
+
+It is worth checking that models are doing well for the right reasons. We can
+edit/refine them if not.
+
+
+---
+
+### Motivation: Knowing your Data
+
+We might identify new structure (or issues) by going behind high-level metrics
+or summaries.
 
 ---
 
@@ -61,6 +85,21 @@ class: middle
 ]
 
 ---
+
+### Useful Analogy: Data Visualization
+
+1. Both data visualization and model interpretability develop representations that
+make it easier to think about information stored in machine (but not human)
+friendly formats.
+
+1. In interpretability, we have to think both about the original data *and* a
+model trained on it.
+
+---
+
+I'm not sure this is really worth including. I do like the analogy, but seems
+potentially like a distraction from the larger computational themes. Not really
+information for people to work off of.
 
 ### Key Properties
 
@@ -109,6 +148,15 @@ about data visualization.
 
 ---
 
+This is good. We're now getting more specific about techniques, actual problems
+solving and data analysis.
+
+Higher-level theme can be: We are good at using computers for problem solving, a
+lot of it is automation, but not all...
+
+Make sure to capture peoples' attention early on. Okay to end on a more
+philosophical note, but that's not really the key.
+
 class: middle
 
 .center[
@@ -119,10 +167,10 @@ class: middle
 
 ### Vocabulary
 
-1. **Interpretable Model**: A model that, by virtue of its design, is easy for
-its stakeholders to accurately describe and alter.
-1. **Explainability Technique**: A method that shapes our mental models about
-black box systems.
+1. **Interpretable Model**: A model that, by virtue of its design, is easy to
+accurately describe and edit.
+1. **Explainability Technique**: A method that summarizes some aspect of a black
+box system.
 
 .center[
   <img src="figures/black_box_flashlight.png" width=720/>
@@ -297,16 +345,38 @@ making a final classification.
 
 ---
 
-### Linked Brushing
+### Interaction Gulfs
+
+To be useful, an interactive system needs to make it easy to ask questions and
+quickly get answers `r Citep(bib, "Hutchins1985-oz")`: 
+
+1. Gulf of Execution: How long does it take to see the response to a query?
+
+1. Gulf of Evaluation: How long does it take to understand the output?
+
+.center[
+<img src="figures/interaction_gulfs.png" width=600/>
+]
+
+---
+
+### Linked Views
+
+1. By linking many low-dimensional views, we can begin understanding
+higher-dimensional relationships.
+
+1. User queries can be defined visually, not just through selection menus. This
+increases information density.
 
 ---
 
 ### Example: Multiple Testing
 
+We can use linked views to navigate a collection of hypothesis tests. Each
+letter corresponds to an experimental factor.
 
----
-
-### Example: Model Evaluation
+<iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400>
+</iframe>
 
 ---
 
@@ -325,6 +395,21 @@ interest without losing relevant context `r Citep(bib, "Heer2004DOITreesRS")`.
 
 ### Example: Dimensionality Reduction
 
+We can use focus-plus-context to compare topics across a range of $K$ from a
+mixed-membership model. Low $K$ gives an overview, large $K$ gives details.
+
+```{r, out.width = 750}
+include_graphics("figures/alto_sketches_annotated alignment.png")
+```
+
+
+---
+
+### Example: Model Evaluation
+
+This visualization uses both linked views and the focus-plus-context principle
+to help evaluate the quality of a single-cell simulator. 
+
 ---
 
 class: middle
@@ -332,6 +417,29 @@ class: middle
 .center[
 ## Summary
 ]
+
+---
+
+### Automation vs. Augmentation
+
+Will you introduce that at the beginning? Or will you be only mentioning this at
+the end? Tricky because you are trying to cover two themes at once...
+
+For interactivity, it definitely makes sense to include something like this. For
+interpretability, it's not quite as clear.
+
+---
+
+### Conclusion
+
+Interactivity and interpretability are both exercises in creating links between
+human and machine representations.
+
+1. Embeddings, perturbations, and concepts are useful for answering different
+types of questions related to complex models.
+
+1. The interaction gulfs, linking, and focus-plus-context are useful principles
+to keep in mind when designing any interactive software.
 
 ---
 
