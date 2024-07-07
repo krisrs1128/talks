@@ -50,27 +50,6 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
 
 ---
 
-This feels too abstract!!
-
-Can you begin with some actual examples. The Asthma and Bard examples are nice.
-
----
-
-### Motivation: Hypothesis Generation
-
-The most important features in a model may guide follow-up experimentation and
-theory building.
-
----
-
-### Motivation: Validation and Improvement
-
-It is worth checking that models are doing well for the right reasons. We can
-edit/refine them if not.
-
-
----
-
 ### Motivation: Knowing your Data
 
 We might identify new structure (or issues) by going behind high-level metrics
@@ -81,91 +60,16 @@ or summaries.
 class: middle
 
 .center[
-## What is Interpretability?
+## Interpretability
 ]
 
 ---
 
-### Useful Analogy: Data Visualization
-
-1. Both data visualization and model interpretability develop representations that
-make it easier to think about information stored in machine (but not human)
-friendly formats.
-
-1. In interpretability, we have to think both about the original data *and* a
-model trained on it.
+### What is Interpretability?
 
 ---
 
-I'm not sure this is really worth including. I do like the analogy, but seems
-potentially like a distraction from the larger computational themes. Not really
-information for people to work off of.
-
-### Key Properties
-
-.pull-left[
-A good visualization is:
-
-1. **Legible**: It omits extraneous, distracting elements.
-1. **Annotated**: It shows data within the problem context.
-1. **Information Dense**: It shows relevant variation efficiently.
-]
-
-.pull-right[
-<img src="figures/tufte.png" width=330/>
-]
-
----
-
-### Key Properties
-
-A good visualization is:
-
-1. **Legible**: It omits extraneous, distracting elements.
-1. **Annotated**: It shows data within the problem context.
-1. **Information Dense**: It shows relevant variation efficiently.
-
-.center[
-<img src="figures/tufte-2.png"/>
-]
-
----
-
-### Below-the-Surface
-
-More subtly, it should pay attention to:
-
-1. **Data Provenance**: If we don't know the data sources, we should be skeptical or
-anything that's shown, no matter how compelling.
-1. **Audience**: The effectiveness of a visualization is dependent on the visual
-vocabulary of its audience.
-1. **Prioritization**: Every design emphasizes some comparisons over others. Are the
-"important" patterns visible?
-1. **Interactivity**: Does it engage the reader's problem solving capacity?
-
-We should think about model interpretability with the same nuance that we think
-about data visualization.
-
----
-
-This is good. We're now getting more specific about techniques, actual problems
-solving and data analysis.
-
-Higher-level theme can be: We are good at using computers for problem solving, a
-lot of it is automation, but not all...
-
-Make sure to capture peoples' attention early on. Okay to end on a more
-philosophical note, but that's not really the key.
-
-class: middle
-
-.center[
-## Interpretability Techniques
-]
-
----
-
-### Vocabulary
+### Distinctions
 
 1. **Interpretable Model**: A model that, by virtue of its design, is easy to
 accurately describe and edit.
@@ -178,7 +82,7 @@ box system.
 
 ---
 
-### Vocabulary
+### Distinctions
 
 1. **Local Explanation**: An artifact for reasoning about individual predictions.
 1. **Global Explanation**: An artifact for reasoning about an entire model.
@@ -189,7 +93,7 @@ box system.
 
 ---
 
-### Running Example
+### Illustrative Example
 
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
@@ -256,8 +160,9 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space `r Citep(bib, "Liu2019LatentSC")`.  This figure traces out the microbiome profiles
-between two samples.
+Another common technique is to analyze linear interpolations in this space 
+`r Citep(bib, "Liu2019LatentSC")`.  This figure traces out the microbiome
+profiles between two samples.
 
 .center[
 <img src="figures/species_21_interpolation.svg" width=940/>
@@ -345,18 +250,40 @@ making a final classification.
 
 ---
 
-### Interaction Gulfs
+### What is Interactivity?
 
-To be useful, an interactive system needs to make it easy to ask questions and
-quickly get answers `r Citep(bib, "Hutchins1985-oz")`: 
+An interface is interactive if it can respond to user inputs. 
 
-1. Gulf of Execution: How long does it take to see the response to a query?
+* 
 
-1. Gulf of Evaluation: How long does it take to understand the output?
+---
 
-.center[
-<img src="figures/interaction_gulfs.png" width=600/>
-]
+
+### <span style="col: #D93611;">Focus-plus-Context</span>
+
+The focus-plus-context principle is to allow readers to zoom into patterns of
+interest without losing relevant context `r Citep(bib, "Heer2004DOITreesRS")`.
+
+> "Overview first, details-on-demand."
+
+---
+
+### Example: Degree-of-Interest
+
+<!-- You may have to install this again -->
+<iframe src="krisrs1128.github.io/treelapse/"
+
+---
+
+### Example: Dimensionality Reduction
+
+We can use focus-plus-context to compare topics across a range of $K$ from a
+mixed-membership model `r Citep(bib, "Symul2022")`. Low $K$ gives an overview,
+large $K$ gives details.
+
+```{r, out.width = 750}
+include_graphics("figures/alto_sketches_annotated alignment.png")
+```
 
 ---
 
@@ -380,31 +307,6 @@ letter corresponds to an experimental factor.
 
 ---
 
-### <span style="col: #D93611;">Focus-plus-Context</span>
-
-The focus-plus-context principle is to allow readers to zoom into patterns of
-interest without losing relevant context `r Citep(bib, "Heer2004DOITreesRS")`.
-
-> "Overview first, details-on-demand."
-
-.center[
-<img src="figures/doitree_dmoz.gif" width=800/>
-]
-
----
-
-### Example: Dimensionality Reduction
-
-We can use focus-plus-context to compare topics across a range of $K$ from a
-mixed-membership model. Low $K$ gives an overview, large $K$ gives details.
-
-```{r, out.width = 750}
-include_graphics("figures/alto_sketches_annotated alignment.png")
-```
-
-
----
-
 ### Example: Model Evaluation
 
 This visualization uses both linked views and the focus-plus-context principle
@@ -415,18 +317,48 @@ to help evaluate the quality of a single-cell simulator.
 class: middle
 
 .center[
-## Summary
+## Augmentation and AI
 ]
 
 ---
 
-### Automation vs. Augmentation
+### AI and IA - Design Space
 
-Will you introduce that at the beginning? Or will you be only mentioning this at
-the end? Tricky because you are trying to cover two themes at once...
+Computers are good at scaling repetitive operations, but people are good at
+criticism and planning. How can we get the best of both worlds?
 
-For interactivity, it definitely makes sense to include something like this. For
-interpretability, it's not quite as clear.
+.pull-left[
+* Artificial Intelligence (AI): Solves problems directly.
+
+* Intelligence Augmentation (IA): Enhances problem solving ability.
+]
+
+.pull-right[
+  Figure showing the trade-off. I think this was in Design Study Methodology.
+  Accurate vs. inaccurate system.
+  Well-defined vs. open-ended tasks.
+]
+
+---
+
+### Guide-Decide Loop
+
+1. We can have the AI make suggestions and then design interactions that allow
+users to reject, revise, or accept changes.
+
+1. This depends on their being a good shared representation that links the
+frontend (human interaction) and backend (computation). 
+
+---
+
+### Interactive Cleaning
+
+One example of this is the Wrangler system.
+
+
+---
+
+### Interactive Translation
 
 ---
 
