@@ -303,15 +303,6 @@ making a final classification.
 
 ---
 
-### Software
-
-1. Captum (python)
-1. DALEX (R)
-
-Code from Review Paper: [https://go.wisc.edu/3k1ewe](go.wisc.edu/3k1ewe)
-
----
-
 .center[
 ## Interactivity
 ]
@@ -399,12 +390,25 @@ to help evaluate the quality of a single-cell simulator.
 
 ### Software
 
+.pull-left[
+**Interpretability**
+
+1. Captum (python)
+1. DALEX (R)
+]
+
+
+.pull-right[
+**Interactivity**
+
 1. Shiny (R/Python)
 1. D3 + Svelte (Javascript)
 1. p5 (Javascript)
 1. Sketch (R)
+]
 
-Course: Notes, Recordings
+Visualization Course: [Notes], [Recordings]()<br/>
+Review Paper: [Code Repository](https://go.wisc.edu/3k1ewe)
 
 ---
 
