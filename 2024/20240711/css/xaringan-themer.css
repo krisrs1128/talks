@@ -129,7 +129,8 @@ a, a > code {
   background-color: #f7f7f7;
   position: absolute;
   color: #10040f;
-  font-family: 'Lora';
+  font-family: 'Raleway';
+  /* font-family: 'Lora'; */
   font-size: 40px;
   width: 1100px;
   left: 60px;
@@ -266,7 +267,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
-  width: 400px;
+  width: 800px;
   color: #5f558e;
   text-align: left;
   left: 20px;

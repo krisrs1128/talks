@@ -33,27 +33,70 @@ bib <- ReadBib("references.bib")
 
 <div id="title">
 Interactivity for Interpretable Machine Learning<br/>
-<br/>
+</div>
+<div id="under_title">
+Computational Genomics Summer Institute 2024<br/>
 </div>
 
 <div id="subtitle">
 Kris Sankaran <br/>
 UW - Madison <br/>
+11 | July | 2024 <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-11 | July | 2024 <br/>
-Computational Genomics Summer Institute <br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a> 
+Slides<br/>
+<!-- <img src="figures/cropped-CGSI_logo_final-2.jpg" width=100/><br/> -->
+<img src="figures/slides-link.png" width=100/>
 </div>
 
 ---
 
-### Motivation: Knowing your Data
+### Learning Objectives
 
-We might identify new structure (or issues) by going behind high-level metrics
-or summaries.
+By the end of this tutorial, you will be able to:
+
+1. Discuss how interpretability and interactivity can support modeling in computational genomics.
+
+1. Compare and contrast the outputs associated with different interpretability techniques.
+
+1. Apply principles from interactive computing to the research software that you are developing.
+
+---
+
+### Motivation: Outpatient Care for Pneumonia
+
+.center[
+<img src="figures/asthma.png" width=1000/>
+
+Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
+]
+
+
+---
+
+### Motivation: The Google Bard Demo
+
+.center[
+<img src="figures/bard-hallucination.webp" width=830/>
+
+See the discussion in `r Citep(bib, "kundaliya2023")`.
+]
+
+---
+
+### Know Your Data
+
+1. Computers let us solve problems that would be impossible to manage any other
+way, but we need some way of checking our work, especially when there are
+real-world consequences.
+
+1. We can often improve our models by looking more closely at what they learn
+and intervening as necessary.
+
+1. In the long-run, we'll be able to get more out of our data and models if we
+look more critically at them.
 
 ---
 
@@ -188,10 +231,14 @@ profiles between two samples.
 
 ### Perturbation
 
-To explain a generic model’s decision on an instance, we can perturb it and see
-how the prediction changes.
-
-<img src="figures/perturbation_types.png"/>
+For local (sample-specific) explanations, the intuition is to perturb the input
+and see how model predictions change.
+<br/>
+<br/>
+.center[
+<img src="figures/perturbation.png" width=500/>
+]
+Examples: LIME \cite{}, integrated gradients \cite{}, GradCAM \cite{}, local variable importance \cite{}
 
 ---
 
@@ -236,11 +283,11 @@ language/representations for interacting with models.
 
 ### Concept Bottlenecks
 
-In the microbiome example, we could define interpretable "concepts" by looking
-at the taxa trends for commonly co-varying groups of species.
+In the microbiome example, we could define concepts like blooms or trends. These
+would have to be manually annotated in the original training data.
 
 .center[
-<img src="figures/concept_1.svg"/>
+<img src="figures/trends.png" width=1000/>
 ]
 
 ---
@@ -251,12 +298,17 @@ We reconfigure our transformer model to first predict the concept label before
 making a final classification.
 
 .center[
-<img src="figures/concept_architecture.png"/>
+<img src="figures/concept_architecture-2.png" width=600/>
 ]
 
 ---
 
-### Concept Bottlenecks
+### Software
+
+1. Captum (python)
+1. DALEX (R)
+
+Code from Review Paper: [https://go.wisc.edu/3k1ewe](go.wisc.edu/3k1ewe)
 
 ---
 
@@ -321,8 +373,10 @@ include_graphics("figures/alto_sketches_annotated alignment.png")
 1. By linking many low-dimensional views, we can begin understanding
 higher-dimensional relationships.
 
-1. User queries can be defined visually, not just through selection menus. This
-increases information density.
+1. Queries can be defined graphically, not just through selection menus.
+
+<!-- add the penguins example -->
+<iframe src="https://"/>
 
 ---
 
@@ -336,14 +390,21 @@ letter corresponds to an experimental factor.
 
 ---
 
-### Example: Multiple Testing (II)
-
----
-
 ### Example: Model Evaluation
 
 This visualization uses both linked views and the focus-plus-context principle
 to help evaluate the quality of a single-cell simulator. 
+
+---
+
+### Software
+
+1. Shiny (R/Python)
+1. D3 + Svelte (Javascript)
+1. p5 (Javascript)
+1. Sketch (R)
+
+Course: Notes, Recordings
 
 ---
 
@@ -386,7 +447,7 @@ frontend (human interaction) and backend (computation).
 
 ### Interactive Cleaning
 
-The wrangler system recommends transformations based on what the interactions
+The Wrangler system recommends transformations based on what the interactions
 that the user has made so far.
 
 A domain-specific language for data cleaning serves as the shared
