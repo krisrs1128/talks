@@ -44,12 +44,16 @@ url={https://ezproxy.library.wisc.edu/login?url=https://www.proquest.com/trade-j
 	bdsk-url-1 = {http://vis.stanford.edu/papers/doitrees-revisited}
 }
 
-@article{Coenen2019VisualizingAM,
-  title={Visualizing and Measuring the Geometry of BERT},
-  author={Andy Coenen and Emily Reif and Ann Yuan and Been Kim and Adam Pearce and Fernanda B. Vi{\'e}gas and Martin Wattenberg},
-  journal={ArXiv},
-  year={2019},
-  volume={abs/1906.02715}
+@inbook{Coenen2019VisualizingAM,
+author = {Coenen, Andy and Reif, Emily and Yuan, Ann and Kim, Been and Pearce, Adam and Vi\'{e}gas, Fernanda and Wattenberg, Martin},
+title = {Visualizing and measuring the geometry of BERT},
+year = {2019},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {Transformer architectures show significant promise for natural language processing. Given that a single pretrained model can be fine-tuned to perform well on many different tasks, these networks appear to extract generally useful linguistic features. How do such networks represent this information internally? This paper describes qualitative and quantitative investigations of one particularly effective model, BERT. At a high level, linguistic features seem to be represented in separate semantic and syntactic subspaces. We find evidence of a fine-grained geometric representation of word senses. We also present empirical descriptions of syntactic representations in both attention matrices and individual word embeddings, as well as a mathematical argument to explain the geometry of these representations.},
+booktitle = {Proceedings of the 33rd International Conference on Neural Information Processing Systems},
+articleno = {771},
+numpages = {10}
 }
 
 
@@ -97,7 +101,6 @@ year = {2014},
 isbn = {9781450330695},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/2642918.2647408},
 doi = {10.1145/2642918.2647408},
 abstract = {The standard approach to computer-aided language translation is post-editing: a machine generates a single translation that a human translator corrects. Recent studies have shown this simple technique to be surprisingly effective, yet it underutilizes the complementary strengths of precision-oriented humans and recall-oriented machines. We present Predictive Translation Memory, an interactive, mixed-initiative system for human language translation. Translators build translations incrementally by considering machine suggestions that update according to the user's current partial translation. In a large-scale study, we find that professional translators are slightly slower in the interactive mode yet produce slightly higher quality translations despite significant prior experience with the baseline post-editing condition. Our analysis identifies significant predictors of time and quality, and also characterizes interactive aid usage. Subjects entered over 99\% of characters via interactive aids, a significantly higher fraction than that shown in previous work.},
 booktitle = {Proceedings of the 27th Annual ACM Symposium on User Interface Software and Technology},
@@ -201,7 +204,7 @@ series = {UIST '14}
 
 @ARTICLE{Buja1996-sq,
   title     = "Interactive high-dimensional data visualization",
-  author    = "Buja, Andreas and Cook, Dianne and Swayne, Research S, Deborah F",
+  author    = "Buja, Andreas and Cook, Dianne and Swayne, Deborah F",
   journal   = "J. Comput. Graph. Stat.",
   publisher = "Informa UK Limited",
   volume    =  5,
@@ -346,7 +349,7 @@ address = {New York, NY, USA},
 url = {https://doi.org/10.1145/2939672.2939778},
 doi = {10.1145/2939672.2939778},
 abstract = {Despite widespread adoption, machine learning models remain mostly black boxes. Understanding the reasons behind predictions is, however, quite important in assessing trust, which is fundamental if one plans to take action based on a prediction, or when choosing whether to deploy a new model. Such understanding also provides insights into the model, which can be used to transform an untrustworthy model or prediction into a trustworthy one.In this work, we propose LIME, a novel explanation technique that explains the predictions of any classifier in an interpretable and faithful manner, by learning an interpretable model locally varound the prediction. We also propose a method to explain models by presenting representative individual predictions and their explanations in a non-redundant way, framing the task as a submodular optimization problem. We demonstrate the flexibility of these methods by explaining different models for text (e.g. random forests) and image classification (e.g. neural networks). We show the utility of explanations via novel experiments, both simulated and with human subjects, on various scenarios that require trust: deciding if one should trust a prediction, choosing between models, improving an untrustworthy classifier, and identifying why a classifier should not be trusted.},
-booktitle = {Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
+journal = {Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
 numpages = {10},
 keywords = {interpretable machine learning, interpretability, explaining machine learning, black box classifier},
 location = {San Francisco, California, USA},
@@ -388,7 +391,7 @@ series = {ICML'17}
   year={2017},
   volume={},
   number={},
-  pages={618-626},
+  pages={618--626},
   keywords={Visualization;Cats;Dogs;Computer architecture;Knowledge discovery},
   doi={10.1109/ICCV.2017.74}}
 
@@ -426,9 +429,14 @@ series = {ICML'17}
 }
 
 
-@article{50351,title	= {Concept Bottleneck Models},author	= {Pang Wei Koh
-and Thao Nguyen and Yew Siang Tang and Stephen Mussmann and Emma Pierson and
-Been Kim and Percy Liang},year	= {2020}, journal = {NeurIPS}}
+@inproceedings{50351,
+title	= {Concept Bottleneck Models},
+author	= {Pang Wei Koh and Thao Nguyen and Yew Siang Tang and Stephen Mussmann and Emma Pierson and Been Kim and Percy Liang},
+year	= {2020}, 
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+booktitle = {Proceedings of the 33rd International Conference on Neural Information Processing Systems}
+}
 
 @article{Gu2019,
   title = {BadNets: Evaluating Backdooring Attacks on Deep Neural Networks},
@@ -553,8 +561,7 @@ numpages = {10}
 }
 
 @ARTICLE{Holmes1993-fl,
-  title     = "Comment on ``A model for studying display methods of statistical
-               graphics''",
+  title     = "Comment on 'A model for studying display methods of statistical graphics'",
   author    = "Holmes, Susan",
   journal   = "J. Comput. Graph. Stat.",
   publisher = "Informa UK Limited",
