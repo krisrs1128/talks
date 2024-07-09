@@ -46,7 +46,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-[Slides](https://go.wisc.edu/8k8r2q)<br/>
+<a href="https://go.wisc.edu/pl9a65">Slides</a><br/>
 <!-- <img src="figures/cropped-CGSI_logo_final-2.jpg" width=100/><br/> -->
 <img src="figures/slides-link.png" width=100/>
 </div>
@@ -86,11 +86,11 @@ See the discussion in `r Citep(bib, "kundaliya2023")`.
 
 ---
 
-### Know Your Data
+### Motivation
 
 1. Computers let us solve problems that would be impossible to manage any other
-way, but we need some way of **checking our work**, especially when there are
-real-world consequences.
+way, but we need some way of **checking our work**, especially when the stakes
+are high.
 
 1. We can often **improve our models** by looking more closely at what they learn
 and intervening as necessary.
@@ -195,7 +195,7 @@ microbiome profiles like a sequence of words.
 How can we try to understand the representations $z_{i}$?
 
 .center[
-<img src="figures/representation_learning.png" width=700/>
+<img src="figures/representation_learning.png" width=500/>
 ]
 
 ---
@@ -326,11 +326,11 @@ making a final classification.
 
 ### What is Interactivity?
 
-Interactivity allows us to specify what computation we want done without writing
-code.
+Interactivity allows us to specify what computation we want done without having
+to write code.
 
 .pull-left[
-<img src="figures/autocomplete.gif" width=350/><br/>
+<img src="figures/autocomplete.gif" width=300/><br/>
 <span style="font-size: 18px;">
 Text entry can be considered a type of interaction.
 </span>
@@ -361,9 +361,9 @@ context. This has a flavor of "analyzing the residuals."
 ]
 
 .pull-right[
-<img src="figures/structuration.png"/>
-<span style="font-size: 18px;">
-Tukey's iterative structuration, as imagined by `r Citep(bib, "Holmes1993")`.
+<img src="figures/structuration.png" width=250/>
+<span style="font-size: 18px;"><br/>
+Tukey's iterative structuration, as imagined by `r Citep(bib, "Holmes1993-fl")`.
 </span>
 ]
 
@@ -372,7 +372,7 @@ Tukey's iterative structuration, as imagined by `r Citep(bib, "Holmes1993")`.
 ### Example: Tree Navigation
 
 Large trees can be difficult to explore. Focus-plus-context gives a natural way
-of navigating them, recomputing the view according to user interactions.  `r Citep(bib, c("Heer2004DOITreesRS", "sankaran_interactive_2018"))`.
+of navigating them, recomputing the view according to user interactions  `r Citep(bib, c("Heer2004DOITreesRS", "sankaran_interactive_2018"))`.
 
 .center[
 <iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-dd8d9e7ec77f2a8cc333" width=900 height=380></iframe>
@@ -411,7 +411,8 @@ an overview, large $K$ gives details.
 ### Example: Multiple Testing
 
 We can use linked views to navigate a collection of hypothesis tests. Each
-letter corresponds to an experimental factor.
+letter corresponds to an experimental factor (details in `r Citep(bib,
+"Chevrette2022-om")`).
 
 .center[
 <iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400></iframe>
@@ -431,10 +432,10 @@ to help evaluate the quality of a single-cell simulator.
 .pull-left[
 **Interpretability**
 
-1. Captum (python)
+1. Captum (Python)
 1. DALEX (R)
-1. imodels (python)
-1. interpretml (python)
+1. imodels (Python)
+1. interpretml (Python)
 
 Review Paper<br/> - [Code Repository](https://go.wisc.edu/3k1ewe)
 
@@ -445,9 +446,10 @@ Review Paper<br/> - [Code Repository](https://go.wisc.edu/3k1ewe)
 **Interactivity**
 
 1. Shiny (R/Python)
-1. D3 (Javascript)
-1. p5 (Javascript)
-1. Jupyter Widgets (python)
+1. Vega/Vega-lite (JS, Python, R)
+1. D3 (JS)
+1. p5 (JS)
+1. Jupyter Widgets (Python)
 
 Visualization Course<br/> - Notes [I](https://krisrs1128.github.io/stat679_notes/), [II](https://krisrs1128.github.io/stat436_s24/)<br/>- Recordings [I](https://www.youtube.com/watch?v=cc__b5R6OzA&list=PLhax_7Mawcfk1GEl_vOg7cE_vtRTsqMWw&pp=gAQBiAQB), [II](https://mediaspace.wisc.edu/channel/STAT+479%3A+Statistical+Data+Visualization/197911113)
 ]
@@ -508,19 +510,21 @@ representation here is natural language.
 
 ### Conclusion
 
-We'll see throughout this retreat ways in which models can help generate useful
-catalogs, improve engineering processes, and uncover the truth.
+.pull-left[
+1. It takes effort to specify and validate models. The literatures on
+interpretability and interactivity can help us to think systematically about
+this work.
 
-.center[
-  Include a figure that summarizes a few of these talks
-  phylogenetic tree
-  single cell map
-  EHR or drug development picture
+1. More than just help answer questions, these tools can help shape good
+questions during day-to-day analysis.
 ]
 
-These problems aren't solved by models in isolation -- there is human labor
-involved in specification and oversight. Interpretability and interactivity can
-make this work more accessible and reliable.
+.pull-right[
+<img src="figures/question_evidence.png" width=420/><br/>
+<span style="font-size: 18px;">
+Figure from `r Citep(bib, "simplystatisticsSimplyStatistics")`'s reflection on `r Citep(bib, "Tukey1962-vv")`.
+</span>
+]
 
 ---
 
@@ -533,38 +537,45 @@ PrintBibliography(bib, start = 1, end = 3)
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 4, end = 7)
+PrintBibliography(bib, start = 4, end = 8)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 8, end = 10)
+PrintBibliography(bib, start = 9, end = 13)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 11, end = 15)
+PrintBibliography(bib, start = 14, end = 17)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 16, end = 20)
+PrintBibliography(bib, start = 18, end = 22)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 21, end = 25)
+PrintBibliography(bib, start = 23, end = 25)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 26, end = 30)
+PrintBibliography(bib, start = 26, end = 29)
 ```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 30, end = 35)
+```
+
 
 ---
 
