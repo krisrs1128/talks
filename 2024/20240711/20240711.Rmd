@@ -46,7 +46,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-Slides<br/>
+[Slides](https://go.wisc.edu/8k8r2q)<br/>
 <!-- <img src="figures/cropped-CGSI_logo_final-2.jpg" width=100/><br/> -->
 <img src="figures/slides-link.png" width=100/>
 </div>
@@ -89,13 +89,13 @@ See the discussion in `r Citep(bib, "kundaliya2023")`.
 ### Know Your Data
 
 1. Computers let us solve problems that would be impossible to manage any other
-way, but we need some way of checking our work, especially when there are
+way, but we need some way of **checking our work**, especially when there are
 real-world consequences.
 
-1. We can often improve our models by looking more closely at what they learn
+1. We can often **improve our models** by looking more closely at what they learn
 and intervening as necessary.
 
-1. In the long-run, we'll be able to get more out of our data and models if we
+1. In the long-run, we'll be able to **get more out of our data and models** if we
 look more critically at them.
 
 ---
@@ -112,19 +112,13 @@ class: middle
 
 Models with these properties tend to be more interpretable `r Citep(bib, c("Lipton2018-dt", "Murdoch2019-aw", "Doshi-Velez2017-qo", "Sankaran2024-ny"))`:
 
-1. Parsimony: The model has relatively few components.
-1. Simulatability: A user can predict how the model will behave on a new sample.
-1. Modularity: The model can be broken into simpler components.
+<img src="figures/simplicity.png" width=50/> **Parsimony**: The model has relatively few components. <br/><br/>
 
----
+<img src="figures/crystal-ball.png" width=40/> **Simulatability**: Users can predict model behavior on new samples. <br/><br/>
 
-### Nuances
+<img src="figures/Lego_Brick_4.svg" width=50/> **Modularity**: The model can be broken into simpler components.
 
-1. It is not helpful to discuss interpretability in isolation. It is better to
-consider how it helps achieve goals that are difficult to encode in the initial
-training objective (scientific discovery, generalizability, fairness).
-
-1. Even a linear model can be uninterpretable if there are many predictors.
+<!-- First Q&A: Would you say that a linear regression model is interpretable? -->
 
 ---
 
@@ -154,23 +148,24 @@ box system.
 
 ### Illustrative Example
 
-Problem: Imagine sampling longitudinal microbiome profiles from 500 study
-participants, some of whom eventually developed a disease. Can we discovery any
-microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
-`r Citep(bib, 'Gosmann2017-aw')`.
+Imagine sampling microbiome profiles over time and seeing that some of the hosts
+develop a disease. Can we discover risk factors from these data?
 
 .center[
   <img src="figures/simulated-data.svg" width=830/>
 ]
+<span style="font-size: 18px;">
+This simulation is motivated by microbiome studies of HIV risk `r Citep(bib, 'Gosmann2017-aw')`.
+</span>
 
 ---
 
 ### Transformers
 
 .pull-left[
-1. A principle of deep learning is that end-to-end optimization is more general
-than expert design.
-1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+1. A principle of deep learning is that end-to-end optimization is preferable to
+expert design.
+1. We apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
 ]
 
@@ -183,9 +178,9 @@ microbiome profiles like a sequence of words.
 ### Transformers
 
 .pull-left[
-1. A principle of deep learning is that end-to-end optimization is more general
-than expert design.
-1. We can apply the GPT2 architecture to our problem, viewing a sequence of
+1. A principle of deep learning is that end-to-end optimization is preferable to
+expert design.
+1. We apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
 ]
 
@@ -195,11 +190,20 @@ microbiome profiles like a sequence of words.
 
 ---
 
+### Representation Learning
+
+How can we try to understand the representations $z_{i}$?
+
+.center[
+<img src="figures/representation_learning.png" width=700/>
+]
+
+---
+
 ### Embeddings
 
-In text data, we can understand context-dependent meaning by looking for
-clusters in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
-These represent a type of interaction.
+In text data, we can identify context-dependent meaning by looking for clusters
+in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
 .center[
 <img src="figures/bert_context.png" width=670/>
 ]
@@ -231,8 +235,8 @@ profiles between two samples.
 
 ### Perturbation
 
-For local (sample-specific) explanations, the intuition is to perturb the input
-and see how model predictions change.
+For local explanations, we can perturb the sample of interest and see how model
+predictions change.
 <br/>
 <br/>
 .center[
@@ -242,12 +246,14 @@ Examples: LIME `r Citep(bib, "10.1145/2939672.2939778")`, integrated gradients
 `r Citep(bib, "10.5555/3305890.3306024")`, GradCAM `r Citep(bib, "8237336")`,
 local variable importance `r Citep(bib, "Agarwal2023-np")`.
 
+<!-- Q&A: How can we operationalize this intuition? -->
+
 ---
 
 ### Integrated Gradients
 
-For example, we can compute the gradient of each class as we perturb a reference
-towards a sample of interest.
+Integrated gradients are better than ordinary gradients because they are less
+sensitive to saturation in the usual logistic loss.
 
 \begin{align*}
 \left(x_{i} - x_{i}'\right) \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right)\right)}{\partial x_{i}} d\alpha
@@ -264,8 +270,8 @@ Animation from `r Citep(bib, "Sturmfels2020")`.
 
 ### Integrated Gradients
 
-In our microbiome example, this can highlight the species and timepoints that
-are most responsible for the disease vs. healthy classification of each example.
+In our microbiome example, this highlights the species and timepoints that are
+most responsible for the disease vs. healthy classification for each sample.
 
 .center[
 <img src="figures/microbiome_integrated_gradients.svg"/>
@@ -276,9 +282,10 @@ are most responsible for the disease vs. healthy classification of each example.
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts `r Citep(bib, "50351")`.
-This is part of a larger body of work that attempts to establish shared
-language/representations for interacting with models.
+to a set of human-interpretable concepts `r Citep(bib, "50351")`.  This is part
+of a larger body of work that attempts to establish shared
+language/representations for interacting with models 
+`r Citep(bib, "yuksekgonul2023posthoc")`.
 
 .center[
 <span style="font-size: 18px;">
@@ -319,7 +326,8 @@ making a final classification.
 
 ### What is Interactivity?
 
-Interactivity allows us to specify what computation we want done.
+Interactivity allows us to specify what computation we want done without writing
+code.
 
 .pull-left[
 <img src="figures/autocomplete.gif" width=350/><br/>
@@ -341,22 +349,30 @@ An interactive delegate calculator created by the NYT `r Citep(bib,
 
 ### <span style="col: #D93611;">Focus-plus-Context</span>
 
-We can try to let readers zoom into patterns of interest without losing relevant
-context.
+We can let readers zoom into patterns of interest without losing relevant
+context. This has a flavor of "analyzing the residuals."
 <br/>
 <br/>
 
+.pull-left[
 > Overview first, zoom and filter, then details on demand.
 
 -- Schneiderman's "Visual Information Seeking Mantra" `r Citep(bib, "Shneiderman2002-ju")`.
+]
+
+.pull-right[
+<img src="figures/structuration.png"/>
+<span style="font-size: 18px;">
+Tukey's iterative structuration, as imagined by `r Citep(bib, "Holmes1993")`.
+</span>
+]
 
 ---
 
 ### Example: Tree Navigation
 
-Large trees can be difficult to explore. We can allow the user to focus on parts
-of the tree that are interesting while maintaining continuity with the earlier
-context `r Citep(bib, "Heer2004DOITreesRS")`.
+Large trees can be difficult to explore. Focus-plus-context gives a natural way
+of navigating them, recomputing the view according to user interactions.  `r Citep(bib, c("Heer2004DOITreesRS", "sankaran_interactive_2018"))`.
 
 .center[
 <iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-dd8d9e7ec77f2a8cc333" width=900 height=380></iframe>
@@ -366,9 +382,9 @@ context `r Citep(bib, "Heer2004DOITreesRS")`.
 
 ### Example: Dimensionality Reduction
 
-We can use focus-plus-context to compare topics across a collection of topic
-models `r Citep(bib, c("Symul2023-ug", "Fukuyama2023-ph"))`. Low $K$ gives an overview, large $K$ gives
-details.
+We can use focus-plus-context to compare topics across models with different
+complexity `r Citep(bib, c("Symul2023-ug", "Fukuyama2023-ph"))`. Low $K$ gives
+an overview, large $K$ gives details.
 
 .center[
 <img src="figures/vaginal_microbiome_alto.jpg" width=900/>
@@ -381,12 +397,14 @@ details.
 .pull-left[
 1. We can navigate higher dimensions by linking low-dimensional views `r Citep(bib, c("Becker1987-rc", "Buja1996-sq"))`.
 
-1. It helps to define queries graphically, not just through selection menus.
+1. Notice that we're defining queries graphically, not just through selection menus.
 ]
 
 .pull-right[
 <iframe src="https://connect.doit.wisc.edu/content/6df2063a-1c7d-4f01-b98c-3aebed82d190/" allowfullscreen="" data-external="1" height=500 width=600></iframe>
 ]
+
+<!-- Q&A: What are some interesting questions you'd like to answer on this flight delay data? -->
 
 ---
 
@@ -447,8 +465,8 @@ class: middle
 
 ### AI and IA - Design Space
 
-Computers are good at scaling repetitive operations, but people are good at
-criticism and planning. How can we get the best of both worlds?
+Computers are good at accurately reaching well-defined goals, but people are
+good at criticism and planning. How can we get the best of both worlds?
 
 **Artificial Intelligence (AI)**: Solve problems directly.<br/>
 **Intelligence Augmentation (IA)**: Enhance problem solving ability.
@@ -461,11 +479,11 @@ criticism and planning. How can we get the best of both worlds?
 
 ### Guide-Decide Loop
 
-1. We can have the AI make suggestions and then design interactions that allow
-users to reject, revise, or accept changes `r Citep(bib, c("predictive-interaction", "Heer2019-ie"))`.
+1. The AI make suggestions that we can choose to reject, revise, or accept 
+`r Citep(bib, c("predictive-interaction", "Heer2019-ie"))`.
 
-1. This depends on their being a good shared representation that links the
-frontend (human interaction) and backend (computation). 
+1. This depends on their being a shared representation that links the frontend
+(for human interpretation) with the backend (for model prediction). 
 
 .center[
 <img src="figures/guide-decide.png" width=700/>
@@ -476,30 +494,33 @@ frontend (human interaction) and backend (computation).
 ### Interactive Translation
 
 A well-designed interface helps professional translators achieve better results
-than simply editing text that was generated by an automated translation system
+than simply editing the output of an automated translation system
 `r Citep(bib, c("10.1145/2642918.2647408", "green-etal-2014-human", "10.1145/2470654.2470718"))`.
 
 .center[
 <img src="figures/phrasal.png" width=800/>
 ]
 
-Predictions can be updated in response to human interactions, and the natural
-language itself serves as teh shared representation.
+Predictions can be updated in response to interactions. The shared
+representation here is natural language.
 
 ---
 
 ### Conclusion
 
 We'll see throughout this retreat ways in which models can help generate useful
-catalogs, streamline design processes, and uncover the truth.
+catalogs, improve engineering processes, and uncover the truth.
 
 .center[
   Include a figure that summarizes a few of these talks
+  phylogenetic tree
+  single cell map
+  EHR or drug development picture
 ]
 
-These problems are not solved by models in isolation. There is usually some
-human labor involved either for specification or oversight. Interpretability and
-interactivity help with these issues.
+These problems aren't solved by models in isolation -- there is human labor
+involved in specification and oversight. Interpretability and interactivity can
+make this work more accessible and reliable.
 
 ---
 
@@ -548,5 +569,9 @@ PrintBibliography(bib, start = 26, end = 30)
 ---
 
 ### Figure Attribution
+
+Simplicity by M. Oki Orlando from <a href="https://thenounproject.com/browse/icons/term/simplicity/" target="_blank" title="Simplicity Icons">Noun Project</a> (CC BY 3.0)
+
+Crystal Ball by Kiki Rizky from <a href="https://thenounproject.com/browse/icons/term/crystal-ball/" target="_blank" title="Crystal Ball Icons">Noun Project</a> (CC BY 3.0)
 
 ---
