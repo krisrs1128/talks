@@ -57,11 +57,9 @@ Slides<br/>
 
 By the end of this tutorial, you will be able to:
 
-1. Discuss how interpretability and interactivity can support modeling in computational genomics.
+1. Compare and contrast outputs from different interpretability techniques.
 
-1. Compare and contrast the outputs associated with different interpretability techniques.
-
-1. Apply principles from interactive computing to the research software that you are developing.
+1. Apply interactive computing ideas to the research code that you develop.
 
 ---
 
@@ -70,7 +68,9 @@ By the end of this tutorial, you will be able to:
 .center[
 <img src="figures/asthma.png" width=1000/>
 
+<span style="font-size: 18px;">
 Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
+</span>
 ]
 
 
@@ -110,7 +110,7 @@ class: middle
 
 ### What is Interpretability?
 
-Models with these properties tend to be more interpretable:
+Models with these properties tend to be more interpretable `r Citep(bib, c("Lipton2018-dt", "Murdoch2019-aw", "Doshi-Velez2017-qo", "Sankaran2024-ny"))`:
 
 1. Parsimony: The model has relatively few components.
 1. Simulatability: A user can predict how the model will behave on a new sample.
@@ -157,7 +157,7 @@ box system.
 Problem: Imagine sampling longitudinal microbiome profiles from 500 study
 participants, some of whom eventually developed a disease. Can we discovery any
 microbiome-related risk factors?  This simulation is motivated by microbiome studies of HIV risk
-`r Citep(bib, 'Gosmann2017LactobacillusDeficientCB')`.
+`r Citep(bib, 'Gosmann2017-aw')`.
 
 .center[
   <img src="figures/simulated-data.svg" width=830/>
@@ -238,7 +238,9 @@ and see how model predictions change.
 .center[
 <img src="figures/perturbation.png" width=500/>
 ]
-Examples: LIME \cite{}, integrated gradients \cite{}, GradCAM \cite{}, local variable importance \cite{}
+Examples: LIME `r Citep(bib, "10.1145/2939672.2939778")`, integrated gradients
+`r Citep(bib, "10.5555/3305890.3306024")`, GradCAM `r Citep(bib, "8237336")`,
+local variable importance `r Citep(bib, "Agarwal2023-np")`.
 
 ---
 
@@ -252,7 +254,10 @@ towards a sample of interest.
 \end{align*}
 
 .center[
-  <img src="figures/integrated_gradients_animation.gif" width=1200/>
+  <img src="figures/integrated_gradients_animation.gif" width=750/><br/>
+<span style="font-size: 18px;">
+Animation from `r Citep(bib, "Sturmfels2020")`.
+</span>
 ]
 
 ---
@@ -271,12 +276,15 @@ are most responsible for the disease vs. healthy classification of each example.
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts `r Citep(bib, "Koh2020ConceptBM")`.
+to a set of human-interpretable concepts `r Citep(bib, "50351")`.
 This is part of a larger body of work that attempts to establish shared
 language/representations for interacting with models.
 
 .center[
-<img src="figures/koh_concept.png" width=750 style="position: absolute; top: 340px; left: 300px"/> 
+<span style="font-size: 18px;">
+<img src="figures/koh_concept.png" width=750/> <br/>
+Figure from `r Citep(bib, "50351")`.
+</span>
 ]
 
 ---
@@ -311,16 +319,21 @@ making a final classification.
 
 ### What is Interactivity?
 
-An interactive interface responds to user inputs. We can use selection menus,
-text entry, or graphical queries to request changes in what information is
-displayed and how.
+Interactivity allows us to specify what computation we want done.
 
 .pull-left[
-  Figure of selection menu
+<img src="figures/autocomplete.gif" width=350/><br/>
+<span style="font-size: 18px;">
+Text entry can be considered a type of interaction.
+</span>
 ]
 
 .pull-right[
-  Figure of brushing. Maybe from upshot?
+<img src="figures/delegate-calc-1.gif"/>
+<span style="font-size: 18px;">
+An interactive delegate calculator created by the NYT `r Citep(bib,
+"vis4DefenseInteractive")`.
+</span>
 ]
 
 ---
@@ -328,56 +341,63 @@ displayed and how.
 
 ### <span style="col: #D93611;">Focus-plus-Context</span>
 
-The focus-plus-context principle is to allow readers to zoom into patterns of
-interest without losing relevant context `r Citep(bib, "Heer2004DOITreesRS")`.
+We can try to let readers zoom into patterns of interest without losing relevant
+context.
+<br/>
+<br/>
 
-"OVerview, select and filter, then details on demand"
-"Overview first, then details-on-demand."
+> Overview first, zoom and filter, then details on demand.
+
+-- Schneiderman's "Visual Information Seeking Mantra" `r Citep(bib, "Shneiderman2002-ju")`.
 
 ---
 
 ### Example: Tree Navigation
 
-Large trees can be difficult to explore. We can compute an "interest
-distribution" over nodes and update the tree layout accordingly 
-`r Citep(bib, "Heer2004DOITreesRS")`.
+Large trees can be difficult to explore. We can allow the user to focus on parts
+of the tree that are interesting while maintaining continuity with the earlier
+context `r Citep(bib, "Heer2004DOITreesRS")`.
 
-<!-- You may have to install this again -->
-<iframe src="krisrs1128.github.io/treelapse/"
+.center[
+<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-dd8d9e7ec77f2a8cc333" width=900 height=380></iframe>
+]
 
 ---
 
 ### Example: Dimensionality Reduction
 
-We can use focus-plus-context to compare topics across a range of $K$ from a
-mixed-membership model `r Citep(bib, "Symul2022")`. Low $K$ gives an overview,
-large $K$ gives details.
+We can use focus-plus-context to compare topics across a collection of topic
+models `r Citep(bib, c("Symul2023-ug", "Fukuyama2023-ph"))`. Low $K$ gives an overview, large $K$ gives
+details.
 
-```{r, out.width = 750}
-include_graphics("figures/alto_sketches_annotated alignment.png")
-```
+.center[
+<img src="figures/vaginal_microbiome_alto.jpg" width=900/>
+]
 
 ---
 
 ### Linked Views
 
-1. By linking many low-dimensional views, we can begin understanding
-higher-dimensional relationships.
+.pull-left[
+1. We can navigate higher dimensions by linking low-dimensional views `r Citep(bib, c("Becker1987-rc", "Buja1996-sq"))`.
 
-1. Queries can be defined graphically, not just through selection menus.
+1. It helps to define queries graphically, not just through selection menus.
+]
 
-<!-- add the penguins example -->
-<iframe src="https://"/>
+.pull-right[
+<iframe src="https://connect.doit.wisc.edu/content/6df2063a-1c7d-4f01-b98c-3aebed82d190/" allowfullscreen="" data-external="1" height=500 width=600></iframe>
+]
 
 ---
 
-### Example: Multiple Testing (I)
+### Example: Multiple Testing
 
 We can use linked views to navigate a collection of hypothesis tests. Each
 letter corresponds to an experimental factor.
 
-<iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400>
-</iframe>
+.center[
+<iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400></iframe>
+]
 
 ---
 
@@ -395,6 +415,11 @@ to help evaluate the quality of a single-cell simulator.
 
 1. Captum (python)
 1. DALEX (R)
+1. imodels (python)
+1. interpretml (python)
+
+Review Paper<br/> - [Code Repository](https://go.wisc.edu/3k1ewe)
+
 ]
 
 
@@ -402,13 +427,13 @@ to help evaluate the quality of a single-cell simulator.
 **Interactivity**
 
 1. Shiny (R/Python)
-1. D3 + Svelte (Javascript)
+1. D3 (Javascript)
 1. p5 (Javascript)
-1. Sketch (R)
+1. Jupyter Widgets (python)
+
+Visualization Course<br/> - Notes [I](https://krisrs1128.github.io/stat679_notes/), [II](https://krisrs1128.github.io/stat436_s24/)<br/>- Recordings [I](https://www.youtube.com/watch?v=cc__b5R6OzA&list=PLhax_7Mawcfk1GEl_vOg7cE_vtRTsqMWw&pp=gAQBiAQB), [II](https://mediaspace.wisc.edu/channel/STAT+479%3A+Statistical+Data+Visualization/197911113)
 ]
 
-Visualization Course: [Notes], [Recordings]()<br/>
-Review Paper: [Code Repository](https://go.wisc.edu/3k1ewe)
 
 ---
 
@@ -425,16 +450,11 @@ class: middle
 Computers are good at scaling repetitive operations, but people are good at
 criticism and planning. How can we get the best of both worlds?
 
-.pull-left[
-* Artificial Intelligence (AI): Solves problems directly.
-
-* Intelligence Augmentation (IA): Enhances problem solving ability.
-]
-
-.pull-right[
-  Figure showing the trade-off. I think this was in Design Study Methodology.
-  Accurate vs. inaccurate system.
-  Well-defined vs. open-ended tasks.
+**Artificial Intelligence (AI)**: Solve problems directly.<br/>
+**Intelligence Augmentation (IA)**: Enhance problem solving ability.
+<br/>
+.center[
+<img src="figures/dm_vs_ai.png" width=800/>
 ]
 
 ---
@@ -442,31 +462,29 @@ criticism and planning. How can we get the best of both worlds?
 ### Guide-Decide Loop
 
 1. We can have the AI make suggestions and then design interactions that allow
-users to reject, revise, or accept changes.
+users to reject, revise, or accept changes `r Citep(bib, c("predictive-interaction", "Heer2019-ie"))`.
 
 1. This depends on their being a good shared representation that links the
 frontend (human interaction) and backend (computation). 
 
----
-
-### Interactive Cleaning
-
-The Wrangler system recommends transformations based on what the interactions
-that the user has made so far.
-
-A domain-specific language for data cleaning serves as the shared
-representation.
+.center[
+<img src="figures/guide-decide.png" width=700/>
+]
 
 ---
 
 ### Interactive Translation
 
-A well-designed interface could help professional translators achieve better
-results than simply editing text that was generated by an automated translation
-system.
+A well-designed interface helps professional translators achieve better results
+than simply editing text that was generated by an automated translation system
+`r Citep(bib, c("10.1145/2642918.2647408", "green-etal-2014-human", "10.1145/2470654.2470718"))`.
 
-The natural language itself serves as the shared representation between front
-and backends.
+.center[
+<img src="figures/phrasal.png" width=800/>
+]
+
+Predictions can be updated in response to human interactions, and the natural
+language itself serves as teh shared representation.
 
 ---
 
@@ -500,15 +518,35 @@ PrintBibliography(bib, start = 4, end = 7)
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 8, end = 11)
+PrintBibliography(bib, start = 8, end = 10)
 ```
 
 ---
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 12, end = 16)
+PrintBibliography(bib, start = 11, end = 15)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 16, end = 20)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 21, end = 25)
+```
+
+---
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 26, end = 30)
 ```
 
 ---
 
 ### Figure Attribution
+
+---
