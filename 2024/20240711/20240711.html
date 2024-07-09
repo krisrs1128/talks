@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Interactivity for Interpretable Machine Learning</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+
+
+&lt;div id="title"&gt;
+Interactivity for Interpretable Machine Learning&lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="under_title"&gt;
+Computational Genomics Summer Institute 2024&lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+UW - Madison &lt;br/&gt;
+11 | July | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+[Slides](https://go.wisc.edu/8k8r2q)&lt;br/&gt;
+&lt;!-- &lt;img src="figures/cropped-CGSI_logo_final-2.jpg" width=100/&gt;&lt;br/&gt; --&gt;
+&lt;img src="figures/slides-link.png" width=100/&gt;
+&lt;/div&gt;
+
+---
+
+### Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+1. Compare and contrast outputs from different interpretability techniques.
+
+1. Apply interactive computing ideas to the research code that you develop.
+
+---
+
+### Motivation: Outpatient Care for Pneumonia
+
+.center[
+&lt;img src="figures/asthma.png" width=1000/&gt;
+
+&lt;span style="font-size: 18px;"&gt;
+Example from [1].
+&lt;/span&gt;
+]
+
+
+---
+
+### Motivation: The Google Bard Demo
+
+.center[
+&lt;img src="figures/bard-hallucination.webp" width=830/&gt;
+
+See the discussion in [2].
+]
+
+---
+
+### Know Your Data
+
+1. Computers let us solve problems that would be impossible to manage any other
+way, but we need some way of **checking our work**, especially when there are
+real-world consequences.
+
+1. We can often **improve our models** by looking more closely at what they learn
+and intervening as necessary.
+
+1. In the long-run, we'll be able to **get more out of our data and models** if we
+look more critically at them.
+
+---
+
+class: middle
+
+.center[
+## Interpretability
+]
+
+---
+
+### What is Interpretability?
+
+Models with these properties tend to be more interpretable [13; 14; 15; 16]:
+
+&lt;img src="figures/simplicity.png" width=50/&gt; **Parsimony**: The model has relatively few components. &lt;br/&gt;&lt;br/&gt;
+
+&lt;img src="figures/crystal-ball.png" width=40/&gt; **Simulatability**: Users can predict model behavior on new samples. &lt;br/&gt;&lt;br/&gt;
+
+&lt;img src="figures/Lego_Brick_4.svg" width=50/&gt; **Modularity**: The model can be broken into simpler components.
+
+&lt;!-- First Q&amp;A: Would you say that a linear regression model is interpretable? --&gt;
+
+---
+
+### Distinctions
+
+1. **Interpretable Model**: A model that, by virtue of its design, is easy to
+accurately describe and edit.
+1. **Explainability Technique**: A method that summarizes some aspect of a black
+box system.
+
+.center[
+  &lt;img src="figures/black_box_flashlight.png" width=720/&gt;
+]
+
+---
+
+### Distinctions
+
+1. **Local Explanation**: An artifact for reasoning about individual predictions.
+1. **Global Explanation**: An artifact for reasoning about an entire model.
+
+.center[
+&lt;img src="figures/explanation_types.png" width=800/&gt;
+]
+
+---
+
+### Illustrative Example
+
+Imagine sampling microbiome profiles over time and seeing that some of the hosts
+develop a disease. Can we discover risk factors from these data?
+
+.center[
+  &lt;img src="figures/simulated-data.svg" width=830/&gt;
+]
+&lt;span style="font-size: 18px;"&gt;
+This simulation is motivated by microbiome studies of HIV risk [23].
+&lt;/span&gt;
+
+---
+
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is preferable to
+expert design.
+1. We apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+&lt;img src="figures/transformers-analogy-2.png"/&gt;
+]
+
+---
+
+### Transformers
+
+.pull-left[
+1. A principle of deep learning is that end-to-end optimization is preferable to
+expert design.
+1. We apply the GPT2 architecture to our problem, viewing a sequence of
+microbiome profiles like a sequence of words.
+]
+
+.pull-right[
+&lt;img src="figures/transformer_analogy.png"/&gt;
+]
+
+---
+
+### Representation Learning
+
+How can we try to understand the representations `\(z_{i}\)`?
+
+.center[
+&lt;img src="figures/representation_learning.png" width=700/&gt;
+]
+
+---
+
+### Embeddings
+
+In text data, we can identify context-dependent meaning by looking for clusters
+in the PCA of embeddings [3].
+.center[
+&lt;img src="figures/bert_context.png" width=670/&gt;
+]
+
+---
+
+### Embeddings
+
+We can build the analogous visualization for our microbiome problem. Samples
+that are nearby in the embedding space are similar w.r.t. predictive features.
+
+.center[
+&lt;img src="figures/pca_comparison.svg" width=1400/&gt;
+]
+
+---
+
+### Interpolations
+
+Another common technique is to analyze linear interpolations in this space 
+.  This figure traces out the microbiome
+profiles between two samples.
+
+.center[
+&lt;img src="figures/species_21_interpolation.svg" width=940/&gt;
+]
+
+---
+
+### Perturbation
+
+For local explanations, we can perturb the sample of interest and see how model
+predictions change.
+&lt;br/&gt;
+&lt;br/&gt;
+.center[
+&lt;img src="figures/perturbation.png" width=500/&gt;
+]
+Examples: LIME , integrated gradients
+[18], GradCAM [17],
+local variable importance [20].
+
+&lt;!-- Q&amp;A: How can we operationalize this intuition? --&gt;
+
+---
+
+### Integrated Gradients
+
+Integrated gradients are better than ordinary gradients because they are less
+sensitive to saturation in the usual logistic loss.
+
+`\begin{align*}
+\left(x_{i} - x_{i}'\right) \int_{\alpha \in \left[0, 1\right]} \frac{\partial f\left(x_{i}' + \alpha\left(x_{i} - x_{i}'\right)\right)}{\partial x_{i}} d\alpha
+\end{align*}`
+
+.center[
+  &lt;img src="figures/integrated_gradients_animation.gif" width=750/&gt;&lt;br/&gt;
+&lt;span style="font-size: 18px;"&gt;
+Animation from [21].
+&lt;/span&gt;
+]
+
+---
+
+### Integrated Gradients
+
+In our microbiome example, this highlights the species and timepoints that are
+most responsible for the disease vs. healthy classification for each sample.
+
+.center[
+&lt;img src="figures/microbiome_integrated_gradients.svg"/&gt;
+]
+
+---
+
+### Concept Bottlenecks
+
+Alternatively, we can explain a decision by reducing the arbitrary feature space
+to a set of human-interpretable concepts [22].  This is part
+of a larger body of work that attempts to establish shared
+language/representations for interacting with models 
+[26].
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/koh_concept.png" width=750/&gt; &lt;br/&gt;
+Figure from [22].
+&lt;/span&gt;
+]
+
+---
+
+### Concept Bottlenecks
+
+In the microbiome example, we could define concepts like blooms or trends. These
+would have to be manually annotated in the original training data.
+
+.center[
+&lt;img src="figures/trends.png" width=1000/&gt;
+]
+
+---
+
+### Concept Bottlenecks
+
+We reconfigure our transformer model to first predict the concept label before
+making a final classification.
+
+.center[
+&lt;img src="figures/concept_architecture-2.png" width=600/&gt;
+]
+
+---
+
+.center[
+## Interactivity
+]
+
+---
+
+### What is Interactivity?
+
+Interactivity allows us to specify what computation we want done without writing
+code.
+
+.pull-left[
+&lt;img src="figures/autocomplete.gif" width=350/&gt;&lt;br/&gt;
+&lt;span style="font-size: 18px;"&gt;
+Text entry can be considered a type of interaction.
+&lt;/span&gt;
+]
+
+.pull-right[
+&lt;img src="figures/delegate-calc-1.gif"/&gt;
+&lt;span style="font-size: 18px;"&gt;
+An interactive delegate calculator created by the NYT [4].
+&lt;/span&gt;
+]
+
+---
+
+
+### &lt;span style="col: #D93611;"&gt;Focus-plus-Context&lt;/span&gt;
+
+We can let readers zoom into patterns of interest without losing relevant
+context. This has a flavor of "analyzing the residuals."
+&lt;br/&gt;
+&lt;br/&gt;
+
+.pull-left[
+&gt; Overview first, zoom and filter, then details on demand.
+
+-- Schneiderman's "Visual Information Seeking Mantra" [5].
+]
+
+.pull-right[
+&lt;img src="figures/structuration.png"/&gt;
+&lt;span style="font-size: 18px;"&gt;
+Tukey's iterative structuration, as imagined by .
+&lt;/span&gt;
+]
+
+---
+
+### Example: Tree Navigation
+
+Large trees can be difficult to explore. Focus-plus-context gives a natural way
+of navigating them, recomputing the view according to user interactions.  [27].
+
+.center[
+&lt;iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-dd8d9e7ec77f2a8cc333" width=900 height=380&gt;&lt;/iframe&gt;
+]
+
+---
+
+### Example: Dimensionality Reduction
+
+We can use focus-plus-context to compare topics across models with different
+complexity [6; 7]. Low `\(K\)` gives
+an overview, large `\(K\)` gives details.
+
+.center[
+&lt;img src="figures/vaginal_microbiome_alto.jpg" width=900/&gt;
+]
+
+---
+
+### Linked Views
+
+.pull-left[
+1. We can navigate higher dimensions by linking low-dimensional views [11; 12].
+
+1. Notice that we're defining queries graphically, not just through selection menus.
+]
+
+.pull-right[
+&lt;iframe src="https://connect.doit.wisc.edu/content/6df2063a-1c7d-4f01-b98c-3aebed82d190/" allowfullscreen="" data-external="1" height=500 width=600&gt;&lt;/iframe&gt;
+]
+
+&lt;!-- Q&amp;A: What are some interesting questions you'd like to answer on this flight delay data? --&gt;
+
+---
+
+### Example: Multiple Testing
+
+We can use linked views to navigate a collection of hypothesis tests. Each
+letter corresponds to an experimental factor.
+
+.center[
+&lt;iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400&gt;&lt;/iframe&gt;
+]
+
+---
+
+### Example: Model Evaluation
+
+This visualization uses both linked views and the focus-plus-context principle
+to help evaluate the quality of a single-cell simulator. 
+
+---
+
+### Software
+
+.pull-left[
+**Interpretability**
+
+1. Captum (python)
+1. DALEX (R)
+1. imodels (python)
+1. interpretml (python)
+
+Review Paper&lt;br/&gt; - [Code Repository](https://go.wisc.edu/3k1ewe)
+
+]
+
+
+.pull-right[
+**Interactivity**
+
+1. Shiny (R/Python)
+1. D3 (Javascript)
+1. p5 (Javascript)
+1. Jupyter Widgets (python)
+
+Visualization Course&lt;br/&gt; - Notes [I](https://krisrs1128.github.io/stat679_notes/), [II](https://krisrs1128.github.io/stat436_s24/)&lt;br/&gt;- Recordings [I](https://www.youtube.com/watch?v=cc__b5R6OzA&amp;list=PLhax_7Mawcfk1GEl_vOg7cE_vtRTsqMWw&amp;pp=gAQBiAQB), [II](https://mediaspace.wisc.edu/channel/STAT+479%3A+Statistical+Data+Visualization/197911113)
+]
+
+
+---
+
+class: middle
+
+.center[
+## Augmentation and AI
+]
+
+---
+
+### AI and IA - Design Space
+
+Computers are good at accurately reaching well-defined goals, but people are
+good at criticism and planning. How can we get the best of both worlds?
+
+**Artificial Intelligence (AI)**: Solve problems directly.&lt;br/&gt;
+**Intelligence Augmentation (IA)**: Enhance problem solving ability.
+&lt;br/&gt;
+.center[
+&lt;img src="figures/dm_vs_ai.png" width=800/&gt;
+]
+
+---
+
+### Guide-Decide Loop
+
+1. The AI make suggestions that we can choose to reject, revise, or accept 
+[25; 24].
+
+1. This depends on their being a shared representation that links the frontend
+(for human interpretation) with the backend (for model prediction). 
+
+.center[
+&lt;img src="figures/guide-decide.png" width=700/&gt;
+]
+
+---
+
+### Interactive Translation
+
+A well-designed interface helps professional translators achieve better results
+than simply editing the output of an automated translation system
+[8; 9; 10].
+
+.center[
+&lt;img src="figures/phrasal.png" width=800/&gt;
+]
+
+Predictions can be updated in response to interactions. The shared
+representation here is natural language.
+
+---
+
+### Conclusion
+
+We'll see throughout this retreat ways in which models can help generate useful
+catalogs, improve engineering processes, and uncover the truth.
+
+.center[
+  Include a figure that summarizes a few of these talks
+  phylogenetic tree
+  single cell map
+  EHR or drug development picture
+]
+
+These problems aren't solved by models in isolation -- there is human labor
+involved in specification and oversight. Interpretability and interactivity can
+make this work more accessible and reliable.
+
+---
+
+### References
+
+[1] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance
+framework". In: _arXiv_ (2023).
+
+[2] G. Aisch. _In Defense of Interactive Graphics - vis4.net_.
+&lt;https://www.vis4.net/blog/in-defense-of-interactive-graphics/&gt;. [Accessed
+08-07-2024].
+
+[3] R. A. Becker et al. "Brushing Scatterplots". In: _Technometrics_ 29.2 (May.
+1987), p. 127.
+
+---
+
+[1] A. Buja et al. "Interactive high-dimensional data visualization". En. In: _J.
+Comput. Graph. Stat._ 5.1 (Mar. 1996), pp. 78-99.
+
+[2] R. Caruana et al. "Intelligible Models for HealthCare: Predicting Pneumonia
+Risk and Hospital 30-day Readmission". In: _Proceedings of the 21th ACM SIGKDD
+International Conference on Knowledge Discovery and Data Mining_ (2015).
+
+[3] A. Coenen et al. "Visualizing and Measuring the Geometry of BERT". In: _ArXiv_
+abs/1906.02715 (2019).
+
+[4] F. Doshi-Velez et al. "Towards A rigorous science of interpretable machine
+learning". In: _arXiv_ (2017).
+
+---
+
+[1] J. Fukuyama et al. "Multiscale analysis of count data through topic alignment".
+En. In: _Biostatistics_ 24.4 (Oct. 2023), pp. 1045-1065.
+
+[2] C. Gosmann et al. "Lactobacillus-deficient cervicovaginal bacterial communities
+are associated with increased HIV acquisition in young south African women". En.
+In: _Immunity_ 46.1 (Jan. 2017), pp. 29-37.
+
+[3] S. Green et al. "Predictive translation memory: a mixed-initiative system for
+human language translation". In: _Proceedings of the 27th Annual ACM Symposium on
+User Interface Software and Technology_. UIST '14. Honolulu, Hawaii, USA:
+Association for Computing Machinery, 2014, p. 177–187. ISBN: 9781450330695. DOI:
+[10.1145/2642918.2647408](https://doi.org/10.1145%2F2642918.2647408). URL:
+[https://doi.org/10.1145/2642918.2647408](https://doi.org/10.1145/2642918.2647408).
+
+---
+
+[1] S. Green et al. "The efficacy of human post-editing for language translation".
+In: _Proceedings of the SIGCHI Conference on Human Factors in Computing Systems_.
+CHI '13. Paris, France: Association for Computing Machinery, 2013, p. 439–448.
+ISBN: 9781450318990. DOI:
+[10.1145/2470654.2470718](https://doi.org/10.1145%2F2470654.2470718). URL:
+[https://doi.org/10.1145/2470654.2470718](https://doi.org/10.1145/2470654.2470718).
+
+[2] S. Green et al. "Human Effort and Machine Learnability in Computer Aided
+Translation". In: _Proceedings of the 2014 Conference on Empirical Methods in
+Natural Language Processing (EMNLP)_. Ed. by A. Moschitti, B. Pang and W.
+Daelemans. Doha, Qatar: Association for Computational Linguistics, Oct. 2014, pp.
+1225-1236. DOI: [10.3115/v1/D14-1130](https://doi.org/10.3115%2Fv1%2FD14-1130).
+URL: [https://aclanthology.org/D14-1130](https://aclanthology.org/D14-1130).
+
+[3] J. Heer. "Agency plus automation: Designing artificial intelligence into
+interactive systems". En. In: _Proc. Natl. Acad. Sci. U. S. A._ 116.6 (Feb. 2019),
+pp. 1844-1850.
+
+[4] J. Heer et al. "Predictive Interaction for Data Transformation". In:
+_Conference on Innovative Data Systems Research (CIDR)_ (2015). URL:
+[https://idl.uw.edu/papers/predictive-interaction](https://idl.uw.edu/papers/predictive-interaction).
+
+[5] P. W. Koh et al. "Concept Bottleneck Models". In: _NeurIPS_ (2020).
+
+---
+
+[1] D. Kundaliya. "Computing - Incisive Media: Google AI chatbot Bard gives wrong
+answer in its first demo". In: _Computing_ (Sep. 2023). URL:
+[https://ezproxy.library.wisc.edu/login?url=https://www.proquest.com/trade-journals/computing-incisive-media-google-ai-chatbot-bard/docview/2774438186/se-2](https://ezproxy.library.wisc.edu/login?url=https://www.proquest.com/trade-journals/computing-incisive-media-google-ai-chatbot-bard/docview/2774438186/se-2).
+
+[2] Z. C. Lipton. "The Mythos of Model Interpretability". En. In: _ACM Queue_ 16.3
+(Jun. 2018), pp. 31-57.
+
+[3] W. J. Murdoch et al. "Definitions, methods, and applications in interpretable
+machine learning". En. In: _Proc. Natl. Acad. Sci. U. S. A._ 116.44 (Oct. 2019),
+pp. 22071-22080.
+
+[4] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI".
+In: _arXiv_ (2024).
+
+[5] K. Sankaran et al. "Interactive Visualization of Hierarchically Structured
+Data". En. In: _Journal of Computational and Graphical Statistics_ 27.3 (Jul.
+2018), pp. 553-563. ISSN: 1061-8600, 1537-2715. DOI:
+[10.1080/10618600.2017.1392866](https://doi.org/10.1080%2F10618600.2017.1392866).
+URL:
+[https://www.tandfonline.com/doi/full/10.1080/10618600.2017.1392866](https://www.tandfonline.com/doi/full/10.1080/10618600.2017.1392866)
+(visited on 08/25/2022).
+
+---
+
+[1] R. R. Selvaraju et al. "Grad-CAM: Visual Explanations from Deep Networks via
+Gradient-Based Localization". In: _2017 IEEE International Conference on Computer
+Vision (ICCV)_. 2017, pp. 618-626. DOI:
+[10.1109/ICCV.2017.74](https://doi.org/10.1109%2FICCV.2017.74).
+
+[2] B. Shneiderman. "The eyes have it: a task by data type taxonomy for information
+visualizations". In: _Proceedings 1996 IEEE Symposium on Visual Languages_.
+Boulder, CO, USA: IEEE Comput. Soc. Press, 2002.
+
+[3] P. Sturmfels et al. "Visualizing the Impact of Feature Attribution Baselines".
+In: _Distill_ 5.1 (Jan. 2020). ISSN: 2476-0757. DOI:
+[10.23915/distill.00022](https://doi.org/10.23915%2Fdistill.00022). URL:
+[http://dx.doi.org/10.23915/distill.00022](http://dx.doi.org/10.23915/distill.00022).
+
+[4] M. Sundararajan et al. "Axiomatic attribution for deep networks". In:
+_Proceedings of the 34th International Conference on Machine Learning - Volume 70_.
+ICML'17. Sydney, NSW, Australia: JMLR.org, 2017, p. 3319–3328.
+
+[5] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and
+non-pregnant women". En. In: _Proc. Biol. Sci._ 290.2011 (Nov. 2023), p. 20231461.
+
+---
+
+[1] M. Yuksekgonul et al. "Post-hoc Concept Bottleneck Models". In: _The Eleventh
+International Conference on Learning Representations _. 2023. URL:
+[https://openreview.net/forum?id=nA5AZ8CEyow](https://openreview.net/forum?id=nA5AZ8CEyow).
+
+---
+
+### Figure Attribution
+
+Simplicity by M. Oki Orlando from &lt;a href="https://thenounproject.com/browse/icons/term/simplicity/" target="_blank" title="Simplicity Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+Crystal Ball by Kiki Rizky from &lt;a href="https://thenounproject.com/browse/icons/term/crystal-ball/" target="_blank" title="Crystal Ball Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
