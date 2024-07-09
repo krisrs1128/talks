@@ -57,6 +57,7 @@ Example from [1].
 &lt;/span&gt;
 ]
 
+&lt;!-- Q&amp;A This is pretty counterintuitive. What do you think is going on? --&gt;
 
 ---
 
@@ -139,7 +140,7 @@ develop a disease. Can we discover risk factors from these data?
   &lt;img src="figures/simulated-data.svg" width=830/&gt;
 ]
 &lt;span style="font-size: 18px;"&gt;
-This simulation is motivated by microbiome studies of HIV risk [7].
+This simulation is motivated by microbiome studies of HIV risk over time [7].
 &lt;/span&gt;
 
 ---
@@ -147,10 +148,10 @@ This simulation is motivated by microbiome studies of HIV risk [7].
 ### Transformers
 
 .pull-left[
-1. A principle of deep learning is that end-to-end optimization is preferable to
-expert design.
 1. We apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
+1. The hope is that this model automatically discovers temporal and taxonomic
+features that distinguish the classes.
 ]
 
 .pull-right[
@@ -162,10 +163,10 @@ microbiome profiles like a sequence of words.
 ### Transformers
 
 .pull-left[
-1. A principle of deep learning is that end-to-end optimization is preferable to
-expert design.
 1. We apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
+1. The hope is that this model automatically discovers temporal and taxonomic
+features that distinguish the classes.
 ]
 
 .pull-right[
@@ -176,7 +177,7 @@ microbiome profiles like a sequence of words.
 
 ### Representation Learning
 
-How can we try to understand the representations `\(z_{i}\)`?
+How can we try to understand the transformer embeddings `\(z_{i}\)`?
 
 .center[
 &lt;img src="figures/representation_learning.png" width=500/&gt;
@@ -207,9 +208,8 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space 
-.  This figure traces out the microbiome
-profiles between two samples.
+Another common technique is to analyze linear interpolations in this space.
+This figure traces out the microbiome profiles between two samples.
 
 .center[
 &lt;img src="figures/species_21_interpolation.svg" width=940/&gt;
@@ -226,9 +226,9 @@ predictions change.
 .center[
 &lt;img src="figures/perturbation.png" width=500/&gt;
 ]
-Examples: LIME , integrated gradients
-[9], GradCAM [10],
-local variable importance [11].
+Examples: LIME [9], integrated gradients
+[10], GradCAM [11],
+local variable importance [12].
 
 &lt;!-- Q&amp;A: How can we operationalize this intuition? --&gt;
 
@@ -246,7 +246,7 @@ sensitive to saturation in the usual logistic loss.
 .center[
   &lt;img src="figures/integrated_gradients_animation.gif" width=750/&gt;&lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Animation from [12].
+Interactive visualization from [13].
 &lt;/span&gt;
 ]
 
@@ -266,15 +266,15 @@ most responsible for the disease vs. healthy classification for each sample.
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts [13].  This is part
+to a set of human-interpretable concepts [14].  This is part
 of a larger body of work that attempts to establish shared
 language/representations for interacting with models 
-[14].
+[15].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/koh_concept.png" width=750/&gt; &lt;br/&gt;
-Figure from [13].
+Figure from [14].
 &lt;/span&gt;
 ]
 
@@ -316,14 +316,14 @@ to write code.
 .pull-left[
 &lt;img src="figures/autocomplete.gif" width=300/&gt;&lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Text entry can be considered a type of interaction.
+Text entry is a type of interaction.
 &lt;/span&gt;
 ]
 
 .pull-right[
 &lt;img src="figures/delegate-calc-1.gif"/&gt;
 &lt;span style="font-size: 18px;"&gt;
-An interactive delegate calculator created by the NYT [15].
+An interactive delegate calculator created by the NYT [16].
 &lt;/span&gt;
 ]
 
@@ -340,13 +340,13 @@ context. This has a flavor of "analyzing the residuals."
 .pull-left[
 &gt; Overview first, zoom and filter, then details on demand.
 
--- Schneiderman's "Visual Information Seeking Mantra" [16].
+-- Schneiderman's "Visual Information Seeking Mantra" [17].
 ]
 
 .pull-right[
 &lt;img src="figures/structuration.png" width=250/&gt;
 &lt;span style="font-size: 18px;"&gt;&lt;br/&gt;
-Tukey's iterative structuration, as imagined by [27].
+Tukey's iterative structuration, as interpreted by [18].
 &lt;/span&gt;
 ]
 
@@ -355,7 +355,7 @@ Tukey's iterative structuration, as imagined by [27].
 ### Example: Tree Navigation
 
 Large trees can be difficult to explore. Focus-plus-context gives a natural way
-of navigating them, recomputing the view according to user interactions  [29; 17].
+of navigating them, updating the view according to user interactions  [19; 20].
 
 .center[
 &lt;iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-dd8d9e7ec77f2a8cc333" width=900 height=380&gt;&lt;/iframe&gt;
@@ -366,8 +366,8 @@ of navigating them, recomputing the view according to user interactions  [29; 17
 ### Example: Dimensionality Reduction
 
 We can use focus-plus-context to compare topics across models with different
-complexity [18; 19]. Low `\(K\)` gives
-an overview, large `\(K\)` gives details.
+complexity [21; 22]. Low `\(K\)` gives
+context, large `\(K\)` gives focus.
 
 .center[
 &lt;img src="figures/vaginal_microbiome_alto.jpg" width=900/&gt;
@@ -378,7 +378,7 @@ an overview, large `\(K\)` gives details.
 ### Linked Views
 
 .pull-left[
-1. We can navigate higher dimensions by linking low-dimensional views [20; 21].
+1. We can navigate higher dimensions by linking low-dimensional views [23; 24].
 
 1. Notice that we're defining queries graphically, not just through selection menus.
 ]
@@ -391,21 +391,11 @@ an overview, large `\(K\)` gives details.
 
 ---
 
-### Example: Multiple Testing
-
-We can use linked views to navigate a collection of hypothesis tests. Each
-letter corresponds to an experimental factor (details in [28]).
-
-.center[
-&lt;iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400&gt;&lt;/iframe&gt;
-]
-
----
-
 ### Example: Model Evaluation
 
-This visualization uses both linked views and the focus-plus-context principle
-to help evaluate the quality of a single-cell simulator. 
+We can use these ideas to evaluate the quality of a single-cell simulator. 
+
+&lt;iframe src="http://localhost:5000/" width=950 height=450/&gt;
 
 ---
 
@@ -452,8 +442,9 @@ class: middle
 Computers are good at accurately reaching well-defined goals, but people are
 good at criticism and planning. How can we get the best of both worlds?
 
-**Artificial Intelligence (AI)**: Solve problems directly.&lt;br/&gt;
-**Intelligence Augmentation (IA)**: Enhance problem solving ability.
+**Artificial Intelligence (AI)**: Solve problems without human intervention.&lt;br/&gt;
+**Intelligence Augmentation (IA)**: Enhance human problem solving ability.
+&lt;br/&gt;
 &lt;br/&gt;
 .center[
 &lt;img src="figures/dm_vs_ai.png" width=800/&gt;
@@ -463,8 +454,8 @@ good at criticism and planning. How can we get the best of both worlds?
 
 ### Guide-Decide Loop
 
-1. The AI make suggestions that we can choose to reject, revise, or accept 
-[22; 23].
+1. In an interactive setting, AI can make suggestions that we then reject,
+revise, or accept [26; 27].
 
 1. This depends on their being a shared representation that links the frontend
 (for human interpretation) with the backend (for model prediction). 
@@ -479,7 +470,7 @@ good at criticism and planning. How can we get the best of both worlds?
 
 A well-designed interface helps professional translators achieve better results
 than simply editing the output of an automated translation system
-[24; 25; 26].
+[28; 29; 30].
 
 .center[
 &lt;img src="figures/phrasal.png" width=800/&gt;
@@ -492,29 +483,30 @@ representation here is natural language.
 
 ### Conclusion
 
-.pull-left[
-1. It takes effort to specify and validate models. The literatures on
-interpretability and interactivity can help us to think systematically about
-this work.
+1. Interpretability and interactivity can simplify the process of specifying and
+validating models.
 
-1. More than just help answer questions, these tools can help shape good
-questions during day-to-day analysis.
-]
-
-.pull-right[
-&lt;img src="figures/question_evidence.png" width=420/&gt;&lt;br/&gt;
-&lt;span style="font-size: 18px;"&gt;
-Figure from [30]'s reflection on [31].
-&lt;/span&gt;
-]
+1. Good research questions arise from carefully looking at your data and models,
+and these tools can help.
 
 ---
 
-### References
+### Thank you!
 
-[1] R. Caruana et al. "Intelligible Models for HealthCare: Predicting Pneumonia
-Risk and Hospital 30-day Readmission". In: _Proceedings of the 21th ACM SIGKDD
-International Conference on Knowledge Discovery and Data Mining_ (2015).
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko.
+* Funding: NIGMS R01GM152744.
+
+
+
+---
+
+class: reference
+
+&lt;h3 style="font-size: 22px;"&gt;References&lt;/h3&gt;
+[1] R. Caruana, Y. Lou, J. Gehrke, P. Koch, M. Sturm, and N. Elhadad.
+"Intelligible Models for HealthCare: Predicting Pneumonia Risk and Hospital 30-day
+Readmission". In: _Proceedings of the 21th ACM SIGKDD International Conference on
+Knowledge Discovery and Data Mining_ (2015).
 
 [2] D. Kundaliya. "Computing - Incisive Media: Google AI chatbot Bard gives wrong
 answer in its first demo". In: _Computing_ (Sep. 2023). URL:
@@ -523,132 +515,147 @@ answer in its first demo". In: _Computing_ (Sep. 2023). URL:
 [3] Z. C. Lipton. "The Mythos of Model Interpretability". En. In: _ACM Queue_ 16.3
 (Jun. 2018), pp. 31-57.
 
----
+[4] W. J. Murdoch, C. Singh, K. Kumbier, R. Abbasi-Asl, and B. Yu. "Definitions,
+methods, and applications in interpretable machine learning". En. In: _Proc. Natl.
+Acad. Sci. U. S. A._ 116.44 (Oct. 2019), pp. 22071-22080.
 
-[4] W. J. Murdoch et al. "Definitions, methods, and applications in interpretable
-machine learning". En. In: _Proc. Natl. Acad. Sci. U. S. A._ 116.44 (Oct. 2019),
-pp. 22071-22080.
-
-[5] F. Doshi-Velez et al. "Towards A rigorous science of interpretable machine
-learning". In: _arXiv_ (2017).
+[5] F. Doshi-Velez and B. Kim. "Towards A rigorous science of interpretable
+machine learning". In: _arXiv_ (2017).
 
 [6] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI".
 In: _arXiv_ (2024).
 
-[7] C. Gosmann et al. "Lactobacillus-deficient cervicovaginal bacterial
-communities are associated with increased HIV acquisition in young south African
-women". En. In: _Immunity_ 46.1 (Jan. 2017), pp. 29-37.
+[7] C. Gosmann, M. N. Anahtar, S. A. Handley, M. Farcasanu, G. Abu-Ali, B. A.
+Bowman, N. Padavattan, C. Desai, et al. "Lactobacillus-deficient cervicovaginal
+bacterial communities are associated with increased HIV acquisition in young south
+African women". En. In: _Immunity_ 46.1 (Jan. 2017), pp. 29-37.
 
-[8] A. Coenen et al. "Visualizing and Measuring the Geometry of BERT". In: _ArXiv_
-abs/1906.02715 (2019).
+[8] A. Coenen, E. Reif, A. Yuan, B. Kim, A. Pearce, F. Viégas, and M. Wattenberg.
+"Visualizing and measuring the geometry of BERT". In: _Proceedings of the 33rd
+International Conference on Neural Information Processing Systems_. Red Hook, NY,
+USA: Curran Associates Inc., 2019.
 
----
+[9] M. T. Ribeiro, S. Singh, and C. Guestrin. "``Why Should I Trust You?'':
+Explaining the Predictions of Any Classifier". In: _Proceedings of the 22nd ACM
+SIGKDD International Conference on Knowledge Discovery and Data Mining_. KDD '16
+(2016). DOI: [10.1145/2939672.2939778](https://doi.org/10.1145%2F2939672.2939778).
+URL:
+[https://doi.org/10.1145/2939672.2939778](https://doi.org/10.1145/2939672.2939778).
 
-[9] M. Sundararajan et al. "Axiomatic attribution for deep networks". In:
-_Proceedings of the 34th International Conference on Machine Learning - Volume
-70_. ICML'17. Sydney, NSW, Australia: JMLR.org, 2017, p. 3319–3328.
+[10] M. Sundararajan, A. Taly, and Q. Yan. "Axiomatic attribution for deep
+networks". In: _Proceedings of the 34th International Conference on Machine
+Learning - Volume 70_. ICML'17. Sydney, NSW, Australia: JMLR.org, 2017, p.
+3319–3328.
 
-[10] R. R. Selvaraju et al. "Grad-CAM: Visual Explanations from Deep Networks via
-Gradient-Based Localization". In: _2017 IEEE International Conference on Computer
-Vision (ICCV)_. 2017, pp. 618-626. DOI:
+[11] R. R. Selvaraju, M. Cogswell, A. Das, R. Vedantam, D. Parikh, and D. Batra.
+"Grad-CAM: Visual Explanations from Deep Networks via Gradient-Based
+Localization". In: _2017 IEEE International Conference on Computer Vision (ICCV)_.
+2017, pp. 618-626. DOI:
 [10.1109/ICCV.2017.74](https://doi.org/10.1109%2FICCV.2017.74).
 
-[11] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance
-framework". In: _arXiv_ (2023).
+[12] A. Agarwal, A. M. Kenney, Y. S. Tan, T. M. Tang, and B. Yu. "MDI+: A flexible
+random forest-based feature importance framework". In: _arXiv_ (2023).
 
-[12] P. Sturmfels et al. "Visualizing the Impact of Feature Attribution
-Baselines". In: _Distill_ 5.1 (Jan. 2020). ISSN: 2476-0757. DOI:
+[13] P. Sturmfels, S. Lundberg, and S. Lee. "Visualizing the Impact of Feature
+Attribution Baselines". In: _Distill_ 5.1 (Jan. 2020). ISSN: 2476-0757. DOI:
 [10.23915/distill.00022](https://doi.org/10.23915%2Fdistill.00022). URL:
 [http://dx.doi.org/10.23915/distill.00022](http://dx.doi.org/10.23915/distill.00022).
 
-[13] P. W. Koh et al. "Concept Bottleneck Models". In: _NeurIPS_ (2020).
+[14] P. W. Koh, T. Nguyen, Y. S. Tang, S. Mussmann, E. Pierson, B. Kim, and P.
+Liang. "Concept Bottleneck Models". In: _Proceedings of the 33rd International
+Conference on Neural Information Processing Systems_. Red Hook, NY, USA: Curran
+Associates Inc., 2020.
 
 ---
 
-[14] M. Yuksekgonul et al. "Post-hoc Concept Bottleneck Models". In: _The Eleventh
-International Conference on Learning Representations _. 2023. URL:
+class: reference
+
+[15] M. Yuksekgonul, M. Wang, and J. Zou. "Post-hoc Concept Bottleneck Models".
+In: _The Eleventh International Conference on Learning Representations _. 2023.
+URL:
 [https://openreview.net/forum?id=nA5AZ8CEyow](https://openreview.net/forum?id=nA5AZ8CEyow).
 
-[15] G. Aisch. _In Defense of Interactive Graphics - vis4.net_.
+[16] G. Aisch. _In Defense of Interactive Graphics - vis4.net_.
 &lt;https://www.vis4.net/blog/in-defense-of-interactive-graphics/&gt;. [Accessed
 08-07-2024].
 
-[16] B. Shneiderman. "The eyes have it: a task by data type taxonomy for
+[17] B. Shneiderman. "The eyes have it: a task by data type taxonomy for
 information visualizations". In: _Proceedings 1996 IEEE Symposium on Visual
 Languages_. Boulder, CO, USA: IEEE Comput. Soc. Press, 2002.
 
-[17] K. Sankaran et al. "Interactive Visualization of Hierarchically Structured
-Data". En. In: _Journal of Computational and Graphical Statistics_ 27.3 (Jul.
-2018), pp. 553-563. ISSN: 1061-8600, 1537-2715. DOI:
+[18] S. Holmes. "Comment on 'A model for studying display methods of statistical
+graphics'". In: _J. Comput. Graph. Stat._ 2.4 (Dec. 1993), pp. 349-353.
+
+[19] J. Heer and S. K. Card. "DOITrees Revisited: Scalable, Space-Constrained
+Visualization of Hierarchical Data". In: _Advanced Visual Interfaces_ (2004), pp.
+421-424. URL:
+[http://vis.stanford.edu/papers/doitrees-revisited](http://vis.stanford.edu/papers/doitrees-revisited).
+
+[20] K. Sankaran and S. Holmes. "Interactive Visualization of Hierarchically
+Structured Data". En. In: _Journal of Computational and Graphical Statistics_ 27.3
+(Jul. 2018), pp. 553-563. ISSN: 1061-8600, 1537-2715. DOI:
 [10.1080/10618600.2017.1392866](https://doi.org/10.1080%2F10618600.2017.1392866).
 
----
+[21] L. Symul, P. Jeganathan, E. K. Costello, M. France, S. M. Bloom, D. S. Kwon,
+J. Ravel, D. A. Relman, et al. "Sub-communities of the vaginal microbiota in
+pregnant and non-pregnant women". En. In: _Proc. Biol. Sci._ 290.2011 (Nov. 2023),
+p. 20231461.
 
-[18] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and
-non-pregnant women". En. In: _Proc. Biol. Sci._ 290.2011 (Nov. 2023), p. 20231461.
+[22] J. Fukuyama, K. Sankaran, and L. Symul. "Multiscale analysis of count data
+through topic alignment". En. In: _Biostatistics_ 24.4 (Oct. 2023), pp. 1045-1065.
 
-[19] J. Fukuyama et al. "Multiscale analysis of count data through topic
-alignment". En. In: _Biostatistics_ 24.4 (Oct. 2023), pp. 1045-1065.
+[23] R. A. Becker and W. S. Cleveland. "Brushing Scatterplots". In:
+_Technometrics_ 29.2 (May. 1987), p. 127.
 
-[20] R. A. Becker et al. "Brushing Scatterplots". In: _Technometrics_ 29.2 (May.
-1987), p. 127.
+[24] A. Buja, D. Cook, and D. F. Swayne. "Interactive high-dimensional data
+visualization". En. In: _J. Comput. Graph. Stat._ 5.1 (Mar. 1996), pp. 78-99.
 
-[21] A. Buja et al. "Interactive high-dimensional data visualization". En. In: _J.
-Comput. Graph. Stat._ 5.1 (Mar. 1996), pp. 78-99.
+[25] M. G. Chevrette, C. S. Thomas, A. Hurley, N. Rosario-Meléndez, K. Sankaran,
+Y. Tu, A. Hall, S. Magesh, et al. "Microbiome composition modulates secondary
+metabolism in a multispecies bacterial community". En. In: _Proc. Natl. Acad. Sci.
+U. S. A._ 119.42 (Oct. 2022), p. e2212930119.
 
-[22] J. Heer et al. "Predictive Interaction for Data Transformation". In:
-_Conference on Innovative Data Systems Research (CIDR)_ (2015). URL:
+[26] J. Heer, J. Hellerstein, and S. Kandel. "Predictive Interaction for Data
+Transformation". In: _Conference on Innovative Data Systems Research (CIDR)_
+(2015). URL:
 [https://idl.uw.edu/papers/predictive-interaction](https://idl.uw.edu/papers/predictive-interaction).
 
----
-
-[23] J. Heer. "Agency plus automation: Designing artificial intelligence into
+[27] J. Heer. "Agency plus automation: Designing artificial intelligence into
 interactive systems". En. In: _Proc. Natl. Acad. Sci. U. S. A._ 116.6 (Feb. 2019),
 pp. 1844-1850.
 
-[24] S. Green et al. "Predictive translation memory: a mixed-initiative system for
-human language translation". In: _Proceedings of the 27th Annual ACM Symposium on
-User Interface Software and Technology_. UIST '14. Honolulu, Hawaii, USA:
-Association for Computing Machinery, 2014, p. 177–187. ISBN: 9781450330695. DOI:
-[10.1145/2642918.2647408](https://doi.org/10.1145%2F2642918.2647408). URL:
-[https://doi.org/10.1145/2642918.2647408](https://doi.org/10.1145/2642918.2647408).
+[28] S. Green, J. Chuang, J. Heer, and C. D. Manning. "Predictive translation
+memory: a mixed-initiative system for human language translation". In:
+_Proceedings of the 27th Annual ACM Symposium on User Interface Software and
+Technology_. UIST '14. Honolulu, Hawaii, USA: Association for Computing Machinery,
+2014, p. 177–187. ISBN: 9781450330695. DOI:
+[10.1145/2642918.2647408](https://doi.org/10.1145%2F2642918.2647408).
 
-[25] S. Green et al. "Human Effort and Machine Learnability in Computer Aided
-Translation". In: _Proceedings of the 2014 Conference on Empirical Methods in
-Natural Language Processing (EMNLP)_. Ed. by A. Moschitti, B. Pang and W.
-Daelemans. Doha, Qatar, Oct. 2014, pp. 1225-1236. DOI:
+[29] S. Green, S. I. Wang, J. Chuang, J. Heer, S. Schuster, and C. D. Manning.
+"Human Effort and Machine Learnability in Computer Aided Translation". In:
+_Proceedings of the 2014 Conference on Empirical Methods in Natural Language
+Processing (EMNLP)_. Ed. by A. Moschitti, B. Pang and W. Daelemans. Doha, Qatar,
+Oct. 2014, pp. 1225-1236. DOI:
 [10.3115/v1/D14-1130](https://doi.org/10.3115%2Fv1%2FD14-1130).
 
 ---
 
-[26] S. Green et al. "The efficacy of human post-editing for language
-translation". In: _Proceedings of the SIGCHI Conference on Human Factors in
-Computing Systems_. CHI '13. Paris, France: Association for Computing Machinery,
-2013, p. 439–448. ISBN: 9781450318990. DOI:
+class: reference
+
+[30] S. Green, J. Heer, and C. D. Manning. "The efficacy of human post-editing for
+language translation". In: _Proceedings of the SIGCHI Conference on Human Factors
+in Computing Systems_. CHI '13. Paris, France: Association for Computing
+Machinery, 2013, p. 439–448. ISBN: 9781450318990. DOI:
 [10.1145/2470654.2470718](https://doi.org/10.1145%2F2470654.2470718). URL:
 [https://doi.org/10.1145/2470654.2470718](https://doi.org/10.1145/2470654.2470718).
 
-[27] S. Holmes. "Comment on ``A model for studying display methods of statistical
-graphics''". In: _J. Comput. Graph. Stat._ 2.4 (Dec. 1993), pp. 349-353.
-
-[28] M. G. Chevrette et al. "Microbiome composition modulates secondary metabolism
-in a multispecies bacterial community". En. In: _Proc. Natl. Acad. Sci. U. S. A._
-119.42 (Oct. 2022), p. e2212930119.
-
-[29] J. Heer et al. "DOITrees Revisited: Scalable, Space-Constrained Visualization
-of Hierarchical Data". In: _Advanced Visual Interfaces_ (2004), pp. 421-424. URL:
-[http://vis.stanford.edu/papers/doitrees-revisited](http://vis.stanford.edu/papers/doitrees-revisited).
-
----
-
-[30] R. Peng. _Simply Statistics: Tukey, Design Thinking, and Better Questions -
+[31] R. Peng. _Simply Statistics: Tukey, Design Thinking, and Better Questions -
 simplystatistics.org_.
 &lt;https://simplystatistics.org/posts/2019-04-17-tukey-design-thinking-and-better-questions/&gt;.
 [Accessed 09-07-2024].
 
-[31] J. W. Tukey. "The future of data analysis". In: _Ann. Math. Stat._ 33.1 (Mar.
+[32] J. W. Tukey. "The future of data analysis". In: _Ann. Math. Stat._ 33.1 (Mar.
 1962), pp. 1-67.
-
 
 ---
 
@@ -657,6 +664,17 @@ simplystatistics.org_.
 Simplicity by M. Oki Orlando from &lt;a href="https://thenounproject.com/browse/icons/term/simplicity/" target="_blank" title="Simplicity Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
 
 Crystal Ball by Kiki Rizky from &lt;a href="https://thenounproject.com/browse/icons/term/crystal-ball/" target="_blank" title="Crystal Ball Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+---
+
+### Example: Multiple Testing
+
+Linked views can help make sense of a collection of hypothesis tests. Each
+letter corresponds to an experimental factor (details in [25]).
+
+.center[
+&lt;iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=1400 height=600&gt;&lt;/iframe&gt;
+]
 
 ---
     </textarea>

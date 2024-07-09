@@ -26,7 +26,7 @@ BibOptions(
   style = "markdown",
   hyperlink = FALSE, 
   dashed = FALSE,
-  max.names = 1
+  max.names = 8
 )
 bib <- ReadBib("references.bib")
 ```
@@ -73,6 +73,7 @@ Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
 </span>
 ]
 
+<!-- Q&A This is pretty counterintuitive. What do you think is going on? -->
 
 ---
 
@@ -155,7 +156,7 @@ develop a disease. Can we discover risk factors from these data?
   <img src="figures/simulated-data.svg" width=830/>
 ]
 <span style="font-size: 18px;">
-This simulation is motivated by microbiome studies of HIV risk `r Citep(bib, 'Gosmann2017-aw')`.
+This simulation is motivated by microbiome studies of HIV risk over time `r Citep(bib, 'Gosmann2017-aw')`.
 </span>
 
 ---
@@ -163,10 +164,10 @@ This simulation is motivated by microbiome studies of HIV risk `r Citep(bib, 'Go
 ### Transformers
 
 .pull-left[
-1. A principle of deep learning is that end-to-end optimization is preferable to
-expert design.
 1. We apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
+1. The hope is that this model automatically discovers temporal and taxonomic
+features that distinguish the classes.
 ]
 
 .pull-right[
@@ -178,10 +179,10 @@ microbiome profiles like a sequence of words.
 ### Transformers
 
 .pull-left[
-1. A principle of deep learning is that end-to-end optimization is preferable to
-expert design.
 1. We apply the GPT2 architecture to our problem, viewing a sequence of
 microbiome profiles like a sequence of words.
+1. The hope is that this model automatically discovers temporal and taxonomic
+features that distinguish the classes.
 ]
 
 .pull-right[
@@ -192,7 +193,7 @@ microbiome profiles like a sequence of words.
 
 ### Representation Learning
 
-How can we try to understand the representations $z_{i}$?
+How can we try to understand the transformer embeddings $z_{i}$?
 
 .center[
 <img src="figures/representation_learning.png" width=500/>
@@ -223,9 +224,8 @@ that are nearby in the embedding space are similar w.r.t. predictive features.
 
 ### Interpolations
 
-Another common technique is to analyze linear interpolations in this space 
-`r Citep(bib, "Liu2019LatentSC")`.  This figure traces out the microbiome
-profiles between two samples.
+Another common technique is to analyze linear interpolations in this space.
+This figure traces out the microbiome profiles between two samples.
 
 .center[
 <img src="figures/species_21_interpolation.svg" width=940/>
@@ -262,7 +262,7 @@ sensitive to saturation in the usual logistic loss.
 .center[
   <img src="figures/integrated_gradients_animation.gif" width=750/><br/>
 <span style="font-size: 18px;">
-Animation from `r Citep(bib, "Sturmfels2020")`.
+Interactive visualization from `r Citep(bib, "Sturmfels2020")`.
 </span>
 ]
 
@@ -332,7 +332,7 @@ to write code.
 .pull-left[
 <img src="figures/autocomplete.gif" width=300/><br/>
 <span style="font-size: 18px;">
-Text entry can be considered a type of interaction.
+Text entry is a type of interaction.
 </span>
 ]
 
@@ -363,7 +363,7 @@ context. This has a flavor of "analyzing the residuals."
 .pull-right[
 <img src="figures/structuration.png" width=250/>
 <span style="font-size: 18px;"><br/>
-Tukey's iterative structuration, as imagined by `r Citep(bib, "Holmes1993-fl")`.
+Tukey's iterative structuration, as interpreted by `r Citep(bib, "Holmes1993-fl")`.
 </span>
 ]
 
@@ -372,7 +372,7 @@ Tukey's iterative structuration, as imagined by `r Citep(bib, "Holmes1993-fl")`.
 ### Example: Tree Navigation
 
 Large trees can be difficult to explore. Focus-plus-context gives a natural way
-of navigating them, recomputing the view according to user interactions  `r Citep(bib, c("Heer2004DOITreesRS", "sankaran_interactive_2018"))`.
+of navigating them, updating the view according to user interactions  `r Citep(bib, c("Heer2004DOITreesRS", "sankaran_interactive_2018"))`.
 
 .center[
 <iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-dd8d9e7ec77f2a8cc333" width=900 height=380></iframe>
@@ -384,7 +384,7 @@ of navigating them, recomputing the view according to user interactions  `r Cite
 
 We can use focus-plus-context to compare topics across models with different
 complexity `r Citep(bib, c("Symul2023-ug", "Fukuyama2023-ph"))`. Low $K$ gives
-an overview, large $K$ gives details.
+context, large $K$ gives focus.
 
 .center[
 <img src="figures/vaginal_microbiome_alto.jpg" width=900/>
@@ -408,22 +408,11 @@ an overview, large $K$ gives details.
 
 ---
 
-### Example: Multiple Testing
-
-We can use linked views to navigate a collection of hypothesis tests. Each
-letter corresponds to an experimental factor (details in `r Citep(bib,
-"Chevrette2022-om")`).
-
-.center[
-<iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=990 height=400></iframe>
-]
-
----
-
 ### Example: Model Evaluation
 
-This visualization uses both linked views and the focus-plus-context principle
-to help evaluate the quality of a single-cell simulator. 
+We can use these ideas to evaluate the quality of a single-cell simulator. 
+
+<iframe src="http://localhost:5000/" width=950 height=450/>
 
 ---
 
@@ -470,8 +459,9 @@ class: middle
 Computers are good at accurately reaching well-defined goals, but people are
 good at criticism and planning. How can we get the best of both worlds?
 
-**Artificial Intelligence (AI)**: Solve problems directly.<br/>
-**Intelligence Augmentation (IA)**: Enhance problem solving ability.
+**Artificial Intelligence (AI)**: Solve problems without human intervention.<br/>
+**Intelligence Augmentation (IA)**: Enhance human problem solving ability.
+<br/>
 <br/>
 .center[
 <img src="figures/dm_vs_ai.png" width=800/>
@@ -481,8 +471,8 @@ good at criticism and planning. How can we get the best of both worlds?
 
 ### Guide-Decide Loop
 
-1. The AI make suggestions that we can choose to reject, revise, or accept 
-`r Citep(bib, c("predictive-interaction", "Heer2019-ie"))`.
+1. In an interactive setting, AI can make suggestions that we then reject,
+revise, or accept `r Citep(bib, c("predictive-interaction", "Heer2019-ie"))`.
 
 1. This depends on their being a shared representation that links the frontend
 (for human interpretation) with the backend (for model prediction). 
@@ -510,72 +500,45 @@ representation here is natural language.
 
 ### Conclusion
 
-.pull-left[
-1. It takes effort to specify and validate models. The literatures on
-interpretability and interactivity can help us to think systematically about
-this work.
+1. Interpretability and interactivity can simplify the process of specifying and
+validating models.
 
-1. More than just help answer questions, these tools can help shape good
-questions during day-to-day analysis.
-]
-
-.pull-right[
-<img src="figures/question_evidence.png" width=420/><br/>
-<span style="font-size: 18px;">
-Figure from `r Citep(bib, "simplystatisticsSimplyStatistics")`'s reflection on `r Citep(bib, "Tukey1962-vv")`.
-</span>
-]
+1. Good research questions arise from carefully looking at your data and models,
+and these tools can help.
 
 ---
 
-### References
+### Thank you!
 
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko.
+* Funding: NIGMS R01GM152744.
+
+
+
+---
+
+class: reference
+
+<h3 style="font-size: 22px;">References</h3>
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 3)
+PrintBibliography(bib, start = 1, end = 14)
 ```
 
 ---
 
+class: reference
+
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 4, end = 8)
+PrintBibliography(bib, start = 15, end = 29)
 ```
 
 ---
 
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 9, end = 13)
-```
-
----
+class: reference
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 17)
+PrintBibliography(bib, start = 30, end = 33)
 ```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 18, end = 22)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 23, end = 25)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 26, end = 29)
-```
-
----
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 30, end = 35)
-```
-
 
 ---
 
@@ -584,5 +547,16 @@ PrintBibliography(bib, start = 30, end = 35)
 Simplicity by M. Oki Orlando from <a href="https://thenounproject.com/browse/icons/term/simplicity/" target="_blank" title="Simplicity Icons">Noun Project</a> (CC BY 3.0)
 
 Crystal Ball by Kiki Rizky from <a href="https://thenounproject.com/browse/icons/term/crystal-ball/" target="_blank" title="Crystal Ball Icons">Noun Project</a> (CC BY 3.0)
+
+---
+
+### Example: Multiple Testing
+
+Linked views can help make sense of a collection of hypothesis tests. Each
+letter corresponds to an experimental factor (details in `r Citep(bib, "Chevrette2022-om")`).
+
+.center[
+<iframe src="https://connect.doit.wisc.edu/content/7d109162-8690-4c84-8563-4bdee8f15ca0" width=1400 height=600></iframe>
+]
 
 ---
