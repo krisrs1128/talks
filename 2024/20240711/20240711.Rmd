@@ -136,17 +136,6 @@ box system.
 
 ---
 
-### Distinctions
-
-1. **Local Explanation**: An artifact for reasoning about individual predictions.
-1. **Global Explanation**: An artifact for reasoning about an entire model.
-
-.center[
-<img src="figures/explanation_types.png" width=800/>
-]
-
----
-
 ### Illustrative Example
 
 Imagine sampling microbiome profiles over time and seeing that some of the hosts
