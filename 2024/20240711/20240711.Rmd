@@ -77,16 +77,6 @@ Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
 
 ---
 
-### Motivation: The Google Bard Demo
-
-.center[
-<img src="figures/bard-hallucination.webp" width=830/>
-
-See the discussion in `r Citep(bib, "kundaliya2023")`.
-]
-
----
-
 ### Motivation
 
 1. Computers let us solve problems that would be impossible to manage any other
@@ -533,11 +523,13 @@ PrintBibliography(bib, start = 30, end = 33)
 
 ---
 
-### Figure Attribution
+### Motivation: The Google Bard Demo
 
-Simplicity by M. Oki Orlando from <a href="https://thenounproject.com/browse/icons/term/simplicity/" target="_blank" title="Simplicity Icons">Noun Project</a> (CC BY 3.0)
+.center[
+<img src="figures/bard-hallucination.webp" width=830/>
 
-Crystal Ball by Kiki Rizky from <a href="https://thenounproject.com/browse/icons/term/crystal-ball/" target="_blank" title="Crystal Ball Icons">Noun Project</a> (CC BY 3.0)
+See the discussion in `r Citep(bib, "kundaliya2023")`.
+]
 
 ---
 
@@ -551,3 +543,9 @@ letter corresponds to an experimental factor (details in `r Citep(bib, "Chevrett
 ]
 
 ---
+
+### Figure Attribution
+
+Simplicity by M. Oki Orlando from <a href="https://thenounproject.com/browse/icons/term/simplicity/" target="_blank" title="Simplicity Icons">Noun Project</a> (CC BY 3.0)
+
+Crystal Ball by Kiki Rizky from <a href="https://thenounproject.com/browse/icons/term/crystal-ball/" target="_blank" title="Crystal Ball Icons">Noun Project</a> (CC BY 3.0)
