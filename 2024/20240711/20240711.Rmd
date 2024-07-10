@@ -183,6 +183,10 @@ features that distinguish the classes.
 microbiome profiles like a sequence of words.
 1. The hope is that this model automatically discovers temporal and taxonomic
 features that distinguish the classes.
+
+Transformer: 83.2%<br/>
+Lasso: 78%<br/>
+Lasso (True Features): 87.8%
 ]
 
 .pull-right[
@@ -193,52 +197,44 @@ features that distinguish the classes.
 
 ### Representation Learning
 
-How can we try to understand the transformer embeddings $z_{i}$?
-
+How can we try to understand the transformer embeddings $\tilde{\mathbf{z}}_{i}$?
+<br/>
+<br/>
 .center[
-<img src="figures/representation_learning.png" width=500/>
+<img src="figures/transformer_layers.png" width=900/>
+]
+
+---
+
+### Representation Learning
+
+We can use PCA to explore the embedding space `r Citep(bib, "Coenen2019VisualizingAM")`.
+<br/>
+<br/>
+.center[
+<img src="figures/transformer_layers_pca.png" width=650/>
 ]
 
 ---
 
 ### Embeddings
 
-In text data, we can identify context-dependent meaning by looking for clusters
-in the PCA of embeddings `r Citep(bib, "Coenen2019VisualizingAM")`.
-.center[
-<img src="figures/bert_context.png" width=670/>
-]
-
----
-
-### Embeddings
-
-We can build the analogous visualization for our microbiome problem. Samples
-that are nearby in the embedding space are similar w.r.t. predictive features.
-
-.center[
-<img src="figures/pca_comparison.svg" width=1400/>
-]
-
----
-
-### Interpolations
-
-Another common technique is to analyze linear interpolations in this space.
-This figure traces out the microbiome profiles between two samples.
+We can interpolate between samples to understand the resulting embedding space.
 
 .center[
 <img src="figures/species_21_interpolation.svg" width=940/>
 ]
 
+
 ---
 
 ### Perturbation
 
-For local explanations, we can perturb the sample of interest and see how model
-predictions change.
+To understand predictions at individual samples, we can use *local*
+explanations. These apply a perturbation and quantify the results.
 <br/>
 <br/>
+
 .center[
 <img src="figures/perturbation.png" width=500/>
 ]
@@ -298,22 +294,28 @@ Figure from `r Citep(bib, "50351")`.
 
 ### Concept Bottlenecks
 
-In the microbiome example, we could define concepts like blooms or trends. These
-would have to be manually annotated in the original training data.
+Alternatively, we can explain a decision by reducing the arbitrary feature space
+to a set of human-interpretable concepts `r Citep(bib, "50351")`.  This is part
+of a larger body of work that attempts to establish shared
+language/representations for interacting with models 
+`r Citep(bib, "yuksekgonul2023posthoc")`.
 
 .center[
-<img src="figures/trends.png" width=1000/>
+<span style="font-size: 18px;">
+<img src="figures/concept_architecture-2.png" width=600/>
+</span>
 ]
 
 ---
 
 ### Concept Bottlenecks
 
-We reconfigure our transformer model to first predict the concept label before
-making a final classification.
+In the microbiome example, we could define concepts like blooms or trends. These
+would have to be manually annotated in the original training data. The test set
+performance is comparable to before (84%).
 
 .center[
-<img src="figures/concept_architecture-2.png" width=600/>
+<img src="figures/trends.png" width=1000/>
 ]
 
 ---
@@ -361,8 +363,8 @@ context. This has a flavor of "analyzing the residuals."
 ]
 
 .pull-right[
-<img src="figures/structuration.png" width=250/>
-<span style="font-size: 18px;"><br/>
+.center[<img src="figures/structuration.png" width=250/>]
+<span style="font-size: 18px;">
 Tukey's iterative structuration, as interpreted by `r Citep(bib, "Holmes1993-fl")`.
 </span>
 ]
@@ -471,8 +473,8 @@ good at criticism and planning. How can we get the best of both worlds?
 
 ### Guide-Decide Loop
 
-1. In an interactive setting, AI can make suggestions that we then reject,
-revise, or accept `r Citep(bib, c("predictive-interaction", "Heer2019-ie"))`.
+1. In an interactive setting, AI can make suggestions for the next step in an
+analysis `r Citep(bib, c("predictive-interaction", "Heer2019-ie"))`.
 
 1. This depends on their being a shared representation that links the frontend
 (for human interpretation) with the backend (for model prediction). 
@@ -510,7 +512,7 @@ and these tools can help.
 
 ### Thank you!
 
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Mason Garza, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko.
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kaiyan Ma, Kai Cui, and Kobe Uko.
 * Funding: NIGMS R01GM152744.
 
 
