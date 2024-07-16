@@ -50,8 +50,8 @@ scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(
 
 BibOptions(
   check.entries = FALSE, 
-  bib.style = "authoryear", 
-  cite.style = "authoryear", 
+  bib.style = "numeric", 
+  cite.style = "numeric", 
   style = "markdown",
   hyperlink = FALSE, 
   dashed = FALSE,
@@ -70,33 +70,119 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 Computational Genomics Summer Institute<br/>
-Slides: <a href="https://go.wisc.edu/u10492">go.wisc.edu/</a> 
+Slides: <a href="https://go.wisc.edu/6y38gg">go.wisc.edu/6y38gg</a> 
 </div>
 
 ---
 
-### Motivation: Choosing $K$
+### Motivation
 
+In biological problems, samples are often not cleanly separated into clusters.
+For more informative exploration of these data, it helps to
+
+.pull-three-quarters-left[
+1. Think in Mixtures: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. Think across Scales: Study both coarse and fine-level variation
+simultaneously.
+]
+
+.pull-three-quarters-right[
+
+]
 
 ---
 
-### Where will we go?
+### Motivation
 
-1. Topic Models
-1. Optimal Transport
-1. Topic Alignment: Alto
+In biological problems, samples are often not cleanly separated into clusters.
+For more informative exploration of these data, it helps to
+
+.pull-three-quarters-left[
+1. Think in Mixtures: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. Think across Scales: Study both coarse and fine-level variation
+simultaneously.
+]
+
+.pull-three-quarters-right[
+]
 
 ---
 
+### Motivation
 
+In biological problems, samples are often not cleanly separated into clusters.
+For more informative exploration of these data, it helps to
+
+.pull-three-quarters-left[
+1. Think in Mixtures $\to$ Topic Models
+
+1. Think across Scales $\to$ Topic Alignment
+]
 
 ---
 
+class: middle
 
-### Latent Dirichlet Allocation
+.center[
+## Topic Models
+]
 
-Latent Dirichlet Allocation `r Citep(bib, "blei_lda")` is often useful for
-dimensionality reduction for microbiome data `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023"))`.
+---
+
+### Motivation
+
+Topic models `r Citep(bib, c("Pritchard2000", "blei_lda"))` have been widely
+used for dimensionality reduction of count data 
+`r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
+
+---
+
+### Example 1: GTex
+
+.pull-left[
+<img src="figure/GTex-topics.png" width=270/>
+]
+
+.pull-right[
+<img src="figure/GTex-memberships.png" width=325/>
+]
+
+---
+
+### Example 2: Microbiome
+
+`r Citep(bib, "Dethlefsen2010")` looked at how microbiome communities changed in
+response to antibiotics. Some sort of summarization is needed, there are too
+many taxa to make sense of directly.
+
+.center[
+<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-f49f5eec4ced01f92314" width=800 height=500/>
+]
+
+---
+
+### Example 2: Microbiome
+
+.center[
+<img src="figure/antibiotic_topics.png" width=800/>
+]
+
+---
+
+### Example 2: Microbiome
+
+.center[
+<img src="figure/antibiotic_memberships.png" width=800/>
+]
+
+---
+
+### Model
+
 It supposes that samples $x_i \in \mathbb{R}^{D}$ are drawn independently:
 \begin{align*}
 x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
@@ -111,7 +197,7 @@ We vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ---
 
-### Latent Dirichlet Allocation
+### Interpretation
 
 Topic models are well-suited to count data dimensionality reduction. The
 estimated parameters can be interpreted as,
@@ -125,11 +211,23 @@ include_graphics("figure/latent_dirichlet_v2.png")
 
 ---
 
-<img src="figures/antibiotic_memberships.png"/>
+class: middle
+
+.center[
+## Topic Alignment 
+]
 
 ---
 
-<img src="figures/antibiotic_scores.png"/>
+### Choice of $K$
+
+> However, we stress that care should be taken in the interpretation of the
+inferred value of K. To begin with, due to the very high dimensionality of the
+parameter space, we found it difficult to obtain reliable estimates of 
+$P\left(X \vert K\right)$... There are also biological reasons to be careful
+interpreting $K$.
+
+-- From the original STRUCTURE paper `r Citep(bib, "Pritchard2000")`
 
 ---
 
@@ -234,9 +332,10 @@ include_graphics("figure/alto_sketches_diagnotics.png")
 
 ---
 
-### True LDA Model
+### True Model
 
-Sanity check - What is the alignment when data are generated from LDA? Can you guess the true $K$?
+Sanity check - What is the alignment when data are generated from a topic model?
+Can you guess the true $K$?
 
 * $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
 
@@ -265,9 +364,9 @@ include_graphics("figure/summary_alto_asymptotic_behavior.png")
 ---
 
 
-### LDA with background variation
+### Model with background variation
 
-What happens when the LDA model is mis-specified? Consider the following
+What happens when the topic model is mis-specified? Consider the following
 generative mechanism,
 
 \begin{align*}
@@ -284,7 +383,7 @@ where $\*B$ stacks the $\beta_k$ rowwise.
 ### Result
 
 The alignment structure is sensitive to changes in $\alpha$ and fragments when
-LDA structure is not present.
+structure is not present.
 
 .pull-left[
 ```{r, out.width = 300}
@@ -340,7 +439,7 @@ stack the results into $\*B^{i}$, and then draw,
 \begin{align}
 x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
 \end{align}
-as in standard LDA.
+as in a standard topic model.
 
 ---
 
@@ -519,6 +618,16 @@ class: background-rivers
 .center[
 <img src="figure/Lena__credit_row_0.jpg"/>
 ]
+
+---
+
+class: reference
+
+### References
+
+```{r, echo = FALSE}
+PrintBibliography(bib, start = 1, end = 15)
+```
 
 ---
 
