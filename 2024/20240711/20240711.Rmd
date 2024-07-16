@@ -187,7 +187,7 @@ How can we try to understand the transformer embeddings $\tilde{\mathbf{z}}_{i}$
 
 ### Representation Learning
 
-We can use PCA to explore the embedding space `r Citep(bib, "Coenen2019VisualizingAM")`.
+We can use PCA to explore the embedding space `r Citep(bib, c("Coenen2019VisualizingAM", "JMLR:v11:erhan10a"))`.
 <br/>
 <br/>
 .center[
@@ -518,7 +518,7 @@ PrintBibliography(bib, start = 15, end = 29)
 class: reference
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 30, end = 33)
+PrintBibliography(bib, start = 30, end = 34)
 ```
 
 ---
