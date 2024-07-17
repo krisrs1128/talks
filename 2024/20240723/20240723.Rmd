@@ -78,14 +78,13 @@ Slides: <a href="https://go.wisc.edu/6y38gg">go.wisc.edu/6y38gg</a>
 ### Motivation
 
 In biological problems, samples are often not cleanly separated into clusters.
-For more informative exploration of these data, it helps to
+For more informative exploration of these data, it helps to consider,
 
 .pull-three-quarters-left[
-1. Think in Mixtures: Instead of matching a sample to a single cluster centroid,
+1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
 view them as intermediates between multiple representatives.
 
-1. Think across Scales: Study both coarse and fine-level variation
-simultaneously.
+1. Multiple Scales: Study both coarse and fine-level variation simultaneously.
 ]
 
 .pull-three-quarters-right[
@@ -100,11 +99,10 @@ In biological problems, samples are often not cleanly separated into clusters.
 For more informative exploration of these data, it helps to
 
 .pull-three-quarters-left[
-1. Think in Mixtures: Instead of matching a sample to a single cluster centroid,
+1. Mixtures: Instead of matching a sample to a single cluster centroid,
 view them as intermediates between multiple representatives.
 
-1. Think across Scales: Study both coarse and fine-level variation
-simultaneously.
+1. Multiple Scales: Study both coarse and fine-level variation simultaneously.
 ]
 
 .pull-three-quarters-right[
@@ -118,9 +116,9 @@ In biological problems, samples are often not cleanly separated into clusters.
 For more informative exploration of these data, it helps to
 
 .pull-three-quarters-left[
-1. Think in Mixtures $\to$ Topic Models
+1. Mixtures $\to$ Topic Models
 
-1. Think across Scales $\to$ Topic Alignment
+1. Multiple Scales $\to$ Topic Alignment
 ]
 
 ---
@@ -135,21 +133,34 @@ class: middle
 
 ### Motivation
 
-Topic models `r Citep(bib, c("Pritchard2000", "blei_lda"))` have been widely
-used for dimensionality reduction of count data 
+1. Topic models `r Citep(bib, c("Pritchard2000", "blei_lda"))` are useful for
+dimensionality reduction of count data 
 `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
+
+1. Clusters look for representative cases and assume that all samples are like
+them. In contrast, topic models look for extreme cases. Samples are viewed as
+mixtures between these extremes.
+
+<img src="figure/cluster-vs-topic.png" width=800/>
 
 ---
 
 ### Example 1: GTex
 
-.pull-left[
-<img src="figure/GTex-topics.png" width=270/>
-]
+How are genes co-expressed across tissues? We can apply topic models to GTex
+Consortium data to understand variation within and between tissues.
 
 .pull-right[
-<img src="figure/GTex-memberships.png" width=325/>
+<img src="figure/GTex-memberships.png" width=800/>
 ]
+
+---
+
+### Example 1: GTex
+
+These are the expression patterns associated with each of those topics.
+
+<img src="figure/GTex-topics.png" width=800/>
 
 ---
 
@@ -222,12 +233,12 @@ class: middle
 ### Choice of $K$
 
 > However, we stress that care should be taken in the interpretation of the
-inferred value of K. To begin with, due to the very high dimensionality of the
+inferred value of $K$. To begin with, due to the very high dimensionality of the
 parameter space, we found it difficult to obtain reliable estimates of 
 $P\left(X \vert K\right)$... There are also biological reasons to be careful
 interpreting $K$.
 
--- From the original STRUCTURE paper `r Citep(bib, "Pritchard2000")`
+-- From `r Citep(bib, "Pritchard2000")`.
 
 ---
 
@@ -509,25 +520,45 @@ map(vm_data, dim)
 
 ---
 
-### Interpretations
+### Interpretation
 
+.pull-left[
 * Using the paths diagnostic, either $K = 7$ or $12$ give justifiable models
   - We can also distinguish high and low coherence topics
 * At $K = 7$, the four Lactobacillus CSTs are already present, and the remaining
 represent coherent subtypes in the dysbiotic CSTs
- 
-.pull-left[
-```{r out.width=280}
-include_graphics("figure/microbiome_flow.png")
-```
 ]
 
 .pull-right[
-```{r, out.width=800}
-include_graphics("figure/microbiome_betas.png")
-```
+<img src="figure/pregnancy_sankey.jpg" width=500/>
 ]
- 
+
+---
+
+### Interpretation
+
+.pull-left[
+* Using the paths diagnostic, either $K = 7$ or $12$ give justifiable models
+  - We can also distinguish high and low coherence topics
+* At $K = 7$, the four Lactobacillus CSTs are already present, and the remaining
+represent coherent subtypes in the dysbiotic CSTs
+]
+
+.pull-right[
+<img src="figure/pregnancy_topics_heatmap.jpg" width=700/>
+]
+
+---
+
+### Interpretation
+
+For each subject, we can visualize change in topics over time. This highlights
+smooth transitions between community states.
+
+.center[
+<img src="figure/topic_trajectories_pregnancy.jpeg" width=550/>
+]
+
 ---
 
 .pull-left[
@@ -625,7 +656,7 @@ class: reference
 
 ### References
 
-```{r, echo = FALSE}
+```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 15)
 ```
 
