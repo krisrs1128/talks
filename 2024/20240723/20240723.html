@@ -72,6 +72,44 @@ view them as intermediates between multiple representatives.
 
 ---
 
+### Enterotypes
+
+The study [1] claimed to detect "enterotypes" in the
+human gut microbiome. They thought of these like blood type.
+
+.pull-left[
+&gt; ... We identified three robust clusters (enterotypes hereafter) that are not
+nation or continent-specific.
+
+-- From the abstract in [1]
+]
+
+.pull-right[
+&lt;img src="figure/enterotypes.png" width=300/&gt;&lt;br/&gt;
+&lt;span style="font-size: 18px;"&gt;
+The visualization that motivated the original enterotype definition.
+&lt;/span&gt;
+]
+
+---
+
+### Enterotypes
+
+More detailed analysis revealed that these boundaries are not so clear cut after
+all [2; 3; 4; 5].
+
+.center[
+&lt;img src="figure/enterotype-rebuttal.png" width=300/&gt;
+]
+
+&lt;span style="font-size: 18px;"&gt;
+The same person can jump between clusters in longitudinal sampling, which
+complicates the simpler enterotypes story [5].
+&lt;/span&gt;
+
+---
+
+
 class: middle
 
 .center[
@@ -83,9 +121,9 @@ class: middle
 ### Motivation
 
 1. Topic models were independently developed for analyzing population genetics
-and text data [1; 2]. Since then, they
+and text data [6; 7]. Since then, they
 have been applied widely across computational genomics 
-[3; 4; 5; 6].
+[8; 9; 10; 11].
 
 1. Clusters look for representative cases and assume that all samples are like
 them. In contrast, topic models look for extreme cases. Samples are viewed as
@@ -121,7 +159,7 @@ These are the expression patterns associated with each of those topics.
 
 ### Example 2: Microbiome
 
-[7] looked at how microbiome communities changed in
+[12] looked at how microbiome communities changed in
 response to antibiotics. Some sort of summarization is needed, there are too
 many taxa to make sense of directly.
 
@@ -192,7 +230,7 @@ parameter space, we found it difficult to obtain reliable estimates of
 `\(P\left(X \vert K\right)\)`... There are also biological reasons to be careful
 interpreting `\(K\)`.
 
--- From [1].
+-- From [6].
 
 ---
 
@@ -410,7 +448,7 @@ Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs) in
 the vaginal microbiome
   - Four healthy CSTs are dominated by Lactobacillus variants
   - A fifth dysbiotic CST is more compositionally diverse and has been
-  implicated in preterm birth [8; 9] and HIV transmission [10].
+  implicated in preterm birth [13; 14] and HIV transmission [15].
 ]
 
 .pull-right[
@@ -424,7 +462,7 @@ the vaginal microbiome
 
 ### Dataset
 
-Consider the 16S modality from the follow-up study [11].
+Consider the 16S modality from the follow-up study [16].
 .pull-left[
 * 135 individuals followed through pregnancy
 * 2179 samples and 2699 species
@@ -585,70 +623,59 @@ class: reference
 
 ### References
 
-[1] J. K. Pritchard et al. "Inference of Population Structure Using Multilocus
-Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p. 945–959. ISSN: 1943-2631.
-DOI: [10.1093/genetics/155.2.945](https://doi.org/10.1093%2Fgenetics%2F155.2.945).
-URL:
-[http://dx.doi.org/10.1093/genetics/155.2.945](http://dx.doi.org/10.1093/genetics/155.2.945).
+[1] M. Arumugam et al. "Enterotypes of the human gut microbiome". In: _Nature_ 473.7346 (Apr. 2011), p. 174–180. ISSN: 1476-4687. DOI:
+[10.1038/nature09944](https://doi.org/10.1038%2Fnature09944). URL: [http://dx.doi.org/10.1038/nature09944](http://dx.doi.org/10.1038/nature09944).
 
-[2] D. M. Blei et al. "Latent dirichlet allocation". In: _J. Mach. Learn. Res._
-3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
+[2] E. Yong. "Gut microbial 'enterotypes' become less clear-cut". En. In: _Nature_ (Mar. 2012).
 
-[3] K. Sankaran et al. "Latent variable modeling for the microbiome". In:
-_Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
-[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018).
-URL:
+[3] O. Koren et al. "A guide to enterotypes across the human body: meta-analysis of microbial community structures in human microbiome datasets". En. In: _PLoS Comput. Biol._ 9.1
+(Jan. 2013), p. e1002863.
+
+[4] I. Bulygin et al. "Absence of enterotypes in the human gut microbiomes reanalyzed with non-linear dimensionality reduction methods". En. In: _PeerJ_ 11 (Sep. 2023), p. e15838.
+
+[5] D. Knights et al. "Rethinking ``enterotypes''". En. In: _Cell Host Microbe_ 16.4 (Oct. 2014), pp. 433-437.
+
+[6] J. K. Pritchard et al. "Inference of Population Structure Using Multilocus Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p. 945–959. ISSN: 1943-2631. DOI:
+[10.1093/genetics/155.2.945](https://doi.org/10.1093%2Fgenetics%2F155.2.945). URL: [http://dx.doi.org/10.1093/genetics/155.2.945](http://dx.doi.org/10.1093/genetics/155.2.945).
+
+[7] D. M. Blei et al. "Latent dirichlet allocation". In: _J. Mach. Learn. Res._ 3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
+
+[8] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
 [http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
 
-[4] A. Kim et al. "Latent Dirichlet Allocation modeling of environmental
-microbiomes". In: _PLOS Computational Biology_ 19.6 (Jun. 2023). Ed. by G. Zeller,
-p. e1011075. ISSN: 1553-7358. DOI:
-[10.1371/journal.pcbi.1011075](https://doi.org/10.1371%2Fjournal.pcbi.1011075).
-URL:
+[9] A. Kim et al. "Latent Dirichlet Allocation modeling of environmental microbiomes". In: _PLOS Computational Biology_ 19.6 (Jun. 2023). Ed. by G. Zeller, p. e1011075. ISSN:
+1553-7358. DOI: [10.1371/journal.pcbi.1011075](https://doi.org/10.1371%2Fjournal.pcbi.1011075). URL:
 [http://dx.doi.org/10.1371/journal.pcbi.1011075](http://dx.doi.org/10.1371/journal.pcbi.1011075).
 
-[5] C. Tataru et al. "Topic modeling for multi-omic integration in the human gut
-microbiome and implications for Autism". In: _Scientific Reports_ 13.1 (Jul.
-2023). ISSN: 2045-2322. DOI:
-[10.1038/s41598-023-38228-0](https://doi.org/10.1038%2Fs41598-023-38228-0). URL:
-[http://dx.doi.org/10.1038/s41598-023-38228-0](http://dx.doi.org/10.1038/s41598-023-38228-0).
+[10] C. Tataru et al. "Topic modeling for multi-omic integration in the human gut microbiome and implications for Autism". In: _Scientific Reports_ 13.1 (Jul. 2023). ISSN: 2045-2322.
+DOI: [10.1038/s41598-023-38228-0](https://doi.org/10.1038%2Fs41598-023-38228-0). URL: [http://dx.doi.org/10.1038/s41598-023-38228-0](http://dx.doi.org/10.1038/s41598-023-38228-0).
 
-[6] X. Peng et al. "A topic modeling approach reveals the dynamic T cell
-composition of peripheral blood during cancer immunotherapy". In: _Cell Reports
-Methods_ 3.8 (Aug. 2023), p. 100546. ISSN: 2667-2375. DOI:
-[10.1016/j.crmeth.2023.100546](https://doi.org/10.1016%2Fj.crmeth.2023.100546).
-URL:
+[11] X. Peng et al. "A topic modeling approach reveals the dynamic T cell composition of peripheral blood during cancer immunotherapy". In: _Cell Reports Methods_ 3.8 (Aug. 2023), p.
+100546. ISSN: 2667-2375. DOI: [10.1016/j.crmeth.2023.100546](https://doi.org/10.1016%2Fj.crmeth.2023.100546). URL:
 [http://dx.doi.org/10.1016/j.crmeth.2023.100546](http://dx.doi.org/10.1016/j.crmeth.2023.100546).
 
-[7] L. Dethlefsen et al. "Incomplete recovery and individualized responses of the
-human distal gut microbiota to repeated antibiotic perturbation". In: _Proceedings
-of the National Academy of Sciences_ 108.supplement_1 (Sep. 2010), p. 4554–4561.
-ISSN: 1091-6490. DOI:
-[10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107). URL:
+[12] L. Dethlefsen et al. "Incomplete recovery and individualized responses of the human distal gut microbiota to repeated antibiotic perturbation". In: _Proceedings of the National
+Academy of Sciences_ 108.supplement_1 (Sep. 2010), p. 4554–4561. ISSN: 1091-6490. DOI: [10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107). URL:
 [http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.1000087107).
 
-[8] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature
-Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
-[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2). URL:
-[http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
+[13] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
+[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2). URL: [http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
 
-[9] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth: a
-systematic review and network meta-analysis". In: _Scientific Reports_ 12.1 (May.
-2022). ISSN: 2045-2322. DOI:
-[10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9). URL:
+---
+
+class: reference
+
+[14] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth: a systematic review and network meta-analysis". In: _Scientific Reports_ 12.1 (May. 2022). ISSN:
+2045-2322. DOI: [10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9). URL:
 [http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
 
-[10] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial
-Communities Are Associated with Increased HIV Acquisition in Young South African
-Women". In: _Immunity_ 46.1 (Jan. 2017), p. 29–37. ISSN: 1074-7613. DOI:
-[10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013).
-URL:
+[15] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial Communities Are Associated with Increased HIV Acquisition in Young South African Women". In: _Immunity_ 46.1
+(Jan. 2017), p. 29–37. ISSN: 1074-7613. DOI: [10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013). URL:
 [http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
 
-[11] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and
-non-pregnant women". In: _Proceedings of the Royal Society B: Biological Sciences_
-290.2011 (Nov. 2023). ISSN: 1471-2954. DOI:
-[10.1098/rspb.2023.1461](https://doi.org/10.1098%2Frspb.2023.1461). URL:
+[16] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of the Royal Society B: Biological Sciences_ 290.2011 (Nov.
+2023). ISSN: 1471-2954. DOI: [10.1098/rspb.2023.1461](https://doi.org/10.1098%2Frspb.2023.1461). URL:
 [http://dx.doi.org/10.1098/rspb.2023.1461](http://dx.doi.org/10.1098/rspb.2023.1461).
 
 ---

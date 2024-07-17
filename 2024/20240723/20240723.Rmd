@@ -107,6 +107,44 @@ view them as intermediates between multiple representatives.
 
 ---
 
+### Enterotypes
+
+The study `r Citep(bib, "Arumugam2011")` claimed to detect "enterotypes" in the
+human gut microbiome. They thought of these like blood type.
+
+.pull-left[
+> ... We identified three robust clusters (enterotypes hereafter) that are not
+nation or continent-specific.
+
+-- From the abstract in `r Citep(bib, "Arumugam2011")`
+]
+
+.pull-right[
+<img src="figure/enterotypes.png" width=300/><br/>
+<span style="font-size: 18px;">
+The visualization that motivated the original enterotype definition.
+</span>
+]
+
+---
+
+### Enterotypes
+
+More detailed analysis revealed that these boundaries are not so clear cut after
+all `r Citep(bib, c("Yong2012-ri", "Koren2013-tb", "Bulygin2023-up", "Knights2014-jv"))`.
+
+.center[
+<img src="figure/enterotype-rebuttal.png" width=300/>
+]
+
+<span style="font-size: 18px;">
+The same person can jump between clusters in longitudinal sampling, which
+complicates the simpler enterotypes story `r Citep(bib, "Knights2014-jv")`.
+</span>
+
+---
+
+
 class: middle
 
 .center[
@@ -648,7 +686,15 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 15)
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 30)
 ```
 
 ---
