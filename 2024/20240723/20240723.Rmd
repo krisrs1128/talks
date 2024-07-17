@@ -80,15 +80,13 @@ Slides: <a href="https://go.wisc.edu/6y38gg">go.wisc.edu/6y38gg</a>
 In biological problems, samples are often not cleanly separated into clusters.
 For more informative exploration of these data, it helps to consider,
 
-.pull-three-quarters-left[
 1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
 view them as intermediates between multiple representatives.
 
 1. Multiple Scales: Study both coarse and fine-level variation simultaneously.
-]
 
-.pull-three-quarters-right[
-
+.center[
+<img src="figure/clusters_vs_mixtures.png" width=700/>
 ]
 
 ---
@@ -96,29 +94,15 @@ view them as intermediates between multiple representatives.
 ### Motivation
 
 In biological problems, samples are often not cleanly separated into clusters.
-For more informative exploration of these data, it helps to
+For more informative exploration of these data, it helps to consider,
 
-.pull-three-quarters-left[
 1. Mixtures: Instead of matching a sample to a single cluster centroid,
 view them as intermediates between multiple representatives.
 
-1. Multiple Scales: Study both coarse and fine-level variation simultaneously.
-]
+1. **Multiple Scales**: Study both coarse and fine-level variation simultaneously.
 
-.pull-three-quarters-right[
-]
-
----
-
-### Motivation
-
-In biological problems, samples are often not cleanly separated into clusters.
-For more informative exploration of these data, it helps to
-
-.pull-three-quarters-left[
-1. Mixtures $\to$ Topic Models
-
-1. Multiple Scales $\to$ Topic Alignment
+.center[
+<img src="figure/multiscale.png"/>
 ]
 
 ---
@@ -133,15 +117,19 @@ class: middle
 
 ### Motivation
 
-1. Topic models `r Citep(bib, c("Pritchard2000", "blei_lda"))` are useful for
-dimensionality reduction of count data 
+1. Topic models were independently developed for analyzing population genetics
+and text data `r Citep(bib, c("Pritchard2000", "blei_lda"))`. Since then, they
+have been applied widely across computational genomics 
 `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
 
 1. Clusters look for representative cases and assume that all samples are like
 them. In contrast, topic models look for extreme cases. Samples are viewed as
 mixtures between these extremes.
 
-<img src="figure/cluster-vs-topic.png" width=800/>
+
+.center[
+<img src="figure/text-sequencing-analogy.png" width=520/>
+]
 
 ---
 
@@ -150,8 +138,8 @@ mixtures between these extremes.
 How are genes co-expressed across tissues? We can apply topic models to GTex
 Consortium data to understand variation within and between tissues.
 
-.pull-right[
-<img src="figure/GTex-memberships.png" width=800/>
+.center[
+<img src="figure/gtex_memberships.png" width=780/>
 ]
 
 ---
@@ -160,7 +148,9 @@ Consortium data to understand variation within and between tissues.
 
 These are the expression patterns associated with each of those topics.
 
-<img src="figure/GTex-topics.png" width=800/>
+.center[
+<img src="figure/GTex-topics.png" width=730/>
+]
 
 ---
 
@@ -179,7 +169,7 @@ many taxa to make sense of directly.
 ### Example 2: Microbiome
 
 .center[
-<img src="figure/antibiotic_topics.png" width=800/>
+<img src="figure/antibiotic_memberships.png" width=800/>
 ]
 
 ---
@@ -187,8 +177,9 @@ many taxa to make sense of directly.
 ### Example 2: Microbiome
 
 .center[
-<img src="figure/antibiotic_memberships.png" width=800/>
+<img src="figure/antibiotic_prototypes.png" width=800/>
 ]
+
 
 ---
 
