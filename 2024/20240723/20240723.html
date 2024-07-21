@@ -35,7 +35,7 @@ Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt
 
 &lt;div id="subtitle_right"&gt;
 Computational Genomics Summer Institute&lt;br/&gt;
-Slides: &lt;a href="https://go.wisc.edu/6y38gg"&gt;go.wisc.edu/6y38gg&lt;/a&gt; 
+Slides: &lt;a href="https://go.wisc.edu/6y38gg"&gt;go.wisc.edu/6y38gg&lt;/a&gt;
 &lt;/div&gt;
 
 ---
@@ -150,7 +150,7 @@ class: middle
 
 1. Topic models were independently developed for analyzing genotype and and text
 data [6; 7] and are now widely used in
-computational genomics 
+computational genomics
 [8; 9; 10; 11].
 
 1. Clusters look for representative cases and assume that all samples are like
@@ -261,7 +261,7 @@ class: middle
 
 &gt; However, we stress that care should be taken in the interpretation of the
 inferred value of `\(K\)`. To begin with, due to the very high dimensionality of the
-parameter space, we found it difficult to obtain reliable estimates of 
+parameter space, we found it difficult to obtain reliable estimates of
 `\(P\left(X \vert K\right)\)`... There are also biological reasons to be careful
 interpreting `\(K\)`.
 
@@ -350,6 +350,23 @@ The weights `\(W\)` can be estimated by solving the optimal transport problem,
 
 ---
 
+### Estimating Weights: Transport approach
+
+
+The weights `\(W\)` can be estimated by solving the optimal transport problem,
+`\begin{align*}
+&amp;\min_{W \in \mathcal{U}\left(p, q\right)} \left&lt;C,W\right&gt;
+\end{align*}`
+&lt;span style="font-size: 20px;"&gt;
+`\begin{align*}
+\mathcal{U}\left(p, q\right) := &amp;\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
+\end{align*}`
+&lt;/span&gt;
+
+&lt;img src="figure/optimal_transport_matrices.png" width="800" style="display: block; margin: auto;" /&gt;
+
+---
+
 ### Diagnostics
 
 * Paths: Partitions the Sankey diagram into connected sets of topics.
@@ -428,10 +445,10 @@ structure is not present.
 ### Diagnostics
 
 .pull-left-small[
-This structure is consistent across simulation runs, and the diagnostics 
+This structure is consistent across simulation runs, and the diagnostics
 quantify topic deterioration
 ]
-  
+
 .pull-right-large[
 &lt;img src="figure/gradient-combined.png" width="635" style="display: block; margin: auto;" /&gt;
 ]
@@ -511,7 +528,7 @@ the vaginal microbiome
 ### Example Output
 
 .pull-left[
-Topic alignment was used to analyze vaginal microbiome communities in [19]. 
+Topic alignment was used to analyze vaginal microbiome communities in [19].
 
 * This used 2179 samples from 135 women, sampled longitudinally.
 * In the same way that the community has moved beyond enterotypes, we can try to better understand these communities.
@@ -598,35 +615,37 @@ class: small-code
 ### Software
 
 Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
- 
+
 .pull-left[
 
 ``` r
 library(purrr)
 library(alto)
 
-# simulate data and fit models
-x &lt;- rmultinom(20, 500, rep(0.1, 50))
-colnames(x) &lt;- seq_len(ncol(x))
-lda_params &lt;- map(1:10, ~ list(k = .)) |&gt;
-  setNames(1:10)
-lda_models &lt;- run_lda_models(x, lda_params)
-
-# perform alignment
-result &lt;- align_topics(lda_models)
+# Define LDA parameters
+params &lt;- map(
+  set_names(1:10),
+  ~ list(k = .)
+)
+models &lt;- run_lda_models(
+  vm_data$counts,
+  params
+)
 ```
 ]
 
 .pull-right[
 
 ``` r
+# Run alignment
+result &lt;- align_topics(models, method = "transport")
 plot(result)
 ```
 
-&lt;img src="20240723_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="20240723_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
-All the simulations discussed today are vignettes in the package. 
+All the simulations discussed today are vignettes in the package.
 
 ---
 
@@ -725,17 +744,15 @@ Methods_ 3.8 (Aug. 2023), p. 100546. ISSN: 2667-2375. DOI:
 URL:
 [http://dx.doi.org/10.1016/j.crmeth.2023.100546](http://dx.doi.org/10.1016/j.crmeth.2023.100546).
 
-[12] L. Dethlefsen et al. "Incomplete recovery and individualized responses of the
-human distal gut microbiota to repeated antibiotic perturbation". In: _Proceedings
-of the National Academy of Sciences_ 108.supplement_1 (Sep. 2010), p. 4554–4561.
-ISSN: 1091-6490. DOI:
-[10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107). URL:
-[http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.1000087107).
+[12] K. K. Dey et al. "Visualizing the structure of RNA-seq expression data using
+grade of membership models". In: _PLOS Genetics_ 13.3 (Mar. 2017). Ed. by A.
+Kundaje, p. e1006599. ISSN: 1553-7404. DOI:
+[10.1371/journal.pgen.1006599](https://doi.org/10.1371%2Fjournal.pgen.1006599).
+URL:
+[http://dx.doi.org/10.1371/journal.pgen.1006599](http://dx.doi.org/10.1371/journal.pgen.1006599).
 
-[13] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature
-Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
-[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2). URL:
-[http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
+[13] J. H. Kushal K Dey. "GTEX V6 analysis - stephenslab.github.io".  ().
+[Accessed 21-07-2024].
 
 ---
 
@@ -880,13 +897,13 @@ Coherence quantifies a topic's average connectedness to other topics along the s
 `\begin{align*}
  c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
 \end{align*}`
-  
+
 .pull-left[
 * Transient topics (appearing at one `\(K\)` and disappearing at
  another) have low coherence scores
 * Consistently recovered topics across choices of `\(K\)` have high coherence
 ]
- 
+
 .pull-right[
 
 ]

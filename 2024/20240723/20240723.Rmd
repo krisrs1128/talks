@@ -30,7 +30,7 @@ library(knitr)
 library(RefManageR)
 library(tidyverse)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
-min_theme <- theme_minimal() + 
+min_theme <- theme_minimal() +
   theme(
     panel.grid.minor = element_blank(),
     panel.background = element_rect(fill = "#f7f7f7"),
@@ -49,11 +49,11 @@ scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(
 scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 
 BibOptions(
-  check.entries = FALSE, 
-  bib.style = "numeric", 
-  cite.style = "numeric", 
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
   style = "markdown",
-  hyperlink = FALSE, 
+  hyperlink = FALSE,
   dashed = FALSE,
   max.names = 1
 )
@@ -70,7 +70,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 Computational Genomics Summer Institute<br/>
-Slides: <a href="https://go.wisc.edu/6y38gg">go.wisc.edu/6y38gg</a> 
+Slides: <a href="https://go.wisc.edu/6y38gg">go.wisc.edu/6y38gg</a>
 </div>
 
 ---
@@ -185,7 +185,7 @@ class: middle
 
 1. Topic models were independently developed for analyzing genotype and and text
 data `r Citep(bib, c("Pritchard2000", "blei_lda"))` and are now widely used in
-computational genomics 
+computational genomics
 `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
 
 1. Clusters look for representative cases and assume that all samples are like
@@ -298,7 +298,7 @@ class: middle
 
 > However, we stress that care should be taken in the interpretation of the
 inferred value of $K$. To begin with, due to the very high dimensionality of the
-parameter space, we found it difficult to obtain reliable estimates of 
+parameter space, we found it difficult to obtain reliable estimates of
 $P\left(X \vert K\right)$... There are also biological reasons to be careful
 interpreting $K$.
 
@@ -399,6 +399,25 @@ include_graphics("figure/transport_alignment_conceptual.png")
 
 ---
 
+### Estimating Weights: Transport approach
+
+
+The weights $W$ can be estimated by solving the optimal transport problem,
+\begin{align*}
+&\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right>
+\end{align*}
+<span style="font-size: 20px;">
+\begin{align*}
+\mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
+\end{align*}
+</span>
+
+```{r, out.width = 800}
+include_graphics("figure/optimal_transport_matrices.png")
+```
+
+---
+
 ### Diagnostics
 
 * Paths: Partitions the Sankey diagram into connected sets of topics.
@@ -491,10 +510,10 @@ include_graphics("figure/gradient_flow-4.png")
 ### Diagnostics
 
 .pull-left-small[
-This structure is consistent across simulation runs, and the diagnostics 
+This structure is consistent across simulation runs, and the diagnostics
 quantify topic deterioration
 ]
-  
+
 .pull-right-large[
 ```{r, out.width = 635}
 include_graphics("figure/gradient-combined.png")
@@ -582,7 +601,7 @@ the vaginal microbiome
 ### Example Output
 
 .pull-left[
-Topic alignment was used to analyze vaginal microbiome communities in `r Citep(bib, "Symul2023")`. 
+Topic alignment was used to analyze vaginal microbiome communities in `r Citep(bib, "Symul2023")`.
 
 * This used 2179 samples from 135 women, sampled longitudinally.
 * In the same way that the community has moved beyond enterotypes, we can try to better understand these communities.
@@ -673,35 +692,33 @@ class: small-code
 ### Software
 
 Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
- 
+
 .pull-left[
 ```{r, echo = TRUE, warning = FALSE}
 library(purrr)
 library(alto)
 
-# simulate data and fit models
-x <- rmultinom(20, 500, rep(0.1, 50))
-colnames(x) <- seq_len(ncol(x))
-lda_params <- map(1:10, ~ list(k = .)) |>
-  setNames(1:10)
-lda_models <- run_lda_models(x, lda_params)
-
-# perform alignment
-result <- align_topics(lda_models)
+# Define LDA parameters
+params <- map(
+  set_names(1:10),
+  ~ list(k = .)
+)
+models <- run_lda_models(
+  vm_data$counts,
+  params
+)
 ```
 ]
 
 .pull-right[
-```{r, eval = FALSE, echo = TRUE}
+```{r, eval = TRUE, echo = TRUE}
+# Run alignment
+result <- align_topics(models, method = "transport")
 plot(result)
-```
-
-```{r, echo = FALSE, fig.align = "left", fig.height = 2.8}
-alto::plot(result)
 ```
 ]
 
-All the simulations discussed today are vignettes in the package. 
+All the simulations discussed today are vignettes in the package.
 
 ---
 
@@ -849,13 +866,13 @@ Coherence quantifies a topic's average connectedness to other topics along the s
 \begin{align*}
  c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
 \end{align*}
-  
+
 .pull-left[
 * Transient topics (appearing at one $K$ and disappearing at
  another) have low coherence scores
 * Consistently recovered topics across choices of $K$ have high coherence
 ]
- 
+
 .pull-right[
 ```{r, out.width=250}
 #include_graphics("figure/coherence-sketch.png")
