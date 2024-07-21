@@ -311,3 +311,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 .reference {
   font-size: 12px;
 }
+
+.small-code .remark-code {
+  font-size: 18px;
+}
