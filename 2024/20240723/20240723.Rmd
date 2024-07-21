@@ -29,7 +29,7 @@ library(MASS)
 library(knitr)
 library(RefManageR)
 library(tidyverse)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 min_theme <- theme_minimal() + 
   theme(
     panel.grid.minor = element_blank(),
@@ -109,8 +109,8 @@ view them as intermediates between multiple representatives.
 
 ### Enterotypes
 
-The study `r Citep(bib, "Arumugam2011")` claimed to detect "enterotypes" in the
-human gut microbiome. They thought of these like blood type.
+The study `r Citep(bib, "Arumugam2011")` argued that all human gut microbiomes
+could be divided into well-defined enterotypes.
 
 .pull-left[
 > ... We identified three robust clusters (enterotypes hereafter) that are not
@@ -130,8 +130,39 @@ The visualization that motivated the original enterotype definition.
 
 ### Enterotypes
 
-More detailed analysis revealed that these boundaries are not so clear cut after
-all `r Citep(bib, c("Yong2012-ri", "Koren2013-tb", "Bulygin2023-up", "Knights2014-jv"))`.
+This idea caught on. Could we have discovered something as fundamental as blood type?
+
+.center[
+<img src="figure/news-1.png" width=500/>
+]
+
+---
+
+### Enterotypes
+
+This idea caught on. Could we have discovered something as fundamental as blood type?
+
+.center[
+<img src="figure/news-2.png" width=750/>
+]
+
+---
+
+### Enterotypes
+
+This idea caught on. Could we have discovered something as fundamental as blood type?
+
+.center[
+<img src="figure/news-3.png" width=550/>
+]
+
+---
+
+### Enterotypes
+
+Reality is more complex -- and interesting! Microbiomes
+are more dyanmic and not so easily categorized
+`r Citep(bib, c("Yong2012-ri", "Koren2013-tb", "Bulygin2023-up", "Knights2014-jv"))`.
 
 .center[
 <img src="figure/enterotype-rebuttal.png" width=300/>
@@ -144,7 +175,6 @@ complicates the simpler enterotypes story `r Citep(bib, "Knights2014-jv")`.
 
 ---
 
-
 class: middle
 
 .center[
@@ -156,8 +186,8 @@ class: middle
 ### Motivation
 
 1. Topic models were independently developed for analyzing population genetics
-and text data `r Citep(bib, c("Pritchard2000", "blei_lda"))`. Since then, they
-have been applied widely across computational genomics 
+and text data `r Citep(bib, c("Pritchard2000", "blei_lda"))` and are now widely
+used in computational genomics 
 `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
 
 1. Clusters look for representative cases and assume that all samples are like
@@ -173,8 +203,8 @@ mixtures between these extremes.
 
 ### Example 1: GTex
 
-How are genes co-expressed across tissues? We can apply topic models to GTex
-Consortium data to understand variation within and between tissues.
+How are genes co-expressed across tissues? We can apply topic models to GTEX
+Consortium data, following `r Citep(bib, c("Dey2017", "stephenslabGTEXAnalysis"))`.
 
 .center[
 <img src="figure/gtex_memberships.png" width=780/>
@@ -194,17 +224,19 @@ These are the expression patterns associated with each of those topics.
 
 ### Example 2: Microbiome
 
-`r Citep(bib, "Dethlefsen2010")` looked at how microbiome communities changed in
-response to antibiotics. Some sort of summarization is needed, there are too
-many taxa to make sense of directly.
+How do microbiome communities change in response to antibiotics? The study `r Citep(bib, "Dethlefsen2010")` gathered samples before and after antibiotic
+interventions.
 
 .center[
-<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-f49f5eec4ced01f92314" width=800 height=500/>
+<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-f49f5eec4ced01f92314" width=800 height=360/>
 ]
 
 ---
 
 ### Example 2: Microbiome
+
+If we use topic models, we can see that <span style="color: #476b57;">Topic 2</span> increases during the antibiotic interventions,
+especially the first `r Citep(bib, "Sankaran2018")`.
 
 .center[
 <img src="figure/antibiotic_memberships.png" width=800/>
@@ -214,8 +246,11 @@ many taxa to make sense of directly.
 
 ### Example 2: Microbiome
 
+We can interpret topics by looking for representative taxa. These are species
+that have much higher probabilities in one topic compared to the others.
+
 .center[
-<img src="figure/antibiotic_prototypes.png" width=800/>
+<img src="figure/antibiotic_prototypes.png" width=750/>
 ]
 
 
@@ -512,10 +547,10 @@ include_graphics("figure/equivalence_similarity_hm.png")
 
 ---
 
-### Data Analysis
+### Application Background
 
 .pull-left[
-Ravel et al. (2011) use clustering to identify 5 Community State Types (CSTs) in
+`r Citep(bib, "Ravel2010")` used clustering to identify 5 Community State Types (CSTs) in
 the vaginal microbiome
   - Four healthy CSTs are dominated by Lactobacillus variants
   - A fifth dysbiotic CST is more compositionally diverse and has been
@@ -523,42 +558,30 @@ the vaginal microbiome
 ]
 
 .pull-right[
-```{r, out.width = 420, fig.cap = "CSTs as found by Ravel et al. (2011)."}
-include_graphics("figure/community_state_types.jpg")
-```
+  <img src="figure/community_state_types.jpg" width=380/>
+  <span style="font-size: 18px;">
+
+  `r Citep(bib, 'Ravel2010')` grouped samples (columns) into CSTs."
+  </span>
 ]
 
 ---
 
-### Dataset
+### Example Output
 
-Consider the 16S modality from the follow-up study `r Citep(bib, "Symul2023")`.
 .pull-left[
-* 135 individuals followed through pregnancy
-* 2179 samples and 2699 species
+Topic alignment was used to analyze vaginal microbiome communities in `r Citep(bib, "Symul2023")`. 
+
+* This used 2179 samples from 135 women, sampled longitudinally.
+* In the same way that the community has moved beyond enterotypes, we can try to better understand these communities.
 ]
 
 .pull-right[
-```{r, echo = TRUE}
+```{r, echo = FALSE, message = FALSE}
 library(alto)
 library(purrr)
 data(vm_data)
-map(vm_data, dim)
 ```
-]
-
----
-
-### Interpretation
-
-.pull-left[
-* Using the paths diagnostic, either $K = 7$ or $12$ give justifiable models
-  - We can also distinguish high and low coherence topics
-* At $K = 7$, the four Lactobacillus CSTs are already present, and the remaining
-represent coherent subtypes in the dysbiotic CSTs
-]
-
-.pull-right[
 <img src="figure/pregnancy_sankey.jpg" width=500/>
 ]
 
@@ -567,38 +590,64 @@ represent coherent subtypes in the dysbiotic CSTs
 ### Interpretation
 
 .pull-left[
-* Using the paths diagnostic, either $K = 7$ or $12$ give justifiable models
-  - We can also distinguish high and low coherence topics
-* At $K = 7$, the four Lactobacillus CSTs are already present, and the remaining
-represent coherent subtypes in the dysbiotic CSTs
+* Overlaying coherence scores onto the alignment, we can distinguish distinguish
+between high and low-coherence topics.
+
+* Coherence is not a simple function of $K$ alone.
 ]
 
 .pull-right[
-<img src="figure/pregnancy_topics_heatmap.jpg" width=700/>
+<img src="figure/coherence_on_tree.png" width=340/>
 ]
 
 ---
 
 ### Interpretation
 
-For each subject, we can visualize change in topics over time. This highlights
-smooth transitions between community states.
+.pull-left[
+* We can see dropoffs in topic quality for $K = 6 \to 7$ and $K = 9 \to 10$.
+* Each color in the top figure corresponds to a different set of topic models.
+]
+
+.pull-right[
+<img src="figure/alignment_scores_across_k.png"/>
+]
+
+---
+
+### Interpretation
 
 .center[
-<img src="figure/topic_trajectories_pregnancy.jpeg" width=550/>
+<img src="figure/pregnancy_topics_heatmap.jpg" width=600/>
+]
+
+<span style="font-size: 18px;">
+At $K = 5$, the four Lactobacillus CSTs are already present. At $K = 9$, we can
+see additional community structure in the dysbiotic CST.
+</span>
+
+---
+
+### Interpretation
+
+Like in the antibiotics study, we can visualize change in topics over time. This
+highlights smooth transitions between community states.
+
+.center[
+<img src="figure/topic_trajectories_pregnancy.jpeg" width=590/>
 ]
 
 ---
 
 .pull-left[
-**Test set perplexity**
+**Test set perplexity** `r Citep(bib, c("foulds2013", "Wallach2009EvaluationMF"))`
   - Similar: Helps to choose $K$.
   - Different (-): Doesn't give topic-level quality.
   - Different (+): Evaluates generalization ability.
 ]
 
 .pull-right[
-**Hierarchical Topic Models `r Citep(bib, "")`**
+**Hierarchical Topic Models** `r Citep(bib, c("10.5555/2981345.2981348", "Smith2014"))`
   - Similar: Learns topics at multiple levels of resolution
   - Different (-): Requires word-level representations.
   - Different (+/-): Words belong to individual subtrees
@@ -607,6 +656,7 @@ smooth transitions between community states.
 <img src="figure/hlda.png"/>
 
 ---
+class: small-code
 
 ### Software
 
@@ -620,7 +670,8 @@ library(alto)
 # simulate data and fit models
 x <- rmultinom(20, 500, rep(0.1, 50))
 colnames(x) <- seq_len(ncol(x))
-lda_params <- setNames(map(1:10, ~ list(k = .)), 1:10)
+lda_params <- map(1:10, ~ list(k = .)) |>
+  setNames(1:10)
 lda_models <- run_lda_models(x, lda_params)
 
 # perform alignment
@@ -644,23 +695,21 @@ All the simulations discussed today are vignettes in the package.
 
 ### Takeaways
 
-- `alto` paper: [ https://go.wisc.edu/tify36]( https://go.wisc.edu/tify36)
-- `alto` documentation: [lasy.github.io/alto](https://lasy.github.io/alto/)
-
-> Exploratory analysis can guide critical examination of complex problems, and
+Exploratory analysis can guide critical examination of complex problems, and
 topic alignment is a simple but useful addition to the toolbox for count data.
 
-.pull-left[
-```{r, out.width = 200}
-include_graphics("figure/structuration.png")
-```
+.pull-three-quarters-left[
+<img src="figure/alto_sketches_annotated alignment.png" width=700/>
 ]
 
-.pull-right[
-```{r}
-include_graphics("figure/alto_sketches_annotated alignment.png")
-```
-
+.pull-three-quarters-right[
+[Paper](https://go.wisc.edu/tify36)<br/>
+<img src="figure/qr-paper.png" width=80/>
+<br/>
+<br/>
+<br/>
+[Package](lasy.github.io/alto)<br/>
+<img src="figure/qr-package.png" width=80/>
 ]
 
 ---
@@ -693,8 +742,10 @@ PrintBibliography(bib, start = 1, end = 13)
 
 class: reference
 
+### References
+
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 30)
+PrintBibliography(bib, start = 14, end = 31)
 ```
 
 ---
@@ -781,8 +832,7 @@ include_graphics("figure/refinement-branches-5.png")
 
 ### Coherence
 
-The coherence of a topic is defined as its average connectedness to other topics
-along the same path,
+Coherence quantifies a topic's average connectedness to other topics along the same path,
 
 \begin{align*}
  c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
@@ -804,7 +854,7 @@ along the same path,
 
 ### Refinement
 
-Parent specificity distinguishes two qualitatively different regimes,
+Parent specificity identifies two distinct regimes,
 
 * High Refinement: Each topic receives the most mass from a unique parent,
 corresponding to a true or "compromise" topic
