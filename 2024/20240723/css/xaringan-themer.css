@@ -76,7 +76,7 @@ h2 {
 }
 .remark-slide-content h2 {
   font-family: 'Raleway';
-  font-size: 60px;
+  font-size: 55px;
 }
 .remark-slide-content h3 {
   font-family: 'Raleway';
@@ -219,7 +219,6 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-size: 90px;
   font-family: 'Indie Flower';
 }
-}
 
 .remark-slide-content.full-slide-fig{
   padding: 0px 0px 0px 0px;
@@ -245,7 +244,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
-  width: 500px;
+  width: 300px;
   color: #5f558e;
   text-align: right;
   right: 20px;
@@ -267,7 +266,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
-  width: 800px;
+  width: 370px;
   color: #5f558e;
   text-align: left;
   left: 20px;

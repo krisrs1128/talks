@@ -40,15 +40,15 @@ Slides: &lt;a href="https://go.wisc.edu/6y38gg"&gt;go.wisc.edu/6y38gg&lt;/a&gt;
 
 ---
 
-### Motivation
+### Overview
 
-In biological problems, samples are often not cleanly separated into clusters.
-For more informative exploration of these data, it helps to consider,
+In many datasets, samples can't be cleanly separated into clusters.  For more
+informative exploration of these data, it helps to consider,
 
 1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
 view them as intermediates between multiple representatives.
 
-1. Multiple Scales: Study both coarse and fine-level variation simultaneously.
+1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
 
 .center[
 &lt;img src="figure/clusters_vs_mixtures.png" width=700/&gt;
@@ -56,15 +56,15 @@ view them as intermediates between multiple representatives.
 
 ---
 
-### Motivation
+### Overview
 
-In biological problems, samples are often not cleanly separated into clusters.
-For more informative exploration of these data, it helps to consider,
+In many datasets, samples can't be cleanly separated into clusters.  For more
+informative exploration of these data, it helps to consider,
 
 1. Mixtures: Instead of matching a sample to a single cluster centroid,
 view them as intermediates between multiple representatives.
 
-1. **Multiple Scales**: Study both coarse and fine-level variation simultaneously.
+1. **Multiple Scales**: Allow transitions from coarse to fine-grained analysis.
 
 .center[
 &lt;img src="figure/multiscale.png"/&gt;
@@ -72,28 +72,26 @@ view them as intermediates between multiple representatives.
 
 ---
 
-### Enterotypes
+### Motivation: Enterotypes
 
 The study [1] argued that all human gut microbiomes
-could be divided into well-defined enterotypes.
+could be divided into well-defined enterotypes:
 
 .pull-left[
 &gt; ... We identified three robust clusters (enterotypes hereafter) that are not
 nation or continent-specific.
-
--- From the abstract in [1]
 ]
 
 .pull-right[
 &lt;img src="figure/enterotypes.png" width=300/&gt;&lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-The visualization that motivated the original enterotype definition.
+The visualization that motivated the definition of enterotypes.
 &lt;/span&gt;
 ]
 
 ---
 
-### Enterotypes
+### Motivation: Enterotypes
 
 This idea caught on. Could we have discovered something as fundamental as blood type?
 
@@ -103,7 +101,7 @@ This idea caught on. Could we have discovered something as fundamental as blood 
 
 ---
 
-### Enterotypes
+### Motivation: Enterotypes
 
 This idea caught on. Could we have discovered something as fundamental as blood type?
 
@@ -113,7 +111,7 @@ This idea caught on. Could we have discovered something as fundamental as blood 
 
 ---
 
-### Enterotypes
+### Motivation: Enterotypes
 
 This idea caught on. Could we have discovered something as fundamental as blood type?
 
@@ -123,7 +121,7 @@ This idea caught on. Could we have discovered something as fundamental as blood 
 
 ---
 
-### Enterotypes
+### Motivation: Enterotypes
 
 Reality is more complex -- and interesting! Microbiomes
 are more dyanmic and not so easily categorized
@@ -148,16 +146,16 @@ class: middle
 
 ---
 
-### Motivation
+### Origins
 
-1. Topic models were independently developed for analyzing population genetics
-and text data [6; 7] and are now widely
-used in computational genomics 
+1. Topic models were independently developed for analyzing genotype and and text
+data [6; 7] and are now widely used in
+computational genomics 
 [8; 9; 10; 11].
 
 1. Clusters look for representative cases and assume that all samples are like
 them. In contrast, topic models look for extreme cases. Samples are viewed as
-mixtures between these extremes.
+mixtures between extremes.
 
 
 .center[
@@ -169,7 +167,7 @@ mixtures between these extremes.
 ### Example 1: GTex
 
 How are genes co-expressed across tissues? We can apply topic models to GTEX
-Consortium data, following [17; 18].
+Consortium data, following [12; 13].
 
 .center[
 &lt;img src="figure/gtex_memberships.png" width=780/&gt;
@@ -185,11 +183,13 @@ These are the expression patterns associated with each of those topics.
 &lt;img src="figure/GTex-topics.png" width=730/&gt;
 ]
 
+&lt;!-- [Example Interpretation](https://www.genecards.org/cgi-bin/carddisp.pl?id_type=hgnc&amp;id=7939#summaries) --&gt;
+
 ---
 
 ### Example 2: Microbiome
 
-How do microbiome communities change in response to antibiotics? The study [12] gathered samples before and after antibiotic
+How do microbiome communities change in response to antibiotics? The study [14] gathered samples before and after antibiotic
 interventions.
 
 .center[
@@ -223,7 +223,7 @@ that have much higher probabilities in one topic compared to the others.
 
 ### Model
 
-It supposes that samples `\(x_i \in \mathbb{R}^{D}\)` are drawn independently:
+Topic models suppose that samples `\(x_i \in \mathbb{R}^{D}\)` are drawn independently:
 `\begin{align*}
 x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 \gamma_{i} &amp;\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
@@ -252,7 +252,7 @@ estimated parameters can be interpreted as,
 class: middle
 
 .center[
-## Topic Alignment 
+## Topic Alignment: Method
 ]
 
 ---
@@ -327,7 +327,7 @@ w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 Let `\(V_p\)` and `\(V_q\)` be two subsets of topics within the graph.
 
 * Let the total "mass" of `\(V_p\)` be `\(p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}\)`. Define `\(q\)` similarly.
-* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions.
+* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [24].
 
 &lt;img src="figure/transport_alignment_conceptual.png" width="420" style="display: block; margin: auto;" /&gt;
 
@@ -338,9 +338,13 @@ Let `\(V_p\)` and `\(V_q\)` be two subsets of topics within the graph.
 
 The weights `\(W\)` can be estimated by solving the optimal transport problem,
 `\begin{align*}
-&amp;\min_{W \in \mathcal{U}\left(p, q\right)} \left&lt;C,W\right&gt; \\
+&amp;\min_{W \in \mathcal{U}\left(p, q\right)} \left&lt;C,W\right&gt;
+\end{align*}`
+&lt;span style="font-size: 20px;"&gt;
+`\begin{align*}
 \mathcal{U}\left(p, q\right) := &amp;\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
 \end{align*}`
+&lt;/span&gt;
 
 &lt;img src="figure/transport_alignment_conceptual.png" width="420" style="display: block; margin: auto;" /&gt;
 
@@ -348,11 +352,19 @@ The weights `\(W\)` can be estimated by solving the optimal transport problem,
 
 ### Diagnostics
 
-* Paths: Partitions the Sankey diagram into connected sets of topics
-* Coherence: Measures transience of a topic along its path
-* Refinement: Reflects degree of mixing between descendant topics
+* Paths: Partitions the Sankey diagram into connected sets of topics.
+* Coherence: Measures transience of a topic along its path.
+* Refinement: Reflects degree of mixing between descendant topics.
 
 &lt;img src="figure/alto_sketches_diagnotics.png" width="2696" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+.center[
+## Topic Alignment: Examples
+]
 
 ---
 
@@ -479,18 +491,18 @@ as in a standard topic model.
 ### Application Background
 
 .pull-left[
-[19] used clustering to identify 5 Community State Types (CSTs) in
+[15] used clustering to identify 5 Community State Types (CSTs) in
 the vaginal microbiome
   - Four healthy CSTs are dominated by Lactobacillus variants
   - A fifth dysbiotic CST is more compositionally diverse and has been
-  implicated in preterm birth [13; 14] and HIV transmission [15].
+  implicated in preterm birth [16; 17] and HIV transmission [18].
 ]
 
 .pull-right[
   &lt;img src="figure/community_state_types.jpg" width=380/&gt;
   &lt;span style="font-size: 18px;"&gt;
 
-  [19] grouped samples (columns) into CSTs."
+  [15] grouped samples (columns) into CSTs."
   &lt;/span&gt;
 ]
 
@@ -499,7 +511,7 @@ the vaginal microbiome
 ### Example Output
 
 .pull-left[
-Topic alignment was used to analyze vaginal microbiome communities in [16]. 
+Topic alignment was used to analyze vaginal microbiome communities in [19]. 
 
 * This used 2179 samples from 135 women, sampled longitudinally.
 * In the same way that the community has moved beyond enterotypes, we can try to better understand these communities.
@@ -620,8 +632,8 @@ All the simulations discussed today are vignettes in the package.
 
 ### Takeaways
 
-Exploratory analysis can guide critical examination of complex problems, and
-topic alignment is a simple but useful addition to the toolbox for count data.
+Topic alignment is a simple but useful addition to the exploratory data analysis
+toolbox for count data.
 
 .pull-three-quarters-left[
 &lt;img src="figure/alto_sketches_annotated alignment.png" width=700/&gt;
@@ -731,40 +743,42 @@ class: reference
 
 ### References
 
-[14] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth:
+[14] L. Dethlefsen et al. "Incomplete recovery and individualized responses of the
+human distal gut microbiota to repeated antibiotic perturbation". In: _Proceedings
+of the National Academy of Sciences_ 108.supplement_1 (Sep. 2010), p. 4554–4561.
+ISSN: 1091-6490. DOI:
+[10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107). URL:
+[http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.1000087107).
+
+[15] J. Ravel et al. "Vaginal microbiome of reproductive-age women". In:
+_Proceedings of the National Academy of Sciences_ 108.supplement_1 (Jun. 2010), p.
+4680–4687. ISSN: 1091-6490. DOI:
+[10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107). URL:
+[http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
+
+[16] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature
+Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
+[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2). URL:
+[http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
+
+[17] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth:
 a systematic review and network meta-analysis". In: _Scientific Reports_ 12.1
 (May. 2022). ISSN: 2045-2322. DOI:
 [10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9). URL:
 [http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
 
-[15] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial
+[18] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial
 Communities Are Associated with Increased HIV Acquisition in Young South African
 Women". In: _Immunity_ 46.1 (Jan. 2017), p. 29–37. ISSN: 1074-7613. DOI:
 [10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013).
 URL:
 [http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
 
-[16] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and
+[19] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and
 non-pregnant women". In: _Proceedings of the Royal Society B: Biological Sciences_
 290.2011 (Nov. 2023). ISSN: 1471-2954. DOI:
 [10.1098/rspb.2023.1461](https://doi.org/10.1098%2Frspb.2023.1461). URL:
 [http://dx.doi.org/10.1098/rspb.2023.1461](http://dx.doi.org/10.1098/rspb.2023.1461).
-
-[17] K. K. Dey et al. "Visualizing the structure of RNA-seq expression data using
-grade of membership models". In: _PLOS Genetics_ 13.3 (Mar. 2017). Ed. by A.
-Kundaje, p. e1006599. ISSN: 1553-7404. DOI:
-[10.1371/journal.pgen.1006599](https://doi.org/10.1371%2Fjournal.pgen.1006599).
-URL:
-[http://dx.doi.org/10.1371/journal.pgen.1006599](http://dx.doi.org/10.1371/journal.pgen.1006599).
-
-[18] J. H. Kushal K Dey. "GTEX V6 analysis - stephenslab.github.io".  ().
-[Accessed 21-07-2024].
-
-[19] J. Ravel et al. "Vaginal microbiome of reproductive-age women". In:
-_Proceedings of the National Academy of Sciences_ 108.supplement_1 (Jun. 2010), p.
-4680–4687. ISSN: 1091-6490. DOI:
-[10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107). URL:
-[http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
 
 [20] J. Foulds et al. "Annealing paths for the evaluation of topic models". In:
 _Proceedings of the Empirical Methods in Natural Language Processing Conference
@@ -782,6 +796,10 @@ Canada: MIT Press, 2003, p. 17–24.
 [23] A. Smith et al. "Hiearchie: Visualization for Hierarchical Topic Models".
 (2014). DOI: [10.3115/v1/w14-3111](https://doi.org/10.3115%2Fv1%2Fw14-3111). URL:
 [http://dx.doi.org/10.3115/v1/W14-3111](http://dx.doi.org/10.3115/v1/W14-3111).
+
+[24] G. Peyré et al. "Computational Optimal Transport".  (2018). DOI:
+[10.48550/ARXIV.1803.00567](https://doi.org/10.48550%2FARXIV.1803.00567). URL:
+[https://arxiv.org/abs/1803.00567](https://arxiv.org/abs/1803.00567).
 
 ---
 
@@ -890,7 +908,7 @@ each corresponding to an arbitrary split of a true topic
 
 ### Refinement
 
-Parent specificity distinguishes two qualitatively different regimes,
+Parent specificity identifies two distinct regimes,
 
 * High Refinement: Each topic receives the most mass from a unique parent,
 corresponding to a true or "compromise" topic
