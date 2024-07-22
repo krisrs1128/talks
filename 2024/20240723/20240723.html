@@ -93,7 +93,7 @@ This idea caught on. Could we have discovered something as fundamental as blood 
 ### Motivation: Enterotypes
 
 Reality is more complex -- and interesting! Microbiomes
-are dyanmic and not so easily categorized
+are dynamic and not so easily categorized
 [2; 3; 4; 5].
 
 .center[
@@ -117,9 +117,12 @@ view them as intermediates between multiple representatives.
 
 1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
 
+&lt;span style="font-size: 18px;"&gt;
 .center[
-&lt;img src="figure/clusters_vs_mixtures.png" width=700/&gt;
+&lt;img src="figure/clusters_vs_mixtures.png" width=565/&gt;&lt;br/&gt;
+Figure adapted from [6].
 ]
+&lt;/span&gt;
 
 ---
 
@@ -150,9 +153,9 @@ class: middle
 ### Origins
 
 Topic models were independently developed for analyzing genotype and text
-data [6; 7] and are now widely used in
+data [7; 8] and are now widely used in
 computational genomics
-[8; 9; 10; 11].
+[9; 10; 11; 12].
 
 .center[
 &lt;img src="figure/text_genotypes.png" width=1200/&gt;
@@ -163,7 +166,7 @@ computational genomics
 ### Example 1: GTEX
 
 How are genes co-expressed across tissues? We can apply topic models to GTEX
-Consortium data, following [12; 13].
+Consortium data, following [13; 14].
 
 .center[
 &lt;img src="figure/gtex_memberships.png" width=780/&gt;
@@ -185,7 +188,7 @@ These are the expression patterns associated with each of those topics.
 
 ### Example 2: Gut Microbiome
 
-How do microbiome communities change in response to antibiotics? The study [14] gathered samples before and after antibiotic
+How do microbiome communities change in response to antibiotics? The study [15] gathered samples before and after antibiotic
 interventions.
 
 .center[
@@ -197,7 +200,7 @@ interventions.
 ### Example 2: Gut Microbiome
 
 If we use topic models, we can see that &lt;span style="color: #476b57;"&gt;Topic 2&lt;/span&gt; increases during the antibiotic interventions,
-especially the first [8].
+especially the first [9].
 
 .center[
 &lt;img src="figure/antibiotic_memberships.png" width=1000/&gt;
@@ -233,6 +236,17 @@ We vertically stack the `\(N\)` `\(\gamma_i\)`'s into `\(\Gamma \in \Delta^{N}_{
 
 ---
 
+### Simplex View
+
+This model considers two sets of mixtures simultaneously.
+
+* Memberships: `\(\gamma_{i}\)` describes sample `\(x_i\)` as a mixture of topics.
+* Topics: `\(\beta_{k}\)` describes the composition of topic `\(k\)`.
+
+&lt;img src="figure/topic_double_triangle.png"/&gt;
+
+---
+
 class: middle
 
 .center[
@@ -249,10 +263,10 @@ parameter space, we found it difficult to obtain reliable estimates of
 `\(P\left(X \vert K\right)\)`... There are also biological reasons to be careful
 interpreting `\(K\)`.
 
--- From [6].
+-- From [7].
 
 In practice, it's common to check results and goodness-of-fit measures across
-many `\(K\)` [15; 16; 17].
+many `\(K\)` [16; 17; 18].
 
 ---
 
@@ -319,7 +333,7 @@ w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 Let `\(V_p\)` and `\(V_q\)` be two subsets of topics within the graph.
 
 * Let the total "mass" of `\(V_p\)` be `\(p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}\)`. Define `\(q\)` similarly.
-* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [18].
+* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [19].
 
 &lt;img src="figure/transport_alignment_conceptual.png" width="420" style="display: block; margin: auto;" /&gt;
 
@@ -447,21 +461,75 @@ quantify topic deterioration
 
 ---
 
+### Strain switching
+
+The final simulation mimics the strain switching problem [27; 28].
+  * Small subsets of species switch between two otherwise similar topics
+  * Multiple resolutions are required to detect the difference
+
+.center[
+&lt;img src="figure/strain_switching.png" width=850/&gt;
+]
+
+---
+
+### Mechanism
+
+We construct related topics `\(\tilde{\beta}_k^r\)` by perturbing an underlying
+collection of `\(\beta_{k}\)`. Then, for each sample `\(i\)` and each `\(k\)`, we draw one
+member from the class,
+
+`\begin{align*}
+\beta_{k}^{i} &amp;\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
+\end{align*}`
+
+stack the results into `\(\*B^{i}\)`, and then draw,
+
+`\begin{align}
+x_{i} &amp;\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
+\end{align}`
+as in a standard topic model.
+
+---
+
+### Results
+* There are five topics, two of which exhibit strain switching
+* At smaller `\(K\)`, we recognize the five main topics
+* At larger `\(K\)`, we can distinguish perturbed variants
+
+.pull-left[
+&lt;img src="figure/equivalence_flow.png" width="960" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="figure/equivalence_betas.png" width="4320" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Results
+* At smaller `\(K\)`, we recognize the main community structure, but don't see strain switching
+* At larger `\(K\)`, we can recognize instances of switching
+
+&lt;img src="figure/equivalence_similarity_hm.png" width="650" style="display: block; margin: auto;" /&gt;
+
+---
+
 ### Data Analysis Background
 
 .pull-left[
-[19] used clustering to identify 5 Community State Types (CSTs) in
+[20] used clustering to identify 5 Community State Types (CSTs) in
 the vaginal microbiome
   - Four healthy CSTs are dominated by Lactobacillus variants
   - A fifth dysbiotic CST is more compositionally diverse and has been
-  implicated in preterm birth [20; 21] and HIV transmission [22].
+  implicated in preterm birth [21; 22] and HIV transmission [23].
 ]
 
 .pull-right[
   &lt;img src="figure/community_state_types.jpg" width=380/&gt;
   &lt;span style="font-size: 18px;"&gt;
 
-  [19] grouped samples (columns) into CSTs.
+  [20] grouped samples (columns) into CSTs.
   &lt;/span&gt;
 ]
 
@@ -470,7 +538,7 @@ the vaginal microbiome
 ### Deconstructing CSTs
 
 .pull-left[
-The follow-up study [23] had many more samples than [19] and so could begin to tease additional structure lying
+The follow-up study [6] had many more samples than [20] and so could begin to tease additional structure lying
 behind CSTs.
 
 * They had 2179 samples from 135 women, sampled longitudinally.
@@ -537,7 +605,7 @@ highlights smooth transitions in topic memberships.
 ---
 
 .pull-left[
-**Test set perplexity** [24; 16]
+**Test set perplexity** [24; 17]
   - Similar: Helps to choose `\(K\)`.
   - Different (-): Doesn't give topic-level quality.
   - Different (+): Evaluates generalization ability.
@@ -585,7 +653,7 @@ result &lt;- align_topics(models, method = "transport")
 plot(result)
 ```
 
-&lt;img src="20240723_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="20240723_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 All the simulations discussed today are vignettes in the package.
@@ -652,105 +720,7 @@ methods". En. In: _PeerJ_ 11 (Sep. 2023), p. e15838.
 [5] D. Knights et al. "Rethinking enterotypes". En. In: _Cell Host
 Microbe_ 16.4 (Oct. 2014), pp. 433-437.
 
-[6] J. K. Pritchard et al. "Inference of Population Structure Using
-Multilocus Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p.
-945–959. ISSN: 1943-2631. DOI:
-[10.1093/genetics/155.2.945](https://doi.org/10.1093%2Fgenetics%2F155.2.945).
-URL:
-[http://dx.doi.org/10.1093/genetics/155.2.945](http://dx.doi.org/10.1093/genetics/155.2.945).
-
-[7] D. M. Blei et al. "Latent dirichlet allocation". In: _J. Mach.
-Learn. Res._ 3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
-
-[8] K. Sankaran et al. "Latent variable modeling for the microbiome".
-In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357.
-DOI:
-[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018).
-URL:
-[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
-
-[9] A. Kim et al. "Latent Dirichlet Allocation modeling of
-environmental microbiomes". In: _PLOS Computational Biology_ 19.6
-(Jun. 2023). Ed. by G. Zeller, p. e1011075. ISSN: 1553-7358. DOI:
-[10.1371/journal.pcbi.1011075](https://doi.org/10.1371%2Fjournal.pcbi.1011075).
-URL:
-[http://dx.doi.org/10.1371/journal.pcbi.1011075](http://dx.doi.org/10.1371/journal.pcbi.1011075).
-
-[10] C. Tataru et al. "Topic modeling for multi-omic integration in
-the human gut microbiome and implications for Autism". In:
-_Scientific Reports_ 13.1 (Jul. 2023). ISSN: 2045-2322. DOI:
-[10.1038/s41598-023-38228-0](https://doi.org/10.1038%2Fs41598-023-38228-0).
-URL:
-[http://dx.doi.org/10.1038/s41598-023-38228-0](http://dx.doi.org/10.1038/s41598-023-38228-0).
-
-[11] X. Peng et al. "A topic modeling approach reveals the dynamic T
-cell composition of peripheral blood during cancer immunotherapy".
-In: _Cell Reports Methods_ 3.8 (Aug. 2023), p. 100546. ISSN:
-2667-2375. DOI:
-[10.1016/j.crmeth.2023.100546](https://doi.org/10.1016%2Fj.crmeth.2023.100546).
-URL:
-[http://dx.doi.org/10.1016/j.crmeth.2023.100546](http://dx.doi.org/10.1016/j.crmeth.2023.100546).
-
-[12] K. K. Dey et al. "Visualizing the structure of RNA-seq
-expression data using grade of membership models". In: _PLOS
-Genetics_ 13.3 (Mar. 2017). Ed. by A. Kundaje, p. e1006599. ISSN:
-1553-7404. DOI:
-[10.1371/journal.pgen.1006599](https://doi.org/10.1371%2Fjournal.pgen.1006599).
-URL:
-[http://dx.doi.org/10.1371/journal.pgen.1006599](http://dx.doi.org/10.1371/journal.pgen.1006599).
-
-[13] J. H. Kushal K Dey. "GTEX V6 analysis - stephenslab.github.io".
-(). [Accessed 21-07-2024].
-
----
-
-class: reference
-
-### References
-
-[14] L. Dethlefsen et al. "Incomplete recovery and individualized
-responses of the human distal gut microbiota to repeated antibiotic
-perturbation". In: _Proceedings of the National Academy of Sciences_
-108.supplement_1 (Sep. 2010), p. 4554–4561. ISSN: 1091-6490. DOI:
-[10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107).
-URL:
-[http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.1000087107).
-
-[15] G. Peyré et al. "Computational Optimal Transport".  (2018). DOI:
-[10.48550/ARXIV.1803.00567](https://doi.org/10.48550%2FARXIV.1803.00567).
-URL:
-[https://arxiv.org/abs/1803.00567](https://arxiv.org/abs/1803.00567).
-
-[16] J. Ravel et al. "Vaginal microbiome of reproductive-age women".
-In: _Proceedings of the National Academy of Sciences_
-108.supplement_1 (Jun. 2010), p. 4680–4687. ISSN: 1091-6490. DOI:
-[10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107).
-URL:
-[http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
-
-[17] J. M. Fettweis et al. "The vaginal microbiome and preterm
-birth". In: _Nature Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN:
-1546-170X. DOI:
-[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2).
-URL:
-[http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
-
-[18] U. Gudnadottir et al. "The vaginal microbiome and the risk of
-preterm birth: a systematic review and network meta-analysis". In:
-_Scientific Reports_ 12.1 (May. 2022). ISSN: 2045-2322. DOI:
-[10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9).
-URL:
-[http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
-
-[19] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal
-Bacterial Communities Are Associated with Increased HIV Acquisition
-in Young South African Women". In: _Immunity_ 46.1 (Jan. 2017), p.
-29–37. ISSN: 1074-7613. DOI:
-[10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013).
-URL:
-[http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
-
-[20] L. Symul et al. "Sub-communities of the vaginal microbiota in
+[6] L. Symul et al. "Sub-communities of the vaginal microbiota in
 pregnant and non-pregnant women". In: _Proceedings of the Royal
 Society B: Biological Sciences_ 290.2011 (Nov. 2023). ISSN:
 1471-2954. DOI:
@@ -758,89 +728,159 @@ Society B: Biological Sciences_ 290.2011 (Nov. 2023). ISSN:
 URL:
 [http://dx.doi.org/10.1098/rspb.2023.1461](http://dx.doi.org/10.1098/rspb.2023.1461).
 
-[21] J. Foulds et al. "Annealing paths for the evaluation of topic
-models". In: _Proceedings of the Empirical Methods in Natural
-Language Processing Conference (EMNLP 2013)_ (Jan. 2013).
+[7] J. K. Pritchard et al. "Inference of Population Structure Using
+Multilocus Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p.
+945–959. ISSN: 1943-2631. DOI:
+[10.1093/genetics/155.2.945](https://doi.org/10.1093%2Fgenetics%2F155.2.945).
+URL:
+[http://dx.doi.org/10.1093/genetics/155.2.945](http://dx.doi.org/10.1093/genetics/155.2.945).
 
-[22] H. M. Wallach et al. "Evaluation methods for topic models". In:
-_International Conference on Machine Learning_ (2009). URL:
-[https://api.semanticscholar.org/CorpusID:10910725](https://api.semanticscholar.org/CorpusID:10910725).
+[8] D. M. Blei et al. "Latent dirichlet allocation". In: _J. Mach.
+Learn. Res._ 3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
 
-[23] D. M. Blei et al. "Hierarchical topic models and the nested
-chinese restaurant process". In: _Proceedings of the 16th
-International Conference on Neural Information Processing Systems_.
-NIPS'03. Whistler, British Columbia, Canada: MIT Press, 2003, p.
-17–24.
+[9] K. Sankaran et al. "Latent variable modeling for the microbiome".
+In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357.
+DOI:
+[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018).
+URL:
+[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
 
-[24] A. Smith et al. "Hiearchie: Visualization for Hierarchical Topic
-Models".  (2014). DOI:
-[10.3115/v1/w14-3111](https://doi.org/10.3115%2Fv1%2Fw14-3111). URL:
-[http://dx.doi.org/10.3115/v1/W14-3111](http://dx.doi.org/10.3115/v1/W14-3111).
+[10] A. Kim et al. "Latent Dirichlet Allocation modeling of
+environmental microbiomes". In: _PLOS Computational Biology_ 19.6
+(Jun. 2023). Ed. by G. Zeller, p. e1011075. ISSN: 1553-7358. DOI:
+[10.1371/journal.pcbi.1011075](https://doi.org/10.1371%2Fjournal.pcbi.1011075).
+URL:
+[http://dx.doi.org/10.1371/journal.pcbi.1011075](http://dx.doi.org/10.1371/journal.pcbi.1011075).
 
-[25] J. Novembre. "Pritchard, Stephens, and Donnelly on Population
+[11] C. Tataru et al. "Topic modeling for multi-omic integration in
+the human gut microbiome and implications for Autism". In:
+_Scientific Reports_ 13.1 (Jul. 2023). ISSN: 2045-2322. DOI:
+[10.1038/s41598-023-38228-0](https://doi.org/10.1038%2Fs41598-023-38228-0).
+URL:
+[http://dx.doi.org/10.1038/s41598-023-38228-0](http://dx.doi.org/10.1038/s41598-023-38228-0).
+
+[12] X. Peng et al. "A topic modeling approach reveals the dynamic T
+cell composition of peripheral blood during cancer immunotherapy".
+In: _Cell Reports Methods_ 3.8 (Aug. 2023), p. 100546. ISSN:
+2667-2375. DOI:
+[10.1016/j.crmeth.2023.100546](https://doi.org/10.1016%2Fj.crmeth.2023.100546).
+URL:
+[http://dx.doi.org/10.1016/j.crmeth.2023.100546](http://dx.doi.org/10.1016/j.crmeth.2023.100546).
+
+[13] K. K. Dey et al. "Visualizing the structure of RNA-seq
+expression data using grade of membership models". In: _PLOS
+Genetics_ 13.3 (Mar. 2017). Ed. by A. Kundaje, p. e1006599. ISSN:
+1553-7404. DOI:
+[10.1371/journal.pgen.1006599](https://doi.org/10.1371%2Fjournal.pgen.1006599).
+URL:
+[http://dx.doi.org/10.1371/journal.pgen.1006599](http://dx.doi.org/10.1371/journal.pgen.1006599).
+
+---
+
+class: reference
+
+### References
+
+[14] J. H. Kushal K Dey. "GTEX V6 analysis - stephenslab.github.io".
+(). [Accessed 21-07-2024].
+
+[15] L. Dethlefsen et al. "Incomplete recovery and individualized
+responses of the human distal gut microbiota to repeated antibiotic
+perturbation". In: _Proceedings of the National Academy of Sciences_
+108.supplement_1 (Sep. 2010), p. 4554–4561. ISSN: 1091-6490. DOI:
+[10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107).
+URL:
+[http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.1000087107).
+
+[16] J. Novembre. "Pritchard, Stephens, and Donnelly on Population
 Structure". In: _Genetics_ 204.2 (Oct. 2016), p. 391–393. ISSN:
 1943-2631. DOI:
 [10.1534/genetics.116.195164](https://doi.org/10.1534%2Fgenetics.116.195164).
 URL:
 [http://dx.doi.org/10.1534/genetics.116.195164](http://dx.doi.org/10.1534/genetics.116.195164).
 
-[26] D. J. Lawson et al. "A tutorial on how not to over-interpret
+[17] H. M. Wallach et al. "Evaluation methods for topic models". In:
+_International Conference on Machine Learning_ (2009). URL:
+[https://api.semanticscholar.org/CorpusID:10910725](https://api.semanticscholar.org/CorpusID:10910725).
+
+[18] D. J. Lawson et al. "A tutorial on how not to over-interpret
 STRUCTURE and ADMIXTURE bar plots". In: _Nature Communications_ 9.1
 (Aug. 2018). ISSN: 2041-1723. DOI:
 [10.1038/s41467-018-05257-7](https://doi.org/10.1038%2Fs41467-018-05257-7).
 URL:
 [http://dx.doi.org/10.1038/s41467-018-05257-7](http://dx.doi.org/10.1038/s41467-018-05257-7).
 
+[19] G. Peyré et al. "Computational Optimal Transport".  (2018). DOI:
+[10.48550/ARXIV.1803.00567](https://doi.org/10.48550%2FARXIV.1803.00567).
+URL:
+[https://arxiv.org/abs/1803.00567](https://arxiv.org/abs/1803.00567).
+
+[20] J. Ravel et al. "Vaginal microbiome of reproductive-age women".
+In: _Proceedings of the National Academy of Sciences_
+108.supplement_1 (Jun. 2010), p. 4680–4687. ISSN: 1091-6490. DOI:
+[10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107).
+URL:
+[http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
+
+[21] J. M. Fettweis et al. "The vaginal microbiome and preterm
+birth". In: _Nature Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN:
+1546-170X. DOI:
+[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2).
+URL:
+[http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
+
+[22] U. Gudnadottir et al. "The vaginal microbiome and the risk of
+preterm birth: a systematic review and network meta-analysis". In:
+_Scientific Reports_ 12.1 (May. 2022). ISSN: 2045-2322. DOI:
+[10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9).
+URL:
+[http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
+
+[23] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal
+Bacterial Communities Are Associated with Increased HIV Acquisition
+in Young South African Women". In: _Immunity_ 46.1 (Jan. 2017), p.
+29–37. ISSN: 1074-7613. DOI:
+[10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013).
+URL:
+[http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
+
+[24] J. Foulds et al. "Annealing paths for the evaluation of topic
+models". In: _Proceedings of the Empirical Methods in Natural
+Language Processing Conference (EMNLP 2013)_ (Jan. 2013).
+
+[25] D. M. Blei et al. "Hierarchical topic models and the nested
+chinese restaurant process". In: _Proceedings of the 16th
+International Conference on Neural Information Processing Systems_.
+NIPS'03. Whistler, British Columbia, Canada: MIT Press, 2003, p.
+17–24.
+
+[26] A. Smith et al. "Hiearchie: Visualization for Hierarchical Topic
+Models".  (2014). DOI:
+[10.3115/v1/w14-3111](https://doi.org/10.3115%2Fv1%2Fw14-3111). URL:
+[http://dx.doi.org/10.3115/v1/W14-3111](http://dx.doi.org/10.3115/v1/W14-3111).
+
 ---
 
-### Strain switching
+class: reference
 
-The final simulation mimics the strain switching problem.
-  * Small subsets of species switch between two otherwise similar topics
-  * Multiple resolutions are required to detect the difference
+### References
 
----
+[27] P. Jeganathan et al. "A Statistical Perspective on the
+Challenges in Molecular Microbial Biology". In: _Journal of
+Agricultural, Biological and Environmental Statistics_ 26.2 (Mar.
+2021), p. 131–160. ISSN: 1537-2693. DOI:
+[10.1007/s13253-021-00447-1](https://doi.org/10.1007%2Fs13253-021-00447-1).
+URL:
+[http://dx.doi.org/10.1007/s13253-021-00447-1](http://dx.doi.org/10.1007/s13253-021-00447-1).
 
-### Mechanism
-
-We construct related topics `\(\tilde{\beta}_k^r\)` by perturbing an underlying
-collection of `\(\beta_{k}\)`. Then, for each sample `\(i\)` and each `\(k\)`, we draw one
-member from the class,
-
-`\begin{align*}
-\beta_{k}^{i} &amp;\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
-\end{align*}`
-
-stack the results into `\(\*B^{i}\)`, and then draw,
-
-`\begin{align}
-x_{i} &amp;\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
-\end{align}`
-as in a standard topic model.
+[28] T. E. Reiter et al. "Meta-analysis of metagenomes via machine
+learning and assembly graphs reveals strain switches in Crohn’s
+disease". In: _bioArxiv_ (Jul. 2022). DOI:
+[10.1101/2022.06.30.498290](https://doi.org/10.1101%2F2022.06.30.498290).
+URL:
+[http://dx.doi.org/10.1101/2022.06.30.498290](http://dx.doi.org/10.1101/2022.06.30.498290).
 
 ---
-
-### Results
-* There are five topics, two of which exhibit strain switching
-* At smaller `\(K\)`, we recognize the five main topics
-* At larger `\(K\)`, we can distinguish perturbed variants
-
-.pull-left[
-&lt;img src="figure/equivalence_flow.png" width="960" style="display: block; margin: auto;" /&gt;
-]
-
-.pull-right[
-&lt;img src="figure/equivalence_betas.png" width="4320" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-### Results
-* At smaller `\(K\)`, we recognize the main community structure, but don't see strain switching
-* At larger `\(K\)`, we can recognize instances of switching
-
-&lt;img src="figure/equivalence_similarity_hm.png" width="650" style="display: block; margin: auto;" /&gt;
-
 
 ### Paths
 

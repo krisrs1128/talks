@@ -128,7 +128,7 @@ This idea caught on. Could we have discovered something as fundamental as blood 
 ### Motivation: Enterotypes
 
 Reality is more complex -- and interesting! Microbiomes
-are dyanmic and not so easily categorized
+are dynamic and not so easily categorized
 `r Citep(bib, c("Yong2012-ri", "Koren2013-tb", "Bulygin2023-up", "Knights2014-jv"))`.
 
 .center[
@@ -152,9 +152,12 @@ view them as intermediates between multiple representatives.
 
 1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
 
+<span style="font-size: 18px;">
 .center[
-<img src="figure/clusters_vs_mixtures.png" width=700/>
+<img src="figure/clusters_vs_mixtures.png" width=565/><br/>
+Figure adapted from `r Citep(bib, "Symul2023")`.
 ]
+</span>
 
 ---
 
@@ -265,6 +268,17 @@ where the columns $\beta_{k}$ of $\*B \in \Delta^{K}_{D}$ lie in the $D$-dimensi
 \end{align*}
 
 We vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
+
+---
+
+### Simplex View
+
+This model considers two sets of mixtures simultaneously.
+
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of topics.
+* Topics: $\beta_{k}$ describes the composition of topic $k$.
+
+<img src="figure/topic_double_triangle.png"/>
 
 ---
 
@@ -512,6 +526,66 @@ include_graphics("figure/gradient-combined.png")
 
 ---
 
+### Strain switching
+
+The final simulation mimics the strain switching problem `r Citep(bib, c("Jeganathan2021", "Reiter2022"))`.
+  * Small subsets of species switch between two otherwise similar topics
+  * Multiple resolutions are required to detect the difference
+
+.center[
+<img src="figure/strain_switching.png" width=850/>
+]
+
+---
+
+### Mechanism
+
+We construct related topics $\tilde{\beta}_k^r$ by perturbing an underlying
+collection of $\beta_{k}$. Then, for each sample $i$ and each $k$, we draw one
+member from the class,
+
+\begin{align*}
+\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
+\end{align*}
+
+stack the results into $\*B^{i}$, and then draw,
+
+\begin{align}
+x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
+\end{align}
+as in a standard topic model.
+
+---
+
+### Results
+* There are five topics, two of which exhibit strain switching
+* At smaller $K$, we recognize the five main topics
+* At larger $K$, we can distinguish perturbed variants
+
+.pull-left[
+```{r}
+include_graphics("figure/equivalence_flow.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/equivalence_betas.png")
+```
+]
+
+---
+
+### Results
+* At smaller $K$, we recognize the main community structure, but don't see strain switching
+* At larger $K$, we can recognize instances of switching
+
+```{r out.width=650}
+include_graphics("figure/equivalence_similarity_hm.png")
+```
+
+---
+
 ### Data Analysis Background
 
 .pull-left[
@@ -714,60 +788,15 @@ PrintBibliography(bib, start = 14, end = 26)
 
 ---
 
-### Strain switching
+class: reference
 
-The final simulation mimics the strain switching problem.
-  * Small subsets of species switch between two otherwise similar topics
-  * Multiple resolutions are required to detect the difference
+### References
 
----
-
-### Mechanism
-
-We construct related topics $\tilde{\beta}_k^r$ by perturbing an underlying
-collection of $\beta_{k}$. Then, for each sample $i$ and each $k$, we draw one
-member from the class,
-
-\begin{align*}
-\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
-\end{align*}
-
-stack the results into $\*B^{i}$, and then draw,
-
-\begin{align}
-x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
-\end{align}
-as in a standard topic model.
-
----
-
-### Results
-* There are five topics, two of which exhibit strain switching
-* At smaller $K$, we recognize the five main topics
-* At larger $K$, we can distinguish perturbed variants
-
-.pull-left[
-```{r}
-include_graphics("figure/equivalence_flow.png")
-```
-]
-
-.pull-right[
-```{r}
-include_graphics("figure/equivalence_betas.png")
-```
-]
-
----
-
-### Results
-* At smaller $K$, we recognize the main community structure, but don't see strain switching
-* At larger $K$, we can recognize instances of switching
-
-```{r out.width=650}
-include_graphics("figure/equivalence_similarity_hm.png")
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 27, end = 34)
 ```
 
+---
 
 ### Paths
 
