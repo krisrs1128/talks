@@ -70,40 +70,9 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 Computational Genomics Summer Institute<br/>
-Slides: <a href="https://go.wisc.edu/6y38gg">go.wisc.edu/6y38gg</a>
+Slides: <a href="https://go.wisc.edu/6y38gg">go.wisc.edu/6y38gg</a><br/>
+Paper: <a href="https://go.wisc.edu/tify36">go.wisc.edu/tify36</a>
 </div>
-
----
-
-### Overview
-
-In many datasets, samples can't be cleanly separated into clusters.  For more
-informative exploration of these data, it helps to consider,
-
-1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
-view them as intermediates between multiple representatives.
-
-1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
-
-.center[
-<img src="figure/clusters_vs_mixtures.png" width=700/>
-]
-
----
-
-### Overview
-
-In many datasets, samples can't be cleanly separated into clusters.  For more
-informative exploration of these data, it helps to consider,
-
-1. Mixtures: Instead of matching a sample to a single cluster centroid,
-view them as intermediates between multiple representatives.
-
-1. **Multiple Scales**: Allow transitions from coarse to fine-grained analysis.
-
-.center[
-<img src="figure/multiscale.png"/>
-]
 
 ---
 
@@ -159,7 +128,7 @@ This idea caught on. Could we have discovered something as fundamental as blood 
 ### Motivation: Enterotypes
 
 Reality is more complex -- and interesting! Microbiomes
-are more dyanmic and not so easily categorized
+are dyanmic and not so easily categorized
 `r Citep(bib, c("Yong2012-ri", "Koren2013-tb", "Bulygin2023-up", "Knights2014-jv"))`.
 
 .center[
@@ -167,9 +136,41 @@ are more dyanmic and not so easily categorized
 ]
 
 <span style="font-size: 18px;">
-The same person can jump between clusters in longitudinal sampling, which
-complicates the simpler enterotypes story `r Citep(bib, "Knights2014-jv")`.
+The same person can jump between clusters in longitudinal sampling `r Citep(bib, "Knights2014-jv")`, which
+complicates the simpler enterotypes story.
 </span>
+
+---
+
+### Improved Exploration
+
+Samples often can't be cleanly separated into clusters.  For more informative
+exploration of these data, it helps to consider,
+
+1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
+
+.center[
+<img src="figure/clusters_vs_mixtures.png" width=700/>
+]
+
+---
+
+### Improved Exploration
+
+Samples often can't be cleanly separated into clusters.  For more informative
+exploration of these data, it helps to consider,
+
+1. Mixtures: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. **Multiple Scales**: Allow transitions from coarse to fine-grained analysis.
+
+.center[
+<img src="figure/multiscale.png"/>
+]
 
 ---
 
@@ -183,23 +184,18 @@ class: middle
 
 ### Origins
 
-1. Topic models were independently developed for analyzing genotype and and text
+Topic models were independently developed for analyzing genotype and and text
 data `r Citep(bib, c("Pritchard2000", "blei_lda"))` and are now widely used in
 computational genomics
 `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
 
-1. Clusters look for representative cases and assume that all samples are like
-them. In contrast, topic models look for extreme cases. Samples are viewed as
-mixtures between extremes.
-
-
 .center[
-<img src="figure/text-sequencing-analogy.png" width=520/>
+<img src="figure/text-sequencing-analogy.png" width=700/>
 ]
 
 ---
 
-### Example 1: GTex
+### Example 1: GTEX
 
 How are genes co-expressed across tissues? We can apply topic models to GTEX
 Consortium data, following `r Citep(bib, c("Dey2017", "stephenslabGTEXAnalysis"))`.
@@ -210,7 +206,7 @@ Consortium data, following `r Citep(bib, c("Dey2017", "stephenslabGTEXAnalysis")
 
 ---
 
-### Example 1: GTex
+### Example 1: GTEX
 
 These are the expression patterns associated with each of those topics.
 
@@ -222,7 +218,7 @@ These are the expression patterns associated with each of those topics.
 
 ---
 
-### Example 2: Microbiome
+### Example 2: Gut Microbiome
 
 How do microbiome communities change in response to antibiotics? The study `r Citep(bib, "Dethlefsen2010")` gathered samples before and after antibiotic
 interventions.
@@ -233,24 +229,24 @@ interventions.
 
 ---
 
-### Example 2: Microbiome
+### Example 2: Gut Microbiome
 
 If we use topic models, we can see that <span style="color: #476b57;">Topic 2</span> increases during the antibiotic interventions,
 especially the first `r Citep(bib, "Sankaran2018")`.
 
 .center[
-<img src="figure/antibiotic_memberships.png" width=800/>
+<img src="figure/antibiotic_memberships.png" width=1000/>
 ]
 
 ---
 
-### Example 2: Microbiome
+### Example 2: Gut Microbiome
 
 We can interpret topics by looking for representative taxa. These are species
 that have much higher probabilities in one topic compared to the others.
 
 .center[
-<img src="figure/antibiotic_prototypes.png" width=750/>
+<img src="figure/antibiotic_prototypes.png" width=900/>
 ]
 
 
@@ -272,20 +268,6 @@ We vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ---
 
-### Interpretation
-
-Topic models are well-suited to count data dimensionality reduction. The
-estimated parameters can be interpreted as,
-* $\Gamma \in \Delta_{K}^{N}$: Per-document memberships across $K$ topics.
-* $\*B \in \Delta_{D}^{K}$: Per topic distributions over $D$ words.
-* $K$ = Number of topics = Number of extreme points
-
-```{r, out.width = 430}
-include_graphics("figure/latent_dirichlet_v2.png")
-```
-
----
-
 class: middle
 
 .center[
@@ -304,17 +286,25 @@ interpreting $K$.
 
 -- From `r Citep(bib, "Pritchard2000")`.
 
+In practice, it's common to check results and goodness-of-fit measures across
+many $K$ `r Citep(bib, c("Novembre2016", "Wallach2009EvaluationMF", "Lawson2018"))`.
+
 ---
 
 ### `alto`: Main Idea
 
-* We will fit an ensemble of models of varying complexities.
-* Post-estimation, we will build a compact representation of the result.
-* In the Sankey diagram, columns are models and rectangles are topics
+We will fit an ensemble of models of varying complexities. Then,
+post-estimation, we will build a compact representation of the result.
 
+.center[
 ```{r, out.width = 750}
 include_graphics("figure/alto_sketches_annotated alignment.png")
 ```
+
+<span style="font-size: 20px;">
+In the Sankey diagram, columns are models and rectangles are topics.
+</span>
+]
 
 ---
 
@@ -322,9 +312,9 @@ include_graphics("figure/alto_sketches_annotated alignment.png")
 
 We view an alignment as a graph across the ensemble. Index models by $m$ and
 topics by $k$. Then,
-* Nodes $V$ correspond to topics, parameterized by $\{\beta^m_{k}, \gamma^m_{k}\}$
-* Edges $E$ are placed between topics from neighboring models, i.e. $K$ to $K + 1$
-* Weights $W$ encode the similarity between topics
+* Nodes $V$ describe topics, parameterized by $\{\beta^m_{k}, \gamma^m_{k}\}$.
+* Edges $E$ link topics from neighboring models, i.e. $K$ to $K + 1$.
+* Weights $W$ encode the similarity between topics.
 
 ```{r, out.width = 560}
 include_graphics("figure/alto_sketches_annotated alignment.png")
@@ -350,7 +340,7 @@ include_graphics("figure/alto_sketches_annotated alignment.png")
 
 ---
 
-### Estimating Weights: Product approach
+### Estimating Weights: Product Approach
 
 .pull-left[
 To compute weights, we can use,
@@ -367,7 +357,7 @@ include_graphics("figure/product_alignment_conceptual.png")
 
 ---
 
-### Estimating Weights: Transport approach
+### Estimating Weights: Transport Approach
 
 Let $V_p$ and $V_q$ be two subsets of topics within the graph.
 
@@ -380,7 +370,7 @@ include_graphics("figure/transport_alignment_conceptual.png")
 
 ---
 
-### Estimating Weights: Transport approach
+### Estimating Weights: Transport Approach
 
 
 The weights $W$ can be estimated by solving the optimal transport problem,
@@ -399,7 +389,7 @@ include_graphics("figure/transport_alignment_conceptual.png")
 
 ---
 
-### Estimating Weights: Transport approach
+### Estimating Weights: Transport Approach
 
 
 The weights $W$ can be estimated by solving the optimal transport problem,
@@ -472,8 +462,8 @@ include_graphics("figure/summary_alto_asymptotic_behavior.png")
 
 ### Model with background variation
 
-What happens when the topic model is mis-specified? Consider the following
-generative mechanism,
+Can we detect systematic departures from the assumed model?  Consider the
+following generative mechanism,
 
 \begin{align*}
 x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
@@ -522,62 +512,6 @@ include_graphics("figure/gradient-combined.png")
 
 ---
 
-### Strain switching
-
-The final simulation mimics the strain switching problem.
-  * Small subsets of species switch between two otherwise similar topics
-  * Multiple resolutions are required to detect the difference
-
----
-
-### Mechanism
-
-We construct related topics $\tilde{\beta}_k^r$ by perturbing an underlying
-collection of $\beta_{k}$. Then, for each sample $i$ and each $k$, we draw one
-member from the class,
-
-\begin{align*}
-\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
-\end{align*}
-
-stack the results into $\*B^{i}$, and then draw,
-
-\begin{align}
-x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
-\end{align}
-as in a standard topic model.
-
----
-
-### Results
-* There are five topics, two of which exhibit strain switching
-* At smaller $K$, we recognize the five main topics
-* At larger $K$, we can distinguish perturbed variants
-
-.pull-left[
-```{r}
-include_graphics("figure/equivalence_flow.png")
-```
-]
-
-.pull-right[
-```{r}
-include_graphics("figure/equivalence_betas.png")
-```
-]
-
----
-
-### Results
-* At smaller $K$, we recognize the main community structure, but don't see strain switching
-* At larger $K$, we can recognize instances of switching
-
-```{r out.width=650}
-include_graphics("figure/equivalence_similarity_hm.png")
-```
-
----
-
 ### Application Background
 
 .pull-left[
@@ -592,19 +526,20 @@ the vaginal microbiome
   <img src="figure/community_state_types.jpg" width=380/>
   <span style="font-size: 18px;">
 
-  `r Citep(bib, 'Ravel2010')` grouped samples (columns) into CSTs."
+  `r Citep(bib, 'Ravel2010')` grouped samples (columns) into CSTs.
   </span>
 ]
 
 ---
 
-### Example Output
+### Deconstructing CSTs
 
 .pull-left[
-Topic alignment was used to analyze vaginal microbiome communities in `r Citep(bib, "Symul2023")`.
+The follow-up study `r Citep(bib, "Symul2023")` had many more samples than `r Citep(bib, 'Ravel2010')` and so could begin to tease additional structure lying
+behind CSTs.
 
-* This used 2179 samples from 135 women, sampled longitudinally.
-* In the same way that the community has moved beyond enterotypes, we can try to better understand these communities.
+* They had 2179 samples from 135 women, sampled longitudinally.
+* The green and blue paths to the right reflect the known Lactobacillus CSTs.
 ]
 
 .pull-right[
@@ -618,7 +553,7 @@ data(vm_data)
 
 ---
 
-### Interpretation
+### Coherence Scores
 
 .pull-left[
 * Overlaying coherence scores onto the alignment, we can distinguish distinguish
@@ -633,7 +568,7 @@ between high and low-coherence topics.
 
 ---
 
-### Interpretation
+### Metrics across Replicates
 
 .pull-left[
 * We can see dropoffs in topic quality for $K = 6 \to 7$ and $K = 9 \to 10$.
@@ -646,7 +581,7 @@ between high and low-coherence topics.
 
 ---
 
-### Interpretation
+### Taxonomic Breakdown
 
 .center[
 <img src="figure/pregnancy_topics_heatmap.jpg" width=600/>
@@ -659,7 +594,7 @@ see additional community structure in the dysbiotic CST.
 
 ---
 
-### Interpretation
+### Time Series
 
 Like in the antibiotics study, we can visualize change in topics over time. This
 highlights smooth transitions between community states.
@@ -774,10 +709,65 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 30)
+PrintBibliography(bib, start = 14, end = 26)
 ```
 
 ---
+
+### Strain switching
+
+The final simulation mimics the strain switching problem.
+  * Small subsets of species switch between two otherwise similar topics
+  * Multiple resolutions are required to detect the difference
+
+---
+
+### Mechanism
+
+We construct related topics $\tilde{\beta}_k^r$ by perturbing an underlying
+collection of $\beta_{k}$. Then, for each sample $i$ and each $k$, we draw one
+member from the class,
+
+\begin{align*}
+\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
+\end{align*}
+
+stack the results into $\*B^{i}$, and then draw,
+
+\begin{align}
+x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
+\end{align}
+as in a standard topic model.
+
+---
+
+### Results
+* There are five topics, two of which exhibit strain switching
+* At smaller $K$, we recognize the five main topics
+* At larger $K$, we can distinguish perturbed variants
+
+.pull-left[
+```{r}
+include_graphics("figure/equivalence_flow.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/equivalence_betas.png")
+```
+]
+
+---
+
+### Results
+* At smaller $K$, we recognize the main community structure, but don't see strain switching
+* At larger $K$, we can recognize instances of switching
+
+```{r out.width=650}
+include_graphics("figure/equivalence_similarity_hm.png")
+```
+
 
 ### Paths
 

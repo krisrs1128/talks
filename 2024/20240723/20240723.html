@@ -35,40 +35,9 @@ Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt
 
 &lt;div id="subtitle_right"&gt;
 Computational Genomics Summer Institute&lt;br/&gt;
-Slides: &lt;a href="https://go.wisc.edu/6y38gg"&gt;go.wisc.edu/6y38gg&lt;/a&gt;
+Slides: &lt;a href="https://go.wisc.edu/6y38gg"&gt;go.wisc.edu/6y38gg&lt;/a&gt;&lt;br/&gt;
+Paper: &lt;a href="https://go.wisc.edu/tify36"&gt;go.wisc.edu/tify36&lt;/a&gt;
 &lt;/div&gt;
-
----
-
-### Overview
-
-In many datasets, samples can't be cleanly separated into clusters.  For more
-informative exploration of these data, it helps to consider,
-
-1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
-view them as intermediates between multiple representatives.
-
-1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
-
-.center[
-&lt;img src="figure/clusters_vs_mixtures.png" width=700/&gt;
-]
-
----
-
-### Overview
-
-In many datasets, samples can't be cleanly separated into clusters.  For more
-informative exploration of these data, it helps to consider,
-
-1. Mixtures: Instead of matching a sample to a single cluster centroid,
-view them as intermediates between multiple representatives.
-
-1. **Multiple Scales**: Allow transitions from coarse to fine-grained analysis.
-
-.center[
-&lt;img src="figure/multiscale.png"/&gt;
-]
 
 ---
 
@@ -124,7 +93,7 @@ This idea caught on. Could we have discovered something as fundamental as blood 
 ### Motivation: Enterotypes
 
 Reality is more complex -- and interesting! Microbiomes
-are more dyanmic and not so easily categorized
+are dyanmic and not so easily categorized
 [2; 3; 4; 5].
 
 .center[
@@ -132,9 +101,41 @@ are more dyanmic and not so easily categorized
 ]
 
 &lt;span style="font-size: 18px;"&gt;
-The same person can jump between clusters in longitudinal sampling, which
-complicates the simpler enterotypes story [5].
+The same person can jump between clusters in longitudinal sampling [5], which
+complicates the simpler enterotypes story.
 &lt;/span&gt;
+
+---
+
+### Improved Exploration
+
+Samples often can't be cleanly separated into clusters.  For more informative
+exploration of these data, it helps to consider,
+
+1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
+
+.center[
+&lt;img src="figure/clusters_vs_mixtures.png" width=700/&gt;
+]
+
+---
+
+### Improved Exploration
+
+Samples often can't be cleanly separated into clusters.  For more informative
+exploration of these data, it helps to consider,
+
+1. Mixtures: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. **Multiple Scales**: Allow transitions from coarse to fine-grained analysis.
+
+.center[
+&lt;img src="figure/multiscale.png"/&gt;
+]
 
 ---
 
@@ -148,23 +149,18 @@ class: middle
 
 ### Origins
 
-1. Topic models were independently developed for analyzing genotype and and text
+Topic models were independently developed for analyzing genotype and and text
 data [6; 7] and are now widely used in
 computational genomics
 [8; 9; 10; 11].
 
-1. Clusters look for representative cases and assume that all samples are like
-them. In contrast, topic models look for extreme cases. Samples are viewed as
-mixtures between extremes.
-
-
 .center[
-&lt;img src="figure/text-sequencing-analogy.png" width=520/&gt;
+&lt;img src="figure/text-sequencing-analogy.png" width=700/&gt;
 ]
 
 ---
 
-### Example 1: GTex
+### Example 1: GTEX
 
 How are genes co-expressed across tissues? We can apply topic models to GTEX
 Consortium data, following [12; 13].
@@ -175,7 +171,7 @@ Consortium data, following [12; 13].
 
 ---
 
-### Example 1: GTex
+### Example 1: GTEX
 
 These are the expression patterns associated with each of those topics.
 
@@ -187,7 +183,7 @@ These are the expression patterns associated with each of those topics.
 
 ---
 
-### Example 2: Microbiome
+### Example 2: Gut Microbiome
 
 How do microbiome communities change in response to antibiotics? The study [14] gathered samples before and after antibiotic
 interventions.
@@ -198,24 +194,24 @@ interventions.
 
 ---
 
-### Example 2: Microbiome
+### Example 2: Gut Microbiome
 
 If we use topic models, we can see that &lt;span style="color: #476b57;"&gt;Topic 2&lt;/span&gt; increases during the antibiotic interventions,
 especially the first [8].
 
 .center[
-&lt;img src="figure/antibiotic_memberships.png" width=800/&gt;
+&lt;img src="figure/antibiotic_memberships.png" width=1000/&gt;
 ]
 
 ---
 
-### Example 2: Microbiome
+### Example 2: Gut Microbiome
 
 We can interpret topics by looking for representative taxa. These are species
 that have much higher probabilities in one topic compared to the others.
 
 .center[
-&lt;img src="figure/antibiotic_prototypes.png" width=750/&gt;
+&lt;img src="figure/antibiotic_prototypes.png" width=900/&gt;
 ]
 
 
@@ -237,18 +233,6 @@ We vertically stack the `\(N\)` `\(\gamma_i\)`'s into `\(\Gamma \in \Delta^{N}_{
 
 ---
 
-### Interpretation
-
-Topic models are well-suited to count data dimensionality reduction. The
-estimated parameters can be interpreted as,
-* `\(\Gamma \in \Delta_{K}^{N}\)`: Per-document memberships across `\(K\)` topics.
-* `\(\*B \in \Delta_{D}^{K}\)`: Per topic distributions over `\(D\)` words.
-* `\(K\)` = Number of topics = Number of extreme points
-
-&lt;img src="figure/latent_dirichlet_v2.png" width="430" style="display: block; margin: auto;" /&gt;
-
----
-
 class: middle
 
 .center[
@@ -267,15 +251,23 @@ interpreting `\(K\)`.
 
 -- From [6].
 
+In practice, it's common to check results and goodness-of-fit measures across
+many `\(K\)` [25; 22; 26].
+
 ---
 
 ### `alto`: Main Idea
 
-* We will fit an ensemble of models of varying complexities.
-* Post-estimation, we will build a compact representation of the result.
-* In the Sankey diagram, columns are models and rectangles are topics
+We will fit an ensemble of models of varying complexities. Then,
+post-estimation, we will build a compact representation of the result.
 
+.center[
 &lt;img src="figure/alto_sketches_annotated alignment.png" width="750" style="display: block; margin: auto;" /&gt;
+
+&lt;span style="font-size: 20px;"&gt;
+In the Sankey diagram, columns are models and rectangles are topics.
+&lt;/span&gt;
+]
 
 ---
 
@@ -283,9 +275,9 @@ interpreting `\(K\)`.
 
 We view an alignment as a graph across the ensemble. Index models by `\(m\)` and
 topics by `\(k\)`. Then,
-* Nodes `\(V\)` correspond to topics, parameterized by `\(\{\beta^m_{k}, \gamma^m_{k}\}\)`
-* Edges `\(E\)` are placed between topics from neighboring models, i.e. `\(K\)` to `\(K + 1\)`
-* Weights `\(W\)` encode the similarity between topics
+* Nodes `\(V\)` describe topics, parameterized by `\(\{\beta^m_{k}, \gamma^m_{k}\}\)`.
+* Edges `\(E\)` link topics from neighboring models, i.e. `\(K\)` to `\(K + 1\)`.
+* Weights `\(W\)` encode the similarity between topics.
 
 &lt;img src="figure/alto_sketches_annotated alignment.png" width="560" style="display: block; margin: auto;" /&gt;
 
@@ -307,7 +299,7 @@ corresponding topic distribution
 
 ---
 
-### Estimating Weights: Product approach
+### Estimating Weights: Product Approach
 
 .pull-left[
 To compute weights, we can use,
@@ -322,18 +314,18 @@ w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 
 ---
 
-### Estimating Weights: Transport approach
+### Estimating Weights: Transport Approach
 
 Let `\(V_p\)` and `\(V_q\)` be two subsets of topics within the graph.
 
 * Let the total "mass" of `\(V_p\)` be `\(p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}\)`. Define `\(q\)` similarly.
-* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [24].
+* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [15].
 
 &lt;img src="figure/transport_alignment_conceptual.png" width="420" style="display: block; margin: auto;" /&gt;
 
 ---
 
-### Estimating Weights: Transport approach
+### Estimating Weights: Transport Approach
 
 
 The weights `\(W\)` can be estimated by solving the optimal transport problem,
@@ -350,7 +342,7 @@ The weights `\(W\)` can be estimated by solving the optimal transport problem,
 
 ---
 
-### Estimating Weights: Transport approach
+### Estimating Weights: Transport Approach
 
 
 The weights `\(W\)` can be estimated by solving the optimal transport problem,
@@ -413,8 +405,8 @@ The diagnostics become more reliable as the sample size increases.
 
 ### Model with background variation
 
-What happens when the topic model is mis-specified? Consider the following
-generative mechanism,
+Can we detect systematic departures from the assumed model?  Consider the
+following generative mechanism,
 
 `\begin{align*}
 x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
@@ -452,6 +444,352 @@ quantify topic deterioration
 .pull-right-large[
 &lt;img src="figure/gradient-combined.png" width="635" style="display: block; margin: auto;" /&gt;
 ]
+
+---
+
+### Application Background
+
+.pull-left[
+[16] used clustering to identify 5 Community State Types (CSTs) in
+the vaginal microbiome
+  - Four healthy CSTs are dominated by Lactobacillus variants
+  - A fifth dysbiotic CST is more compositionally diverse and has been
+  implicated in preterm birth [17; 18] and HIV transmission [19].
+]
+
+.pull-right[
+  &lt;img src="figure/community_state_types.jpg" width=380/&gt;
+  &lt;span style="font-size: 18px;"&gt;
+
+  [16] grouped samples (columns) into CSTs.
+  &lt;/span&gt;
+]
+
+---
+
+### Deconstructing CSTs
+
+.pull-left[
+The follow-up study [20] had many more samples than [16] and so could begin to tease additional structure lying
+behind CSTs.
+
+* They had 2179 samples from 135 women, sampled longitudinally.
+* The green and blue paths to the right reflect the known Lactobacillus CSTs.
+]
+
+.pull-right[
+
+&lt;img src="figure/pregnancy_sankey.jpg" width=500/&gt;
+]
+
+---
+
+### Coherence Scores
+
+.pull-left[
+* Overlaying coherence scores onto the alignment, we can distinguish distinguish
+between high and low-coherence topics.
+
+* Coherence is not a simple function of `\(K\)` alone.
+]
+
+.pull-right[
+&lt;img src="figure/coherence_on_tree.png" width=340/&gt;
+]
+
+---
+
+### Metrics across Replicates
+
+.pull-left[
+* We can see dropoffs in topic quality for `\(K = 6 \to 7\)` and `\(K = 9 \to 10\)`.
+* Each color in the top figure corresponds to a different set of topic models.
+]
+
+.pull-right[
+&lt;img src="figure/alignment_scores_across_k.png"/&gt;
+]
+
+---
+
+### Taxonomic Breakdown
+
+.center[
+&lt;img src="figure/pregnancy_topics_heatmap.jpg" width=600/&gt;
+]
+
+&lt;span style="font-size: 18px;"&gt;
+At `\(K = 5\)`, the four Lactobacillus CSTs are already present. At `\(K = 9\)`, we can
+see additional community structure in the dysbiotic CST.
+&lt;/span&gt;
+
+---
+
+### Time Series
+
+Like in the antibiotics study, we can visualize change in topics over time. This
+highlights smooth transitions between community states.
+
+.center[
+&lt;img src="figure/topic_trajectories_pregnancy.jpeg" width=590/&gt;
+]
+
+---
+
+.pull-left[
+**Test set perplexity** [21; 22]
+  - Similar: Helps to choose `\(K\)`.
+  - Different (-): Doesn't give topic-level quality.
+  - Different (+): Evaluates generalization ability.
+]
+
+.pull-right[
+**Hierarchical Topic Models** [23; 24]
+  - Similar: Learns topics at multiple levels of resolution
+  - Different (-): Requires word-level representations.
+  - Different (+/-): Words belong to individual subtrees
+]
+
+&lt;img src="figure/hlda.png"/&gt;
+
+---
+class: small-code
+
+### Software
+
+Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
+
+.pull-left[
+
+``` r
+library(purrr)
+library(alto)
+
+# Define LDA parameters
+params &lt;- map(
+  set_names(1:10),
+  ~ list(k = .)
+)
+models &lt;- run_lda_models(
+  vm_data$counts,
+  params
+)
+```
+]
+
+.pull-right[
+
+``` r
+# Run alignment
+result &lt;- align_topics(models, method = "transport")
+plot(result)
+```
+
+&lt;img src="20240723_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+All the simulations discussed today are vignettes in the package.
+
+---
+
+### Takeaways
+
+Topic alignment is a simple but useful addition to the exploratory data analysis
+toolbox for count data.
+
+.pull-three-quarters-left[
+&lt;img src="figure/alto_sketches_annotated alignment.png" width=700/&gt;
+]
+
+.pull-three-quarters-right[
+[Paper](https://go.wisc.edu/tify36)&lt;br/&gt;
+&lt;img src="figure/qr-paper.png" width=80/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+[Package](lasy.github.io/alto)&lt;br/&gt;
+&lt;img src="figure/qr-package.png" width=80/&gt;
+]
+
+---
+
+class: background-rivers
+
+.center[
+### Thank you!
+]
+
+* Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, and Kobe Uko
+* Funding: NIGMS R01GM152744
+
+.center[
+&lt;img src="figure/Lena__credit_row_0.jpg"/&gt;
+]
+
+---
+
+class: reference
+
+### References
+
+[1] M. Arumugam et al. "Enterotypes of the human gut microbiome". In:
+_Nature_ 473.7346 (Apr. 2011), p. 174–180. ISSN: 1476-4687. DOI:
+[10.1038/nature09944](https://doi.org/10.1038%2Fnature09944). URL:
+[http://dx.doi.org/10.1038/nature09944](http://dx.doi.org/10.1038/nature09944).
+
+[2] E. Yong. "Gut microbial 'enterotypes' become less clear-cut". En.
+In: _Nature_ (Mar. 2012).
+
+[3] O. Koren et al. "A guide to enterotypes across the human body:
+meta-analysis of microbial community structures in human microbiome
+datasets". En. In: _PLoS Comput. Biol._ 9.1 (Jan. 2013), p. e1002863.
+
+[4] I. Bulygin et al. "Absence of enterotypes in the human gut
+microbiomes reanalyzed with non-linear dimensionality reduction
+methods". En. In: _PeerJ_ 11 (Sep. 2023), p. e15838.
+
+[5] D. Knights et al. "Rethinking enterotypes". En. In: _Cell Host
+Microbe_ 16.4 (Oct. 2014), pp. 433-437.
+
+[6] J. K. Pritchard et al. "Inference of Population Structure Using
+Multilocus Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p.
+945–959. ISSN: 1943-2631. DOI:
+[10.1093/genetics/155.2.945](https://doi.org/10.1093%2Fgenetics%2F155.2.945).
+URL:
+[http://dx.doi.org/10.1093/genetics/155.2.945](http://dx.doi.org/10.1093/genetics/155.2.945).
+
+[7] D. M. Blei et al. "Latent dirichlet allocation". In: _J. Mach.
+Learn. Res._ 3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
+
+[8] K. Sankaran et al. "Latent variable modeling for the microbiome".
+In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357.
+DOI:
+[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018).
+URL:
+[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
+
+[9] A. Kim et al. "Latent Dirichlet Allocation modeling of
+environmental microbiomes". In: _PLOS Computational Biology_ 19.6
+(Jun. 2023). Ed. by G. Zeller, p. e1011075. ISSN: 1553-7358. DOI:
+[10.1371/journal.pcbi.1011075](https://doi.org/10.1371%2Fjournal.pcbi.1011075).
+URL:
+[http://dx.doi.org/10.1371/journal.pcbi.1011075](http://dx.doi.org/10.1371/journal.pcbi.1011075).
+
+[10] C. Tataru et al. "Topic modeling for multi-omic integration in
+the human gut microbiome and implications for Autism". In:
+_Scientific Reports_ 13.1 (Jul. 2023). ISSN: 2045-2322. DOI:
+[10.1038/s41598-023-38228-0](https://doi.org/10.1038%2Fs41598-023-38228-0).
+URL:
+[http://dx.doi.org/10.1038/s41598-023-38228-0](http://dx.doi.org/10.1038/s41598-023-38228-0).
+
+[11] X. Peng et al. "A topic modeling approach reveals the dynamic T
+cell composition of peripheral blood during cancer immunotherapy".
+In: _Cell Reports Methods_ 3.8 (Aug. 2023), p. 100546. ISSN:
+2667-2375. DOI:
+[10.1016/j.crmeth.2023.100546](https://doi.org/10.1016%2Fj.crmeth.2023.100546).
+URL:
+[http://dx.doi.org/10.1016/j.crmeth.2023.100546](http://dx.doi.org/10.1016/j.crmeth.2023.100546).
+
+[12] K. K. Dey et al. "Visualizing the structure of RNA-seq
+expression data using grade of membership models". In: _PLOS
+Genetics_ 13.3 (Mar. 2017). Ed. by A. Kundaje, p. e1006599. ISSN:
+1553-7404. DOI:
+[10.1371/journal.pgen.1006599](https://doi.org/10.1371%2Fjournal.pgen.1006599).
+URL:
+[http://dx.doi.org/10.1371/journal.pgen.1006599](http://dx.doi.org/10.1371/journal.pgen.1006599).
+
+[13] J. H. Kushal K Dey. "GTEX V6 analysis - stephenslab.github.io".
+(). [Accessed 21-07-2024].
+
+---
+
+class: reference
+
+### References
+
+[14] L. Dethlefsen et al. "Incomplete recovery and individualized
+responses of the human distal gut microbiota to repeated antibiotic
+perturbation". In: _Proceedings of the National Academy of Sciences_
+108.supplement_1 (Sep. 2010), p. 4554–4561. ISSN: 1091-6490. DOI:
+[10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107).
+URL:
+[http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.1000087107).
+
+[15] G. Peyré et al. "Computational Optimal Transport".  (2018). DOI:
+[10.48550/ARXIV.1803.00567](https://doi.org/10.48550%2FARXIV.1803.00567).
+URL:
+[https://arxiv.org/abs/1803.00567](https://arxiv.org/abs/1803.00567).
+
+[16] J. Ravel et al. "Vaginal microbiome of reproductive-age women".
+In: _Proceedings of the National Academy of Sciences_
+108.supplement_1 (Jun. 2010), p. 4680–4687. ISSN: 1091-6490. DOI:
+[10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107).
+URL:
+[http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
+
+[17] J. M. Fettweis et al. "The vaginal microbiome and preterm
+birth". In: _Nature Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN:
+1546-170X. DOI:
+[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2).
+URL:
+[http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
+
+[18] U. Gudnadottir et al. "The vaginal microbiome and the risk of
+preterm birth: a systematic review and network meta-analysis". In:
+_Scientific Reports_ 12.1 (May. 2022). ISSN: 2045-2322. DOI:
+[10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9).
+URL:
+[http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
+
+[19] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal
+Bacterial Communities Are Associated with Increased HIV Acquisition
+in Young South African Women". In: _Immunity_ 46.1 (Jan. 2017), p.
+29–37. ISSN: 1074-7613. DOI:
+[10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013).
+URL:
+[http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
+
+[20] L. Symul et al. "Sub-communities of the vaginal microbiota in
+pregnant and non-pregnant women". In: _Proceedings of the Royal
+Society B: Biological Sciences_ 290.2011 (Nov. 2023). ISSN:
+1471-2954. DOI:
+[10.1098/rspb.2023.1461](https://doi.org/10.1098%2Frspb.2023.1461).
+URL:
+[http://dx.doi.org/10.1098/rspb.2023.1461](http://dx.doi.org/10.1098/rspb.2023.1461).
+
+[21] J. Foulds et al. "Annealing paths for the evaluation of topic
+models". In: _Proceedings of the Empirical Methods in Natural
+Language Processing Conference (EMNLP 2013)_ (Jan. 2013).
+
+[22] H. M. Wallach et al. "Evaluation methods for topic models". In:
+_International Conference on Machine Learning_ (2009). URL:
+[https://api.semanticscholar.org/CorpusID:10910725](https://api.semanticscholar.org/CorpusID:10910725).
+
+[23] D. M. Blei et al. "Hierarchical topic models and the nested
+chinese restaurant process". In: _Proceedings of the 16th
+International Conference on Neural Information Processing Systems_.
+NIPS'03. Whistler, British Columbia, Canada: MIT Press, 2003, p.
+17–24.
+
+[24] A. Smith et al. "Hiearchie: Visualization for Hierarchical Topic
+Models".  (2014). DOI:
+[10.3115/v1/w14-3111](https://doi.org/10.3115%2Fv1%2Fw14-3111). URL:
+[http://dx.doi.org/10.3115/v1/W14-3111](http://dx.doi.org/10.3115/v1/W14-3111).
+
+[25] J. Novembre. "Pritchard, Stephens, and Donnelly on Population
+Structure". In: _Genetics_ 204.2 (Oct. 2016), p. 391–393. ISSN:
+1943-2631. DOI:
+[10.1534/genetics.116.195164](https://doi.org/10.1534%2Fgenetics.116.195164).
+URL:
+[http://dx.doi.org/10.1534/genetics.116.195164](http://dx.doi.org/10.1534/genetics.116.195164).
+
+[26] D. J. Lawson et al. "A tutorial on how not to over-interpret
+STRUCTURE and ADMIXTURE bar plots". In: _Nature Communications_ 9.1
+(Aug. 2018). ISSN: 2041-1723. DOI:
+[10.1038/s41467-018-05257-7](https://doi.org/10.1038%2Fs41467-018-05257-7).
+URL:
+[http://dx.doi.org/10.1038/s41467-018-05257-7](http://dx.doi.org/10.1038/s41467-018-05257-7).
 
 ---
 
@@ -503,322 +841,6 @@ as in a standard topic model.
 
 &lt;img src="figure/equivalence_similarity_hm.png" width="650" style="display: block; margin: auto;" /&gt;
 
----
-
-### Application Background
-
-.pull-left[
-[15] used clustering to identify 5 Community State Types (CSTs) in
-the vaginal microbiome
-  - Four healthy CSTs are dominated by Lactobacillus variants
-  - A fifth dysbiotic CST is more compositionally diverse and has been
-  implicated in preterm birth [16; 17] and HIV transmission [18].
-]
-
-.pull-right[
-  &lt;img src="figure/community_state_types.jpg" width=380/&gt;
-  &lt;span style="font-size: 18px;"&gt;
-
-  [15] grouped samples (columns) into CSTs."
-  &lt;/span&gt;
-]
-
----
-
-### Example Output
-
-.pull-left[
-Topic alignment was used to analyze vaginal microbiome communities in [19].
-
-* This used 2179 samples from 135 women, sampled longitudinally.
-* In the same way that the community has moved beyond enterotypes, we can try to better understand these communities.
-]
-
-.pull-right[
-
-&lt;img src="figure/pregnancy_sankey.jpg" width=500/&gt;
-]
-
----
-
-### Interpretation
-
-.pull-left[
-* Overlaying coherence scores onto the alignment, we can distinguish distinguish
-between high and low-coherence topics.
-
-* Coherence is not a simple function of `\(K\)` alone.
-]
-
-.pull-right[
-&lt;img src="figure/coherence_on_tree.png" width=340/&gt;
-]
-
----
-
-### Interpretation
-
-.pull-left[
-* We can see dropoffs in topic quality for `\(K = 6 \to 7\)` and `\(K = 9 \to 10\)`.
-* Each color in the top figure corresponds to a different set of topic models.
-]
-
-.pull-right[
-&lt;img src="figure/alignment_scores_across_k.png"/&gt;
-]
-
----
-
-### Interpretation
-
-.center[
-&lt;img src="figure/pregnancy_topics_heatmap.jpg" width=600/&gt;
-]
-
-&lt;span style="font-size: 18px;"&gt;
-At `\(K = 5\)`, the four Lactobacillus CSTs are already present. At `\(K = 9\)`, we can
-see additional community structure in the dysbiotic CST.
-&lt;/span&gt;
-
----
-
-### Interpretation
-
-Like in the antibiotics study, we can visualize change in topics over time. This
-highlights smooth transitions between community states.
-
-.center[
-&lt;img src="figure/topic_trajectories_pregnancy.jpeg" width=590/&gt;
-]
-
----
-
-.pull-left[
-**Test set perplexity** [20; 21]
-  - Similar: Helps to choose `\(K\)`.
-  - Different (-): Doesn't give topic-level quality.
-  - Different (+): Evaluates generalization ability.
-]
-
-.pull-right[
-**Hierarchical Topic Models** [22; 23]
-  - Similar: Learns topics at multiple levels of resolution
-  - Different (-): Requires word-level representations.
-  - Different (+/-): Words belong to individual subtrees
-]
-
-&lt;img src="figure/hlda.png"/&gt;
-
----
-class: small-code
-
-### Software
-
-Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
-
-.pull-left[
-
-``` r
-library(purrr)
-library(alto)
-
-# Define LDA parameters
-params &lt;- map(
-  set_names(1:10),
-  ~ list(k = .)
-)
-models &lt;- run_lda_models(
-  vm_data$counts,
-  params
-)
-```
-]
-
-.pull-right[
-
-``` r
-# Run alignment
-result &lt;- align_topics(models, method = "transport")
-plot(result)
-```
-
-&lt;img src="20240723_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
-]
-
-All the simulations discussed today are vignettes in the package.
-
----
-
-### Takeaways
-
-Topic alignment is a simple but useful addition to the exploratory data analysis
-toolbox for count data.
-
-.pull-three-quarters-left[
-&lt;img src="figure/alto_sketches_annotated alignment.png" width=700/&gt;
-]
-
-.pull-three-quarters-right[
-[Paper](https://go.wisc.edu/tify36)&lt;br/&gt;
-&lt;img src="figure/qr-paper.png" width=80/&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-&lt;br/&gt;
-[Package](lasy.github.io/alto)&lt;br/&gt;
-&lt;img src="figure/qr-package.png" width=80/&gt;
-]
-
----
-
-class: background-rivers
-
-.center[
-### Thank you!
-]
-
-* Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, and Kobe Uko
-* Funding: NIGMS R01GM152744
-
-.center[
-&lt;img src="figure/Lena__credit_row_0.jpg"/&gt;
-]
-
----
-
-class: reference
-
-### References
-
-[1] M. Arumugam et al. "Enterotypes of the human gut microbiome". In: _Nature_
-473.7346 (Apr. 2011), p. 174–180. ISSN: 1476-4687. DOI:
-[10.1038/nature09944](https://doi.org/10.1038%2Fnature09944). URL:
-[http://dx.doi.org/10.1038/nature09944](http://dx.doi.org/10.1038/nature09944).
-
-[2] E. Yong. "Gut microbial 'enterotypes' become less clear-cut". En. In: _Nature_
-(Mar. 2012).
-
-[3] O. Koren et al. "A guide to enterotypes across the human body: meta-analysis
-of microbial community structures in human microbiome datasets". En. In: _PLoS
-Comput. Biol._ 9.1 (Jan. 2013), p. e1002863.
-
-[4] I. Bulygin et al. "Absence of enterotypes in the human gut microbiomes
-reanalyzed with non-linear dimensionality reduction methods". En. In: _PeerJ_ 11
-(Sep. 2023), p. e15838.
-
-[5] D. Knights et al. "Rethinking enterotypes". En. In: _Cell Host Microbe_ 16.4
-(Oct. 2014), pp. 433-437.
-
-[6] J. K. Pritchard et al. "Inference of Population Structure Using Multilocus
-Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p. 945–959. ISSN: 1943-2631.
-DOI: [10.1093/genetics/155.2.945](https://doi.org/10.1093%2Fgenetics%2F155.2.945).
-URL:
-[http://dx.doi.org/10.1093/genetics/155.2.945](http://dx.doi.org/10.1093/genetics/155.2.945).
-
-[7] D. M. Blei et al. "Latent dirichlet allocation". In: _J. Mach. Learn. Res._
-3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
-
-[8] K. Sankaran et al. "Latent variable modeling for the microbiome". In:
-_Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
-[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018).
-URL:
-[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
-
-[9] A. Kim et al. "Latent Dirichlet Allocation modeling of environmental
-microbiomes". In: _PLOS Computational Biology_ 19.6 (Jun. 2023). Ed. by G. Zeller,
-p. e1011075. ISSN: 1553-7358. DOI:
-[10.1371/journal.pcbi.1011075](https://doi.org/10.1371%2Fjournal.pcbi.1011075).
-URL:
-[http://dx.doi.org/10.1371/journal.pcbi.1011075](http://dx.doi.org/10.1371/journal.pcbi.1011075).
-
-[10] C. Tataru et al. "Topic modeling for multi-omic integration in the human gut
-microbiome and implications for Autism". In: _Scientific Reports_ 13.1 (Jul.
-2023). ISSN: 2045-2322. DOI:
-[10.1038/s41598-023-38228-0](https://doi.org/10.1038%2Fs41598-023-38228-0). URL:
-[http://dx.doi.org/10.1038/s41598-023-38228-0](http://dx.doi.org/10.1038/s41598-023-38228-0).
-
-[11] X. Peng et al. "A topic modeling approach reveals the dynamic T cell
-composition of peripheral blood during cancer immunotherapy". In: _Cell Reports
-Methods_ 3.8 (Aug. 2023), p. 100546. ISSN: 2667-2375. DOI:
-[10.1016/j.crmeth.2023.100546](https://doi.org/10.1016%2Fj.crmeth.2023.100546).
-URL:
-[http://dx.doi.org/10.1016/j.crmeth.2023.100546](http://dx.doi.org/10.1016/j.crmeth.2023.100546).
-
-[12] K. K. Dey et al. "Visualizing the structure of RNA-seq expression data using
-grade of membership models". In: _PLOS Genetics_ 13.3 (Mar. 2017). Ed. by A.
-Kundaje, p. e1006599. ISSN: 1553-7404. DOI:
-[10.1371/journal.pgen.1006599](https://doi.org/10.1371%2Fjournal.pgen.1006599).
-URL:
-[http://dx.doi.org/10.1371/journal.pgen.1006599](http://dx.doi.org/10.1371/journal.pgen.1006599).
-
-[13] J. H. Kushal K Dey. "GTEX V6 analysis - stephenslab.github.io".  ().
-[Accessed 21-07-2024].
-
----
-
-class: reference
-
-### References
-
-[14] L. Dethlefsen et al. "Incomplete recovery and individualized responses of the
-human distal gut microbiota to repeated antibiotic perturbation". In: _Proceedings
-of the National Academy of Sciences_ 108.supplement_1 (Sep. 2010), p. 4554–4561.
-ISSN: 1091-6490. DOI:
-[10.1073/pnas.1000087107](https://doi.org/10.1073%2Fpnas.1000087107). URL:
-[http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.1000087107).
-
-[15] J. Ravel et al. "Vaginal microbiome of reproductive-age women". In:
-_Proceedings of the National Academy of Sciences_ 108.supplement_1 (Jun. 2010), p.
-4680–4687. ISSN: 1091-6490. DOI:
-[10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107). URL:
-[http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
-
-[16] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature
-Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
-[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2). URL:
-[http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
-
-[17] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth:
-a systematic review and network meta-analysis". In: _Scientific Reports_ 12.1
-(May. 2022). ISSN: 2045-2322. DOI:
-[10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9). URL:
-[http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
-
-[18] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial
-Communities Are Associated with Increased HIV Acquisition in Young South African
-Women". In: _Immunity_ 46.1 (Jan. 2017), p. 29–37. ISSN: 1074-7613. DOI:
-[10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013).
-URL:
-[http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
-
-[19] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and
-non-pregnant women". In: _Proceedings of the Royal Society B: Biological Sciences_
-290.2011 (Nov. 2023). ISSN: 1471-2954. DOI:
-[10.1098/rspb.2023.1461](https://doi.org/10.1098%2Frspb.2023.1461). URL:
-[http://dx.doi.org/10.1098/rspb.2023.1461](http://dx.doi.org/10.1098/rspb.2023.1461).
-
-[20] J. Foulds et al. "Annealing paths for the evaluation of topic models". In:
-_Proceedings of the Empirical Methods in Natural Language Processing Conference
-(EMNLP 2013)_ (Jan. 2013).
-
-[21] H. M. Wallach et al. "Evaluation methods for topic models". In:
-_International Conference on Machine Learning_ (2009). URL:
-[https://api.semanticscholar.org/CorpusID:10910725](https://api.semanticscholar.org/CorpusID:10910725).
-
-[22] D. M. Blei et al. "Hierarchical topic models and the nested chinese
-restaurant process". In: _Proceedings of the 16th International Conference on
-Neural Information Processing Systems_. NIPS'03. Whistler, British Columbia,
-Canada: MIT Press, 2003, p. 17–24.
-
-[23] A. Smith et al. "Hiearchie: Visualization for Hierarchical Topic Models".
-(2014). DOI: [10.3115/v1/w14-3111](https://doi.org/10.3115%2Fv1%2Fw14-3111). URL:
-[http://dx.doi.org/10.3115/v1/W14-3111](http://dx.doi.org/10.3115/v1/W14-3111).
-
-[24] G. Peyré et al. "Computational Optimal Transport".  (2018). DOI:
-[10.48550/ARXIV.1803.00567](https://doi.org/10.48550%2FARXIV.1803.00567). URL:
-[https://arxiv.org/abs/1803.00567](https://arxiv.org/abs/1803.00567).
-
----
 
 ### Paths
 
