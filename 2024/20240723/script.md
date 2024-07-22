@@ -1,5 +1,3 @@
-Prepare some audience questions!!
----- 
 ### Talk Notes
 
 ---- 
@@ -47,10 +45,9 @@ Prepare some audience questions!!
 
 1. Topic models were introduced in the late 90s/early 2000s independently within the text and population genetics communities.
 2. This might sound surprising at first, but there's actually a very natural analogy. You can do this for any omics, but for the microbiome,
-	* Samples are like documents
-	* Species are like terms.
-	* Each person's microbiome is a distribution over species in the same way that a document is a distribution over words.
-? (document -\> person, term -\> alleles, topic -\> population, corpus -\> metapopulation)
+	* Individuals are like documents
+	* Loci are like terms.
+	* If you can summarize a document as a draw from distribution over word counts, then you can imagine an individual as a draw from a distribution over genotypes.
 ---- 
 **Example 1: GTEX**
 1. How does this look like in practice?
@@ -68,7 +65,7 @@ Prepare some audience questions!!
 ---- 
 **Example 2: Microbiome**\*\* 1. This is the same kind of plot as the GTEX plot, except the columns are timepoints and the groups are phases of sampling.
 2. They introduced antibiotics here, removed it here, and give them it again here.
-3. You can see that there is a dramatic shift after the first timecourse, something new emerges in the interim. You can also see a group that was pretty strongly affected after the first course and which was less sensitive the second time around.
+3. You can see that there is a dramatic shift after the first time course, something new emerges in the interim. You can also see a group that was pretty strongly affected after the first course and which was less sensitive the second time around.
 ---- 
 **Example 2: Microbiome**
 1. You can go back and see which microbes are contributing the most to these topics. Here are those that are very close to the "corners." 
@@ -84,7 +81,7 @@ Prepare some audience questions!!
 
 I realize this is a lot of notation, so if later you need a reminder for what anything means, please do ask.
 
-Before I move on are there any questions?
+Before I move on are there any questions? (If no questions, asked them to relate this to PCA)
 ---- 
 **Topic Alignment: Method**
 Okay, so let's move on to topic alignment. This is going to allow us to work across scales, not just mixtures.
@@ -147,6 +144,7 @@ The quantitative measures back this up.
 1. We've simulated many datasets and computed metrics for each topic across the replicates. One point is a topic, the x-axis is the number of topics.
 2. You can see that the number of paths plateaus at K = 5, which is what we want.
 3. In these panels, I've added color showing how similar the estimated topic is to any of the true topics. We don't actually know color in reality. But you can can see that the topic quality improves as we get up to K = 5 and then drops off.
+Question: Which of these is closer to the true topic model, and which is drawn from the random Dirichlets?
 ---- 
 **No Title Diagnostics**
 There are two points to note: 
