@@ -149,13 +149,13 @@ class: middle
 
 ### Origins
 
-Topic models were independently developed for analyzing genotype and and text
+Topic models were independently developed for analyzing genotype and text
 data [6; 7] and are now widely used in
 computational genomics
 [8; 9; 10; 11].
 
 .center[
-&lt;img src="figure/text-sequencing-analogy.png" width=700/&gt;
+&lt;img src="figure/text_genotypes.png" width=1200/&gt;
 ]
 
 ---
@@ -252,7 +252,7 @@ interpreting `\(K\)`.
 -- From [6].
 
 In practice, it's common to check results and goodness-of-fit measures across
-many `\(K\)` [25; 22; 26].
+many `\(K\)` [15; 16; 17].
 
 ---
 
@@ -319,7 +319,7 @@ w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
 Let `\(V_p\)` and `\(V_q\)` be two subsets of topics within the graph.
 
 * Let the total "mass" of `\(V_p\)` be `\(p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}\)`. Define `\(q\)` similarly.
-* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [15].
+* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [18].
 
 &lt;img src="figure/transport_alignment_conceptual.png" width="420" style="display: block; margin: auto;" /&gt;
 
@@ -450,18 +450,18 @@ quantify topic deterioration
 ### Application Background
 
 .pull-left[
-[16] used clustering to identify 5 Community State Types (CSTs) in
+[19] used clustering to identify 5 Community State Types (CSTs) in
 the vaginal microbiome
   - Four healthy CSTs are dominated by Lactobacillus variants
   - A fifth dysbiotic CST is more compositionally diverse and has been
-  implicated in preterm birth [17; 18] and HIV transmission [19].
+  implicated in preterm birth [20; 21] and HIV transmission [22].
 ]
 
 .pull-right[
   &lt;img src="figure/community_state_types.jpg" width=380/&gt;
   &lt;span style="font-size: 18px;"&gt;
 
-  [16] grouped samples (columns) into CSTs.
+  [19] grouped samples (columns) into CSTs.
   &lt;/span&gt;
 ]
 
@@ -470,7 +470,7 @@ the vaginal microbiome
 ### Deconstructing CSTs
 
 .pull-left[
-The follow-up study [20] had many more samples than [16] and so could begin to tease additional structure lying
+The follow-up study [23] had many more samples than [19] and so could begin to tease additional structure lying
 behind CSTs.
 
 * They had 2179 samples from 135 women, sampled longitudinally.
@@ -537,14 +537,14 @@ highlights smooth transitions between community states.
 ---
 
 .pull-left[
-**Test set perplexity** [21; 22]
+**Test set perplexity** [24; 16]
   - Similar: Helps to choose `\(K\)`.
   - Different (-): Doesn't give topic-level quality.
   - Different (+): Evaluates generalization ability.
 ]
 
 .pull-right[
-**Hierarchical Topic Models** [23; 24]
+**Hierarchical Topic Models** [25; 26]
   - Similar: Learns topics at multiple levels of resolution
   - Different (-): Requires word-level representations.
   - Different (+/-): Words belong to individual subtrees
@@ -557,7 +557,7 @@ class: small-code
 
 ### Software
 
-Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
+Topic alignment is implemented in the R package [alto](https://lasy.github.io/alto).
 
 .pull-left[
 
@@ -607,7 +607,7 @@ toolbox for count data.
 &lt;br/&gt;
 &lt;br/&gt;
 &lt;br/&gt;
-[Package](lasy.github.io/alto)&lt;br/&gt;
+[Package](https://lasy.github.io/alto)&lt;br/&gt;
 &lt;img src="figure/qr-package.png" width=80/&gt;
 ]
 
@@ -920,11 +920,9 @@ Coherence quantifies a topic's average connectedness to other topics along the s
  c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
 \end{align*}`
 
-.pull-left[
 * Transient topics (appearing at one `\(K\)` and disappearing at
  another) have low coherence scores
 * Consistently recovered topics across choices of `\(K\)` have high coherence
-]
 
 .pull-right[
 

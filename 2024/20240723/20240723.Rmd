@@ -184,13 +184,13 @@ class: middle
 
 ### Origins
 
-Topic models were independently developed for analyzing genotype and and text
+Topic models were independently developed for analyzing genotype and text
 data `r Citep(bib, c("Pritchard2000", "blei_lda"))` and are now widely used in
 computational genomics
 `r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
 
 .center[
-<img src="figure/text-sequencing-analogy.png" width=700/>
+<img src="figure/text_genotypes.png" width=1200/>
 ]
 
 ---
@@ -626,7 +626,7 @@ class: small-code
 
 ### Software
 
-Topic alignment is implemented in the R package [alto](lasy.github.io/alto).
+Topic alignment is implemented in the R package [alto](https://lasy.github.io/alto).
 
 .pull-left[
 ```{r, echo = TRUE, warning = FALSE}
@@ -672,7 +672,7 @@ toolbox for count data.
 <br/>
 <br/>
 <br/>
-[Package](lasy.github.io/alto)<br/>
+[Package](https://lasy.github.io/alto)<br/>
 <img src="figure/qr-package.png" width=80/>
 ]
 
@@ -857,11 +857,9 @@ Coherence quantifies a topic's average connectedness to other topics along the s
  c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
 \end{align*}
 
-.pull-left[
 * Transient topics (appearing at one $K$ and disappearing at
  another) have low coherence scores
 * Consistently recovered topics across choices of $K$ have high coherence
-]
 
 .pull-right[
 ```{r, out.width=250}
