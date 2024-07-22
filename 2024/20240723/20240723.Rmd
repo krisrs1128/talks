@@ -512,7 +512,7 @@ include_graphics("figure/gradient-combined.png")
 
 ---
 
-### Application Background
+### Data Analysis Background
 
 .pull-left[
 `r Citep(bib, "Ravel2010")` used clustering to identify 5 Community State Types (CSTs) in
@@ -588,7 +588,7 @@ between high and low-coherence topics.
 ]
 
 <span style="font-size: 18px;">
-At $K = 5$, the four Lactobacillus CSTs are already present. At $K = 9$, we can
+At $K = 5$, four of the previously known CSTs are present. At $K = 9$, we can
 see additional community structure in the dysbiotic CST.
 </span>
 
@@ -597,10 +597,10 @@ see additional community structure in the dysbiotic CST.
 ### Time Series
 
 Like in the antibiotics study, we can visualize change in topics over time. This
-highlights smooth transitions between community states.
+highlights smooth transitions in topic memberships.
 
 .center[
-<img src="figure/topic_trajectories_pregnancy.jpeg" width=590/>
+<img src="figure/topic_trajectories_pregnancy.jpeg" width=700/>
 ]
 
 ---
@@ -895,5 +895,5 @@ each corresponding to an arbitrary split of a true topic
 
 
 \begin{align*}
-  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} w_{\mathrm{out}}\left(v, v_{m^{\prime}}^{\prime}\right) w_{\text {in }}\left(v, v_{m^{\prime}}^{\prime}\right)
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} \wout \left(v, v_{m^{\prime}}^{\prime}\right) \win\left(v, v_{m^{\prime}}^{\prime}\right)
 \end{align*}

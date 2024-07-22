@@ -447,7 +447,7 @@ quantify topic deterioration
 
 ---
 
-### Application Background
+### Data Analysis Background
 
 .pull-left[
 [19] used clustering to identify 5 Community State Types (CSTs) in
@@ -519,7 +519,7 @@ between high and low-coherence topics.
 ]
 
 &lt;span style="font-size: 18px;"&gt;
-At `\(K = 5\)`, the four Lactobacillus CSTs are already present. At `\(K = 9\)`, we can
+At `\(K = 5\)`, four of the previously known CSTs are present. At `\(K = 9\)`, we can
 see additional community structure in the dysbiotic CST.
 &lt;/span&gt;
 
@@ -528,10 +528,10 @@ see additional community structure in the dysbiotic CST.
 ### Time Series
 
 Like in the antibiotics study, we can visualize change in topics over time. This
-highlights smooth transitions between community states.
+highlights smooth transitions in topic memberships.
 
 .center[
-&lt;img src="figure/topic_trajectories_pregnancy.jpeg" width=590/&gt;
+&lt;img src="figure/topic_trajectories_pregnancy.jpeg" width=700/&gt;
 ]
 
 ---
@@ -954,7 +954,7 @@ each corresponding to an arbitrary split of a true topic
 
 
 `\begin{align*}
-  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} w_{\mathrm{out}}\left(v, v_{m^{\prime}}^{\prime}\right) w_{\text {in }}\left(v, v_{m^{\prime}}^{\prime}\right)
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} \wout \left(v, v_{m^{\prime}}^{\prime}\right) \win\left(v, v_{m^{\prime}}^{\prime}\right)
 \end{align*}`
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

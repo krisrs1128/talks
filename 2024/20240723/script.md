@@ -187,17 +187,17 @@ There are two points to note:
 ---- 
 **Taxonomic Breakdown**
 1. We can of course study the species that contributed to each of the topics. This is like the heatmap from the GTEX application.
-2. The point is that IV-A and IV-C0 now gets split into a few sub-communities.
+2. The point is that IV-A and IV-C0, which had previously been the generic "dysbiotic" community state type, now gets split into a few sub-communities.
 ---- 
 **Time Series**
 1. It's also interesting to visualize change in the topic memberships over time. Here are scores for a single study participant.
-2. You can see that there are transitions from between topics. It seems that green can transition to blue via the appearance of orange. 
+2. You can see that there are transitions from between topics. After two weeks, this participant leaves the "Green" topic and enters a mix of orange and turquoise. And at the onset of bleeding, the orange state becomes more prominent.
 3. If you look carefully, you can see that the orange states are related to menstruation.
 ---- 
 **Test-set Perplexity**
 1. Okay, so that is the data analysis. I'm about to wrap up, but I want to mention some related ideas.
 2. First, you might be wondering how this is related to just evaluating test-set perplexity. They are definitely related, the main difference is that perplexity is a measure of the entire model, while our diagram helps to understand individual topics.
-3. Second, you might look at this diagram and think we might be able to get something like hierarchical topic models. At a superficial level, these are similar, but their actual generative mechanism is very different. For each word, you traverse the full tree.
+3. Second, you might look at this diagram and think we might be able to get something like hierarchical topic models. At a superficial level, these are similar, but their actual generative mechanism is very different. In topic alignment, the tree is used in the generative mechanism for every single word. In topic alignment, the tree exists at the topic level.
 ---- 
 **Software**
 1. We've implemented this all in an R package.
