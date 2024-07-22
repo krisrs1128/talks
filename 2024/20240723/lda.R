@@ -17,7 +17,7 @@ library("reshape2")
 library("tidyverse")
 library("stringr")
 library("phyloseq")
-#library("ggscaffold")
+library("ggscaffold")
 library("feather")
 theme_set(min_theme(list(text_size = 7, subtitle_size = 9)))
 source("./posterior_check_funs.R")
@@ -243,8 +243,13 @@ ggplot(theta, aes(time, value, fill = topic, col = topic)) +
     panel.spacing = unit(0.5, "lines"),
     strip.switch.pad.grid = unit(0, "cm"),
     strip.text.x = element_text(size = 8, angle = 90),
-    axis.ticks.x = element_blank()
+    axis.ticks.x = element_blank(),
+    panel.background = element_rect(fill = "transparent", color = NA),
+    legend.background = element_rect(fill = "transparent", color = NA),
+    strip.background = element_rect(fill = "transparent", color = NA),
+    plot.background = element_rect(fill = "transparent", color = NA)
   )
+ggsave("../../doc/figure/antibiotic_memberships.png", bg = "transparent", width=8, height=3.5, dpi= 700)
 
 ## ---- visualize_lda_beta ----
 beta_summary <- beta_hat %>%
@@ -352,13 +357,18 @@ p <- ggplot(mabt %>% filter(!is.na(prototypical))) +
   theme(
     strip.text.y = element_text(angle = 0),
     panel.border = element_rect(fill = "transparent", size = 0.75),
-    legend.position = "bottom"
+    panel.background = element_rect(fill = "transparent", color = NA),
+    legend.position = "none",
+    legend.background = element_rect(fill = "transparent", color = NA),
+    strip.background = element_rect(fill = "transparent", color = NA),
+    plot.background = element_rect(fill = "transparent", color = NA)
   )
 ggsave(
-  "../../doc/figure/topic_prototypes.png",
-  p, width = 4.5, height = 2.8
+  "../../doc/figure/antibiotic_prototypes.png",
+  p, width = 8, height = 3.7, dpi = 800,
+  bg = "transparent"
 )
-
+stop()
 for (k in seq_len(stan_data$K)) {
   cur_prototypes <- mabt %>%
     filter(rsv %in% prototypes[[k]][1:15])
