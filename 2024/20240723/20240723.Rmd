@@ -515,7 +515,7 @@ include_graphics("figure/gradient_flow-4.png")
 
 .pull-left-small[
 This structure is consistent across simulation runs, and the diagnostics
-quantify topic deterioration
+quantify topic deterioration.
 ]
 
 .pull-right-large[
@@ -559,8 +559,8 @@ as in a standard topic model.
 
 ### Results
 * There are five topics, two of which exhibit strain switching
-* At smaller $K$, we recognize the five main topics
-* At larger $K$, we can distinguish perturbed variants
+* At smaller $K$, we recognize the five main topics.
+* At larger $K$, we can distinguish perturbed variants.
 
 .pull-left[
 ```{r}
@@ -577,8 +577,8 @@ include_graphics("figure/equivalence_betas.png")
 ---
 
 ### Results
-* At smaller $K$, we recognize the main community structure, but don't see strain switching
-* At larger $K$, we can recognize instances of switching
+* At smaller $K$, we recognize the main community structure, but don't see strain switching.
+* At larger $K$, we can recognize instances of switching.
 
 ```{r out.width=650}
 include_graphics("figure/equivalence_similarity_hm.png")
@@ -590,8 +590,8 @@ include_graphics("figure/equivalence_similarity_hm.png")
 
 .pull-left[
 `r Citep(bib, "Ravel2010")` used clustering to identify 5 Community State Types (CSTs) in
-the vaginal microbiome
-  - Four healthy CSTs are dominated by Lactobacillus variants
+the vaginal microbiome.
+  - Four healthy CSTs are dominated by Lactobacillus variants.
   - A fifth dysbiotic CST is more compositionally diverse and has been
   implicated in preterm birth `r Citep(bib, c("Fettweis2019", "Gudnadottir2022"))` and HIV transmission `r Citep(bib, "Gosmann2017")`.
 ]
@@ -688,9 +688,9 @@ highlights smooth transitions in topic memberships.
 
 .pull-right[
 **Hierarchical Topic Models** `r Citep(bib, c("10.5555/2981345.2981348", "Smith2014"))`
-  - Similar: Learns topics at multiple levels of resolution
+  - Similar: Learns topics at multiple levels of resolution.
   - Different (-): Requires word-level representations.
-  - Different (+/-): Words belong to individual subtrees
+  - Different (+/-): Words belong to individual subtrees.
 ]
 
 <img src="figure/hlda.png"/>
