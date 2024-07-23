@@ -55,11 +55,11 @@ body {
 h1, h3 {
   font-weight: normal;
   color: #5f558e;
-  background-color: #fafafa;
+  background-color: #f7f7f7;
 }
 
 h2 {
-  background-color: #fafafa;
+  background-color: #f7f7f7;
   font-weight: normal;
   color: #0c0c0c;
 }
@@ -126,7 +126,7 @@ a, a > code {
 }
 
 #title {
-  background-color: #fafafa;
+  background-color: #f7f7f7;
   position: absolute;
   color: #10040f;
   font-family: 'Raleway';
@@ -241,7 +241,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 
 #subtitle {
   position: absolute;
-  background-color: #fafafa;
+  background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
   width: 300px;
@@ -263,7 +263,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 
 #subtitle_right {
   position: absolute;
-  background-color: #fafafa;
+  background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
   width: 550px;
