@@ -1,0 +1,186 @@
+---
+title: "Intervention Analysis with Mirrors"
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+$\def\Dir{\text{Dir}}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\newcommand{\wout}{\tilde w_{\text{out}}}$
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+min_theme <- theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Intervention Analysis with Transfer Functions and Mirrors
+
+<div id="subtitle">
+Kris Sankaran <br/>
+08 | August | 2024 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+Advanced Methods for Microbiome Data Analysis<br/>
+Joint Statistical Meetings</br>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Paper: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
+</div>
+
+---
+
+### Motivation: (? do you have any classical experiment in mind?)
+
+---
+
+### Key Questions
+
+1. Who?
+  - Which taxa are affected by an environmental shift?
+1. When?
+  - Are the effects immediate? Lagged? Do they persist?
+1. How?
+  - Are there host factors that mediate the effect?
+
+---
+
+### Transfer Functions
+
+We wanted to further develop the intervention analysis techniques of `r Citet(bib, "box1975intervention")`.
+
+```{r, out.width = 500}
+include_graphics("figure/intervention-analysis.png")
+```
+
+---
+
+### Transfer Functions
+
+These are just a particular form of autoregressive model:
+
+\begin{align}
+	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}
+\end{align}
+
+where $y_{t}$ is the series of interest (e.g., ozone) and $w_{t}$ encodes the intervention (e.g., new regulations).
+
+---
+
+### Transfer Functions
+
+.pull-left[
+* The pattern of AR coefficients determines $y_{t}$'s response to "pulse" and
+"step" interventions.
+* Note that, unlike generalized Lotka-Volterra models, they can model lagged
+intervention effects.
+]
+.pull-right[
+```{r, out.width = 400}
+include_graphics("figure/pulse.png")
+```
+]
+
+
+---
+
+### Tree-Based Implementation
+
+In our adaptation, we model each taxon $j$ using a separate GBM:
+
+\begin{align}
+y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{t}	
+\end{align}
+
+* To forecast $H$ steps ahead, we plug in intermediate predictions $\hat{y}_{j(t + h)}$
+* In principle, we could apply post-estimation smoothing to share information across related taxa.
+
+---
+
+### Tree-Based Implementation 
+
+We also consider non-time varying features $z$ associated with the host:
+
+\begin{align}
+y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilon_{t}	
+\end{align}
+
+$f_{j}$ could learn interactions between host characteristics $z$ and intervention indicators $w_{t}$.
+
+
+---
+
+## Experiments
+
+---
+
+## Data Analysis
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 26)
+```
+
+---
