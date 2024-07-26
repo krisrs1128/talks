@@ -1,0 +1,265 @@
+---
+title: "Untitled"
+output: 
+  html_document:
+    highlight: "kate"
+params:
+  outputs_dir: "data/simulation_output/"
+  outputs_filter: "*rda"
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+params <- list(outputs_dir = "data/simulation_output", outputs_filter = "*rda")
+```
+
+```{r}
+library(glue)
+library(fs)
+library(tidyverse)
+library(tfPaper)
+theme_set(my_theme())
+```
+
+```{r}
+data_var <- data_parameters(params$outputs_dir) |>
+  mutate(data_path = factor(output_path)) |>
+  select(-output_path)
+configurations <- method_configurations(data_var$data_path) |>
+  left_join(data_var)
+```
+
+```{r}
+paths <- dir_ls(params$outputs_dir, recurse = TRUE) |>
+  path_filter(regexp=params$outputs_filter)
+
+metadata <- paths |>
+  as_tibble() |>
+  mutate(output_path = basename(value)) |>
+  rename(full_path = value) |>
+  left_join(configurations)
+```
+
+## Forecasting Results
+```{r}
+metrics <- paths |>
+  path_filter("*forecasting*") |>
+  map_dfr(~ { load(.); metrics }, .id = "full_path")
+
+computation <- paths |>
+  path_filter("*forecasting*") |>
+  map_dfr(~ { load(.); tibble(time_diff = time_diff) }, .id = "full_path")
+```
+
+```{r, fig.width = 11, fig.height = 4}
+pal <- c("#5F7343", "#F27405", "#F2380F", "#3B4F8C", "#068BBF")
+
+computation |>
+  left_join(metadata) |>
+  unnest_wider(hyper) |>
+  mutate(
+    time_diff = as.numeric(time_diff) / 60,
+    P = ifelse(is.na(P), "", as.character(P)),
+    rho = ifelse(is.na(rho), "", as.character(rho)),
+    hyperparameter = glue(" [{rho}{P}]"),
+    hyperparameter = ifelse(hyperparameter == " []", "", hyperparameter),
+    method = case_match(method, "mdsine" ~ "MDSINE2", "fido" ~ "fido", "mbtransfer" ~ "mbtransfer")
+  ) |>
+  ggplot() +
+  geom_boxplot(
+    aes(reorder(normalization, time_diff), time_diff,
+    fill = interaction(factor(method), hyperparameter, sep = ""), 
+    col = interaction(factor(method), hyperparameter, sep = "")), 
+    alpha = 0.6,
+    position = position_dodge2(preserve = "single")
+  ) +
+  scale_fill_manual(values = pal) +
+  scale_color_manual(values = pal) +
+  scale_y_log10() +
+  labs(y = "Minutes", col = "Method", fill = "Method", x = "Normalization") +
+  facet_wrap(~ method) +
+  theme(
+    strip.text = element_text(size = 16),
+    legend.text = element_text(size = 14)
+  )
+ggsave("computation-sim.png", width = 11, height = 4)
+```
+
+```{r, fig.width = 14, fig.height = 8}
+metrics <- metrics |>
+  left_join(metadata) |>
+  unnest_wider("hyper")
+
+for (norm_n in c("none", "DESeq2", "DESeq2-asinh")) {
+  cur_metrics <- metrics |>
+    mutate(
+      n_taxa = factor(glue("{n_taxa} taxa"), levels = c("100 taxa", "200 taxa", "400 taxa")),
+      prop_nonnull = glue("{100 * prop_nonnull}% nonnull"),
+      lag = glue("Lag {lag}"),
+      P = ifelse(is.na(P), "", as.character(P)),
+      rho = ifelse(is.na(rho), "", as.character(rho)),
+      hyperparameter = glue(" [{rho}{P}]"),
+      hyperparameter = ifelse(hyperparameter == " []", "", hyperparameter),
+      method = case_match(method, "mdsine" ~ "MDSINE2", "fido" ~ "fido", "mbtransfer" ~ "mbtransfer"),
+      baseline_lambda = glue("λ = {baseline_lambda}"),
+      phylo_alpha = glue("𝛼 = {phylo_alpha}"),
+      signal_B = glue("b = {signal_B}")
+    ) |>
+    filter(normalization == norm_n)
+  
+  metrics_range <- cur_metrics |>
+    filter(method != "MDSINE2") |>
+    summarise(
+      min = median(mae, na.rm = T) - 1.5 * IQR(mae, na.rm = T),
+      max = median(mae, na.rm = T) + 3 * IQR(mae, na.rm = T)
+    )
+
+  p <- ggplot(cur_metrics) +
+    geom_boxplot(
+      aes(
+        interaction(n_taxa, signal_B, sep = ", "), mae,
+        fill = interaction(factor(method), hyperparameter, sep = ""), 
+        col = interaction(factor(method), hyperparameter, sep = "")), 
+      alpha = 0.5,
+      position = position_dodge2(preserve = "single")
+      ) +
+    scale_fill_manual(values = pal) +
+    scale_color_manual(values = pal) +
+    scale_y_continuous(limits = c(metrics_range$min, metrics_range$max)) +
+    facet_grid(phylo_alpha + baseline_lambda ~ prop_nonnull) +
+    labs(
+      x = "Number of Taxa", 
+      y = "Mean Absolute Error (Lags H = 1, ..., 5)",
+      col = "Method", 
+      fill = "Method",
+      title = glue("Normalization - {norm_n}")
+    ) +
+    theme(
+      strip.text = element_text(size = 14),
+      axis.text.x = element_text(angle = 90, size = 15),
+      axis.text.y = element_text(angle = 0, size = 10),
+      legend.title = element_text(size = 16),
+      legend.text = element_text(size = 14),
+      title = element_text(size = 18)
+    )
+
+  ggsave(glue("forecasting-sim-{norm_n}.png"), p, height = 8, width = 14)
+}
+```
+
+```{r}
+library(ggplot2)
+
+make_plot <- function(df) {
+  ggplot(df) +
+    geom_boxplot(
+      aes(
+        interaction(n_taxa, signal_B, sep = ", "), mae,
+        fill = interaction(factor(method), hyperparameter, sep = ""), 
+        col = interaction(factor(method), hyperparameter, sep = "")), 
+      alpha = 0.5,
+      position = position_dodge2(preserve = "single")
+      ) +
+    scale_fill_manual(values = pal) +
+    scale_color_manual(values = pal) +
+    scale_y_continuous(limits = c(metrics_range$min, metrics_range$max)) +
+    #facet_grid(phylo_alpha + baseline_lambda ~ prop_nonnull) +
+    labs(
+      x = "Number of Taxa", 
+      y = "Mean Absolute Error (Lags H = 1, ..., 5)",
+      col = "Method",
+      fill = "Method"
+    ) +
+    theme(
+      strip.text = element_text(size = 14),
+      axis.text.x = element_text(angle = 90, size = 15),
+      axis.text.y = element_text(angle = 0, size = 10),
+#      panel.background = element_rect(fill = NA, color = NA),
+      plot.background = element_rect(fill = NA, color = NA),
+      legend.background = element_rect(fill = NA, color = NA),
+      legend.title = element_text(size = 16),
+      legend.text = element_text(size = 14),
+      title = element_text(size = 18)
+    )
+}
+
+cur_metrics |>
+  filter(phylo_alpha == "𝛼 = 0.1", baseline_lambda == "λ = 0.1", prop_nonnull == "10% nonnull") |>
+  make_plot()
+ggsave("~/Desktop/laboratory/talks/2024/20240806/figure/simulation_results_config1.png", width=11, height=6.5)
+cur_metrics |>
+  filter(phylo_alpha == "𝛼 = 0.1", baseline_lambda == "λ = 10", prop_nonnull == "10% nonnull") |>
+  make_plot()
+ggsave("~/Desktop/laboratory/talks/2024/20240806/figure/simulation_results_config2.png", width=11, height=6.5)
+cur_metrics |>
+  filter(phylo_alpha == "𝛼 = 10", baseline_lambda == "λ = 0.1", prop_nonnull == "10% nonnull") |>
+  make_plot()
+ggsave("~/Desktop/laboratory/talks/2024/20240806/figure/simulation_results_config3.png", width=11, height=6.5)
+cur_metrics |>
+  filter(phylo_alpha == "𝛼 = 0.1", baseline_lambda == "λ = 0.1", prop_nonnull == "40% nonnull") |>
+  make_plot()
+ggsave("~/Desktop/laboratory/talks/2024/20240806/figure/simulation_results_config4.png", width=11, height=6.5)
+```
+
+### Inferential Results
+
+```{r}
+inference_config <- configurations |>
+  filter(map_lgl(hyper, ~ !is.null(.$P) > 0 && .$P == 2)) |>
+  mutate(output_path = glue("inference-{str_pad(row_number(), 3, 'left', '0')}.rda")) |>
+  select(-method)
+
+testing_results <- paths |>
+  path_filter("*inference*") |>
+  map_dfr(~ { load(.); testing_results }, .id = "full_path") |>
+  mutate(output_path = path_file(full_path)) |>
+  left_join(inference_config)
+```
+
+```{r, fig.height = 6.5, fig.width = 11}
+pal <- c("#6D0FF2", "#705ABF", "#B99AD9",
+ "#730912", "#A63232", "#BF6849",
+ "#21400B", "#5F8C1C", "#93BF73")
+
+testing_results |>
+  filter(type == "marginal") |>
+  mutate(
+    prop_nonnull = glue("{100 * prop_nonnull}% nonnull"),
+    signal_B = glue("b = {signal_B}"),
+    baseline_lambda = glue("λ = {baseline_lambda}"),
+    phylo_alpha = glue("𝛼 = {phylo_alpha}"),
+    lag = glue("Lag {lag}"),
+    method = ifelse(method == "avg", "Pre/Post\nt-test", method),
+    n_taxa = glue("{n_taxa} taxa")
+  ) |>
+  ggplot() +
+  geom_vline(xintercept = 0.2, col = "#898989", linewidth = 1) +
+  geom_point(aes(fdp, power, shape = signal_B), size = 1.8) +
+  geom_point(aes(fdp, power, shape = signal_B, col = interaction(prop_nonnull, n_taxa, sep = ", ")), size = 1.6, alpha = 0.9) +
+  scale_color_manual(values = pal) +
+  scale_y_continuous(breaks = c(.5, 1)) +
+  scale_x_continuous(breaks = c(0.2, 0.4, 0.6, 0.8)) +
+  guides(color = guide_legend(nrow = 3)) +
+  facet_grid(normalization + phylo_alpha ~ lag + reorder(method, fdp)) +
+  labs(x = "False Discovery Proportion", y = "Power", col = "Lag", shape = "Signal Strength") +
+  theme(
+    axis.text = element_text(size = 10),
+    strip.text = element_text(size = 14),
+    strip.text.y = element_text(angle = 0, size = 14),
+    panel.spacing.y = unit(0.1, "line"),
+    panel.spacing.x = unit(0.5, "line")
+  )
+
+ggsave(glue("inference-sim-error.png"), height = 6.5, width = 11)
+
+summary_table <- testing_results |>
+  filter(type == "marginal") |>
+  group_by(method, normalization, lag, n_taxa, prop_nonnull, signal_B) |>
+  summarise(
+    FDP = round(mean(fdp), 3),
+    FDP_sd = round(sd(fdp), 3)
+  )
+
+write_csv(summary_table, "summary_table_fdp.csv")
+```
