@@ -16,13 +16,24 @@ output:
 class: title
 
 $\def\Dir{\text{Dir}}$
+$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)}$
 $\def\Mult{\text{Mult}}$
 $\def\*#1{\mathbf{#1}}$
 $\def\m#1{\boldsymbol{#1}}$
 $\def\Unif{\text{Unif}}$
 $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
-$\newcommand{\wout}{\tilde w_{\text{out}}}$
+$\def\simplex{\Delta}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\PD{\mathrm{PD}}$
+$\def\FDP{\mathrm{FDR}}$
+$\newcommand\mbb[1]{\mathbb{#1}}$
+$\newcommand\mbf[1]{\mathbf{#1}}$
+$\def\mc#1{\mathcal{#1}}$
+$\def\mrm#1{\mathrm{#1}}$
+$\def\absarg#1{\left|#1\right|}$
+
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(MASS)
@@ -60,7 +71,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Intervention Analysis with Transfer Functions and Mirrors
+## Microbiome Intervention Analysis with `mbtransfer`
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -69,7 +80,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-Advanced Methods for Microbiome Data Analysis<br/>
+Methods for Microbiome Data Analysis<br/>
 Joint Statistical Meetings</br>
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 Paper: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
@@ -106,9 +117,7 @@ include_graphics("figure/intervention-analysis.png")
 
 These are just a particular form of autoregressive model:
 
-\begin{align}
-	y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}
-\end{align}
+$$y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}$$
 
 where $y_{t}$ is the series of interest (e.g., ozone) and $w_{t}$ encodes the intervention (e.g., new regulations).
 
@@ -131,29 +140,69 @@ include_graphics("figure/pulse.png")
 
 ---
 
-### Tree-Based Implementation
+### Implementation
 
-In our adaptation, we model each taxon $j$ using a separate GBM:
+This is a text
 
-\begin{align}
-y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}\right) + \epsilon_{t}	
-\end{align}
-
-* To forecast $H$ steps ahead, we plug in intermediate predictions $\hat{y}_{j(t + h)}$
-* In principle, we could apply post-estimation smoothing to share information across related taxa.
+$$\mathbf{y}_{t}^{(i)} = \mathbf{f}\left(\mathbf{Y}^{(i)}_{t - 1}, \mathbf{W}^{(i)}_{t}, \mathbf{z}^{(i)} \right) + \mathbf{\epsilon}_{t}^{(i)}$$
 
 ---
 
-### Tree-Based Implementation 
+### Mirror Statistics
 
-We also consider non-time varying features $z$ associated with the host:
+split the data into 
+$\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)$ and $\mathbf{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)$ and check for agreement in the estimates $\hat{\mathbf{\beta}}^{(1)}$ and $\hat{\mathbf{\beta}}^{(2)}$ across splits.
 
-\begin{align}
-y_{jt} = f_{j}\left(y_{j,(t - p - 1):(t - 1)}, w_{(t - q):t}, z\right) + \epsilon_{t}	
-\end{align}
+<img src="figure/mirror-explanation1.png" width=800/>
 
-$f_{j}$ could learn interactions between host characteristics $z$ and intervention indicators $w_{t}$.
+---
 
+### Mirror Statistics
+
+statistic $M_{j} = \text{sign}\left(\hat{\beta}^{(1)}_{j}\hat{\beta}^{(2)}_{j}\right)\left[\left|\hat{\beta}_{j}^{(1)}\right| + \left|\hat{\beta}_{j}^{(2)}\right|\right]$
+
+<img src="figure/mirror-explanation1.png" width=800/>
+
+---
+
+### Mirror Statistics
+
+$\widehat{\FDP}\left(t\right) = \frac{\left|\{j : M_{j} > t\}\right|}{\left|\left\{j : M_{j} < -t\right\}\right|}$
+
+<img src="figure/mirror-explanation2.png" width=800/>
+
+---
+
+### Mirror Statistics
+
+
+<img src="figure/mirror-explanation3.png" width=400/>
+
+---
+
+### Mirror Statistics
+
+
+---
+
+### Mirror Statistics
+
+As in the discussion above, we first randomly split subjects into subsets, $\mathcal{D}^{(1)}$ and $\mathcal{D}^{(2)}$. For each split $s$, we estimate models $\hat{\*f}^{(s)}$ using $d_{t}^{(i)} = \left(\*y_{t + 1}^{(i)}, \*Y_{t}^{(i)}, \*W_{t + 1}^{(i)}, \*z^{(i)}\right)$ for subjects $i$ in that split and nonoverlapping segments beginning at times $t$. Next, we estimate the counterfactual difference between interventions $\tilde{\*W}_{t} = \*1_{Q}$ and $\tilde{\*W}_{t} = \*0_{Q}$ for each taxon:
+
+
+$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right) - \hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)\right].$$
+
+---
+
+### Mirror Statistics
+
+\begin{align*}
+	M_{j} = \text{sign}\left(\PD_{j}^{(1)}\PD_{j}^{(2)}\right)\left[\absarg{\PD_{j}^{(1)}} + \absarg{\PD_{j}^{(2)}}\right],
+\end{align*}
+
+---
+
+<img src="figure/Fig1.png"/>
 
 ---
 
@@ -161,7 +210,75 @@ $f_{j}$ could learn interactions between host characteristics $z$ and interventi
 
 ---
 
+
+
+---
+
+* Phylogenetic correlation: Microbiome data often have correlated taxa due to shared evolutionary ancestry or occupation of similar ecological niches.
+
+* Uneven sequencing depth: In a typical experiment, not all samples are sequenced to the same read depth. This necessitates sample-wise normalization.
+
+
+---
+
+### Generative Mechanism
+
+here is some tex
+
+$$\mathbf{y}_{t}^{(i)}\vert\theta_{t}^{(i)},\mathbf{\varphi},b^{(i)}\sim\text{NB}\left(b^{(i)}\exp{\theta_{t}^{(i)}},\mathbf{\varphi}\right)\\\theta_{t}^{(i)}=\sum_{p=1}^{P}A_{p}\theta_{t-p}^{(i)}+\sum_{q=1}^{Q}\left(B_{q}+C_{q}\odot z^{(i)}\right)\mathbf{w}_{t-q}^{i}+\mathbf{\epsilon}_{t}^{(i)}\\b^{(i)}\sim\Gamma\left(10,\lambda\right)\\\epsilon_{t}^{(i)}\sim\mathcal{N}\left(0,\Sigma\right)$$
+
+and more text
+
+---
+
+### 
+
+<img src="figure/Fig6.png"/>
+
+---
+
+<img src="figure/simulation_results_config1.png" width=900/>
+
+---
+
+<img src="figure/simulation_results_config2.png" width=900/>
+
+---
+
+<img src="figure/simulation_results_config3.png" width=900/>
+
+---
+
+<img src="figure/Fig4.png" width=1100/>
+
+
+---
+
+
 ## Data Analysis
+
+---
+
+
+---
+
+<img src="figure/Fig7.png"/>
+
+---
+
+<img src="figure/Fig8.png"/>
+
+---
+
+<img src="figure/S1_Fig12.png"/>
+
+
+---
+
+---
+
+### Code Example
+
 
 ---
 
