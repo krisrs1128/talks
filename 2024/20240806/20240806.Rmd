@@ -75,15 +75,15 @@ bib <- ReadBib("references.bib")
 
 <div id="subtitle">
 Kris Sankaran <br/>
-08 | August | 2024 <br/>
+06 | August | 2024 <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
 Methods for Microbiome Data Analysis<br/>
 Joint Statistical Meetings</br>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
-Paper: <a href="https://go.wisc.edu/">go.wisc.edu/</a>
+Slides: <a href="https://go.wisc.edu/ta8m7b/">go.wisc.edu/ta8m7b</a><br/>
+Paper: <a href=" https://go.wisc.edu/5n5et7/">go.wisc.edu/5n5et7</a>
 </div>
 
 ---
