@@ -137,7 +137,9 @@ time horizons using a high-dimensional linear model.
 1. **Mirror Statistics**: Use agreement across data splits to allow false
 discovery rate-controlled inference of perturbation effects.
 
-<img src="figure/approach.png"/>
+.center[
+<img src="figure/approach.png" width=800/>
+]
 
 ---
 
@@ -157,7 +159,7 @@ where $y_{t}$ is the series of interest and $w_{t}$ encodes the intervention.
 include_graphics("figure/intervention-analysis.png")
 ```
 <span style="font-size: 18px;">
-In `r Citep(bib, "box1975intervention")`, $y_{t}$ are ozone concentrations and $w_{t}$ are new regulations.
+In Box and Tiao `r Citep(bib, "box1975intervention")`, $y_{t}$ are ozone concentrations and $w_{t}$ are new regulations.
  </span>
 
 ]
@@ -169,9 +171,7 @@ In `r Citep(bib, "box1975intervention")`, $y_{t}$ are ozone concentrations and $
 .pull-left[
 1. The pattern of autoregressive coefficients determines $y_{t}$'s response to
  "pulse" and "step" interventions.
-1. Note that, unlike generalized Lotka-Volterra models, they can model lagged
-intervention effects.
-]
+1. Note that, unlike standard generalized Lotka-Volterra models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.  ]
 .pull-right[
 ```{r, out.width = 400}
 include_graphics("figure/pulse.png")
@@ -204,14 +204,14 @@ For each coordinate, we use a regularized linear boosting model `r Citep(bib, "F
 do the perturbations last?
 
 
-1. We will want test statistics that are sensitive to effects that are not
-easily summarized by individual coefficients.
+2. To gauge statistical significance of effects that are not available in model
+coefficients, we can use the approach of Dai et al. `r Citep(bib, "Dai2022")`.
 
 ---
 
 ### General Approach: Mirror Statistics
 
-Liu et al. `r Citep(bib, "Dai2022")` splits the data into $\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)$ and $\mathcal{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)$ and check for agreement in the estimates $\hat{\mathbf{\beta}}^{(1)}$ and $\hat{\mathbf{\beta}}^{(2)}$ across splits.
+Dai et al. `r Citep(bib, "Dai2022")` splits the data into $\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)$ and $\mathcal{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)$ and check for agreement in the estimates $\hat{\mathbf{\beta}}^{(1)}$ and $\hat{\mathbf{\beta}}^{(2)}$ across splits.
 
 <img src="figure/mirror-explanation1.png" width=800/>
 
@@ -251,7 +251,7 @@ $$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mat
 
 ---
 
-### Mirror Statistics
+### Partial Dependence Mirrors
 
 Our definition uses $PD_{j}^{(s)}$ as analogous to the usual $\hat{\beta}_{j}$.
 
@@ -471,14 +471,16 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 27)
+PrintBibliography(bib, start = 14, end = 28)
 ```
 
 ---
 
 ### Phylogenetic Covariance
 
-<img src="figure/phylogenetic_covariance.png"/>
+.center[
+<img src="figure/phylogenetic_covariance.png" width=700/>
+]
 
 ---
 

@@ -102,7 +102,9 @@ time horizons using a high-dimensional linear model.
 1. **Mirror Statistics**: Use agreement across data splits to allow false
 discovery rate-controlled inference of perturbation effects.
 
-&lt;img src="figure/approach.png"/&gt;
+.center[
+&lt;img src="figure/approach.png" width=800/&gt;
+]
 
 ---
 
@@ -120,7 +122,7 @@ where `\(y_{t}\)` is the series of interest and `\(w_{t}\)` encodes the interven
 .pull-right[
 &lt;img src="figure/intervention-analysis.png" width="500" style="display: block; margin: auto;" /&gt;
 &lt;span style="font-size: 18px;"&gt;
-In [4], `\(y_{t}\)` are ozone concentrations and `\(w_{t}\)` are new regulations.
+In Box and Tiao [4], `\(y_{t}\)` are ozone concentrations and `\(w_{t}\)` are new regulations.
  &lt;/span&gt;
 
 ]
@@ -132,9 +134,7 @@ In [4], `\(y_{t}\)` are ozone concentrations and `\(w_{t}\)` are new regulations
 .pull-left[
 1. The pattern of autoregressive coefficients determines `\(y_{t}\)`'s response to
  "pulse" and "step" interventions.
-1. Note that, unlike generalized Lotka-Volterra models, they can model lagged
-intervention effects.
-]
+1. Note that, unlike standard generalized Lotka-Volterra models [19; 20], they can model lagged intervention effects.  ]
 .pull-right[
 &lt;img src="figure/pulse.png" width="400" style="display: block; margin: auto;" /&gt;
 ]
@@ -148,7 +148,7 @@ We estimate a separate transfer function model `\(f_{j}\)` for each taxon:
 
 `$$\mathbf{y}_{t}^{(i)} = \mathbf{f}\left(\mathbf{Y}^{(i)}_{t - 1}, \mathbf{W}^{(i)}_{t}, \mathbf{z}^{(i)} \right) + \mathbf{\epsilon}_{t}^{(i)}$$`
 
-For each coordinate, we use a regularized linear boosting model [9] with candidate interactions formed from an initial prescreen [10].
+For each coordinate, we use a regularized linear boosting model [5] with candidate interactions formed from an initial prescreen [6].
 
 |Variable| Interpretation |
 |--|---|
@@ -165,14 +165,14 @@ For each coordinate, we use a regularized linear boosting model [9] with candida
 do the perturbations last?
 
 
-1. We will want test statistics that are sensitive to effects that are not
-easily summarized by individual coefficients.
+2. To gauge statistical significance of effects that are not available in model
+coefficients, we can use the approach of Dai et al. [7].
 
 ---
 
 ### General Approach: Mirror Statistics
 
-Liu et al. [5] splits the data into `\(\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)\)` and `\(\mathcal{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)\)` and check for agreement in the estimates `\(\hat{\mathbf{\beta}}^{(1)}\)` and `\(\hat{\mathbf{\beta}}^{(2)}\)` across splits.
+Dai et al. [7] splits the data into `\(\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)\)` and `\(\mathcal{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)\)` and check for agreement in the estimates `\(\hat{\mathbf{\beta}}^{(1)}\)` and `\(\hat{\mathbf{\beta}}^{(2)}\)` across splits.
 
 &lt;img src="figure/mirror-explanation1.png" width=800/&gt;
 
@@ -206,13 +206,13 @@ For nonlinear effects, we first randomly split series into subsets, `\(\mathcal{
 
 ### Partial Dependence
 
-Next, we estimate the partial dependence [9; 11] of the intervention `\(\mathbf{W}_{t}\)` across time horizons.
+Next, we estimate the partial dependence [5; 8] of the intervention `\(\mathbf{W}_{t}\)` across time horizons.
 
 `$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right) - \hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)\right].$$`
 
 ---
 
-### Mirror Statistics
+### Partial Dependence Mirrors
 
 Our definition uses `\(PD_{j}^{(s)}\)` as analogous to the usual `\(\hat{\beta}_{j}\)`.
 
@@ -261,7 +261,7 @@ long-term community response to environmental interventions?
 
 ### Generative Mechanism
 
-Negative binomial models are often good fits to microbiome data [16; 17; 18]. We use an
+Negative binomial models are often good fits to microbiome data [9; 10; 11]. We use an
 autoregressive version:
 
 `$$\mathbf{y}_{t}^{(i)}\vert\theta_{t}^{(i)},\mathbf{\varphi},b^{(i)}\sim\text{NB}\left(b^{(i)}\exp{\theta_{t}^{(i)}},\mathbf{\varphi}\right)\\\theta_{t}^{(i)}=\sum_{p=1}^{P}A_{p}\theta_{t-p}^{(i)}+\sum_{q=1}^{Q}\left(B_{q}+C_{q}\odot z^{(i)}\right)\mathbf{w}_{t-q}^{i}+\mathbf{\epsilon}_{t}^{(i)}\\b^{(i)}\sim\Gamma\left(10,\lambda\right)\\\epsilon_{t}^{(i)}\sim\mathcal{N}\left(0,\Sigma\right)$$`
@@ -290,8 +290,8 @@ Inference
 
 Forecasting
 
-1. `MDSINE2` [7; 13; 8]: A Bayesian nonparametric negative binomial autoregressive model for discovering taxonomic interactions.
-1. `fido` [14; 15]: A multinomial regression model for count data that we adpted for forecasting.
+1. `MDSINE2` [13; 14; 15]: A Bayesian nonparametric negative binomial autoregressive model for discovering taxonomic interactions.
+1. `fido` [16; 17]: A multinomial regression model for count data that we adpted for forecasting.
 
 ---
 
@@ -337,7 +337,7 @@ class: middle
 ### Data Description
 
 .pull-left[
-David et al. [6] investigated short-term change in
+David et al. [18] investigated short-term change in
 microbiome composition and function in response to diet perturbations.
 ]
 
@@ -504,42 +504,55 @@ class: reference
 
 ### References
 
-[14] J. D. Silverman et al. "Dynamic linear models guide design and
+[14] T. Gibson et al. "Robust and Scalable Models of Microbiome
+Dynamics". In: _Proceedings of the 35th International Conference on
+Machine Learning_. Ed. by J. Dy and A. Krause. Vol. 80. Proceedings
+of Machine Learning Research. PMLR, 2018, pp. 1763-1772. URL:
+[https://proceedings.mlr.press/v80/gibson18a.html](https://proceedings.mlr.press/v80/gibson18a.html).
+
+[15] T. E. Gibson et al. "Microbial dynamics inference at
+ecosystem-scale".  (Dec. 2021). DOI:
+[10.1101/2021.12.14.469105](https://doi.org/10.1101%2F2021.12.14.469105).
+URL:
+[http://dx.doi.org/10.1101/2021.12.14.469105](http://dx.doi.org/10.1101/2021.12.14.469105).
+
+[16] J. D. Silverman et al. "Dynamic linear models guide design and
 analysis of microbiota studies within artificial human guts".  (Apr.
 2018). DOI: [10.1101/306597](https://doi.org/10.1101%2F306597). URL:
 [http://dx.doi.org/10.1101/306597](http://dx.doi.org/10.1101/306597).
 
-[15] J. D. Silverman et al. "Bayesian Multinomial Logistic Normal
+[17] J. D. Silverman et al. "Bayesian Multinomial Logistic Normal
 Models through Marginally Latent Matrix-T Processes". In: _Journal of
 Machine Learning Research_ 23.7 (2022), pp. 1-42. URL:
 [http://jmlr.org/papers/v23/19-882.html](http://jmlr.org/papers/v23/19-882.html).
 
-[16] X. Zhang et al. "Negative binomial mixed models for analyzing
-microbiome count data". In: _BMC Bioinformatics_ 18.1 (Jan. 2017).
-ISSN: 1471-2105. DOI:
-[10.1186/s12859-016-1441-7](https://doi.org/10.1186%2Fs12859-016-1441-7).
-URL:
-[http://dx.doi.org/10.1186/s12859-016-1441-7](http://dx.doi.org/10.1186/s12859-016-1441-7).
+[18] L. A. David et al. "Diet rapidly and reproducibly alters the
+human gut microbiome". In: _Nature_ 505.7484 (Dec. 2013), p. 559–563.
+ISSN: 1476-4687. DOI:
+[10.1038/nature12820](https://doi.org/10.1038%2Fnature12820). URL:
+[http://dx.doi.org/10.1038/nature12820](http://dx.doi.org/10.1038/nature12820).
 
-[17] S. Jiang et al. "A Bayesian zero-inflated negative binomial
-regression model for the integrative analysis of microbiome data".
-In: _Biostatistics_ 22.3 (Dec. 2019), p. 522–540. ISSN: 1468-4357.
-DOI:
-[10.1093/biostatistics/kxz050](https://doi.org/10.1093%2Fbiostatistics%2Fkxz050).
+[19] D. Gonze et al. "Microbial communities as dynamical systems".
+In: _Current Opinion in Microbiology_ 44 (Aug. 2018), p. 41–49. ISSN:
+1369-5274. DOI:
+[10.1016/j.mib.2018.07.004](https://doi.org/10.1016%2Fj.mib.2018.07.004).
 URL:
-[http://dx.doi.org/10.1093/biostatistics/kxz050](http://dx.doi.org/10.1093/biostatistics/kxz050).
+[http://dx.doi.org/10.1016/j.mib.2018.07.004](http://dx.doi.org/10.1016/j.mib.2018.07.004).
 
-[18] A. K. Mishra et al. "Negative binomial factor regression with
-application to microbiome data analysis". In: _Statistics in
-Medicine_ 41.15 (Apr. 2022), p. 2786–2803. ISSN: 1097-0258. DOI:
-[10.1002/sim.9384](https://doi.org/10.1002%2Fsim.9384). URL:
-[http://dx.doi.org/10.1002/sim.9384](http://dx.doi.org/10.1002/sim.9384).
+[20] T. A. Joseph et al. "Compositional Lotka-Volterra describes
+microbial dynamics in the simplex". In: _PLOS Computational Biology_
+16.5 (May. 2020). Ed. by V. Dakos, p. e1007917. ISSN: 1553-7358. DOI:
+[10.1371/journal.pcbi.1007917](https://doi.org/10.1371%2Fjournal.pcbi.1007917).
+URL:
+[http://dx.doi.org/10.1371/journal.pcbi.1007917](http://dx.doi.org/10.1371/journal.pcbi.1007917).
 
 ---
 
 ### Phylogenetic Covariance
 
-&lt;img src="figure/phylogenetic_covariance.png"/&gt;
+.center[
+&lt;img src="figure/phylogenetic_covariance.png" width=700/&gt;
+]
 
 ---
 
