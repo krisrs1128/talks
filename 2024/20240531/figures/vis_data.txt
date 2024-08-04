@@ -1,0 +1,147 @@
+---
+title: "Untitled"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries}
+library(SingleCellExperiment)
+library(SummarizedExperiment)
+library(gamboostLSS)
+library(glue)
+library(jsonlite)
+library(scDesigner)
+library(splines)
+library(tidyverse)
+library(umap)
+set.seed(20231127)
+```
+
+```{r, load_pancreas_data}
+sce <- readRDS((url("https://figshare.com/ndownloader/files/40581992")))[1:250, ]
+simulator <- setup_simulator(
+  sce,
+  ~ ns(pseudotime, 3),
+  ~ ZINBLSS()
+) |>
+  estimate(nu = 0.05, mstop = 400)
+
+new_data <- expand_colData(sce, c("pseudotime"))
+ribbon_data <- plot(simulator@margins, sce, "pseudotime", new_data = new_data, max_print = 250)$layers[[1]]$data
+```
+```{r}
+grouped_ribbon <- ribbon_data |>
+  group_by(feature)
+
+ribbon_data <- group_split(grouped_ribbon)
+names(ribbon_data) <- group_keys(grouped_ribbon)$feature
+```
+
+This is the data to write.
+
+```{r}
+samples <- sample(simulator)
+original_data <- scDesigner:::pivot_experiment(sce)
+simulated <- scDesigner:::pivot_experiment(samples)
+```
+
+```{r}
+test_functions <- original_data |>
+  bind_rows(simulated, .id = "source") |>
+  mutate(time_bin = cut(pseudotime, 10)) |>
+  group_by(feature) |>
+  mutate(
+    value = log(1 + value),
+    value = value / mean(value)
+  ) |>
+  group_by(source, feature, time_bin) |>
+  summarise(
+    q0 = quantile(value, 0),
+    q20 = quantile(value, 0.2),
+    q40 = quantile(value, 0.4),
+    q60 = quantile(value, 0.6),
+    q80 = quantile(value, 0.8),
+    q100 = quantile(value, 1),
+  ) |>
+  pivot_wider(names_from = time_bin, values_from = starts_with("q")) |>
+  ungroup()
+```
+
+
+```{r}
+config <- umap.defaults
+config$n_neighbors <- 40
+config$min_dist <- 0.8
+config$spread <- 2
+
+embeddings <- umap(
+  test_functions |>
+  select(-(source:feature)),
+  config
+)$layout |>
+  data.frame() |>
+  mutate(
+    source = ifelse(row_number() <= n() / 2, "original", "simulated"),
+    feature = test_functions$feature,
+    feature = str_remove(feature, "\\.1")
+  ) |>
+  rename(x = X1, y = X2)
+```
+
+This writes the data.
+
+```{r}
+combined <- bind_rows(original_data, simulated) |>
+  mutate(source = ifelse(row_number() <= n() / 2, "original", "simulated")) |>
+  group_by(feature) |>
+  rename(x = pseudotime) |>
+  filter(newdata_index < 500) |>
+  select(feature, x, value, source)
+
+keys <- group_keys(combined)
+combined <- group_split(combined)
+names(combined) <- keys$feature
+```
+
+```{r}
+distances <- embeddings |>
+  pivot_wider(names_from = source, values_from = x:y) |>
+  group_by(feature) |>
+  summarise(dist = sqrt((x_original - x_simulated) ^ 2 + (y_original - y_simulated) ^ 2))
+```
+
+```{r}
+write_json(combined, "data/data.json")
+write_json(embeddings, "data/umap.json")
+write_json(ribbon_data, "data/ribbon.json")
+write_json(distances, "data/distances.json")
+```
+
+```{r}
+combined <- read_json("data/data.json", simplifyVector = TRUE)
+distances <- read_json("data/distances.json", simplifyVector = TRUE)
+ribbon_data <- read_json("data/ribbon.json", simplifyVector = TRUE) |>
+  map(~ rename(., x = pseudotime))
+
+for (i in seq_along(combined)) {
+  combined[[i]] |>
+    ggplot(aes(x)) +
+    geom_point(aes(y = value, col = source)) +
+    geom_ribbon(data = ribbon_data[[i]], aes(ymin = pmax(0, mu - sigma), ymax = mu + sigma), fill = "#7C9EA6", alpha = 0.2) +
+    geom_line(data = ribbon_data[[i]], aes(y = mu), col = "#7C9EA6", linewidth = 2) +
+    scale_color_manual(values = c("#BF1725", "#7C9EA6")) +
+    theme_void() +
+    theme(
+      legend.position = "none",
+      plot.background = element_rect(fill = rgb(207/255, 216/255, 220/255, 0.2), linewidth = 0)
+    )
+
+  print(i)
+  ggsave(glue("data/thumbnail_{combined[[i]]$feature[1]}.png"), width = 8, height = 4)
+}
+```
+
