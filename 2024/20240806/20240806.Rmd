@@ -33,6 +33,40 @@ $\newcommand\mbf[1]{\mathbf{#1}}$
 $\def\mc#1{\mathcal{#1}}$
 $\def\mrm#1{\mathrm{#1}}$
 $\def\absarg#1{\left|#1\right|}$
+<div style = "position:fixed; visibility: hidden">
+$$\require{color}\definecolor{myred}{rgb}{0.705882352941177, 0.341176470588235, 0.36078431372549}$$
+$$\require{color}\definecolor{mygreen}{rgb}{0.352941176470588, 0.541176470588235, 0.501960784313725}$$
+</div>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+<style>
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+</style>
+
+```{r flair_color, echo=FALSE}
+library(xaringancolor)
+setup_colors(
+  myred = "#B4575C",
+  mygreen = "#5A8A80"
+)
+
+library(flair)
+myred <- "#B4575C"
+mygreen <- "#5A8A80"
+```
 
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
@@ -40,7 +74,7 @@ library(MASS)
 library(knitr)
 library(RefManageR)
 library(tidyverse)
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 min_theme <- theme_minimal() +
   theme(
     panel.grid.minor = element_blank(),
@@ -203,9 +237,11 @@ For each coordinate, we use a regularized linear boosting model `r Citep(bib, "F
 1. Which of the taxa $j$ are affected by the external perturbation, and how long
 do the perturbations last?
 
-
 2. To gauge statistical significance of effects that are not available in model
 coefficients, we can use the approach of Dai et al. `r Citep(bib, "Dai2022")`.
+.center[
+<img src="figure/trajectories_significance.png" width=700/>
+]
 
 ---
 
@@ -221,7 +257,9 @@ Dai et al. `r Citep(bib, "Dai2022")` splits the data into $\mathcal{D}^{(1)} = \
 
 To detect whether $\beta_{j} \neq 0$, we can use the statistic:
 
+.center[
 $M_{j} = \text{sign}\left(\hat{\beta}^{(1)}_{j}\hat{\beta}^{(2)}_{j}\right)\left[\left|\hat{\beta}_{j}^{(1)}\right| + \left|\hat{\beta}_{j}^{(2)}\right|\right]$
+]
 
 <img src="figure/mirror-explanation1.png" width=800/>
 
@@ -229,31 +267,72 @@ $M_{j} = \text{sign}\left(\hat{\beta}^{(1)}_{j}\hat{\beta}^{(2)}_{j}\right)\left
 
 ### FDR Estimation
 
-To choose a significance threshold $t$, estimate the false discovery rate:
+To choose a threshold $\tau$, estimate the false discovery rate:
 
-$$\widehat{\FDP}\left(t\right) = \frac{\left|\{j : M_{j} > t\}\right|}{\left|\left\{j : M_{j} < -t\right\}\right|}$$
+.center[
+$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} > \tau\}\right|}{\left|\left\{j : M_{j} < -\tau\right\}\right|}$$
+]
 
 <img src="figure/mirror-explanation2.png" width=800/>
 
 ---
 
-### Partial Dependence
+### FDR Estimation
 
-For nonlinear effects, we first randomly split series into subsets, $\mathcal{D}^{(1)}$ and $\mathcal{D}^{(2)}$. We estimate models $\hat{\*f}^{(s)}$ using $\left(\*Y_{t}^{(i)}, \*W_{t + 1}^{(i)}, \*z^{(i)}\right)$ for subjects $i$ in split $s$.
+To choose a threshold $\tau$, estimate the false discovery rate:
+
+.center[
+$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} > \tau\}\right|}{\left|\left\{j : M_{j} < -\tau\right\}\right|}$$
+]
+
+.pull-left[
+<img src="figure/mirror-explanation2.png" width=500/>
+]
+.pull-right[
+For FDR control, we require,
+* Symmetry of $M_{j}$ under the null
+* Independence of $M_{j}$
+]
 
 ---
 
 ### Partial Dependence
 
-Next, we estimate the partial dependence `r Citep(bib, c("Friedman2001", "JMLR:v19:18-416"))` of the intervention $\mathbf{W}_{t}$ across time horizons.
+For transfer function models, we need an alternative to $\beta_{j}$. We estimate the partial dependence `r Citep(bib, c("Friedman2001", "JMLR:v19:18-416"))` of the intervention $\mathbf{W}_{t}$ across time horizons.
 
-$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right) - \hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)\right].$$
+.center[
+$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\myred{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right)} - \mygreen{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)}\right].$$
+<img src="figure/pd-1.png" width=650/>
+]
+
+---
+
+### Partial Dependence
+
+For transfer function models, we need an alternative to $\beta_{j}$. We estimate the partial dependence `r Citep(bib, c("Friedman2001", "JMLR:v19:18-416"))` of the intervention $\mathbf{W}_{t}$ across time horizons.
+
+.center[
+$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\myred{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right)} - \mygreen{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)}\right].$$
+<img src="figure/pd-2.png" width=650/>
+]
+
+---
+
+### Partial Dependence
+
+For transfer function models, we need an alternative to $\beta_{j}$. We estimate the partial dependence `r Citep(bib, c("Friedman2001", "JMLR:v19:18-416"))` of the intervention $\mathbf{W}_{t}$ across time horizons.
+
+.center[
+$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\myred{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right)} - \mygreen{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)}\right].$$
+<img src="figure/pd-3.png" width=650/>
+]
 
 ---
 
 ### Partial Dependence Mirrors
 
-Our definition uses $PD_{j}^{(s)}$ as analogous to the usual $\hat{\beta}_{j}$.
+Our definition uses $PD_{j}^{(s)}$ in place of $\hat{\beta}_{j}^{(s)}$ from the
+usual definition.
 
 \begin{align*}
 	M_{j} = \text{sign}\left(\PD_{j}^{(1)}\PD_{j}^{(2)}\right)\left[\absarg{\PD_{j}^{(1)}} + \absarg{\PD_{j}^{(2)}}\right]
@@ -263,7 +342,9 @@ Our definition uses $PD_{j}^{(s)}$ as analogous to the usual $\hat{\beta}_{j}$.
 
 ### Summary
 
+.center[
 <img src="figure/Fig1.png"/>
+]
 
 ---
 
@@ -277,10 +358,15 @@ class: middle
 
 ### Questions
 
-1. Inference: How do methods compare in their FDR control and power?
+1. **Forecasting**: How do methods compare in their ability to predict microbial
+community response to interventions?
 
-1. Forecasts: How do methods compare in their ability to predict short and
-long-term community response to environmental interventions?
+1. **Selection**: How do methods compare in their FDR control and power in
+detecting affected taxa?
+
+.center[
+<img src="figure/inference-pred.png" width=850/>
+]
 
 ---
 
@@ -414,7 +500,7 @@ intervention is or is not applied.
 
 <img src="figure/Fig8.png" width=900/>
 <span style="font-size: 18px;"><br/>
-Estimates $PD_{j}$ (top panel) and underlying data (bottom panel) for taxa significant effects.
+Estimates $\mathrm{PD}_{j}$ (top panel) and underlying data (bottom panel) for taxa significant effects.
 </span>
 
 ---
