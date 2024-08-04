@@ -56,7 +56,7 @@ MathJax.Hub.Config({
 .mygreen {color: #5A8A80;}
 </style>
 
-```{r flair_color, echo=FALSE}
+```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
 library(xaringancolor)
 setup_colors(
   myred = "#B4575C",
@@ -117,7 +117,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 <div id="subtitle_right">
 Methods for Microbiome Data Analysis<br/>
 Joint Statistical Meetings</br>
-Slides: <a href="https://go.wisc.edu/ta8m7b">go.wisc.edu/ta8m7b</a><br/>
+Slides: <a href="https://go.wisc.edu/h5ow0o">go.wisc.edu/h5ow0o</a><br/>
 Paper: <a href=" https://go.wisc.edu/5x8k89">go.wisc.edu/5x8k89</a>
 </div>
 
@@ -534,11 +534,6 @@ class: background-rivers
 * Collaborators: Pratheepa Jeganathan (McMaster University)
 * Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, and Kobe Uko
 * Funding: NIGMS R01GM152744
-
-.center[
-<img src="figure/Lena__credit_row_0.jpg"/>
-]
-
 
 ---
 
