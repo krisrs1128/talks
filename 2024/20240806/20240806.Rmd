@@ -474,7 +474,7 @@ microbiome composition and function in response to diet perturbations.
 
 ### In- and Out-of-Sample Prediction
 
-<img src="figure/Fig7.png" width=750/>
+<img src="figure/Fig7.png" width=750/><br/>
 <span style="font-size: 18px;">
 Forecasting performance across subsets of taxa and time lags. Out-of-sample
 performance is strongest among highly abundant taxa (top row) and short-term
