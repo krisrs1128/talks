@@ -128,8 +128,8 @@ Paper: <a href=" https://go.wisc.edu/5x8k89">go.wisc.edu/5x8k89</a>
 
 ### Motivation: Interaction in Dynamic Communities
 
-We are only beginning to understand microbial community dynamics. This knowledge
-is critical for moving from description to design `r Citep(bib, c("2024", "Tian2022"))`.
+Microbiome communities are dynamic `r Citep(bib, c("Dethlefsen2010", "Gerber2014"))`. More precise knowledge of how it can change is critical for
+moving from description to design `r Citep(bib, c("2024", "Tian2022"))`.
 
 <img src="figure/curtis-opening.png"/>
 <span style="font-size: 18px;">
@@ -147,7 +147,7 @@ induced interventions have gained popularity. The questions are:
 
 1. **Who**: Which taxa are affected by an intervention?
 1. **When**: Are the effects immediate? Lagged? Do they persist?
-1. **How**: Are there host factors that mediate the effect?
+1. **Why**: Are there host factors that mediate the effect?
 
 .center[
   <img src="figure/motivation.png"/>
@@ -163,13 +163,15 @@ class: middle
 
 ---
 
-### Overview
+### Ingredients
 
-1. **Transfer Functions**: Model intervention and interaction effects across
-time horizons using a high-dimensional linear model.
+1. **Transfer Functions** `r Citep(bib, "box1975intervention")`: Model
+intervention and interaction effects across time horizons using a
+high-dimensional linear model.
 
-1. **Mirror Statistics**: Use agreement across data splits to allow false
-discovery rate-controlled inference of perturbation effects.
+1. **Mirror Statistics** `r Citep(bib, "Dai2022")`: Use agreement across data
+splits to allow false discovery rate-controlled inference of intervention
+effects.
 
 .center[
 <img src="figure/approach.png" width=800/>
@@ -180,7 +182,7 @@ discovery rate-controlled inference of perturbation effects.
 ### Transfer Functions
 
 .pull-left[
-Classical transfer function models are autoregressive models:
+Classical transfer function models are autoregressive models `r Citep(bib, "box1975intervention")`:
 
 $$y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}$$
 
@@ -247,7 +249,7 @@ coefficients, we can use the approach of Dai et al. `r Citep(bib, "Dai2022")`.
 
 ### General Approach: Mirror Statistics
 
-Dai et al. `r Citep(bib, "Dai2022")` splits the data into $\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)$ and $\mathcal{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)$ and check for agreement in the estimates $\hat{\mathbf{\beta}}^{(1)}$ and $\hat{\mathbf{\beta}}^{(2)}$ across splits.
+Split the data into $\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)$ and $\mathcal{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)$ and check for agreement in the estimates $\hat{\mathbf{\beta}}^{(1)}$ and $\hat{\mathbf{\beta}}^{(2)}$ across splits.
 
 <img src="figure/mirror-explanation1.png" width=800/>
 
@@ -270,7 +272,7 @@ $M_{j} = \text{sign}\left(\hat{\beta}^{(1)}_{j}\hat{\beta}^{(2)}_{j}\right)\left
 To choose a threshold $\tau$, estimate the false discovery rate:
 
 .center[
-$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} > \tau\}\right|}{\left|\left\{j : M_{j} < -\tau\right\}\right|}$$
+$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} < -\tau\}\right|}{\left|\left\{j : M_{j} > \tau\right\}\right|}$$
 ]
 
 <img src="figure/mirror-explanation2.png" width=800/>
@@ -282,14 +284,14 @@ $$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} > \tau\}\right|}{\le
 To choose a threshold $\tau$, estimate the false discovery rate:
 
 .center[
-$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} > \tau\}\right|}{\left|\left\{j : M_{j} < -\tau\right\}\right|}$$
+$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} < -\tau\}\right|}{\left|\left\{j : M_{j} > \tau\right\}\right|}$$
 ]
 
 .pull-left[
 <img src="figure/mirror-explanation2.png" width=500/>
 ]
 .pull-right[
-For FDR control, we require,
+Assumptions:
 * Symmetry of $M_{j}$ under the null
 * Independence of $M_{j}$
 ]
@@ -331,20 +333,12 @@ $$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mat
 
 ### Partial Dependence Mirrors
 
-Our definition uses $PD_{j}^{(s)}$ in place of $\hat{\beta}_{j}^{(s)}$ from the
+Our definition uses $\mathrm{PD}_{j}^{(s)}$ in place of $\hat{\beta}_{j}^{(s)}$ from the
 usual definition.
 
 \begin{align*}
 	M_{j} = \text{sign}\left(\PD_{j}^{(1)}\PD_{j}^{(2)}\right)\left[\absarg{\PD_{j}^{(1)}} + \absarg{\PD_{j}^{(2)}}\right]
 \end{align*}
-
----
-
-### Summary
-
-.center[
-<img src="figure/Fig1.png"/>
-]
 
 ---
 
@@ -356,7 +350,7 @@ class: middle
 
 ---
 
-### Questions
+### Evaluation Criteria
 
 1. **Forecasting**: How do methods compare in their ability to predict microbial
 community response to interventions?
@@ -372,24 +366,26 @@ detecting affected taxa?
 
 ### Simulation Parameters
 
+<img src="figure/dimensionality.png" width=50/> Number of (nonnull) taxa: How do dimensionality and proportion of nulls influence performance?
+
+<img src="figure/normal_curve.png" width=80/> Signal strength: How are inference and forecasting are affected by intervention strength?
+
+<img src="figure/transform.png" width=40/> Normalization strategy: We can apply methods to either raw or transformed data.
+
 <img src="figure/phylo.png" width=50/> Phylogenetic correlation: We include correlated taxa that reflect shared evolutionary ancestry.<br/>
 
 <img src="figure/reads.png" width=90/> Sequencing depth: In a typical experiment, not all samples are sequenced to the same read depth.
-
-<img src="figure/dimensionality.png" width=50/> Number of (nonnull) taxa: Dimensionality and the signal enrichment varies across applications.
-
-<img src="figure/normal_curve.png" width=80/> Signal strength: Both inference and forecasting are affected by the strength of the intervention.
-
-<img src="figure/transform.png" width=40/> Normalization strategy: We can apply methods to either raw or transformed data.
 
 ---
 
 ### Generative Mechanism
 
-Negative binomial models are often good fits to microbiome data `r Citep(bib, c("Zhang2017", "Jiang2019", "Mishra2022"))`. We use an
+Negative binomial models often fit microbiome data well `r Citep(bib, c("Zhang2017", "Jiang2019", "Mishra2022"))`. We use an
 autoregressive version:
 
-$$\mathbf{y}_{t}^{(i)}\vert\theta_{t}^{(i)},\mathbf{\varphi},b^{(i)}\sim\text{NB}\left(b^{(i)}\exp{\theta_{t}^{(i)}},\mathbf{\varphi}\right)\\\theta_{t}^{(i)}=\sum_{p=1}^{P}A_{p}\theta_{t-p}^{(i)}+\sum_{q=1}^{Q}\left(B_{q}+C_{q}\odot z^{(i)}\right)\mathbf{w}_{t-q}^{i}+\mathbf{\epsilon}_{t}^{(i)}\\b^{(i)}\sim\Gamma\left(10,\lambda\right)\\\epsilon_{t}^{(i)}\sim\mathcal{N}\left(0,\Sigma\right)$$
+$$\mathbf{y}_{t}^{(i)}\vert\theta_{t}^{(i)},\mathbf{\varphi},b^{(i)}\sim\text{NB}\left(b^{(i)}\exp{\theta_{t}^{(i)}},\mathbf{\varphi}\right)\\\theta_{t}^{(i)}=\sum_{p=1}^{P}A_{p}\theta_{t-p}^{(i)}+\sum_{q=1}^{Q}\left(B_{q}+C_{q}\odot z^{(i)}\right)\mathbf{w}_{t-q}^{i}+\mathbf{\epsilon}_{t}^{(i)}\\b^{(i)}\sim\Gamma\left(10,\lambda\right)\\\epsilon_{t}^{(i)}\sim\mathcal{N}\left(0,\Sigma\left(\alpha\right)\right)$$
+
+<!-- \Sigma_{ij}\left(\alpha\right) = \exp{}$ -->
 
 ---
 
@@ -406,17 +402,18 @@ the top three rows have true intervention effects.
 
 ---
 
-### Baselines
-
-Inference
-
-1. `DESeq2` `r Citep(bib, "Love2014")` with main and interaction effects for $\mathbf{w}_{t}$ and $\mathbf{z}$.
-1. Two-Sample $t$-test comparing the four $\mathbf{y}_{t}$ for the first four $t$ after $\mathbf{w}_{t} = 1$ and with all other $\mathbf{y}_{t}$
+### Comparison
 
 Forecasting
 
 1. `MDSINE2` `r Citep(bib, c("Bucci2016", "pmlr-v80-gibson18a", "Gibson2021"))`: A Bayesian nonparametric negative binomial autoregressive model for discovering taxonomic interactions.
-1. `fido` `r Citep(bib, c("Silverman2018", "JMLR:v23:19-882"))`: A multinomial regression model for count data that we adpted for forecasting.
+1. `fido` `r Citep(bib, c("Silverman2018", "JMLR:v23:19-882"))`: An extended multinomial regression model that we adapted to forecasting.
+
+Selection
+
+1. `DESeq2` `r Citep(bib, "Love2014")` with main and interaction effects for $\mathbf{w}_{t}$ and $\mathbf{z}$.
+1. Two-Sample $t$-test comparing the four $\mathbf{y}_{t}$ for the first four $t$ after $\mathbf{w}_{t} = 1$ and with all other $\mathbf{y}_{t}$
+
 
 ---
 
@@ -464,6 +461,9 @@ class: middle
 .pull-left[
 David et al. `r Citep(bib, "David2013")` investigated short-term change in
 microbiome composition and function in response to diet perturbations.
+
+* Samples? Timepoints per sample?
+* Animal-only (tk samples) and plant-based (tk samples) diets for tk days.
 ]
 
 .pull-right[
@@ -474,10 +474,11 @@ microbiome composition and function in response to diet perturbations.
 
 ### In- and Out-of-Sample Prediction
 
-<img src="figure/Fig7.png"/>
+<img src="figure/Fig7.png" width=750/>
 <span style="font-size: 18px;">
-Out-of-sample performance is strongest among highly abundant taxa (top row) and
-short-term time lags (left column).
+Forecasting performance across subsets of taxa and time lags. Out-of-sample
+performance is strongest among highly abundant taxa (top row) and short-term
+time lags (left column).
 </span>
 
 ---
@@ -505,7 +506,7 @@ Estimates $\mathrm{PD}_{j}$ (top panel) and underlying data (bottom panel) for t
 
 ---
 
-### Takeaways
+### Takeaway
 
 `mbtransfer` supports FDR-controlled inference in forecasting models used for dynamic microbiome data.
 
@@ -552,7 +553,7 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 28)
+PrintBibliography(bib, start = 14, end = 29)
 ```
 
 ---
@@ -565,6 +566,24 @@ PrintBibliography(bib, start = 14, end = 28)
 
 ---
 
+### Example Trajectories
+
+.center[
+<img src="figure/Fig5.png" width=1000/>
+]
+
+---
+
+### Computation Time
+
+.center[
+<img src="figure/S1_Fig7.png" width=1000/>
+]
+
+
+
+---
+
 ### Figure Attributions
 
 math function by Ralf Schmitzer from <a href="https://thenounproject.com/browse/icons/term/math-function/" target="_blank" title="math function Icons">Noun Project</a> (CC BY 3.0)
@@ -574,5 +593,3 @@ biological tree by Leslie Coonrod from <a href="https://thenounproject.com/brows
 standard normal distribution by Nick Taras from <a href="https://thenounproject.com/browse/icons/term/standard-normal-distribution/" target="_blank" title="standard normal distribution Icons">Noun Project</a> (CC BY 3.0)
 
 microbiome by Stefanie Peschel from <a href="https://thenounproject.com/browse/icons/term/microbiome/" target="_blank" title="microbiome Icons">Noun Project</a> (CC BY 3.0)
-
----
