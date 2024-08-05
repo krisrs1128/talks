@@ -128,8 +128,8 @@ Paper: <a href=" https://go.wisc.edu/5x8k89">go.wisc.edu/5x8k89</a>
 
 ### Motivation: Interaction in Dynamic Communities
 
-Microbiome communities are dynamic `r Citep(bib, c("Dethlefsen2010", "Gerber2014"))`. More precise knowledge of how it can change is critical for
-moving from description to design `r Citep(bib, c("2024", "Tian2022"))`.
+Microbiome communities are dynamic `r Citep(bib, c("Dethlefsen2010", "Gerber2014"))`. More precise knowledge of how it changes 
+can guide microbiome design `r Citep(bib, c("2024", "Tian2022"))`.
 
 <img src="figure/curtis-opening.png"/>
 <span style="font-size: 18px;">
@@ -202,20 +202,6 @@ In Box and Tiao `r Citep(bib, "box1975intervention")`, $y_{t}$ are ozone concent
 
 ---
 
-### Transfer Functions
-
-.pull-left[
-1. The pattern of autoregressive coefficients determines $y_{t}$'s response to
- "pulse" and "step" interventions.
-1. Note that, unlike standard generalized Lotka-Volterra models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.  ]
-.pull-right[
-```{r, out.width = 400}
-include_graphics("figure/pulse.png")
-```
-]
-
-
----
 
 ### Transfer Functions for Microbial Communities
 
@@ -227,10 +213,10 @@ For each coordinate, we use a regularized linear boosting model `r Citep(bib, "F
 
 |Variable| Interpretation |
 |--|---|
-| $\mathbf{y}_{t}^{(i)}$ | The microbiome community profiles in subject $i$ at time $t$ |
-| $\mathbf{Y}^{(i)}_{t - 1} \in \reals$ | The previous $L$ lags of the $i^{th}$ series. |
-| $\mathbf{W}^{(i)}_{t - 1} \in \reals$ | An external series whose influence on the response on the microbiome community we would like to identify. |
-| $\mathbf{z}^{(i)} \in \reals$ | Subject-level covariates that can interact with $\mathbf{Y}_{t - 1}^{(i)}$ and $\mathbf{W}_{t}^{(i)}$|
+| $\mathbf{y}_{t}^{(i)} \in \reals^{J}$ | The microbiome community profiles in subject $i$ at time $t$. |
+| $\mathbf{Y}^{(i)}_{t - 1} \in \reals^{J \times P}$ | The length $P$ memory of the $i^{th}$ subject's community. |
+| $\mathbf{W}^{(i)}_{t - 1} \in \reals^{D \times Q}$ | The length $Q$ memory of the $i^{th}$ subject's interventions. |
+| $\mathbf{z}^{(i)} \in \reals^{S}$ | Subject-level covariates that can interact with $\mathbf{Y}_{t - 1}^{(i)}$ and $\mathbf{W}_{t}^{(i)}$.|
 
 ---
 
@@ -383,22 +369,9 @@ detecting affected taxa?
 Negative binomial models often fit microbiome data well `r Citep(bib, c("Zhang2017", "Jiang2019", "Mishra2022"))`. We use an
 autoregressive version:
 
-$$\mathbf{y}_{t}^{(i)}\vert\theta_{t}^{(i)},\mathbf{\varphi},b^{(i)}\sim\text{NB}\left(b^{(i)}\exp{\theta_{t}^{(i)}},\mathbf{\varphi}\right)\\\theta_{t}^{(i)}=\sum_{p=1}^{P}A_{p}\theta_{t-p}^{(i)}+\sum_{q=1}^{Q}\left(B_{q}+C_{q}\odot z^{(i)}\right)\mathbf{w}_{t-q}^{i}+\mathbf{\epsilon}_{t}^{(i)}\\b^{(i)}\sim\Gamma\left(10,\lambda\right)\\\epsilon_{t}^{(i)}\sim\mathcal{N}\left(0,\Sigma\left(\alpha\right)\right)$$
+$$\mathbf{y}_{t}^{(i)}\vert\theta_{t}^{(i)},\mathbf{\varphi},d^{(i)}\sim\text{NB}\left(d^{(i)}\exp{\theta_{t}^{(i)}},\mathbf{\varphi}\right)\\\theta_{t}^{(i)}=\sum_{p=1}^{P}A_{p}\theta_{t-p}^{(i)}+\sum_{q=1}^{Q}\left(B_{q}+C_{q}\odot \mathbf{z}^{(i)}\right)\mathbf{w}_{t-q}^{i}+\mathbf{\epsilon}_{t}^{(i)}\\d^{(i)}\sim\Gamma\left(10,\lambda\right)\\\epsilon_{t}^{(i)}\sim\mathcal{N}\left(0,\Sigma\left(\alpha\right)\right)$$
 
 <!-- \Sigma_{ij}\left(\alpha\right) = \exp{}$ -->
-
----
-
-### Generative Mechanism
-
-.center[
-<img src="figure/simulated_data.png" width=800/><br/>
-]
-<span style="font-size: 18px">
-Taxonomic abundances in the simulated negative binomial data, transformed to
-taxon-specific quantiles. The intervention windows are surrounded in red. Only
-the top three rows have true intervention effects.
-</span>
 
 ---
 
@@ -421,12 +394,6 @@ Selection
 ### Prediction Performance: $\alpha = 0.1, \lambda = 0.1$
 
 <img src="figure/simulation_results_config1.png" width=900/>
-
----
-
-### Prediction Performance: $\alpha = 0.1, \lambda = 10$
-
-<img src="figure/simulation_results_config2.png" width=900/>
 
 ---
 
@@ -458,15 +425,16 @@ class: middle
 
 ### Data Description
 
-.pull-left[
 David et al. `r Citep(bib, "David2013")` investigated short-term change in
 microbiome composition and function in response to diet perturbations.
 
-* Samples? Timepoints per sample?
-* Animal-only (tk samples) and plant-based (tk samples) diets for tk days.
+.pull-three-quarters-left[
+* 20 participants observed for 15 days.
+* 15 days = 4 pre + 5 intervention + 6 post.
+* Specially prepared animal- (10 subjects) and plant-based (10 subjects) diets.
 ]
 
-.pull-right[
+.pull-three-quarters-right[
 <img src="figure/diet-study.png" width=300/>
 ]
 
@@ -484,7 +452,6 @@ time lags (left column).
 ---
 
 ### Mirror Statistics
-
 
 <img src="figure/S1_Fig12.png"/>
 
@@ -506,9 +473,10 @@ Estimates $\mathrm{PD}_{j}$ (top panel) and underlying data (bottom panel) for t
 
 ---
 
-### Takeaway
+### Takeaways
 
-`mbtransfer` supports FDR-controlled inference in forecasting models used for dynamic microbiome data.
+`mbtransfer` supports FDR-controlled inference across multiple time horizons for
+models of dynamic microbiome data.
 
 .pull-three-quarters-left[
 <img src="figure/Fig1.png" width=700/>
@@ -533,7 +501,7 @@ class: background-rivers
 ]
 
 * Collaborators: Pratheepa Jeganathan (McMaster University)
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, and Kobe Uko
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, Sam Merten, and Kobe Uko
 * Funding: NIGMS R01GM152744
 
 ---
@@ -580,7 +548,32 @@ PrintBibliography(bib, start = 14, end = 29)
 <img src="figure/S1_Fig7.png" width=1000/>
 ]
 
+---
 
+### Transfer Functions
+
+.pull-left[
+1. The pattern of autoregressive coefficients determines $y_{t}$'s response to
+ "pulse" and "step" interventions.
+1. Note that, unlike standard generalized Lotka-Volterra models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.  ]
+.pull-right[
+```{r, out.width = 400}
+include_graphics("figure/pulse.png")
+```
+]
+
+---
+
+### Generative Mechanism
+
+.center[
+<img src="figure/simulated_data.png" width=800/><br/>
+]
+<span style="font-size: 18px">
+Taxonomic abundances in the simulated negative binomial data, transformed to
+taxon-specific quantiles. The intervention windows are surrounded in red. Only
+the top three rows have true intervention effects.
+</span>
 
 ---
 
