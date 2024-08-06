@@ -109,13 +109,13 @@ bib <- ReadBib("references.bib")
 
 <div id="subtitle">
 Kris Sankaran <br/>
-Joint work with Pratheepa Jeganathan<br/>
+(w/ Pratheepa Jeganathan)<br/>
 06 | August | 2024 <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
 <div id="subtitle_right">
-Methods for Microbiome Data Analysis<br/>
+Advanced Methods for Microbiome Data Analysis<br/>
 Joint Statistical Meetings</br>
 Slides: <a href="https://go.wisc.edu/h5ow0o">go.wisc.edu/h5ow0o</a><br/>
 Paper: <a href=" https://go.wisc.edu/5x8k89">go.wisc.edu/5x8k89</a>
@@ -149,9 +149,10 @@ induced interventions have gained popularity. The questions are:
 1. **When**: Are the effects immediate? Lagged? Do they persist?
 1. **Why**: Are there host factors that mediate the effect?
 
-.center[
-  <img src="figure/motivation.png"/>
-]
+<img src="figure/motivation.png"/>
+<span style="font-size: 18px;">
+Examples of microbiomes responding to environmental shifts, discussed in our supplement S2 `r Citep(bib, "Sankaran2024")`. 
+</span>
 
 ---
 
@@ -187,12 +188,13 @@ Classical transfer function models are autoregressive models `r Citep(bib, "box1
 $$y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}$$
 
 where $y_{t}$ is the series of interest and $w_{t}$ encodes the intervention.
+
+Unlike gLV models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.
 ]
 
-
 .pull-right[
-```{r, out.width = 500}
-include_graphics("figure/intervention-analysis.png")
+```{r, out.width = 340}
+include_graphics("figure/pulse.png")
 ```
 <span style="font-size: 18px;">
 In Box and Tiao `r Citep(bib, "box1975intervention")`, $y_{t}$ are ozone concentrations and $w_{t}$ are new regulations.
@@ -209,7 +211,7 @@ We estimate a separate transfer function model $f_{j}$ for each taxon:
 
 $$\mathbf{y}_{t}^{(i)} = \mathbf{f}\left(\mathbf{Y}^{(i)}_{t - 1}, \mathbf{W}^{(i)}_{t}, \mathbf{z}^{(i)} \right) + \mathbf{\epsilon}_{t}^{(i)}$$
 
-For each coordinate, we use a regularized linear boosting model `r Citep(bib, "Friedman2001")` with candidate interactions formed from an initial prescreen `r Citep(bib, "JMLR:v19:16-515")`.
+For each coordinate, we use a regularized linear boosting model `r Citep(bib, "Friedman2001")` with candidate interactions found in an initial prescreen `r Citep(bib, "JMLR:v19:16-515")`.
 
 |Variable| Interpretation |
 |--|---|
@@ -222,11 +224,11 @@ For each coordinate, we use a regularized linear boosting model `r Citep(bib, "F
 
 ### Mirror Statistics
 
-1. Which of the taxa $j$ are affected by the external perturbation, and how long
-do the perturbations last?
+1. Which taxa $j$ are affected by the external perturbation, and how long do the
+perturbations last?
 
-2. To gauge statistical significance of effects that are not available in model
-coefficients, we can use the approach of Dai et al. `r Citep(bib, "Dai2022")`.
+2. We can use the approach of Dai et al. `r Citep(bib, "Dai2022")` to gauge statistical significance of effects that are not available in model
+coefficients.
 .center[
 <img src="figure/trajectories_significance.png" width=700/>
 ]
@@ -555,10 +557,13 @@ PrintBibliography(bib, start = 14, end = 29)
 .pull-left[
 1. The pattern of autoregressive coefficients determines $y_{t}$'s response to
  "pulse" and "step" interventions.
-1. Note that, unlike standard generalized Lotka-Volterra models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.  ]
+
+1. Note that, unlike standard generalized Lotka-Volterra models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.
+]
+
 .pull-right[
 ```{r, out.width = 400}
-include_graphics("figure/pulse.png")
+include_graphics("figure/intervention-analysis.png")
 ```
 ]
 
