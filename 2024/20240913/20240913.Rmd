@@ -58,7 +58,7 @@ To solve these problems, we draw from classic ideas from statistics and computin
 we can quickly generate realistic data.
 
 * **Visualization**: A good interface can shape the way we think for the better,
-helping us be more more critical and creative.
+helping us be more critical and creative.
 
 ---
 
@@ -94,7 +94,7 @@ Figure adapted from `r Citep(bib, "Symul2023")`.
 
 ### Themes: Visualization
 
-In `r Citep(bib, "Fukuyama2022")`, we studied how to navigate across an ensemble of topic models.
+In `r Citep(bib, "Fukuyama2022")`, we studied navigation across ensembles of topic models.
 
 .center[
 ```{r, out.width = 850}
@@ -201,7 +201,7 @@ suggest disease $\to$ microbe $\to$ metabolite indirect effects.
     - Interfaces: `r Citep(bib, c("Jiang2024", "interpretability"))`
     - Visualization: `r Citep(bib, c("Fukuyama2022", "Sankaran2018", "Sankaran2019"))`
 
-* I enjoy working with students with a variety of educational levels and backgrounds.
+* I enjoy working with students with different educational levels and backgrounds.
 
 * Email: [ksankaran@wisc.edu](mailto:ksankaran@wisc.edu)
 
