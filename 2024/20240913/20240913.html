@@ -14,7 +14,7 @@
 
 
 &lt;div id="links"&gt;
-Slides: https://go.wisc.edu/&lt;br&gt;
+Slides: https://go.wisc.edu/05h9p7&lt;br&gt;
 Lab Site: https://go.wisc.edu/pgb8nl
 &lt;/div&gt;
 
@@ -26,8 +26,8 @@ data. The essential statistical questions are:
 * **Integration**: How should we analyze data gathered from multiple batches or
 technologies?
 
-* **Experimental Design**: How can we manipulate microbiomes so that they end up
-in desirable community states?
+* **Experimental Design**: How should we design microbiome experiments to 
+accelerate engineering or medical applications?
 
 * **Reproducibility**: How can we be sure our conclusions are trustworthy?
 
@@ -50,29 +50,6 @@ helping us be more more critical and creative.
 
 ---
 
-### Themes: Simulation
-
-We have written an online guide [1] for using simulators in microbiome analysis. We
-used it to teach a short course for computational biologists.
-
-&lt;img src="figures/microbiome_intro_chapter.png"/&gt;
-
----
-
-### Themes: Simulation
-
-.pull-three-quarters-left[
-&lt;img src="figures/multivariate_power_curve.png" width=720/&gt;
-]
-.pull-three-quarters-right[
-&lt;span style="font-size: 18px;"&gt;
-Here is an example from the book about using a simulator to guide power analysis
-in a multivariate model.  Panels A + B check simulator faithfulness, and panel C compares models across sample sizes.
-&lt;/span&gt;
-]
-
----
-
 ### Themes: Visualization
 
 Topic models were independently developed for analyzing genotype and text
@@ -85,10 +62,11 @@ computational genomics
 ]
 
 ---
+exclude: true
 
 ### Themes: Visualization
 
-1. They are helpful because real biological samples often don't separate cleanly into clusteres.
+1. They are helpful because real biological samples often don't separate cleanly into clusters.
 
 1. Instead of matching a sample to a single cluster centroid, view them as
 mixtures of multiple representatives.
@@ -107,7 +85,7 @@ Figure adapted from [8].
 In [9], we studied how to navigate across an ensemble of topic models.
 
 .center[
-&lt;img src="figures/alto_sketches_annotated alignment.png" width="750" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/alto_sketches_annotated alignment.png" width="850" style="display: block; margin: auto;" /&gt;
 
 &lt;span style="font-size: 20px;"&gt;
 In the Sankey diagram, columns are models and rectangles are topics.
@@ -115,6 +93,7 @@ In the Sankey diagram, columns are models and rectangles are topics.
 ]
 
 ---
+exclude: true
 
 ### Themes: Visualization
 
@@ -131,16 +110,41 @@ The diagnostics in this simulation suggest that the true `\(K\)` is 5.
 
 ---
 
+
+### Themes: Simulation
+
+We have written an online guide [1] for using simulators in microbiome analysis. We
+used it to teach a short course for computational biologists.
+
+&lt;img src="figures/microbiome_intro_chapter.png"/&gt;
+
+---
+
+### Themes: Simulation
+
+.pull-three-quarters-left[
+&lt;img src="figures/multivariate_power_curve.png" width=680/&gt;
+]
+.pull-three-quarters-right[
+&lt;span style="font-size: 18px;"&gt;
+Here is an example of using a simulator to guide power analysis in a
+multivariate model. Panels A + B check simulator faithfulness, and C compares
+models across sample sizes.
+&lt;/span&gt;
+]
+
+---
+
 ### Themes: Interface Design
 
-We built an interface to specify and evaluate causal mediation analysis models.
-
-.center[
-&lt;img src="figures/multimedia_webpage.png"/&gt;
+.pull-three-quarters-left[
+&lt;img src="figures/multimedia_webpage.png" width=740/&gt;
 ]
-&lt;span style="font-size: 20px;"&gt;
-The package is described in [10]. See also the package
-and this blog post.
+
+.pull-three-quarters-right[
+&lt;span style="font-size: 18px;"&gt;
+We wrote a package for mediation analysis of microbiome data [10].
+See also [the code](https://github.com/krisrs1128/multimedia) and this [blog post](https://krisrs1128.github.io/info-uncertainty//posts/mediation-software).
 &lt;/span&gt;
 ]
 
@@ -177,7 +181,7 @@ suggest disease `\(\to\)` microbe `\(\to\)` metabolite indirect effects.
 
 ### Reaching Out
 
-* You can learn more at [go.wisc.edu/pgb8nl](go.wisc.edu/pgb8nl).
+* You can learn more at [https://go.wisc.edu/pgb8nl](https://go.wisc.edu/pgb8nl).
     - Simulation: [11; 4; 1]
     - Interfaces: [10; 12]
     - Visualization: [9; 4; 13]
@@ -191,131 +195,70 @@ class: reference
 
 ### References
 
-[1] D. M. Blei, A. Y. Ng, and M. I. Jordan. "Latent dirichlet allocation". In:
-_J. Mach. Learn. Res._ 3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
+[1] K. Sankaran, S. Kodikara, J. J. Li, and K. Lê Cao. _Chapter 1 Introduction | Simulation for
+Microbiome Analysis - krisrs1128.github.io_.
+&lt;https://krisrs1128.github.io/microbiome-simulation/index.html&gt;. [Accessed 09-09-2024].
 
-[2] J. Fukuyama, K. Sankaran, and L. Symul. "Multiscale analysis of count data
-through topic alignment". In: _Biostatistics_ 24.4 (Jun. 2022), p. 1045–1065.
-ISSN: 1468-4357. DOI: 10.1093/biostatistics/kxac018.
-&lt;http://dx.doi.org/10.1093/biostatistics/kxac018&gt;.
+[2] J. K. Pritchard, M. Stephens, and P. Donnelly. "Inference of Population Structure Using Multilocus
+Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p. 945–959. ISSN: 1943-2631. DOI:
+10.1093/genetics/155.2.945. &lt;http://dx.doi.org/10.1093/genetics/155.2.945&gt;.
 
-[3] A. Kim, S. Sevanto, E. R. Moore, et al. "Latent Dirichlet Allocation
-modeling of environmental microbiomes". In: _PLOS Computational Biology_ 19.6
-(Jun. 2023). Ed. by G. Zeller, p. e1011075. ISSN: 1553-7358. DOI:
-10.1371/journal.pcbi.1011075.
-&lt;http://dx.doi.org/10.1371/journal.pcbi.1011075&gt;.
+[3] D. M. Blei, A. Y. Ng, and M. I. Jordan. "Latent dirichlet allocation". In: _J. Mach. Learn. Res._
+3.null (Mar. 2003), p. 993–1022. ISSN: 1532-4435.
 
-[4] J. J. L. Kris Sankaran Saritha Kodikara and K. L. Cao. _Chapter 1
-Introduction | Simulation for Microbiome Analysis - krisrs1128.github.io_.
-&lt;https://krisrs1128.github.io/microbiome-simulation/index.html&gt;. [Accessed
-09-09-2024].
-
-[5] X. Peng, J. Lee, M. Adamow, et al. "A topic modeling approach reveals the
-dynamic T cell composition of peripheral blood during cancer immunotherapy".
-In: _Cell Reports Methods_ 3.8 (Aug. 2023), p. 100546. ISSN: 2667-2375. DOI:
-10.1016/j.crmeth.2023.100546.
-&lt;http://dx.doi.org/10.1016/j.crmeth.2023.100546&gt;.
-
-[6] J. K. Pritchard, M. Stephens, and P. Donnelly. "Inference of Population
-Structure Using Multilocus Genotype Data". In: _Genetics_ 155.2 (Jun. 2000),
-p. 945–959. ISSN: 1943-2631. DOI: 10.1093/genetics/155.2.945.
-&lt;http://dx.doi.org/10.1093/genetics/155.2.945&gt;.
-
-[7] K. Sankaran. "Data Science Principles for Interpretable and Explainable
-AI". In: _arXiv_ copyright = Creative Commons Attribution Non Commercial No
-Derivatives 4.0 International (2024). DOI: 10.48550/ARXIV.2405.10552.
-&lt;https://arxiv.org/abs/2405.10552&gt;.
-
-[8] K. Sankaran and S. P. Holmes. "Generative Models: An Interdisciplinary
-Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar.
-2023), p. 325–352. ISSN: 2326-831X. DOI:
-10.1146/annurev-statistics-033121-110134.
-&lt;http://dx.doi.org/10.1146/annurev-statistics-033121-110134&gt;.
-
-[9] K. Sankaran and S. P. Holmes. "Latent variable modeling for the
-microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN:
-1468-4357. DOI: 10.1093/biostatistics/kxy018.
+[4] K. Sankaran and S. P. Holmes. "Latent variable modeling for the microbiome". In: _Biostatistics_
+20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI: 10.1093/biostatistics/kxy018.
 &lt;http://dx.doi.org/10.1093/biostatistics/kxy018&gt;.
 
-[10] K. Sankaran and S. P. Holmes. "Multitable Methods for Microbiome Data
-Integration". In: _Frontiers in Genetics_ 10 (Aug. 2019). ISSN: 1664-8021.
-DOI: 10.3389/fgene.2019.00627. &lt;http://dx.doi.org/10.3389/fgene.2019.00627&gt;.
+[5] A. Kim, S. Sevanto, E. R. Moore, and N. Lubbers. "Latent Dirichlet Allocation modeling of
+environmental microbiomes". In: _PLOS Computational Biology_ 19.6 (Jun. 2023). Ed. by G. Zeller, p.
+e1011075. ISSN: 1553-7358. DOI: 10.1371/journal.pcbi.1011075.
+&lt;http://dx.doi.org/10.1371/journal.pcbi.1011075&gt;.
 
-[11] L. Symul, P. Jeganathan, E. K. Costello, et al. "Sub-communities of the
-vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of
-the Royal Society B: Biological Sciences_ 290.2011 (Nov. 2023). ISSN:
-1471-2954. DOI: 10.1098/rspb.2023.1461.
-&lt;http://dx.doi.org/10.1098/rspb.2023.1461&gt;.
-
-[12] C. Tataru, M. Peras, E. Rutherford, et al. "Topic modeling for multi-omic
-integration in the human gut microbiome and implications for Autism". In:
-_Scientific Reports_ 13.1 (Jul. 2023). ISSN: 2045-2322. DOI:
+[6] C. Tataru, M. Peras, E. Rutherford, K. Dunlap, X. Yin, B. S. Chrisman, T. Z. DeSantis, D. P. Wall,
+S. Iwai, and M. M. David. "Topic modeling for multi-omic integration in the human gut microbiome and
+implications for Autism". In: _Scientific Reports_ 13.1 (Jul. 2023). ISSN: 2045-2322. DOI:
 10.1038/s41598-023-38228-0. &lt;http://dx.doi.org/10.1038/s41598-023-38228-0&gt;.
+
+[7] X. Peng, J. Lee, M. Adamow, C. Maher, M. A. Postow, M. K. Callahan, K. S. Panageas, and R. Shen. "A
+topic modeling approach reveals the dynamic T cell composition of peripheral blood during cancer
+immunotherapy". In: _Cell Reports Methods_ 3.8 (Aug. 2023), p. 100546. ISSN: 2667-2375. DOI:
+10.1016/j.crmeth.2023.100546. &lt;http://dx.doi.org/10.1016/j.crmeth.2023.100546&gt;.
+
+[8] L. Symul, P. Jeganathan, E. K. Costello, M. France, S. M. Bloom, D. S. Kwon, J. Ravel, D. A.
+Relman, and S. Holmes. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women".
+In: _Proceedings of the Royal Society B: Biological Sciences_ 290.2011 (Nov. 2023). ISSN: 1471-2954.
+DOI: 10.1098/rspb.2023.1461. &lt;http://dx.doi.org/10.1098/rspb.2023.1461&gt;.
+
+[9] J. Fukuyama, K. Sankaran, and L. Symul. "Multiscale analysis of count data through topic
+alignment". In: _Biostatistics_ 24.4 (Jun. 2022), p. 1045–1065. ISSN: 1468-4357. DOI:
+10.1093/biostatistics/kxac018. &lt;http://dx.doi.org/10.1093/biostatistics/kxac018&gt;.
+
+[10] H. Jiang, X. Miao, M. W. Thairu, M. Beebe, D. W. Grupe, R. J. Davidson, J. Handelsman, and K.
+Sankaran. "multimedia: Multimodal Mediation Analysis of Microbiome Data". In: _bioRxiv_ (Mar. 2024).
+DOI: 10.1101/2024.03.27.587024. &lt;http://dx.doi.org/10.1101/2024.03.27.587024&gt;.
+
+[11] K. Sankaran and S. P. Holmes. "Generative Models: An Interdisciplinary Perspective". In: _Annual
+Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN: 2326-831X. DOI:
+10.1146/annurev-statistics-033121-110134. &lt;http://dx.doi.org/10.1146/annurev-statistics-033121-110134&gt;.
 
 ---
 class: reference
 
 ### References
 
-[1] L. Symul, P. Jeganathan, E. K. Costello, et al. "Sub-communities of the
-vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of
-the Royal Society B: Biological Sciences_ 290.2011 (Nov. 2023). ISSN:
-1471-2954. DOI: 10.1098/rspb.2023.1461.
-&lt;http://dx.doi.org/10.1098/rspb.2023.1461&gt;.
+[12] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI". In: _arXiv_ copyright
+= Creative Commons Attribution Non Commercial No Derivatives 4.0 International (2024). DOI:
+10.48550/ARXIV.2405.10552. &lt;https://arxiv.org/abs/2405.10552&gt;.
 
-[2] C. Tataru, M. Peras, E. Rutherford, et al. "Topic modeling for multi-omic
-integration in the human gut microbiome and implications for Autism". In:
-_Scientific Reports_ 13.1 (Jul. 2023). ISSN: 2045-2322. DOI:
-10.1038/s41598-023-38228-0. &lt;http://dx.doi.org/10.1038/s41598-023-38228-0&gt;.
+[13] K. Sankaran and S. P. Holmes. "Multitable Methods for Microbiome Data Integration". In: _Frontiers
+in Genetics_ 10 (Aug. 2019). ISSN: 1664-8021. DOI: 10.3389/fgene.2019.00627.
+&lt;http://dx.doi.org/10.3389/fgene.2019.00627&gt;.
 
----
-
-exclude: true
-
-### Themes: Simulation
-
-1. We have a more general review  of how simulation is used
-across interdisciplinary research.
-
-1. For example, this figure shows how a statistical emulator can be trained to
-approximate an agent-based model of COVID-19 transmission.
-
-.center[
-&lt;img src="figures/emulation.jpeg"/&gt;
-]
-
----
-
-exclude: true
-
-### Themes: Visualization
-
-Recently, we have been studying how visualization can help interpret complex
-machine learning models that are becoming adopted in microbiome research.
-
-.center[
-&lt;img src="figures/species_21_interpolation.svg" width=940/&gt;
-]
-
----
-
-exclude: true
-
-### Microbiome Data Science
-
-We work directly with biologists, and these questions have come up in our
-projects together:
-
-* **Integration**: Combine immunological (single-cell) and microbial
-(metagenomic) data to understand factors that contribute to HIV risk.
-
-* **Experimental Design**: Study how environmental factors influence whether an invading 
-pathogen successfully attacks a synthetic root microbiome.
-
-* **Reproducibility**: Gauge how antibiotics shape the microbiome at multiple
-levels of taxonomic resolution.
-
----
+[14] _GitHub - krisrs1128/multimedia: multimedia is an R package for multimodal mediation analysis of
+microbiome data. It has been designed to help integration of relative abundance, survey, and
+metabolomic data through causal mediation analysis. - github.com_.
+&lt;https://github.com/krisrs1128/multimedia&gt;. [Accessed 10-09-2024].
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-0.15.0.min.js"></script>
