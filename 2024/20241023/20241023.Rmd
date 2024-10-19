@@ -66,7 +66,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Managing Batch Effects in Biological Data
+## Managing Batch Effects in Sequencing Data
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -79,7 +79,7 @@ BME 780: Methods in Quantitative Biology<br/>
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 </div>
 
-<!-- 45 minute talk -->
+<!-- 50 minute talk -->
 
 ---
 
@@ -88,38 +88,101 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 By the end of this lecture, you will be able to:
 
 1. **Imagine**: Evaluate whether batch effects might exist in your data.
+
 1. **Derive**: Interpret algebraic expressions used to represent batch effect correction methods.
-1. **Decide**: Navigate trade-offs between approaches, including doing nothing.
+
+1. **Decide**: Navigate trade-offs between batch effect correction approaches.
+
 1. **Check**: Implement diagnostics to ensure trustworthy outputs.
+
 1. **Improve**: Explain the potential for replication and controls to improve batch effect correction methods
 
 ---
 
+.center[
 ## Motivation
+]
 
 ---
 
 ### Cancer Microbiome Controversy
 
+1. In June 2024, the journal Nature retracted a paper the claimed distinct
+microbiome signatures associated with different types of cancer. 
+
+1. Competing labs suspected data analysis mistakes when they recognized unusual,
+marine taxa among those that were most important.
+
+1. After 3 rounds of argument and counter-argument, the paper was retracted.
 
 ---
 
 ### Cancer Microbiome Controversy
 
+1. Most researchers now agree that the signature discussed in the original paper
+was a technical artifact resulting from the use of supervised normalization, a
+particular batch effect correction method.
 
-Before we can understand the nuances of this story, we need to learn about batch
-effects and the methods that have been designed to address them.
+1. Before we can understand the nuances of this story, we need to learn about
+batch effects and the methods that have been designed to address them.
 
 ---
 
 ### Measurement vs. Reality
 
+1. In the same way that a photo can be blurry or obscured by glare, the
+measurements we obtain from sequencing can be obscured by technical factors.
+
+1. Any data are only an imperfect snapshot of the true biological moment that
+we're seeking to understand. 
+
+.center[
+    <img src="figures/kensington.jpg" width=900>
+]
+
+---
+
+### Measurement vs. Reality
+
+1. In the same way that a photo can be blurry or obscured by glare, the
+measurements we obtain from sequencing can be obscured by technical factors.
+
+1. Any data are only an imperfect snapshot of the true biological moment that
+we're seeking to understand. 
+
+.center[
+
+]
+
+---
+
+### Sources of Technical Variation
+
+There are many points at which technical variation arise.
+
+.center[
+<img src="figures/sources_of_variation.png" width=900/>
+]
+
+---
+
+### Technical Variation $\to$ Batch Effects
+
+1. Differences at any stage can lead to systematic differences between data
+collected across experimental runs ("batches").
+
+1. This is especially problematic for studies with large sample sizes or
+multiple study sites. It may not be feasible to process all samples in exactly
+the same way.
 
 ---
 
 ### Improving Discovery
 
-Batch effects can mask real biological effects.
+1. Batch effects can mask real biological effects.
+
+1. To discover more interesting patterns, we need to either remove these effects
+or account for them in the later models.
 
 (show the classic PCA picture from Leek)
 
@@ -133,6 +196,8 @@ conditions that led to its production are not generalizable.
 1. If we can account for as much batch-to-batch variation as possible, we can
 fortify ourselves against this line of attack.
 
+(picture or quote from Latour re. induction)
+
 ---
 
 ## Correction Techniques
@@ -141,26 +206,58 @@ fortify ourselves against this line of attack.
 
 ### General Strategies
 
-Goal vs. Mechanism Driven strategies.
+1. Correct: Subtract the batch effects before all other analysis.
+1. Account: Directly model batch-to-batch variation in the analysis.
 
-Examplars: ComBat, Harmony.
+|  | Pros | Cons |
+|--|---|---|
+| Correct | Generality. Can be reused easily. | Can introduce its own artifacts. |
+| Account | Cohesion. Only one method needed for everything.  | Time consuming. Requires development for each context. |
 
-Ironically, Harmony is the method that more aggressively transforms the source
-data.
+We will review correction methods, since we don't want to restrict ourselves to
+any application context.
 
 ---
 
-### Example: ComBat
+### Correction Methods
+
+Correction methods define:
+
+1. A class of allowable transformations that can be used to remove the batch effects.
+
+1. An objective function we can optimize to help us find the most plausible
+transformation.
+
+There are many ways to parameterize and optimize over transformations, and the
+best choice can depend on specific properties of the data and experimental
+design.
+
+---
+
+### Exemplar Methods
+
+1. Two classic methods are ComBat (2007, 7.6K citations) and Harmony (2019, 4.8K
+citations).
+
+1. ComBat is based off a linear model, while Harmony uses nonlinear embedding
+ideas.
+
+1. Next week, we will discuss CellAnova (2023), which is a modern descendant
+of these techniques.
+
+---
+
+### ComBat - Setting
 
 (include the screenshot)
 
 ---
 
-### Model
+### ComBat - Model
 
 ---
 
-### Estimation
+### ComBat - Estimation
 
 ---
 
