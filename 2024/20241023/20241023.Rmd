@@ -28,6 +28,7 @@ MathJax.Hub.Config({
 });
 </script>
 
+
 <style>
 .myred {color: #B4575C;}
 .mygreen {color: #5A8A80;}
@@ -52,23 +53,6 @@ library(knitr)
 library(RefManageR)
 library(tidyverse)
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
-min_theme <- theme_minimal() +
-  theme(
-    panel.grid.minor = element_blank(),
-    panel.background = element_rect(fill = "#f7f7f7"),
-    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
-    axis.text = element_text(size = 14),
-    strip.text = element_text(size = 16),
-    axis.title = element_text(size = 16),
-    legend.position = "bottom"
-  )
-theme_set(min_theme)
-
-# overwrite some default scales in ggplot2
-scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
-scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
-scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
-scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
 
 BibOptions(
   check.entries = FALSE,
@@ -86,8 +70,7 @@ bib <- ReadBib("references.bib")
 
 <div id="subtitle">
 Kris Sankaran <br/>
-(w/ Pratheepa Jeganathan)<br/>
-06 | August | 2024 <br/>
+23 | October | 2024 <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 </div>
 
@@ -102,19 +85,171 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ### Learning Outcomes
 
+By the end of this lecture, you will be able to:
 
-----
+1. **Imagine**: Evaluate whether batch effects might exist in your data.
+1. **Derive**: Interpret algebraic expressions used to represent batch effect correction methods.
+1. **Decide**: Navigate trade-offs between approaches, including doing nothing.
+1. **Check**: Implement diagnostics to ensure trustworthy outputs.
+1. **Improve**: Explain the potential for replication and controls to improve batch effect correction methods
 
-## Fundamental Approaches
+---
+
+## Motivation
+
+---
+
+### Cancer Microbiome Controversy
 
 
 ---
 
-## Checking your Work
+### Cancer Microbiome Controversy
+
+
+Before we can understand the nuances of this story, we need to learn about batch
+effects and the methods that have been designed to address them.
 
 ---
 
-## Discipline and Design
+### Measurement vs. Reality
+
+
+---
+
+### Improving Discovery
+
+Batch effects can mask real biological effects.
+
+(show the classic PCA picture from Leek)
+
+---
+
+### Improving Credibility
+
+1. To dispute a scientific fact, a dissenter can always argue that the
+conditions that led to its production are not generalizable.
+
+1. If we can account for as much batch-to-batch variation as possible, we can
+fortify ourselves against this line of attack.
+
+---
+
+## Correction Techniques
+
+---
+
+### General Strategies
+
+Goal vs. Mechanism Driven strategies.
+
+Examplars: ComBat, Harmony.
+
+Ironically, Harmony is the method that more aggressively transforms the source
+data.
+
+---
+
+### Example: ComBat
+
+(include the screenshot)
+
+---
+
+### Model
+
+---
+
+### Estimation
+
+---
+
+### Example: Harmony
+
+---
+
+### Objective Function
+
+---
+
+### Optimization
+
+---
+
+## Checking Your Work
+
+---
+
+### Challenges
+
+Batch effect correction can introduce subtle problems of its own.
+
+1. Biases in Testing
+1. Incomplete removal
+1. Is the data even alignable?
+
+---
+
+### Is it Hopeless?
+
+(screenshot from biostars)
+
+1. We shouldn't apply correction methods if we don't see any effects. But we
+also shouldn't ignore them if they exist.
+
+1. We just need to be careful when we use methods. There are many informal
+checks.
+
+---
+
+### Easy Checks
+
+1. Run separately across batches
+1. Run with different hyperparameters
+
+---
+
+### Difficult (but Useful) Checks
+
+1. Run a simulation experiment
+1. It is getting easier to run your own benchmarks.
+1. We always use positive and negative controls in wet lab experiments. Why not in computational analysis?
+
+---
+
+## Disciplined Design and Analysis
+
+---
+
+### Replication and controls
+
+We often know a lot more about our data than we use in our methods. For example:
+
+1. Replication
+
+1. Controls
+
+---
+
+### CellAnova: Cheat Sheet
+
+1. Use controls samples and genes to match across batches.
+
+---
+
+### CellAnova: Cheat Sheet
+
+1. Any useful mathematical facts?
+
+---
+
+### Conclusion
+
+1. Garbage In, Garbage Out: 
+
+1. Essential Approaches:
+
+1. Diagnostics: 
 
 ---
 
