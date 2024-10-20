@@ -337,8 +337,12 @@ model to share information across all genes. This improves stability in the
 corrections for genes with very high noise levels.
 
 .center[
-<img src="figures/combat_fig3.png"/>
+<img src="figures/combat_fig3.gif" width=330/>
 ]
+<p class="caption">
+By fitting the model simultaneously across genes, all the estimates can be drawn
+towards typical values across the ensemble.
+</p>
 
 ---
 
@@ -355,41 +359,44 @@ effect from the observed data.
 
 ### Harmony - Setting
 
-1. Harmony was proposed to integrate single cell data across experiments. Since
+Harmony was proposed to integrate single cell data across experiments. Since
 these data have much larger sample sizes, $n \geq 20K$ cells per batch, it's
 possible to learn a more complex transformation.
 
-1. The intuition is to use clustering to identify matching cell types across
+.center[
+<img src="figures/harmony_integration.png" width=840/>
+]
+<p class="caption">
+The intuition is to use clustering to identify matching cell types across
 batches. These clusters can then be made to overlap.
-
-(there must be a picture from the Harmony Ppaer)
+</p>
 
 ---
 
 ### Harmony - Clustering
 
+.pull-left[
 Soft clustering finds centroids $\*\mu_k$ and responsibilities $\*r_i$ to solve,
 
 \begin{align*}
-\min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} \left[\sum_{k = 1}^{K}\|\*y_i - \*\mu_{k}\|_{2}^{2} + \lambda H\left(\*r_{i}\right)\right]
+\min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} \left[\sum_{k = 1}^{K} r_{ik} \|\*y_i - \*\mu_{k}\|_{2}^{2} - \lambda H\left(\*r_{i}\right)\right]
 \end{align*}
 where $H\left(\*r_i\right)$ is the entropy of sample $i$'s responsibilities.
+]
 
-
-.center[
-<img src="figures/hard_clustering.png"/>
+.pull-right[
+<img src="figures/soft_clustering.png" width=350 align="right"/>
 ]
 
 ---
 
 ### Harmony - Clustering
 
-They use a chi-square statistic to encourage clusters to contain an even mix of
+They use a chi-square statistic to encourage clusters to contain an mix evenly across
 batches (strong associations lead to large values of the statistic).
 
 \begin{align*}
-\min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} &\left[\sum_{k = 1}^{K}\|\*y_i - \*\mu_{k}\|_{2}^{2} + \lambda H\left(\*r_{i}\right)\right] + \\ 
-&\chi^2\left(\text{batch assignments}, \text{cluster assignments}\right)
+\min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} &\left[\sum_{k = 1}^{K}r_{ik}\|\*y_i - \*\mu_{k}\|_{2}^{2} - \lambda H\left(\*r_{i}\right)\right] +\chi^2\left(\text{batch}, \text{cluster}\right)
 \end{align*}
 
 ---
@@ -419,16 +426,14 @@ process is iterated until convergence.
 
 Batch effect correction can introduce subtle problems of its own.
 
-.pull-left[
 **Hypothesis Testing**: When the batches are highly imbalanced, correction can
 distort the null distribution of test statistics. This invalidates the usual
 $p$-values.
 
 **Fix**: Adjust the null distribution to reflect the correction step `r Citep(bib, "Nygaard2015")`.
-]
 
-.pull-right[
-(Show the p-value histogram from the Vygaard paper)
+.center[
+<img src="figures/nygaard_pvals.png" width=700/>
 ]
 
 ---
@@ -454,7 +459,7 @@ can bias performance estimates in machine learning pipelines `r Citep(bib, "Sone
 
 Batch effect correction can introduce subtle problems of its own.
 
-.pull-left[
+.pull-three-quarters-left[
 **Alignability**: Batch effect correction methods will attempt to match batches
 regardless of whether there is actually any shared biology.
 
@@ -462,8 +467,8 @@ regardless of whether there is actually any shared biology.
 batches `r Citep(bib, "Ma2024")`.
 ]
 
-.pull-right[
-(Take a figure from Rong Ma's paper)
+.pull-three-quarters-right[
+<img src="figures/alignability.jpg" width=200 align="right"/>
 ]
 
 ---
@@ -488,13 +493,7 @@ label was provided.
 
 ### Should we bother?
 
-(screenshot from biostars)
-
-1. We shouldn't apply correction methods if we don't see any effects. But we
-also shouldn't ignore them if they exist.
-
-1. We just need to be careful when we use methods. There are many informal
-checks.
+<img src="figures/biostars.png" width=900/>
 
 ---
 
