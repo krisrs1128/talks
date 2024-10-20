@@ -20,7 +20,10 @@ MathJax.Hub.Config({
   TeX: {
     Macros: {
       myred: ["{\\color{myred}{#1}}", 1],
-      mygreen: ["{\\color{mygreen}{#1}}", 1]
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
     },
     loader: {load: ['[tex]/color']},
     tex: {packages: {'[+]': ['color']}}
@@ -137,7 +140,7 @@ measurements we obtain from sequencing can be obscured by technical factors.
 we're seeking to understand. 
 
 .center[
-    <img src="figures/kensington.jpg" width=900>
+    <img src="figures/kensington.jpg" width=450>
 ]
 
 ---
@@ -158,22 +161,24 @@ we're seeking to understand.
 
 ### Sources of Technical Variation
 
-There are many points at which technical variation arise.
+There are many points at which technical variation arise. For example, for singel-cell sequencing:
 
-.center[
-<img src="figures/sources_of_variation.png" width=900/>
+.pull-left[
+* Sample Collection
+* Sample Storage
+* Library Preparation
+* cDNA Synthesis
 ]
 
----
+.pull-right[
+* PCR Amplification
+* Sequencing
+* Read Assignment
+]
 
-### Technical Variation $\to$ Batch Effects
-
-1. Differences at any stage can lead to systematic differences between data
-collected across experimental runs ("batches").
-
-1. This is especially problematic for studies with large sample sizes or
-multiple study sites. It may not be feasible to process all samples in exactly
-the same way.
+Differences at any step can lead to systematic differences between data
+collected across experimental runs ("batches"). This is especially problematic
+for studies with large sample sizes or multiple study sites.
 
 ---
 
@@ -184,7 +189,30 @@ the same way.
 1. To discover more interesting patterns, we need to either remove these effects
 or account for them in the later models.
 
-(show the classic PCA picture from Leek)
+.center[
+<img src="figures/batch_effects_leek.png" width=450/><br/>
+<span style="font-size: 16px;">
+Read coverage across samples from the HapMap project, discussed in `r Citep(bib,
+"Leek2010")`. Horizontal blocks have the same sequencing date.
+</span>
+]
+
+---
+
+### Improving Discovery
+
+1. Batch effects can mask real biological effects.
+
+1. To discover more interesting patterns, we need to either remove these effects
+or account for them in the later models.
+
+.center[
+<img src="figures/batch_effects_eva.png" width=450/><br/>
+<span style="font-size: 16px;">
+Batch effects across collection dates from a microbiome ecological remediation
+study, discussed in `r Citep(bib, "Wang2019")`.
+</span>
+]
 
 ---
 
@@ -236,8 +264,8 @@ design.
 
 ### Exemplar Methods
 
-1. Two classic methods are ComBat (2007, 7.6K citations) and Harmony (2019, 4.8K
-citations).
+1. Two classic methods are ComBat `r Citep(bib, "Johnson2006")` (2007, 7.6K
+citations) and Harmony `r Citep(bib, "Korsunsky2019")` (2019, 4.8K citations).
 
 1. ComBat is based off a linear model, while Harmony uses nonlinear embedding
 ideas.
@@ -249,27 +277,115 @@ of these techniques.
 
 ### ComBat - Setting
 
-(include the screenshot)
+ComBat was proposed to remove batch effects in microarray data with small sample
+sizes, $n \approx 5 - 20$ per batch, and it has inspired many variants.
+
+1. $\*y_i \in \reals^{G}$: Sample $i$'s expression levels across $G$ genes.
+1. $\*x_i \in \reals^{D}$: Potentially relevant biological factors.
+1. $\*m\left(i\right) \in \left[1, \dots, M \right]$: Which of the $M$ batches does sample $i$ belong to?
 
 ---
 
 ### ComBat - Model
 
+Sample $i$ is assumed to be drawn from:
+
+\begin{align*}
+\*y_{i} = \mu + \*W \*x_{i} + \*b_{m(i)} + \Lambda_{m(i)}\*\epsilon_i
+\end{align*}
+
+where $\Lambda_{m} = \diag{\delta_{mg}}$ rescales the noise $\epsilon_i \sim \mathcal{N}\left(0, \diag{\sigma_g^2}\right)$.
+
+---
+
+### ComBat - Model
+
+\begin{align*}
+\*y_{i} = \mu + \*W \*x_{i} + \*b_{m(i)} + \Lambda_{m(i)}\*\epsilon_i
+\end{align*}
+
+1. The parameters $\*W$ capture shared biological effects
+1. Batches effects cause systematic location-scale shifts, parameterized by
+$\*b_m$ and $\*\Lambda_m$.
+
 ---
 
 ### ComBat - Estimation
 
----
+Rather than estimating each gene $g$ separately, ComBat uses a hierarchical
+model to share information across all genes. This improves stability in the
+corrections for genes with very high noise levels.
 
-### Example: Harmony
-
----
-
-### Objective Function
+(include the shrinkage picture from ComBat)
 
 ---
 
-### Optimization
+### ComBat - Correction
+
+Once we have estimates $\hat{\*b}_m$ and $\hat{\*\Lambda}_{m}$, we can remove their
+effect from the observed data.
+
+\begin{align*}
+\*y_i \to \hat{\Lambda}^{-1}_{m(i)}\left(\*y_i - \hat{\*b}_{m(i)}\right)
+\end{align*}
+
+---
+
+### Harmony - Setting
+
+1. Harmony was proposed to integrate single cell data across experiments. Since
+these data have much larger sample sizes, $n \geq 20K$ cells per batch, it's
+possible to learn a more complex transformation.
+
+1. The intuition is to use clustering to identify matching cell types across
+batches. These clusters can then be made to overlap.
+
+(there must be a picture from the Harmony Ppaer)
+
+---
+
+### Harmony - Clustering
+
+Soft clustering finds centroids $\*\mu_k$ and responsibilities $\*r_i$ to solve,
+
+\begin{align*}
+\min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} \left[\sum_{k = 1}^{K}\|\*y_i - \*\mu_{k}\|_{2}^{2} + \lambda H\left(\*r_{i}\right)\right]
+\end{align*}
+where $H\left(\*r_i\right)$ is the entropy of sample $i$'s responsibilities.
+
+
+.center[
+<img src="figures/hard_clustering.png"/>
+]
+
+---
+
+### Harmony - Clustering
+
+They use a chi-square statistic to encourage clusters to contain an even mix of
+batches (strong associations lead to large values of the statistic).
+
+\begin{align*}
+\min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} &\left[\sum_{k = 1}^{K}\|\*y_i - \*\mu_{k}\|_{2}^{2} + \lambda H\left(\*r_{i}\right)\right] + \\ 
+&\chi^2\left(\text{batch assignments}, \text{cluster assignments}\right)
+\end{align*}
+
+---
+
+### Harmony - Correction
+
+1. We can use linear regression to estimate batch-specific to each cluster,
+\begin{align*}
+\*y_i = \sum_{k} r_{ik} \*b^k_{m\left(i\right)} + \epsilon_i
+\end{align*}
+(It is slightly more complicated, but this is the main idea)
+
+1. The clustering step is repeated on the transformed data, and the whole
+process is iterated until convergence.
+
+```{r, echo = FALSE, out.width = 500}
+#include_graphics("figures/batch-regression-removal.png")
+```
 
 ---
 
@@ -281,13 +397,74 @@ of these techniques.
 
 Batch effect correction can introduce subtle problems of its own.
 
-1. Biases in Testing
-1. Incomplete removal
-1. Is the data even alignable?
+.pull-left[
+**Hypothesis Testing**: When the batches are highly imbalanced, correction can
+distort the null distribution of test statistics. This invalidates the usual
+$p$-values.
+
+**Fix**: Adjust the null distribution to reflect the correction step.
+]
+
+.pull-right[
+(Show the p-value histogram from the Vygaard paper)
+]
 
 ---
 
-### Is it Hopeless?
+### Challenges
+
+Batch effect correction can introduce subtle problems of its own.
+
+.pull-left[
+**Incomplete Removal**: Batch effects can persist even after correction, and this
+can bias performance estimates in machine learning pipelines.
+
+**Fix**: Test the pipeline restricted to individual batches.
+]
+
+.pull-right[
+(Give a figure from the Soneson paper)
+]
+
+---
+
+### Challenges
+
+Batch effect correction can introduce subtle problems of its own.
+
+.pull-left[
+**Alignability**: Batch effect correction methods will attempt to match batches
+regardless of whether there is actually any shared biology.
+
+**Fix**: Perform an initial test to see whether there is sufficient overlap across
+batches.
+]
+
+.pull-right[
+(Take a figure from Rong Ma's paper)
+]
+
+---
+
+### Challenges
+
+Batch effect correction can introduce subtle problems of its own.
+
+.pull-left[
+**Supervision**: Methods that use a biological group label can introduce spurious
+associations with that label.
+
+**Fix**: Test the sensitivity of the results to whether or not the biological group
+label was provided.
+]
+
+.pull-right[
+(Recap to the original Knight paper screenshot)
+]
+
+---
+
+### Should we bother?
 
 (screenshot from biostars)
 
@@ -299,18 +476,16 @@ checks.
 
 ---
 
-### Easy Checks
+### Summary of Checks
 
-1. Run separately across batches
-1. Run with different hyperparameters
+1. Run the analysis separately across batches. Most of the results should overlap, and the corrected method should have higher power.
 
----
+1. Evaluate the sensitivity of the correction methods to hyperparameter choices (e.g., number of clusters in Harmony).
 
-### Difficult (but Useful) Checks
+1. Use a semisynthetic dataset to define computational negative controls. There
+are many packages for learning a simulator based on an initial dataset.
 
-1. Run a simulation experiment
-1. It is getting easier to run your own benchmarks.
-1. We always use positive and negative controls in wet lab experiments. Why not in computational analysis?
+(Give figure from Gerry's splatter simulation)
 
 ---
 
@@ -320,17 +495,24 @@ checks.
 
 ### Replication and controls
 
-We often know a lot more about our data than we use in our methods. For example:
+1. At multiple steps of data generation, we can introduce replication and controls.
 
-1. Replication
+  - Replication: Generate multiple reads of the same sample.
+  - Controls: Samples that lack a biological perturbation, but which are
+  otherwise comparable.
 
-1. Controls
+1. Any variation that is only present after that step must be due to the
+measurement mechanism, rather than the true biology.
 
 ---
 
 ### CellAnova: Cheat Sheet
 
-1. Use controls samples and genes to match across batches.
+1. CellAnova builds on this idea by defining the batch effect correction steps
+using control samples.
+
+1. Across all batches, these controls are assumed to have the same underlying
+biology.
 
 ---
 
@@ -342,11 +524,16 @@ We often know a lot more about our data than we use in our methods. For example:
 
 ### Conclusion
 
-1. Garbage In, Garbage Out: 
+1. Garbage In, Garbage Out: If the main source of variation in the data comes
+from batch effects, then even the most sophisticated methodology will fail to
+discover interesting biology.
 
-1. Essential Approaches:
+1. Approaches: Correction methods try to estimate batch-specific transformations
+of shared biology. These transformations are then reversed to define the
+correction.
 
-1. Diagnostics: 
+1. Checks: It's important not to use batch effect correction methods blindly,
+and many simple checks can be applied.
 
 ---
 
