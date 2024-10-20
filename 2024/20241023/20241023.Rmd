@@ -402,7 +402,7 @@ Batch effect correction can introduce subtle problems of its own.
 distort the null distribution of test statistics. This invalidates the usual
 $p$-values.
 
-**Fix**: Adjust the null distribution to reflect the correction step.
+**Fix**: Adjust the null distribution to reflect the correction step `r Citep(bib, "Nygaard2015")`.
 ]
 
 .pull-right[
@@ -417,7 +417,7 @@ Batch effect correction can introduce subtle problems of its own.
 
 .pull-left[
 **Incomplete Removal**: Batch effects can persist even after correction, and this
-can bias performance estimates in machine learning pipelines.
+can bias performance estimates in machine learning pipelines `r Citep(bib, "Soneson2014")`.
 
 **Fix**: Test the pipeline restricted to individual batches.
 ]
@@ -437,7 +437,7 @@ Batch effect correction can introduce subtle problems of its own.
 regardless of whether there is actually any shared biology.
 
 **Fix**: Perform an initial test to see whether there is sufficient overlap across
-batches.
+batches `r Citep(bib, "Ma2024")`.
 ]
 
 .pull-right[
