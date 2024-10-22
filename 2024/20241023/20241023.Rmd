@@ -90,7 +90,7 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 By the end of this lecture, you will be able to:
 
-1. **Imagine**: Evaluate whether batch effects might exist in your data.
+1. **Imagine**: Why might batch effects appear in your data?
 
 1. **Derive**: Interpret algebraic expressions used to represent batch effect correction methods.
 
@@ -110,24 +110,23 @@ By the end of this lecture, you will be able to:
 
 ### Cancer Microbiome Controversy
 
-1. In June 2024, the journal Nature retracted a paper the claimed distinct
-microbiome signatures associated with different types of cancer. 
+.center[
+    <img src="figures/retraction.png"/>
+]
 
-1. Competing labs suspected data analysis mistakes when they recognized unusual,
-marine taxa among those that were most important.
-
-1. After 3 rounds of argument and counter-argument, the paper was retracted.
+In June 2024, Nature retracted a paper the claimed distinct microbiome
+signatures associated with different types of cancer. This came after one year's
+worth of debate about the data analysis.
 
 ---
 
 ### Cancer Microbiome Controversy
 
-1. Most researchers now agree that the signature discussed in the original paper
-was a technical artifact resulting from the use of supervised normalization, a
-particular batch effect correction method.
-
-1. Before we can understand the nuances of this story, we need to learn about
-batch effects and the methods that have been designed to address them.
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+.center[<img src="figures/batch_confounding.png" width=550/>]
+<p class="caption">Figure from `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.</p>
 
 ---
 
@@ -265,11 +264,9 @@ any application context.
 
 ### Correction Methods
 
-Any method must define,
-
 .pull-left[
+Any method must define,
 1. Transformations: How might batch effects impact measurement?
-
 1. Objective: How can we find the most plausible transformation for our data?
 ]
 
