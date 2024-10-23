@@ -41,7 +41,7 @@ MathJax.Hub.Config({
 
 
 
-## Managing Batch Effects in Sequencing Data
+## Managing Batch Effects in Biological Data
 
 &lt;div id="subtitle"&gt;
 Kris Sankaran &lt;br/&gt;
@@ -51,7 +51,7 @@ Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt
 
 &lt;div id="subtitle_right"&gt;
 BME 780: Methods in Quantitative Biology&lt;br/&gt;
-Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;&lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/1lv9js"&gt;go.wisc.edu/1lv9js&lt;/a&gt;&lt;br/&gt;
 &lt;/div&gt;
 
 &lt;!-- 50 minute talk --&gt;
@@ -76,19 +76,20 @@ Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;&lt;br/&gt;
 
 ---
 
-### Cancer Microbiome Controversy [19]
+### Cancer Microbiome Controversy [1]
 
 .center[
     &lt;img src="figures/retraction.png"/&gt;
 ]
 
-In June 2024, Nature retracted a paper the claimed distinct microbiome
-signatures associated with different types of cancer. This came after one year's
-worth of debate about the data analysis.
+In June 2024, Nature retracted a paper [15] the claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate [19; 20; 22]
+about the data analysis.
 
 ---
 
-### Cancer Microbiome Controversy [19]
+### Cancer Microbiome Controversy [1]
 
 .center[
     &lt;img src="figures/retraction.png"/&gt;
@@ -100,14 +101,14 @@ to learn about batch effects and correction methods.
 
 ---
 
-### Measurement vs. Reality [17]
+### Measurement vs. Reality [2]
 
 .pull-left[
 1. In the same way that a photo can be blurry or obscured by glare, the
 measurements we obtain from sequencing can be obscured by technical factors.
 
-1. Any data are only an imperfect snapshot of the true biological moment that
-we're seeking to understand. 
+1. Any data are only an imperfect snapshot of the biological scene we're seeking
+to understand. 
 ]
 
 .pull-right[
@@ -119,20 +120,20 @@ The glare is a technical artifact of the measuring device.
 
 ---
 
-### Measurement vs. Reality [17]
+### Measurement vs. Reality [2]
 
 .pull-left[
 1. In the same way that a photo can be blurry or obscured by glare, the
 measurements we obtain from sequencing can be obscured by technical factors.
 
-1. Any data are only an imperfect snapshot of the true biological moment that
-we're seeking to understand. 
+1. Any data are only an imperfect snapshot of the biological scene we're seeking
+to understand. 
 ]
 
 .pull-right[
     &lt;img src="figures/goodsell_phagophore.jpg" width=300/&gt;
 &lt;p class="caption"&gt;
-It is hard to precisely measure molecular systems. Artwork from [1].
+It is hard to precisely measure molecular systems. Artwork from [3].
 &lt;/p&gt;
 ]
 
@@ -140,8 +141,7 @@ It is hard to precisely measure molecular systems. Artwork from [1].
 
 ### Sources of Technical Variation
 
-There are many points at which technical variation arises. For example, for single-cell sequencing [18]:
-
+There are many points at which technical variation arises. For example, for single-cell sequencing [4]:
 .pull-left[
 * Sample Collection
 * Sample Storage
@@ -173,7 +173,7 @@ or account for them in the analysis.
 .pull-right[
 &lt;img src="figures/batch_effects_leek.png" width=700/&gt;
 &lt;p class="caption"&gt;
-Read coverage across samples from the HapMap project, discussed in [2]. Horizontal blocks have the same sequencing date.
+Read coverage across samples from the HapMap project, discussed in [5]. Horizontal blocks have the same sequencing date.
 &lt;/p&gt;
 ]
 
@@ -191,8 +191,8 @@ or account for them in the analysis.
 .pull-right[
 &lt;img src="figures/batch_effects_eva.png" width=700/&gt;
 &lt;p class="caption"&gt;
-Batch effects across collection dates from a microbiome ecological remediation
-study, discussed in [3].
+Batch effects across collection dates from a microbiome 
+study, discussed in [6].
 &lt;/p&gt;
 ]
 
@@ -200,15 +200,13 @@ study, discussed in [3].
 
 ### Improving Credibility
 
-1. To dispute a scientific fact, a dissenter can always argue that the
-conditions that led to its production are not generalizable.
-
-1. If we can account for as much batch-to-batch variation as possible, we can
-fortify ourselves against this line of attack.
-
 &gt; If all goes well, then the article... has shown mammal kidney structure; if all goes badley, it shrinks to three hamsters in one laboratory in 1984.
 &gt;
-&gt; -- Bruno Latour in [16]
+&gt; -- Bruno Latour in [7]
+
+To dispute a scientific fact, a dissenter can always argue that the
+conditions that led to its production are not generalizable. To guard against
+this, we need to understand batch-to-batch variation.
 
 ---
 
@@ -244,8 +242,8 @@ Any method must define,
 &lt;img src="figures/batch_transformation.png"/&gt;
 ]
 
-The best choice can depend on specific properties of the data and experimental
-design, which is why there are so many batch effect correction methods.
+The best choice can depend on properties of the data and the experimental
+design, which is why there are so many available methods.
 
 ---
 
@@ -253,9 +251,9 @@ design, which is why there are so many batch effect correction methods.
 
 Today and next week, we'll consider:
 
-1. ComBat [4] (2007, 7.6K citations). Linear Model.
-1. Harmony [5] (2019, 4.8K citations). Clustering + Weighted Least Squares.
-1. CellAnova [6] (preprint, 2023). Clustering + Linear Model.
+1. ComBat [8] (2007, 7.6K citations). Linear Model.
+1. Harmony [9] (2019, 4.8K citations). Clustering + Weighted Least Squares.
+1. CellAnova [10] (preprint, 2023). Clustering + Linear Model.
 
 ---
 
@@ -281,7 +279,7 @@ Sample `\(i\)` is assumed to be drawn from:
 where `\(\Lambda_{m} = \diag{\delta_{mg}}\)` rescales the noise `\(\epsilon_i \sim \mathcal{N}\left(0, \diag{\sigma_g^2}\right)\)`.
 
 1. The parameters `\(\*W\)` capture shared biological effects.
-1. Batches effects cause systematic location-scale shifts.
+1. Batch effects cause systematic location-scale shifts.
 1. Given `\(\*b_m\)` and `\(\*\Lambda_{m}\)`, we can remove their effect from
 the observed data.
 ---
@@ -296,8 +294,8 @@ corrections for genes with very high noise levels.
 &lt;img src="figures/combat_fig3.gif" width=330/&gt;
 ]
 &lt;p class="caption"&gt;
-By fitting the model simultaneously across genes, all the estimates can be drawn
-towards typical values across the ensemble.
+By fitting the model simultaneously across genes, the estimates are "shrunk"
+towards the mean. 
 &lt;/p&gt;
 
 ---
@@ -312,8 +310,7 @@ transformation.
 &lt;img src="figures/harmony_integration.png" width=840/&gt;
 ]
 &lt;p class="caption"&gt;
-The intuition is to use clustering to identify matching cell types across
-batches. These clusters can then be made to overlap.
+First cluster to find cell types and then make batches overlap within each cluster.
 &lt;/p&gt;
 
 ---
@@ -337,29 +334,29 @@ where `\(H\left(\*r_i\right)\)` is the entropy of sample `\(i\)`'s responsibilit
 
 ### Harmony - Clustering
 
-They use a chi-square statistic to encourage clusters to contain an mix evenly across
-batches (strong associations lead to large values of the statistic).
+They use a chi-square statistic to encourage clusters to contain an evan mix
+across batches (strong associations lead to large values of the statistic).
 
 `\begin{align*}
 \min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} &amp;\left[\sum_{k = 1}^{K}r_{ik}\|\*y_i - \*\mu_{k}\|_{2}^{2} - \lambda H\left(\*r_{i}\right)\right] +\chi^2\left(\text{batch}, \text{cluster}\right)
 \end{align*}`
 
 .center[
-&lt;img src="figures/harmony_integration-step2.png" width=600/&gt;
+&lt;img src="figures/harmony_integration-step2.png" width=800/&gt;
 ]
 
 ---
 
 ### Harmony - Correction
 
-We can use weighted linear squares to estimate batch-specific to each cluster,
+They use weighted least squares to estimate batch means for each cluster,
 `\begin{align*}
-\sum_{k} r_{ik} \left(\*y_i - \mu_k - \*b^k_{m\left(i\right)}\right)^2
+\sum_{k} r_{ik} \|\*y_i - \mu_k - \*b^k_{m\left(i\right)}\|_{2}^2
 \end{align*}`
 The corrected data are `\(\tilde{\*y}_i = \sum_{k}r_{ik}\mu_k\)`.
 
 .center[
-&lt;img src="figures/harmony_integration-step3.png" width=600/&gt;
+&lt;img src="figures/harmony_integration-step3.png" width=800/&gt;
 ]
 
 ---
@@ -370,10 +367,10 @@ Batch effect correction can introduce subtle problems of its own.
 
 **Hypothesis Testing**: When the batches are highly imbalanced, correction can
 distort the null distribution of test statistics. This invalidates the usual
-`\(p\)`-values [7].
+`\(p\)`-values [11].
 
 .center[
-&lt;img src="figures/nygaard_pvals.png" width=700/&gt;
+&lt;img src="figures/nygaard_pvals.png" width=880/&gt;
 ]
 
 ---
@@ -384,7 +381,7 @@ Batch effect correction can introduce subtle problems of its own.
 
 .pull-three-quarters-left[
 **Alignability**: Batch effect correction methods will attempt to match batches
-regardless of whether there is actually any shared biology [8].
+regardless of whether there is actually any shared biology [12].
 ]
 
 .pull-three-quarters-right[
@@ -398,7 +395,7 @@ regardless of whether there is actually any shared biology [8].
 Batch effect correction can introduce subtle problems of its own.
 
 **Supervision**: Methods that use a biological group label can introduce spurious
-associations with that label [9].
+associations with that label [13].
 
 .center[
 &lt;img src="figures/retraction.png" width = 600/&gt;
@@ -406,7 +403,9 @@ associations with that label [9].
 
 ---
 
+.center[
 ## Disciplined Design and Analysis
+]
 
 ---
 
@@ -416,13 +415,13 @@ associations with that label [9].
 overlap if the biology is truly shared across batches.
 
 1. Use a simulation to better understand the pipeline. There are many packages
-for learning a simulator based on an initial dataset [10].
+for learning a simulator based on an initial dataset [14].
 
 ---
 
 ### Simulation and Supervised Normalization
 
-Gerry Tonkin-Hill has an excellent re-analysis [9] of the data from [11] which sheds light what were likely the source of the phantom signals. The first part is a simulation.
+Gerry Tonkin-Hill has an excellent re-analysis [13] of the data from [15] which sheds light what were likely the source of the phantom signals. The first part is a simulation.
 
 .pull-left[
 &lt;img src="figures/gth_sim1.png"/&gt;
@@ -436,7 +435,8 @@ Gerry Tonkin-Hill has an excellent re-analysis [9] of the data from [11] which s
 ### Simulation and Supervised Normalization
 
 This setting is balanced -- each condition is equally likely across batches. In
-this case, SVN batch effect correction works well.
+this case, SVN batch effect correction [23]
+works well.
 
 .pull-left[
 &lt;img src="figures/gth_sim3.png"/&gt;
@@ -465,19 +465,18 @@ But what happens if there is imbalance?
 In this case, the SVN correction introduces an artificial difference.
 
 .center[
-&lt;img src="figures/gth_sim7.png" width=400/&gt;
+&lt;img src="figures/gth_sim7.png" width=500/&gt;
 ]
 
-This should cause concern about the original analysis: Some of the hospitals
-specialize in some cancer types. Then again, this simulation is quite
-unrealistic.
+This should cause concern about the original analysis: Hospitals specialize in
+cancer types. Then again, this simulation is quite unrealistic.
 
 ---
 
 ### Experimental Design
 
 1. To better account for batch effects, we should think carefully about
-replication and controls [12; 13; 14].
+replication and controls [16; 17; 18].
 
   - Replication: Generate multiple measurements of the same sample.
   - Controls: Samples or features where the signal is known to be absent.
@@ -489,10 +488,10 @@ due to the measurement mechanism, rather than the true biology.
 
 ### TCGA Data Revisited
 
-1. [11]'s data had been sequenced at several centers, and
+1. [15]'s data had been sequenced at several centers, and
 they used SVN to remove center-level batch effects.
 
-1. After [15] raised concerns about the paper, they
+1. After [19] raised concerns about the paper, they
 decided to rerun the analysis restricted to data sequenced at Harvard Medical.
 
 .center[
@@ -527,8 +526,8 @@ experimental design.
 
 ### CellAnova
 
-1. CellAnova [6] takes this thinking a step further by
-formalizing an approach to matching samples across batches.
+1. CellAnova [10] takes this thinking a step further by
+formalizing an approach to defining and using control samples.
 
 1. Across all batches, control samples are assumed to have the same underlying
 biology, and this gives confidence in the resulting correction.
@@ -554,15 +553,15 @@ vs.
 
 ### Conclusion
 
-1. Garbage In, Garbage Out: If the main source of variation in the data comes
+1. **Garbage In, Garbage Out**: If the main source of variation in the data comes
 from batch effects, then even the most sophisticated methodology will fail to
 discover interesting biology.
 
-1. Approaches: Correction methods try to estimate batch-specific transformations
-of shared biology. These transformations are then reversed to define the
+1. **Approaches**: Correction methods estimate batch-specific transformations of
+shared biology. These transformations are then reversed to define the
 correction.
 
-1. Checks: It's important not to use batch effect correction methods
+1. **Checks**: It's important not to use batch effect correction methods
 thoughtlessly.  Consider applying simulation and leveraging the experimental
 design.
 
@@ -572,81 +571,71 @@ class: reference
 
 ### References
 
-[1] D. S. Goodsell et al. "From Atoms to Cells: Using Mesoscale Landscapes to
+[1] C. Offord. "Journal retracts influential cancer microbiome paper". In:
+_AAAS Articles DO Group_ (Jun. 2024). DOI:
+[10.1126/science.z2xkuua](https://doi.org/10.1126%2Fscience.z2xkuua). URL:
+[http://dx.doi.org/10.1126/science.z2xkuua](http://dx.doi.org/10.1126/science.z2xkuua).
+
+[2] A. Sarkar et al. "Separating measurement and expression models clarifies
+confusion in single-cell RNA sequencing analysis". In: _Nature genetics_ 53.6
+(2021), pp. 770-777.
+
+[3] D. S. Goodsell et al. "From Atoms to Cells: Using Mesoscale Landscapes to
 Construct Visual Narratives". In: _Journal of Molecular Biology_ 430.21 (Oct.
 2018), p. 3954–3968. ISSN: 0022-2836. DOI:
 [10.1016/j.jmb.2018.06.009](https://doi.org/10.1016%2Fj.jmb.2018.06.009). URL:
 [http://dx.doi.org/10.1016/j.jmb.2018.06.009](http://dx.doi.org/10.1016/j.jmb.2018.06.009).
 
-[2] J. T. Leek et al. "Tackling the widespread and critical impact of batch
+[4] R. Jiang et al. "Statistics or biology: the zero-inflation controversy
+about scRNA-seq data". In: _Genome biology_ 23.1 (2022), p. 31.
+
+[5] J. T. Leek et al. "Tackling the widespread and critical impact of batch
 effects in high-throughput data". In: _Nature Reviews Genetics_ 11.10 (Sep.
 2010), p. 733–739. ISSN: 1471-0064. DOI:
 [10.1038/nrg2825](https://doi.org/10.1038%2Fnrg2825). URL:
 [http://dx.doi.org/10.1038/nrg2825](http://dx.doi.org/10.1038/nrg2825).
 
-[3] Y. Wang et al. "Managing batch effects in microbiome data". In: _Briefings
+[6] Y. Wang et al. "Managing batch effects in microbiome data". In: _Briefings
 in Bioinformatics_ 21.6 (Nov. 2019), p. 1954–1970. ISSN: 1477-4054. DOI:
 [10.1093/bib/bbz105](https://doi.org/10.1093%2Fbib%2Fbbz105). URL:
 [http://dx.doi.org/10.1093/bib/bbz105](http://dx.doi.org/10.1093/bib/bbz105).
 
-[4] W. E. Johnson et al. "Adjusting batch effects in microarray expression data
+[7] B. Latour. "Science in action: How to follow scientists and engineers
+through society". In: _Harvard UP_ (1987).
+
+[8] W. E. Johnson et al. "Adjusting batch effects in microarray expression data
 using empirical Bayes methods". In: _Biostatistics_ 8.1 (Apr. 2006), p.
 118–127. ISSN: 1465-4644. DOI:
 [10.1093/biostatistics/kxj037](https://doi.org/10.1093%2Fbiostatistics%2Fkxj037).
 URL:
 [http://dx.doi.org/10.1093/biostatistics/kxj037](http://dx.doi.org/10.1093/biostatistics/kxj037).
 
-[5] I. Korsunsky et al. "Fast, sensitive and accurate integration of
+[9] I. Korsunsky et al. "Fast, sensitive and accurate integration of
 single-cell data with Harmony". In: _Nature Methods_ 16.12 (Nov. 2019), p.
 1289–1296. ISSN: 1548-7105. DOI:
 [10.1038/s41592-019-0619-0](https://doi.org/10.1038%2Fs41592-019-0619-0). URL:
 [http://dx.doi.org/10.1038/s41592-019-0619-0](http://dx.doi.org/10.1038/s41592-019-0619-0).
 
-[6] Z. Zhang et al. "Signal recovery in single cell batch integration".  (May.
+[10] Z. Zhang et al. "Signal recovery in single cell batch integration".  (May.
 2023). DOI:
 [10.1101/2023.05.05.539614](https://doi.org/10.1101%2F2023.05.05.539614). URL:
 [http://dx.doi.org/10.1101/2023.05.05.539614](http://dx.doi.org/10.1101/2023.05.05.539614).
 
-[7] V. Nygaard et al. "Methods that remove batch effects while retaining group
+[11] V. Nygaard et al. "Methods that remove batch effects while retaining group
 differences may lead to exaggerated confidence in downstream analyses". In:
 _Biostatistics_ 17.1 (Aug. 2015), p. 29–39. ISSN: 1465-4644. DOI:
 [10.1093/biostatistics/kxv027](https://doi.org/10.1093%2Fbiostatistics%2Fkxv027).
 URL:
 [http://dx.doi.org/10.1093/biostatistics/kxv027](http://dx.doi.org/10.1093/biostatistics/kxv027).
 
-[8] R. Ma et al. "Principled and interpretable alignability testing and
+[12] R. Ma et al. "Principled and interpretable alignability testing and
 integration of single-cell data". In: _Proceedings of the National Academy of
 Sciences_ 121.10 (Feb. 2024). ISSN: 1091-6490. DOI:
 [10.1073/pnas.2313719121](https://doi.org/10.1073%2Fpnas.2313719121). URL:
 [http://dx.doi.org/10.1073/pnas.2313719121](http://dx.doi.org/10.1073/pnas.2313719121).
 
-[9] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_.
+[13] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_.
 &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
-
-[10] K. Sankaran et al. "Semisynthetic Simulation for Microbiome Data
-Analysis".  (Oct. 2024). DOI:
-[10.1101/2024.10.14.618211](https://doi.org/10.1101%2F2024.10.14.618211). URL:
-[http://dx.doi.org/10.1101/2024.10.14.618211](http://dx.doi.org/10.1101/2024.10.14.618211).
-
-[11] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and
-tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020),
-p. 567–574. ISSN: 1476-4687. DOI:
-[10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
-[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
-
-[12] J. A. Gagnon-Bartsch et al. "Using control genes to correct for unwanted
-variation in microarray data". In: _Biostatistics_ 13.3 (Nov. 2011), p.
-539–552. ISSN: 1468-4357. DOI:
-[10.1093/biostatistics/kxr034](https://doi.org/10.1093%2Fbiostatistics%2Fkxr034).
-URL:
-[http://dx.doi.org/10.1093/biostatistics/kxr034](http://dx.doi.org/10.1093/biostatistics/kxr034).
-
-[13] L. Jacob et al. "Correcting gene expression data when neither the unwanted
-variation nor the factor of interest are observed". In: _Biostatistics_ 17.1
-(Aug. 2015), p. 16–28. ISSN: 1468-4357. DOI:
-[10.1093/biostatistics/kxv026](https://doi.org/10.1093%2Fbiostatistics%2Fkxv026).
-URL:
-[http://dx.doi.org/10.1093/biostatistics/kxv026](http://dx.doi.org/10.1093/biostatistics/kxv026).
 
 ---
 
@@ -654,39 +643,60 @@ class: reference
 
 ### References
 
-[14] D. Gerard et al. "Unifying and Generalizing Methods for Removing Unwanted
+[14] K. Sankaran et al. "Semisynthetic Simulation for Microbiome Data
+Analysis".  (Oct. 2024). DOI:
+[10.1101/2024.10.14.618211](https://doi.org/10.1101%2F2024.10.14.618211). URL:
+[http://dx.doi.org/10.1101/2024.10.14.618211](http://dx.doi.org/10.1101/2024.10.14.618211).
+
+[15] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and
+tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020),
+p. 567–574. ISSN: 1476-4687. DOI:
+[10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
+[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
+
+[16] J. A. Gagnon-Bartsch et al. "Using control genes to correct for unwanted
+variation in microarray data". In: _Biostatistics_ 13.3 (Nov. 2011), p.
+539–552. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxr034](https://doi.org/10.1093%2Fbiostatistics%2Fkxr034).
+URL:
+[http://dx.doi.org/10.1093/biostatistics/kxr034](http://dx.doi.org/10.1093/biostatistics/kxr034).
+
+[17] L. Jacob et al. "Correcting gene expression data when neither the unwanted
+variation nor the factor of interest are observed". In: _Biostatistics_ 17.1
+(Aug. 2015), p. 16–28. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxv026](https://doi.org/10.1093%2Fbiostatistics%2Fkxv026).
+URL:
+[http://dx.doi.org/10.1093/biostatistics/kxv026](http://dx.doi.org/10.1093/biostatistics/kxv026).
+
+[18] D. Gerard et al. "Unifying and Generalizing Methods for Removing Unwanted
 Variation Based on Negative Controls". In: _Statistica Sinica_ (2021). ISSN:
 1017-0405. DOI:
 [10.5705/ss.202018.0345](https://doi.org/10.5705%2Fss.202018.0345). URL:
 [http://dx.doi.org/10.5705/ss.202018.0345](http://dx.doi.org/10.5705/ss.202018.0345).
 
-[15] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome
+[19] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome
 findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511.
 DOI: [10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL:
 [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
 
-[16] B. Latour. "Science in action: How to follow scientists and engineers
-through society". In: _Harvard UP_ (1987).
+[20] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities
+of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
+[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL:
+[http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
 
-[17] A. Sarkar et al. "Separating measurement and expression models clarifies
-confusion in single-cell RNA sequencing analysis". In: _Nature genetics_ 53.6
-(2021), pp. 770-777.
+[21] L. Narunsky-Haziza et al. "Pan-cancer analyses reveal cancer-type-specific
+fungal ecologies and bacteriome interactions". In: _Cell_ 185.20 (2022), pp.
+3789-3806.
 
-[18] R. Jiang et al. "Statistics or biology: the zero-inflation controversy
-about scRNA-seq data". In: _Genome biology_ 23.1 (2022), p. 31.
+[22] G. D. Sepich-Poore et al. "Robustness of cancer microbiome signals over a
+broad range of methodological variation". In: _Oncogene_ 43.15 (Feb. 2024), p.
+1127–1148. ISSN: 1476-5594. DOI:
+[10.1038/s41388-024-02974-w](https://doi.org/10.1038%2Fs41388-024-02974-w).
+URL:
+[http://dx.doi.org/10.1038/s41388-024-02974-w](http://dx.doi.org/10.1038/s41388-024-02974-w).
 
-[19] C. Offord. "Journal retracts influential cancer microbiome paper". In:
-_AAAS Articles DO Group_ (Jun. 2024). DOI:
-[10.1126/science.z2xkuua](https://doi.org/10.1126%2Fscience.z2xkuua). URL:
-[http://dx.doi.org/10.1126/science.z2xkuua](http://dx.doi.org/10.1126/science.z2xkuua).
-
----
-
-
-
----
-
-### Figure Attributions
+[23] B. H. Mecham et al. "Supervised normalization of microarrays". In:
+_Bioinformatics_ 26.10 (2010), pp. 1308-1315.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
