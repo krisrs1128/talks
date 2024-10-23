@@ -168,7 +168,7 @@ It is hard to precisely measure molecular systems. Artwork from `r Citep(bib, "G
 
 ### Sources of Technical Variation
 
-There are many points at which technical variation arise. For example, for singel-cell sequencing `r Citep(bib, "jiang2022statistics")`:
+There are many points at which technical variation arises. For example, for single-cell sequencing `r Citep(bib, "jiang2022statistics")`:
 
 .pull-left[
 * Sample Collection
@@ -333,7 +333,7 @@ towards typical values across the ensemble.
 
 ### Harmony - Setting
 
-Harmony was proposed to integrate single cell data across experiments. Since
+Harmony was proposed to integrate single-cell data across experiments. Since
 these data have much larger sample sizes, it's possible to learn a more complex
 transformation.
 
@@ -522,8 +522,7 @@ due to the measurement mechanism, rather than the true biology.
 they used SVN to remove center-level batch effects.
 
 1. After `r Citep(bib, "Gihawi2023")` raised concerns about the paper, they
-decided to rerun the analysis restricted to just data generated at the center at
-Harvard Medical.
+decided to rerun the analysis restricted to data sequenced at Harvard Medical.
 
 .center[
 <img src="figures/gth_real1.png" width=480/>
@@ -545,7 +544,7 @@ collected by different hospitals.
 ### TCGA Data Revisited
 
 If you remove the hospital-level batch effect, the signal more or less vanishes.
-Either applying or ommitting a batch effect correction method can lead to
+Either applying or omitting a batch effect correction method can lead to
 spurious effects! It is important to be skeptical and carefully consider the
 experimental design.
 
@@ -592,8 +591,9 @@ discover interesting biology.
 of shared biology. These transformations are then reversed to define the
 correction.
 
-1. Checks: It's important not to use batch effect correction methods blindly.
-Consider applying simulation and leveraging the experimental design.
+1. Checks: It's important not to use batch effect correction methods
+thoughtlessly.  Consider applying simulation and leveraging the experimental
+design.
 
 ---
 
