@@ -88,15 +88,11 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ### Learning Outcomes
 
-By the end of this lecture, you will be able to:
-
 1. **Imagine**: Why might batch effects appear in your data?
 
 1. **Derive**: Interpret algebraic expressions used to represent batch effect correction methods.
 
-1. **Decide**: Navigate trade-offs between batch effect correction approaches.
-
-1. **Check**: Implement diagnostics to ensure trustworthy outputs.
+1. **Check**: Reason about checks that can give more confidence in a batch effect correction method's output.
 
 1. **Improve**: Explain the potential for replication and controls to improve batch effect correction methods
 
@@ -122,11 +118,13 @@ worth of debate about the data analysis.
 
 ### Cancer Microbiome Controversy
 
+.center[
+    <img src="figures/retraction.png"/>
+]
+
 The "disease signature" was an artifact resulting from the use of a batch effect
 correction method.  Before we can understand the nuances of the story, we need
 to learn about batch effects and correction methods.
-.center[<img src="figures/batch_confounding.png" width=550/>]
-<p class="caption">Figure from `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.</p>
 
 ---
 
@@ -321,9 +319,10 @@ where $\Lambda_{m} = \diag{\delta_{mg}}$ rescales the noise $\epsilon_i \sim \ma
 \*y_{i} = \mu + \*W \*x_{i} + \*b_{m(i)} + \Lambda_{m(i)}\*\epsilon_i
 \end{align*}
 
-1. The parameters $\*W$ capture shared biological effects
-1. Batches effects cause systematic location-scale shifts, parameterized by
-$\*b_m$ and $\*\Lambda_m$.
+1. The parameters $\*W$ capture shared biological effects.
+1. Batches effects cause systematic location-scale shifts.
+1. Given $\*b_m$ and $\*\Lambda_{m}$, we can remove their effect from
+the observed data.
 
 ---
 
@@ -340,17 +339,6 @@ corrections for genes with very high noise levels.
 By fitting the model simultaneously across genes, all the estimates can be drawn
 towards typical values across the ensemble.
 </p>
-
----
-
-### ComBat - Correction
-
-Once we have estimates $\hat{\*b}_m$ and $\hat{\*\Lambda}_{m}$, we can remove their
-effect from the observed data.
-
-\begin{align*}
-\*y_i \to \hat{\Lambda}^{-1}_{m(i)}\left(\*y_i - \hat{\*b}_{m(i)}\right)
-\end{align*}
 
 ---
 
@@ -415,19 +403,13 @@ process is iterated until convergence.
 
 ---
 
-## Checking Your Work
-
----
-
 ### Challenges
 
 Batch effect correction can introduce subtle problems of its own.
 
 **Hypothesis Testing**: When the batches are highly imbalanced, correction can
 distort the null distribution of test statistics. This invalidates the usual
-$p$-values.
-
-**Fix**: Adjust the null distribution to reflect the correction step `r Citep(bib, "Nygaard2015")`.
+$p$-values `r Citep(bib, "Nygaard2015")`.
 
 .center[
 <img src="figures/nygaard_pvals.png" width=700/>
@@ -439,29 +421,9 @@ $p$-values.
 
 Batch effect correction can introduce subtle problems of its own.
 
-.pull-left[
-**Incomplete Removal**: Batch effects can persist even after correction, and this
-can bias performance estimates in machine learning pipelines `r Citep(bib, "Soneson2014")`.
-
-**Fix**: Test the pipeline restricted to individual batches.
-]
-
-.pull-right[
-(Give a figure from the Soneson paper)
-]
-
----
-
-### Challenges
-
-Batch effect correction can introduce subtle problems of its own.
-
 .pull-three-quarters-left[
 **Alignability**: Batch effect correction methods will attempt to match batches
-regardless of whether there is actually any shared biology.
-
-**Fix**: Perform an initial test to see whether there is sufficient overlap across
-batches `r Citep(bib, "Ma2024")`.
+regardless of whether there is actually any shared biology `r Citep(bib, "Ma2024")`.
 ]
 
 .pull-three-quarters-right[
@@ -474,36 +436,12 @@ batches `r Citep(bib, "Ma2024")`.
 
 Batch effect correction can introduce subtle problems of its own.
 
-.pull-left[
 **Supervision**: Methods that use a biological group label can introduce spurious
-associations with that label.
+associations with that label `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.
 
-**Fix**: Test the sensitivity of the results to whether or not the biological group
-label was provided.
+.center[
+<img src="figures/retraction.png" width = 600/>
 ]
-
-.pull-right[
-(Recap to the original Knight paper screenshot)
-]
-
----
-
-### Should we bother?
-
-<img src="figures/biostars.png" width=900/>
-
----
-
-### Summary of Checks
-
-1. Run the analysis separately across batches. Most of the results should overlap, and the corrected method should have higher power.
-
-1. Evaluate the sensitivity of the correction methods to hyperparameter choices (e.g., number of clusters in Harmony).
-
-1. Use a semisynthetic dataset to define computational negative controls. There
-are many packages for learning a simulator based on an initial dataset.
-
-(Give figure from Gerry's splatter simulation)
 
 ---
 
@@ -511,32 +449,129 @@ are many packages for learning a simulator based on an initial dataset.
 
 ---
 
-### Replication and controls
+### Sensitivity and Simulation
 
-1. At multiple steps of data generation, we can introduce replication and controls.
+1. Run the analysis separately across batches. Many of the results should
+overlap if the biology is truly shared across batches.
 
-  - Replication: Generate multiple reads of the same sample.
-  - Controls: Samples that lack a biological perturbation, but which are
-  otherwise comparable.
-
-1. Any variation that is only present after that step must be due to the
-measurement mechanism, rather than the true biology.
+1. Use a simulation to better understand the pipeline. There are many packages
+for learning a simulator based on an initial dataset `r Citep(bib, "Sankaran2024")`.
 
 ---
 
-### CellAnova: Cheat Sheet
+### Simulation and Supervised Normalization
 
-1. CellAnova builds on this idea by defining the batch effect correction steps
-using control samples.
+Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom signals. The first part is a simulation.
 
-1. Across all batches, these controls are assumed to have the same underlying
-biology.
+.pull-left[
+<img src="figures/gth_sim1.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim2.png"/>
+]
 
 ---
 
-### CellAnova: Cheat Sheet
+### Simulation and Supervised Normalization
 
-1. Any useful mathematical facts?
+This setting is balanced -- each condition is equally likely across batches. In
+this case, SVN batch effect correction works well.
+
+.pull-left[
+<img src="figures/gth_sim3.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim4.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+But what happens if there is imbalance?
+
+.pull-left[
+<img src="figures/gth_sim5.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim6.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+In this case, the SVN correction introduces an artificial difference.
+
+.center[
+<img src="figures/gth_sim7.png" width=400/>
+]
+
+This should cause concern about the original analysis: Some of the hospitals
+specialize in some cancer types. Then again, this simulation is quite
+unrealistic.
+
+---
+
+### Experimental Design
+
+1. To better account for batch effects, we should think carefully about
+replication and controls `r Citep(bib, c("GagnonBartsch2011", "Jacob2015", "Gerard2021"))`.
+
+  - Replication: Generate multiple measurements of the same sample.
+  - Controls: Samples or features where the signal is known to be absent.
+
+1. Any variation that is only present after a step of data generation must be
+due to the measurement mechanism, rather than the true biology.
+
+---
+
+### TCGA Data Revisited
+
+1. `r Citep(bib, "Poore2020")`'s data had been sequenced at several centers, and
+they used SVN to remove center-level batch effects.
+
+1. After `r Citep(bib, "Gihawi2023")` raised concerns about the paper, they
+decided to rerun the analysis restricted to just data generated at the center at
+Harvard Medical.
+
+.center[
+<img src="figures/gth_real1.png" width=480/>
+]
+
+---
+
+### TCGA Data Revisited
+
+However, even though the data were sequenced at the same center, they were
+collected by different hospitals.
+
+.center[
+<img src="figures/gth_real2.png" width=600/>
+]
+
+---
+
+### TCGA Data Revisited
+
+If you remove the hospital-level batch effect, the signal more or less vanishes.
+Either applying or ommitting a batch effect correction method can lead to
+spurious effects! It is important to be skeptical and carefully consider the
+experimental design.
+
+.center[
+    <img src="figures/gth_real4.png" width=600/>
+]
+
+---
+
+### CellAnova
+
+1. CellAnova `r Citep(bib, "Zhang2023")` takes this thinking a step further by
+formalizing an approach to matching samples across batches.
+
+1. Across all batches, control samples are assumed to have the same underlying
+biology, and this gives confidence in the resulting correction.
 
 ---
 
