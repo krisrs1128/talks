@@ -104,7 +104,7 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ---
 
-### Cancer Microbiome Controversy
+### Cancer Microbiome Controversy `r Citep(bib, "retraction2024")`
 
 .center[
     <img src="figures/retraction.png"/>
@@ -116,7 +116,7 @@ worth of debate about the data analysis.
 
 ---
 
-### Cancer Microbiome Controversy
+### Cancer Microbiome Controversy `r Citep(bib, "retraction2024")`
 
 .center[
     <img src="figures/retraction.png"/>
@@ -128,7 +128,7 @@ to learn about batch effects and correction methods.
 
 ---
 
-### Measurement vs. Reality
+### Measurement vs. Reality `r Citep(bib, "sarkar2021separating")`
 
 .pull-left[
 1. In the same way that a photo can be blurry or obscured by glare, the
@@ -147,7 +147,7 @@ The glare is a technical artifact of the measuring device.
 
 ---
 
-### Measurement vs. Reality
+### Measurement vs. Reality `r Citep(bib, "sarkar2021separating")`
 
 .pull-left[
 1. In the same way that a photo can be blurry or obscured by glare, the
@@ -168,7 +168,7 @@ It is hard to precisely measure molecular systems. Artwork from `r Citep(bib, "G
 
 ### Sources of Technical Variation
 
-There are many points at which technical variation arise. For example, for singel-cell sequencing:
+There are many points at which technical variation arise. For example, for singel-cell sequencing `r Citep(bib, "jiang2022statistics")`:
 
 .pull-left[
 * Sample Collection
@@ -235,7 +235,9 @@ conditions that led to its production are not generalizable.
 1. If we can account for as much batch-to-batch variation as possible, we can
 fortify ourselves against this line of attack.
 
-(picture or quote from Latour re. induction)
+> If all goes well, then the article... has shown mammal kidney structure; if all goes badley, it shrinks to three hamsters in one laboratory in 1984.
+>
+> -- Bruno Latour in `r Citep(bib, "latour1987science")`
 
 ---
 
@@ -255,8 +257,7 @@ fortify ourselves against this line of attack.
 | Correct | Generality. Can be reused easily. | Can introduce its own artifacts. |
 | Account | Cohesion. Only one method needed for everything.  | Time consuming. Bespoke development for each context. |
 
-We will review correction methods, since we don't want to restrict ourselves to
-any application context.
+We will review correction methods.
 
 ---
 
@@ -279,14 +280,11 @@ design, which is why there are so many batch effect correction methods.
 
 ### Exemplar Methods
 
-1. Two classic methods are ComBat `r Citep(bib, "Johnson2006")` (2007, 7.6K
-citations) and Harmony `r Citep(bib, "Korsunsky2019")` (2019, 4.8K citations).
+Today and next week, we'll consider:
 
-1. ComBat is based off a linear model, while Harmony uses clustering and
-weighted regression.
-
-1. Next week, we will discuss CellAnova `r Citep(bib, "Zhang2023")` (2023),
-which is a modern descendant of these techniques.
+1. ComBat `r Citep(bib, "Johnson2006")` (2007, 7.6K citations). Linear Model.
+1. Harmony `r Citep(bib, "Korsunsky2019")` (2019, 4.8K citations). Clustering + Weighted Least Squares.
+1. CellAnova `r Citep(bib, "Zhang2023")` (preprint, 2023). Clustering + Linear Model.
 
 ---
 
@@ -297,7 +295,7 @@ sizes, $n \approx 5 - 20$ per batch, and it has inspired many variants.
 
 1. $\*y_i \in \reals^{G}$: Sample $i$'s expression levels across $G$ genes.
 1. $\*x_i \in \reals^{D}$: Potentially relevant biological factors.
-1. $\*m\left(i\right) \in \left[1, \dots, M \right]$: Which of the $M$ batches does sample $i$ belong to?
+1. $m\left(i\right) \in \left[1, \dots, M \right]$: Which of the $M$ batches does sample $i$ belong to?
 
 ---
 
@@ -336,8 +334,8 @@ towards typical values across the ensemble.
 ### Harmony - Setting
 
 Harmony was proposed to integrate single cell data across experiments. Since
-these data have much larger sample sizes, $n \geq 20K$ cells per batch, it's
-possible to learn a more complex transformation.
+these data have much larger sample sizes, it's possible to learn a more complex
+transformation.
 
 .center[
 <img src="figures/harmony_integration.png" width=840/>
