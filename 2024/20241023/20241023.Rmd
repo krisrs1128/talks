@@ -311,19 +311,10 @@ Sample $i$ is assumed to be drawn from:
 
 where $\Lambda_{m} = \diag{\delta_{mg}}$ rescales the noise $\epsilon_i \sim \mathcal{N}\left(0, \diag{\sigma_g^2}\right)$.
 
----
-
-### ComBat - Model
-
-\begin{align*}
-\*y_{i} = \mu + \*W \*x_{i} + \*b_{m(i)} + \Lambda_{m(i)}\*\epsilon_i
-\end{align*}
-
 1. The parameters $\*W$ capture shared biological effects.
 1. Batches effects cause systematic location-scale shifts.
 1. Given $\*b_m$ and $\*\Lambda_{m}$, we can remove their effect from
 the observed data.
-
 ---
 
 ### ComBat - Estimation
@@ -384,22 +375,23 @@ batches (strong associations lead to large values of the statistic).
 \min_{\*\mu_k \in \reals^{G}, \*r_i \in \Delta^{K}} \sum_{i = 1}^{N} &\left[\sum_{k = 1}^{K}r_{ik}\|\*y_i - \*\mu_{k}\|_{2}^{2} - \lambda H\left(\*r_{i}\right)\right] +\chi^2\left(\text{batch}, \text{cluster}\right)
 \end{align*}
 
+.center[
+<img src="figures/harmony_integration-step2.png" width=600/>
+]
+
 ---
 
 ### Harmony - Correction
 
-1. We can use linear regression to estimate batch-specific to each cluster,
+We can use weighted linear squares to estimate batch-specific to each cluster,
 \begin{align*}
-\*y_i = \sum_{k} r_{ik} \*b^k_{m\left(i\right)} + \epsilon_i
+\sum_{k} r_{ik} \left(\*y_i - \mu_k - \*b^k_{m\left(i\right)}\right)^2
 \end{align*}
-(It is slightly more complicated, but this is the main idea)
+The corrected data are $\tilde{\*y}_i = \sum_{k}r_{ik}\mu_k$.
 
-1. The clustering step is repeated on the transformed data, and the whole
-process is iterated until convergence.
-
-```{r, echo = FALSE, out.width = 500}
-#include_graphics("figures/batch-regression-removal.png")
-```
+.center[
+<img src="figures/harmony_integration-step3.png" width=600/>
+]
 
 ---
 
@@ -575,6 +567,23 @@ biology, and this gives confidence in the resulting correction.
 
 ---
 
+### CellAnova
+
+The CellAnova paper uses notation that stacks the expressions like those we saw
+in ComBat.
+
+\begin{align*}
+\*y_{i} = \mu + \*W \*x_{i} + \*b_{m(i)} + \Lambda_{m(i)}\*\epsilon_i
+\end{align*}
+
+vs.
+
+\begin{align*}
+\*Y = \*M + \*X \*W^\top + \*B \*V^\top
+\end{align*}
+
+---
+
 ### Conclusion
 
 1. Garbage In, Garbage Out: If the main source of variation in the data comes
@@ -585,8 +594,8 @@ discover interesting biology.
 of shared biology. These transformations are then reversed to define the
 correction.
 
-1. Checks: It's important not to use batch effect correction methods blindly,
-and many simple checks can be applied.
+1. Checks: It's important not to use batch effect correction methods blindly.
+Consider applying simulation and leveraging the experimental design.
 
 ---
 
