@@ -129,6 +129,28 @@ to learn about batch effects and correction methods.
 
 ---
 
+### Sources of Technical Variation
+
+There are many points at which technical variation arises. For example, for single-cell sequencing `r Citep(bib, "jiang2022statistics")`:
+.pull-left[
+* Sample Collection
+* Sample Storage
+* Library Preparation
+* cDNA Synthesis
+]
+
+.pull-right[
+* PCR Amplification
+* Sequencing
+* Read Assignment
+]
+
+Differences at any step can lead to systematic differences between data
+collected across experimental runs ("batches"). This is especially problematic
+for studies with large sample sizes or multiple study sites.
+
+---
+
 ### Measurement vs. Reality `r Citep(bib, "sarkar2021separating")`
 
 .pull-left[
@@ -167,27 +189,6 @@ It is hard to precisely measure molecular systems. Artwork from `r Citep(bib, "G
 
 ---
 
-### Sources of Technical Variation
-
-There are many points at which technical variation arises. For example, for single-cell sequencing `r Citep(bib, "jiang2022statistics")`:
-.pull-left[
-* Sample Collection
-* Sample Storage
-* Library Preparation
-* cDNA Synthesis
-]
-
-.pull-right[
-* PCR Amplification
-* Sequencing
-* Read Assignment
-]
-
-Differences at any step can lead to systematic differences between data
-collected across experimental runs ("batches"). This is especially problematic
-for studies with large sample sizes or multiple study sites.
-
----
 
 ### Improving Discovery
 
@@ -229,7 +230,7 @@ study, discussed in `r Citep(bib, "Wang2019")`.
 
 ### Improving Credibility
 
-> If all goes well, then the article... has shown mammal kidney structure; if all goes badley, it shrinks to three hamsters in one laboratory in 1984.
+> If all goes well, then the article... has shown mammal kidney structure; if all goes badly, it shrinks to three hamsters in one laboratory in 1984.
 >
 > -- Bruno Latour in `r Citep(bib, "latour1987science")`
 
