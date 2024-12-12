@@ -23,7 +23,8 @@ MathJax.Hub.Config({
       myred: ["{\\color{myred}{#1}}", 1],
       mygreen: ["{\\color{mygreen}{#1}}", 1],
       reals: "{\\mathbb{R}}",
-      Esubarg: "{\\mathbf{E}{#1}\left[{#2}\right]}",
+      Esubarg: "{\\mathbf{E}{#1}\\left[{#2}\\right]}",
+      absarg: "{\\left|{#1}\\right|}",
       "\*": ["{\\mathbf{#1}}", 1],
       diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
     },
