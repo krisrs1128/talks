@@ -336,11 +336,51 @@ We can estimate this without evaluating $v$ on all subsets!
 
 ---
 
-### $L$ and $C$ Shapley
+### Feature Neighborhoods
+
+1. Another idea is to restrict the collection of sets in the summation. 
+
+1. This is most natural when there is a notion of distance between features. For
+example, for a word at the start of a sentence, don't bother with sets of words
+near the end.
+
+---
+
+### $L$ Shapley
+
+Let $N_{k}\left(i\right)$ be all the features within distance $k$ of feature
+$i$. A fast approximation is to consider:
+
+\begin{align*}
+\varphi_{x}^{L}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \in N_{k\left(i\right)}} 
+frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
+\end{align*}
+
+1. When $k$ is small, this will be an efficient approximation.
+
+1. This is sometimes called $L$-Shapley ($L$ \to ``Local'')
+
+---
+
+### $C$ Shapley
+
+We can further focus on those subsets that are connected to feature $i$:
+
+\begin{align*}
+\varphi_{x}^{C}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \subseteq N_{k\left(i\right), S \text{connected to } i}} 
+frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
+\end{align*}
+
+1. This is sometimes called $C$-Shapley ($C$ \to ``Connected'')
 
 ---
 
 ### Related: Gradients & Saliency
+
+1. Shapley values can be used to attribute importances to pixels in an image.
+
+1. These ideas are closely related to saliency method, which consider what
+happens to a model's prediction when we perturb (rather than omit) pixel $i$.
 
 ---
 
