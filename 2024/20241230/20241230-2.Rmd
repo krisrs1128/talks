@@ -1,0 +1,299 @@
+---
+title: ""
+author: "Kris Sankaran"
+#output:
+  # xaringan::moon_reader:
+  #   css: ["default", "css/xaringan-themer.css"]
+  #   lib_dir: libs
+  #   self_contained: false
+  #   nature:
+  #     highlightStyle: github
+  #     highlightLines: true
+  #     ratio: "16:9"
+  #   seal: false
+output: html_document
+---
+
+class: title
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      Esubarg: "{\\mathbf{E}{#1}\left[{#2}\right]}",
+      absarg: "{\\left|{#1}\\right|}",
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+
+<style>
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+</style>
+
+```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
+library(xaringancolor)
+setup_colors(
+  myred = "#B4575C",
+  mygreen = "#5A8A80"
+)
+
+library(flair)
+myred <- "#B4575C"
+mygreen <- "#5A8A80"
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Profiles and Importance
+
+<div id="subtitle">
+Kris Sankaran <br/>
+30 | December | 2024 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+IISA Interpretability Short Course <br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+</div>
+
+<!-- 30 minute talk -->
+
+---
+
+### Global Summaries
+
+1. LIME and Shapley are used when we want to understand the important variables for predictions at a specific instance $x$.
+
+1. What if we want global variable summaries across the entire model? We could
+average Shapley values across samples, but this doesn't tell us *how* a variable
+influences the response.
+
+---
+
+## Partial Dependence
+
+---
+
+### 
+
+(take material from your course)
+
+---
+
+### Pathologies: Extrapolation
+
+While partial dependence is a simple idea, it suffers from a few issues.
+
+First, we might query the model at coordinates $\left(x_{d}, x_{-d}\right)$ that
+are never encountered in the data.
+
+---
+
+### Pathologies: Multicollinearity
+
+We could try to fix this by evaluating the sum only over $x_{-d}$ that are close to the observed data.
+
+There is a subtle problem: If $x_{d}$ and $x_{d'}$ are highly correlated, we
+might accidentally attribute effects from one onto the other.
+
+---
+
+## Accumulated Local Effects
+
+---
+
+### Geometric Intuition
+
+To resolve these issues, consider the derivaties,
+
+\begin{align*}
+\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d}.
+\end{align*}
+
+This removes any linear effects from variables other than $x_{d}$.
+
+---
+
+### Geometric Intuition
+
+We can evaluate these derivatives locally across the observed data range. Then,
+we can stitch (``accumulate'') them into a single, coherent summary.
+
+(add a picture to summarize this)
+
+---
+
+### ALE Estimand
+
+This is formalized by the following formula,
+
+\begin{align*}
+g_{d}\left(x_{d}\right) := \int \Earg{\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d} \vert x_{-d} = z} dz
+\end{align*}
+
+---
+
+### ALE Estimator
+
+This is estimated using partial differences along a fine partition
+
+\begin{align*}
+\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{i} \in N_{d}\left(k\right)} f\left(z_{dk}^{k}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)
+\end{align*}
+
+(add the picture with the extended endpoints)
+
+---
+
+### Computation
+
+Each neighborhood $N_{d}$ is usually relatively small. This means that ALE plots
+needs fewer function evaluations $f$ compared to Partial Dependence Plots.
+
+---
+
+## MDI+
+
+---
+
+### Model-Specific Variable Importance
+
+Both PDP and ALE plots are model agnostic. If we allow ourselves to focus on
+specific classes of models, then we can come up with more precise notions of
+importance (give some references,e.g., DeepShap).
+
+To illustrate this idea, we will consider the MDI+ (Mean Decrease in Impurity)
+measure proposed in `Citep(bib, "")` for decision trees and random forests.
+
+---
+
+### Classic MDI
+
+Let $t$ be a node within a decision tree. Let $t_{L}$ and $t_{R}$ be the left
+and right descendent subtrees. We define the decrease in impurity at node $s$
+as:
+
+\begin{align*}
+\Delta\left(s\right) &= \frac{1}{N\left(t\right)}\left[
+\sum_{x_{i} \in t} \left(y_i - \overline{y}_{t}\right)^2 -
+\sum_{x_{i} \in t_{L}} \left(y_i - \overline{y}_{t_{L}}\right) ^ 2 - 
+\sum_{x_{i} \in t_{R}} \left(y_i - \overline{y}_{t_{R}}\right) ^ 2 \right]
+\end{align*}
+
+---
+
+### Classic MDI
+
+The MDI for feature $d$ is then a weighted mean of $\Delta$ across all splits that
+involving feature $d$.
+
+\begin{align*}
+\text{MDI}_{k}\left(s\right) &= \frac{1}{N}\sum_{s : \text{splits } k} N\left(s\right) \Delta\left(s\right)
+\end{align*}
+
+Here, $N\left(s\right)$ is the number of samples that descend from split $s$.
+
+---
+
+### Random forests
+
+To go from decision trees to random forests....
+
+---
+
+### Issues
+
+1. Like with PDP, the main issue with MDI is that it behaves poorly when features are correlated.
+
+1. If a variable is highly correlated with any others, then its estimated MDI will be low. 
+
+---
+
+### Decision Trees $\to$ Regression
+
+Decision trees can be represented as linear regressions in an basis derived from the tree.
+
+\begin{align*}
+\psi_{s}\left(x\right) &= \frac{1}{\sqrt{N\left(t_{L}\right)N\left(t_{R}\right)}}\left[N\left(t_{R}\right)\indic{x \in t_{L}} - N\left(t_{L}\right)\indic{x \in t_{R}}\right]
+\end{align*}
+
+---
+
+### Decision Trees $\to$ Regression
+
+The $\hat{y}$ from this regression are exactly the fitted values from a decision tree.
+
+\begin{align*}
+\hat{y} = \left[\psi_{1}\left(x\right) \vert \dots \vert \psi_{S}\left(x\right)\right]\hat{\beta}
+\end{align*}
+
+---
+
+### MDI $\to$ $R^2$
+
+Replace all basis elements not involving feature $k$ by their averages:
+
+\begin{align*}
+\hat{y}^{(k)} = \left[\overline{\psi}_{1}\left(x\right) \vert \dots \vert \psi_{s}\left(x\right) \vert \dots \vert \overline{\psi}_{S}\left(x\right)\right]\hat{\beta}
+\end{align*}
+
+The $R^2$ of this model is exactly the MDI of feature $k$.
+
+---
+
+### MDI $\to$ MDI$+$
+
+1. The main idea of MDI+ is that we don't have to use linear regression -- we
+can use the entire high-dimensional statistics toolkit.
+
+1. E.g., `Citep(bib, "")` argue that using $R^2$ from a ridge regression model
+leads to more stable rankings than ordinary MDI.
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 29)
+```
