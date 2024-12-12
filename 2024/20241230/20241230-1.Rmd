@@ -1,0 +1,189 @@
+---
+title: """
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+
+<style>
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+</style>
+
+```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
+library(xaringancolor)
+setup_colors(
+  myred = "#B4575C",
+  mygreen = "#5A8A80"
+)
+
+library(flair)
+myred <- "#B4575C"
+mygreen <- "#5A8A80"
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Local Attribution
+
+<div id="subtitle">
+Kris Sankaran <br/>
+30 | December | 2024 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+IISA Interpretability Short Course <br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+</div>
+
+<!-- 30 minute talk -->
+
+---
+
+### Local vs. Global Explanations
+
+---
+
+### Which words are important?
+
+---
+
+### Which features are used?
+
+(image example)
+
+(loan example)
+
+---
+
+## LIME: Locally Interpretable Model Explanations
+
+
+---
+
+### Intuition
+
+1. A complex decision boundary can still be approximated well by many simple hyperplanes. 
+
+1. To explain a prediction near a single sample, we consider the approximating
+hyperplane near that sample.
+
+---
+
+### Notation
+
+1. $x$: The sample whose predictions we want to explain.
+1. $s$: A summarization function used to represent $x$ (e.g., word counts).
+1. $f$: A complex model we want to explain.
+1. $\mathcal{G}$: A class of simple models to use in the explanations.
+1. $\pi_{x}$
+
+---
+
+### Objective
+
+\begin{align}
+\min_{g \in G} \Esubarg{\pi_{x}}{L\left(f\left(s\left(x'\right)\right), g\left(s\left(x'\right)\right)\right)} + \omega\left(g\right)
+\end{align}
+
+---
+
+### Algorithm
+
+1. Sample $x_{n}^{\prime} \sim \pi_{x}$. 
+
+1. Solve the optimization:
+
+\begin{align}
+\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(s\left(x_{n}^{\prime}\right)\right), g\left(s\left(x_{n}^{\prime}\right)\right)\right) + \omega\left(g\right)
+\end{align}
+
+---
+
+### Example: Lasso for Bag-of-Words
+
+1. $f$ is the original sentiment prediction model.
+1. $\pi_{x}$ samples words with probability
+1. $g$ is a linear model
+1. $\Omega$ is the $\ell^1$ penalty
+
+\begin{align}
+\sum_{n = 1}^{N} \left(f\left(s\left(x\right)\right) - s\left(x\right)^\top\beta\right)^2 + \|\beta\|_{1}
+\end{align}
+
+---
+
+## Shapley Values
+
+---
+
+---
+
+
+### Related: Gradients & Saliency
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 29)
+```
