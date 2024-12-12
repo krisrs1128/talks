@@ -1,16 +1,17 @@
 ---
-title: """
+title: ""
 author: "Kris Sankaran"
-output:
-  xaringan::moon_reader:
-    css: ["default", "css/xaringan-themer.css"]
-    lib_dir: libs
-    self_contained: false
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      ratio: "16:9"
-    seal: false
+#output:
+  # xaringan::moon_reader:
+  #   css: ["default", "css/xaringan-themer.css"]
+  #   lib_dir: libs
+  #   self_contained: false
+  #   nature:
+  #     highlightStyle: github
+  #     highlightLines: true
+  #     ratio: "16:9"
+  #   seal: false
+output: html_document
 ---
 
 class: title
@@ -22,6 +23,7 @@ MathJax.Hub.Config({
       myred: ["{\\color{myred}{#1}}", 1],
       mygreen: ["{\\color{mygreen}{#1}}", 1],
       reals: "{\\mathbb{R}}",
+      Esubarg: "{\\mathbf{E}{#1}\left[{#2}\right]}",
       "\*": ["{\\mathbf{#1}}", 1],
       diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
     },
@@ -119,7 +121,7 @@ hyperplane near that sample.
 ### Notation
 
 1. $x$: The sample whose predictions we want to explain.
-1. $s$: A summarization function used to represent $x$ (e.g., word counts).
+1. $t$: A summarization function used to represent $x$ (e.g., word counts).
 1. $f$: A complex model we want to explain.
 1. $\mathcal{G}$: A class of simple models to use in the explanations.
 1. $\pi_{x}$
@@ -129,7 +131,7 @@ hyperplane near that sample.
 ### Objective
 
 \begin{align}
-\min_{g \in G} \Esubarg{\pi_{x}}{L\left(f\left(s\left(x'\right)\right), g\left(s\left(x'\right)\right)\right)} + \omega\left(g\right)
+\min_{g \in G} \Esubarg{\pi_{x}}{L\left(f\left(t\left(x'\right)\right), g\left(t\left(x'\right)\right)\right)} + \omega\left(g\right)
 \end{align}
 
 ---
@@ -141,7 +143,7 @@ hyperplane near that sample.
 1. Solve the optimization:
 
 \begin{align}
-\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(s\left(x_{n}^{\prime}\right)\right), g\left(s\left(x_{n}^{\prime}\right)\right)\right) + \omega\left(g\right)
+\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(t\left(x_{n}^{\prime}\right)\right), g\left(t\left(x_{n}^{\prime}\right)\right)\right) + \omega\left(g\right)
 \end{align}
 
 ---
@@ -154,7 +156,7 @@ hyperplane near that sample.
 1. $\Omega$ is the $\ell^1$ penalty
 
 \begin{align}
-\sum_{n = 1}^{N} \left(f\left(s\left(x\right)\right) - s\left(x\right)^\top\beta\right)^2 + \|\beta\|_{1}
+\sum_{n = 1}^{N} \left(f\left(t\left(x\right)\right) - t\left(x\right)^\top\beta\right)^2 + \|\beta\|_{1}
 \end{align}
 
 ---
@@ -163,8 +165,180 @@ hyperplane near that sample.
 
 ---
 
+### Credit Assignment
+
+1. LIME has a nice geometric interpretation. Shapley values is built off a contrasting game theoretic analogy.
+
+1. How would you distribute profit across employees $i$ in a company if you knew
+that any team $S$ would have profit $v\left(S\right)$?  This is a credit
+assignment problem.
+
 ---
 
+### Shapley Credit Assignment
+
+We can distribute credit according to how much the team's profit decreases when we remove employee $i$,
+
+\begin{align}
+\varphi\left(i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{{D - 1 \choose d - 1}}\sum_{S \in \mathcal{S}_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
+\end{align}
+
+* There are $D$ employees total.
+* $\mathcal{S}_{d}\left(i\right)$ is the collection of subsets of size $d$ that includes employee $i$.
+
+---
+
+### Game Theory $\to$ Machine Learning
+
+1. Instead assigning credit to employees, we attribute importances to features.
+
+1. The attributions are made locally at the per-prediction level. The features
+to which we assign credit are often summaries, like the word counts in the LIME
+example above.
+
+1. Instead of profit, consider the model's expected prediction when a subset $S$ of features is fixed,
+
+\begin{align}
+v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S})}{f\left(x_{S}, x^{\prime}_{S^C})}
+\end{align}
+
+---
+
+### Shapley Values
+
+This definition satisfies some elegant axioms.
+
+---
+
+### Shapley Feature Attribution
+
+With this definition of $v$, we can describe the importance of feature $i$ in
+making the prediction $f\left(x\right)$:
+
+\begin{align}
+\varphi_{x}\left(f, i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in \mathcal{S}_{d}\left(i\right)}\left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right) \right]
+\end{align}
+
+This definition satisfies the same axioms as the ones above for credit assignment. In particular, $f\left(x\right) = \sum_{d = 1}^{D}\varphi_{x}\left(f, d\right)$.
+
+---
+
+### Visualization - One Sample
+
+Since adding all the attributions leads to $f\left(x\right)$, we can center a
+stacked barplot around $f\left(x\right)$. Each bar corresponds to one feature.
+
+
+
+---
+
+### Visualization - Many Samples
+
+Since stacked barplots are compact, we can visualize entire datasets this way.
+This helps identify sets of samples which have similar explanations.
+
+---
+
+### Computational Challenges
+
+This definition has some elegant properties, but naive calculation is impossible
+in all but the simplest cases.
+
+1. $v_{x}\left(S\right)$ involves a potentially complex conditional expectation.
+1. We need to enumerate over all subsets containing $i$.
+
+---
+
+### Approximating $v_{x}\left(S\right)$
+
+Remember the definition:
+
+\begin{align*}
+v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S})}{f\left(x_{S}, x^{\prime}_{S^C})}
+\end{align*}
+
+---
+
+### Reference Values
+
+One simple idea is to replace $x^{\prime}_{S^C}$ with some reference value, like
+the all zeros vector or the average $\overline{x}_{S^C}$ across all samples:
+
+\begin{align*}
+v_{x}\left(S\right) \approx f\left(x_{S}, \overline{x}_{S^C}\right)
+\end{align*}
+
+This is convenient because it only requires one function evaluation per set $S$.
+But this is a quite aggressive approximation.
+
+---
+
+### Assuming $x_{S} \indep x_{S^C}$
+
+An alternative approximation is to assume independence between features in $S$ and $S^C$,
+
+\begin{align*}
+v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C}\right)}{f\left(x_{S}, x^{\prime}_{S^C})}
+&\approx \sum_{n = 1}^{N}{f\left(x_{S}, x^{\prime}_{n,S^C})}
+\end{align*}
+
+Of course, we can get a reasonable approximation using subsamples.
+
+---
+
+### Learning the Conditionals
+
+A more sophisticated approach learns a new generative model to allow sampling
+$x^{\prime}_{n,S^C} \vert x_{S}$. In fact, the same model can be used for many
+conditionals.
+
+1. Draw $N^\ast$ samples $x^{\prime}_{n,S^C} \sim p\left(\cdot \vert x_\right)$
+1. Approximate
+
+\beginn{align*}
+v_{x}\left(S\right) &\approx \sum_{n = 1}^{N^\ast}{f\left(x_{S}, x^{\prime}_{n,S^C})}
+\end{align*}
+
+---
+
+### Regression Perspective
+
+How can we avoid summing over so many subsets? It turns out that there is an
+equivalent formulation of the Shapley value in terms of weighted linear
+regression.
+
+\begin{align*}
+v_{x}\left(S\right) \approx \varphi_{x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{x}\left(f, d\right)
+\end{align*}
+
+We can compute $v_{x}\left(S\right)$ on only a subset of sets. $\indic{d \in S}$
+is known, so this is a linear regression with unknown coefficients
+$\varphi_{x}\left(f, d\right)$
+
+---
+
+### Kernel Reweighting
+
+Each row in this regression is a subset $S$ of features,
+
+\begin{align*}
+v_{x}\left(S\right) \approx \varphi_{x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{x}\left(f, d\right)
+\end{align*}
+
+If for the row corresponding to subset $S$ we use weights
+\begin{align*}
+\frac{D - 1}{\left(D \choose \left|S\right|\right) \left|S\right|\left(D - \left|S\right|\right)}
+\end{align*}
+then the resulting weighted linear regression exactly recovers the Shapley
+values $\varphi_{x}\left(f, d\right)$.
+
+We can estimate this without evaluating $v$ on all subsets!
+
+---
+
+### $L$ and $C$ Shapley
+
+---
 
 ### Related: Gradients & Saliency
 
