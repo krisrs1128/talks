@@ -1,0 +1,182 @@
+---
+title: ""
+author: "Kris Sankaran"
+#output:
+  # xaringan::moon_reader:
+  #   css: ["default", "css/xaringan-themer.css"]
+  #   lib_dir: libs
+  #   self_contained: false
+  #   nature:
+  #     highlightStyle: github
+  #     highlightLines: true
+  #     ratio: "16:9"
+  #   seal: false
+output: html_document
+---
+
+class: title
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      Esubarg: "{\\mathbf{E}{#1}\left[{#2}\right]}",
+      absarg: "{\\left|{#1}\\right|}",
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+
+<style>
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+</style>
+
+```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
+library(xaringancolor)
+setup_colors(
+  myred = "#B4575C",
+  mygreen = "#5A8A80"
+)
+
+library(flair)
+myred <- "#B4575C"
+mygreen <- "#5A8A80"
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Motivation and Definitions
+
+<div id="subtitle">
+Kris Sankaran <br/>
+30 | December | 2024 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+IISA Interpretability Short Course <br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+</div>
+<!-- 30 minute talk -->
+
+---
+
+### Motivation: Outpatient Care for Pneumonia
+
+.center[
+<img src="figures/asthma.png" width=1000/>
+
+<span style="font-size: 18px;">
+Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
+</span>
+]
+
+<!-- Q&A This is pretty counterintuitive. What do you think is going on? -->
+
+---
+
+### Motivation
+
+1. Computers let us solve problems that would be impossible to manage any other
+way, but we need some way of **checking our work**, especially when the stakes
+are high.
+
+1. We can often **improve our models** by looking more closely at what they learn
+and intervening as necessary.
+
+1. In the long-run, we'll be able to **get more out of our data and models** if we
+look more critically at them.
+
+---
+
+class: middle
+
+.center[
+## Interpretability
+]
+
+---
+
+### What is Interpretability?
+
+Models with these properties tend to be more interpretable `r Citep(bib, c("Lipton2018-dt", "Murdoch2019-aw", "Doshi-Velez2017-qo", "Sankaran2024-ny"))`:
+
+<img src="figures/simplicity.png" width=50/> **Parsimony**: The model has relatively few components. <br/><br/>
+
+<img src="figures/crystal-ball.png" width=40/> **Simulatability**: Users can predict model behavior on new samples. <br/><br/>
+
+<img src="figures/Lego_Brick_4.svg" width=50/> **Modularity**: The model can be broken into simpler components.
+
+<!-- First Q&A: Would you say that a linear regression model is interpretable? -->
+
+---
+
+### Distinctions
+
+1. **Interpretable Model**: A model that, by virtue of its design, is easy to
+accurately describe and edit.
+1. **Explainability Technique**: A method that summarizes some aspect of a black
+box system.
+
+.center[
+  <img src="figures/black_box_flashlight.png" width=720/>
+]
+
+---
+
+### Local vs. Global
+
+1. **Local Explanation**: An artifact for reasoning about individual predictions.
+
+1. **Global Explanation**: An artifact for reasoning about an entire model.
+
+.center[
+<img src="figures/explanation_types.png" width=800/>
+]
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 29)
+```
