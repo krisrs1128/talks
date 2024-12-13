@@ -143,11 +143,24 @@ f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k})_{+}
 
 ---
 
-### Example
+### Example Factor
 
-1. To understand the $k^{th}$ factor (column) in $\Phi$, we can look for $i$ with large values of $\alpha_{ik}$.
+1. To understand the $k^{th}$ factor (column) in $\Phi$, we can look for $i$
+with large values of $\alpha_{ik}$.
 
-1. For example, for this feature, $\alpha_{i}$ is large only on examples that have something to do with the Golden Gate Bridge.
+1. For example, for this feature, $\alpha_{i}$ is large only on examples that
+have something to do with the Golden Gate Bridge.
+
+---
+
+### Atlases
+
+We can also build maps of many related features. This figure is a UMAP of ...
+(phi? alpha?)
+
+
+These annotations were generated automatically, which could make this analysis
+much more automatic.
 
 ---
 
@@ -157,7 +170,8 @@ f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k})_{+}
 
 ### Abstraction
 
-1. One of the motivations for deep learning is that deeper layers of a network can learn more abstract representations.
+1. One of the motivations for deep learning is that deeper layers of a network
+can learn more abstract representations.
 
 1. Using dictionary learning, we can test this by comparing features with more
 weight on high vs. lower parts of the network.
@@ -226,5 +240,64 @@ memorized text whenever it encounters one of these rare tokens.
 
 ---
 
+### Steering Generations
+
+If we want generated output to reflect more (or less) of feature $\varphi_{k}$,
+we can manually increase (or decrease) the activation of the associated neurons.
+
+(example with the golden gate bridge)
 
 ---
+
+### Steering and Safety
+
+This is one plausible direction for improving model safety. Though, there are so
+many ways in which an output can be harmful that it's not yet clear how this can
+be practically done.
+
+(example of one of the outputs from ...)
+
+---
+
+### Editing and  Memorization
+
+Simple editing isn't a panacea. `r Citep(bib, "")` tried to fine-tune the
+model's weights so that memorized paragraphs had lower likelihood. However,
+the tuned models were still prone to generating memorized output.
+
+
+The authors speculate that it may still be possible to use activations to detect
+when the model is about to return memorized output.
+
+---
+
+### Takeaways
+
+1. While concepts and probes work well when we have specific concepts in mind a
+priori, dictionary learning is helpful when want to explore in a more open-ended
+way.
+
+1. Interpretability is interesting not only for understand but also for control.
+We may be able to steer LLMs towards more desirable properties by clearly
+understanding their features.
+
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 29)
+```
