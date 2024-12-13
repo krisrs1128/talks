@@ -176,8 +176,11 @@ This is estimated using partial differences along a fine partition
 
 ### Computation
 
-Each neighborhood $N_{d}$ is usually relatively small. This means that ALE plots
-needs fewer function evaluations $f$ compared to Partial Dependence Plots.
+1. Each neighborhood $N_{d}$ is usually relatively small. This means that ALE
+plots needs fewer function evaluations $f$ compared to Partial Dependence Plots.
+
+1. Given these lighter demands, it's not unrealistic to bootstrap the ALE
+estimator, so we can easily get pointwise confidence bands.
 
 ---
 
