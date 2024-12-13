@@ -1,0 +1,230 @@
+---
+title: ""
+author: "Kris Sankaran"
+#output:
+  # xaringan::moon_reader:
+  #   css: ["default", "css/xaringan-themer.css"]
+  #   lib_dir: libs
+  #   self_contained: false
+  #   nature:
+  #     highlightStyle: github
+  #     highlightLines: true
+  #     ratio: "16:9"
+  #   seal: false
+output: html_document
+---
+
+class: title
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      Esubarg: "{\\mathbf{E}{#1}\left[{#2}\right]}",
+      absarg: "{\\left|{#1}\\right|}",
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+
+<style>
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+</style>
+
+```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
+library(xaringancolor)
+setup_colors(
+  myred = "#B4575C",
+  mygreen = "#5A8A80"
+)
+
+library(flair)
+myred <- "#B4575C"
+mygreen <- "#5A8A80"
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Interpretability for Model Developers: Dictionary Learning
+
+<div id="subtitle">
+Kris Sankaran <br/>
+30 | December | 2024 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+IISA Interpretability Short Course <br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+</div>
+<!-- 30 minute talk -->
+
+---
+
+### Motivation
+
+1. Understanding: Explanations can give more insight into model mechanics than
+benchmark metrics alone. We can check whether the model is right for the right
+reasons.
+
+1. Improvement: By clarifying model mechanics, we might be able to address
+current challenges, like memorization.
+
+---
+
+### Activation Analysis
+
+A classic line of work studies patterns of model activations.
+
+
+In some cases, the deep representations reflect features we can easily
+understand, like whether a string of text lies within quotes.
+
+---
+
+### Dictionary Learning
+
+Instead of analyzing individual neurons, we can identify latent factors using
+dictionary learning. Since DL uses an overcomplete basis ($K > D$), the features
+are sparser and more disentangled relative to standard dimensionality reduction.
+
+---
+
+### Formulation I
+
+The formulation in `r Citep(bib, "")`. $x_{i}$ are the concatenated activations 
+across all layers in the network.
+
+\begin{align*}
+\arg\min \|\*x_i - \*\Phi\*\alpha_{i}\|_{2} + \lambda_{1} \|\*\Phi\|_{1} + \lambda_{2}\|\alpha_i\|_{1}
+\end{align*}
+
+---
+
+### Formulation II
+
+The formulation in `r Citep(bib, "")`. $\*x_{i}$ are activations from a
+single residual connection in the Claude Sonnet model.
+
+\begin{align*}
+\arg \min &\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
+\hat{x} &= b_{k} + \Phi^{(2)}f\left(x\right) + b \\
+f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k})_{+}
+\end{align*}
+
+(need to double check this one, also try to make it more consistent with Lecun...)
+
+---
+
+### Example
+
+1. To understand the $k^{th}$ factor (column) in $\Phi$, we can look for $i$ with large values of $\alpha_{ik}$.
+
+1. For example, for this feature, $\alpha_{i}$ is large only on examples that have something to do with the Golden Gate Bridge.
+
+---
+
+## Testing
+
+---
+
+### Abstraction
+
+1. One of the motivations for deep learning is that deeper layers of a network can learn more abstract representations.
+
+1. Using dictionary learning, we can test this by comparing features with more
+weight on high vs. lower parts of the network.
+
+(draw the weights and the ones that we are most interested in)
+
+---
+
+### Example Features
+
+The associated features are consistent with the belief that deeper layers are
+more abstract.
+
+---
+
+### Local Explanation
+
+We can use LIME to identify individual words that contribute the most to a single feature.
+
+---
+
+### Memorization
+
+1. In the New York Times article `r Citep(bib, "")`, the author found that GPT
+could exactly complete his previous articles, just by being given the first few
+sentences.
+
+1. AI companies need to understand this ``memorization'' issue both to protect
+privacy and to respect copyright.
+
+---
+
+### Defining Memorization
+
+`r Citep(bib, "Stoehr")` made the idea of memorization more precise. When
+prompted with 50 tokens, how closely do the next 50 generated tokens match any
+training example?
+
+(Fig 2, lower panel)
+
+The red points are generated texts that exactly match those in the training
+data. Notice that many paragraphs occur thousands of times.
+
+---
+
+### Activation Patterns
+
+It would be interesting to see what happens when using dictionary learning.
+Instead, the authors summarized layers using the maximum activation for each
+``component'' of transformer self-attention heads.
+
+There are qualitative differences in activation patterns between memorized and
+non-memorized paragraphs.
+
+---
+
+### Activation Patterns
+
+One of the heads is very active on memorized paragraphs, and they found that it
+attends to rare tokens. The theory is that it might be ``looking up'' the
+memorized text whenever it encounters one of these rare tokens.
+
+---
+
+## Control
+
+---
+
+
+---
