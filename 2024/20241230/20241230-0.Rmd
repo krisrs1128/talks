@@ -102,11 +102,28 @@ Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
 
 ---
 
+### What can go wrong?
+
+.center[
+<img src="figures/adversarial-stopsign.webp" width = 600/>
+
+Example from `r Citep(bib, "Gu2017BadNetsIV")`.
+]
+
+---
+
+### What can go wrong?
+
+.center[
+<img src="figures/bard-hallucination.webp" width=900/>
+]
+
+---
+
 ### Motivation
 
 1. Computers let us solve problems that would be impossible to manage any other
-way, but we need some way of **checking our work**, especially when the stakes
-are high.
+way, but we need some way of **checking our work**.
 
 1. We can often **improve our models** by looking more closely at what they learn
 and intervening as necessary.
@@ -159,6 +176,36 @@ box system.
 
 .center[
 <img src="figures/explanation_types.png" width=800/>
+]
+
+---
+
+### Analogy: Interpretability and Visualization
+
+.pull-left[
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+]
+
+.pull-right[
+<img src="figures/tufte.png" width=330/>
+]
+
+---
+
+### Key Properties
+
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **Annotated**: It shows data within the problem context.
+1. **Information Dense**: It shows relevant variation efficiently.
+
+.center[
+<img src="figures/tufte-2.png"/>
 ]
 
 ---

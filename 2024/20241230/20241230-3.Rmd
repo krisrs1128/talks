@@ -88,6 +88,13 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ---
 
+### Probes
+
+---
+
+
+---
+
 ### Concept Bottlenecks
 
 Alternatively, we can explain a decision by reducing the arbitrary feature space
@@ -120,6 +127,8 @@ language/representations for interacting with models
 ]
 
 ---
+
+### Concepts and Hypothesis Testing
 
 ---
 
