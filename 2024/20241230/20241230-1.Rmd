@@ -23,8 +23,10 @@ MathJax.Hub.Config({
       myred: ["{\\color{myred}{#1}}", 1],
       mygreen: ["{\\color{mygreen}{#1}}", 1],
       reals: "{\\mathbb{R}}",
-      Esubarg: "{\\mathbf{E}{#1}\\left[{#2}\\right]}",
-      absarg: "{\\left|{#1}\\right|}",
+      indic: ["{\\mathbf{1}\\left\\{{#1}\\right\\}}", 1],
+      indep: "{\\perp\\!\\!\\!\\!\\perp}",
+      Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
+      absarg: ["{\\left|{#1}\\right|}", 1],
       "\*": ["{\\mathbf{#1}}", 1],
       diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
     },
@@ -200,7 +202,7 @@ example above.
 1. Instead of profit, consider the model's expected prediction when a subset $S$ of features is fixed,
 
 \begin{align}
-v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S})}{f\left(x_{S}, x^{\prime}_{S^C})}
+v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S}\right)}{f\left(x_{S}, x^{\prime}_{S^C}\right)}
 \end{align}
 
 ---
@@ -255,7 +257,7 @@ in all but the simplest cases.
 Remember the definition:
 
 \begin{align*}
-v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S})}{f\left(x_{S}, x^{\prime}_{S^C})}
+v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S}\right)}{f\left(x_{S}, x^{\prime}_{S^C}\right)}
 \end{align*}
 
 ---
@@ -279,8 +281,8 @@ But this is a quite aggressive approximation.
 An alternative approximation is to assume independence between features in $S$ and $S^C$,
 
 \begin{align*}
-v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C}\right)}{f\left(x_{S}, x^{\prime}_{S^C})}
-&\approx \sum_{n = 1}^{N}{f\left(x_{S}, x^{\prime}_{n,S^C})}
+v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C}\right)}{f\left(x_{S}, x^{\prime}_{S^C}\right)} \\
+&\approx \sum_{n = 1}^{N}{f\left(x_{S}, x^{\prime}_{n,S^C}\right)}
 \end{align*}
 
 Of course, we can get a reasonable approximation using subsamples.
@@ -293,11 +295,11 @@ A more sophisticated approach learns a new generative model to allow sampling
 $x^{\prime}_{n,S^C} \vert x_{S}$. In fact, the same model can be used for many
 conditionals.
 
-1. Draw $N^\ast$ samples $x^{\prime}_{n,S^C} \sim p\left(\cdot \vert x_\right)$
+1. Draw $N^\ast$ samples $x^{\prime}_{n,S^C} \sim p\left(\cdot \vert x\right)$
 1. Approximate
 
-\beginn{align*}
-v_{x}\left(S\right) &\approx \sum_{n = 1}^{N^\ast}{f\left(x_{S}, x^{\prime}_{n,S^C})}
+\begin{align*}
+v_{x}\left(S\right) &\approx \sum_{n = 1}^{N^\ast}{f\left(x_{S}, x^{\prime}_{n,S^C}\right)}
 \end{align*}
 
 ---
@@ -354,7 +356,7 @@ $i$. A fast approximation is to consider:
 
 \begin{align*}
 \varphi_{x}^{L}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \in N_{k\left(i\right)}} 
-frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
+\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
 \end{align*}
 
 1. When $k$ is small, this will be an efficient approximation.
@@ -369,7 +371,7 @@ We can further focus on those subsets that are connected to feature $i$:
 
 \begin{align*}
 \varphi_{x}^{C}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \subseteq N_{k\left(i\right), S \text{connected to } i}} 
-frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
+\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
 \end{align*}
 
 1. This is sometimes called $C$-Shapley ($C$ \to ``Connected'')

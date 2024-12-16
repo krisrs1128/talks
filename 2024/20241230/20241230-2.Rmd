@@ -114,10 +114,13 @@ fixing those values of $x_{d}$.
 
 ---
 
-We formalize this as:
+### Definition
+
+We can then average this over all the $x_{d}$ seen in the data.
 
 \begin{align*}
-\pdp{d} &= \Esubarg{x_{-d}}{f\left(x_d, x_{-d}\right)}
+\pdp{d} &= \Esubarg{x_{-d}}{f\left(x_d, x_{-d}\right)} \\
+&\approx \sum_{n = 1}^{N} f\left(x_{d}, x_{n, -d}\right)
 \end{align*}
 
 ---
@@ -170,7 +173,7 @@ we can stitch (``accumulate'') them into a single, coherent summary.
 This is formalized by the following formula,
 
 \begin{align*}
-g_{d}\left(x_{d}\right) := \int \Esubarg{x_{-d}\vert x_{d}}{\left.\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d} \right| x_{d} = z} dz
+\text{ALE}_{d}\left(x_{d}\right) := \int \Esubarg{x_{-d}\vert x_{d}}{\left.\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d} \right| x_{d} = z} dz
 \end{align*}
 
 ---
