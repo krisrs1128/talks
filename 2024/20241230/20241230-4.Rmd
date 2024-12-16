@@ -99,15 +99,6 @@ current challenges, like memorization.
 
 ---
 
-### Activation Analysis
-
-A classic line of work studies patterns of model activations.
-
-
-In some cases, the deep representations reflect features we can easily
-understand, like whether a string of text lies within quotes.
-
----
 
 ### Dictionary Learning
 

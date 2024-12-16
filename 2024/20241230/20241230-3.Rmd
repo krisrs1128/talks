@@ -88,20 +88,77 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ---
 
-### Probes
+### Activations Analysis
+
+1. Deep learning models are composed of many simpler layers. When an input is
+passed through the network, it is transformed into a series of neuron
+``activations''' at each layer.
+
+1. Neurons activate on inputs with specific properties. For example, many
+neurons in the first layer of a network detect edges with a given orientation.
+
+(maybe show the image with Cat neurons)
 
 ---
 
+### Activations Analysis
+
+1. Deep learning models are composed of many simpler layers. When an input is
+passed through the network, it is transformed into a series of neuron
+``activations''' at each layer.
+
+1. Neurons activate on inputs with specific properties. For example, many
+neurons in the first layer of a network detect edges with a given orientation.
+
+(show the image of Yoshua from his Trends article)
+
+---
+
+### Activation Analysis
+
+There is a long line.... in real world evidence
+
+
+In some cases, the deep representations reflect features we can easily
+understand, like whether a string of text lies within quotes.
+
+---
+
+### Directed Questions
+
+We often want to see whether a model has learned specific features.
+
+* Validation: Has the model learned a property that we expect to generalize across many contexts?
+* Fairness: Can we ensure that the model isn't using a protected attribute, like race?
+
+In this case, we need a more directed search.
+
+---
+
+### Linear Probes
+
+1. A probe is a linear model that predicts a feature of interest from intermediate model activations.
+
+1. If the probe has high accuracy, then we might say that this feature has been
+``learned'' by the model in that layer.
+
+(graphical representation of probe within the network)
+
+---
+
+### Application
+
+(give a more meaningful application of linear probes -- I think the original
+paper was for debugging) 
 
 ---
 
 ### Concept Bottlenecks
 
-Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts `r Citep(bib, "50351")`.  This is part
-of a larger body of work that attempts to establish shared
-language/representations for interacting with models 
-`r Citep(bib, "yuksekgonul2023posthoc")`.
+A related idea is to reduce arbitrary model activations to a set of
+human-interpretable concepts `r Citep(bib, "50351")`.  This is part of a larger
+body of work that attempts to establish shared language/representations for
+interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
 
 .center[
 <span style="font-size: 18px;">
@@ -114,11 +171,10 @@ Figure from `r Citep(bib, "50351")`.
 
 ### Concept Bottlenecks
 
-Alternatively, we can explain a decision by reducing the arbitrary feature space
-to a set of human-interpretable concepts `r Citep(bib, "50351")`.  This is part
-of a larger body of work that attempts to establish shared
-language/representations for interacting with models 
-`r Citep(bib, "yuksekgonul2023posthoc")`.
+A related idea is to reduce arbitrary model activations to a set of
+human-interpretable concepts `r Citep(bib, "50351")`.  This is part of a larger
+body of work that attempts to establish shared language/representations for
+interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
 
 .center[
 <span style="font-size: 18px;">
@@ -130,9 +186,29 @@ language/representations for interacting with models
 
 ### Concepts and Hypothesis Testing
 
+Even without any special architecture, we can test whether a model has learned a
+concept. 
+
+* Test Statistic: Compute classifier performance between samples that represent a concept and random sampled negative examples.
+
+* Null Distribution: Compute the test statistic after permuting the positive and negative labels.
+
+---
+
+### Application
+
+Concepts have been applied to medical imaging tasks. In this example...
+
 ---
 
 ### Takeaways
+
+Probes and concepts provide a bridge between difficult-to-interpret deep
+learning model activations and vocabulary people already use within an
+application domain. 
+
+Deep learning has made manual feature engineering unecessary for many problems,
+but simple features are still useful for explanation.
 
 ---
 
