@@ -1,9 +1,178 @@
 
-@article{key,
-  author = {},
-  journal = {},
-  number = {},
-  title = {},
-  volume = {},
-  year = {}
+@InProceedings{pmlr-v119-koh20a,
+  title = 	 {Concept Bottleneck Models},
+  author =       {Koh, Pang Wei and Nguyen, Thao and Tang, Yew Siang and Mussmann, Stephen and Pierson, Emma and Kim, Been and Liang, Percy},
+  booktitle = 	 {Proceedings of the 37th International Conference on Machine Learning},
+  pages = 	 {5338--5348},
+  year = 	 {2020},
+  editor = 	 {III, Hal Daumé and Singh, Aarti},
+  volume = 	 {119},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {13--18 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v119/koh20a/koh20a.pdf},
+  url = 	 {https://proceedings.mlr.press/v119/koh20a.html},
+  abstract = 	 {We seek to learn models that we can interact with using high-level concepts: if the model did not think there was a bone spur in the x-ray, would it still predict severe arthritis? State-of-the-art models today do not typically support the manipulation of concepts like "the existence of bone spurs", as they are trained end-to-end to go directly from raw input (e.g., pixels) to output (e.g., arthritis severity). We revisit the classic idea of first predicting concepts that are provided at training time, and then using these concepts to predict the label. By construction, we can intervene on these concept bottleneck models by editing their predicted concept values and propagating these changes to the final prediction. On x-ray grading and bird identification, concept bottleneck models achieve competitive accuracy with standard end-to-end models, while enabling interpretation in terms of high-level clinical concepts ("bone spurs") or bird attributes ("wing color"). These models also allow for richer human-model interaction: accuracy improves significantly if we can correct model mistakes on concepts at test time.}
 }
+
+@misc{
+alain2017understanding,
+title={Understanding intermediate layers using linear classifier probes},
+author={Guillaume Alain and Yoshua Bengio},
+year={2017},
+url={https://openreview.net/forum?id=ryF7rTqgl}
+}
+
+@article{templeton2024scaling,
+    title={Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet},
+    author={Templeton, Adly and Conerly, Tom and Marcus, Jonathan and Lindsey, Jack and Bricken, Trenton and Chen, Brian and Pearce, Adam and Citro, Craig and Ameisen, Emmanuel and Jones, Andy and Cunningham, Hoagy and Turner, Nicholas L and McDougall, Callum and MacDiarmid, Monte and Freeman, C. Daniel and Sumers, Theodore R. and Rees, Edward and Batson, Joshua and Jermyn, Adam and Carter, Shan and Olah, Chris and Henighan, Tom},
+    year={2024},
+    journal={Transformer Circuits Thread},
+    url={https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html}
+}
+
+@ARTICLE{Friedman2001-xk,
+  title     = "Greedy function approximation: A gradient boosting machine",
+  author    = "Friedman, Jerome H",
+  journal   = "Ann. Stat.",
+  publisher = "Institute of Mathematical Statistics",
+  volume    =  29,
+  number    =  5,
+  pages     = "1189--1232",
+  month     =  oct,
+  year      =  2001
+}
+
+@ARTICLE{Kim2017-kb,
+  title        = "Interpretability beyond feature attribution: Quantitative
+                  testing with Concept Activation Vectors ({TCAV})",
+  author       = "Kim, Been and Wattenberg, Martin and Gilmer, Justin and Cai,
+                  Carrie and Wexler, James and Viegas, Fernanda and Sayres,
+                  Rory",
+  abstract     = "The interpretation of deep learning models is a challenge due
+                  to their size, complexity, and often opaque internal state.
+                  In addition, many systems, such as image classifiers, operate
+                  on low-level features rather than high-level concepts. To
+                  address these challenges, we introduce Concept Activation
+                  Vectors (CAVs), which provide an interpretation of a neural
+                  net's internal state in terms of human-friendly concepts. The
+                  key idea is to view the high-dimensional internal state of a
+                  neural net as an aid, not an obstacle. We show how to use
+                  CAVs as part of a technique, Testing with CAVs (TCAV), that
+                  uses directional derivatives to quantify the degree to which
+                  a user-defined concept is important to a classification
+                  result--for example, how sensitive a prediction of ``zebra''
+                  is to the presence of stripes. Using the domain of image
+                  classification as a testing ground, we describe how CAVs may
+                  be used to explore hypotheses and generate insights for a
+                  standard image classification network as well as a medical
+                  application.",
+  journal      = "arXiv [stat.ML]",
+  publisher    = "arXiv",
+  year         =  2017,
+  primaryClass = "stat.ML"
+}
+
+@INPROCEEDINGS{Yun2021-jc,
+  title      = "Transformer visualization via dictionary learning:
+                contextualized embedding as a linear superposition of
+                transformer factors",
+  booktitle  = "Proceedings of Deep Learning Inside Out ({DeeLIO)}: The 2nd
+                Workshop on Knowledge Extraction and Integration for Deep
+                Learning Architectures",
+  author     = "Yun, Zeyu and Chen, Yubei and Olshausen, Bruno and LeCun, Yann",
+  publisher  = "Association for Computational Linguistics",
+  year       =  2021,
+  address    = "Stroudsburg, PA, USA",
+  conference = "Proceedings of Deep Learning Inside Out (DeeLIO): The 2nd
+                Workshop on Knowledge Extraction and Integration for Deep
+                Learning Architectures",
+  location   = "Online"
+}
+
+@ARTICLE{Apley2020-nd,
+  title     = "Visualizing the effects of predictor variables in black box
+               supervised learning models",
+  author    = "Apley, Daniel W and Zhu, Jingyu",
+  abstract  = "Summary In many supervised learning applications, understanding
+               and visualizing the effects of the predictor variables on the
+               predicted response is of paramount importance. A shortcoming of
+               black box supervised learning models (e.g. complex trees, neural
+               networks, boosted trees, random forests, nearest neighbours,
+               local kernel-weighted methods and support vector regression) in
+               this regard is their lack of interpretability or transparency.
+               Partial dependence plots, which are the most popular approach
+               for visualizing the effects of the predictors with black box
+               supervised learning models, can produce erroneous results if the
+               predictors are strongly correlated, because they require
+               extrapolation of the response at predictor values that are far
+               outside the multivariate envelope of the training data. As an
+               alternative to partial dependence plots, we present a new
+               visualization approach that we term accumulated local effects
+               plots, which do not require this unreliable extrapolation with
+               correlated predictors. Moreover, accumulated local effects plots
+               are far less computationally expensive than partial dependence
+               plots. We also provide an R package ALEPlot as supplementary
+               material to implement our proposed method.",
+  journal   = "J. R. Stat. Soc. Series B Stat. Methodol.",
+  publisher = "Oxford University Press (OUP)",
+  volume    =  82,
+  number    =  4,
+  pages     = "1059--1086",
+  month     =  sep,
+  year      =  2020,
+  copyright = "https://academic.oup.com/journals/pages/open\_access/funder\_policies/chorus/standard\_publication\_model",
+  language  = "en"
+}
+
+@ARTICLE{Agarwal2023-sx,
+  title        = "{MDI+}: A flexible random forest-based feature importance
+                  framework",
+  author       = "Agarwal, Abhineet and Kenney, Ana M and Tan, Yan Shuo and
+                  Tang, Tiffany M and Yu, Bin",
+  abstract     = "Mean decrease in impurity (MDI) is a popular feature
+                  importance measure for random forests (RFs). We show that the
+                  MDI for a feature $X_k$ in each tree in an RF is equivalent
+                  to the unnormalized $R^2$ value in a linear regression of the
+                  response on the collection of decision stumps that split on
+                  $X_k$. We use this interpretation to propose a flexible
+                  feature importance framework called MDI+. Specifically, MDI+
+                  generalizes MDI by allowing the analyst to replace the linear
+                  regression model and $R^2$ metric with regularized
+                  generalized linear models (GLMs) and metrics better suited
+                  for the given data structure. Moreover, MDI+ incorporates
+                  additional features to mitigate known biases of decision
+                  trees against additive or smooth models. We further provide
+                  guidance on how practitioners can choose an appropriate GLM
+                  and metric based upon the Predictability, Computability,
+                  Stability framework for veridical data science. Extensive
+                  data-inspired simulations show that MDI+ significantly
+                  outperforms popular feature importance measures in
+                  identifying signal features. We also apply MDI+ to two
+                  real-world case studies on drug response prediction and
+                  breast cancer subtype classification. We show that MDI+
+                  extracts well-established predictive genes with significantly
+                  greater stability compared to existing feature importance
+                  measures. All code and models are released in a full-fledged
+                  python package on Github.",
+  year         =  2023,
+  primaryClass = "stat.ME",
+  eprint       = "2307.01932"
+}
+
+@INPROCEEDINGS{Ribeiro2016-qk,
+  title           = "Why should {I} trust you?",
+  booktitle       = "Proceedings of the 22nd {ACM} {SIGKDD} International
+                     Conference on Knowledge Discovery and Data Mining",
+  author          = "Ribeiro, Marco Tulio and Singh, Sameer and Guestrin,
+                     Carlos",
+  publisher       = "ACM",
+  month           =  aug,
+  year            =  2016,
+  address         = "New York, NY, USA",
+  copyright       = "http://www.acm.org/publications/policies/copyright\_policy\#Background",
+  conference      = "KDD '16: The 22nd ACM SIGKDD International Conference on
+                     Knowledge Discovery and Data Mining",
+  location        = "San Francisco California USA"
+}
+
