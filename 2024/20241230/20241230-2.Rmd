@@ -23,7 +23,9 @@ MathJax.Hub.Config({
       myred: ["{\\color{myred}{#1}}", 1],
       mygreen: ["{\\color{mygreen}{#1}}", 1],
       reals: "{\\mathbb{R}}",
-      Esubarg: "{\\mathbf{E}{#1}\left[{#2}\right]}",
+      pdp: ["{\\text{PDP}_{#1}\\left(x_{#1}\\right)}", 1],
+      indic: ["{\\mathbf{1}\\left\\{{#1}\\right\\}}", 1],
+      Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
       absarg: "{\\left|{#1}\\right|}",
       "\*": ["{\\mathbf{#1}}", 1],
       diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
@@ -33,7 +35,6 @@ MathJax.Hub.Config({
   }
 });
 </script>
-
 
 <style>
 .myred {color: #B4575C;}
@@ -103,9 +104,21 @@ influences the response.
 
 ---
 
-### 
+### Motivation
 
-(take material from your course)
+1. One idea is to consider the values of $x_{d}$ that were observed in our
+dataset. Then, we can evaluate our model over a range of values $x_{-d}$ after
+fixing those values of $x_{d}$. 
+
+1. These curves are called Ceteris Paribus ("All Else Held Equal") profiles.
+
+---
+
+We formalize this as:
+
+\begin{align*}
+\pdp{d} &= \Esubarg{x_{-d}}{f\left(x_d, x_{-d}\right)}
+\end{align*}
 
 ---
 
@@ -157,7 +170,7 @@ we can stitch (``accumulate'') them into a single, coherent summary.
 This is formalized by the following formula,
 
 \begin{align*}
-g_{d}\left(x_{d}\right) := \int \Earg{\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d} \vert x_{-d} = z} dz
+g_{d}\left(x_{d}\right) := \int \Esubarg{x_{-d}\vert x_{d}}{\left.\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d} \right| x_{d} = z} dz
 \end{align*}
 
 ---
@@ -167,7 +180,7 @@ g_{d}\left(x_{d}\right) := \int \Earg{\frac{\partial f\left(x_d, x_{-d}\right)}{
 This is estimated using partial differences along a fine partition
 
 \begin{align*}
-\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{i} \in N_{d}\left(k\right)} f\left(z_{dk}^{k}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)
+\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{i} \in N_{d}\left(k\right)} \left[f\left(z_{dk}^{k}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)\right]
 \end{align*}
 
 (add the picture with the extended endpoints)
@@ -246,7 +259,7 @@ To go from decision trees to random forests....
 Decision trees can be represented as linear regressions in an basis derived from the tree.
 
 \begin{align*}
-\psi_{s}\left(x\right) &= \frac{1}{\sqrt{N\left(t_{L}\right)N\left(t_{R}\right)}}\left[N\left(t_{R}\right)\indic{x \in t_{L}} - N\left(t_{L}\right)\indic{x \in t_{R}}\right]
+\psi_{s}\left(x\right) &= \frac{1}{\sqrt{N\left(t_{L}\right)N\left(t_{R}\right)}} \left[N\left(t_{R}\right)\indic{x \in t_{L}} - N\left(t_{L}\right)\indic{x \in t_{R}}\right]
 \end{align*}
 
 ---

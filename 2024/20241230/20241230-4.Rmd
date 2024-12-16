@@ -23,7 +23,8 @@ MathJax.Hub.Config({
       myred: ["{\\color{myred}{#1}}", 1],
       mygreen: ["{\\color{mygreen}{#1}}", 1],
       reals: "{\\mathbb{R}}",
-      Esubarg: "{\\mathbf{E}{#1}\left[{#2}\right]}",
+      indic: ["{\\mathbf{1}\\left\\{{#1}\\right\\}}", 1],
+      Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
       absarg: "{\\left|{#1}\\right|}",
       "\*": ["{\\mathbf{#1}}", 1],
       diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
@@ -127,7 +128,7 @@ single residual connection in the Claude Sonnet model.
 \begin{align*}
 \arg \min &\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
 \hat{x} &= b_{k} + \Phi^{(2)}f\left(x\right) + b \\
-f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k})_{+}
+f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k}\right)_{+}
 \end{align*}
 
 (need to double check this one, also try to make it more consistent with Lecun...)
