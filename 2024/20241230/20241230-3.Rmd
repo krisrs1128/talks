@@ -25,7 +25,7 @@ MathJax.Hub.Config({
       reals: "{\\mathbb{R}}",
       indic: ["{\\mathbf{1}\\left\\{{#1}\\right\\}}", 1],
       Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
-      absarg: "{\\left|{#1}\\right|}",
+      absarg: ["{\\left|{#1}\\right|}", 1],
       "\*": ["{\\mathbf{#1}}", 1],
       diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
     },
@@ -98,7 +98,6 @@ passed through the network, it is transformed into a series of neuron
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
 
-(maybe show the image with Cat neurons)
 
 ---
 
@@ -111,14 +110,26 @@ passed through the network, it is transformed into a series of neuron
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
 
-(show the image of Yoshua from his Trends article)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig1_bengio.png"/> <br/>
+Figure from `r Citep(bib, "Bengio2009")`.
+</span>
+]
 
 ---
 
 ### Activation Analysis
 
-There is a long line.... in real world evidence
+There is a long line of research suggesting that deep learning models indeed
+learn higher-level abstractions.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig2_karpathy.png"/> <br/>
+Figure from `r Citep(bib, "karpathy2015")`.
+</span>
+]
 
 In some cases, the deep representations reflect features we can easily
 understand, like whether a string of text lies within quotes.
@@ -138,19 +149,33 @@ In this case, we need a more directed search.
 
 ### Linear Probes
 
-1. A probe is a linear model that predicts a feature of interest from intermediate model activations.
+1. A probe is a linear model that predicts a feature of interest from
+intermediate model activations.
 
 1. If the probe has high accuracy, then we might say that this feature has been
 ``learned'' by the model in that layer.
 
-(graphical representation of probe within the network)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/alain_fig2.png"/> <br/>
+In this example, probes have been added to every layer of a network. Figure from
+`r Citep(bib, "alain2017understanding")`.
+</span>
+]
 
 ---
 
 ### Application
 
-(give a more meaningful application of linear probes -- I think the original
-paper was for debugging) 
+This can be a useful debugging strategy for model with more complex
+architectures.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pathological_training.gif"/> <br/>
+In this example from `r Citep(bib, "alain2017understanding")`, a skip connection across layers 1 - 64  has prevented successful training across those layers.
+</span>
+]
 
 ---
 
@@ -187,19 +212,61 @@ interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
 
 ### Concepts and Hypothesis Testing
 
-Even without any special architecture, we can test whether a model has learned a
-concept. 
+`r Citep(bib, "tcav")` tried to formally test whether a concept is being used to
+predict a particular class.
 
-* Test Statistic: Compute classifier performance between samples that represent a concept and random sampled negative examples.
+**Step 1**. Define a collection of images $\*x_{i}$ that represents the concept. Also consruct a control pool of random images $\*x_{i}^'$.
 
-* Null Distribution: Compute the test statistic after permuting the positive and negative labels.
+Here, we are interested in the concept "stripes."
+
+---
+
+**Step 2**. Use an intermediate layer's activations $h\left(\*x\right)$ as
+predictors for a linear classifier to
+distinguish the groups. This is like probes, except the task is derived from
+Step 1.
+
+Let $\*v$ denote the normal to the decision boundary.
+
+---
+
+**Step 3**. Evaluate class $k$'s sensitivity to perturbations in the direction $v$.
+
+\begin{align*}
+S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
+\end{align*}
+
+$y_{k}$ is the pre-classification logit for class $k$ viewed as a function of
+the intermediate activations.
+
+---
+
+**Step 4** Let $N_{k}$ be the number of images in class $k$, and define the test
+statistic
+
+\begin{align*}
+T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right) > 0\}}.
+\end{align*}
+
+---
+
+**Step 5** Test the significance of $T_{k}$ by learning reference $\*v$ trained
+to distinguish randomly chosen example images.
 
 ---
 
 ### Application
 
-Concepts have been applied to medical imaging tasks. In this example...
+Concepts have been applied to medical imaging tasks. In this example, concepts
+give additional context about why a model might classify the lesion as a 
+melanoma.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/lucieri_fig5.png" width=600/> <br/>
+Figure from `r Citep(bib, "Lucieri2022")`. In this case, the model is incorrect despite concepts suggesting the correct diagnosis.
+</span>
+]
 ---
 
 ### Takeaways

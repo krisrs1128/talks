@@ -218,13 +218,3 @@ class: reference
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
 ```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 29)
-```

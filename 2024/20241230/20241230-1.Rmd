@@ -91,10 +91,6 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ---
 
-### Local vs. Global Explanations
-
----
-
 ### Which words are important?
 
 ---
@@ -124,17 +120,23 @@ hyperplane near that sample.
 ### Notation
 
 1. $x$: The sample whose predictions we want to explain.
-1. $t$: A summarization function used to represent $x$ (e.g., word counts).
 1. $f$: A complex model we want to explain.
-1. $\mathcal{G}$: A class of simple models to use in the explanations.
-1. $\pi_{x}$
+1. $G$: A class of simple models to use in the explanations.
+
+---
+
+### Notation
+
+1. $\pi_{x}$: A distribution over a neighborhood of $x$.
+1. $x'$: A sample from $\pi_{x}$.
+1. $z, z'$: Summarized versions of $x, x'$ (e.g., word counts).
 
 ---
 
 ### Objective
 
 \begin{align}
-\min_{g \in G} \Esubarg{\pi_{x}}{L\left(f\left(t\left(x'\right)\right), g\left(t\left(x'\right)\right)\right)} + \omega\left(g\right)
+\min_{g \in G} \Esubarg{\pi_{x}}{L\left(f\left(z'\right), g\left(z'\right)\right)} + \Omega\left(g\right)
 \end{align}
 
 ---
@@ -146,7 +148,7 @@ hyperplane near that sample.
 1. Solve the optimization:
 
 \begin{align}
-\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(t\left(x_{n}^{\prime}\right)\right), g\left(t\left(x_{n}^{\prime}\right)\right)\right) + \omega\left(g\right)
+\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(z_{n}^{\prime}\right), g\left(z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
 \end{align}
 
 ---
@@ -159,7 +161,7 @@ hyperplane near that sample.
 1. $\Omega$ is the $\ell^1$ penalty
 
 \begin{align}
-\sum_{n = 1}^{N} \left(f\left(t\left(x\right)\right) - t\left(x\right)^\top\beta\right)^2 + \|\beta\|_{1}
+\sum_{n = 1}^{N} \left(f\left(z_{n}\right) - z_{n}^\top\beta\right)^2 + \|\beta\|_{1}
 \end{align}
 
 ---
@@ -183,11 +185,11 @@ assignment problem.
 We can distribute credit according to how much the team's profit decreases when we remove employee $i$,
 
 \begin{align}
-\varphi\left(i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{{D - 1 \choose d - 1}}\sum_{S \in \mathcal{S}_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
+\varphi\left(i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{{D - 1 \choose d - 1}}\sum_{S \in S_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
 \end{align}
 
 * There are $D$ employees total.
-* $\mathcal{S}_{d}\left(i\right)$ is the collection of subsets of size $d$ that includes employee $i$.
+* $S_{d}\left(i\right)$ is the collection of subsets of size $d$ that includes employee $i$.
 
 ---
 
@@ -219,7 +221,7 @@ With this definition of $v$, we can describe the importance of feature $i$ in
 making the prediction $f\left(x\right)$:
 
 \begin{align}
-\varphi_{x}\left(f, i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in \mathcal{S}_{d}\left(i\right)}\left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right) \right]
+\varphi_{x}\left(f, i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)}\left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right) \right]
 \end{align}
 
 This definition satisfies the same axioms as the ones above for credit assignment. In particular, $f\left(x\right) = \sum_{d = 1}^{D}\varphi_{x}\left(f, d\right)$.
@@ -393,14 +395,4 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
-```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 29)
 ```

@@ -111,8 +111,8 @@ are sparser and more disentangled relative to standard dimensionality reduction.
 
 ### Formulation I
 
-The formulation in `r Citep(bib, "")`. $x_{i}$ are the concatenated activations 
-across all layers in the network.
+The formulation in `r Citep(bib, "Yun2021-jc")`. $x_{i}$ are the concatenated
+activations across all layers in the network.
 
 \begin{align*}
 \arg\min \|\*x_i - \*\Phi\*\alpha_{i}\|_{2} + \lambda_{1} \|\*\Phi\|_{1} + \lambda_{2}\|\alpha_i\|_{1}
@@ -122,8 +122,8 @@ across all layers in the network.
 
 ### Formulation II
 
-The formulation in `r Citep(bib, "")`. $\*x_{i}$ are activations from a
-single residual connection in the Claude Sonnet model.
+The formulation in `r Citep(bib, "templeton2024scaling")`. $\*x_{i}$ are
+activations from a single residual connection in the Claude Sonnet model.
 
 \begin{align*}
 \arg \min &\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
@@ -198,7 +198,7 @@ privacy and to respect copyright.
 
 ### Defining Memorization
 
-`r Citep(bib, "Stoehr")` made the idea of memorization more precise. When
+`r Citep(bib, "stoehr2024")` made the idea of memorization more precise. When
 prompted with 50 tokens, how closely do the next 50 generated tokens match any
 training example?
 
@@ -213,7 +213,7 @@ data. Notice that many paragraphs occur thousands of times.
 
 It would be interesting to see what happens when using dictionary learning.
 Instead, the authors summarized layers using the maximum activation for each
-``component'' of transformer self-attention heads.
+"component" of transformer self-attention heads.
 
 There are qualitative differences in activation patterns between memorized and
 non-memorized paragraphs.
@@ -282,14 +282,4 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
-```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 29)
 ```

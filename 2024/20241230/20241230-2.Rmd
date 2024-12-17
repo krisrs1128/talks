@@ -120,7 +120,7 @@ We can then average this over all the $x_{d}$ seen in the data.
 
 \begin{align*}
 \pdp{d} &= \Esubarg{x_{-d}}{f\left(x_d, x_{-d}\right)} \\
-&\approx \sum_{n = 1}^{N} f\left(x_{d}, x_{n, -d}\right)
+&\approx \frac{1}{N}\sum_{n = 1}^{N} f\left(x_{d}, x_{n, -d}\right)
 \end{align*}
 
 ---
@@ -183,7 +183,7 @@ This is formalized by the following formula,
 This is estimated using partial differences along a fine partition
 
 \begin{align*}
-\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{i} \in N_{d}\left(k\right)} \left[f\left(z_{dk}^{k}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)\right]
+\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{i} \in N_{d}\left(k\right)} \left[f\left(z_{dk}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)\right]
 \end{align*}
 
 (add the picture with the extended endpoints)
@@ -305,14 +305,4 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
-```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 29)
 ```
