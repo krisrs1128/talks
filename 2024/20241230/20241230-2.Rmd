@@ -105,25 +105,83 @@ influences the response.
 
 ---
 
-### Motivation
-
-1. One idea is to consider the values of $x_{d}$ that were observed in our
-dataset. Then, we can evaluate our model over a range of values $x_{-d}$ after
-fixing those values of $x_{d}$. 
-
-1. These curves are called Ceteris Paribus ("All Else Held Equal") profiles.
-
----
-
 ### Definition
 
-We can then average this over all the $x_{d}$ seen in the data, yielding a
-Partial Dependence curve `r Citep(bib, "Friedman2001-xk,")`.
+Partial Dependence Profiles  `r Citep(bib, "Friedman2001-xk,")` are based on a
+"ceteris paribus" idea. To understand the effect of variable $x_{d}$, evaluate
+the function $f$ at different values of $x_{d}$, holding other variables at
+values observed in the training data.
 
 \begin{align*}
 \pdp{d} &= \Esubarg{x_{-d}}{f\left(x_d, x_{-d}\right)} \\
 &\approx \frac{1}{N}\sum_{n = 1}^{N} f\left(x_{d}, x_{n, -d}\right)
 \end{align*}
+
+---
+
+### Intuition
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pdp_1.png"/>
+Suppose we want to a PDP curve for the first dimension evaluated at $x_{d}^{\ast}$.
+</span>
+]
+
+---
+
+### Intuition
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pdp_2.png"/>
+We set the first coordinate of all observed data points to $x_{d}^{\ast}$.
+</span>
+]
+
+---
+
+### Intuition
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pdp_3.png"/>
+We evaluate $f$ at these points and take the average.
+</span>
+]
+
+---
+
+### Intuition
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pdp_4.png"/>
+We can do this at another point $x_{d}^{\ast\ast}$.
+</span>
+]
+
+---
+
+### Intuition
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pdp_5.png"/>
+</span>
+We are now beginning to see a PDP curve along this direction.
+]
+
+---
+
+### Intuition
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pdp_6.png"/>
+We continue until we trace out a full curve along that axis.
+</span>
+]
 
 ---
 
