@@ -111,11 +111,11 @@ are sparser and more disentangled relative to standard dimensionality reduction.
 
 ### Formulation I
 
-The formulation in `r Citep(bib, "Yun2021-jc")`. $x_{i}$ are the concatenated
+The formulation in `r Citep(bib, "Yun2021-jc")`. $\*x_{n}$ are the concatenated
 activations across all layers in the network.
 
 \begin{align*}
-\arg\min \|\*x_i - \*\Phi\*\alpha_{i}\|_{2} + \lambda_{1} \|\*\Phi\|_{1} + \lambda_{2}\|\alpha_i\|_{1}
+\arg\min_{\Phi, \alpha_{n}} \sum_{n = 1}^{N} \|\*x_n - \*\Phi\*\alpha_{n}\|_{2} + \lambda_{1} \|\*\Phi\|_{1} + \lambda_{2}\|\alpha_n\|_{1}
 \end{align*}
 
 ---
@@ -150,9 +150,13 @@ have something to do with the Golden Gate Bridge.
 We can also build maps of many related features. This figure is a UMAP of ...
 (phi? alpha?)
 
-
-These annotations were generated automatically, which could make this analysis
-much more automatic.
+.center[
+<span style="font-size: 18px;">
+<img src="figures/golden_gate_umap.png"/>
+These annotations were generated automatically, which helps make this analysis
+more automatic.
+</span>
+]
 
 ---
 
@@ -175,13 +179,40 @@ weight on high vs. lower parts of the network.
 ### Example Features
 
 The associated features are consistent with the belief that deeper layers are
-more abstract.
+more abstract. First, they find that factors whose coefficients $\alpha_{n}^{l}$
+is much larger in either the shallower or deeper parts of the network.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig2_yun.png">
+</span>
+]
+
+---
+
+### Example Features
+
+The associated features are consistent with the belief that deeper layers are
+more abstract. First, they find that factors whose coefficients $\alpha_{n}^{l}$
+is much larger in either the shallower or deeper parts of the network.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/yun_depth_comparison.png">
+</span>
+]
 
 ---
 
 ### Local Explanation
 
 We can use LIME to identify individual words that contribute the most to a single feature.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig7_yun.png">
+</span>
+]
 
 ---
 
@@ -202,10 +233,14 @@ privacy and to respect copyright.
 prompted with 50 tokens, how closely do the next 50 generated tokens match any
 training example?
 
-(Fig 2, lower panel)
-
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig2_stoehr.png"/>
 The red points are generated texts that exactly match those in the training
 data. Notice that many paragraphs occur thousands of times.
+</span>
+]
+
 
 ---
 
@@ -215,8 +250,13 @@ It would be interesting to see what happens when using dictionary learning.
 Instead, the authors summarized layers using the maximum activation for each
 "component" of transformer self-attention heads.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig4_stoehr.png"/>
 There are qualitative differences in activation patterns between memorized and
 non-memorized paragraphs.
+</span>
+]
 
 ---
 
@@ -225,6 +265,12 @@ non-memorized paragraphs.
 One of the heads is very active on memorized paragraphs, and they found that it
 attends to rare tokens. The theory is that it might be ``looking up'' the
 memorized text whenever it encounters one of these rare tokens.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig7_stoehr.png"/>
+</span>
+]
 
 ---
 
@@ -237,7 +283,24 @@ memorized text whenever it encounters one of these rare tokens.
 If we want generated output to reflect more (or less) of feature $\varphi_{k}$,
 we can manually increase (or decrease) the activation of the associated neurons.
 
-(example with the golden gate bridge)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/golden_gate_self.png"/>
+</span>
+]
+
+---
+
+### Steering Generations
+
+If we want generated output to reflect more (or less) of feature $\varphi_{k}$,
+we can manually increase (or decrease) the activation of the associated neurons.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/transit_self.png"/>
+</span>
+]
 
 ---
 
@@ -253,8 +316,8 @@ be practically done.
 
 ### Editing and  Memorization
 
-Simple editing isn't a panacea. `r Citep(bib, "")` tried to fine-tune the
-model's weights so that memorized paragraphs had lower likelihood. However,
+Simple editing isn't a panacea. `r Citep(bib, "stoehr2024")` tried to fine-tune
+the model's weights so that memorized paragraphs had lower likelihood. However,
 the tuned models were still prone to generating memorized output.
 
 
