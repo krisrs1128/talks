@@ -92,7 +92,8 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ### Global Summaries
 
-1. LIME and Shapley are used when we want to understand the important variables for predictions at a specific instance $x$.
+1. LIME and Shapley are used when we want to understand the important variables
+for predictions at a specific instance $x$.
 
 1. What if we want global variable summaries across the entire model? We could
 average Shapley values across samples, but this doesn't tell us *how* a variable
@@ -116,7 +117,8 @@ fixing those values of $x_{d}$.
 
 ### Definition
 
-We can then average this over all the $x_{d}$ seen in the data.
+We can then average this over all the $x_{d}$ seen in the data, yielding a
+Partial Dependence curve `r Citep(bib, "Friedman2001-xk,")`.
 
 \begin{align*}
 \pdp{d} &= \Esubarg{x_{-d}}{f\left(x_d, x_{-d}\right)} \\
@@ -149,7 +151,8 @@ might accidentally attribute effects from one onto the other.
 
 ### Geometric Intuition
 
-To resolve these issues, consider the derivaties,
+The main idea of `r Citep(bib, "Apley2020-nd")` is to resolve these issues using
+the derivatives:
 
 \begin{align*}
 \frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d}.
@@ -164,7 +167,13 @@ This removes any linear effects from variables other than $x_{d}$.
 We can evaluate these derivatives locally across the observed data range. Then,
 we can stitch (``accumulate'') them into a single, coherent summary.
 
-(add a picture to summarize this)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig9_apley.png"/>
+The ALE curve summarizes many local effects.
+</span>
+]
+
 
 ---
 
@@ -183,10 +192,16 @@ This is formalized by the following formula,
 This is estimated using partial differences along a fine partition
 
 \begin{align*}
-\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{i} \in N_{d}\left(k\right)} \left[f\left(z_{dk}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)\right]
+\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{n} \in N_{d}\left(k\right)} \left[f\left(z_{dk}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)\right]
 \end{align*}
 
-(add the picture with the extended endpoints)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig3_apley.png"/>
+The derivatives are approximated by using empirical differences along a fine
+grid.
+</span>
+]
 
 ---
 
@@ -211,7 +226,8 @@ specific classes of models, then we can come up with more precise notions of
 importance (give some references,e.g., DeepShap).
 
 To illustrate this idea, we will consider the MDI+ (Mean Decrease in Impurity)
-measure proposed in `Citep(bib, "")` for decision trees and random forests.
+measure proposed in `Citep(bib, "Agarwal2023-sx")` for decision trees and random
+forests.
 
 ---
 
@@ -223,9 +239,9 @@ as:
 
 \begin{align*}
 \Delta\left(s\right) &= \frac{1}{N\left(t\right)}\left[
-\sum_{x_{i} \in t} \left(y_i - \overline{y}_{t}\right)^2 -
-\sum_{x_{i} \in t_{L}} \left(y_i - \overline{y}_{t_{L}}\right) ^ 2 - 
-\sum_{x_{i} \in t_{R}} \left(y_i - \overline{y}_{t_{R}}\right) ^ 2 \right]
+\sum_{x_{n} \in t} \left(y_i - \overline{y}_{t}\right)^2 -
+\sum_{x_{n} \in t_{L}} \left(y_i - \overline{y}_{t_{L}}\right) ^ 2 - 
+\sum_{x_{n} \in t_{R}} \left(y_i - \overline{y}_{t_{R}}\right) ^ 2 \right]
 \end{align*}
 
 ---
@@ -294,8 +310,8 @@ The $R^2$ of this model is exactly the MDI of feature $k$.
 1. The main idea of MDI+ is that we don't have to use linear regression -- we
 can use the entire high-dimensional statistics toolkit.
 
-1. E.g., `Citep(bib, "")` argue that using $R^2$ from a ridge regression model
-leads to more stable rankings than ordinary MDI.
+1. E.g., `Citep(bib, "Agarwal2023-sx")` argue that using $R^2$ from a ridge
+regression model leads to more stable rankings than ordinary MDI.
 
 ---
 
