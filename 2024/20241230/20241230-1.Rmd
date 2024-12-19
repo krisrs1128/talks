@@ -1,16 +1,16 @@
 ---
 title: ""
 author: "Kris Sankaran"
-#output:
-  # xaringan::moon_reader:
-  #   css: ["default", "css/xaringan-themer.css"]
-  #   lib_dir: libs
-  #   self_contained: false
-  #   nature:
-  #     highlightStyle: github
-  #     highlightLines: true
-  #     ratio: "16:9"
-  #   seal: false
+# output:
+#   xaringan::moon_reader:
+#     css: ["default", "css/xaringan-themer.css"]
+#     lib_dir: libs
+#     self_contained: false
+#     nature:
+#       highlightStyle: github
+#       highlightLines: true
+#       ratio: "16:9"
+#     seal: false
 output: html_document
 ---
 
@@ -22,6 +22,7 @@ MathJax.Hub.Config({
     Macros: {
       myred: ["{\\color{myred}{#1}}", 1],
       mygreen: ["{\\color{mygreen}{#1}}", 1],
+      mypurple: ["{\\color{mypurple}{#1}}", 1],
       reals: "{\\mathbb{R}}",
       indic: ["{\\mathbf{1}\\left\\{{#1}\\right\\}}", 1],
       indep: "{\\perp\\!\\!\\!\\!\\perp}",
@@ -36,24 +37,25 @@ MathJax.Hub.Config({
 });
 </script>
 
-
-<style>
-.myred {color: #B4575C;}
-.mygreen {color: #5A8A80;}
-</style>
+<div style = "position:fixed; visibility: hidden">
+$$\require{color}\definecolor{myred}{rgb}{0.918, 0.20, 0.137}$$
+$$\require{color}\definecolor{mygreen}{rgb}{0.352941176470588, 0.541176470588235, 0.501960784313725}$$
+$$\require{color}\definecolor{mypurple}{rgb}{0.71, 0.29, 0.49}$$
+</div>
 
 ```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
 library(xaringancolor)
 setup_colors(
-  myred = "#B4575C",
-  mygreen = "#5A8A80"
+  myred = "#ea3323",
+  mygreen = "#5A8A80",
+  mypurple = "#b54c7f"
 )
 
 library(flair)
-myred <- "#B4575C"
+myred <- "#ea3323"
 mygreen <- "#5A8A80"
+mypurple <- "#b54c7f"
 ```
-
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(MASS)
@@ -115,28 +117,49 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 1. To explain a prediction near a single sample, we consider the approximating
 hyperplane near that sample.
 
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig3_ribiero.png"/>
+</span>
+]
+
+
 ---
 
 ### Notation
 
-1. $x$: The sample whose predictions we want to explain.
+1. $\myred{\*x}$: The sample whose predictions we want to explain.
 1. $f$: A complex model we want to explain.
 1. $G$: A class of simple models to use in the explanations.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/LIME-summary1.png"/>
+</span>
+]
+
+
 ---
 
 ### Notation
 
-1. $\pi_{x}$: A distribution over a neighborhood of $x$.
-1. $x'$: A sample from $\pi_{x}$.
-1. $z, z'$: Summarized versions of $x, x'$ (e.g., word counts).
+1. $\mypurple{\pi}_{\myred{\*x}}$: A distribution over a neighborhood of $x$.
+1. $\*x'$: A sample from $\pi_{\myred{\*x}}$.
+1. $\*z, \*z'$: Summarized versions of $\*x, \*x'$ (e.g., word counts).
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/LIME-summary2.png"/>
+</span>
+]
 
 ---
 
 ### Objective
 
 \begin{align}
-\min_{g \in G} \Esubarg{\pi_{x}}{L\left(f\left(z'\right), g\left(z'\right)\right)} + \Omega\left(g\right)
+\min_{g \in G} \Esubarg{\pi_{\*x}}{L\left(f\left(\*z'\right), g\left(\*z'\right)\right)} + \Omega\left(g\right)
 \end{align}
 
 ---
@@ -148,7 +171,7 @@ hyperplane near that sample.
 1. Solve the optimization:
 
 \begin{align}
-\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(z_{n}^{\prime}\right), g\left(z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
+\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(\*z_{n}^{\prime}\right), g\left(\*z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
 \end{align}
 
 ---
