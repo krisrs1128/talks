@@ -109,7 +109,7 @@ are sparser and more disentangled relative to standard dimensionality reduction.
 
 ---
 
-### Formulation I
+### Formulation
 
 The formulation in `r Citep(bib, "Yun2021-jc")`. $\*x_{n}$ are the concatenated
 activations across all layers in the network.
@@ -117,6 +117,19 @@ activations across all layers in the network.
 \begin{align*}
 \arg\min_{\Phi, \alpha_{n}} \sum_{n = 1}^{N} \|\*x_n - \*\Phi\*\alpha_{n}\|_{2} + \lambda_{1} \|\*\Phi\|_{1} + \lambda_{2}\|\alpha_n\|_{1}
 \end{align*}
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/dictionary_rectangle.png"/>
+</span>
+]
+
+---
+
+### Formulation
+
+The columns $\varphi_{k}$ of $\Phi$ are called atoms.
+
 
 ---
 

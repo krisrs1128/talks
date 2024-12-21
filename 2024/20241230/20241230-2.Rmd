@@ -192,6 +192,12 @@ While partial dependence is a simple idea, it suffers from a few issues.
 First, we might query the model at coordinates $\left(x_{d}, x_{-d}\right)$ that
 are never encountered in the data.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/pdp_pathology.png"/>
+</span>
+]
+
 ---
 
 ### Pathologies: Multicollinearity
@@ -346,8 +352,15 @@ Decision trees can be represented as linear regressions in an basis derived from
 The $\hat{y}$ from this regression are exactly the fitted values from a decision tree.
 
 \begin{align*}
-\hat{y} = \left[\psi_{1}\left(x\right) \vert \dots \vert \psi_{S}\left(x\right)\right]\hat{\beta}
+\hat{y} = \left[\psi_{1}\left(\*x\right) \vert \dots \vert \psi_{S}\left(\*x\right)\right]\hat{\beta}
 \end{align*}
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/tree_regression_correspondence.png"/>
+</span>
+]
+
 
 ---
 
