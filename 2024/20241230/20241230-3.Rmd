@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Interpretability Short Course: Probes and Concepts"
 author: "Kris Sankaran"
 #output:
   # xaringan::moon_reader:
@@ -139,10 +139,11 @@ understand, like whether a string of text lies within quotes.
 
 We often want to see whether a model has learned specific features.
 
-* Validation: Has the model learned a property that we expect to generalize across many contexts?
-* Fairness: Can we ensure that the model isn't using a protected attribute, like race?
+* **Validation**: Has the model learned a property that we expect to generalize across many contexts?
+* **Fairness**: Can we ensure that the model isn't using a protected attribute, like race?
+* **Development**: Are claims about why models do well accurate? (e.g., does transfer learning really reuse features?)
 
-In this case, we need a more directed search.
+In this case, we need a more directed analysis.
 
 ---
 
@@ -214,7 +215,7 @@ interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
 `r Citep(bib, "tcav")` formally tests whether a concept is being used to predict
 a particular class. It applies to any architecture.
 
-**Step 1**. Define a collection of images $\*x_{i}$ that represents the concept. Also construct a control pool of random images $\*x_{i}^'$.
+**Step 1**. Define a collection of images $\*x_{i}$ that represents the concept. Also construct a control pool of random images $\*x_{i}^\prime$.
 
 Here, we are interested in the concept "stripes."
 
@@ -286,11 +287,9 @@ the intermediate activations.
 </span>
 ]
 
-
-
 ---
 
-### Application
+### Real-World Example
 
 Concepts have been applied to medical imaging tasks. In this example, concepts
 give additional context about why a model might classify the lesion as a 
@@ -302,8 +301,16 @@ melanoma.
 Figure from `r Citep(bib, "Lucieri2022")`. In this case, the model is incorrect despite concepts suggesting the correct diagnosis.
 </span>
 ]
+
 ---
 
+### Software
+
+1. ``: 
+
+class: reference
+
+---
 ### Takeaways
 
 Probes and concepts provide a bridge between difficult-to-interpret deep

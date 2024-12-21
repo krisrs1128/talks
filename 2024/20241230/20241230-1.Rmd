@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Interpretability Short Course: Local Measures"
 author: "Kris Sankaran"
 # output:
 #   xaringan::moon_reader:
@@ -484,7 +484,19 @@ We can further focus on those subsets that are connected to feature $i$:
 
 ---
 
+### Software
+
+1. `imodels`: 
+
 class: reference
+
+---
+
+### Takeaways
+
+1. 
+
+---
 
 ### References
 

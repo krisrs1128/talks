@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Interpretability Short Course: Global Measures"
 author: "Kris Sankaran"
 #output:
   # xaringan::moon_reader:
@@ -383,6 +383,17 @@ can use the entire high-dimensional statistics toolkit.
 
 1. E.g., `Citep(bib, "Agarwal2023-sx")` argue that using $R^2$ from a ridge
 regression model leads to more stable rankings than ordinary MDI.
+
+---
+
+### Software
+
+1. `imodels`: 
+
+
+---
+
+### Takeaways
 
 ---
 

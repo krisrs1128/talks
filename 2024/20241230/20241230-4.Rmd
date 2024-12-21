@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Interpretability Short Course: Dictionary Learning"
 author: "Kris Sankaran"
 #output:
   # xaringan::moon_reader:
@@ -140,15 +140,11 @@ overcomplete, it can reconstruct relatively complex patterns.
 
 ---
 
-
----
-
 ### Example Factor
 
-1. To understand the $k^{th}$ factor (column) in $\Phi$, we can look for $i$
-with large values of $\alpha_{ik}$.
+1. To interpret $\varphi_{k}$, we can look for examples $i$ with large $\alpha_{ik}$.
 
-1. For example, for this feature, $\alpha_{i}$ is large only on examples that
+1. For example, for this feature has the largest $\alpha_{ik}$ in examples that
 have something to do with the Golden Gate Bridge.
 
 ---
@@ -168,7 +164,7 @@ more automatic.
 
 ---
 
-## Testing
+## Applications
 
 ---
 
@@ -180,7 +176,12 @@ can learn more abstract representations.
 1. Using dictionary learning, we can test this by comparing features with more
 weight on high vs. lower parts of the network.
 
-(draw the weights and the ones that we are most interested in)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/dictionary_rectangles_compare.png"/>
+</span>
+]
+
 
 ---
 
@@ -333,6 +334,13 @@ The authors speculate that it may still be possible to use activations to detect
 when the model is about to return memorized output.
 
 ---
+
+### Software
+
+
+
+---
+
 
 ### Takeaways
 
