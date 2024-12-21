@@ -128,23 +128,18 @@ activations across all layers in the network.
 
 ### Formulation
 
-The columns $\varphi_{k}$ of $\Phi$ are called atoms.
+The columns $\varphi_{k}$ of $\Phi$ are called atoms. Since the basis is
+overcomplete, it can reconstruct relatively complex patterns.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/atoms_interpretation.png"/>
+</span>
+]
 
 
 ---
 
-### Formulation II
-
-The formulation in `r Citep(bib, "templeton2024scaling")`. $\*x_{i}$ are
-activations from a single residual connection in the Claude Sonnet model.
-
-\begin{align*}
-\arg \min &\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
-\hat{x} &= b_{k} + \Phi^{(2)}f\left(x\right) + b \\
-f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k}\right)_{+}
-\end{align*}
-
-(need to double check this one, also try to make it more consistent with Lecun...)
 
 ---
 
@@ -359,3 +354,16 @@ class: reference
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
 ```
+
+---
+
+### Formulation II
+
+The formulation in `r Citep(bib, "templeton2024scaling")`. $\*x_{i}$ are
+activations from a single residual connection in the Claude Sonnet model.
+
+\begin{align*}
+\arg \min &\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
+\hat{x} &= b_{k} + \Phi^{(2)}f\left(x\right) + b \\
+f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k}\right)_{+}
+\end{align*}
