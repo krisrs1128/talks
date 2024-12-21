@@ -225,3 +225,31 @@ url={https://openreview.net/forum?id=ryF7rTqgl}
   month = mar,
   pages = {106620}
 }
+
+@inproceedings{atanasova-etal-2020-diagnostic,
+    title = "A Diagnostic Study of Explainability Techniques for Text Classification",
+    author = "Atanasova, Pepa  and
+      Simonsen, Jakob Grue  and
+      Lioma, Christina  and
+      Augenstein, Isabelle",
+    editor = "Webber, Bonnie  and
+      Cohn, Trevor  and
+      He, Yulan  and
+      Liu, Yang",
+    booktitle = "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)",
+    month = nov,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2020.emnlp-main.263",
+    doi = "10.18653/v1/2020.emnlp-main.263",
+    pages = "3256--3274",
+    abstract = "Recent developments in machine learning have introduced models that approach human performance at the cost of increased architectural complexity. Efforts to make the rationales behind the models{'} predictions transparent have inspired an abundance of new explainability techniques. Provided with an already trained model, they compute saliency scores for the words of an input instance. However, there exists no definitive guide on (i) how to choose such a technique given a particular application task and model architecture, and (ii) the benefits and drawbacks of using each such technique. In this paper, we develop a comprehensive list of diagnostic properties for evaluating existing explainability techniques. We then employ the proposed list to compare a set of diverse explainability techniques on downstream text classification tasks and neural network architectures. We also compare the saliency scores assigned by the explainability techniques with human annotations of salient input regions to find relations between a model{'}s performance and the agreement of its rationales with human ones. Overall, we find that the gradient-based explanations perform best across tasks and model architectures, and we present further insights into the properties of the reviewed explainability techniques.",
+}
+
+@Manual{lime_package,
+  title = {lime: Local Interpretable Model-Agnostic Explanations},
+  author = {Emil Hvitfeldt and Thomas Lin Pedersen and Michaël Benesty},
+  year = {2022},
+  note = {https://lime.data-imaginist.com, https://github.com/thomasp85/lime},
+}
