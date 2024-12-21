@@ -395,6 +395,14 @@ regression model leads to more stable rankings than ordinary MDI.
 
 ### Takeaways
 
+1. For global explanations, partial dependence profiles give intuitive summaries
+for arbitrary models. Accumulated local effects plots are an improved version of
+partial dependence plots.
+
+1. When restricting attention to tree-based measures, it's possible to improve
+on classical purity-based variable importance measures by making the connection
+to regression.
+
 ---
 
 class: reference

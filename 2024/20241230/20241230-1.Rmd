@@ -447,7 +447,7 @@ near the end.
 
 ---
 
-### $L$ Shapley
+### $L$-Shapley
 
 Let $N_{k}\left(i\right)$ be all the features within distance $k$ of feature
 $i$. A fast approximation is to consider:
@@ -467,7 +467,7 @@ $i$. A fast approximation is to consider:
 
 ---
 
-### $C$ Shapley
+### $C$-Shapley
 
 We can further focus on those subsets that are connected to feature $i$:
 
@@ -494,7 +494,11 @@ class: reference
 
 ### Takeaways
 
-1. 
+1. Shapley values offer a principled way for identifying relevant features in
+local examples.
+
+1. Various approximations are available to make their computation feasible even
+when many features are present.
 
 ---
 
