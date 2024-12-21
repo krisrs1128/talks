@@ -120,7 +120,7 @@ activations across all layers in the network.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/dictionary_rectangle.png"/>
+<img src="figures/dictionary_rectangles.png"/>
 </span>
 ]
 

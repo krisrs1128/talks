@@ -288,7 +288,7 @@ v_{\*x}\left(S\right) &= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)
 \end{align}
 
 .center[
-<img src="figures/shapley_v.png"/>
+<img src="figures/shapley_v2.png"/>
 ]
 
 ---

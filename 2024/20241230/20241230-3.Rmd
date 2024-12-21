@@ -53,7 +53,6 @@ myred <- "#B4575C"
 mygreen <- "#5A8A80"
 ```
 
-
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(MASS)
 library(knitr)
@@ -212,12 +211,18 @@ interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
 
 ### Concepts and Hypothesis Testing
 
-`r Citep(bib, "tcav")` tried to formally test whether a concept is being used to
-predict a particular class.
+`r Citep(bib, "tcav")` formally tests whether a concept is being used to predict
+a particular class. It applies to any architecture.
 
-**Step 1**. Define a collection of images $\*x_{i}$ that represents the concept. Also consruct a control pool of random images $\*x_{i}^'$.
+**Step 1**. Define a collection of images $\*x_{i}$ that represents the concept. Also construct a control pool of random images $\*x_{i}^'$.
 
 Here, we are interested in the concept "stripes."
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/concepts_step1.png" width=600/>
+</span>
+]
 
 ---
 
@@ -226,7 +231,12 @@ predictors for a linear classifier to
 distinguish the groups. This is like probes, except the task is derived from
 Step 1.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/concepts_step2.png" width=600/>
 Let $\*v$ denote the normal to the decision boundary.
+</span>
+]
 
 ---
 
@@ -236,8 +246,14 @@ Let $\*v$ denote the normal to the decision boundary.
 S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
 \end{align*}
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/concepts_step3.png" width=600/>
 $y_{k}$ is the pre-classification logit for class $k$ viewed as a function of
 the intermediate activations.
+</span>
+]
+
 
 ---
 
@@ -248,10 +264,29 @@ statistic
 T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right) > 0\}}.
 \end{align*}
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/concepts_step4.png" width=600/>
+$y_{k}$ is the pre-classification logit for class $k$ viewed as a function of
+the intermediate activations.
+</span>
+]
+
+
 ---
 
 **Step 5** Test the significance of $T_{k}$ by learning reference $\*v$ trained
 to distinguish randomly chosen example images.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/concepts_step5.png" width=600/>
+$y_{k}$ is the pre-classification logit for class $k$ viewed as a function of
+the intermediate activations.
+</span>
+]
+
+
 
 ---
 
