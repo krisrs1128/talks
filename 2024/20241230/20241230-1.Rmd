@@ -95,13 +95,27 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 ### Which words are important?
 
+Why was this sentence classified as having negative sentiment?
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/sal_example.png"/> 
+Example from `r Citep(bib, 'atanasova-etal-2020-diagnostic')`.
+</span>
+]
+
 ---
 
 ### Which features are used?
 
-(image example)
+Why is the second most probable class in this image "candle, taper, wax light"?
 
-(loan example)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/lime_wax_example.png"/> 
+Example from `r Citep(bib, 'lime_package')`.
+</span>
+]
 
 ---
 
@@ -117,10 +131,10 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 1. To explain a prediction near a single sample, we consider the approximating
 hyperplane near that sample.
 
-
 .center[
 <span style="font-size: 18px;">
 <img src="figures/fig3_ribiero.png"/>
+Figure from `r Citep(bib, "Ribeiro2016-qk")`.
 </span>
 ]
 
@@ -184,7 +198,7 @@ hyperplane near that sample.
 1. $\Omega$ is the $\ell^1$ penalty
 
 \begin{align}
-\sum_{n = 1}^{N} \left(f\left(z_{n}\right) - z_{n}^\top\beta\right)^2 + \|\beta\|_{1}
+\sum_{n = 1}^{N} \left(f\left(\*z_{n}\right) - \*z_{n}^\top\beta\right)^2 + \|\beta\|_{1}
 \end{align}
 
 ---
@@ -195,11 +209,16 @@ hyperplane near that sample.
 
 ### Credit Assignment
 
-1. LIME has a nice geometric interpretation. Shapley values is built off a contrasting game theoretic analogy.
-
-1. How would you distribute profit across employees $i$ in a company if you knew
+How would you distribute profit across employees $i$ in a company if you knew
 that any team $S$ would have profit $v\left(S\right)$?  This is a credit
 assignment problem.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/shapley_team_1.png"/> 
+Shapley values are built off a game theoretic analogy.
+</span>
+]
 
 ---
 
@@ -214,49 +233,75 @@ We can distribute credit according to how much the team's profit decreases when 
 * There are $D$ employees total.
 * $S_{d}\left(i\right)$ is the collection of subsets of size $d$ that includes employee $i$.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/shapley_team_2.png"/> 
+</span>
+]
+
 ---
 
 ### Game Theory $\to$ Machine Learning
 
 1. Instead assigning credit to employees, we attribute importances to features.
 
-1. The attributions are made locally at the per-prediction level. The features
-to which we assign credit are often summaries, like the word counts in the LIME
-example above.
-
-1. Instead of profit, consider the model's expected prediction when a subset $S$ of features is fixed,
+1. The attributions are made locally at the per-prediction level.  Instead of
+profit, consider the model's expected prediction when a subset $S$ of features
+is fixed,
 
 \begin{align}
-v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S}\right)}{f\left(x_{S}, x^{\prime}_{S^C}\right)}
+v_{\*x}\left(S\right) &= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
 \end{align}
-
----
-
-### Shapley Values
-
-This definition satisfies some elegant axioms.
 
 ---
 
 ### Shapley Feature Attribution
 
 With this definition of $v$, we can describe the importance of feature $i$ in
-making the prediction $f\left(x\right)$:
+making the prediction $f\left(\*x\right)$:
 
 \begin{align}
-\varphi_{x}\left(f, i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)}\left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right) \right]
+\varphi_{\*x}\left(f, i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)}\left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right) \right]
 \end{align}
 
-This definition satisfies the same axioms as the ones above for credit assignment. In particular, $f\left(x\right) = \sum_{d = 1}^{D}\varphi_{x}\left(f, d\right)$.
+This definition satisfies the same axioms as the ones above for credit assignment. In particular, $f\left(\*x\right) = \sum_{d = 1}^{D}\varphi_{\*x}\left(f, d\right)$.
 
 ---
 
 ### Visualization - One Sample
 
-Since adding all the attributions leads to $f\left(x\right)$, we can center a
-stacked barplot around $f\left(x\right)$. Each bar corresponds to one feature.
+Since adding all the attributions leads to $f\left(\*x\right)$, we can center a
+stacked barplot around $f\left(\*x\right)$. Each piece corresponds to one feature.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/shapley_sample_level.png"/> 
+</span>
+]
 
+---
+
+### Geometric Interpretation
+
+\begin{align}
+v_{\*x}\left(S\right) &= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
+\end{align}
+
+.center[
+<img src="figures/shapley_v.png"/>
+]
+
+---
+
+### Geometric Interpretation
+
+How would we compute $\varphi\left(2\right)$ in this example? We also need:
+
+* $v\left(\{1, 2\}\right)$
+* $v\left(\{2\}\right)$
+* $v\left(\empty\right)$
+
+What do these correspond to geometrically?
 
 ---
 
@@ -265,6 +310,12 @@ stacked barplot around $f\left(x\right)$. Each bar corresponds to one feature.
 Since stacked barplots are compact, we can visualize entire datasets this way.
 This helps identify sets of samples which have similar explanations.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/shapley_dataset_level.png"/> 
+</span>
+]
+
 ---
 
 ### Computational Challenges
@@ -272,7 +323,7 @@ This helps identify sets of samples which have similar explanations.
 This definition has some elegant properties, but naive calculation is impossible
 in all but the simplest cases.
 
-1. $v_{x}\left(S\right)$ involves a potentially complex conditional expectation.
+1. $v_{\*x}\left(S\right)$ involves a potentially complex conditional expectation.
 1. We need to enumerate over all subsets containing $i$.
 
 ---
@@ -282,49 +333,49 @@ in all but the simplest cases.
 Remember the definition:
 
 \begin{align*}
-v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C} \vert x_{S}\right)}{f\left(x_{S}, x^{\prime}_{S^C}\right)}
+v_{\*x}\left(S\right) &= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
 \end{align*}
 
 ---
 
 ### Reference Values
 
-One simple idea is to replace $x^{\prime}_{S^C}$ with some reference value, like
-the all zeros vector or the average $\overline{x}_{S^C}$ across all samples:
+One simple idea is to replace $\*x^{\prime}_{S^C}$ with some reference value, like
+the all zeros vector or the average $\overline{\*x}_{S^C}$ across all samples:
 
 \begin{align*}
-v_{x}\left(S\right) \approx f\left(x_{S}, \overline{x}_{S^C}\right)
+v_{\*x}\left(S\right) \approx f\left(\*x_{S}, \overline{\*x}_{S^C}\right)
 \end{align*}
 
-This is convenient because it only requires one function evaluation per set $S$.
-But this is a quite aggressive approximation.
+This only requires one function evaluation per set $S$ but is a very rough
+approximation.
 
 ---
 
 ### Assuming $x_{S} \indep x_{S^C}$
 
-An alternative approximation is to assume independence between features in $S$ and $S^C$,
+An alternative is to assume independence between features in $S$ and $S^C$,
 
 \begin{align*}
-v_{x}\left(S\right) &= \Esubarg{p\left(x^{\prime}_{S^C}\right)}{f\left(x_{S}, x^{\prime}_{S^C}\right)} \\
-&\approx \sum_{n = 1}^{N}{f\left(x_{S}, x^{\prime}_{n,S^C}\right)}
+v_{\*x}\left(S\right) &= \Esubarg{p\left(\*x^{\prime}_{S^C}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)} \\
+&\approx \sum_{n = 1}^{N}{f\left(\*x_{S}, \*x^{\prime}_{n,S^C}\right)}
 \end{align*}
 
-Of course, we can get a reasonable approximation using subsamples.
+We could also sum over subsamples.
 
 ---
 
 ### Learning the Conditionals
 
 A more sophisticated approach learns a new generative model to allow sampling
-$x^{\prime}_{n,S^C} \vert x_{S}$. In fact, the same model can be used for many
+$\*x^{\prime}_{n,S^C} \vert \*x_{S}$. In fact, the same model can be used for many
 conditionals.
 
-1. Draw $N^\ast$ samples $x^{\prime}_{n,S^C} \sim p\left(\cdot \vert x\right)$
-1. Approximate
+1. Draw $N^\ast$ samples $\*x^{\prime}_{n,S^C} \sim p\left(\cdot \vert \*x\right)$
+1. Approximate:
 
 \begin{align*}
-v_{x}\left(S\right) &\approx \sum_{n = 1}^{N^\ast}{f\left(x_{S}, x^{\prime}_{n,S^C}\right)}
+v_{\*x}\left(S\right) &\approx \sum_{n = 1}^{N^\ast}{f\left(\*x_{S}, \*x^{\prime}_{n,S^C}\right)}
 \end{align*}
 
 ---
@@ -336,12 +387,36 @@ equivalent formulation of the Shapley value in terms of weighted linear
 regression.
 
 \begin{align*}
-v_{x}\left(S\right) \approx \varphi_{x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{x}\left(f, d\right)
+v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
 \end{align*}
 
-We can compute $v_{x}\left(S\right)$ on only a subset of sets. $\indic{d \in S}$
-is known, so this is a linear regression with unknown coefficients
-$\varphi_{x}\left(f, d\right)$
+.center[
+<span style="font-size: 18px;">
+<img src="figures/shapley_kernel_regression.png"/> 
+$\indic{d \in S}$ is known, so this is a linear regression with unknown
+coefficients $\varphi_{\*x}\left(f, d\right)$
+</span>
+]
+
+---
+
+
+### Regression Perspective
+
+How can we avoid summing over so many subsets? It turns out that there is an
+equivalent formulation of the Shapley value in terms of weighted linear
+regression.
+
+\begin{align*}
+v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
+\end{align*}
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/shapley_kernel_regression.png"/> 
+We can compute $v_{\*x}\left(S\right)$ on a subset of sets.
+</span>
+]
 
 ---
 
@@ -350,7 +425,7 @@ $\varphi_{x}\left(f, d\right)$
 Each row in this regression is a subset $S$ of features,
 
 \begin{align*}
-v_{x}\left(S\right) \approx \varphi_{x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{x}\left(f, d\right)
+v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
 \end{align*}
 
 If for the row corresponding to subset $S$ we use weights
@@ -358,9 +433,7 @@ If for the row corresponding to subset $S$ we use weights
 \frac{D - 1}{\left(D \choose \left|S\right|\right) \left|S\right|\left(D - \left|S\right|\right)}
 \end{align*}
 then the resulting weighted linear regression exactly recovers the Shapley
-values $\varphi_{x}\left(f, d\right)$.
-
-We can estimate this without evaluating $v$ on all subsets!
+values $\varphi_{\*x}\left(f, d\right)$.
 
 ---
 
@@ -380,13 +453,17 @@ Let $N_{k}\left(i\right)$ be all the features within distance $k$ of feature
 $i$. A fast approximation is to consider:
 
 \begin{align*}
-\varphi_{x}^{L}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \in N_{k\left(i\right)}} 
-\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
+\varphi_{\*x}^{L}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \in N_{k\left(i\right)}} 
+\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right)\right]
 \end{align*}
 
 1. When $k$ is small, this will be an efficient approximation.
 
 1. This is sometimes called $L$-Shapley ($L$ \to ``Local'')
+
+.center[
+<img src="figures/l-c-shapley.png"/> 
+]
 
 ---
 
@@ -395,20 +472,15 @@ $i$. A fast approximation is to consider:
 We can further focus on those subsets that are connected to feature $i$:
 
 \begin{align*}
-\varphi_{x}^{C}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \subseteq N_{k\left(i\right), S \text{connected to } i}} 
-\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{x}\left(S\right) - v_{x}\left(S - \{i\}\right)\right]
+\varphi_{\*x}^{C}\left(f, i\right) &= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \subseteq N_{k\left(i\right), S \text{connected to } i}} 
+\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right)\right]
 \end{align*}
 
 1. This is sometimes called $C$-Shapley ($C$ \to ``Connected'')
 
----
-
-### Related: Gradients & Saliency
-
-1. Shapley values can be used to attribute importances to pixels in an image.
-
-1. These ideas are closely related to saliency method, which consider what
-happens to a model's prediction when we perturb (rather than omit) pixel $i$.
+.center[
+<img src="figures/l-c-shapley.png"/> 
+]
 
 ---
 
@@ -419,3 +491,7 @@ class: reference
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
 ```
+
+---
+
+Human by Teuku Syahrizal from <a href="https://thenounproject.com/browse/icons/term/human/" target="_blank" title="Human Icons">Noun Project</a> (CC BY 3.0)
