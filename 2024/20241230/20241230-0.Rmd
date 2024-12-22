@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Interpretability: Motivation and Definitions"
 author: "Kris Sankaran"
 #output:
   # xaringan::moon_reader:
@@ -150,7 +150,7 @@ Models with these properties tend to be more interpretable `r Citep(bib, c("Lipt
 
 <img src="figures/crystal-ball.png" width=40/> **Simulatability**: Users can predict model behavior on new samples. <br/><br/>
 
-<img src="figures/Lego_Brick_4.svg" width=50/> **Modularity**: The model can be broken into simpler components.
+<img src="figures/Lego_Brick_4.png" width=50/> **Modularity**: The model can be broken into simpler components.
 
 <!-- First Q&A: Would you say that a linear regression model is interpretable? -->
 

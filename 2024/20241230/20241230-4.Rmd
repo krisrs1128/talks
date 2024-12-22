@@ -111,11 +111,12 @@ are sparser and more disentangled relative to standard dimensionality reduction.
 
 ### Formulation
 
-The formulation in `r Citep(bib, "Yun2021-jc")`. $\*x_{n}$ are the concatenated
-activations across all layers in the network.
+Following `r Citep(bib, "Yun2021-jc")`, suppose $\*x_{n}$ are the concatenated
+activations across all layers in the network. Then solve:
 
 \begin{align*}
-\arg\min_{\Phi, \alpha_{n}} \sum_{n = 1}^{N} \|\*x_n - \*\Phi\*\alpha_{n}\|_{2} + \lambda_{1} \|\*\Phi\|_{1} + \lambda_{2}\|\alpha_n\|_{1}
+\arg\min_{\Phi, \left(\alpha_{n}\right)} \sum_{n = 1}^{N} \|\*x_n - \*\Phi\*\alpha_{n}\|_{2} + \lambda\|\alpha_n\|_{1} \\
+\text{subject to } \alpha_{n} \succeq 0 \text{ for } n = 1, \dots, N
 \end{align*}
 
 .center[
@@ -227,12 +228,18 @@ We can use LIME to identify individual words that contribute the most to a singl
 
 ### Memorization
 
-1. In the New York Times article `r Citep(bib, "")`, the author found that GPT
-could exactly complete his previous articles, just by being given the first few
-sentences.
+1. The New York Times sued OpenAI partly on the basis that ChatGPT sometimes
+reproduces articles verbatim `r Citep(bib, c("freeman2024exploring", "nyt_case"))`.
 
-1. AI companies need to understand this ``memorization'' issue both to protect
+1. AI companies need to understand this "memorization" issue both to protect
 privacy and to respect copyright.
+
+.center[
+<span style="font-size: 18px;">
+<img src="figures/nyt_memorization.png">
+</span>
+]
+
 
 ---
 
@@ -319,25 +326,20 @@ This is one plausible direction for improving model safety. Though, there are so
 many ways in which an output can be harmful that it's not yet clear how this can
 be practically done.
 
-(example of one of the outputs from ...)
+.center[
+<span style="font-size: 18px;">
+<img src="figures/scam_emails.png"/>
+</span>
+]
 
----
-
-### Editing and  Memorization
-
-Simple editing isn't a panacea. `r Citep(bib, "stoehr2024")` tried to fine-tune
-the model's weights so that memorized paragraphs had lower likelihood. However,
-the tuned models were still prone to generating memorized output.
-
-
-The authors speculate that it may still be possible to use activations to detect
-when the model is about to return memorized output.
 
 ---
 
 ### Software
 
+1.
 
+1.
 
 ---
 

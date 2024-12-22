@@ -323,12 +323,6 @@ Here, $N\left(s\right)$ is the number of samples that descend from split $s$.
 
 ---
 
-### Random forests
-
-To go from decision trees to random forests....
-
----
-
 ### Issues
 
 1. Like with PDP, the main issue with MDI is that it behaves poorly when features are correlated.

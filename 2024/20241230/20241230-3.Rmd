@@ -97,6 +97,12 @@ passed through the network, it is transformed into a series of neuron
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
 
+.center[
+<span style="font-size: 18px;">
+<img src="figures/fig2_zeiler.png"/> <br/>
+Figure from `r Citep(bib, "Zeiler2014")`.
+</span>
+]
 
 ---
 
@@ -215,26 +221,24 @@ interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
 `r Citep(bib, "tcav")` formally tests whether a concept is being used to predict
 a particular class. It applies to any architecture.
 
-**Step 1**. Define a collection of images $\*x_{i}$ that represents the concept. Also construct a control pool of random images $\*x_{i}^\prime$.
-
-Here, we are interested in the concept "stripes."
+**Step 1**. Define a collection of images $\*x_{n}$ that represents the concept. Also construct a control pool of random images $\*x_{n}^\prime$.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step1.png" width=600/>
+<img src="figures/concepts_step1.png" width=600/><br/>
+Here, we are interested in the concept "stripes."
 </span>
 ]
 
 ---
 
 **Step 2**. Use an intermediate layer's activations $h\left(\*x\right)$ as
-predictors for a linear classifier to
-distinguish the groups. This is like probes, except the task is derived from
-Step 1.
+predictors for a linear classifier to distinguish the groups. This is like
+probes, except the task is derived from Step 1.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step2.png" width=600/>
+<img src="figures/concepts_step2.png" width=600/><br/>
 Let $\*v$ denote the normal to the decision boundary.
 </span>
 ]
@@ -249,9 +253,9 @@ S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step3.png" width=600/>
-$y_{k}$ is the pre-classification logit for class $k$ viewed as a function of
-the intermediate activations.
+<img src="figures/concepts_step3.png" width=600/><br/>
+$\nabla y_{k}\left(h\left(\*x\right)\right)$ is the direction in the activation
+space with the steepest increase in class $k$'s pre-classification logit.
 </span>
 ]
 
@@ -267,12 +271,10 @@ T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right)
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step4.png" width=600/>
-$y_{k}$ is the pre-classification logit for class $k$ viewed as a function of
-the intermediate activations.
+<img src="figures/concepts_step4.png" width=600/><br/>
+We count the number of class $k$'s members that are on the same halfspace as $\*v$.<br/>
 </span>
 ]
-
 
 ---
 
@@ -281,9 +283,8 @@ to distinguish randomly chosen example images.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step5.png" width=600/>
-$y_{k}$ is the pre-classification logit for class $k$ viewed as a function of
-the intermediate activations.
+<img src="figures/concepts_step5.png" width=600/><br/>
+Random classification directions serve as a negative control.
 </span>
 ]
 
@@ -306,11 +307,11 @@ Figure from `r Citep(bib, "Lucieri2022")`. In this case, the model is incorrect 
 
 ### Software
 
-1. ``: 
+1. :
 
-class: reference
 
 ---
+
 ### Takeaways
 
 Probes and concepts provide a bridge between difficult-to-interpret deep
