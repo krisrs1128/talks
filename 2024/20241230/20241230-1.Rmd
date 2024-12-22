@@ -1,17 +1,17 @@
 ---
 title: "Interpretability Short Course: Local Measures"
 author: "Kris Sankaran"
-# output:
-#   xaringan::moon_reader:
-#     css: ["default", "css/xaringan-themer.css"]
-#     lib_dir: libs
-#     self_contained: false
-#     nature:
-#       highlightStyle: github
-#       highlightLines: true
-#       ratio: "16:9"
-#     seal: false
-output: html_document
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+# output: html_document
 ---
 
 class: title

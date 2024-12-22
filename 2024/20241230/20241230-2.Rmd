@@ -1,17 +1,17 @@
 ---
 title: "Interpretability Short Course: Global Measures"
 author: "Kris Sankaran"
-#output:
-  # xaringan::moon_reader:
-  #   css: ["default", "css/xaringan-themer.css"]
-  #   lib_dir: libs
-  #   self_contained: false
-  #   nature:
-  #     highlightStyle: github
-  #     highlightLines: true
-  #     ratio: "16:9"
-  #   seal: false
-output: html_document
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+# output: html_document
 ---
 
 class: title
@@ -93,7 +93,7 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 ### Global Summaries
 
 1. LIME and Shapley are used when we want to understand the important variables
-for predictions at a specific instance $x$.
+for predictions at a specific instance $\*x$.
 
 1. What if we want global variable summaries across the entire model? We could
 average Shapley values across samples, but this doesn't tell us *how* a variable
@@ -113,8 +113,8 @@ the function $f$ at different values of $x_{d}$, holding other variables at
 values observed in the training data.
 
 \begin{align*}
-\pdp{d} &= \Esubarg{x_{-d}}{f\left(x_d, x_{-d}\right)} \\
-&\approx \frac{1}{N}\sum_{n = 1}^{N} f\left(x_{d}, x_{n, -d}\right)
+\pdp{d} &= \Esubarg{\*x_{-d}}{f\left(x_d, \*x_{-d}\right)} \\
+&\approx \frac{1}{N}\sum_{n = 1}^{N} f\left(x_{d}, \*x_{n, -d}\right)
 \end{align*}
 
 ---
@@ -189,7 +189,7 @@ We continue until we trace out a full curve along that axis.
 
 While partial dependence is a simple idea, it suffers from a few issues.
 
-First, we might query the model at coordinates $\left(x_{d}, x_{-d}\right)$ that
+First, we might query the model at coordinates $\left(x_{d}, \*x_{-d}\right)$ that
 are never encountered in the data.
 
 .center[
@@ -202,9 +202,9 @@ are never encountered in the data.
 
 ### Pathologies: Multicollinearity
 
-We could try to fix this by evaluating the sum only over $x_{-d}$ that are close to the observed data.
+We could try to fix this by evaluating the sum only over $\*x_{-d}$ that are close to the observed data.
 
-There is a subtle problem: If $x_{d}$ and $x_{d'}$ are highly correlated, we
+There is a subtle problem: If $x_{d}$ and $x_{d^\prime}$ are highly correlated, we
 might accidentally attribute effects from one onto the other.
 
 ---
@@ -219,7 +219,7 @@ The main idea of `r Citep(bib, "Apley2020-nd")` is to resolve these issues using
 the derivatives:
 
 \begin{align*}
-\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d}.
+\frac{\partial f\left(x_d, \*x_{-d}\right)}{\partial x_d}.
 \end{align*}
 
 This removes any linear effects from variables other than $x_{d}$.
@@ -229,7 +229,7 @@ This removes any linear effects from variables other than $x_{d}$.
 ### Geometric Intuition
 
 We can evaluate these derivatives locally across the observed data range. Then,
-we can stitch (``accumulate'') them into a single, coherent summary.
+we can stitch ("accumulate") them into a single, coherent summary.
 
 .center[
 <span style="font-size: 18px;">
@@ -246,7 +246,7 @@ The ALE curve summarizes many local effects.
 This is formalized by the following formula,
 
 \begin{align*}
-\text{ALE}_{d}\left(x_{d}\right) := \int \Esubarg{x_{-d}\vert x_{d}}{\left.\frac{\partial f\left(x_d, x_{-d}\right)}{\partial x_d} \right| x_{d} = z} dz
+\text{ALE}_{d}\left(x_{d}\right) := \int \Esubarg{\*x_{-d}\vert x_{d}}{\left.\frac{\partial f\left(x_d, \*x_{-d}\right)}{\partial x_d} \right| x_{d} = z} dz
 \end{align*}
 
 ---
@@ -256,7 +256,7 @@ This is formalized by the following formula,
 This is estimated using partial differences along a fine partition
 
 \begin{align*}
-\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{n} \in N_{d}\left(k\right)} \left[f\left(z_{dk}, x_{-d}\right) - f\left(z_{d,k-1}, x_{-d}\right)\right]
+\sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{n} \in N_{d}\left(k\right)} \left[f\left(z_{dk}, \*x_{-d}\right) - f\left(z_{d,k-1}, \*x_{-d}\right)\right]
 \end{align*}
 
 .center[
@@ -303,9 +303,9 @@ as:
 
 \begin{align*}
 \Delta\left(s\right) &= \frac{1}{N\left(t\right)}\left[
-\sum_{x_{n} \in t} \left(y_i - \overline{y}_{t}\right)^2 -
-\sum_{x_{n} \in t_{L}} \left(y_i - \overline{y}_{t_{L}}\right) ^ 2 - 
-\sum_{x_{n} \in t_{R}} \left(y_i - \overline{y}_{t_{R}}\right) ^ 2 \right]
+\sum_{\*x_{n} \in t} \left(y_i - \overline{y}_{t}\right)^2 -
+\sum_{\*x_{n} \in t_{L}} \left(y_i - \overline{y}_{t_{L}}\right) ^ 2 - 
+\sum_{\*x_{n} \in t_{R}} \left(y_i - \overline{y}_{t_{R}}\right) ^ 2 \right]
 \end{align*}
 
 ---
@@ -336,7 +336,7 @@ Here, $N\left(s\right)$ is the number of samples that descend from split $s$.
 Decision trees can be represented as linear regressions in an basis derived from the tree.
 
 \begin{align*}
-\psi_{s}\left(x\right) &= \frac{1}{\sqrt{N\left(t_{L}\right)N\left(t_{R}\right)}} \left[N\left(t_{R}\right)\indic{x \in t_{L}} - N\left(t_{L}\right)\indic{x \in t_{R}}\right]
+\psi_{s}\left(\*x\right) &= \frac{1}{\sqrt{N\left(t_{L}\right)N\left(t_{R}\right)}} \left[N\left(t_{R}\right)\indic{\*x \in t_{L}} - N\left(t_{L}\right)\indic{\*x \in t_{R}}\right]
 \end{align*}
 
 ---
@@ -363,7 +363,7 @@ The $\hat{y}$ from this regression are exactly the fitted values from a decision
 Replace all basis elements not involving feature $k$ by their averages:
 
 \begin{align*}
-\hat{y}^{(k)} = \left[\overline{\psi}_{1}\left(x\right) \vert \dots \vert \psi_{s}\left(x\right) \vert \dots \vert \overline{\psi}_{S}\left(x\right)\right]\hat{\beta}
+\hat{y}^{(k)} = \left[\overline{\psi}_{1}\left(\*x\right) \vert \dots \vert \psi_{s}\left(\*x\right) \vert \dots \vert \overline{\psi}_{S}\left(\*x\right)\right]\hat{\beta}
 \end{align*}
 
 The $R^2$ of this model is exactly the MDI of feature $k$.
