@@ -104,7 +104,7 @@ current challenges, like memorization.
 ### Dictionary Learning
 
 Instead of analyzing individual neurons, we can identify latent factors using
-dictionary learning. Since DL uses an overcomplete basis ($K > D$), the features
+dictionary learning. Since DL uses an overcomplete basis, $K > D$, the features
 are sparser and more disentangled relative to standard dimensionality reduction.
 
 ---
@@ -228,11 +228,9 @@ We can use LIME to identify individual words that contribute the most to a singl
 
 ### Memorization
 
-1. The New York Times sued OpenAI partly on the basis that ChatGPT sometimes
-reproduces articles verbatim `r Citep(bib, c("freeman2024exploring", "nyt_case"))`.
-
-1. AI companies need to understand this "memorization" issue both to protect
-privacy and to respect copyright.
+The New York Times sued OpenAI partly on the basis that ChatGPT sometimes
+reproduces articles verbatim `r Citep(bib, c("freeman2024exploring", "nyt_case"))`.  AI companies need to understand this "memorization" issue both
+to protect privacy and to respect copyright.
 
 .center[
 <span style="font-size: 18px;">
@@ -279,7 +277,7 @@ non-memorized paragraphs.
 ### Activation Patterns
 
 One of the heads is very active on memorized paragraphs, and they found that it
-attends to rare tokens. The theory is that it might be ``looking up'' the
+attends to rare tokens. The theory is that it might be "looking up" the
 memorized text whenever it encounters one of these rare tokens.
 
 .center[
