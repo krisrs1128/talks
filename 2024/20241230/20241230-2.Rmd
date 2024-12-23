@@ -73,7 +73,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Profiles and Importance
+## Explaining Models: Profiles and Importance
 
 <div id="subtitle">
 Kris Sankaran <br/>

@@ -1,5 +1,5 @@
 ---
-title: "Interpretability Short Course: Local Measures"
+title: "Interpretability Short Course: Explaining Predictions"
 author: "Kris Sankaran"
 output:
   xaringan::moon_reader:
@@ -76,7 +76,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Local Attribution
+## Explaining Predictions
 
 <div id="subtitle">
 Kris Sankaran <br/>

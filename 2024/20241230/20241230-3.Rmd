@@ -72,7 +72,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Concepts and Probes
+## Explaining Models: Concepts and Probes
 
 <div id="subtitle">
 Kris Sankaran <br/>
