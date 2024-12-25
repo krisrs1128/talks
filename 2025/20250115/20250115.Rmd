@@ -1,0 +1,174 @@
+---
+title: "Interpretability: Motivation and Definitions"
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+# output: html_document
+---
+
+class: title
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      reals: "{\\mathbb{R}}",
+      indic: ["{\\mathbf{1}\\left\\{{#1}\\right\\}}", 1],
+      Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
+      absarg: "{\\left|{#1}\\right|}",
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Visualizing Microbiome Data
+
+<div id="subtitle">
+Kris Sankaran <br/>
+15 | January | 2025 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+</div>
+
+<div id="subtitle_right">
+<br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+</div>
+<!-- 30 minute talk -->
+
+---
+
+"Premature summarization is the root of all evil in statistics"
+
+---
+
+## Principles
+
+---
+
+### Information Density
+
+---
+
+### Focus-plus-Context
+
+Also called iterative structuration.
+
+---
+
+### Coordinated Views
+
+---
+
+## Applications
+
+---
+
+### Differential Analysis
+
+---
+
+### Solution: MA Plots
+
+---
+
+### Solution: Volcano Plots
+
+---
+
+### Community Dynamics
+
+Problem: 
+Visual Solution(s):
+How to read it:
+Limitations:
+Code example: 
+
+---
+
+### Solution: Principal Components Analysis
+
+---
+
+### Solution: Topic Analysis
+
+---
+
+### Solution: Transfer Analysis
+
+---
+
+### Multiscale Analysis
+
+---
+
+### Solution: Topic Alignment
+
+---
+
+### Data Integration
+
+---
+
+### Solution: Canonical Correlation Analysis
+
+---
+
+### Solution: Mediation Analysis
+
+---
+
+### Batch Effect Detection
+
+---
+
+### Solution: Percentile Plot
+
+---
+
+### Experimental Design
+
+---
+
+### Solution: Power Curves
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
