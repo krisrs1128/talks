@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Interpretability Short Course: Probes and Concepts</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      indic: ["{\\mathbf{1}\\left\\{#1\\right\\}}", 1],
+      Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
+      absarg: ["{\\left|{#1}\\right|}", 1],
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+&lt;/script&gt;
+
+
+&lt;style&gt;
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+&lt;/style&gt;
+
+
+
+
+
+## Explaining Models: Concepts and Probes
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+30 | December | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+IISA Interpretability Short Course &lt;br/&gt;
+Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim/&lt;/a&gt;&lt;br/&gt;
+&lt;/div&gt;
+&lt;!-- 30 minute talk --&gt;
+
+---
+
+### Activations Analysis
+
+1. Deep learning models are composed of many simpler layers. When an input is
+passed through the network, it is transformed into a series of neuron
+``activations''' at each layer.
+
+1. Neurons activate on inputs with specific properties. For example, many
+neurons in the first layer of a network detect edges with a given orientation.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig2_zeiler.png"/&gt; &lt;br/&gt;
+Figure from [19].
+&lt;/span&gt;
+]
+
+---
+
+### Activations Analysis
+
+1. Deep learning models are composed of many simpler layers. When an input is
+passed through the network, it is transformed into a series of neuron
+``activations''' at each layer.
+
+1. Neurons activate on inputs with specific properties. For example, many
+neurons in the first layer of a network detect edges with a given orientation.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig1_bengio.png"/&gt; &lt;br/&gt;
+Figure from [20].
+&lt;/span&gt;
+]
+
+---
+
+### Activation Analysis
+
+There is a long line of research suggesting that deep learning models indeed
+learn higher-level abstractions.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig2_karpathy.png"/&gt; &lt;br/&gt;
+Figure from [21].
+&lt;/span&gt;
+]
+
+In some cases, the deep representations reflect features we can easily
+understand, like whether a string of text lies within quotes.
+
+---
+
+### Directed Questions
+
+We often want to see whether a model has learned specific features.
+
+* **Validation**: Has the model learned a property that we expect to generalize across many contexts?
+* **Fairness**: Can we ensure that the model isn't using a protected attribute, like race?
+* **Development**: Are claims about why models do well accurate? (e.g., does transfer learning really reuse features?)
+
+In this case, we need a more directed analysis.
+
+---
+
+### Linear Probes
+
+1. A probe is a linear model that predicts a feature of interest from
+intermediate model activations.
+
+1. If the probe has high accuracy, then we might say that this feature has been
+``learned'' by the model in that layer.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/alain_fig2.png"/&gt; &lt;br/&gt;
+In this example, probes have been added to every layer of a network. Figure from
+[22].
+&lt;/span&gt;
+]
+
+---
+
+### Application
+
+This can be a useful debugging strategy for model with more complex
+architectures.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/pathological_training.gif"/&gt; &lt;br/&gt;
+In this example from [22], a skip connection across layers 1 - 64  has prevented successful training across those layers.
+&lt;/span&gt;
+]
+
+---
+
+### Concept Bottlenecks
+
+A related idea is to reduce arbitrary model activations to a set of
+human-interpretable concepts .  This is part of a larger
+body of work that attempts to establish shared language/representations for
+interacting with models .
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/koh_concept.png" width=750/&gt; &lt;br/&gt;
+Figure from .
+&lt;/span&gt;
+]
+
+---
+
+### Concept Bottlenecks
+
+A related idea is to reduce arbitrary model activations to a set of
+human-interpretable concepts .  This is part of a larger
+body of work that attempts to establish shared language/representations for
+interacting with models .
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/concept_architecture-2.png" width=600/&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Concepts and Hypothesis Testing
+
+ formally tests whether a concept is being used to predict
+a particular class. It applies to any architecture.
+
+**Step 1**. Define a collection of images `\(\*x_{n}\)` that represents the concept. Also construct a control pool of random images `\(\*x_{n}^\prime\)`.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/concepts_step1.png" width=600/&gt;&lt;br/&gt;
+Here, we are interested in the concept "stripes."
+&lt;/span&gt;
+]
+
+---
+
+**Step 2**. Use an intermediate layer's activations `\(h\left(\*x\right)\)` as
+predictors for a linear classifier to distinguish the groups. This is like
+probes, except the task is derived from Step 1.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/concepts_step2.png" width=600/&gt;&lt;br/&gt;
+Let `\(\*v\)` denote the normal to the decision boundary.
+&lt;/span&gt;
+]
+
+---
+
+**Step 3**. Evaluate class `\(k\)`'s sensitivity to perturbations in the direction `\(v\)`.
+
+`\begin{align*}
+S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
+\end{align*}`
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/concepts_step3.png" width=600/&gt;&lt;br/&gt;
+`\(\nabla y_{k}\left(h\left(\*x\right)\right)\)` is the direction in the activation
+space with the steepest increase in class `\(k\)`'s pre-classification logit.
+&lt;/span&gt;
+]
+
+
+---
+
+**Step 4** Let `\(N_{k}\)` be the number of images in class `\(k\)`, and define the test
+statistic
+
+`\begin{align*}
+T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right) &gt; 0\}}.
+\end{align*}`
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/concepts_step4.png" width=600/&gt;&lt;br/&gt;
+We count the number of class `\(k\)`'s members that are on the same halfspace as `\(\*v\)`.&lt;br/&gt;
+&lt;/span&gt;
+]
+
+---
+
+**Step 5** Test the significance of `\(T_{k}\)` by learning reference `\(\*v\)` trained
+to distinguish randomly chosen example images.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/concepts_step5.png" width=600/&gt;&lt;br/&gt;
+Random classification directions serve as a negative control.
+&lt;/span&gt;
+]
+
+---
+
+### Real-World Example
+
+Concepts have been applied to medical imaging tasks. In this example, concepts
+give additional context about why a model might classify the lesion as a 
+melanoma.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/lucieri_fig5.png" width=600/&gt; &lt;br/&gt;
+Figure from [23]. In this case, the model is incorrect despite concepts suggesting the correct diagnosis.
+&lt;/span&gt;
+]
+
+---
+
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Compare and Contrast**] Think back to the problem you discussed in
+[Interpretability Goals] How might you have applied one of the interpretability
+techniques that we have discussed today? In what ways are the explanations
+well-suited to the problem? In what ways do they come short?
+
+---
+
+### Takeaways
+
+Probes and concepts provide a bridge between difficult-to-interpret deep
+learning model activations and vocabulary people already use within an
+application domain. 
+
+Deep learning has made manual feature engineering unecessary for many problems,
+but simple features are still useful for explanation.
+
+---
+
+class: reference
+
+### References
+
+[1] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
+[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
+
+[2] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+pp. 1059-1086.
+
+[3] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
+[10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
+[https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
+
+[4] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
+[10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
+
+[5] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+
+[6] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
+[https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
+
+[7] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022), p.
+106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
+[http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
+
+[8] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+USA: ACM, Aug. 2016.
+
+[9] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
+9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
+[http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
+
+---
+
+class: reference
+
+### References
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

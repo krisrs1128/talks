@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Interpretability Short Course: Explaining Predictions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      mypurple: ["{\\color{mypurple}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      indic: ["{\\mathbf{1}\\left\\{#1\\right\\}}", 1],
+      indep: "{\\perp\\!\\!\\!\\!\\perp}",
+      Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
+      absarg: ["{\\left|{#1}\\right|}", 1],
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+&lt;/script&gt;
+
+&lt;div style = "position:fixed; visibility: hidden"&gt;
+`$$\require{color}\definecolor{myred}{rgb}{0.918, 0.20, 0.137}$$`
+`$$\require{color}\definecolor{mygreen}{rgb}{0.352941176470588, 0.541176470588235, 0.501960784313725}$$`
+`$$\require{color}\definecolor{mypurple}{rgb}{0.71, 0.29, 0.49}$$`
+&lt;/div&gt;
+
+
+
+
+
+## Explaining Predictions
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+30 | December | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+IISA Interpretability Short Course &lt;br/&gt;
+Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim/&lt;/a&gt;&lt;br/&gt;
+&lt;/div&gt;
+
+&lt;!-- 30 minute talk --&gt;
+
+---
+
+### Which words are important?
+
+Why was this sentence classified as having negative sentiment?
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/sal_example.png"/&gt; 
+Example from [15].
+&lt;/span&gt;
+]
+
+---
+
+### Which features are used?
+
+Why is the second most probable class in this image "candle, taper, wax light"?
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/lime_wax_example.png"/&gt; 
+Example from [16].
+&lt;/span&gt;
+]
+
+---
+
+## LIME: Locally Interpretable Model Explanations
+
+
+---
+
+### Intuition
+
+1. A complex decision boundary can still be approximated well by many simple hyperplanes. 
+
+1. To explain a prediction near a single sample, we consider the approximating
+hyperplane near that sample.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig3_ribiero.png"/&gt;
+Figure from [17].
+&lt;/span&gt;
+]
+
+
+---
+
+### Notation
+
+1. `\(\myred{\*x}\)`: The sample whose predictions we want to explain.
+1. `\(f\)`: A complex model we want to explain.
+1. `\(G\)`: A class of simple models to use in the explanations.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/LIME-summary1.png"/&gt;
+&lt;/span&gt;
+]
+
+
+---
+
+### Notation
+
+1. `\(\mypurple{\pi}_{\myred{\*x}}\)`: A distribution over a neighborhood of `\(x\)`.
+1. `\(\*x'\)`: A sample from `\(\pi_{\myred{\*x}}\)`.
+1. `\(\*z, \*z'\)`: Summarized versions of `\(\*x, \*x'\)` (e.g., word counts).
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/LIME-summary2.png"/&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Objective
+
+`\begin{align}
+\min_{g \in G} \Esubarg{\pi_{\*x}}{L\left(f\left(\*z'\right), g\left(\*z'\right)\right)} + \Omega\left(g\right)
+\end{align}`
+
+---
+
+### Algorithm
+
+1. Sample `\(x_{n}^{\prime} \sim \pi_{x}\)`. 
+
+1. Solve the optimization:
+
+`\begin{align}
+\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(\*z_{n}^{\prime}\right), g\left(\*z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
+\end{align}`
+
+---
+
+### Example: Lasso for Bag-of-Words
+
+1. `\(f\)` is the original sentiment prediction model.
+1. `\(\pi_{x}\)` samples words with probability
+1. `\(g\)` is a linear model
+1. `\(\Omega\)` is the `\(\ell^1\)` penalty
+
+`\begin{align}
+\sum_{n = 1}^{N} \left(f\left(\*z_{n}\right) - \*z_{n}^\top\beta\right)^2 + \|\beta\|_{1}
+\end{align}`
+
+---
+
+## Shapley Values
+
+---
+
+### Credit Assignment
+
+How would you distribute profit across employees `\(i\)` in a company if you knew
+that any team `\(S\)` would have profit `\(v\left(S\right)\)`?  This is a credit
+assignment problem.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/shapley_team_1.png"/&gt; 
+Shapley values are built off a game theoretic analogy.
+&lt;/span&gt;
+]
+
+---
+
+### Shapley Credit Assignment
+
+We can distribute credit according to how much the team's profit decreases when we remove employee `\(i\)`,
+
+`\begin{align}
+\varphi\left(i\right) &amp;= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{{D - 1 \choose d - 1}}\sum_{S \in S_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
+\end{align}`
+
+* There are `\(D\)` employees total.
+* `\(S_{d}\left(i\right)\)` is the collection of subsets of size `\(d\)` that includes employee `\(i\)`.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/shapley_team_2.png"/&gt; 
+&lt;/span&gt;
+]
+
+---
+
+### Game Theory `\(\to\)` Machine Learning
+
+1. Instead assigning credit to employees, we attribute importances to features.
+
+1. The attributions are made locally at the per-prediction level.  Instead of
+profit, consider the model's expected prediction when a subset `\(S\)` of features
+is fixed,
+
+`\begin{align}
+v_{\*x}\left(S\right) &amp;= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
+\end{align}`
+
+---
+
+### Shapley Feature Attribution
+
+With this definition of `\(v\)`, we can describe the importance of feature `\(i\)` in
+making the prediction `\(f\left(\*x\right)\)`:
+
+`\begin{align}
+\varphi_{\*x}\left(f, i\right) &amp;= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)}\left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right) \right]
+\end{align}`
+
+This definition satisfies the same axioms as the ones above for credit assignment. In particular, `\(f\left(\*x\right) = \sum_{d = 1}^{D}\varphi_{\*x}\left(f, d\right)\)`.
+
+---
+
+### Visualization - One Sample
+
+Since adding all the attributions leads to `\(f\left(\*x\right)\)`, we can center a
+stacked barplot around `\(f\left(\*x\right)\)`. Each piece corresponds to one feature.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/shapley_sample_level.png"/&gt; 
+&lt;/span&gt;
+]
+
+---
+
+### Geometric Interpretation
+
+`\begin{align}
+v_{\*x}\left(S\right) &amp;= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
+\end{align}`
+
+.center[
+&lt;img src="figures/shapley_v2.png"/&gt;
+]
+
+---
+
+### Geometric Interpretation
+
+How would we compute `\(\varphi\left(2\right)\)` in this example? We also need:
+
+* `\(v\left(\{1, 2\}\right)\)`
+* `\(v\left(\{2\}\right)\)`
+* `\(v\left(\empty\right)\)`
+
+What do these correspond to geometrically?
+
+---
+
+### Visualization - Many Samples
+
+Since stacked barplots are compact, we can visualize entire datasets this way.
+This helps identify sets of samples which have similar explanations.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/shapley_dataset_level.png"/&gt; 
+&lt;/span&gt;
+]
+
+---
+
+### Computational Challenges
+
+This definition has some elegant properties, but naive calculation is impossible
+in all but the simplest cases.
+
+1. `\(v_{\*x}\left(S\right)\)` involves a potentially complex conditional expectation.
+1. We need to enumerate over all subsets containing `\(i\)`.
+
+---
+
+### Approximating `\(v_{x}\left(S\right)\)`
+
+Remember the definition:
+
+`\begin{align*}
+v_{\*x}\left(S\right) &amp;= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
+\end{align*}`
+
+---
+
+### Reference Values
+
+One simple idea is to replace `\(\*x^{\prime}_{S^C}\)` with some reference value, like
+the all zeros vector or the average `\(\overline{\*x}_{S^C}\)` across all samples:
+
+`\begin{align*}
+v_{\*x}\left(S\right) \approx f\left(\*x_{S}, \overline{\*x}_{S^C}\right)
+\end{align*}`
+
+This only requires one function evaluation per set `\(S\)` but is a very rough
+approximation.
+
+---
+
+### Assuming `\(x_{S} \indep x_{S^C}\)`
+
+An alternative is to assume independence between features in `\(S\)` and `\(S^C\)`,
+
+`\begin{align*}
+v_{\*x}\left(S\right) &amp;= \Esubarg{p\left(\*x^{\prime}_{S^C}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)} \\
+&amp;\approx \sum_{n = 1}^{N}{f\left(\*x_{S}, \*x^{\prime}_{n,S^C}\right)}
+\end{align*}`
+
+We could also sum over subsamples.
+
+---
+
+### Learning the Conditionals
+
+A more sophisticated approach learns a new generative model to allow sampling
+`\(\*x^{\prime}_{n,S^C} \vert \*x_{S}\)`. In fact, the same model can be used for many
+conditionals.
+
+1. Draw `\(N^\ast\)` samples `\(\*x^{\prime}_{n,S^C} \sim p\left(\cdot \vert \*x\right)\)`
+1. Approximate:
+
+`\begin{align*}
+v_{\*x}\left(S\right) &amp;\approx \sum_{n = 1}^{N^\ast}{f\left(\*x_{S}, \*x^{\prime}_{n,S^C}\right)}
+\end{align*}`
+
+---
+
+### Regression Perspective
+
+How can we avoid summing over so many subsets? It turns out that there is an
+equivalent formulation of the Shapley value in terms of weighted linear
+regression.
+
+`\begin{align*}
+v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
+\end{align*}`
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/shapley_kernel_regression.png"/&gt; 
+`\(\indic{d \in S}\)` is known, so this is a linear regression with unknown
+coefficients `\(\varphi_{\*x}\left(f, d\right)\)`
+&lt;/span&gt;
+]
+
+---
+
+
+### Regression Perspective
+
+How can we avoid summing over so many subsets? It turns out that there is an
+equivalent formulation of the Shapley value in terms of weighted linear
+regression.
+
+`\begin{align*}
+v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
+\end{align*}`
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/shapley_kernel_regression.png"/&gt; 
+We can compute `\(v_{\*x}\left(S\right)\)` on a subset of sets.
+&lt;/span&gt;
+]
+
+---
+
+### Kernel Reweighting
+
+Each row in this regression is a subset `\(S\)` of features,
+
+`\begin{align*}
+v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
+\end{align*}`
+
+If for the row corresponding to subset `\(S\)` we use weights
+`\begin{align*}
+\frac{D - 1}{\left(D \choose \left|S\right|\right) \left|S\right|\left(D - \left|S\right|\right)}
+\end{align*}`
+then the resulting weighted linear regression exactly recovers the Shapley
+values `\(\varphi_{\*x}\left(f, d\right)\)`.
+
+---
+
+### Feature Neighborhoods
+
+1. Another idea is to restrict the collection of sets in the summation. 
+
+1. This is most natural when there is a notion of distance between features. For
+example, for a word at the start of a sentence, don't bother with sets of words
+near the end.
+
+---
+
+### `\(L\)`-Shapley
+
+Let `\(N_{k}\left(i\right)\)` be all the features within distance `\(k\)` of feature
+`\(i\)`. A fast approximation is to consider:
+
+`\begin{align*}
+\varphi_{\*x}^{L}\left(f, i\right) &amp;= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \in N_{k\left(i\right)}} 
+\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right)\right]
+\end{align*}`
+
+1. When `\(k\)` is small, this will be an efficient approximation.
+
+1. This is sometimes called `\(L\)`-Shapley ($L$ \to ``Local'')
+
+.center[
+&lt;img src="figures/l-c-shapley.png"/&gt; 
+]
+
+---
+
+### `\(C\)`-Shapley
+
+We can further focus on those subsets that are connected to feature `\(i\)`:
+
+`\begin{align*}
+\varphi_{\*x}^{C}\left(f, i\right) &amp;= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \subseteq N_{k\left(i\right), S \text{connected to } i}} 
+\frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right)\right]
+\end{align*}`
+
+1. This is sometimes called `\(C\)`-Shapley ($C$ \to ``Connected'')
+
+.center[
+&lt;img src="figures/l-c-shapley.png"/&gt; 
+]
+
+---
+
+### Takeaways
+
+1. Shapley values offer a principled way for identifying relevant features in
+local examples.
+
+1. Various approximations are available to make their computation feasible even
+when many features are present.
+
+---
+
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Interpretability Goals**] Think back to a problem you have worked on where
+interpretability could be important. Who needed the interpretation (you or
+someone else?)? Why did they need it? What type of explanation would have been
+most helpful?
+
+---
+
+### References
+
+[1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
+[10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
+[https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
+
+[2] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+
+[3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+USA: ACM, Aug. 2016.
+
+---
+
+Human by Teuku Syahrizal from &lt;a href="https://thenounproject.com/browse/icons/term/human/" target="_blank" title="Human Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

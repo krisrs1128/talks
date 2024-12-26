@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Interpretability Short Course: Dictionary Learning</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      reals: "{\\mathbb{R}}",
+      indic: ["{\\mathbf{1}\\left\\{#1\\right\\}}", 1],
+      Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
+      absarg: "{\\left|{#1}\\right|}",
+      "\*": ["{\\mathbf{#1}}", 1],
+      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+&lt;/script&gt;
+
+
+&lt;style&gt;
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+&lt;/style&gt;
+
+
+
+
+
+
+## Interpretability for Model Developers: Dictionary Learning
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+30 | December | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+IISA Interpretability Short Course &lt;br/&gt;
+Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim/&lt;/a&gt;&lt;br/&gt;
+&lt;/div&gt;
+&lt;!-- 30 minute talk --&gt;
+
+---
+
+### Motivation
+
+1. Understanding: Explanations can give more insight into model mechanics than
+benchmark metrics alone. We can check whether the model is right for the right
+reasons.
+
+1. Improvement: By clarifying model mechanics, we might be able to address
+current challenges, like memorization.
+
+---
+
+
+### Dictionary Learning
+
+Instead of analyzing individual neurons, we can identify latent factors using
+dictionary learning. Since DL uses an overcomplete basis, `\(K &gt; D\)`, the features
+are sparser and more disentangled relative to standard dimensionality reduction.
+
+---
+
+### Formulation
+
+Following [24], suppose `\(\*x_{n}\)` are the concatenated
+activations across all layers in the network. Then solve:
+
+`\begin{align*}
+\arg\min_{\Phi, \left(\alpha_{n}\right)} \sum_{n = 1}^{N} \|\*x_n - \*\Phi\*\alpha_{n}\|_{2} + \lambda\|\alpha_n\|_{1} \\
+\text{subject to } \alpha_{n} \succeq 0 \text{ for } n = 1, \dots, N
+\end{align*}`
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/dictionary_rectangles.png"/&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Formulation
+
+The columns `\(\varphi_{k}\)` of `\(\Phi\)` are called atoms. Since the basis is
+overcomplete, it can reconstruct relatively complex patterns.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/atoms_interpretation.png"/&gt;
+&lt;/span&gt;
+]
+
+
+---
+
+### Example Factor
+
+1. To interpret `\(\varphi_{k}\)`, we can look for examples `\(i\)` with large `\(\alpha_{ik}\)`.
+
+1. For example, for this feature has the largest `\(\alpha_{ik}\)` in examples that
+have something to do with the Golden Gate Bridge.
+
+---
+
+### Atlases
+
+We can also build maps of many related features. This figure is a UMAP of ...
+(phi? alpha?)
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/golden_gate_umap.png"/&gt;
+These annotations were generated automatically, which helps make this analysis
+more automatic.
+&lt;/span&gt;
+]
+
+---
+
+## Applications
+
+---
+
+### Abstraction
+
+1. One of the motivations for deep learning is that deeper layers of a network
+can learn more abstract representations.
+
+1. Using dictionary learning, we can test this by comparing features with more
+weight on high vs. lower parts of the network.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/dictionary_rectangles_compare.png"/&gt;
+&lt;/span&gt;
+]
+
+
+---
+
+### Example Features
+
+The associated features are consistent with the belief that deeper layers are
+more abstract. First, they find that factors whose coefficients `\(\alpha_{n}^{l}\)`
+is much larger in either the shallower or deeper parts of the network.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig2_yun.png"&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Example Features
+
+The associated features are consistent with the belief that deeper layers are
+more abstract. First, they find that factors whose coefficients `\(\alpha_{n}^{l}\)`
+is much larger in either the shallower or deeper parts of the network.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/yun_depth_comparison.png"&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Local Explanation
+
+We can use LIME to identify individual words that contribute the most to a single feature.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig7_yun.png"&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Memorization
+
+The New York Times sued OpenAI partly on the basis that ChatGPT sometimes
+reproduces articles verbatim [25; 26].  AI companies need to understand this "memorization" issue both
+to protect privacy and to respect copyright.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/nyt_memorization.png"&gt;
+&lt;/span&gt;
+]
+
+
+---
+
+### Defining Memorization
+
+[27] made the idea of memorization more precise. When
+prompted with 50 tokens, how closely do the next 50 generated tokens match any
+training example?
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig2_stoehr.png"/&gt;
+The red points are generated texts that exactly match those in the training
+data. Notice that many paragraphs occur thousands of times.
+&lt;/span&gt;
+]
+
+
+---
+
+### Activation Patterns
+
+It would be interesting to see what happens when using dictionary learning.
+Instead, the authors summarized layers using the maximum activation for each
+"component" of transformer self-attention heads.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig4_stoehr.png"/&gt;
+There are qualitative differences in activation patterns between memorized and
+non-memorized paragraphs.
+&lt;/span&gt;
+]
+
+---
+
+### Activation Patterns
+
+One of the heads is very active on memorized paragraphs, and they found that it
+attends to rare tokens. The theory is that it might be "looking up" the
+memorized text whenever it encounters one of these rare tokens.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/fig7_stoehr.png"/&gt;
+&lt;/span&gt;
+]
+
+---
+
+## Control
+
+---
+
+### Steering Generations
+
+If we want generated output to reflect more (or less) of feature `\(\varphi_{k}\)`,
+we can manually increase (or decrease) the activation of the associated neurons.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/golden_gate_self.png"/&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Steering Generations
+
+If we want generated output to reflect more (or less) of feature `\(\varphi_{k}\)`,
+we can manually increase (or decrease) the activation of the associated neurons.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/transit_self.png"/&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Steering and Safety
+
+This is one plausible direction for improving model safety. Though, there are so
+many ways in which an output can be harmful that it's not yet clear how this can
+be practically done.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img src="figures/scam_emails.png"/&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Takeaways
+
+1. While concepts and probes work well when we have specific concepts in mind a
+priori, dictionary learning is helpful when want to explore in a more open-ended
+way.
+
+1. Interpretability is interesting not only for understand but also for control.
+We may be able to steer LLMs towards more desirable properties by clearly
+understanding their features.
+
+---
+
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Interesting/Confusing**] For any of the topics in this short course, please
+share:
+
+- One point that you learned for the first time.
+- One point that you found interesting.
+- One point that was confusing.
+
+I’ll write replies to the confusing points either during the session or later tonight.
+
+
+---
+
+class: reference
+
+### References
+
+[1] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
+
+[2] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
+[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
+
+[3] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+pp. 1059-1086.
+
+[4] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
+[10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
+[https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
+
+[5] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
+[10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
+
+[6] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
+Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
+
+[7] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+
+[8] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
+[https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
+
+[9] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022), p.
+106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
+[http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
+
+[10] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+USA: ACM, Aug. 2016.
+
+[11] N. Stoehr et al. _Localizing Paragraph Memorization in Language Models_. 2024. DOI: [10.48550/ARXIV.2403.19851](https://doi.org/10.48550%2FARXIV.2403.19851). URL:
+[https://arxiv.org/abs/2403.19851](https://arxiv.org/abs/2403.19851).
+
+[12] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
+Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures_. Online: Association for Computational Linguistics, 2021.
+
+[13] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
+9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
+[http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
+
+---
+
+### Formulation II
+
+The formulation in [28]. `\(\*x_{i}\)` are
+activations from a single residual connection in the Claude Sonnet model.
+
+`\begin{align*}
+\arg \min &amp;\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
+\hat{x} &amp;= b_{k} + \Phi^{(2)}f\left(x\right) + b \\
+f\left(x\right)_k &amp;= \left(\varphi_{k}^{1,\top}x + b_{k}\right)_{+}
+\end{align*}`
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
