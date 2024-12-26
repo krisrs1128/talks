@@ -86,7 +86,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 IISA Interpretability Short Course <br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
 </div>
 
 <!-- 30 minute talk -->
@@ -484,14 +484,6 @@ We can further focus on those subsets that are connected to feature $i$:
 
 ---
 
-### Software
-
-1. `imodels`: 
-
-class: reference
-
----
-
 ### Takeaways
 
 1. Shapley values offer a principled way for identifying relevant features in
@@ -499,6 +491,15 @@ local examples.
 
 1. Various approximations are available to make their computation feasible even
 when many features are present.
+
+---
+
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Interpretability Goals**] Think back to a problem you have worked on where
+interpretability could be important. Who needed the interpretation (you or
+someone else?)? Why did they need it? What type of explanation would have been
+most helpful?
 
 ---
 

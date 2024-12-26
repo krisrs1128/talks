@@ -83,7 +83,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 IISA Interpretability Short Course <br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
 </div>
 <!-- 30 minute talk -->
 
@@ -208,6 +208,13 @@ A good visualization is:
 .center[
 <img src="figures/tufte-2.png"/>
 ]
+
+---
+
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Introductions**] Greet your neighbors. Share your name, affiliation, and what
+makes you interested in machine learning and interpretability.
 
 ---
 

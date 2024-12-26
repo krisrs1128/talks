@@ -82,7 +82,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 IISA Interpretability Short Course <br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
 </div>
 <!-- 30 minute talk -->
 
@@ -305,10 +305,12 @@ Figure from `r Citep(bib, "Lucieri2022")`. In this case, the model is incorrect 
 
 ---
 
-### Software
+### Discussion (go.wisc.edu/aonpy0)
 
-1. :
-
+[**Compare and Contrast**] Think back to the problem you discussed in
+[Interpretability Goals] How might you have applied one of the interpretability
+techniques that we have discussed today? In what ways are the explanations
+well-suited to the problem? In what ways do they come short?
 
 ---
 

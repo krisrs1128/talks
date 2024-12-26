@@ -83,7 +83,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 IISA Interpretability Short Course <br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
 </div>
 
 <!-- 30 minute talk -->
@@ -396,6 +396,18 @@ partial dependence plots.
 1. When restricting attention to tree-based measures, it's possible to improve
 on classical purity-based variable importance measures by making the connection
 to regression.
+
+---
+
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Jargon-free Summary**] Imagine you are working with a client who is familiar
+with the basics of machine learning (e.g., supervised vs. unsupervised learning)
+but not the interpretability literature. Give a jargon-free but precise
+description of *one* of the following techniques. What does it output and what
+is the correct interpretation?  
+
+- LIME, Shapley values, PDP, ALE, MDI+
 
 ---
 
