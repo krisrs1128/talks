@@ -24,7 +24,7 @@ MathJax.Hub.Config({
       mygreen: ["{\\color{mygreen}{#1}}", 1],
       mypurple: ["{\\color{mypurple}{#1}}", 1],
       reals: "{\\mathbb{R}}",
-      indic: ["{\\mathbf{1}\\left\\{{#1}\\right\\}}", 1],
+      indic: ["{\\mathbf{1}\\left\\{#1\\right\\}}", 1],
       indep: "{\\perp\\!\\!\\!\\!\\perp}",
       Esubarg: ["{\\mathbf{E}_{#1}\\left[{#2}\\right]}", 2],
       absarg: ["{\\left|{#1}\\right|}", 1],
