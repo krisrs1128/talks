@@ -70,7 +70,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 IISA 2024<br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/337726">go.wisc.edu/337726</a><br/>
 Paper: <a href="https://go.wisc.edu/tify36">go.wisc.edu/tify36</a>
 </div>
 
