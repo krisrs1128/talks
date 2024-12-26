@@ -227,7 +227,7 @@ Shapley values are built off a game theoretic analogy.
 We can distribute credit according to how much the team's profit decreases when we remove employee $i$,
 
 \begin{align}
-\varphi\left(i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{{D - 1 \choose d - 1}}\sum_{S \in S_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
+\varphi\left(i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
 \end{align}
 
 * There are $D$ employees total.
