@@ -61,15 +61,17 @@ Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim/&lt;/a&g
 
 ### Activations Analysis
 
+.pull-left[
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
 activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
+]
 
-.center[
-&lt;img src="figures/fig2_zeiler.png"/&gt; &lt;br/&gt;
+.pull-right[
+&lt;img width="340" src="figures/fig2_zeiler.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
 Figure from [6].
 &lt;/span&gt;
@@ -79,15 +81,17 @@ Figure from [6].
 
 ### Activations Analysis
 
+.pull-left[
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
 activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
+]
 
-.center[
-&lt;img src="figures/fig1_bengio.png"/&gt; &lt;br/&gt;
+.pull-right[
+&lt;img width="240" src="figures/fig1_bengio.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
 Figure from [7].
 &lt;/span&gt;
@@ -101,7 +105,7 @@ There is a long line of research suggesting that deep learning models indeed
 learn higher-level abstractions.
 
 .center[
-&lt;img src="figures/fig2_karpathy.png"/&gt; &lt;br/&gt;
+&lt;img width="900" src="figures/fig2_karpathy.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
 Figure from [8].
 &lt;/span&gt;
@@ -133,7 +137,7 @@ intermediate model activations.
 learned by the model in that layer.
 
 .center[
-&lt;img src="figures/alain_fig2.png"/&gt; &lt;br/&gt;
+&lt;img width="600" src="figures/alain_fig2.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
 In this example, probes have been added to every layer of a network. Figure from
 [9].
@@ -149,7 +153,7 @@ architectures.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pathological_training.gif"/&gt; &lt;br/&gt;
+&lt;img width="600" src="figures/pathological_training.gif"/&gt; &lt;br/&gt;
 In this example from [9], a skip connection across layers 1 - 64  has prevented successful training across those layers.
 &lt;/span&gt;
 ]
@@ -209,7 +213,7 @@ probes, except the task is derived from Step 1.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/concepts_step2.png" width=600/&gt;&lt;br/&gt;
+&lt;img src="figures/concepts_step2.png" width=530/&gt;&lt;br/&gt;
 Let `\(\*v\)` denote the normal to the decision boundary.
 &lt;/span&gt;
 ]
@@ -224,9 +228,9 @@ S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/concepts_step3.png" width=600/&gt;&lt;br/&gt;
+&lt;img src="figures/concepts_step3.png" width=520/&gt;&lt;br/&gt;
 `\(\nabla y_{k}\left(h\left(\*x\right)\right)\)` is the direction in the activation
-space with the steepest increase in class `\(k\)`'s pre-classification logit.
+space with the steepest increase in class `\(k\)`'s logit.
 &lt;/span&gt;
 ]
 
@@ -242,7 +246,7 @@ T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right)
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/concepts_step4.png" width=600/&gt;&lt;br/&gt;
+&lt;img src="figures/concepts_step4.png" width=460/&gt;&lt;br/&gt;
 We count the number of class `\(k\)`'s gradients that are in the same halfspace as `\(\*v\)`.&lt;br/&gt;
 &lt;/span&gt;
 ]
@@ -332,13 +336,25 @@ pp. 1059-1086.
 p. 106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
 [http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
 
+[11] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
+Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures_. Online: Association for Computational Linguistics, 2021.
+
+[12] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
+Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
+
+[13] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
+
 ---
 
 class: reference
 
 ### References
 
+[14] N. Stoehr et al. _Localizing Paragraph Memorization in Language Models_. 2024. DOI: [10.48550/ARXIV.2403.19851](https://doi.org/10.48550%2FARXIV.2403.19851). URL:
+[https://arxiv.org/abs/2403.19851](https://arxiv.org/abs/2403.19851).
 
+[15] A. Templeton et al. "Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet". In: _Transformer Circuits Thread_ (2024). URL:
+[https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html](https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

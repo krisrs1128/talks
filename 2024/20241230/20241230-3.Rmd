@@ -90,15 +90,17 @@ Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
 
 ### Activations Analysis
 
+.pull-left[
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
 activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
+]
 
-.center[
-<img src="figures/fig2_zeiler.png"/> <br/>
+.pull-right[
+<img width="340" src="figures/fig2_zeiler.png"/> <br/>
 <span style="font-size: 18px;">
 Figure from `r Citep(bib, "Zeiler2014")`.
 </span>
@@ -108,15 +110,17 @@ Figure from `r Citep(bib, "Zeiler2014")`.
 
 ### Activations Analysis
 
+.pull-left[
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
 activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
+]
 
-.center[
-<img src="figures/fig1_bengio.png"/> <br/>
+.pull-right[
+<img width="240" src="figures/fig1_bengio.png"/> <br/>
 <span style="font-size: 18px;">
 Figure from `r Citep(bib, "Bengio2009")`.
 </span>
@@ -130,7 +134,7 @@ There is a long line of research suggesting that deep learning models indeed
 learn higher-level abstractions.
 
 .center[
-<img src="figures/fig2_karpathy.png"/> <br/>
+<img width="900" src="figures/fig2_karpathy.png"/> <br/>
 <span style="font-size: 18px;">
 Figure from `r Citep(bib, "karpathy2015")`.
 </span>
@@ -162,7 +166,7 @@ intermediate model activations.
 learned by the model in that layer.
 
 .center[
-<img src="figures/alain_fig2.png"/> <br/>
+<img width="600" src="figures/alain_fig2.png"/> <br/>
 <span style="font-size: 18px;">
 In this example, probes have been added to every layer of a network. Figure from
 `r Citep(bib, "alain2017understanding")`.
@@ -178,7 +182,7 @@ architectures.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/pathological_training.gif"/> <br/>
+<img width="600" src="figures/pathological_training.gif"/> <br/>
 In this example from `r Citep(bib, "alain2017understanding")`, a skip connection across layers 1 - 64  has prevented successful training across those layers.
 </span>
 ]
@@ -238,7 +242,7 @@ probes, except the task is derived from Step 1.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step2.png" width=600/><br/>
+<img src="figures/concepts_step2.png" width=530/><br/>
 Let $\*v$ denote the normal to the decision boundary.
 </span>
 ]
@@ -253,9 +257,9 @@ S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step3.png" width=600/><br/>
+<img src="figures/concepts_step3.png" width=520/><br/>
 $\nabla y_{k}\left(h\left(\*x\right)\right)$ is the direction in the activation
-space with the steepest increase in class $k$'s pre-classification logit.
+space with the steepest increase in class $k$'s logit.
 </span>
 ]
 
@@ -271,7 +275,7 @@ T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right)
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step4.png" width=600/><br/>
+<img src="figures/concepts_step4.png" width=460/><br/>
 We count the number of class $k$'s gradients that are in the same halfspace as $\*v$.<br/>
 </span>
 ]

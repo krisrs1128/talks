@@ -138,7 +138,6 @@ dependencies:
   - psutil=5.9.0=py312h80987f9_0
   - ptyprocess=0.7.0=pyhd8ed1ab_1
   - pure_eval=0.2.3=pyhd8ed1ab_1
-  - pyarrow=17.0.0=py312hd77ebd4_0
   - pycparser=2.22=pyh29332c3_1
   - pygments=2.18.0=pyhd8ed1ab_1
   - pyparsing=3.2.0=py312hca03da5_0
@@ -189,4 +188,6 @@ dependencies:
   - zlib=1.2.13=h18a0788_1
   - zstandard=0.23.0=py312h1a4646a_1
   - zstd=1.5.6=hfb09047_0
+  - pip:
+      - pyarrow==18.1.0
 prefix: /opt/miniconda3/envs/iisa312
