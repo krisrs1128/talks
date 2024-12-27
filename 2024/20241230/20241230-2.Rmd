@@ -123,7 +123,7 @@ values observed in the training data.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/pdp_1.png"/>
+<img width="700" src="figures/pdp_1.png"/><br/>
 Suppose we want to a PDP curve for the first dimension evaluated at $x_{d}^{\ast}$.
 </span>
 ]
@@ -134,7 +134,7 @@ Suppose we want to a PDP curve for the first dimension evaluated at $x_{d}^{\ast
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/pdp_2.png"/>
+<img width="700" src="figures/pdp_2.png"/><br/>
 We set the first coordinate of all observed data points to $x_{d}^{\ast}$.
 </span>
 ]
@@ -145,7 +145,7 @@ We set the first coordinate of all observed data points to $x_{d}^{\ast}$.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/pdp_3.png"/>
+<img width="700" src="figures/pdp_3.png"/><br/>
 We evaluate $f$ at these points and take the average.
 </span>
 ]
@@ -156,7 +156,7 @@ We evaluate $f$ at these points and take the average.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/pdp_4.png"/>
+<img width="780" src="figures/pdp_4.png"/><br/>
 We can do this at another point $x_{d}^{\ast\ast}$.
 </span>
 ]
@@ -167,9 +167,9 @@ We can do this at another point $x_{d}^{\ast\ast}$.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/pdp_5.png"/>
-</span>
+<img width="450" src="figures/pdp_5.png"/><br/>
 We are now beginning to see a PDP curve along this direction.
+</span>
 ]
 
 ---
@@ -178,7 +178,7 @@ We are now beginning to see a PDP curve along this direction.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/pdp_6.png"/>
+<img width="450" src="figures/pdp_6.png"/><br/>
 We continue until we trace out a full curve along that axis.
 </span>
 ]
@@ -193,9 +193,7 @@ First, we might query the model at coordinates $\left(x_{d}, \*x_{-d}\right)$ th
 are never encountered in the data.
 
 .center[
-<span style="font-size: 18px;">
-<img src="figures/pdp_pathology.png"/>
-</span>
+<img width="520" src="figures/pdp_pathology.png"/>
 ]
 
 ---
@@ -233,7 +231,7 @@ we can stitch ("accumulate") them into a single, coherent summary.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/fig9_apley.png"/>
+<img width="700" src="figures/fig9_apley.png"/><br/>
 The ALE curve summarizes many local effects.
 </span>
 ]
@@ -253,17 +251,19 @@ This is formalized by the following formula,
 
 ### ALE Estimator
 
-This is estimated using partial differences along a fine partition
+This is estimated using empirical partial differences along a fine partition.
 
+.pull-left[
+<span style="font-size: 20px;">
 \begin{align*}
 \sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{n} \in N_{d}\left(k\right)} \left[f\left(z_{dk}, \*x_{-d}\right) - f\left(z_{d,k-1}, \*x_{-d}\right)\right]
 \end{align*}
+</span>
+]
 
-.center[
+.pull-right[
 <span style="font-size: 18px;">
-<img src="figures/fig3_apley.png"/>
-The derivatives are approximated by using empirical differences along a fine
-grid.
+<img width="450" src="figures/fig3_apley.png"/><br/>
 </span>
 ]
 
@@ -290,7 +290,7 @@ specific classes of models, then we can come up with more precise notions of
 importance (give some references,e.g., DeepShap).
 
 To illustrate this idea, we will consider the MDI+ (Mean Decrease in Impurity)
-measure proposed in `Citep(bib, "Agarwal2023-sx")` for decision trees and random
+measure proposed in `r Citep(bib, "Agarwal2023-sx")` for decision trees and random
 forests.
 
 ---
@@ -350,8 +350,8 @@ The $\hat{y}$ from this regression are exactly the fitted values from a decision
 \end{align*}
 
 .center[
-<span style="font-size: 18px;">
-<img src="figures/tree_regression_correspondence.png"/>
+<span style="font-size: 18px;"><br/>
+<img width="700" src="figures/tree_regression_correspondence.png"/>
 </span>
 ]
 
@@ -370,20 +370,13 @@ The $R^2$ of this model is exactly the MDI of feature $k$.
 
 ---
 
-### MDI $\to$ MDI$+$
+### MDI $\to$ MDI+
 
 1. The main idea of MDI+ is that we don't have to use linear regression -- we
 can use the entire high-dimensional statistics toolkit.
 
-1. E.g., `Citep(bib, "Agarwal2023-sx")` argue that using $R^2$ from a ridge
+1. E.g., `r Citep(bib, "Agarwal2023-sx")` argue that using $R^2$ from a ridge
 regression model leads to more stable rankings than ordinary MDI.
-
----
-
-### Software
-
-1. `imodels`: 
-
 
 ---
 

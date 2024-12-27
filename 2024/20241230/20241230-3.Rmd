@@ -92,14 +92,14 @@ Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
 
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
-``activations''' at each layer.
+activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
 
 .center[
-<span style="font-size: 18px;">
 <img src="figures/fig2_zeiler.png"/> <br/>
+<span style="font-size: 18px;">
 Figure from `r Citep(bib, "Zeiler2014")`.
 </span>
 ]
@@ -110,14 +110,14 @@ Figure from `r Citep(bib, "Zeiler2014")`.
 
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
-``activations''' at each layer.
+activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
 
 .center[
-<span style="font-size: 18px;">
 <img src="figures/fig1_bengio.png"/> <br/>
+<span style="font-size: 18px;">
 Figure from `r Citep(bib, "Bengio2009")`.
 </span>
 ]
@@ -130,8 +130,8 @@ There is a long line of research suggesting that deep learning models indeed
 learn higher-level abstractions.
 
 .center[
-<span style="font-size: 18px;">
 <img src="figures/fig2_karpathy.png"/> <br/>
+<span style="font-size: 18px;">
 Figure from `r Citep(bib, "karpathy2015")`.
 </span>
 ]
@@ -159,11 +159,11 @@ In this case, we need a more directed analysis.
 intermediate model activations.
 
 1. If the probe has high accuracy, then we might say that this feature has been
-``learned'' by the model in that layer.
+learned by the model in that layer.
 
 .center[
-<span style="font-size: 18px;">
 <img src="figures/alain_fig2.png"/> <br/>
+<span style="font-size: 18px;">
 In this example, probes have been added to every layer of a network. Figure from
 `r Citep(bib, "alain2017understanding")`.
 </span>
