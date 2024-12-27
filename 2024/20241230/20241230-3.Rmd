@@ -272,7 +272,7 @@ T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right)
 .center[
 <span style="font-size: 18px;">
 <img src="figures/concepts_step4.png" width=600/><br/>
-We count the number of class $k$'s members that are on the same halfspace as $\*v$.<br/>
+We count the number of class $k$'s gradients that are in the same halfspace as $\*v$.<br/>
 </span>
 ]
 
