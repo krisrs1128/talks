@@ -94,7 +94,7 @@ values observed in the training data.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pdp_1.png"/&gt;
+&lt;img width="700" src="figures/pdp_1.png"/&gt;&lt;br/&gt;
 Suppose we want to a PDP curve for the first dimension evaluated at `\(x_{d}^{\ast}\)`.
 &lt;/span&gt;
 ]
@@ -105,7 +105,7 @@ Suppose we want to a PDP curve for the first dimension evaluated at `\(x_{d}^{\a
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pdp_2.png"/&gt;
+&lt;img width="700" src="figures/pdp_2.png"/&gt;&lt;br/&gt;
 We set the first coordinate of all observed data points to `\(x_{d}^{\ast}\)`.
 &lt;/span&gt;
 ]
@@ -116,7 +116,7 @@ We set the first coordinate of all observed data points to `\(x_{d}^{\ast}\)`.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pdp_3.png"/&gt;
+&lt;img width="700" src="figures/pdp_3.png"/&gt;&lt;br/&gt;
 We evaluate `\(f\)` at these points and take the average.
 &lt;/span&gt;
 ]
@@ -127,7 +127,7 @@ We evaluate `\(f\)` at these points and take the average.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pdp_4.png"/&gt;
+&lt;img width="780" src="figures/pdp_4.png"/&gt;&lt;br/&gt;
 We can do this at another point `\(x_{d}^{\ast\ast}\)`.
 &lt;/span&gt;
 ]
@@ -138,9 +138,9 @@ We can do this at another point `\(x_{d}^{\ast\ast}\)`.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pdp_5.png"/&gt;
-&lt;/span&gt;
+&lt;img width="450" src="figures/pdp_5.png"/&gt;&lt;br/&gt;
 We are now beginning to see a PDP curve along this direction.
+&lt;/span&gt;
 ]
 
 ---
@@ -149,7 +149,7 @@ We are now beginning to see a PDP curve along this direction.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pdp_6.png"/&gt;
+&lt;img width="450" src="figures/pdp_6.png"/&gt;&lt;br/&gt;
 We continue until we trace out a full curve along that axis.
 &lt;/span&gt;
 ]
@@ -164,9 +164,7 @@ First, we might query the model at coordinates `\(\left(x_{d}, \*x_{-d}\right)\)
 are never encountered in the data.
 
 .center[
-&lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/pdp_pathology.png"/&gt;
-&lt;/span&gt;
+&lt;img width="520" src="figures/pdp_pathology.png"/&gt;
 ]
 
 ---
@@ -186,7 +184,7 @@ might accidentally attribute effects from one onto the other.
 
 ### Geometric Intuition
 
-The main idea of [18] is to resolve these issues using
+The main idea of [4] is to resolve these issues using
 the derivatives:
 
 `\begin{align*}
@@ -204,7 +202,7 @@ we can stitch ("accumulate") them into a single, coherent summary.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/fig9_apley.png"/&gt;
+&lt;img width="700" src="figures/fig9_apley.png"/&gt;&lt;br/&gt;
 The ALE curve summarizes many local effects.
 &lt;/span&gt;
 ]
@@ -224,17 +222,19 @@ This is formalized by the following formula,
 
 ### ALE Estimator
 
-This is estimated using partial differences along a fine partition
+This is estimated using empirical partial differences along a fine partition.
 
+.pull-left[
+&lt;span style="font-size: 20px;"&gt;
 `\begin{align*}
 \sum_{k = 1}^{K} \frac{1}{N_{d}\left(k\right)} \sum_{x_{n} \in N_{d}\left(k\right)} \left[f\left(z_{dk}, \*x_{-d}\right) - f\left(z_{d,k-1}, \*x_{-d}\right)\right]
 \end{align*}`
+&lt;/span&gt;
+]
 
-.center[
+.pull-right[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/fig3_apley.png"/&gt;
-The derivatives are approximated by using empirical differences along a fine
-grid.
+&lt;img width="450" src="figures/fig3_apley.png"/&gt;&lt;br/&gt;
 &lt;/span&gt;
 ]
 
@@ -261,7 +261,7 @@ specific classes of models, then we can come up with more precise notions of
 importance (give some references,e.g., DeepShap).
 
 To illustrate this idea, we will consider the MDI+ (Mean Decrease in Impurity)
-measure proposed in `Citep(bib, "Agarwal2023-sx")` for decision trees and random
+measure proposed in [5] for decision trees and random
 forests.
 
 ---
@@ -321,8 +321,8 @@ The `\(\hat{y}\)` from this regression are exactly the fitted values from a deci
 \end{align*}`
 
 .center[
-&lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/tree_regression_correspondence.png"/&gt;
+&lt;span style="font-size: 18px;"&gt;&lt;br/&gt;
+&lt;img width="700" src="figures/tree_regression_correspondence.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -341,20 +341,13 @@ The `\(R^2\)` of this model is exactly the MDI of feature `\(k\)`.
 
 ---
 
-### MDI `\(\to\)` MDI$+$
+### MDI `\(\to\)` MDI+
 
 1. The main idea of MDI+ is that we don't have to use linear regression -- we
 can use the entire high-dimensional statistics toolkit.
 
-1. E.g., `Citep(bib, "Agarwal2023-sx")` argue that using `\(R^2\)` from a ridge
+1. E.g., [5] argue that using `\(R^2\)` from a ridge
 regression model leads to more stable rankings than ordinary MDI.
-
----
-
-### Software
-
-1. `imodels`: 
-
 
 ---
 
@@ -386,18 +379,20 @@ class: reference
 
 ### References
 
-[1] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
-pp. 1059-1086.
-
-[2] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+[1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
 Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
 [10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
 [https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
 
-[3] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+[2] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
 
-[4] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+[3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
 USA: ACM, Aug. 2016.
+
+[4] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+pp. 1059-1086.
+
+[5] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

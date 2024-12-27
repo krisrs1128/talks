@@ -82,7 +82,7 @@ are sparser and more disentangled relative to standard dimensionality reduction.
 
 ### Formulation
 
-Following [24], suppose `\(\*x_{n}\)` are the concatenated
+Following [11], suppose `\(\*x_{n}\)` are the concatenated
 activations across all layers in the network. Then solve:
 
 `\begin{align*}
@@ -200,7 +200,7 @@ We can use LIME to identify individual words that contribute the most to a singl
 ### Memorization
 
 The New York Times sued OpenAI partly on the basis that ChatGPT sometimes
-reproduces articles verbatim [25; 26].  AI companies need to understand this "memorization" issue both
+reproduces articles verbatim [12; 13].  AI companies need to understand this "memorization" issue both
 to protect privacy and to respect copyright.
 
 .center[
@@ -214,7 +214,7 @@ to protect privacy and to respect copyright.
 
 ### Defining Memorization
 
-[27] made the idea of memorization more precise. When
+[14] made the idea of memorization more precise. When
 prompted with 50 tokens, how closely do the next 50 generated tokens match any
 training example?
 
@@ -333,52 +333,51 @@ class: reference
 
 ### References
 
-[1] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
-
-[2] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
-[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
-
-[3] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
-pp. 1059-1086.
-
-[4] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+[1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
 Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
 [10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
 [https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
 
-[5] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
+[2] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+
+[3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+USA: ACM, Aug. 2016.
+
+[4] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+pp. 1059-1086.
+
+[5] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
+
+[6] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
+9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
+[http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
+
+[7] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
 [10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
-
-[6] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
-Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
-
-[7] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
 
 [8] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
 [https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
 
-[9] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022), p.
-106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
+[9] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
+[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
+
+[10] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022),
+p. 106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
 [http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
 
-[10] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
-USA: ACM, Aug. 2016.
-
-[11] N. Stoehr et al. _Localizing Paragraph Memorization in Language Models_. 2024. DOI: [10.48550/ARXIV.2403.19851](https://doi.org/10.48550%2FARXIV.2403.19851). URL:
-[https://arxiv.org/abs/2403.19851](https://arxiv.org/abs/2403.19851).
-
-[12] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
+[11] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
 Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures_. Online: Association for Computational Linguistics, 2021.
 
-[13] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
-9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
-[http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
+[12] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
+Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
+
+[13] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
 
 ---
 
 ### Formulation II
 
-The formulation in [28]. `\(\*x_{i}\)` are
+The formulation in [15]. `\(\*x_{i}\)` are
 activations from a single residual connection in the Claude Sonnet model.
 
 `\begin{align*}

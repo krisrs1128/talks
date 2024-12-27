@@ -63,15 +63,15 @@ Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim/&lt;/a&g
 
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
-``activations''' at each layer.
+activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
 
 .center[
-&lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/fig2_zeiler.png"/&gt; &lt;br/&gt;
-Figure from [19].
+&lt;span style="font-size: 18px;"&gt;
+Figure from [6].
 &lt;/span&gt;
 ]
 
@@ -81,15 +81,15 @@ Figure from [19].
 
 1. Deep learning models are composed of many simpler layers. When an input is
 passed through the network, it is transformed into a series of neuron
-``activations''' at each layer.
+activations at each layer.
 
 1. Neurons activate on inputs with specific properties. For example, many
 neurons in the first layer of a network detect edges with a given orientation.
 
 .center[
-&lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/fig1_bengio.png"/&gt; &lt;br/&gt;
-Figure from [20].
+&lt;span style="font-size: 18px;"&gt;
+Figure from [7].
 &lt;/span&gt;
 ]
 
@@ -101,9 +101,9 @@ There is a long line of research suggesting that deep learning models indeed
 learn higher-level abstractions.
 
 .center[
-&lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/fig2_karpathy.png"/&gt; &lt;br/&gt;
-Figure from [21].
+&lt;span style="font-size: 18px;"&gt;
+Figure from [8].
 &lt;/span&gt;
 ]
 
@@ -130,13 +130,13 @@ In this case, we need a more directed analysis.
 intermediate model activations.
 
 1. If the probe has high accuracy, then we might say that this feature has been
-``learned'' by the model in that layer.
+learned by the model in that layer.
 
 .center[
-&lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/alain_fig2.png"/&gt; &lt;br/&gt;
+&lt;span style="font-size: 18px;"&gt;
 In this example, probes have been added to every layer of a network. Figure from
-[22].
+[9].
 &lt;/span&gt;
 ]
 
@@ -150,7 +150,7 @@ architectures.
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/pathological_training.gif"/&gt; &lt;br/&gt;
-In this example from [22], a skip connection across layers 1 - 64  has prevented successful training across those layers.
+In this example from [9], a skip connection across layers 1 - 64  has prevented successful training across those layers.
 &lt;/span&gt;
 ]
 
@@ -243,7 +243,7 @@ T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right)
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/concepts_step4.png" width=600/&gt;&lt;br/&gt;
-We count the number of class `\(k\)`'s members that are on the same halfspace as `\(\*v\)`.&lt;br/&gt;
+We count the number of class `\(k\)`'s gradients that are in the same halfspace as `\(\*v\)`.&lt;br/&gt;
 &lt;/span&gt;
 ]
 
@@ -270,7 +270,7 @@ melanoma.
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/lucieri_fig5.png" width=600/&gt; &lt;br/&gt;
-Figure from [23]. In this case, the model is incorrect despite concepts suggesting the correct diagnosis.
+Figure from [10]. In this case, the model is incorrect despite concepts suggesting the correct diagnosis.
 &lt;/span&gt;
 ]
 
@@ -300,35 +300,37 @@ class: reference
 
 ### References
 
-[1] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
-[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
-
-[2] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
-pp. 1059-1086.
-
-[3] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+[1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
 Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
 [10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
 [https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
 
-[4] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
-[10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
+[2] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
 
-[5] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
-
-[6] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
-[https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
-
-[7] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022), p.
-106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
-[http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
-
-[8] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+[3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
 USA: ACM, Aug. 2016.
 
-[9] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
+[4] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+pp. 1059-1086.
+
+[5] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
+
+[6] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
 9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
 [http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
+
+[7] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
+[10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
+
+[8] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
+[https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
+
+[9] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
+[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
+
+[10] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022),
+p. 106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
+[http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
 
 ---
 

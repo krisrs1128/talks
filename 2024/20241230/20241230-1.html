@@ -68,8 +68,8 @@ Why was this sentence classified as having negative sentiment?
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/sal_example.png"/&gt; 
-Example from [15].
+&lt;img width="600" src="figures/sal_example.png"/&gt; 
+Example from [1].
 &lt;/span&gt;
 ]
 
@@ -81,8 +81,8 @@ Why is the second most probable class in this image "candle, taper, wax light"?
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/lime_wax_example.png"/&gt; 
-Example from [16].
+&lt;img width="600" src="figures/lime_wax_example.png"/&gt; 
+Example from [2].
 &lt;/span&gt;
 ]
 
@@ -102,8 +102,8 @@ hyperplane near that sample.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/fig3_ribiero.png"/&gt;
-Figure from [17].
+&lt;img width="450" src="figures/fig3_ribiero.png"/&gt;
+Figure from [3].
 &lt;/span&gt;
 ]
 
@@ -118,7 +118,7 @@ Figure from [17].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/LIME-summary1.png"/&gt;
+&lt;img width="500" src="figures/LIME-summary1.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -133,21 +133,20 @@ Figure from [17].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/LIME-summary2.png"/&gt;
+&lt;img width="500" src="figures/LIME-summary2.png"/&gt;
 &lt;/span&gt;
 ]
 
 ---
 
-### Objective
+### Algorithm
+
+Ideally, we would be able to solve:
 
 `\begin{align}
 \min_{g \in G} \Esubarg{\pi_{\*x}}{L\left(f\left(\*z'\right), g\left(\*z'\right)\right)} + \Omega\left(g\right)
 \end{align}`
-
----
-
-### Algorithm
+But `\(\pi_{\*x}\)` might be too complex, so we can use the ampirical analog:
 
 1. Sample `\(x_{n}^{\prime} \sim \pi_{x}\)`. 
 
@@ -184,7 +183,7 @@ assignment problem.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/shapley_team_1.png"/&gt; 
+&lt;img width="600" src="figures/shapley_team_1.png"/&gt;&lt;br/&gt;
 Shapley values are built off a game theoretic analogy.
 &lt;/span&gt;
 ]
@@ -196,15 +195,14 @@ Shapley values are built off a game theoretic analogy.
 We can distribute credit according to how much the team's profit decreases when we remove employee `\(i\)`,
 
 `\begin{align}
-\varphi\left(i\right) &amp;= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{{D - 1 \choose d - 1}}\sum_{S \in S_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
+\varphi\left(i\right) &amp;= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)} \left[v\left(S\right) - v\left(S - \{i\}\right)\right]
 \end{align}`
 
-* There are `\(D\)` employees total.
-* `\(S_{d}\left(i\right)\)` is the collection of subsets of size `\(d\)` that includes employee `\(i\)`.
+`\(S_{d}\left(i\right)\)` is the collection of subsets of size `\(d\)` that includes employee `\(i\)`.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/shapley_team_2.png"/&gt; 
+&lt;img width="400" src="figures/shapley_team_2.png"/&gt; 
 &lt;/span&gt;
 ]
 
@@ -244,7 +242,7 @@ stacked barplot around `\(f\left(\*x\right)\)`. Each piece corresponds to one fe
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/shapley_sample_level.png"/&gt; 
+&lt;img width="900" src="figures/shapley_sample_level.png"/&gt; 
 &lt;/span&gt;
 ]
 
@@ -257,7 +255,7 @@ v_{\*x}\left(S\right) &amp;= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\ri
 \end{align}`
 
 .center[
-&lt;img src="figures/shapley_v2.png"/&gt;
+&lt;img width="800" src="figures/shapley_v2.png"/&gt;
 ]
 
 ---
@@ -268,7 +266,7 @@ How would we compute `\(\varphi\left(2\right)\)` in this example? We also need:
 
 * `\(v\left(\{1, 2\}\right)\)`
 * `\(v\left(\{2\}\right)\)`
-* `\(v\left(\empty\right)\)`
+* `\(v\left(\emptyset\right)\)`
 
 What do these correspond to geometrically?
 
@@ -281,7 +279,7 @@ This helps identify sets of samples which have similar explanations.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/shapley_dataset_level.png"/&gt; 
+&lt;img width="900" src="figures/shapley_dataset_level.png"/&gt; 
 &lt;/span&gt;
 ]
 
@@ -355,35 +353,20 @@ How can we avoid summing over so many subsets? It turns out that there is an
 equivalent formulation of the Shapley value in terms of weighted linear
 regression.
 
+.pull-left[
+&lt;span style="font-size: 20px;"&gt;
 `\begin{align*}
 v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
 \end{align*}`
-
-.center[
-&lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/shapley_kernel_regression.png"/&gt; 
-`\(\indic{d \in S}\)` is known, so this is a linear regression with unknown
-coefficients `\(\varphi_{\*x}\left(f, d\right)\)`
 &lt;/span&gt;
 ]
 
----
-
-
-### Regression Perspective
-
-How can we avoid summing over so many subsets? It turns out that there is an
-equivalent formulation of the Shapley value in terms of weighted linear
-regression.
-
-`\begin{align*}
-v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
-\end{align*}`
-
-.center[
+.pull-right[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/shapley_kernel_regression.png"/&gt; 
-We can compute `\(v_{\*x}\left(S\right)\)` on a subset of sets.
+&lt;img width="400" src="figures/shapley_kernel_regression.png"/&gt; 
+`\(\indic{d \in S}\)` is known, so this is a linear regression with unknown
+coefficients `\(\varphi_{\*x}\left(f, d\right)\)`. Notice we can compute
+`\(v_{\*x}\left(S\right)\)` on a subset of sets.
 &lt;/span&gt;
 ]
 
@@ -428,10 +411,10 @@ Let `\(N_{k}\left(i\right)\)` be all the features within distance `\(k\)` of fea
 
 1. When `\(k\)` is small, this will be an efficient approximation.
 
-1. This is sometimes called `\(L\)`-Shapley ($L$ \to ``Local'')
+1. This is sometimes called `\(L\)`-Shapley. `\(L \to\)` Local.
 
 .center[
-&lt;img src="figures/l-c-shapley.png"/&gt; 
+&lt;img width="400" src="figures/l-c-shapley.png"/&gt; 
 ]
 
 ---
@@ -445,10 +428,10 @@ We can further focus on those subsets that are connected to feature `\(i\)`:
 \frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right)\right]
 \end{align*}`
 
-1. This is sometimes called `\(C\)`-Shapley ($C$ \to ``Connected'')
+1. This is sometimes called `\(C\)`-Shapley. `\(C\)` \to Connected.
 
 .center[
-&lt;img src="figures/l-c-shapley.png"/&gt; 
+&lt;img width="600" src="figures/l-c-shapley.png"/&gt; 
 ]
 
 ---
@@ -472,6 +455,8 @@ most helpful?
 
 ---
 
+class: reference
+
 ### References
 
 [1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
@@ -483,6 +468,11 @@ Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Associ
 
 [3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
 USA: ACM, Aug. 2016.
+
+[4] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+pp. 1059-1086.
+
+[5] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
 
 ---
 
