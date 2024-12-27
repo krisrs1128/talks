@@ -99,7 +99,7 @@ Why was this sentence classified as having negative sentiment?
 
 .center[
 <span style="font-size: 18px;">
-<img width="600" src="figures/sal_example.png"/> 
+<img width="600" src="figures/sal_example.png"/><br/> 
 Example from `r Citep(bib, 'atanasova-etal-2020-diagnostic')`.
 </span>
 ]
@@ -112,7 +112,7 @@ Why is the second most probable class in this image "candle, taper, wax light"?
 
 .center[
 <span style="font-size: 18px;">
-<img width="600" src="figures/lime_wax_example.png"/> 
+<img width="600" src="figures/lime_wax_example.png"/><br/>  
 Example from `r Citep(bib, 'lime_package')`.
 </span>
 ]
@@ -133,7 +133,7 @@ hyperplane near that sample.
 
 .center[
 <span style="font-size: 18px;">
-<img width="450" src="figures/fig3_ribiero.png"/>
+<img width="450" src="figures/fig3_ribiero.png"/><br/> 
 Figure from `r Citep(bib, "Ribeiro2016-qk")`.
 </span>
 ]
@@ -149,7 +149,7 @@ Figure from `r Citep(bib, "Ribeiro2016-qk")`.
 
 .center[
 <span style="font-size: 18px;">
-<img width="500" src="figures/LIME-summary1.png"/>
+<img width="500" src="figures/LIME-summary1.png"/><br/> 
 </span>
 ]
 
@@ -413,7 +413,7 @@ v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \i
 
 If for the row corresponding to subset $S$ we use weights
 \begin{align*}
-\frac{D - 1}{\left(D \choose \left|S\right|\right) \left|S\right|\left(D - \left|S\right|\right)}
+\frac{D - 1}{{D \choose \left|S\right|} \left|S\right|\left(D - \left|S\right|\right)}
 \end{align*}
 then the resulting weighted linear regression exactly recovers the Shapley
 values $\varphi_{\*x}\left(f, d\right)$.
@@ -442,7 +442,7 @@ $i$. A fast approximation is to consider:
 
 1. When $k$ is small, this will be an efficient approximation.
 
-1. This is sometimes called $L$-Shapley. $L \to$ Local.
+1. This is sometimes called $L$-Shapley. $L$ is short for local.
 
 .center[
 <img width="400" src="figures/l-c-shapley.png"/> 
@@ -459,7 +459,7 @@ We can further focus on those subsets that are connected to feature $i$:
 \frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right)\right]
 \end{align*}
 
-1. This is sometimes called $C$-Shapley. $C$ \to Connected.
+1. This is sometimes called $C$-Shapley. $C$ is short for connected.
 
 .center[
 <img width="600" src="figures/l-c-shapley.png"/> 
