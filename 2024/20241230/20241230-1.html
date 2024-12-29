@@ -45,7 +45,7 @@ MathJax.Hub.Config({
 
 
 
-## Explaining Predictions
+## Explaining Predictions: LIME and Shapley Values
 
 &lt;div id="subtitle"&gt;
 Kris Sankaran &lt;br/&gt;
@@ -69,7 +69,7 @@ Why was this sentence classified as having negative sentiment?
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img width="600" src="figures/sal_example.png"/&gt;&lt;br/&gt; 
-Example from [1].
+Example from [4].
 &lt;/span&gt;
 ]
 
@@ -82,7 +82,7 @@ Why is the second most probable class in this image "candle, taper, wax light"?
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img width="600" src="figures/lime_wax_example.png"/&gt;&lt;br/&gt;  
-Example from [2].
+Example from [5].
 &lt;/span&gt;
 ]
 
@@ -103,7 +103,7 @@ hyperplane near that sample.
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img width="450" src="figures/fig3_ribiero.png"/&gt;&lt;br/&gt; 
-Figure from [3].
+Figure from [6].
 &lt;/span&gt;
 ]
 
@@ -114,7 +114,7 @@ Figure from [3].
 
 1. `\(\myred{\*x}\)`: The sample whose predictions we want to explain.
 1. `\(f\)`: A complex model we want to explain.
-1. `\(G\)`: A class of simple models to use in the explanations.
+1. `\(\mathcal{G}\)`: A class of simple models to use in the explanations.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
@@ -129,7 +129,7 @@ Figure from [3].
 
 1. `\(\mypurple{\pi}_{\myred{\*x}}\)`: A distribution over a neighborhood of `\(x\)`.
 1. `\(\*x'\)`: A sample from `\(\pi_{\myred{\*x}}\)`.
-1. `\(\*z, \*z'\)`: Summarized versions of `\(\*x, \*x'\)` (e.g., word counts).
+1. `\(\*z, \*z'\)`: Summarized versions of `\(\*x, \*x'\)` (e.g., superpixels).
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
@@ -141,19 +141,20 @@ Figure from [3].
 
 ### Algorithm
 
-Ideally, we would be able to solve:
+Ideally we would solve
 
 `\begin{align}
-\min_{g \in G} \Esubarg{\pi_{\*x}}{L\left(f\left(\*z'\right), g\left(\*z'\right)\right)} + \Omega\left(g\right)
+\min_{g \in \mathcal{G}} \Esubarg{\pi_{\*x}}{L\left(f\left(\*z'\right), g\left(\*z'\right)\right)} + \Omega\left(g\right)
 \end{align}`
-But `\(\pi_{\*x}\)` might be too complex, so we can use the ampirical analog:
+
+but in practice we use the empirical analog:
 
 1. Sample `\(x_{n}^{\prime} \sim \pi_{x}\)`. 
 
 1. Solve the optimization:
 
 `\begin{align}
-\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(\*z_{n}^{\prime}\right), g\left(\*z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
+\min_{g \in \mathcal{G}} \frac{1}{N}\sum_{n = 1}^{N}L\left(f\left(\*z_{n}^{\prime}\right), g\left(\*z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
 \end{align}`
 
 ---
@@ -161,12 +162,12 @@ But `\(\pi_{\*x}\)` might be too complex, so we can use the ampirical analog:
 ### Example: Lasso for Bag-of-Words
 
 1. `\(f\)` is the original sentiment prediction model.
-1. `\(\pi_{x}\)` samples words with probability
-1. `\(g\)` is a linear model
-1. `\(\Omega\)` is the `\(\ell^1\)` penalty
+1. `\(\pi_{x}\)` samples sentences with high cosine similarity to the target.
+1. `\(g\)` is a linear model.
+1. `\(\Omega\)` is the `\(\ell^1\)` penalty, which induces sparsity.
 
 `\begin{align}
-\sum_{n = 1}^{N} \left(f\left(\*z_{n}\right) - \*z_{n}^\top\beta\right)^2 + \|\beta\|_{1}
+\sum_{n = 1}^{N} \frac{1}{N}\left(f\left(\*z_{n}\right) - \*z_{n}^\top\beta\right)^2 + \lambda \|\beta\|_{1}
 \end{align}`
 
 ---
@@ -231,20 +232,7 @@ making the prediction `\(f\left(\*x\right)\)`:
 \varphi_{\*x}\left(f, i\right) &amp;= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)}\left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right) \right]
 \end{align}`
 
-This definition satisfies the same axioms as the ones above for credit assignment. In particular, `\(f\left(\*x\right) = \sum_{d = 1}^{D}\varphi_{\*x}\left(f, d\right)\)`.
-
----
-
-### Visualization - One Sample
-
-Since adding all the attributions leads to `\(f\left(\*x\right)\)`, we can center a
-stacked barplot around `\(f\left(\*x\right)\)`. Each piece corresponds to one feature.
-
-.center[
-&lt;span style="font-size: 18px;"&gt;
-&lt;img width="900" src="figures/shapley_sample_level.png"/&gt; 
-&lt;/span&gt;
-]
+This definition has the nice property that `\(f\left(\*x\right) = \sum_{d = 1}^{D}\varphi_{\*x}\left(f, d\right)\)`.
 
 ---
 
@@ -262,13 +250,26 @@ v_{\*x}\left(S\right) &amp;= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\ri
 
 ### Geometric Interpretation
 
-How would we compute `\(\varphi\left(2\right)\)` in this example? We also need:
+How would we compute `\(\varphi_{\mathbf{x}}\left(f, 2\right)\)` in this example? We also need:
 
 * `\(v\left(\{1, 2\}\right)\)`
 * `\(v\left(\{2\}\right)\)`
 * `\(v\left(\emptyset\right)\)`
 
 What do these correspond to geometrically?
+
+---
+
+### Visualization - One Sample
+
+Since adding all the attributions leads to `\(f\left(\*x\right)\)`, we can center a
+stacked barplot around `\(f\left(\*x\right)\)`. Each piece corresponds to one feature.
+
+.center[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img width="900" src="figures/shapley_sample_level.png"/&gt; 
+&lt;/span&gt;
+]
 
 ---
 
@@ -287,7 +288,7 @@ This helps identify sets of samples which have similar explanations.
 
 ### Computational Challenges
 
-This definition has some elegant properties, but naive calculation is impossible
+Shapley values have some elegant properties, but naive calculation is impossible
 in all but the simplest cases.
 
 1. `\(v_{\*x}\left(S\right)\)` involves a potentially complex conditional expectation.
@@ -297,11 +298,13 @@ in all but the simplest cases.
 
 ### Approximating `\(v_{x}\left(S\right)\)`
 
-Remember the definition:
+How can we simplify the calculation of:
 
 `\begin{align*}
 v_{\*x}\left(S\right) &amp;= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
 \end{align*}`
+
+?
 
 ---
 
@@ -382,7 +385,7 @@ v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \i
 
 If for the row corresponding to subset `\(S\)` we use weights
 `\begin{align*}
-\frac{D - 1}{\left(D \choose \left|S\right|\right) \left|S\right|\left(D - \left|S\right|\right)}
+\frac{D - 1}{{D \choose \left|S\right|} \left|S\right|\left(D - \left|S\right|\right)}
 \end{align*}`
 then the resulting weighted linear regression exactly recovers the Shapley
 values `\(\varphi_{\*x}\left(f, d\right)\)`.
@@ -438,6 +441,9 @@ We can further focus on those subsets that are connected to feature `\(i\)`:
 
 ### Takeaways
 
+1. LIME supposes that locally, a complex model can be well-approximated by a
+simple one.
+
 1. Shapley values offer a principled way for identifying relevant features in
 local examples.
 
@@ -459,45 +465,28 @@ class: reference
 
 ### References
 
-[1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+[1] R. Caruana et al. "Intelligible Models for HealthCare: Predicting Pneumonia Risk and Hospital 30-day Readmission". In: _Proceedings of the 21th ACM SIGKDD International
+Conference on Knowledge Discovery and Data Mining_ (2015).
+
+[2] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI". In: _arXiv_ (2024).
+
+[3] T. Gu et al. "BadNets: Evaluating Backdooring Attacks on Deep Neural Networks". In: _IEEE Access_ 7 (2019), p. 47230–47244. ISSN: 2169-3536. DOI:
+[10.1109/access.2019.2909068](https://doi.org/10.1109%2Faccess.2019.2909068). URL: [http://dx.doi.org/10.1109/ACCESS.2019.2909068](http://dx.doi.org/10.1109/ACCESS.2019.2909068).
+
+[4] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
 Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
 [10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
 [https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
 
-[2] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+[5] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
 
-[3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+[6] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
 USA: ACM, Aug. 2016.
 
-[4] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+[7] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
 pp. 1059-1086.
 
-[5] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
-
-[6] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
-9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
-[http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
-
-[7] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
-[10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
-
-[8] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
-[https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
-
-[9] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
-[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
-
-[10] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022),
-p. 106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
-[http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
-
-[11] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
-Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures_. Online: Association for Computational Linguistics, 2021.
-
-[12] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
-Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
-
-[13] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
+[8] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
 
 ---
 

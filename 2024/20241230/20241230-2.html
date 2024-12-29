@@ -44,7 +44,7 @@ MathJax.Hub.Config({
 
 
 
-## Explaining Models: Profiles and Importance
+## Explaining Models: Profiles, Local Effects, and Importance
 
 &lt;div id="subtitle"&gt;
 Kris Sankaran &lt;br/&gt;
@@ -67,24 +67,27 @@ Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim/&lt;/a&g
 for predictions at a specific instance `\(\*x\)`.
 
 1. What if we want global variable summaries across the entire model? We could
-average Shapley values across samples, but this doesn't tell us *how* a variable
-influences the response.
+average local explanations across samples, but this doesn't tell us *how* a
+variable influences the response.
 
 ---
 
-## Partial Dependence
+## Partial Dependence Profiles
 
 ---
 
 ### Definition
 
-Partial Dependence Profiles   are based on a
-"ceteris paribus" idea. To understand the effect of variable `\(x_{d}\)`, evaluate
-the function `\(f\)` at different values of `\(x_{d}\)`, holding other variables at
-values observed in the training data.
+1. Partial Dependence Profiles   are made by
+changing the value of the feature of interest, keeping all the other variables
+fixed.
+
+1. To understand the effect of variable `\(x_{d}\)`, evaluate the function `\(f\)` at
+different values of `\(x_{d}\)`, holding other variables at values observed in the
+training data.
 
 `\begin{align*}
-\pdp{d} &amp;= \Esubarg{\*x_{-d}}{f\left(x_d, \*x_{-d}\right)} \\
+\pdp{d} &amp;= \Esubarg{p\left(\*x_{-d}\right)}{f\left(x_d, \*x_{-d}\right)} \\
 &amp;\approx \frac{1}{N}\sum_{n = 1}^{N} f\left(x_{d}, \*x_{n, -d}\right)
 \end{align*}`
 
@@ -169,27 +172,20 @@ are never encountered in the data.
 
 ---
 
-### Pathologies: Multicollinearity
-
-We could try to fix this by evaluating the sum only over `\(\*x_{-d}\)` that are close to the observed data.
-
-There is a subtle problem: If `\(x_{d}\)` and `\(x_{d^\prime}\)` are highly correlated, we
-might accidentally attribute effects from one onto the other.
-
----
-
 ## Accumulated Local Effects
 
 ---
 
 ### Geometric Intuition
 
-The main idea of [4] is to resolve these issues using
-the derivatives:
+The main idea of [7] is to resolve these issues by computing
+derivatives
 
 `\begin{align*}
 \frac{\partial f\left(x_d, \*x_{-d}\right)}{\partial x_d}.
 \end{align*}`
+
+locally around plausible configurations `\(\left(x_{d}, \*x_{-d}\right)\)`.
 
 This removes any linear effects from variables other than `\(x_{d}\)`.
 
@@ -261,7 +257,7 @@ specific classes of models, then we can come up with more precise notions of
 importance (give some references,e.g., DeepShap).
 
 To illustrate this idea, we will consider the MDI+ (Mean Decrease in Impurity)
-measure proposed in [5] for decision trees and random
+measure proposed in [8] for decision trees and random
 forests.
 
 ---
@@ -346,7 +342,7 @@ The `\(R^2\)` of this model is exactly the MDI of feature `\(k\)`.
 1. The main idea of MDI+ is that we don't have to use linear regression -- we
 can use the entire high-dimensional statistics toolkit.
 
-1. E.g., [5] argue that using `\(R^2\)` from a ridge
+1. E.g., [8] argue that using `\(R^2\)` from a ridge
 regression model leads to more stable rankings than ordinary MDI.
 
 ---
@@ -379,45 +375,28 @@ class: reference
 
 ### References
 
-[1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+[1] R. Caruana et al. "Intelligible Models for HealthCare: Predicting Pneumonia Risk and Hospital 30-day Readmission". In: _Proceedings of the 21th ACM SIGKDD International
+Conference on Knowledge Discovery and Data Mining_ (2015).
+
+[2] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI". In: _arXiv_ (2024).
+
+[3] T. Gu et al. "BadNets: Evaluating Backdooring Attacks on Deep Neural Networks". In: _IEEE Access_ 7 (2019), p. 47230–47244. ISSN: 2169-3536. DOI:
+[10.1109/access.2019.2909068](https://doi.org/10.1109%2Faccess.2019.2909068). URL: [http://dx.doi.org/10.1109/ACCESS.2019.2909068](http://dx.doi.org/10.1109/ACCESS.2019.2909068).
+
+[4] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
 Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
 [10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
 [https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
 
-[2] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+[5] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
 
-[3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+[6] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
 USA: ACM, Aug. 2016.
 
-[4] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+[7] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
 pp. 1059-1086.
 
-[5] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
-
-[6] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
-9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
-[http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
-
-[7] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
-[10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
-
-[8] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
-[https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
-
-[9] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
-[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
-
-[10] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022),
-p. 106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
-[http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
-
-[11] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
-Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures_. Online: Association for Computational Linguistics, 2021.
-
-[12] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
-Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
-
-[13] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
+[8] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
