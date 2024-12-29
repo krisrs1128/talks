@@ -102,17 +102,17 @@ Example from `r Citep(bib, "Caruana2015IntelligibleMF")`.
 
 ---
 
-### What can go wrong?
+### Motivation: Adversarial Attacks
 
 .center[
 <img src="figures/adversarial-stopsign.webp" width = 600/>
 
-Example from `r Citep(bib, "Gu2017BadNetsIV")`.
+Example from `r Citep(bib, "Gu2019")`.
 ]
 
 ---
 
-### What can go wrong?
+### Motivation: LLM Demo
 
 .center[
 <img src="figures/bard-hallucination.webp" width=900/>
@@ -122,14 +122,14 @@ Example from `r Citep(bib, "Gu2017BadNetsIV")`.
 
 ### Motivation
 
-1. Computers let us solve problems that would be impossible to manage any other
-way, but we need some way of **checking our work**.
+1. Even though abstraction is powerful, models are never used in a vacuum, and
+the results can **impact human well-being.**
 
 1. We can often **improve our models** by looking more closely at what they learn
 and intervening as necessary.
 
-1. In the long-run, we'll be able to **get more out of our data and models** if we
-look more critically at them.
+1. Effective explanations can **guide democratic discourse** about how models
+are built and used.
 
 ---
 
@@ -182,39 +182,20 @@ box system.
 
 ### Analogy: Interpretability and Visualization
 
-.pull-left[
-A good visualization is:
-
-1. **Legible**: It omits extraneous, distracting elements.
-1. **Annotated**: It shows data within the problem context.
-1. **Information Dense**: It shows relevant variation efficiently.
-]
-
-.pull-right[
-<img src="figures/tufte.png" width=330/>
-]
-
----
-
-### Key Properties
-
-A good visualization is:
-
-1. **Legible**: It omits extraneous, distracting elements.
-1. **Annotated**: It shows data within the problem context.
-1. **Information Dense**: It shows relevant variation efficiently.
-
 .center[
-<img src="figures/tufte-2.png"/>
+A good visualization is:
+
+1. **Legible**: It omits extraneous, distracting elements.
+1. **User-focused**: It keeps its audience in mind.
+1. **Information Dense**: It shows relevant variation efficiently.
 ]
 
 ---
 
 ### Discussion (go.wisc.edu/aonpy0)
 
-[**Introductions**] Greet your neighbors. Share your name, affiliation, and what
-makes you interested in machine learning and interpretability.
-
+[**Introductions**] Greet your neighbors. Share your name, main areas of
+interest, and motivation for studying interpretability/explainability.
 ---
 
 class: reference
