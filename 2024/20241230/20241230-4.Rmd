@@ -89,23 +89,18 @@ Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim</a><br/>
 
 ---
 
-### Motivation
-
-1. Understanding: Explanations can give more insight into model mechanics than
-benchmark metrics alone. We can check whether the model is right for the right
-reasons.
-
-1. Improvement: By clarifying model mechanics, we might be able to address
-current challenges, like memorization.
-
----
-
-
 ### Dictionary Learning
 
-Instead of analyzing individual neurons, we can identify latent factors using
-dictionary learning. Since DL uses an overcomplete basis, $K > D$, the features
-are sparser and more disentangled relative to standard dimensionality reduction.
+1. We need to have specific concepts in mind before we can use concept methods.
+How can we find out what the model "knows" from scratch?
+
+1. We might try to analyze individual neurons, but individual neurons often play
+multiple roles. This "distributed representation" property makes the neurons
+more difficult to study (they are also the reason the model is powerful).
+
+1. One idea is to apply dictionary learning to the space of model embeddings.
+This method can disentangle the many roles for each neuron into a discrete set
+of interpretable features.
 
 ---
 
@@ -114,14 +109,16 @@ are sparser and more disentangled relative to standard dimensionality reduction.
 Following `r Citep(bib, "Yun2021-jc")`, suppose $\*x_{n}$ are the concatenated
 activations across all layers in the network. Then solve:
 
+.pull-left[
 \begin{align*}
 \arg\min_{\Phi, \left(\alpha_{n}\right)} \sum_{n = 1}^{N} \|\*x_n - \*\Phi\*\alpha_{n}\|_{2} + \lambda\|\alpha_n\|_{1} \\
 \text{subject to } \alpha_{n} \succeq 0 \text{ for } n = 1, \dots, N
 \end{align*}
+]
 
-.center[
+.pull-right[
 <span style="font-size: 18px;">
-<img src="figures/dictionary_rectangles.png"/>
+<img width="500" src="figures/dictionary_rectangles.png"/>
 </span>
 ]
 
@@ -134,7 +131,7 @@ overcomplete, it can reconstruct relatively complex patterns.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/atoms_interpretation.png"/>
+<img width="600" src="figures/atoms_interpretation.png"/>
 </span>
 ]
 
@@ -143,21 +140,32 @@ overcomplete, it can reconstruct relatively complex patterns.
 
 ### Example Factor
 
+.pull-left[
 1. To interpret $\varphi_{k}$, we can look for examples $i$ with large $\alpha_{ik}$.
 
-1. For example, for this feature has the largest $\alpha_{ik}$ in examples that
-have something to do with the Golden Gate Bridge.
+1. For example, this feature has the largest $\alpha_{ik}$ on examples related
+to the Golden Gate Bridge.
+]
+
+.pull-right[
+<span style="font-size: 18px;">
+<img width="500" src="figures/golden_gate_feature_discovery.png"/>
+</span>
+]
 
 ---
 
 ### Atlases
 
-We can also build maps of many related features. This figure is a UMAP of ...
-(phi? alpha?)
+.pull-left[
+We can also build maps of many related features. This figure is a dimensionality
+reduction of the $\varphi_{k}$, organized so that those that have high inner
+product are placed close to one another.
+]
 
-.center[
+.pull-right[
 <span style="font-size: 18px;">
-<img src="figures/golden_gate_umap.png"/>
+<img width="500" src="figures/golden_gate_umap.png"/>
 These annotations were generated automatically, which helps make this analysis
 more automatic.
 </span>
@@ -175,11 +183,11 @@ more automatic.
 can learn more abstract representations.
 
 1. Using dictionary learning, we can test this by comparing features with more
-weight on high vs. lower parts of the network.
+weight on high vs. lower parts of the network `r Citep(bib, "Yun2021-jc")`.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/dictionary_rectangles_compare.png"/>
+<img width="500" src="figures/dictionary_rectangles_compare.png"/>
 </span>
 ]
 
@@ -228,9 +236,10 @@ We can use LIME to identify individual words that contribute the most to a singl
 
 ### Memorization
 
-The New York Times sued OpenAI partly on the basis that ChatGPT sometimes
-reproduces articles verbatim `r Citep(bib, c("freeman2024exploring", "nyt_case"))`.  AI companies need to understand this "memorization" issue both
-to protect privacy and to respect copyright.
+The New York Times sued OpenAI after finding that ChatGPT can reproduce articles
+verbatim `r Citep(bib, c("freeman2024exploring", "nyt_case"))`.  AI companies
+need to address this "memorization" issue both to protect privacy and to
+respect copyright.
 
 .center[
 <span style="font-size: 18px;">
@@ -243,13 +252,13 @@ to protect privacy and to respect copyright.
 
 ### Defining Memorization
 
-`r Citep(bib, "stoehr2024")` made the idea of memorization more precise. When
-prompted with 50 tokens, how closely do the next 50 generated tokens match any
-training example?
+The reference `r Citep(bib, "stoehr2024")` made the idea of memorization more
+precise. When prompted with 50 tokens, how closely do the next 50 generated
+tokens match any training example?
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/fig2_stoehr.png"/>
+<img width="600" src="figures/fig2_stoehr.png"/><br/>
 The red points are generated texts that exactly match those in the training
 data. Notice that many paragraphs occur thousands of times.
 </span>
@@ -260,13 +269,12 @@ data. Notice that many paragraphs occur thousands of times.
 
 ### Activation Patterns
 
-It would be interesting to see what happens when using dictionary learning.
-Instead, the authors summarized layers using the maximum activation for each
-"component" of transformer self-attention heads.
+The authors summarized layers using the maximum activation for each "component"
+of transformer self-attention heads.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/fig4_stoehr.png"/>
+<img width="600" src="figures/fig4_stoehr.png"/><br/>
 There are qualitative differences in activation patterns between memorized and
 non-memorized paragraphs.
 </span>
@@ -282,7 +290,7 @@ memorized text whenever it encounters one of these rare tokens.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/fig7_stoehr.png"/>
+<img width="1000" src="figures/fig7_stoehr.png"/>
 </span>
 ]
 
@@ -299,7 +307,7 @@ we can manually increase (or decrease) the activation of the associated neurons.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/golden_gate_self.png"/>
+<img width="1000" src="figures/golden_gate_self.png"/>
 </span>
 ]
 
@@ -312,7 +320,7 @@ we can manually increase (or decrease) the activation of the associated neurons.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/transit_self.png"/>
+<img width="1000" src="figures/transit_self.png"/>
 </span>
 ]
 
@@ -320,13 +328,13 @@ we can manually increase (or decrease) the activation of the associated neurons.
 
 ### Steering and Safety
 
-This is one plausible direction for improving model safety. Though, there are so
+This is one plausible direction for improving model safety. However, there are so
 many ways in which an output can be harmful that it's not yet clear how this can
 be practically done.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/scam_emails.png"/>
+<img width="600" src="figures/scam_emails.png"/>
 </span>
 ]
 
@@ -335,10 +343,10 @@ be practically done.
 ### Takeaways
 
 1. While concepts and probes work well when we have specific concepts in mind a
-priori, dictionary learning is helpful when want to explore in a more open-ended
-way.
+priori, dictionary learning is helpful when want to explore models in a more
+open-ended way.
 
-1. Interpretability is interesting not only for understand but also for control.
+1. Interpretability is interesting not only for understanding but also for control.
 We may be able to steer LLMs towards more desirable properties by clearly
 understanding their features.
 
@@ -349,12 +357,11 @@ understanding their features.
 [**Interesting/Confusing**] For any of the topics in this short course, please
 share:
 
-- One point that you learned for the first time.
-- One point that you found interesting.
-- One point that was confusing.
+- 3 points that you learned for the first time.
+- 2 points that you found interesting.
+- 1 point that was confusing.
 
-I’ll write replies to the confusing points either during the session or later tonight.
-
+I’ll write replies to the confusing points.
 
 ---
 
@@ -365,16 +372,3 @@ class: reference
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
 ```
-
----
-
-### Formulation II
-
-The formulation in `r Citep(bib, "templeton2024scaling")`. $\*x_{i}$ are
-activations from a single residual connection in the Claude Sonnet model.
-
-\begin{align*}
-\arg \min &\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
-\hat{x} &= b_{k} + \Phi^{(2)}f\left(x\right) + b \\
-f\left(x\right)_k &= \left(\varphi_{k}^{1,\top}x + b_{k}\right)_{+}
-\end{align*}

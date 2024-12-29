@@ -194,8 +194,8 @@ In this example from `r Citep(bib, "alain2017understanding")`, a skip connection
 ### Concept Bottlenecks
 
 A related idea is to reduce model activations to a set of interpretable concepts
-`r Citep(bib, "50351")`. This is part of a literature that tries to find
-representations for interacting with models `r Citep(bib, c("yuksekgonul2023posthoc", "medium_beyond_nodate", "overlooked_factors"))`.
+`r Citep(bib, "50351")`. This is part of a literature that tries to relate
+complex models to human-defined "concepts" `r Citep(bib, c("yuksekgonul2023posthoc", "medium_beyond_nodate", "overlooked_factors"))`.
 
 .center[
 <span style="font-size: 18px;">
@@ -209,8 +209,8 @@ Figure from `r Citep(bib, "50351")`.
 ### Concept Bottlenecks
 
 A related idea is to reduce model activations to a set of interpretable concepts
-`r Citep(bib, "50351")`. This is part of a literature that tries to find
-representations for interacting with models `r Citep(bib, c("yuksekgonul2023posthoc", "medium_beyond_nodate", "overlooked_factors"))`.
+`r Citep(bib, "50351")`. This is part of a literature that tries to relate
+complex models to human-defined "concepts" `r Citep(bib, c("yuksekgonul2023posthoc", "medium_beyond_nodate", "overlooked_factors"))`.
 
 .center[
 <span style="font-size: 18px;">
@@ -230,7 +230,7 @@ a particular class. It applies to any architecture.
 .center[
 <span style="font-size: 18px;">
 <img src="figures/concepts_step1.png" width=600/><br/>
-Here, we are interested in the concept "stripes."
+Here, we are interested in the concept "stripes." Figure from `r Citep(bib, "tcav")`.
 </span>
 ]
 
@@ -249,7 +249,8 @@ Let $\*v$ denote the normal to the decision boundary.
 
 ---
 
-**Step 3**. Evaluate class $k$'s sensitivity to perturbations in the direction $v$.
+**Step 3**. Compare the direction $v$ to the directions in the embedding spac
+that increase each sample's class $k$ probability.
 
 \begin{align*}
 S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
@@ -266,8 +267,8 @@ space with the steepest increase in class $k$'s logit.
 
 ---
 
-**Step 4** Let $N_{k}$ be the number of images in class $k$, and define the test
-statistic
+**Step 4**. Let $N_{k}$ be the number of images in class $k$, and define the test
+statistic:
 
 \begin{align*}
 T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right) > 0\}}.

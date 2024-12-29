@@ -54,45 +54,42 @@ Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt
 
 &lt;div id="subtitle_right"&gt;
 IISA Interpretability Short Course &lt;br/&gt;
-Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim/&lt;/a&gt;&lt;br/&gt;
+Schedule: &lt;a href="https://go.wisc.edu/zk3gim"&gt;go.wisc.edu/zk3gim&lt;/a&gt;&lt;br/&gt;
 &lt;/div&gt;
 &lt;!-- 30 minute talk --&gt;
 
 ---
 
-### Motivation
-
-1. Understanding: Explanations can give more insight into model mechanics than
-benchmark metrics alone. We can check whether the model is right for the right
-reasons.
-
-1. Improvement: By clarifying model mechanics, we might be able to address
-current challenges, like memorization.
-
----
-
-
 ### Dictionary Learning
 
-Instead of analyzing individual neurons, we can identify latent factors using
-dictionary learning. Since DL uses an overcomplete basis, `\(K &gt; D\)`, the features
-are sparser and more disentangled relative to standard dimensionality reduction.
+1. We need to have specific concepts in mind before we can use concept methods.
+How can we find out what the model "knows" from scratch?
+
+1. We might try to analyze individual neurons, but individual neurons often play
+multiple roles. This "distributed representation" property makes the neurons
+more difficult to study (they are also the reason the model is powerful).
+
+1. One idea is to apply dictionary learning to the space of model embeddings.
+This method can disentangle the many roles for each neuron into a discrete set
+of interpretable features.
 
 ---
 
 ### Formulation
 
-Following [11], suppose `\(\*x_{n}\)` are the concatenated
+Following [19], suppose `\(\*x_{n}\)` are the concatenated
 activations across all layers in the network. Then solve:
 
+.pull-left[
 `\begin{align*}
 \arg\min_{\Phi, \left(\alpha_{n}\right)} \sum_{n = 1}^{N} \|\*x_n - \*\Phi\*\alpha_{n}\|_{2} + \lambda\|\alpha_n\|_{1} \\
 \text{subject to } \alpha_{n} \succeq 0 \text{ for } n = 1, \dots, N
 \end{align*}`
+]
 
-.center[
+.pull-right[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/dictionary_rectangles.png"/&gt;
+&lt;img width="500" src="figures/dictionary_rectangles.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -105,7 +102,7 @@ overcomplete, it can reconstruct relatively complex patterns.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/atoms_interpretation.png"/&gt;
+&lt;img width="600" src="figures/atoms_interpretation.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -114,21 +111,32 @@ overcomplete, it can reconstruct relatively complex patterns.
 
 ### Example Factor
 
+.pull-left[
 1. To interpret `\(\varphi_{k}\)`, we can look for examples `\(i\)` with large `\(\alpha_{ik}\)`.
 
-1. For example, for this feature has the largest `\(\alpha_{ik}\)` in examples that
-have something to do with the Golden Gate Bridge.
+1. For example, this feature has the largest `\(\alpha_{ik}\)` on examples related
+to the Golden Gate Bridge.
+]
+
+.pull-right[
+&lt;span style="font-size: 18px;"&gt;
+&lt;img width="500" src="figures/golden_gate_feature_discovery.png"/&gt;
+&lt;/span&gt;
+]
 
 ---
 
 ### Atlases
 
-We can also build maps of many related features. This figure is a UMAP of ...
-(phi? alpha?)
+.pull-left[
+We can also build maps of many related features. This figure is a dimensionality
+reduction of the `\(\varphi_{k}\)`, organized so that those that have high inner
+product are placed close to one another.
+]
 
-.center[
+.pull-right[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/golden_gate_umap.png"/&gt;
+&lt;img width="500" src="figures/golden_gate_umap.png"/&gt;
 These annotations were generated automatically, which helps make this analysis
 more automatic.
 &lt;/span&gt;
@@ -146,11 +154,11 @@ more automatic.
 can learn more abstract representations.
 
 1. Using dictionary learning, we can test this by comparing features with more
-weight on high vs. lower parts of the network.
+weight on high vs. lower parts of the network [19].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/dictionary_rectangles_compare.png"/&gt;
+&lt;img width="500" src="figures/dictionary_rectangles_compare.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -199,9 +207,10 @@ We can use LIME to identify individual words that contribute the most to a singl
 
 ### Memorization
 
-The New York Times sued OpenAI partly on the basis that ChatGPT sometimes
-reproduces articles verbatim [12; 13].  AI companies need to understand this "memorization" issue both
-to protect privacy and to respect copyright.
+The New York Times sued OpenAI after finding that ChatGPT can reproduce articles
+verbatim [20; 21].  AI companies
+need to address this "memorization" issue both to protect privacy and to
+respect copyright.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
@@ -214,13 +223,13 @@ to protect privacy and to respect copyright.
 
 ### Defining Memorization
 
-[14] made the idea of memorization more precise. When
-prompted with 50 tokens, how closely do the next 50 generated tokens match any
-training example?
+The reference [22] made the idea of memorization more
+precise. When prompted with 50 tokens, how closely do the next 50 generated
+tokens match any training example?
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/fig2_stoehr.png"/&gt;
+&lt;img width="600" src="figures/fig2_stoehr.png"/&gt;&lt;br/&gt;
 The red points are generated texts that exactly match those in the training
 data. Notice that many paragraphs occur thousands of times.
 &lt;/span&gt;
@@ -231,13 +240,12 @@ data. Notice that many paragraphs occur thousands of times.
 
 ### Activation Patterns
 
-It would be interesting to see what happens when using dictionary learning.
-Instead, the authors summarized layers using the maximum activation for each
-"component" of transformer self-attention heads.
+The authors summarized layers using the maximum activation for each "component"
+of transformer self-attention heads.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/fig4_stoehr.png"/&gt;
+&lt;img width="600" src="figures/fig4_stoehr.png"/&gt;&lt;br/&gt;
 There are qualitative differences in activation patterns between memorized and
 non-memorized paragraphs.
 &lt;/span&gt;
@@ -253,7 +261,7 @@ memorized text whenever it encounters one of these rare tokens.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/fig7_stoehr.png"/&gt;
+&lt;img width="1000" src="figures/fig7_stoehr.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -270,7 +278,7 @@ we can manually increase (or decrease) the activation of the associated neurons.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/golden_gate_self.png"/&gt;
+&lt;img width="1000" src="figures/golden_gate_self.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -283,7 +291,7 @@ we can manually increase (or decrease) the activation of the associated neurons.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/transit_self.png"/&gt;
+&lt;img width="1000" src="figures/transit_self.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -291,13 +299,13 @@ we can manually increase (or decrease) the activation of the associated neurons.
 
 ### Steering and Safety
 
-This is one plausible direction for improving model safety. Though, there are so
+This is one plausible direction for improving model safety. However, there are so
 many ways in which an output can be harmful that it's not yet clear how this can
 be practically done.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/scam_emails.png"/&gt;
+&lt;img width="600" src="figures/scam_emails.png"/&gt;
 &lt;/span&gt;
 ]
 
@@ -306,8 +314,8 @@ be practically done.
 ### Takeaways
 
 1. While concepts and probes work well when we have specific concepts in mind a
-priori, dictionary learning is helpful when want to explore in a more open-ended
-way.
+priori, dictionary learning is helpful when want to explore models in a more
+open-ended way.
 
 1. Interpretability is interesting not only for understand but also for control.
 We may be able to steer LLMs towards more desirable properties by clearly
@@ -320,12 +328,11 @@ understanding their features.
 [**Interesting/Confusing**] For any of the topics in this short course, please
 share:
 
-- One point that you learned for the first time.
-- One point that you found interesting.
-- One point that was confusing.
+- 3 points that you learned for the first time.
+- 2 points that you found interesting.
+- 1 point that was confusing.
 
-I’ll write replies to the confusing points either during the session or later tonight.
-
+I’ll write replies to the confusing points by the end of the day.
 
 ---
 
@@ -333,58 +340,45 @@ class: reference
 
 ### References
 
-[1] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
+[1] R. Caruana et al. "Intelligible Models for HealthCare: Predicting Pneumonia Risk and Hospital 30-day Readmission". In: _Proceedings of the 21th ACM SIGKDD International
+Conference on Knowledge Discovery and Data Mining_ (2015).
+
+[2] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI". In: _arXiv_ (2024).
+
+[3] T. Gu et al. "BadNets: Evaluating Backdooring Attacks on Deep Neural Networks". In: _IEEE Access_ 7 (2019), p. 47230–47244. ISSN: 2169-3536. DOI:
+[10.1109/access.2019.2909068](https://doi.org/10.1109%2Faccess.2019.2909068). URL: [http://dx.doi.org/10.1109/ACCESS.2019.2909068](http://dx.doi.org/10.1109/ACCESS.2019.2909068).
+
+[4] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
 Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
 [10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
 [https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
 
-[2] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
+[5] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
 
-[3] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
+[6] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
 USA: ACM, Aug. 2016.
 
-[4] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
+[7] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
 pp. 1059-1086.
 
-[5] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
+[8] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
 
-[6] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
+[9] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
 9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
 [http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
 
-[7] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
+[10] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
 [10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
 
-[8] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
+[11] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
 [https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
 
-[9] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
+[12] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
 [https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
 
-[10] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022),
+[13] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022),
 p. 106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
 [http://dx.doi.org/10.1016/j.cmpb.2022.106620](http://dx.doi.org/10.1016/j.cmpb.2022.106620).
-
-[11] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
-Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures_. Online: Association for Computational Linguistics, 2021.
-
-[12] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
-Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
-
-[13] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
-
----
-
-### Formulation II
-
-The formulation in [15]. `\(\*x_{i}\)` are
-activations from a single residual connection in the Claude Sonnet model.
-
-`\begin{align*}
-\arg \min &amp;\|x - \hat{x}\|_{2}^{2} + \lambda \sum_{k} f_{k}\left(x\right) \|\varphi_{K}^{(2)}\|_{2} \\
-\hat{x} &amp;= b_{k} + \Phi^{(2)}f\left(x\right) + b \\
-f\left(x\right)_k &amp;= \left(\varphi_{k}^{1,\top}x + b_{k}\right)_{+}
-\end{align*}`
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -165,8 +165,8 @@ In this example from [12], a skip connection across layers 1 - 64  has prevented
 ### Concept Bottlenecks
 
 A related idea is to reduce model activations to a set of interpretable concepts
-[14]. This is part of a literature that tries to find
-representations for interacting with models [15; 16; 17].
+[14]. This is part of a literature that tries to relate
+complex models to human-defined "concepts" [15; 16; 17].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
@@ -180,8 +180,8 @@ Figure from [14].
 ### Concept Bottlenecks
 
 A related idea is to reduce model activations to a set of interpretable concepts
-[14]. This is part of a literature that tries to find
-representations for interacting with models [15; 16; 17].
+[14]. This is part of a literature that tries to relate
+complex models to human-defined "concepts" [15; 16; 17].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
@@ -201,7 +201,7 @@ a particular class. It applies to any architecture.
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/concepts_step1.png" width=600/&gt;&lt;br/&gt;
-Here, we are interested in the concept "stripes."
+Here, we are interested in the concept "stripes." Figure from [18].
 &lt;/span&gt;
 ]
 
@@ -220,7 +220,8 @@ Let `\(\*v\)` denote the normal to the decision boundary.
 
 ---
 
-**Step 3**. Evaluate class `\(k\)`'s sensitivity to perturbations in the direction `\(v\)`.
+**Step 3**. Compare the direction `\(v\)` to the directions in the embedding spac
+that increase each sample's class `\(k\)` probability.
 
 `\begin{align*}
 S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
@@ -237,8 +238,8 @@ space with the steepest increase in class `\(k\)`'s logit.
 
 ---
 
-**Step 4** Let `\(N_{k}\)` be the number of images in class `\(k\)`, and define the test
-statistic
+**Step 4**. Let `\(N_{k}\)` be the number of images in class `\(k\)`, and define the test
+statistic:
 
 `\begin{align*}
 T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right) &gt; 0\}}.
