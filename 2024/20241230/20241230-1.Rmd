@@ -76,7 +76,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Explaining Predictions
+## Explaining Predictions: LIME and Shapley Values
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -145,7 +145,7 @@ Figure from `r Citep(bib, "Ribeiro2016-qk")`.
 
 1. $\myred{\*x}$: The sample whose predictions we want to explain.
 1. $f$: A complex model we want to explain.
-1. $G$: A class of simple models to use in the explanations.
+1. $\mathcal{G}$: A class of simple models to use in the explanations.
 
 .center[
 <span style="font-size: 18px;">
@@ -160,7 +160,7 @@ Figure from `r Citep(bib, "Ribeiro2016-qk")`.
 
 1. $\mypurple{\pi}_{\myred{\*x}}$: A distribution over a neighborhood of $x$.
 1. $\*x'$: A sample from $\pi_{\myred{\*x}}$.
-1. $\*z, \*z'$: Summarized versions of $\*x, \*x'$ (e.g., word counts).
+1. $\*z, \*z'$: Summarized versions of $\*x, \*x'$ (e.g., superpixels).
 
 .center[
 <span style="font-size: 18px;">
@@ -172,19 +172,20 @@ Figure from `r Citep(bib, "Ribeiro2016-qk")`.
 
 ### Algorithm
 
-Ideally, we would be able to solve:
+Ideally we would solve
 
 \begin{align}
-\min_{g \in G} \Esubarg{\pi_{\*x}}{L\left(f\left(\*z'\right), g\left(\*z'\right)\right)} + \Omega\left(g\right)
+\min_{g \in \mathcal{G}} \Esubarg{\pi_{\*x}}{L\left(f\left(\*z'\right), g\left(\*z'\right)\right)} + \Omega\left(g\right)
 \end{align}
-But $\pi_{\*x}$ might be too complex, so we can use the ampirical analog:
+
+but in practice we use the empirical analog:
 
 1. Sample $x_{n}^{\prime} \sim \pi_{x}$. 
 
 1. Solve the optimization:
 
 \begin{align}
-\min_{g \in G} \sum_{n = 1}^{N}L\left(f\left(\*z_{n}^{\prime}\right), g\left(\*z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
+\min_{g \in \mathcal{G}} \frac{1}{N}\sum_{n = 1}^{N}L\left(f\left(\*z_{n}^{\prime}\right), g\left(\*z_{n}^{\prime}\right)\right) + \Omega\left(g\right)
 \end{align}
 
 ---
@@ -192,12 +193,12 @@ But $\pi_{\*x}$ might be too complex, so we can use the ampirical analog:
 ### Example: Lasso for Bag-of-Words
 
 1. $f$ is the original sentiment prediction model.
-1. $\pi_{x}$ samples words with probability
-1. $g$ is a linear model
-1. $\Omega$ is the $\ell^1$ penalty
+1. $\pi_{x}$ samples sentences with high cosine similarity to the target.
+1. $g$ is a linear model.
+1. $\Omega$ is the $\ell^1$ penalty, which induces sparsity.
 
 \begin{align}
-\sum_{n = 1}^{N} \left(f\left(\*z_{n}\right) - \*z_{n}^\top\beta\right)^2 + \|\beta\|_{1}
+\sum_{n = 1}^{N} \frac{1}{N}\left(f\left(\*z_{n}\right) - \*z_{n}^\top\beta\right)^2 + \lambda \|\beta\|_{1}
 \end{align}
 
 ---
@@ -262,20 +263,7 @@ making the prediction $f\left(\*x\right)$:
 \varphi_{\*x}\left(f, i\right) &= \frac{1}{D} \sum_{d = 1}^{D} \frac{1}{D - 1 \choose d - 1}\sum_{S \in S_{d}\left(i\right)}\left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right) \right]
 \end{align}
 
-This definition satisfies the same axioms as the ones above for credit assignment. In particular, $f\left(\*x\right) = \sum_{d = 1}^{D}\varphi_{\*x}\left(f, d\right)$.
-
----
-
-### Visualization - One Sample
-
-Since adding all the attributions leads to $f\left(\*x\right)$, we can center a
-stacked barplot around $f\left(\*x\right)$. Each piece corresponds to one feature.
-
-.center[
-<span style="font-size: 18px;">
-<img width="900" src="figures/shapley_sample_level.png"/> 
-</span>
-]
+This definition has the nice property that $f\left(\*x\right) = \sum_{d = 1}^{D}\varphi_{\*x}\left(f, d\right)$.
 
 ---
 
@@ -293,13 +281,26 @@ v_{\*x}\left(S\right) &= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)
 
 ### Geometric Interpretation
 
-How would we compute $\varphi\left(2\right)$ in this example? We also need:
+How would we compute $\varphi_{\mathbf{x}}\left(f, 2\right)$ in this example? We also need:
 
 * $v\left(\{1, 2\}\right)$
 * $v\left(\{2\}\right)$
 * $v\left(\emptyset\right)$
 
 What do these correspond to geometrically?
+
+---
+
+### Visualization - One Sample
+
+Since adding all the attributions leads to $f\left(\*x\right)$, we can center a
+stacked barplot around $f\left(\*x\right)$. Each piece corresponds to one feature.
+
+.center[
+<span style="font-size: 18px;">
+<img width="900" src="figures/shapley_sample_level.png"/> 
+</span>
+]
 
 ---
 
@@ -318,7 +319,7 @@ This helps identify sets of samples which have similar explanations.
 
 ### Computational Challenges
 
-This definition has some elegant properties, but naive calculation is impossible
+Shapley values have some elegant properties, but naive calculation is impossible
 in all but the simplest cases.
 
 1. $v_{\*x}\left(S\right)$ involves a potentially complex conditional expectation.
@@ -328,11 +329,13 @@ in all but the simplest cases.
 
 ### Approximating $v_{x}\left(S\right)$
 
-Remember the definition:
+How can we simplify the calculation of:
 
 \begin{align*}
 v_{\*x}\left(S\right) &= \Esubarg{p\left(\*x^{\prime}_{S^C} \vert \*x_{S}\right)}{f\left(\*x_{S}, \*x^{\prime}_{S^C}\right)}
 \end{align*}
+
+?
 
 ---
 
@@ -413,7 +416,7 @@ v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \i
 
 If for the row corresponding to subset $S$ we use weights
 \begin{align*}
-\frac{D - 1}{\left(D \choose \left|S\right|\right) \left|S\right|\left(D - \left|S\right|\right)}
+\frac{D - 1}{{D \choose \left|S\right|} \left|S\right|\left(D - \left|S\right|\right)}
 \end{align*}
 then the resulting weighted linear regression exactly recovers the Shapley
 values $\varphi_{\*x}\left(f, d\right)$.
@@ -468,6 +471,9 @@ We can further focus on those subsets that are connected to feature $i$:
 ---
 
 ### Takeaways
+
+1. LIME supposes that locally, a complex model can be well-approximated by a
+simple one.
 
 1. Shapley values offer a principled way for identifying relevant features in
 local examples.

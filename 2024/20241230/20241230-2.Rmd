@@ -73,7 +73,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Explaining Models: Profiles and Importance
+## Explaining Models: Profiles, Local Effects, and Importance
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -96,24 +96,27 @@ Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
 for predictions at a specific instance $\*x$.
 
 1. What if we want global variable summaries across the entire model? We could
-average Shapley values across samples, but this doesn't tell us *how* a variable
-influences the response.
+average local explanations across samples, but this doesn't tell us *how* a
+variable influences the response.
 
 ---
 
-## Partial Dependence
+## Partial Dependence Profiles
 
 ---
 
 ### Definition
 
-Partial Dependence Profiles  `r Citep(bib, "Friedman2001-xk,")` are based on a
-"ceteris paribus" idea. To understand the effect of variable $x_{d}$, evaluate
-the function $f$ at different values of $x_{d}$, holding other variables at
-values observed in the training data.
+1. Partial Dependence Profiles  `r Citep(bib, "Friedman2001-xk,")` are made by
+changing the value of the feature of interest, keeping all the other variables
+fixed.
+
+1. To understand the effect of variable $x_{d}$, evaluate the function $f$ at
+different values of $x_{d}$, holding other variables at values observed in the
+training data.
 
 \begin{align*}
-\pdp{d} &= \Esubarg{\*x_{-d}}{f\left(x_d, \*x_{-d}\right)} \\
+\pdp{d} &= \Esubarg{p\left(\*x_{-d}\right)}{f\left(x_d, \*x_{-d}\right)} \\
 &\approx \frac{1}{N}\sum_{n = 1}^{N} f\left(x_{d}, \*x_{n, -d}\right)
 \end{align*}
 
@@ -198,27 +201,20 @@ are never encountered in the data.
 
 ---
 
-### Pathologies: Multicollinearity
-
-We could try to fix this by evaluating the sum only over $\*x_{-d}$ that are close to the observed data.
-
-There is a subtle problem: If $x_{d}$ and $x_{d^\prime}$ are highly correlated, we
-might accidentally attribute effects from one onto the other.
-
----
-
 ## Accumulated Local Effects
 
 ---
 
 ### Geometric Intuition
 
-The main idea of `r Citep(bib, "Apley2020-nd")` is to resolve these issues using
-the derivatives:
+The main idea of `r Citep(bib, "Apley2020-nd")` is to resolve these issues by computing
+derivatives
 
 \begin{align*}
 \frac{\partial f\left(x_d, \*x_{-d}\right)}{\partial x_d}.
 \end{align*}
+
+locally around plausible configurations $\left(x_{d}, \*x_{-d}\right)$.
 
 This removes any linear effects from variables other than $x_{d}$.
 
