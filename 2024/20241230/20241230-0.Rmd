@@ -184,11 +184,15 @@ box system.
 
 ### Analogy: Interpretability and Visualization
 
-A good visualization is:
+1. **Faithful**: Visualizations must honestly represent data in the same way
+that explanations must be be faithful to the original model.
 
-1. **Legible**: It omits extraneous, distracting elements.
-1. **User-focused**: It keeps its audience in mind.
-1. **Information Dense**: It shows relevant variation efficiently.
+1. **Audience-oriented**: Both visualizations and explanations must be tailored
+to the audiences that they intend to serve. Community context is essential.
+
+1. **Data literacy**: Visualizations are now commonplace in public newspapers
+and in undergraduate courses across many disciplines. What could be possible
+with interpretability?
 
 ---
 
