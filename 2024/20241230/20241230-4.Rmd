@@ -354,14 +354,11 @@ understanding their features.
 
 ### Discussion (go.wisc.edu/aonpy0)
 
-[**Interesting/Confusing**] For any of the topics in this short course, please
-share:
+[**Takeaways**] For any of the topics in this short course, please share:
 
-- 3 points that you learned for the first time.
-- 2 points that you found interesting.
-- 1 point that was confusing.
-
-I’ll write replies to the confusing points.
+* 2 points that you learned for the first time.
+* 1 area of your own interest where you might be able to apply these problems.
+* 1 insight that will help you apply interpretability methods wisely.
 
 ---
 
