@@ -6,10 +6,6 @@
 2. Today, I want to share an idea that I've found useful for exploratory analysis of these data. I find it a useful extension of standard topic models -- for just a little extra effort, you can get some interesting and practical information.
 
 ---- 
-**Example 2: Microbiome**
-1. You can go back and see which microbes are contributing the most to these topics. Here are those that are very close to the "corners." 
-2. You can see some that are doing pretty well during the antibiotic time course.
----- 
 **Model**
 1. First a review -- what are topic models?
 2. Remember that the multinomial is the distribution used for sampling outcomes from dice throws.
@@ -107,7 +103,7 @@ The quantitative measures back this up.
 1. Okay, now I want to transition to a real data analysis. This whole project came about in some discussions about applying topic models to an analysis of the vaginal microbiome, so I want to first give some background.
 2. The key thing to know is that a few years ago, researchers categorized samples into something called "Community State Types" (CSTs). They want to say that all the study participants vaginal microbiomes fell into one of five types.
 3. There are four CSTs that are actually very obvious -- they are communities that are completely dominated by one of four lactobacillus species.
-4. But there is a fifth CST that is a mix of many species. This one is a mix of many species, and it was foudn to be associated with preterm birth and HIV status. But it is a bit of an ad hoc construction, and Laura's suspicion was that there is more structure hidden within this mix.
+4. But there is a fifth CST that is a mix of many species. This one is a mix of many species, and it was found to be associated with preterm birth and HIV status. But it is a bit of an ad hoc construction, and Laura's suspicion was that there is more structure hidden within this mix.
 ---- 
 **Deconstructing CSTs**
 1. She had the sample size needed to actually check this. In total there were nearly 2200 samples (taken longitudinally) from 135 women.
