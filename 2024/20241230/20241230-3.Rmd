@@ -258,7 +258,7 @@ S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step3.png" width=520/><br/>
+<img src="figures/concepts_step3.png" width=700/><br/>
 $\nabla y_{k}\left(h\left(\*x\right)\right)$ is the direction in the activation
 space with the steepest increase in class $k$'s logit.
 </span>
@@ -276,7 +276,7 @@ T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right)
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step4.png" width=460/><br/>
+<img src="figures/concepts_step4.png" width=580/><br/>
 We count the number of class $k$'s gradients that are in the same halfspace as $\*v$.<br/>
 </span>
 ]
@@ -288,7 +288,7 @@ to distinguish randomly chosen example images.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/concepts_step5.png" width=600/><br/>
+<img src="figures/concepts_step5.png" width=700/><br/>
 Random classification directions serve as a negative control.
 </span>
 ]
@@ -303,19 +303,10 @@ melanoma.
 
 .center[
 <span style="font-size: 18px;">
-<img src="figures/lucieri_fig5.png" width=600/> <br/>
+<img src="figures/lucieri_fig5.png" width=800/> <br/>
 Figure from `r Citep(bib, "Lucieri2022")`. In this case, the model is incorrect despite concepts suggesting the correct diagnosis.
 </span>
 ]
-
----
-
-### Discussion (go.wisc.edu/aonpy0)
-
-[**Compare and Contrast**] Think back to the problem you discussed in
-[Interpretability Goals] How might you have applied one of the interpretability
-techniques that we have discussed today? In what ways are the explanations
-well-suited to the problem? In what ways do they come short?
 
 ---
 
@@ -327,6 +318,15 @@ application domain.
 
 Deep learning has made manual feature engineering unecessary for many problems,
 but simple features are still useful for explanation.
+
+---
+
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Compare and Contrast**] Think back to the problem you discussed in
+[Interpretability Goals] How might you have applied one of the interpretability
+techniques that we have discussed today? In what ways are the explanations
+well-suited to the problem? In what ways do they come short?
 
 ---
 

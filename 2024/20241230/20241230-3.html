@@ -73,7 +73,7 @@ orientations.
 .pull-right[
 &lt;img width="340" src="figures/fig2_zeiler.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Figure from [9].
+Figure from [4].
 &lt;/span&gt;
 ]
 
@@ -93,7 +93,7 @@ orientations.
 .pull-right[
 &lt;img width="240" src="figures/fig1_bengio.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Figure from [10].
+Figure from [5].
 &lt;/span&gt;
 ]
 
@@ -107,7 +107,7 @@ learn meaningful abstractions.
 .center[
 &lt;img width="900" src="figures/fig2_karpathy.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Figure from [11].
+Figure from [6].
 &lt;/span&gt;
 ]
 
@@ -142,7 +142,7 @@ learned by the model in that layer.
 &lt;img width="600" src="figures/alain_fig2.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
 In this example, probes have been added to every layer of a network. Figure from
-[12].
+[7].
 &lt;/span&gt;
 ]
 
@@ -156,7 +156,7 @@ architectures.
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img width="500" src="figures/pathological_training.gif"/&gt; &lt;br/&gt;
-In this example from [12], a skip connection across layers 1 - 64  has prevented learning across those layers.
+In this example from [7], a skip connection across layers 1 - 64  has prevented learning across those layers.
 &lt;/span&gt;
 ]
 
@@ -165,13 +165,13 @@ In this example from [12], a skip connection across layers 1 - 64  has prevented
 ### Concept Bottlenecks
 
 A related idea is to reduce model activations to a set of interpretable concepts
-[14]. This is part of a literature that tries to relate
-complex models to human-defined "concepts" [15; 16; 17].
+[8]. This is part of a literature that tries to relate
+complex models to human-defined "concepts" [9; 10; 11].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/koh_concept.png" width=750/&gt; &lt;br/&gt;
-Figure from [14].
+Figure from [8].
 &lt;/span&gt;
 ]
 
@@ -180,8 +180,8 @@ Figure from [14].
 ### Concept Bottlenecks
 
 A related idea is to reduce model activations to a set of interpretable concepts
-[14]. This is part of a literature that tries to relate
-complex models to human-defined "concepts" [15; 16; 17].
+[8]. This is part of a literature that tries to relate
+complex models to human-defined "concepts" [9; 10; 11].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
@@ -193,7 +193,7 @@ complex models to human-defined "concepts" [15; 16; 17].
 
 ### Concepts and Hypothesis Testing
 
-TCAV [18] formally tests whether a concept is being used to predict
+TCAV [12] formally tests whether a concept is being used to predict
 a particular class. It applies to any architecture.
 
 **Step 1**. Define a collection of images `\(\*x_{n}\)` that represents the concept. Also construct a control pool of random images `\(\*x_{n}^\prime\)`.
@@ -201,7 +201,7 @@ a particular class. It applies to any architecture.
 .center[
 &lt;span style="font-size: 18px;"&gt;
 &lt;img src="figures/concepts_step1.png" width=600/&gt;&lt;br/&gt;
-Here, we are interested in the concept "stripes." Figure from [18].
+Here, we are interested in the concept "stripes." Figure from [12].
 &lt;/span&gt;
 ]
 
@@ -229,7 +229,7 @@ S_{k}\left(\*x\right) = \nabla y_{k}\left(h\left(\*x\right)\right)^\top \*v
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/concepts_step3.png" width=520/&gt;&lt;br/&gt;
+&lt;img src="figures/concepts_step3.png" width=700/&gt;&lt;br/&gt;
 `\(\nabla y_{k}\left(h\left(\*x\right)\right)\)` is the direction in the activation
 space with the steepest increase in class `\(k\)`'s logit.
 &lt;/span&gt;
@@ -247,7 +247,7 @@ T_{k} = \frac{1}{N_{k}}\absarg{\{\*x \in \text{Class } k : S_{k}\left(\*x\right)
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/concepts_step4.png" width=460/&gt;&lt;br/&gt;
+&lt;img src="figures/concepts_step4.png" width=580/&gt;&lt;br/&gt;
 We count the number of class `\(k\)`'s gradients that are in the same halfspace as `\(\*v\)`.&lt;br/&gt;
 &lt;/span&gt;
 ]
@@ -259,7 +259,7 @@ to distinguish randomly chosen example images.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/concepts_step5.png" width=600/&gt;&lt;br/&gt;
+&lt;img src="figures/concepts_step5.png" width=700/&gt;&lt;br/&gt;
 Random classification directions serve as a negative control.
 &lt;/span&gt;
 ]
@@ -274,19 +274,10 @@ melanoma.
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
-&lt;img src="figures/lucieri_fig5.png" width=600/&gt; &lt;br/&gt;
+&lt;img src="figures/lucieri_fig5.png" width=800/&gt; &lt;br/&gt;
 Figure from [13]. In this case, the model is incorrect despite concepts suggesting the correct diagnosis.
 &lt;/span&gt;
 ]
-
----
-
-### Discussion (go.wisc.edu/aonpy0)
-
-[**Compare and Contrast**] Think back to the problem you discussed in
-[Interpretability Goals] How might you have applied one of the interpretability
-techniques that we have discussed today? In what ways are the explanations
-well-suited to the problem? In what ways do they come short?
 
 ---
 
@@ -301,6 +292,15 @@ but simple features are still useful for explanation.
 
 ---
 
+### Discussion (go.wisc.edu/aonpy0)
+
+[**Compare and Contrast**] Think back to the problem you discussed in
+[Interpretability Goals] How might you have applied one of the interpretability
+techniques that we have discussed today? In what ways are the explanations
+well-suited to the problem? In what ways do they come short?
+
+---
+
 class: reference
 
 ### References
@@ -308,38 +308,39 @@ class: reference
 [1] R. Caruana et al. "Intelligible Models for HealthCare: Predicting Pneumonia Risk and Hospital 30-day Readmission". In: _Proceedings of the 21th ACM SIGKDD International
 Conference on Knowledge Discovery and Data Mining_ (2015).
 
-[2] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI". In: _arXiv_ (2024).
-
-[3] T. Gu et al. "BadNets: Evaluating Backdooring Attacks on Deep Neural Networks". In: _IEEE Access_ 7 (2019), p. 47230–47244. ISSN: 2169-3536. DOI:
+[2] T. Gu et al. "BadNets: Evaluating Backdooring Attacks on Deep Neural Networks". In: _IEEE Access_ 7 (2019), p. 47230–47244. ISSN: 2169-3536. DOI:
 [10.1109/access.2019.2909068](https://doi.org/10.1109%2Faccess.2019.2909068). URL: [http://dx.doi.org/10.1109/ACCESS.2019.2909068](http://dx.doi.org/10.1109/ACCESS.2019.2909068).
 
-[4] P. Atanasova et al. "A Diagnostic Study of Explainability Techniques for Text Classification". In: _Proceedings of the 2020 Conference on Empirical Methods in Natural Language
-Processing (EMNLP)_. Ed. by B. Webber, T. Cohn, Y. He and Y. Liu. Online: Association for Computational Linguistics, Nov. 2020, pp. 3256-3274. DOI:
-[10.18653/v1/2020.emnlp-main.263](https://doi.org/10.18653%2Fv1%2F2020.emnlp-main.263). URL:
-[https://aclanthology.org/2020.emnlp-main.263](https://aclanthology.org/2020.emnlp-main.263).
+[3] K. Sankaran. "Data Science Principles for Interpretable and Explainable AI". In: _arXiv_ (2024).
 
-[5] E. Hvitfeldt et al. _lime: Local Interpretable Model-Agnostic Explanations_. https://lime.data-imaginist.com, https://github.com/thomasp85/lime. 2022.
-
-[6] M. T. Ribeiro et al. "Why should I trust you?" In: _Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining_. San Francisco California
-USA: ACM, Aug. 2016.
-
-[7] D. W. Apley et al. "Visualizing the effects of predictor variables in black box supervised learning models". En. In: _J. R. Stat. Soc. Series B Stat. Methodol._ 82.4 (Sep. 2020),
-pp. 1059-1086.
-
-[8] A. Agarwal et al. "MDI+: A flexible random forest-based feature importance framework".  (2023). eprint: 2307.01932.
-
-[9] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
+[4] M. D. Zeiler et al. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International Publishing, 2014, p. 818–833. ISBN:
 9783319105901. DOI: [10.1007/978-3-319-10590-1_53](https://doi.org/10.1007%2F978-3-319-10590-1_53). URL:
 [http://dx.doi.org/10.1007/978-3-319-10590-1_53](http://dx.doi.org/10.1007/978-3-319-10590-1_53).
 
-[10] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
+[5] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
 [10.1561/2200000006](https://doi.org/10.1561%2F2200000006). URL: [http://dx.doi.org/10.1561/2200000006](http://dx.doi.org/10.1561/2200000006).
 
-[11] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
+[6] A. Karpathy et al. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: [10.48550/ARXIV.1506.02078](https://doi.org/10.48550%2FARXIV.1506.02078). URL:
 [https://arxiv.org/abs/1506.02078](https://arxiv.org/abs/1506.02078).
 
-[12] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
+[7] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
 [https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
+
+[8] P. W. Koh et al. "Concept Bottleneck Models". In: 2020.
+
+[9] M. Yuksekgonul et al. "Post-hoc Concept Bottleneck Models". In: _The Eleventh International Conference on Learning Representations _. 2023. URL:
+[https://openreview.net/forum?id=nA5AZ8CEyow](https://openreview.net/forum?id=nA5AZ8CEyow).
+
+[10] B. Kim. _Beyond Interpretability: Developing a Language to Shape Our Relationships with AI_. En. 2022. URL:
+[https://cacmb4.acm.org/opinion/articles/260816-beyond-interpretability-developing-a-language-to-shape-our-relationships-with-ai/fulltext](https://cacmb4.acm.org/opinion/articles/260816-beyond-interpretability-developing-a-language-to-shape-our-relationships-with-ai/fulltext)
+(visited on 05/16/2024).
+
+[11] V. V. Ramaswamy et al. _Overlooked factors in concept-based explanations: Dataset choice, concept learnability, and human capability_. 2022. DOI:
+[10.48550/ARXIV.2207.09615](https://doi.org/10.48550%2FARXIV.2207.09615). URL: [https://arxiv.org/abs/2207.09615](https://arxiv.org/abs/2207.09615).
+
+[12] B. Kim et al. "Interpretability Beyond Feature Attribution: Quantitative Testing with Concept Activation Vectors (TCAV)". In: _Proceedings of the 35th International Conference
+on Machine Learning_. Ed. by J. Dy and A. Krause. Vol. 80. Proceedings of Machine Learning Research. PMLR, 2018, pp. 2668-2677. URL:
+[https://proceedings.mlr.press/v80/kim18d.html](https://proceedings.mlr.press/v80/kim18d.html).
 
 [13] A. Lucieri et al. "ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions". In: _Computer Methods and Programs in Biomedicine_ 215 (Mar. 2022),
 p. 106620. ISSN: 0169-2607. DOI: [10.1016/j.cmpb.2022.106620](https://doi.org/10.1016%2Fj.cmpb.2022.106620). URL:
@@ -351,35 +352,7 @@ class: reference
 
 ### References
 
-[14] P. W. Koh et al. "Concept Bottleneck Models". In: 2020.
 
-[15] M. Yuksekgonul et al. "Post-hoc Concept Bottleneck Models". In: _The Eleventh International Conference on Learning Representations _. 2023. URL:
-[https://openreview.net/forum?id=nA5AZ8CEyow](https://openreview.net/forum?id=nA5AZ8CEyow).
-
-[16] B. Kim. _Beyond Interpretability: Developing a Language to Shape Our Relationships with AI_. En. 2022. URL:
-[https://cacmb4.acm.org/opinion/articles/260816-beyond-interpretability-developing-a-language-to-shape-our-relationships-with-ai/fulltext](https://cacmb4.acm.org/opinion/articles/260816-beyond-interpretability-developing-a-language-to-shape-our-relationships-with-ai/fulltext)
-(visited on 05/16/2024).
-
-[17] V. V. Ramaswamy et al. _Overlooked factors in concept-based explanations: Dataset choice, concept learnability, and human capability_. 2022. DOI:
-[10.48550/ARXIV.2207.09615](https://doi.org/10.48550%2FARXIV.2207.09615). URL: [https://arxiv.org/abs/2207.09615](https://arxiv.org/abs/2207.09615).
-
-[18] B. Kim et al. "Interpretability Beyond Feature Attribution: Quantitative Testing with Concept Activation Vectors (TCAV)". In: _Proceedings of the 35th International Conference
-on Machine Learning_. Ed. by J. Dy and A. Krause. Vol. 80. Proceedings of Machine Learning Research. PMLR, 2018, pp. 2668-2677. URL:
-[https://proceedings.mlr.press/v80/kim18d.html](https://proceedings.mlr.press/v80/kim18d.html).
-
-[19] Z. Yun et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of transformer factors". In: _Proceedings of Deep Learning
-Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep Learning Architectures_. Online: Association for Computational Linguistics, 2021.
-
-[20] J. Freeman et al. "Exploring Memorization and Copyright Violation in Frontier LLMs: A Study of the New York Times v. OpenAI 2023 Lawsuit". In: _Neurips Safe Generative AI
-Workshop 2024_. 2024. URL: [https://openreview.net/forum?id=C66DBl9At8](https://openreview.net/forum?id=C66DBl9At8).
-
-[21] _The New York Times Company Lawsuit Document 1-68_. Court Filing. Case No. 1:23-cv-11195, Document 1-68. 2023.
-
-[22] N. Stoehr et al. _Localizing Paragraph Memorization in Language Models_. 2024. DOI: [10.48550/ARXIV.2403.19851](https://doi.org/10.48550%2FARXIV.2403.19851). URL:
-[https://arxiv.org/abs/2403.19851](https://arxiv.org/abs/2403.19851).
-
-[23] A. Templeton et al. "Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet". In: _Transformer Circuits Thread_ (2024). URL:
-[https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html](https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
