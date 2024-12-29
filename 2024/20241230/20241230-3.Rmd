@@ -82,21 +82,21 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 IISA Interpretability Short Course <br/>
-Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
+Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim</a><br/>
 </div>
 <!-- 30 minute talk -->
 
 ---
 
-### Activations Analysis
+### Activation Analysis
 
 .pull-left[
-1. Deep learning models are composed of many simpler layers. When an input is
-passed through the network, it is transformed into a series of neuron
-activations at each layer.
+1. Deep learning models are built from simple layers. When an input passes
+through the network, each layer transforms the activations of the layer before.
 
-1. Neurons activate on inputs with specific properties. For example, many
-neurons in the first layer of a network detect edges with a given orientation.
+1. Within a layer, neurons activate on inputs with specific properties. For
+example, neurons in an image classifier detect edge with specific
+orientations.
 ]
 
 .pull-right[
@@ -108,15 +108,15 @@ Figure from `r Citep(bib, "Zeiler2014")`.
 
 ---
 
-### Activations Analysis
+### Activation Analysis
 
 .pull-left[
-1. Deep learning models are composed of many simpler layers. When an input is
-passed through the network, it is transformed into a series of neuron
-activations at each layer.
+1. Deep learning models are built from simple layers. When an input passes
+through the network, each layer transforms the activations of the layer before.
 
-1. Neurons activate on inputs with specific properties. For example, many
-neurons in the first layer of a network detect edges with a given orientation.
+1. Within a layer, neurons activate on inputs with specific properties. For
+example, neurons in an image classifier detect edge with specific
+orientations.
 ]
 
 .pull-right[
@@ -130,8 +130,8 @@ Figure from `r Citep(bib, "Bengio2009")`.
 
 ### Activation Analysis
 
-There is a long line of research suggesting that deep learning models indeed
-learn higher-level abstractions.
+There is a line of research suggesting that the later layers in deep models
+learn meaningful abstractions.
 
 .center[
 <img width="900" src="figures/fig2_karpathy.png"/> <br/>
@@ -150,10 +150,12 @@ understand, like whether a string of text lies within quotes.
 We often want to see whether a model has learned specific features.
 
 * **Validation**: Has the model learned a property that we expect to generalize across many contexts?
+
 * **Fairness**: Can we ensure that the model isn't using a protected attribute, like race?
+
 * **Development**: Are claims about why models do well accurate? (e.g., does transfer learning really reuse features?)
 
-In this case, we need a more directed analysis.
+In this case, we need a more focused analysis.
 
 ---
 
@@ -182,8 +184,8 @@ architectures.
 
 .center[
 <span style="font-size: 18px;">
-<img width="600" src="figures/pathological_training.gif"/> <br/>
-In this example from `r Citep(bib, "alain2017understanding")`, a skip connection across layers 1 - 64  has prevented successful training across those layers.
+<img width="500" src="figures/pathological_training.gif"/> <br/>
+In this example from `r Citep(bib, "alain2017understanding")`, a skip connection across layers 1 - 64  has prevented learning across those layers.
 </span>
 ]
 
@@ -191,10 +193,9 @@ In this example from `r Citep(bib, "alain2017understanding")`, a skip connection
 
 ### Concept Bottlenecks
 
-A related idea is to reduce arbitrary model activations to a set of
-human-interpretable concepts `r Citep(bib, "50351")`.  This is part of a larger
-body of work that attempts to establish shared language/representations for
-interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
+A related idea is to reduce model activations to a set of interpretable concepts
+`r Citep(bib, "50351")`. This is part of a literature that tries to find
+representations for interacting with models `r Citep(bib, c("yuksekgonul2023posthoc", "medium_beyond_nodate", "overlooked_factors"))`.
 
 .center[
 <span style="font-size: 18px;">
@@ -207,10 +208,9 @@ Figure from `r Citep(bib, "50351")`.
 
 ### Concept Bottlenecks
 
-A related idea is to reduce arbitrary model activations to a set of
-human-interpretable concepts `r Citep(bib, "50351")`.  This is part of a larger
-body of work that attempts to establish shared language/representations for
-interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
+A related idea is to reduce model activations to a set of interpretable concepts
+`r Citep(bib, "50351")`. This is part of a literature that tries to find
+representations for interacting with models `r Citep(bib, c("yuksekgonul2023posthoc", "medium_beyond_nodate", "overlooked_factors"))`.
 
 .center[
 <span style="font-size: 18px;">
@@ -222,7 +222,7 @@ interacting with models `r Citep(bib, "yuksekgonul2023posthoc")`.
 
 ### Concepts and Hypothesis Testing
 
-`r Citep(bib, "tcav")` formally tests whether a concept is being used to predict
+TCAV `r Citep(bib, "tcav")` formally tests whether a concept is being used to predict
 a particular class. It applies to any architecture.
 
 **Step 1**. Define a collection of images $\*x_{n}$ that represents the concept. Also construct a control pool of random images $\*x_{n}^\prime$.

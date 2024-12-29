@@ -82,7 +82,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 
 <div id="subtitle_right">
 IISA Interpretability Short Course <br/>
-Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim/</a><br/>
+Schedule: <a href="https://go.wisc.edu/zk3gim">go.wisc.edu/zk3gim</a><br/>
 </div>
 <!-- 30 minute talk -->
 
@@ -130,6 +130,8 @@ and intervening as necessary.
 
 1. Effective explanations can **guide democratic discourse** about how models
 are built and used.
+
+1. In science, researchers use models to **develop and critique conceptual arguments**, not simply to predict.
 
 ---
 
