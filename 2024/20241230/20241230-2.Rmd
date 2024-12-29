@@ -127,7 +127,7 @@ training data.
 .center[
 <span style="font-size: 18px;">
 <img width="700" src="figures/pdp_1.png"/><br/>
-Suppose we want to a PDP curve for the first dimension evaluated at $x_{d}^{\ast}$.
+Suppose we want to a partial dependence curve for the first dimension evaluated at $x_{d}^{\ast}$.
 </span>
 ]
 
@@ -171,7 +171,7 @@ We can do this at another point $x_{d}^{\ast\ast}$.
 .center[
 <span style="font-size: 18px;">
 <img width="450" src="figures/pdp_5.png"/><br/>
-We are now beginning to see a PDP curve along this direction.
+We are now beginning to see a partial dependence curve along this direction.
 </span>
 ]
 
@@ -232,7 +232,6 @@ The ALE curve summarizes many local effects.
 </span>
 ]
 
-
 ---
 
 ### ALE Estimand
@@ -242,6 +241,13 @@ This is formalized by the following formula,
 \begin{align*}
 \text{ALE}_{d}\left(x_{d}\right) := \int \Esubarg{\*x_{-d}\vert x_{d}}{\left.\frac{\partial f\left(x_d, \*x_{-d}\right)}{\partial x_d} \right| x_{d} = z} dz
 \end{align*}
+
+.center[
+<span style="font-size: 18px;">
+<img width="700" src="figures/fig9_apley.png"/><br/>
+The ALE curve summarizes many local effects.
+</span>
+]
 
 ---
 
@@ -283,7 +289,7 @@ pointwise confidence bands.
 
 Both PDP and ALE plots are model agnostic. If we allow ourselves to focus on
 specific classes of models, then we can come up with more precise notions of
-importance (give some references,e.g., DeepShap).
+importance.
 
 To illustrate this idea, we will consider the MDI+ (Mean Decrease in Impurity)
 measure proposed in `r Citep(bib, "Agarwal2023-sx")` for decision trees and random
@@ -321,7 +327,7 @@ Here, $N\left(s\right)$ is the number of samples that descend from split $s$.
 
 ### Issues
 
-1. Like with PDP, the main issue with MDI is that it behaves poorly when features are correlated.
+1. Like with partial dependence, the main issue with MDI is that it behaves poorly when features are correlated.
 
 1. If a variable is highly correlated with any others, then its estimated MDI will be low. 
 
@@ -359,7 +365,7 @@ The $\hat{y}$ from this regression are exactly the fitted values from a decision
 Replace all basis elements not involving feature $k$ by their averages:
 
 \begin{align*}
-\hat{y}^{(k)} = \left[\overline{\psi}_{1}\left(\*x\right) \vert \dots \vert \psi_{s}\left(\*x\right) \vert \dots \vert \overline{\psi}_{S}\left(\*x\right)\right]\hat{\beta}
+\hat{y}^{(k)} = \left[\overline{\psi}_{1}\left(\*x\right) \vert \dots \vert \overline{\psi}_{s - 1}\left(\*x\right) \vert \psi_{s}\left(\*x\right) \vert  \overline{\psi}_{s + 1}\left(\*x\right)  \vert \dots \vert \overline{\psi}_{S}\left(\*x\right)\right]\hat{\beta}
 \end{align*}
 
 The $R^2$ of this model is exactly the MDI of feature $k$.
