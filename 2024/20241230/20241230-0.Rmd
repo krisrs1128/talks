@@ -123,7 +123,7 @@ Example from `r Citep(bib, "Gu2019")`.
 ### Motivation
 
 1. Even though abstraction is powerful, models are never used in a vacuum, and
-the results can **impact human well-being.**
+their use can **impact human well-being.**
 
 1. We can often **improve our models** by looking more closely at what they learn
 and intervening as necessary.
