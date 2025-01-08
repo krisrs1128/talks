@@ -1,0 +1,85 @@
+---
+title: Visualization and Testing
+---
+
+```{r}
+library(mia)
+library(tidySummarizedExperiment)
+library(tidyverse)
+theme_set(theme_classic())
+```
+
+```{r helpers}
+wilcox_test <- function(rawData, group_labels, clr = FALSE, pAdjustMethod = "BH") {
+  if (clr) {
+    rawData[rawData == 0] <- 1e-6
+    clr_counts <- apply(rawData, 1, compositions::clr)
+    counts <- t(clr_counts)
+  } else {
+    counts <- rawData
+  }
+
+  # Perform Kruskal-Wallis test for each row
+  p_values <- numeric(nrow(counts))
+  for (i in 1:nrow(counts)) {
+    test_result <- kruskal.test(counts[i, ] ~ group_labels)
+    p_values[i] <- test_result$p.value
+  }
+  q_value <- p.adjust(p_values, method = pAdjustMethod)
+
+
+  data.frame(
+    "p_value(bmi_group)" = p_values,
+    "q_value(bmi_group)" = q_value,
+    row.names = rownames(rawData)
+  )
+}
+```
+
+```{r}
+data(atlas1006, package = "microbiome")
+atlas <- convertFromPhyloseq(atlas1006) |>
+  mutate(
+    bmi_group = case_when(
+      str_detect(bmi_group, "obese") ~ "obese",
+      bmi_group == "lean" ~ "lean",
+      bmi_group == "overweight" ~ "overweight",
+    )
+  ) |>
+  filter(bmi_group %in% c("obese", "lean", "overweight"), time == 0) |>
+  mutate(bmi_group = factor(bmi_group, levels = c("obese", "overweight", "lean")))
+```
+
+```{r, define-null}
+y <- assay(atlas)
+x <- colData(atlas)$bmi_group
+wilcox_res <- wilcox_test(y, x, clr=TRUE)
+```
+
+```{r}
+tax_order <- wilcox_res |>
+    arrange(p_value.bmi_group.) |>
+    rownames()
+```
+
+```{r}
+assay_df <- bind_cols(
+    as.data.frame(colData(atlas)),
+    t(assay(atlas[tax_order[1:30], ]))
+) |>
+    pivot_longer(-colnames(colData(atlas)), names_to = "taxon", values_to = "value") |>
+    mutate(taxon = factor(taxon, levels = tax_order))
+
+ggplot(assay_df) +
+    stat_ecdf(aes(log(1 + value), col = bmi_group), linewidth = 1) +
+    scale_color_brewer(palette = "Set2") +
+    facet_wrap(~ taxon)#, scales = "free_x")
+```
+
+```{r}
+library(topicmodels)
+```
+
+```{r}
+
+```
