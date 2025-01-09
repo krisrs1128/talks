@@ -196,13 +196,16 @@ topics.
 
 ### STRUCTURE Plot
 
-The mixtures across the entire dataset can be visualized in a STRUCTURE plot.
+The mixtures across the entire dataset can be visualized in stacked barplot.
+
+<img src="figures/antibiotic_memberships.png"/>
 
 ---
 
 ### Considerations
 
 Unlike PCA, topic models are a generative model. This allows us to evaluate model quality by comparing real with simulated samples. 
+
 
 ---
 
@@ -218,12 +221,25 @@ those that have the highest diversity across topics are shown first.
 The main hyperparameter in topic models is the number of topics $K$. It can be
 helpful to compare the topic model results across a range of $K$.
 
+<img src="figures/alto_sketches_annotated alignment.png">
+
 ---
 
 ### Alto Plot
 
 Similar topics are often recovered across a wide range of $K$. We draw larger
 edges between topics that have similar latent communities.
+
+<img src="figures/alto_sketches_annotated alignment.png">
+
+---
+
+### Alto Interpretation
+
+
+<div style="text-align: center;">
+<img src="figures/pregnancy_sankey.jpg" width=650/>
+</div>
 
 ---
 
@@ -247,12 +263,20 @@ visualization to evaluate them.
 
 For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary.
 
+<div style="text-align: center;">
+<img src="figures/mediation_diagram.jpg" width=520/>
+</div>
+
 ---
 
 ### Mediation Analysis
 
 This faceted plot shows the paths with the strongest indirect effects in joint
 metabolome-microbiome analysis.
+
+<div style="text-align: center;">
+<img src="figures/mediation_scatterplot.jpg" width=920/>
+</div>
 
 ---
 
@@ -261,11 +285,28 @@ metabolome-microbiome analysis.
 The exploratory analog of PCA for multiple tables is called canonical
 correlation analysis (CCA).
 
+It builds PCA-like maps for each dataset so that they look as similar to one
+another as possible.
 
+<div style="text-align: center;">
+<img src="figures/sparse_cca_multitable.jpg" width=980/>
+</div>
+
+---
+
+### CCA Components
+
+Like in PCA, the directions in a CCA plot can be interpreted by analyzing the
+CCA components. Each data source has its own set of CCA components.
+
+<img src="figures/sparse_cca_multitable.jpg"/>
 
 ---
 
 ### Considerations
+
+CCA searches for shared variation across tables. To decompose variation into
+shared and distinct components, there are several closely-related alternatives.
 
 ---
 
