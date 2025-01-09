@@ -206,6 +206,8 @@ Figure from `r Citep(bib, "50351")`.
 
 ---
 
+exclude: true
+
 ### Concept Bottlenecks
 
 A related idea is to reduce model activations to a set of interpretable concepts
