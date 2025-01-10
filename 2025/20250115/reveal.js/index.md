@@ -8,7 +8,7 @@ Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 </div>
 
-<!-- 45 minute talk -->
+<!-- 40 minute talk -->
 
 ---
 
@@ -29,8 +29,24 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 ### Motivation
 
 If our brains were built differently, we might be able to understand an entire
-experiment by glancing at a spreadsheet. Unfortunately, we can only keep track
-of so much information at a time.
+experiment by glancing at a spreadsheet. Data visualization allows us to use
+our strengths in visual perception to our advantage.
+
+<div style="text-align: center;">
+<img src="figures/lion_binary.png" width=1200/>
+</div>
+
+---
+
+### Motivation
+
+If our brains were built differently, we might be able to understand an entire
+experiment by glancing at a spreadsheet. Data visualization allows us to use
+our strengths in visual perception to our advantage.
+
+<div style="text-align: center;">
+<img src="figures/paradoxes.png" width=1200/>
+</div>
 
 ---
 
@@ -38,13 +54,16 @@ of so much information at a time.
 
 Statistical thinking allows us to get past this limitation:
 
-1. **Compression**: Find a simple representation that captures the essential
+1. **Compression**: Find a simple representation that captures essential
 properties of the data. 
 
-1. **Localization**: Narrow down to a subset of data that is sufficient to
+1. **Focusing**: Narrow down to a subset of data that is sufficient to
 answer a question of interest. 
 
-(figures summarizing dimensionality reduction and differential analysis)
+<div style="display: flex; justify-content: center; max-width: 700px;">
+    <img src="figures/map.png" style="max-width: 70%; height: auto;"/>
+    <img src="figures/microscope.png" style="max-width: 30%; height: auto;"/>
+</div>
 
 ---
 
@@ -58,6 +77,22 @@ Different ways of encoding information are perceived with different accuracies.
 This means that any visualization implicitly prioritizes some comparisons over
 others.
 
+<div style="text-align: center;">
+<img src="figures/popout.png" width=1200/>
+</div>
+
+---
+
+### Encoding and Efficiency
+
+Different ways of encoding information are perceived with different accuracies.
+This means that any visualization implicitly prioritizes some comparisons over
+others.
+
+<div style="text-align: center;">
+<img src="figures/ranking_encodings.png" width=700/>
+</div>
+
 ---
 
 ### Information Density
@@ -66,14 +101,26 @@ others.
 >
 > -- Susan Holmes
 
-Good visualizations maximize the data-to-ink ratio. Let the readers see as much
-of the relevant data as possible and minimize any distracting elements.
+Good visualizations let readers focus on the data, lend themselves to accurate
+interpretation, and are memorable.
+
+---
+
+<div style="text-align: center;">
+<img src="figures/memorable_visualizations.png" width=1000/>
+</div>
+
 
 ---
 
 ### Faceting
 
-It's often surprisingly easy to understand many related views in parallel. This technique is called "small multiples" or "faceting."
+It's often surprisingly effective show many similar views in parallel. This is
+the basis for techniques like small multiples and piling.
+
+<div style="text-align: center;">
+<img src="figures/piling.png" width=1000/>
+</div>
 
 ---
 
@@ -85,6 +132,10 @@ context.
 > Overview first, zoom and filter, then details on demand.
 
 -- Schneiderman's "Visual Information Seeking Mantra"
+
+---
+
+<iframe src="http://www.youtube.com/embed/RTQ0N4QY0yc?html5=1" style="height: 700px; width: 1200px"></iframe>
 
 ---
 
@@ -315,3 +366,5 @@ shared and distinct components, there are several closely-related alternatives.
 Phylogeny, partial dependence plot, adjacency network plot, 
 
 ---
+
+Microscope by Hilmy Abiyyu Asad from <a href="https://thenounproject.com/browse/icons/term/microscope/" target="_blank" title="Microscope Icons">Noun Project</a> (CC BY 3.0)
