@@ -167,7 +167,7 @@ $\left(t, \mathbf{P}\left(X \leq t\right)\right)$ for values of $t$ between the 
 maximum observed values of $X$. 
 
 <div style="text-align: center;">
-<img src="figures/ecdf.png" width=400/>
+<img src="figures/ecdf_overall.png"/>
 </div>
 
 ---
@@ -175,6 +175,18 @@ maximum observed values of $X$.
 Unlike histograms, ECDFs don't require any choice of bin width. This is
 especially helpful in zero-inflated data.
 
+<div style="text-align: center;">
+<img src="figures/histogram_narrow.png"/>
+</div>
+
+---
+
+Unlike histograms, ECDFs don't require any choice of bin width. This is
+especially helpful in zero-inflated data.
+
+<div style="text-align: center;">
+<img src="figures/histogram_wide.png"/>
+</div>
 
 ---
 
@@ -182,6 +194,10 @@ especially helpful in zero-inflated data.
 
 Here are the ECDF plots for taxa that are differentially abundant across groups.
 Curves further to the right have systematically larger abundances.
+
+<div style="text-align: center;">
+<img src="figures/ecdf_testing.png"/>
+</div>
 
 ---
 
@@ -193,6 +209,24 @@ distributional differences over others.
 1. Which taxa? We typically order the panels using the result of a differential
 abundance analysis.
 
+<div style="text-align: center;">
+    <img src="figures/ecdf_overall.png"/>
+</div>
+
+---
+
+### Considerations
+
+1. What scale? Different variable transformations will emphasize some
+distributional differences over others.
+
+1. Which taxa? We typically order the panels using the result of a differential
+abundance analysis.
+
+<div style="text-align: center;">
+    <img src="figures/ecdf_log.png"/>
+</div>
+
 ---
 
 ### Principal Components Analysis
@@ -200,13 +234,16 @@ abundance analysis.
 A principal components analysis (PCA) finds the best low-dimensional linear
 approximation of a high-dimensional data cloud.
 
+<div style="text-align: center;">
+<img src="https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true"/>
+</div>
+
 ---
 
 ### Resulting "Map"
 
 The samples are organized so that those with similar measurements are placed
 close to one another.
-
 
 ---
 
