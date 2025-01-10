@@ -3,7 +3,9 @@ title: Principal Components
 ---
 
 ```{r}
+library(ggridges)
 library(mia)
+library(sparsepca)
 library(tidySummarizedExperiment)
 library(tidyverse)
 theme_set(theme_classic())
@@ -29,32 +31,55 @@ x <- colData(atlas)$bmi_group
 ```
 
 ```{r}
-library(sparsepca)
-spca_result <- spca(t(asinh(y)), k = 5, alpha = 1e-2, beta = 1e-2)
+spca_result <- spca(t(asinh(y)), k = 130, alpha = 1e-2, beta = 1e-2)
 
-# Create a data frame for plotting
+# dataframes to plot
 spca_df <- bind_cols(
-    set_names(data.frame(spca_result$scores), str_c("PC", 1:5)),
+    set_names(data.frame(spca_result$scores), str_c("PC", 1:130)),
     bmi_group = x
 )
 
+eigenvalues <- tibble(
+    eigenvalue = spca_result$eigenvalues,
+    K = factor(1:130),
+) |>
+    mutate(prop = round(100 * eigenvalue / sum(eigenvalue), 2))
+
+eigenvalues |>
+    filter(K %in% 1:20) |>
+    ggplot() +
+    geom_col(aes(K, prop)) +
+    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+    labs(y = "% Variance Explained")
+
+library(glue)
 ggplot(spca_df, aes(x = PC1, y = PC2, color = bmi_group)) +
     geom_point() +
-    labs(title = "Sparse PCA of Atlas Dataset", x = "PC1", y = "PC2")
+    scale_color_brewer(palette = "Set2") +
+    coord_fixed(sqrt(eigenvalues$eigenvalue[2] / eigenvalues$eigenvalue[1])) +
+    labs(
+        col = "BMI Group", 
+        x = glue("PC1 [{eigenvalues$prop[1]}% Variance]"),
+        y = glue("PC2 [{eigenvalues$prop[2]}% Variance]")
+    )
+        
 
 ggplot(spca_df, aes(x = PC3, y = PC4, color = bmi_group)) +
     geom_point() +
-    labs(title = "Sparse PCA of Atlas Dataset", x = "PC1", y = "PC2")
+    scale_color_brewer(palette = "Set2") +
+    labs(
+        col = "BMI Group",
+        x = glue("PC3 [{eigenvalues$prop[3]}% Variance]"),
+        y = glue("PC4 [{eigenvalues$prop[4]}% Variance]")
+    )
 
-library(ggridges)
 spca_df |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "score") |>
     mutate(PC = factor(PC, levels = str_c("PC", 1:5))) |>
     ggplot() +
         geom_density_ridges(aes(x = score, y = PC, fill = bmi_group), alpha = 0.7) +
-            labs(title = "Ridge Plot of Sparse PCA Scores", x = "Score", y = "Principal Component") +
-            theme_ridges() +
-            scale_fill_brewer(palette = "Set1")
+            labs(x = "Score", y = "Principal Component") +
+            scale_fill_brewer(palette = "Set2")
 
 ```
 
@@ -64,12 +89,11 @@ loadings <- data.frame(spca_result$loadings) |>
     set_names(str_c("PC", 1:5)) |>
     mutate(taxon = rownames(y))
 
-# Reshape loadings to tidy format
+# Filter to top 20 taxa by absolute loading value for each PC
 tidy_loadings <- loadings |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "loading") |>
     mutate(PC = factor(PC, levels = str_c("PC", 1:5)))
 
-# Filter to top 20 taxa by absolute loading value for each PC
 top_loadings <- tidy_loadings |>
     group_by(PC) |>
     slice_max(order_by = abs(loading), n = 20, with_ties = FALSE) |>
@@ -77,8 +101,11 @@ top_loadings <- tidy_loadings |>
 
 # Plot the loadings
 library(tidytext)
-ggplot(top_loadings, aes(loading, reorder_within(taxon, abs(loading), PC))) +
+top_loadings |>
+    filter(PC %in% str_c("PC", 1:5)) |>
+    ggplot(aes(loading, reorder_within(taxon, abs(loading), PC))) +
     geom_col(show.legend = FALSE) +
+    scale_color_brewer(palette = "Set2")
     scale_y_reordered() +
     facet_wrap(~ PC, scales = "free")
 ```
@@ -97,5 +124,6 @@ spca_df |>
     geom_point(alpha = 0.6) +
     facet_wrap(~ taxon, ncol = 5) +
     scale_size(range = c(0, 3)) +
+    scale_color_brewer(palette = "Set2") +
     labs(title = "Sparse PCA of Atlas Dataset", x = "PC1", y = "PC2")
 ```
