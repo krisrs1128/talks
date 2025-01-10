@@ -1,0 +1,158 @@
+---
+title: Visualization and Testing
+---
+
+```{r}
+library(mia)
+library(tidySummarizedExperiment)
+library(tidyverse)
+theme_set(theme_classic())
+```
+
+```{r helpers}
+wilcox_test <- function(rawData, group_labels, clr = FALSE, pAdjustMethod = "BH") {
+  if (clr) {
+    rawData[rawData == 0] <- 1e-6
+    clr_counts <- apply(rawData, 1, compositions::clr)
+    counts <- t(clr_counts)
+  } else {
+    counts <- rawData
+  }
+
+  # Perform Kruskal-Wallis test for each row
+  p_values <- numeric(nrow(counts))
+  for (i in 1:nrow(counts)) {
+    test_result <- kruskal.test(counts[i, ] ~ group_labels)
+    p_values[i] <- test_result$p.value
+  }
+  q_value <- p.adjust(p_values, method = pAdjustMethod)
+
+
+  data.frame(
+    "p_value(bmi_group)" = p_values,
+    "q_value(bmi_group)" = q_value,
+    row.names = rownames(rawData)
+  )
+}
+```
+
+```{r}
+data(atlas1006, package = "microbiome")
+atlas <- convertFromPhyloseq(atlas1006) |>
+  mutate(
+    bmi_group = case_when(
+      str_detect(bmi_group, "obese") ~ "obese",
+      bmi_group == "lean" ~ "lean",
+      bmi_group == "overweight" ~ "overweight",
+    )
+  ) |>
+  filter(bmi_group %in% c("obese", "lean", "overweight"), time == 0) |>
+  mutate(bmi_group = factor(bmi_group, levels = c("obese", "overweight", "lean")))
+```
+
+```{r, define-null}
+y <- assay(atlas)
+x <- colData(atlas)$bmi_group
+wilcox_res <- wilcox_test(y, x, clr=TRUE)
+```
+
+```{r}
+tax_order <- wilcox_res |>
+    arrange(p_value.bmi_group.) |>
+    rownames()
+```
+
+```{r}
+assay_df <- bind_cols(
+    as.data.frame(colData(atlas)),
+    t(assay(atlas))
+  ) |>
+    pivot_longer(-colnames(colData(atlas)), names_to = "taxon", values_to = "value") |>
+    mutate(taxon = factor(taxon, levels = tax_order))
+
+assay_df |>
+  filter(taxon %in% tax_order[1:12]) |>
+  ggplot() +
+    stat_ecdf(aes(log(1 + value), col = bmi_group), linewidth = 1) +
+    scale_color_brewer(palette = "Set2") +
+    facet_wrap(~ taxon, ncol = 7) +
+    theme(
+      strip.text = element_text(size = 10), 
+      panel.background = element_rect(fill = "transparent"), 
+      plot.background = element_rect(fill = "transparent", color = NA),
+      strip.background = element_rect(fill = "transparent", color = NA),
+      legend.background = element_rect(fill = "transparent", color = NA)
+    )
+ggsave("../reveal.js/figures/ecdf_testing.png", width = 11, height = 3.5, bg = "transparent")
+```
+
+```{r}
+assay_df <- assay_df |>
+  group_by(taxon) |>
+  filter(sum(value) != 0, taxon != "Aeromonas") |>
+  ungroup()
+
+assay_df |>
+  filter(taxon %in% taxon[1:10]) |>
+  ggplot() +
+    stat_ecdf(aes(value), linewidth = 1) +
+    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    facet_wrap(~ reorder(taxon, -value), ncol = 5, scales = "free") +
+    labs(x = "Taxon Count", y = "Empirical CDF") +
+    theme(
+      strip.text = element_text(size = 10), 
+      panel.background = element_rect(fill = "transparent"), 
+      plot.background = element_rect(fill = "transparent", color = NA),
+      strip.background = element_rect(fill = "transparent", color = NA)
+    )
+ggsave("../reveal.js/figures/ecdf_overall.png", width = 11, height = 3.5, bg = "transparent")
+
+assay_df |>
+  filter(taxon %in% taxon[1:12]) |>
+  ggplot() +
+    geom_histogram(aes(value)) +
+    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    facet_wrap(~ reorder(taxon, -value), ncol = 6, scales = "free") +
+    theme(
+      strip.text = element_text(size = 10), 
+      panel.background = element_rect(fill = "transparent"), 
+      plot.background = element_rect(fill = "transparent", color = NA),
+      strip.background = element_rect(fill = "transparent", color = NA)
+    )
+ggsave("../reveal.js/figures/histogram_narrow.png", width = 11, height = 3.5, bg = "transparent")
+
+assay_df |>
+  filter(taxon %in% taxon[1:12]) |>
+  ggplot() +
+    geom_histogram(aes(value), bins = 10) +
+    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    facet_wrap(~ reorder(taxon, -value), ncol = 6, scales = "free") +
+    theme(
+      strip.text = element_text(size = 10), 
+      panel.background = element_rect(fill = "transparent"), 
+      plot.background = element_rect(fill = "transparent", color = NA),
+      strip.background = element_rect(fill = "transparent", color = NA)
+    )
+ggsave("../reveal.js/figures/histogram_wide.png", width = 11, height = 3.5, bg = "transparent")
+```
+
+```{r}
+assay_df |>
+  filter(taxon %in% taxon[1:12]) |>
+  ggplot() +
+    stat_ecdf(aes(log(1 + value)), linewidth = 1) +
+    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    facet_wrap(~ reorder(taxon, -value), ncol = 6, scales = "free") +
+    labs(x = "Taxon Count (log scale)", y = "Empirical CDF") +
+    theme(
+      strip.text = element_text(size = 10), 
+      panel.background = element_rect(fill = "transparent"), 
+      plot.background = element_rect(fill = "transparent", color = NA),
+      strip.background = element_rect(fill = "transparent", color = NA)
+    )
+ggsave("../reveal.js/figures/ecdf_log.png", width = 11, height = 3.5, bg = "transparent")
+```
