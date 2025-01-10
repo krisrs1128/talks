@@ -416,7 +416,7 @@ v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \i
 
 If for the row corresponding to subset $S$ we use weights
 \begin{align*}
-\frac{D - 1}{{D \choose \left|S\right|} \left|S\right|\left(D - \left|S\right|\right)}
+\frac{D - 1}{\{D \choose \left|S\right|\} \left|S\right|\left(D - \left|S\right|\right)}
 \end{align*}
 then the resulting weighted linear regression exactly recovers the Shapley
 values $\varphi_{\*x}\left(f, d\right)$.

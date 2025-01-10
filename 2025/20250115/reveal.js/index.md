@@ -162,10 +162,19 @@ We typically expect most taxa to have a $y$-axis value centered around 0.
 
 ### ECDF Plots
 
-An empirical cumulative distribution function (ECDF) plot is a version of a histogram that doesn't require any choice of binsize. It is especially helpful in zero-inflated data.
+An empirical cumulative distribution function (ECDF) traces out the curve
+$\left(t, \mathbf{P}\left(X \leq t\right)\right)$ for values of $t$ between the minimum and
+maximum observed values of $X$. 
 
-The first jump is at the minimum value of the feature. The curve reaches 1 at
-the maximum. The $x$ value when $y = 0.5$ is the median.
+<div style="text-align: center;">
+<img src="figures/ecdf.png" width=400/>
+</div>
+
+---
+
+Unlike histograms, ECDFs don't require any choice of bin width. This is
+especially helpful in zero-inflated data.
+
 
 ---
 
@@ -193,10 +202,10 @@ approximation of a high-dimensional data cloud.
 
 ---
 
-### Resulting Map
+### Resulting "Map"
 
-This results in a map of the samples so that those with similar measurements are
-placed close to one another.
+The samples are organized so that those with similar measurements are placed
+close to one another.
 
 
 ---
