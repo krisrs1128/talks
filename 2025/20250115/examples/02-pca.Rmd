@@ -1,0 +1,101 @@
+---
+title: Principal Components
+---
+
+```{r}
+library(mia)
+library(tidySummarizedExperiment)
+library(tidyverse)
+theme_set(theme_classic())
+```
+
+```{r}
+data(atlas1006, package = "microbiome")
+atlas <- convertFromPhyloseq(atlas1006) |>
+  mutate(
+    bmi_group = case_when(
+      str_detect(bmi_group, "obese") ~ "obese",
+      bmi_group == "lean" ~ "lean",
+      bmi_group == "overweight" ~ "overweight",
+    )
+  ) |>
+  filter(bmi_group %in% c("obese", "lean", "overweight"), time == 0) |>
+  mutate(bmi_group = factor(bmi_group, levels = c("obese", "overweight", "lean")))
+```
+
+```{r, define-null}
+y <- assay(atlas)
+x <- colData(atlas)$bmi_group
+```
+
+```{r}
+library(sparsepca)
+spca_result <- spca(t(asinh(y)), k = 5, alpha = 1e-2, beta = 1e-2)
+
+# Create a data frame for plotting
+spca_df <- bind_cols(
+    set_names(data.frame(spca_result$scores), str_c("PC", 1:5)),
+    bmi_group = x
+)
+
+ggplot(spca_df, aes(x = PC1, y = PC2, color = bmi_group)) +
+    geom_point() +
+    labs(title = "Sparse PCA of Atlas Dataset", x = "PC1", y = "PC2")
+
+ggplot(spca_df, aes(x = PC3, y = PC4, color = bmi_group)) +
+    geom_point() +
+    labs(title = "Sparse PCA of Atlas Dataset", x = "PC1", y = "PC2")
+
+library(ggridges)
+spca_df |>
+    pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "score") |>
+    mutate(PC = factor(PC, levels = str_c("PC", 1:5))) |>
+    ggplot() +
+        geom_density_ridges(aes(x = score, y = PC, fill = bmi_group), alpha = 0.7) +
+            labs(title = "Ridge Plot of Sparse PCA Scores", x = "Score", y = "Principal Component") +
+            theme_ridges() +
+            scale_fill_brewer(palette = "Set1")
+
+```
+
+
+```{r}
+loadings <- data.frame(spca_result$loadings) |>
+    set_names(str_c("PC", 1:5)) |>
+    mutate(taxon = rownames(y))
+
+# Reshape loadings to tidy format
+tidy_loadings <- loadings |>
+    pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "loading") |>
+    mutate(PC = factor(PC, levels = str_c("PC", 1:5)))
+
+# Filter to top 20 taxa by absolute loading value for each PC
+top_loadings <- tidy_loadings |>
+    group_by(PC) |>
+    slice_max(order_by = abs(loading), n = 20, with_ties = FALSE) |>
+    ungroup()
+
+# Plot the loadings
+library(tidytext)
+ggplot(top_loadings, aes(loading, reorder_within(taxon, abs(loading), PC))) +
+    geom_col(show.legend = FALSE) +
+    scale_y_reordered() +
+    facet_wrap(~ PC, scales = "free")
+```
+
+```{r}
+focus_taxa <- top_loadings |>
+    filter(PC == "PC2") |>
+    slice_head(n = 10) |>
+    pull(taxon)
+
+spca_df |>
+    bind_cols(t(y[focus_taxa, ])) |>
+    pivot_longer(any_of(focus_taxa), names_to = "taxon") |>
+    mutate(taxon = factor(taxon, levels = focus_taxa)) |>
+    ggplot(aes(x = PC1, y = PC2, color = bmi_group, size = asinh(value))) +
+    geom_point(alpha = 0.6) +
+    facet_wrap(~ taxon, ncol = 5) +
+    scale_size(range = c(0, 3)) +
+    labs(title = "Sparse PCA of Atlas Dataset", x = "PC1", y = "PC2")
+```
