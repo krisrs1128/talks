@@ -1,0 +1,203 @@
+---
+title: LDA Example
+---
+
+```{r, helpers}
+kl_div <- function(p1, p2) {
+  p1 * log(p1 / p2) + (p2 - p2)
+}
+
+kl_mat <- function(p) {
+  K <- matrix(0, nrow = length(p), ncol = length(p))
+  
+  for (i in seq_along(p)) {
+    for (j in seq_len(i - 1)) {
+      K[i, j] <- kl_div(p[i], p[j])
+    }
+  }
+  K
+}
+
+discrepancy <- function(p, lambda = 1e-7) {
+  p <- (p + lambda) / sum(p + lambda) # Laplace smoothing
+  K <- kl_mat(p)
+  max(K)
+}
+```
+
+
+```{r}
+library(argparser)
+parser <- arg_parser("Perform LDA on the antibiotics dataset")
+parser <- add_argument(parser, "--subject", help = "Subject on which to perform analysis", default = "F")
+argv <- parse_args(parser)
+
+## ---- setup ----
+library(feather)
+library(phyloseq)
+library(reshape2)
+library(rstan)
+library(scico)
+library(stringr)
+library(superheat)
+library(tidyverse)
+set.seed(11242016)
+th <- theme_classic() +
+    theme(
+        panel.background = element_rect(fill = "transparent"), 
+        plot.background = element_rect(fill = "transparent", color = NA),
+        strip.background = element_rect(fill = "transparent", color = NA),
+        legend.background = element_rect(fill = "transparent", color = NA)
+    )
+theme_set(th)
+```
+
+```{r get_data}
+f <- download.file("https://github.com/krisrs1128/microbiome_plvm/raw/refs/heads/master/data/antibiotics-study/abt.rda", "abt.rda")
+get(load("abt.rda"))
+abt <- get(load("abt.rda")) |>
+  subset_samples(ind == argv$subject)
+
+releveled_sample_data <- abt %>%
+  sample_data() %>%
+  data.frame() %>%
+  mutate(
+    condition = recode(
+      condition,
+      "Pre Cp" = "Pre",
+      "1st Cp" = "1st Course",
+      "1st WPC" = "1st Course",
+      "2nd Cp" = "2nd Course",
+      "2nd WPC" = "2nd Course",
+      "Post Cp" = "Post"
+    )
+  )
+rownames(releveled_sample_data) <- abt %>%
+  sample_data %>%
+  rownames
+sample_data(abt) <- releveled_sample_data
+```
+
+```{r stan_fit}
+x <- t(get_taxa(abt))
+dimnames(x) <- NULL
+stan_data <- list(
+  K = 4,
+  V = ncol(x),
+  D = nrow(x),
+  n = x,
+  alpha = rep(1, 4),
+  gamma = rep(0.5, ncol(x))
+)
+
+start_fit <- Sys.time()
+download.file("https://github.com/krisrs1128/microbiome_plvm/raw/refs/heads/master/src/stan/lda_counts.stan", "lda_counts.stan")
+f <- stan_model(file = "lda_counts.stan")
+stan_fit <- vb(
+  f,
+  data = stan_data,
+  output_samples = 1000,
+  eta = 1,
+  adapt_engaged = FALSE
+)
+cat(sprintf(
+  "Finished in %f minutes\n",
+  Sys.time() - start_fit, 4)
+)
+
+samples <- rstan::extract(stan_fit)
+rm(stan_fit)
+```
+
+```{r}
+## ---- extract_beta ----
+beta <- apply(samples$beta, c(2, 3), mean) |> 
+  t() |>
+  as.data.frame() |>
+  mutate(taxon = taxa_names(abt)) |>
+  pivot_longer(-taxon, names_to = "topic", values_to = "beta") |>
+  group_by(taxon) |>
+  mutate(D = discrepancy(beta))
+
+discriminative_taxa <- beta %>%
+  ungroup() %>%
+  slice_max(D, n = 300) %>%
+  mutate(
+    taxon = fct_reorder(taxon, -D),
+    topic = str_replace(topic, "V", "Topic ")
+  )
+
+png("../reveal.js/figures/antibiotic_superheat.png", width=900, height = 400)
+discriminative_taxa %>%
+  pivot_wider(names_from = topic, values_from = beta) %>%
+  column_to_rownames("taxon") %>%
+  select(-D) |>
+  t() |>
+  superheat(
+    pretty.order.cols = TRUE,
+    pretty.order.rows = TRUE,
+    bottom.label.size = .3,
+    bottom.label.text.size = 4,
+    left.label.size = 0.08,
+    bottom.label.text.angle = 90,
+    legend = FALSE
+  )
+dev.off()
+
+x_df <- data.frame(x) |>
+  set_names(taxa_names(abt)) |>
+  mutate(sample = sample_names(abt)) |>
+  pivot_longer(-sample, names_to = "taxon")
+
+beta %>%
+  group_by(taxon) |>
+  summarize(max_topic = glue("Topic {which.max(beta)}"), beta_value = max(beta)) |>
+  group_by(max_topic) |>
+  slice_max(beta_value, n = 10) |>
+  left_join(x_df) |>
+  left_join(sample_info) |>
+  ggplot() +
+    geom_line(aes(time, value, group = taxon, col = factor(max_topic)), linewidth = 1) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+    scale_color_scico_d() +
+    labs(x = "Time", y = "Abundance", col = "Topic") +
+    facet_grid(max_topic ~ ., scales = "free") +
+    theme(
+      legend.position = "none",
+      strip.text.y = element_text(angle = 0)
+      )
+ggsave("../reveal.js/figures/beta_representatives.png", bg = "transparent", width=8, height=3.5, dpi= 700)
+
+
+## ---- visualize_theta_stacked ---
+theta <- apply(samples$theta, c(2, 3), mean)
+sample_info <- sample_data(abt)
+sample_info$sample <- rownames(sample_info)
+
+theta <- data.frame(theta) |>
+  mutate(sample = paste0("F", row_number())) |>
+  left_join(sample_info) |>
+  pivot_longer(starts_with("X"), names_to = "topic") |>
+  mutate(topic = str_remove(topic, "X"))
+
+ggplot(theta, aes(time, value, fill = topic, col = topic)) +
+  geom_col(position = position_stack()) +
+  facet_grid(. ~ condition, scales = "free", space = "free") +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_scico_d() +
+  scale_color_scico_d() +
+  labs(y = "Topic Membership", x = "Time", fill = "Topic", color = "Topic") +
+  theme(
+    panel.spacing = unit(0.5, "lines"),
+    strip.switch.pad.grid = unit(0, "cm"),
+    strip.text.x = element_text(size = 8, angle = 90),
+    axis.ticks.x = element_blank(),
+    panel.background = element_rect(fill = "transparent", color = NA),
+    legend.background = element_rect(fill = "transparent", color = NA),
+    strip.background = element_rect(fill = "transparent", color = NA),
+    plot.background = element_rect(fill = "transparent", color = NA)
+  )
+ggsave("../reveal.js/figures/antibiotic_memberships.png", bg = "transparent", width=8, height=3.5, dpi= 700)
+```
