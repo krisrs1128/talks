@@ -16,9 +16,7 @@ Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 
 1. Visualization Fundamentals
 
-1. Microbiome Gallery - Single Table
-
-1. Microbiome Gallery - Integrative
+1. Microbiome Gallery
 
 ---
 
@@ -378,7 +376,22 @@ Unlike PCA, topic models are a generative model. This allows us to evaluate mode
 ### Topics
 
 We can also visualize the topics themselves. It helps to sort the taxa so that
-those that have the highest diversity across topics are shown first.
+those that have the highest variation across topics are shown first.
+
+<div style="text-align: center;">
+<img src="figures/antibiotic_superheat.png" width=1000/>
+</div>
+
+---
+
+### Topics
+
+We can also visualize the topics themselves. It helps to sort the taxa so that
+those that have the highest variation across topics are shown first.
+
+<div style="text-align: center;">
+<img src="figures/beta_representatives.png" width=1000/>
+</div>
 
 ---
 
@@ -406,10 +419,6 @@ edges between topics that have similar latent communities.
 <div style="text-align: center;">
 <img src="figures/pregnancy_sankey.jpg" width=650/>
 </div>
-
----
-
-## Integration
 
 ---
 
