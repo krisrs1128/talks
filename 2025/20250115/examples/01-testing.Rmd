@@ -73,7 +73,7 @@ assay_df <- bind_cols(
 assay_df |>
   filter(taxon %in% tax_order[1:12]) |>
   ggplot() +
-    stat_ecdf(aes(log(1 + value), col = bmi_group), linewidth = 1) +
+    stat_ecdf(aes(log(1 + value, 10), col = bmi_group), linewidth = 1) +
     scale_color_brewer(palette = "Set2") +
     facet_wrap(~ taxon, ncol = 7) +
     theme(
@@ -143,7 +143,7 @@ ggsave("../reveal.js/figures/histogram_wide.png", width = 11, height = 3.5, bg =
 assay_df |>
   filter(taxon %in% taxon[1:12]) |>
   ggplot() +
-    stat_ecdf(aes(log(1 + value)), linewidth = 1) +
+    stat_ecdf(aes(log(1 + value, 10)), linewidth = 1) +
     scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
     scale_x_continuous(expand = c(0, 0)) +
     facet_wrap(~ reorder(taxon, -value), ncol = 6, scales = "free") +

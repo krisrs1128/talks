@@ -151,7 +151,7 @@ An MA plot is a good first step in a differential abundance analysis.
 * Average: Average of log-abundances across groups
 
 <div style="text-align: center;">
-<img src="figures/ma_plot_da.png" width=900/>
+<img src="figures/ma_plot_da.png" width=850/>
 </div>
 
 ---
@@ -162,7 +162,7 @@ Since phenotypes are usually only associated with a small fraction of taxa, we
 expect the $M$ values to be centered around 0.
 
 <div style="text-align: center;">
-<img src="figures/ma_plot_da.png" width=1000/>
+<img src="figures/ma_plot_da.png" width=950/>
 </div>
 
 ---
@@ -242,7 +242,7 @@ A principal components analysis (PCA) finds the best low-dimensional linear
 approximation of a high-dimensional data cloud.
 
 <div style="text-align: center;">
-<img src="https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true"/>
+<img src="https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true" width=950/>
 </div>
 
 ---
@@ -308,6 +308,17 @@ positive PC1 taxa, and vice versa for negative taxa.
 
 ---
 
+### Identifying Dimensions
+
+Interesting variation can be buried in higher components. A ridgeplot can help
+identify these.
+
+<div style="text-align: center;">
+<img src="figures/pc_ridge-4.png" width=1200/>
+</div>
+
+---
+
 ### Considerations
 
 Like with ECDF plots, the output from a dimensionality reduction will depend on
@@ -321,8 +332,8 @@ this.
 
 ### Topic Models
 
-Since components can have both positive and negative values, effects can
-sometimes cancel out. This can complicate interpretation.
+Since components can have both positive and negative values, effects in PCA can
+sometimes cancel out. This complicates interpretation.
 
 Topic models deal with this by requiring components to be nonnegative.
 Therefore, they can be interpreted as latent communities.
@@ -454,8 +465,7 @@ shared and distinct components, there are several closely-related alternatives.
 
 ### Conclusion
 
-* Other plots not discussed: Phylogeny, partial dependence plot, adjacency
-* network plot.
+* Other plots not discussed: Phylogeny, partial dependence plot, adjacency network plot.
 
 ---
 

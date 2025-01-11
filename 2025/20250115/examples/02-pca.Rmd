@@ -85,18 +85,20 @@ ggplot(spca_df, aes(x = PC7, y = PC8, color = bmi_group)) +
     ) +
     theme(legend.text = element_text(size = 10))
 ggsave("../reveal.js/figures/pc_scores_7-8.png", width = 7, height = 3, bg = "transparent")
-
+?geom_density_ridges()
 spca_df |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "score") |>
     mutate(PC = factor(PC, levels = str_c("PC", 1:130))) |>
-    filter(PC %in% glue("PC{1:10}")) |>
+    filter(PC %in% glue("PC{1:9}")) |>
     ggplot() +
-        geom_density_ridges2(aes(x = score, y = PC, fill = bmi_group), alpha = 0.7) +
-            labs(x = "Score", y = "Principal Component") +
-            scale_fill_brewer(palette = "Set2")
+        geom_density_ridges2(aes(x = score, y = PC, fill = bmi_group), alpha = 1, scale = 3) +
+            labs(x = "Score", y = "Principal Component", fill = "BMI Group") +
+            scale_fill_brewer(palette = "Set2") +
+            theme(
+                axis.title = element_text(size = 12)
+            )
 
-
-ggsave("../reveal.js/figures/pc_ridge-4.png", width = 10, height = 5, bg = "transparent")
+ggsave("../reveal.js/figures/pc_ridge-4.png", width = 10, height = 4, bg = "transparent")
 ```
 
 
@@ -108,7 +110,7 @@ loadings <- data.frame(spca_result$loadings) |>
 # Filter to top 20 taxa by absolute loading value for each PC
 tidy_loadings <- loadings |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "loading") |>
-    mutate(PC = factor(PC, levels = str_c("PC", 1:3)))
+    mutate(PC = factor(PC, levels = str_c("PC", 1:130)))
 
 top_loadings <- tidy_loadings |>
     group_by(PC) |>
@@ -118,7 +120,7 @@ top_loadings <- tidy_loadings |>
 
 # Plot the loadings
 top_loadings |>
-    filter(PC %in% str_c("PC", 1:5)) |>
+    filter(PC %in% str_c("PC", c(1, 2, 7, 8))) |>
     ggplot(aes(loading, reorder_within(taxon, abs(loading), PC))) +
     geom_col(show.legend = FALSE) +
     scale_color_brewer(palette = "Set2") +
