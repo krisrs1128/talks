@@ -4,11 +4,20 @@ title: Principal Components
 
 ```{r}
 library(ggridges)
+library(glue)
 library(mia)
 library(sparsepca)
 library(tidySummarizedExperiment)
+library(tidytext)
 library(tidyverse)
-theme_set(theme_classic())
+th <- theme_classic() +
+    theme(
+        panel.background = element_rect(fill = "transparent"), 
+        plot.background = element_rect(fill = "transparent", color = NA),
+        strip.background = element_rect(fill = "transparent", color = NA),
+        legend.background = element_rect(fill = "transparent", color = NA)
+    )
+theme_set(th)
 ```
 
 ```{r}
@@ -50,80 +59,105 @@ eigenvalues |>
     ggplot() +
     geom_col(aes(K, prop)) +
     scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
-    labs(y = "% Variance Explained")
+    labs(y = "% Variance Explained") 
 
-library(glue)
+ggsave("../reveal.js/figures/pc_eigenvalues.png", width = 6, height = 3, bg = "transparent")
+
 ggplot(spca_df, aes(x = PC1, y = PC2, color = bmi_group)) +
     geom_point() +
     scale_color_brewer(palette = "Set2") +
     coord_fixed(sqrt(eigenvalues$eigenvalue[2] / eigenvalues$eigenvalue[1])) +
     labs(
-        col = "BMI Group", 
+        col = "BMI Group",
         x = glue("PC1 [{eigenvalues$prop[1]}% Variance]"),
         y = glue("PC2 [{eigenvalues$prop[2]}% Variance]")
-    )
-        
+    ) +
+    theme(legend.text = element_text(size = 10))
+ggsave("../reveal.js/figures/pc_scores_1-2.png", width = 7, height = 3, bg = "transparent")
 
-ggplot(spca_df, aes(x = PC3, y = PC4, color = bmi_group)) +
+ggplot(spca_df, aes(x = PC7, y = PC8, color = bmi_group)) +
     geom_point() +
     scale_color_brewer(palette = "Set2") +
     labs(
         col = "BMI Group",
-        x = glue("PC3 [{eigenvalues$prop[3]}% Variance]"),
-        y = glue("PC4 [{eigenvalues$prop[4]}% Variance]")
-    )
+        x = glue("PC7 [{eigenvalues$prop[7]}% Variance]"),
+        y = glue("PC8 [{eigenvalues$prop[8]}% Variance]")
+    ) +
+    theme(legend.text = element_text(size = 10))
+ggsave("../reveal.js/figures/pc_scores_7-8.png", width = 7, height = 3, bg = "transparent")
 
 spca_df |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "score") |>
-    mutate(PC = factor(PC, levels = str_c("PC", 1:5))) |>
+    mutate(PC = factor(PC, levels = str_c("PC", 1:130))) |>
+    filter(PC %in% glue("PC{1:10}")) |>
     ggplot() +
-        geom_density_ridges(aes(x = score, y = PC, fill = bmi_group), alpha = 0.7) +
+        geom_density_ridges2(aes(x = score, y = PC, fill = bmi_group), alpha = 0.7) +
             labs(x = "Score", y = "Principal Component") +
             scale_fill_brewer(palette = "Set2")
 
+
+ggsave("../reveal.js/figures/pc_ridge-4.png", width = 10, height = 5, bg = "transparent")
 ```
 
 
 ```{r}
 loadings <- data.frame(spca_result$loadings) |>
-    set_names(str_c("PC", 1:5)) |>
+    set_names(str_c("PC", 1:130)) |>
     mutate(taxon = rownames(y))
 
 # Filter to top 20 taxa by absolute loading value for each PC
 tidy_loadings <- loadings |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "loading") |>
-    mutate(PC = factor(PC, levels = str_c("PC", 1:5)))
+    mutate(PC = factor(PC, levels = str_c("PC", 1:3)))
 
 top_loadings <- tidy_loadings |>
     group_by(PC) |>
-    slice_max(order_by = abs(loading), n = 20, with_ties = FALSE) |>
+    slice_max(order_by = abs(loading), n = 10, with_ties = FALSE) |>
+    filter(abs(loading) > 0) |>
     ungroup()
 
 # Plot the loadings
-library(tidytext)
 top_loadings |>
     filter(PC %in% str_c("PC", 1:5)) |>
     ggplot(aes(loading, reorder_within(taxon, abs(loading), PC))) +
     geom_col(show.legend = FALSE) +
-    scale_color_brewer(palette = "Set2")
+    scale_color_brewer(palette = "Set2") +
     scale_y_reordered() +
-    facet_wrap(~ PC, scales = "free")
+    facet_grid(PC ~ ., scales = "free", space = "free") +
+    labs(y = "Taxon", x = "Component Loading") +
+    theme(
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 15),
+        strip.text.y = element_text(angle = 0, size = 14),
+        panel.border = element_rect(color = "#b7b7b7", fill = NA, linewidth = 2),
+    )
+ggsave("../reveal.js/figures/pca_loadings.png", width = 10, height = 4, bg = "transparent")
 ```
 
 ```{r}
-focus_taxa <- top_loadings |>
-    filter(PC == "PC2") |>
-    slice_head(n = 10) |>
-    pull(taxon)
+focus_plot <- function(spca_df, pc="PC2") {
+    focus_taxa <- top_loadings |>
+        filter(PC == pc)|>
+        slice_head(n = 10) |>
+        pull(taxon)
 
-spca_df |>
-    bind_cols(t(y[focus_taxa, ])) |>
-    pivot_longer(any_of(focus_taxa), names_to = "taxon") |>
-    mutate(taxon = factor(taxon, levels = focus_taxa)) |>
-    ggplot(aes(x = PC1, y = PC2, color = bmi_group, size = asinh(value))) +
-    geom_point(alpha = 0.6) +
-    facet_wrap(~ taxon, ncol = 5) +
-    scale_size(range = c(0, 3)) +
-    scale_color_brewer(palette = "Set2") +
-    labs(title = "Sparse PCA of Atlas Dataset", x = "PC1", y = "PC2")
+    spca_df |>
+        bind_cols(t(y[focus_taxa, ])) |>
+        pivot_longer(any_of(focus_taxa), names_to = "taxon") |>
+        mutate(taxon = factor(taxon, levels = focus_taxa)) |>
+        ggplot(aes(x = PC1, y = PC2, color = bmi_group, size = asinh(value))) +
+        geom_point(alpha = 0.6) +
+        facet_wrap(~ taxon, ncol = 5) +
+        scale_size(range = c(0, 3)) +
+        scale_color_brewer(palette = "Set2") +
+        theme(
+            panel.border = element_rect(color = "#b7b7b7", fill = NA, linewidth = 2),
+        ) +
+        labs(x = "PC1", y = "PC2", col = "BMI Group", size = "asinh(Abundance)")
+}
+
+focus_plot(spca_df, "PC1")
+ggsave("../reveal.js/figures/focus_pc_1.png", width = 10, height = 5, bg = "transparent")
+focus_plot(spca_df)
+ggsave("../reveal.js/figures/focus_pc_2.png", width = 10, height = 5, bg = "transparent")
 ```
