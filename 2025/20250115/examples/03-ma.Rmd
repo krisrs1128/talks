@@ -1,0 +1,72 @@
+---
+title: Visualization and Testing
+---
+
+```{r}
+library(ggrepel)
+library(mia)
+library(tidySummarizedExperiment)
+library(tidyverse)
+theme_set(theme_classic())
+```
+
+```{r}
+data(atlas1006, package = "microbiome")
+atlas <- convertFromPhyloseq(atlas1006) |>
+  mutate(
+    bmi_group = case_when(
+      str_detect(bmi_group, "obese") ~ "obese",
+      bmi_group == "lean" ~ "lean",
+      bmi_group == "overweight" ~ "overweight",
+    )
+  ) |>
+  filter(bmi_group %in% c("obese", "lean", "overweight"), time == 0) |>
+  mutate(bmi_group = factor(bmi_group, levels = c("obese", "overweight", "lean")))
+```
+
+```{r, define-null}
+y <- assay(atlas)
+x <- colData(atlas)$bmi_group
+```
+
+```{r}
+assay_df <- bind_cols(
+    as.data.frame(colData(atlas)),
+    t(assay(atlas))
+  ) |>
+    pivot_longer(-colnames(colData(atlas)), names_to = "taxon", values_to = "value")
+```
+
+```{r}
+log_abund <- log(1 + y)
+m1 <- rowMeans(log_abund[, x == "lean"])
+m2 <- rowMeans(log_abund[, x != "lean"])
+ma_data <- tibble(
+  taxon = rownames(atlas),
+  average = 0.5 * (m1 + m2),
+  minus = m1 - m2
+)
+
+filtered_data <- ma_data |>
+  filter(abs(minus) > 0.3 | average > 5.5)
+
+ggplot(ma_data, aes(average, minus)) +
+  geom_hline(yintercept = 0) +
+  geom_point(size = 2, col = "#8f8d8d") +
+  geom_text_repel(data = filtered_data, aes(label = taxon), size = 4) +
+  labs(
+    y = "M values",
+    x = "A values"
+  ) +
+  scale_x_continuous(expand = c(0, 0, 0.1, 0)) +
+  theme(
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    panel.background = element_rect(fill = "transparent"), 
+    plot.background = element_rect(fill = "transparent", color = NA),
+    strip.background = element_rect(fill = "transparent", color = NA),
+    legend.background = element_rect(fill = "transparent", color = NA)
+  )
+
+ggsave("../reveal.js/figures/ma_plot_da.png", width = 8, height = 4, , bg = "transparent")
+```
