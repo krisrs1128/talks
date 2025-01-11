@@ -332,18 +332,26 @@ this.
 
 ### Topic Models
 
-Since components can have both positive and negative values, effects in PCA can
-sometimes cancel out. This complicates interpretation.
-
-Topic models deal with this by requiring components to be nonnegative.
-Therefore, they can be interpreted as latent communities.
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="flex: 1; padding-right: 20px;">
+        1. Since components can have both positive and negative values, effects in PCA
+        can sometimes cancel out, complicating interpretations.<br/><br/>
+        1. Topic models deal with this by requiring components to be nonnegative.
+        Therefore, they can be interpreted as latent communities.
+    </div>
+    <img src="figures/latent_dirichlet_v2.png" width=600/>
+</div>
 
 ---
 
 ### Topic Models
 
-In this context, components are called _topics_, and each sample is a mixture of
-topics.
+What were called components in PCA are now called _topics_. Each sample is a
+mixture of topics.
+
+<div style="text-align: center;">
+<img src="figures/latent_dirichlet_v2.png" width=750/>
+</div>
 
 ---
 
@@ -351,14 +359,19 @@ topics.
 
 The mixtures across the entire dataset can be visualized in stacked barplot.
 
-<img src="figures/antibiotic_memberships.png"/>
+<div style="text-align: center;">
+<img src="figures/antibiotic_memberships.png" width=2000/>
+</div>
 
 ---
 
-### Considerations
+### Simulation-based Checks
 
 Unlike PCA, topic models are a generative model. This allows us to evaluate model quality by comparing real with simulated samples. 
 
+<div style="text-align: center;">
+<img src="figures/lda_posterior_predictive.jpeg" width=700/>
+</div>
 
 ---
 
