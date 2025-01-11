@@ -3,7 +3,7 @@
 
 <div id="subtitle">
 Kris Sankaran <br/>
-15 | January | 2025 <br/>
+17 | January | 2025 <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 </div>
@@ -145,18 +145,25 @@ context.
 
 ### MA Plot
 
-An MA plot can be used to identify taxa that are systematically different across groups.
+An MA plot is a good first step in a differential abundance analysis.
 
-* $x$-axis: Average log-abundance across groups
-* $y$-axis: Difference in log-abundances across groups.
+* Minus: Difference in log-abundances between groups.
+* Average: Average of log-abundances across groups
+
+<div style="text-align: center;">
+<img src="figures/ma_plot_da.png" width=900/>
+</div>
 
 ---
 
 ### MA Plot
 
-An MA plot can be used to identify taxa that are systematically different across groups.
+Since phenotypes are usually only associated with a small fraction of taxa, we
+expect the $M$ values to be centered around 0.
 
-We typically expect most taxa to have a $y$-axis value centered around 0.
+<div style="text-align: center;">
+<img src="figures/ma_plot_da.png" width=1000/>
+</div>
 
 ---
 
@@ -240,26 +247,64 @@ approximation of a high-dimensional data cloud.
 
 ---
 
-### Resulting "Map"
+### Scree Plot
+
+The principal components are sorted according to the amount of variance that
+they explain. Dropoffs in the variance explained would suggest intrinsic
+low-dimensionality.
+
+<div style="text-align: center;">
+<img src="figures/pc_eigenvalues.png" width=900/>
+</div>
+
+---
+
+### Resulting "Maps"
 
 The samples are organized so that those with similar measurements are placed
-close to one another.
+close to one another. Different dimensions give different views.
+
+<div style="text-align: center;">
+<img src="figures/pc_scores_1-2.png" width=1200/>
+</div>
+
+---
+
+### Resulting "Maps"
+
+The samples are organized so that those with similar measurements are placed
+close to one another. Different dimensions give different views.
+
+<div style="text-align: center;">
+<img src="figures/pc_scores_7-8.png" width=1200/>
+</div>
 
 ---
 
 ### Components
 
 The "components" in the PCA give a way of interpreting the axes of the map. The
-further we move in the PC1 direction, the more we increase the positive PC1
-coordinates and decrease the negative ones.
+further we move in the PC1 direction, the more we increase the
+positive PC1 taxa, and vice versa for negative taxa.
 
-When the number of features is manageable, both the samples and components can
-be shown simultaneously in a "biplot."
+<div style="text-align: center;">
+<img src="figures/pca_loadings.png" width=1100/>
+</div>
+
+---
+### PCA Interpretation
+
+<div style="text-align: center;">
+<img src="figures/focus_pc_1.png"/>
+</div>
 
 ---
 
 ### PCA Interpretation
 
+<div style="text-align: center;">
+<img src="figures/focus_pc_2.png"/>
+</div>
 
 ---
 
@@ -407,9 +452,10 @@ shared and distinct components, there are several closely-related alternatives.
 
 ---
 
-### Honorable Mentions
+### Conclusion
 
-Phylogeny, partial dependence plot, adjacency network plot, 
+* Other plots not discussed: Phylogeny, partial dependence plot, adjacency
+* network plot.
 
 ---
 
