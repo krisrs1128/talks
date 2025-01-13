@@ -5,7 +5,7 @@
 Kris Sankaran <br/>
 17 | January | 2025 <br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/pu3f5s">go.wisc.edu/pu3f5s</a><br/>
 </div>
 
 <!-- 40 minute talk -->
@@ -32,6 +32,7 @@ our strengths in visual perception to our advantage.
 
 <div style="text-align: center;">
 <img src="figures/lion_binary.png" width=1200/>
+Figure from <span class="cite" data-cite="alain2017understanding"></span>.
 </div>
 
 ---
@@ -44,6 +45,7 @@ our strengths in visual perception to our advantage.
 
 <div style="text-align: center;">
 <img src="figures/paradoxes.png" width=1200/>
+Figure from <span class="cite" data-cite="munzner2004perception"></span>
 </div>
 
 ---
@@ -58,7 +60,7 @@ properties of the data.
 1. **Focusing**: Narrow down to a subset of data that is sufficient to
 answer a question of interest. 
 
-<div style="display: flex; justify-content: center; max-width: 700px;">
+<div style="display: flex; justify-content: center; max-width: 700px;margin: 0 auto">
     <img src="figures/map.png" style="max-width: 70%; height: auto;"/>
     <img src="figures/microscope.png" style="max-width: 30%; height: auto;"/>
 </div>
@@ -77,6 +79,7 @@ others.
 
 <div style="text-align: center;">
 <img src="figures/popout.png" width=1200/>
+Figure from <span class="cite" data-cite="Munzner2014-fj">
 </div>
 
 ---
@@ -89,6 +92,7 @@ others.
 
 <div style="text-align: center;">
 <img src="figures/ranking_encodings.png" width=700/>
+Figure from <span class="cite" data-cite="heer2010crowdsourcing">
 </div>
 
 ---
@@ -105,16 +109,17 @@ interpretation, and are memorable.
 ---
 
 <div style="text-align: center;">
-<img src="figures/memorable_visualizations.png" width=1000/>
-</div>
+<img src="figures/memorable_visualizations.png" width=900/>
 
+Figure from <span class="cite" data-cite="Borkin2013">
+</div>
 
 ---
 
 ### Faceting
 
 It's often surprisingly effective show many similar views in parallel. This is
-the basis for techniques like small multiples and piling.
+the basis for techniques like small multiples <span class="cite" data-cite="tufte1983visual"> and piling <span class="cite" data-cite="lekschas2020generic">.
 
 <div style="text-align: center;">
 <img src="figures/piling.png" width=1000/>
@@ -129,7 +134,7 @@ context.
 
 > Overview first, zoom and filter, then details on demand.
 
--- Schneiderman's "Visual Information Seeking Mantra"
+-- Schneiderman's "Visual Information Seeking Mantra", from <span class="cite" data-cite="shneiderman2003eyes"></span>
 
 ---
 
@@ -143,7 +148,7 @@ context.
 
 ### MA Plot
 
-An MA plot is a good first step in a differential abundance analysis.
+An MA plot <span class="cite" data-cite="dudoit2002statistical"></span> is a good first step in a differential abundance analysis.
 
 * Minus: Difference in log-abundances between groups.
 * Average: Average of log-abundances across groups
@@ -177,8 +182,8 @@ maximum observed values of $X$.
 
 ---
 
-Unlike histograms, ECDFs don't require any choice of bin width. This is
-especially helpful in zero-inflated data.
+Unlike histograms, ECDFs don't require any choice of bin width. They 
+perform surprisingly well in studies of uncertainty visualization <span class="cite" data-cite="Kay2016"></span>.
 
 <div style="text-align: center;">
 <img src="figures/histogram_narrow.png"/>
@@ -186,8 +191,8 @@ especially helpful in zero-inflated data.
 
 ---
 
-Unlike histograms, ECDFs don't require any choice of bin width. This is
-especially helpful in zero-inflated data.
+Unlike histograms, ECDFs don't require any choice of bin width. They 
+perform surprisingly well in studies of uncertainty visualization <span class="cite" data-cite="Kay2016"></span>.
 
 <div style="text-align: center;">
 <img src="figures/histogram_wide.png"/>
@@ -197,7 +202,8 @@ especially helpful in zero-inflated data.
 
 ### ECDF Interpretation
 
-Here are the ECDF plots for taxa that are differentially abundant across groups.
+Here are the ECDF plots for taxa that are differentially abundant across BMI groups in the Atlas study of healthy European adults 
+<span class="cite" data-cite="Lahti2014"></span>.
 Curves further to the right have systematically larger abundances.
 
 <div style="text-align: center;">
@@ -237,7 +243,7 @@ abundance analysis.
 ### Principal Components Analysis
 
 A principal components analysis (PCA) finds the best low-dimensional linear
-approximation of a high-dimensional data cloud.
+approximation of a high-dimensional data cloud <span class="cite" data-cite="Nguyen2019"></span>.
 
 <div style="text-align: center;">
 <img src="https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true" width=950/>

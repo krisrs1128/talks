@@ -1,0 +1,419 @@
+
+@InProceedings{pmlr-v119-koh20a,
+  title = 	 {Concept Bottleneck Models},
+  author =       {Koh, Pang Wei and Nguyen, Thao and Tang, Yew Siang and Mussmann, Stephen and Pierson, Emma and Kim, Been and Liang, Percy},
+  booktitle = 	 {Proceedings of the 37th International Conference on Machine Learning},
+  pages = 	 {5338--5348},
+  year = 	 {2020},
+  editor = 	 {III, Hal Daumé and Singh, Aarti},
+  volume = 	 {119},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {13--18 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v119/koh20a/koh20a.pdf},
+  url = 	 {https://proceedings.mlr.press/v119/koh20a.html},
+  abstract = 	 {We seek to learn models that we can interact with using high-level concepts: if the model did not think there was a bone spur in the x-ray, would it still predict severe arthritis? State-of-the-art models today do not typically support the manipulation of concepts like "the existence of bone spurs", as they are trained end-to-end to go directly from raw input (e.g., pixels) to output (e.g., arthritis severity). We revisit the classic idea of first predicting concepts that are provided at training time, and then using these concepts to predict the label. By construction, we can intervene on these concept bottleneck models by editing their predicted concept values and propagating these changes to the final prediction. On x-ray grading and bird identification, concept bottleneck models achieve competitive accuracy with standard end-to-end models, while enabling interpretation in terms of high-level clinical concepts ("bone spurs") or bird attributes ("wing color"). These models also allow for richer human-model interaction: accuracy improves significantly if we can correct model mistakes on concepts at test time.}
+}
+
+@article{Bengio2009,
+  title = {Learning Deep Architectures for AI},
+  volume = {2},
+  ISSN = {1935-8245},
+  url = {http://dx.doi.org/10.1561/2200000006},
+  DOI = {10.1561/2200000006},
+  number = {1},
+  journal = {Foundations and Trends{\textregistered} in Machine Learning},
+  publisher = {Now Publishers},
+  author = {Bengio,  Y.},
+  year = {2009},
+  pages = {1–127}
+}
+
+@misc{
+alain2017understanding,
+title={Understanding intermediate layers using linear classifier probes},
+author={Guillaume Alain and Yoshua Bengio},
+year={2017},
+url={https://openreview.net/forum?id=ryF7rTqgl}
+}
+
+@article{templeton2024scaling,
+    title={Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet},
+    author={Templeton, Adly and Conerly, Tom and Marcus, Jonathan and Lindsey, Jack and Bricken, Trenton and Chen, Brian and Pearce, Adam and Citro, Craig and Ameisen, Emmanuel and Jones, Andy and Cunningham, Hoagy and Turner, Nicholas L and McDougall, Callum and MacDiarmid, Monte and Freeman, C. Daniel and Sumers, Theodore R. and Rees, Edward and Batson, Joshua and Jermyn, Adam and Carter, Shan and Olah, Chris and Henighan, Tom},
+    year={2024},
+    journal={Transformer Circuits Thread},
+    url={https://transformer-circuits.pub/2024/scaling-monosemanticity/index.html}
+}
+
+@ARTICLE{Friedman2001-xk,
+  title     = "Greedy function approximation: A gradient boosting machine",
+  author    = "Friedman, Jerome H",
+  journal   = "Ann. Stat.",
+  publisher = "Institute of Mathematical Statistics",
+  volume    =  29,
+  number    =  5,
+  pages     = "1189--1232",
+  month     =  oct,
+  year      =  2001
+}
+
+@ARTICLE{Kim2017-kb,
+  title        = "Interpretability beyond feature attribution: Quantitative
+                  testing with Concept Activation Vectors ({TCAV})",
+  author       = "Kim, Been and Wattenberg, Martin and Gilmer, Justin and Cai,
+                  Carrie and Wexler, James and Viegas, Fernanda and Sayres,
+                  Rory",
+  abstract     = "The interpretation of deep learning models is a challenge due
+                  to their size, complexity, and often opaque internal state.
+                  In addition, many systems, such as image classifiers, operate
+                  on low-level features rather than high-level concepts. To
+                  address these challenges, we introduce Concept Activation
+                  Vectors (CAVs), which provide an interpretation of a neural
+                  net's internal state in terms of human-friendly concepts. The
+                  key idea is to view the high-dimensional internal state of a
+                  neural net as an aid, not an obstacle. We show how to use
+                  CAVs as part of a technique, Testing with CAVs (TCAV), that
+                  uses directional derivatives to quantify the degree to which
+                  a user-defined concept is important to a classification
+                  result--for example, how sensitive a prediction of ``zebra''
+                  is to the presence of stripes. Using the domain of image
+                  classification as a testing ground, we describe how CAVs may
+                  be used to explore hypotheses and generate insights for a
+                  standard image classification network as well as a medical
+                  application.",
+  journal      = "arXiv [stat.ML]",
+  publisher    = "arXiv",
+  year         =  2017,
+  primaryClass = "stat.ML"
+}
+
+@INPROCEEDINGS{Yun2021-jc,
+  title      = "Transformer visualization via dictionary learning:
+                contextualized embedding as a linear superposition of
+                transformer factors",
+  booktitle  = "Proceedings of Deep Learning Inside Out ({DeeLIO)}: The 2nd
+                Workshop on Knowledge Extraction and Integration for Deep
+                Learning Architectures",
+  author     = "Yun, Zeyu and Chen, Yubei and Olshausen, Bruno and LeCun, Yann",
+  publisher  = "Association for Computational Linguistics",
+  year       =  2021,
+  address    = "Stroudsburg, PA, USA",
+  conference = "Proceedings of Deep Learning Inside Out (DeeLIO): The 2nd
+                Workshop on Knowledge Extraction and Integration for Deep
+                Learning Architectures",
+  location   = "Online"
+}
+
+@ARTICLE{Apley2020-nd,
+  title     = "Visualizing the effects of predictor variables in black box
+               supervised learning models",
+  author    = "Apley, Daniel W and Zhu, Jingyu",
+  abstract  = "Summary In many supervised learning applications, understanding
+               and visualizing the effects of the predictor variables on the
+               predicted response is of paramount importance. A shortcoming of
+               black box supervised learning models (e.g. complex trees, neural
+               networks, boosted trees, random forests, nearest neighbours,
+               local kernel-weighted methods and support vector regression) in
+               this regard is their lack of interpretability or transparency.
+               Partial dependence plots, which are the most popular approach
+               for visualizing the effects of the predictors with black box
+               supervised learning models, can produce erroneous results if the
+               predictors are strongly correlated, because they require
+               extrapolation of the response at predictor values that are far
+               outside the multivariate envelope of the training data. As an
+               alternative to partial dependence plots, we present a new
+               visualization approach that we term accumulated local effects
+               plots, which do not require this unreliable extrapolation with
+               correlated predictors. Moreover, accumulated local effects plots
+               are far less computationally expensive than partial dependence
+               plots. We also provide an R package ALEPlot as supplementary
+               material to implement our proposed method.",
+  journal   = "J. R. Stat. Soc. Series B Stat. Methodol.",
+  publisher = "Oxford University Press (OUP)",
+  volume    =  82,
+  number    =  4,
+  pages     = "1059--1086",
+  month     =  sep,
+  year      =  2020,
+  copyright = "https://academic.oup.com/journals/pages/open\_access/funder\_policies/chorus/standard\_publication\_model",
+  language  = "en"
+}
+
+@ARTICLE{Agarwal2023-sx,
+  title        = "{MDI+}: A flexible random forest-based feature importance
+                  framework",
+  author       = "Agarwal, Abhineet and Kenney, Ana M and Tan, Yan Shuo and
+                  Tang, Tiffany M and Yu, Bin",
+  abstract     = "Mean decrease in impurity (MDI) is a popular feature
+                  importance measure for random forests (RFs). We show that the
+                  MDI for a feature $X_k$ in each tree in an RF is equivalent
+                  to the unnormalized $R^2$ value in a linear regression of the
+                  response on the collection of decision stumps that split on
+                  $X_k$. We use this interpretation to propose a flexible
+                  feature importance framework called MDI+. Specifically, MDI+
+                  generalizes MDI by allowing the analyst to replace the linear
+                  regression model and $R^2$ metric with regularized
+                  generalized linear models (GLMs) and metrics better suited
+                  for the given data structure. Moreover, MDI+ incorporates
+                  additional features to mitigate known biases of decision
+                  trees against additive or smooth models. We further provide
+                  guidance on how practitioners can choose an appropriate GLM
+                  and metric based upon the Predictability, Computability,
+                  Stability framework for veridical data science. Extensive
+                  data-inspired simulations show that MDI+ significantly
+                  outperforms popular feature importance measures in
+                  identifying signal features. We also apply MDI+ to two
+                  real-world case studies on drug response prediction and
+                  breast cancer subtype classification. We show that MDI+
+                  extracts well-established predictive genes with significantly
+                  greater stability compared to existing feature importance
+                  measures. All code and models are released in a full-fledged
+                  python package on Github.",
+  year         =  2023,
+  primaryClass = "stat.ME",
+  eprint       = "2307.01932"
+}
+
+@INPROCEEDINGS{Ribeiro2016-qk,
+  title           = "Why should {I} trust you?",
+  booktitle       = "Proceedings of the 22nd {ACM} {SIGKDD} International
+                     Conference on Knowledge Discovery and Data Mining",
+  author          = "Ribeiro, Marco Tulio and Singh, Sameer and Guestrin,
+                     Carlos",
+  publisher       = "ACM",
+  month           =  aug,
+  year            =  2016,
+  address         = "New York, NY, USA",
+  copyright       = "http://www.acm.org/publications/policies/copyright\_policy\#Background",
+  conference      = "KDD '16: The 22nd ACM SIGKDD International Conference on
+                     Knowledge Discovery and Data Mining",
+  location        = "San Francisco California USA"
+}
+
+@misc{stoehr2024,
+  doi = {10.48550/ARXIV.2403.19851},
+  url = {https://arxiv.org/abs/2403.19851},
+  author = {Stoehr,  Niklas and Gordon,  Mitchell and Zhang,  Chiyuan and Lewis,  Owen},
+  keywords = {Computation and Language (cs.CL),  Cryptography and Security (cs.CR),  Machine Learning (cs.LG),  Machine Learning (stat.ML),  FOS: Computer and information sciences,  FOS: Computer and information sciences},
+  title = {Localizing Paragraph Memorization in Language Models},
+  publisher = {arXiv},
+  year = {2024},
+  copyright = {Creative Commons Attribution 4.0 International}
+}
+
+@misc{karpathy2015,
+  doi = {10.48550/ARXIV.1506.02078},
+  url = {https://arxiv.org/abs/1506.02078},
+  author = {Karpathy,  Andrej and Johnson,  Justin and Fei-Fei,  Li},
+  keywords = {Machine Learning (cs.LG),  Computation and Language (cs.CL),  Neural and Evolutionary Computing (cs.NE),  FOS: Computer and information sciences,  FOS: Computer and information sciences},
+  title = {Visualizing and Understanding Recurrent Networks},
+  publisher = {arXiv},
+  year = {2015},
+  copyright = {arXiv.org perpetual,  non-exclusive license}
+}
+
+@article{Lucieri2022,
+  title = {ExAID: A multimodal explanation framework for computer-aided diagnosis of skin lesions},
+  volume = {215},
+  ISSN = {0169-2607},
+  url = {http://dx.doi.org/10.1016/j.cmpb.2022.106620},
+  DOI = {10.1016/j.cmpb.2022.106620},
+  journal = {Computer Methods and Programs in Biomedicine},
+  publisher = {Elsevier BV},
+  author = {Lucieri,  Adriano and Bajwa,  Muhammad Naseer and Braun,  Stephan Alexander and Malik,  Muhammad Imran and Dengel,  Andreas and Ahmed,  Sheraz},
+  year = {2022},
+  month = mar,
+  pages = {106620}
+}
+
+@inproceedings{atanasova-etal-2020-diagnostic,
+    title = "A Diagnostic Study of Explainability Techniques for Text Classification",
+    author = "Atanasova, Pepa  and
+      Simonsen, Jakob Grue  and
+      Lioma, Christina  and
+      Augenstein, Isabelle",
+    editor = "Webber, Bonnie  and
+      Cohn, Trevor  and
+      He, Yulan  and
+      Liu, Yang",
+    booktitle = "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)",
+    month = nov,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2020.emnlp-main.263",
+    doi = "10.18653/v1/2020.emnlp-main.263",
+    pages = "3256--3274",
+    abstract = "Recent developments in machine learning have introduced models that approach human performance at the cost of increased architectural complexity. Efforts to make the rationales behind the models{'} predictions transparent have inspired an abundance of new explainability techniques. Provided with an already trained model, they compute saliency scores for the words of an input instance. However, there exists no definitive guide on (i) how to choose such a technique given a particular application task and model architecture, and (ii) the benefits and drawbacks of using each such technique. In this paper, we develop a comprehensive list of diagnostic properties for evaluating existing explainability techniques. We then employ the proposed list to compare a set of diverse explainability techniques on downstream text classification tasks and neural network architectures. We also compare the saliency scores assigned by the explainability techniques with human annotations of salient input regions to find relations between a model{'}s performance and the agreement of its rationales with human ones. Overall, we find that the gradient-based explanations perform best across tasks and model architectures, and we present further insights into the properties of the reviewed explainability techniques.",
+}
+
+@Manual{lime_package,
+  title = {lime: Local Interpretable Model-Agnostic Explanations},
+  author = {Emil Hvitfeldt and Thomas Lin Pedersen and Michaël Benesty},
+  year = {2022},
+  note = {https://lime.data-imaginist.com, https://github.com/thomasp85/lime},
+}
+
+% Other papers to include
+% the recent concept papers - are they reliable?
+% some of the evaluation papers?
+% Some packages. You can have a pointer to relevant packages at the very end
+% your own paper!!
+% 
+
+@inproceedings{
+freeman2024exploring,
+title={Exploring Memorization and Copyright Violation in Frontier {LLM}s: A Study of the New York Times v. Open{AI} 2023 Lawsuit},
+author={Joshua Freeman and Chloe Rippe and Edoardo Debenedetti and Maksym Andriushchenko},
+booktitle={Neurips Safe Generative AI Workshop 2024},
+year={2024},
+url={https://openreview.net/forum?id=C66DBl9At8}
+}
+
+@misc{nyt_case,
+  title        = {The New York Times Company Lawsuit Document 1-68},
+  number       = {1:23-cv-11195},
+  court        = {U.S. District Court},
+  year         = {2023},
+  type         = {Court Filing},
+  note         = {Case No. 1:23-cv-11195, Document 1-68}
+}
+
+@inbook{Zeiler2014,
+  title = {Visualizing and Understanding Convolutional Networks},
+  ISBN = {9783319105901},
+  ISSN = {1611-3349},
+  url = {http://dx.doi.org/10.1007/978-3-319-10590-1_53},
+  DOI = {10.1007/978-3-319-10590-1_53},
+  booktitle = {Computer Vision – ECCV 2014},
+  publisher = {Springer International Publishing},
+  author = {Zeiler,  Matthew D. and Fergus,  Rob},
+  year = {2014},
+  pages = {818–833}
+}
+
+@misc{munzner2004perception,
+    author = {Munzner, Tamara},
+    title = {Perception, Frameworks, Color},
+    year = {2004},
+    month = {jun},
+    institution = {LaBRI, University of Bordeaux},
+    type = {Lecture},
+    howpublished = {InfoVis MiniCourse, Lecture 1},
+    note = {Presentation slides available at https://www.cs.ubc.ca/~tmm/talks/bord04.1/bord1.mgp.6up.pdf}
+}
+
+@BOOK{Munzner2014-fj,
+  title     = "Visualization Analysis and Design",
+  author    = "Munzner, Tamara",
+  publisher = "CRC Press",
+  series    = "AK Peters Visualization Series",
+  month     =  dec,
+  year      =  2014,
+  address   = "London, England"
+}
+
+@inproceedings{heer2010crowdsourcing,
+  title={Crowdsourcing graphical perception: using mechanical turk to assess visualization design},
+  author={Heer, Jeffrey and Bostock, Michael},
+  booktitle={Proceedings of the SIGCHI conference on human factors in computing systems},
+  pages={203--212},
+  year={2010}
+}
+
+@article{Borkin2013,
+  title = {What Makes a Visualization Memorable?},
+  volume = {19},
+  ISSN = {1077-2626},
+  url = {http://dx.doi.org/10.1109/TVCG.2013.234},
+  DOI = {10.1109/tvcg.2013.234},
+  number = {12},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  publisher = {Institute of Electrical and Electronics Engineers (IEEE)},
+  author = {Borkin,  Michelle A. and Vo,  Azalea A. and Bylinskii,  Zoya and Isola,  Phillip and Sunkavalli,  Shashank and Oliva,  Aude and Pfister,  Hanspeter},
+  year = {2013},
+  month = dec,
+  pages = {2306–2315}
+}
+
+@article{lekschas2020generic,
+  title={A generic framework and library for exploration of small multiples through interactive piling},
+  author={Lekschas, Fritz and Zhou, Xinyi and Chen, Wei and Gehlenborg, Nils and Bach, Benjamin and Pfister, Hanspeter},
+  journal={IEEE Transactions on Visualization and Computer Graphics},
+  volume={27},
+  number={2},
+  pages={358--368},
+  year={2020},
+  publisher={IEEE}
+}
+
+@book{tufte1983visual,
+  title={The visual display of quantitative information},
+  author={Tufte, Edward R and Graves-Morris, Peter R},
+  volume={2},
+  number={9},
+  year={1983},
+  publisher={Graphics press Cheshire, CT}
+}
+
+@incollection{shneiderman2003eyes,
+  title={The eyes have it: A task by data type taxonomy for information visualizations},
+  author={Shneiderman, Ben},
+  booktitle={The craft of information visualization},
+  pages={364--371},
+  year={2003},
+  publisher={Elsevier}
+}
+
+@article{dudoit2002statistical,
+  title={Statistical methods for identifying differentially expressed genes in replicated cDNA microarray experiments},
+  author={Dudoit, Sandrine and Yang, Yee Hwa and Callow, Matthew J and Speed, Terence P},
+  journal={Statistica sinica},
+  pages={111--139},
+  year={2002},
+  publisher={JSTOR}
+}
+
+
+@inproceedings{Kay2016,
+  series = {CHI’16},
+  title = {When (ish) is My Bus?: User-centered Visualizations of Uncertainty in Everyday,  Mobile Predictive Systems},
+  url = {http://dx.doi.org/10.1145/2858036.2858558},
+  DOI = {10.1145/2858036.2858558},
+  booktitle = {Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems},
+  publisher = {ACM},
+  author = {Kay,  Matthew and Kola,  Tara and Hullman,  Jessica R. and Munson,  Sean A.},
+  year = {2016},
+  month = may,
+  collection = {CHI’16}
+}
+
+@article{Lahti2014,
+  title = {Tipping elements in the human intestinal ecosystem},
+  volume = {5},
+  ISSN = {2041-1723},
+  url = {http://dx.doi.org/10.1038/ncomms5344},
+  DOI = {10.1038/ncomms5344},
+  number = {1},
+  journal = {Nature Communications},
+  publisher = {Springer Science and Business Media LLC},
+  author = {Lahti,  Leo and Saloj\"{a}rvi,  Jarkko and Salonen,  Anne and Scheffer,  Marten and de Vos,  Willem M.},
+  year = {2014},
+  month = jul 
+}
+
+@article{Nguyen2019,
+  title = {Ten quick tips for effective dimensionality reduction},
+  volume = {15},
+  ISSN = {1553-7358},
+  url = {http://dx.doi.org/10.1371/journal.pcbi.1006907},
+  DOI = {10.1371/journal.pcbi.1006907},
+  number = {6},
+  journal = {PLOS Computational Biology},
+  publisher = {Public Library of Science (PLoS)},
+  author = {Nguyen,  Lan Huong and Holmes,  Susan},
+  editor = {Ouellette,  Francis},
+  year = {2019},
+  month = jun,
+  pages = {e1006907}
+}
