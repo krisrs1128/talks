@@ -1,0 +1,14 @@
+#subtitle {
+    position: absolute;
+    padding-left: 10px;
+    font-size: 25px;
+    width: 350px;
+    color: #5f558e;
+    text-align: left;
+    top: 400px;
+  }
+
+
+.reveal {
+    font-size: 36px; /* Default is 40px */
+}
