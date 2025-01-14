@@ -167,7 +167,7 @@ beta %>%
       legend.position = "none",
       strip.text.y = element_text(angle = 0)
       )
-ggsave("../reveal.js/figures/beta_representatives.png", bg = "transparent", width=8, height=3.5, dpi= 700)
+ggsave("../figures/beta_representatives.png", bg = "transparent", width=8, height=3.5, dpi= 700)
 
 
 ## ---- visualize_theta_stacked ---
@@ -199,5 +199,5 @@ ggplot(theta, aes(time, value, fill = topic, col = topic)) +
     strip.background = element_rect(fill = "transparent", color = NA),
     plot.background = element_rect(fill = "transparent", color = NA)
   )
-ggsave("../reveal.js/figures/antibiotic_memberships.png", bg = "transparent", width=8, height=3.5, dpi= 700)
+ggsave("../figures/antibiotic_memberships.png", bg = "transparent", width=8, height=3.5, dpi= 700)
 ```

@@ -61,7 +61,7 @@ eigenvalues |>
     scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
     labs(y = "% Variance Explained") 
 
-ggsave("../reveal.js/figures/pc_eigenvalues.png", width = 6, height = 3, bg = "transparent")
+ggsave("..//figures/pc_eigenvalues.png", width = 6, height = 3, bg = "transparent")
 
 ggplot(spca_df, aes(x = PC1, y = PC2, color = bmi_group)) +
     geom_point() +
@@ -73,7 +73,7 @@ ggplot(spca_df, aes(x = PC1, y = PC2, color = bmi_group)) +
         y = glue("PC2 [{eigenvalues$prop[2]}% Variance]")
     ) +
     theme(legend.text = element_text(size = 10))
-ggsave("../reveal.js/figures/pc_scores_1-2.png", width = 7, height = 3, bg = "transparent")
+ggsave("..//figures/pc_scores_1-2.png", width = 7, height = 3, bg = "transparent")
 
 ggplot(spca_df, aes(x = PC7, y = PC8, color = bmi_group)) +
     geom_point() +
@@ -84,7 +84,7 @@ ggplot(spca_df, aes(x = PC7, y = PC8, color = bmi_group)) +
         y = glue("PC8 [{eigenvalues$prop[8]}% Variance]")
     ) +
     theme(legend.text = element_text(size = 10))
-ggsave("../reveal.js/figures/pc_scores_7-8.png", width = 7, height = 3, bg = "transparent")
+ggsave("..//figures/pc_scores_7-8.png", width = 7, height = 3, bg = "transparent")
 ?geom_density_ridges()
 spca_df |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "score") |>
@@ -98,7 +98,7 @@ spca_df |>
                 axis.title = element_text(size = 12)
             )
 
-ggsave("../reveal.js/figures/pc_ridge-4.png", width = 10, height = 4, bg = "transparent")
+ggsave("..//figures/pc_ridge-4.png", width = 10, height = 4, bg = "transparent")
 ```
 
 
@@ -133,7 +133,7 @@ top_loadings |>
         strip.text.y = element_text(angle = 0, size = 14),
         panel.border = element_rect(color = "#b7b7b7", fill = NA, linewidth = 2),
     )
-ggsave("../reveal.js/figures/pca_loadings.png", width = 10, height = 4, bg = "transparent")
+ggsave("..//figures/pca_loadings.png", width = 10, height = 4, bg = "transparent")
 ```
 
 ```{r}
@@ -159,7 +159,7 @@ focus_plot <- function(spca_df, pc="PC2") {
 }
 
 focus_plot(spca_df, "PC1")
-ggsave("../reveal.js/figures/focus_pc_1.png", width = 10, height = 5, bg = "transparent")
+ggsave("..//figures/focus_pc_1.png", width = 10, height = 5, bg = "transparent")
 focus_plot(spca_df)
-ggsave("../reveal.js/figures/focus_pc_2.png", width = 10, height = 5, bg = "transparent")
+ggsave("..//figures/focus_pc_2.png", width = 10, height = 5, bg = "transparent")
 ```

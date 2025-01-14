@@ -48,6 +48,8 @@ atlas <- convertFromPhyloseq(atlas1006) |>
   ) |>
   filter(bmi_group %in% c("obese", "lean", "overweight"), time == 0) |>
   mutate(bmi_group = factor(bmi_group, levels = c("obese", "overweight", "lean")))
+rownames(atlas) <- str_remove(rownames(atlas), "et rel.|at rel.") |>
+  str_trim()
 ```
 
 ```{r, define-null}
@@ -75,7 +77,8 @@ assay_df |>
   ggplot() +
     stat_ecdf(aes(log(1 + value, 10), col = bmi_group), linewidth = 1) +
     scale_color_brewer(palette = "Set2") +
-    facet_wrap(~ taxon, ncol = 7) +
+    labs(color = "BMI Group", y = "P(X <= t)", x = "Abundance (log[10]-scale)") +
+    facet_wrap(~ taxon, ncol = 6) +
     theme(
       strip.text = element_text(size = 10), 
       panel.background = element_rect(fill = "transparent"), 
@@ -83,7 +86,7 @@ assay_df |>
       strip.background = element_rect(fill = "transparent", color = NA),
       legend.background = element_rect(fill = "transparent", color = NA)
     )
-ggsave("../reveal.js/figures/ecdf_testing.png", width = 11, height = 3.5, bg = "transparent")
+ggsave("../figures/ecdf_testing.png", width = 11, height = 3.5, bg = "transparent")
 ```
 
 ```{r}
@@ -106,7 +109,7 @@ assay_df |>
       plot.background = element_rect(fill = "transparent", color = NA),
       strip.background = element_rect(fill = "transparent", color = NA)
     )
-ggsave("../reveal.js/figures/ecdf_overall.png", width = 11, height = 3.5, bg = "transparent")
+ggsave("../figures/ecdf_overall.png", width = 11, height = 3.5, bg = "transparent")
 
 assay_df |>
   filter(taxon %in% taxon[1:12]) |>
@@ -121,7 +124,7 @@ assay_df |>
       plot.background = element_rect(fill = "transparent", color = NA),
       strip.background = element_rect(fill = "transparent", color = NA)
     )
-ggsave("../reveal.js/figures/histogram_narrow.png", width = 11, height = 3.5, bg = "transparent")
+ggsave("../figures/histogram_narrow.png", width = 11, height = 3.5, bg = "transparent")
 
 assay_df |>
   filter(taxon %in% taxon[1:12]) |>
@@ -136,7 +139,7 @@ assay_df |>
       plot.background = element_rect(fill = "transparent", color = NA),
       strip.background = element_rect(fill = "transparent", color = NA)
     )
-ggsave("../reveal.js/figures/histogram_wide.png", width = 11, height = 3.5, bg = "transparent")
+ggsave("../figures/histogram_wide.png", width = 11, height = 3.5, bg = "transparent")
 ```
 
 ```{r}
@@ -154,5 +157,5 @@ assay_df |>
       plot.background = element_rect(fill = "transparent", color = NA),
       strip.background = element_rect(fill = "transparent", color = NA)
     )
-ggsave("../reveal.js/figures/ecdf_log.png", width = 11, height = 3.5, bg = "transparent")
+ggsave("../figures/ecdf_log.png", width = 11, height = 3.5, bg = "transparent")
 ```
