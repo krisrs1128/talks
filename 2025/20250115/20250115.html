@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Visualizing Microbiome Data</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+### Visualizing Microbiome Data
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+17 | January | 2025 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/pu3f5s"&gt;go.wisc.edu/pu3f5s&lt;/a&gt;&lt;br/&gt;
+&lt;/div&gt;
+
+&lt;!-- 40 minute talk --&gt;
+
+
+---
+
+### Outline
+
+1. Visualization Fundamentals
+
+1. Microbiome Gallery
+
+---
+
+### Visualization Fundamentals
+
+---
+
+### Motivation
+
+If our brains were built differently, we might be able to understand an entire
+experiment by glancing at a spreadsheet. Data visualization allows us to use
+our strengths in visual perception to our advantage.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/lion_binary.png" width=1200/&gt;
+Figure from [3].
+&lt;/div&gt;
+
+---
+
+### Motivation
+
+If our brains were built differently, we might be able to understand an entire
+experiment by glancing at a spreadsheet. Data visualization allows us to use
+our strengths in visual perception to our advantage.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/paradoxes.png" width=1200/&gt;
+Figure from [4].
+&lt;/div&gt;
+
+---
+
+### Motivation
+
+Statistical thinking allows us to get past this limitation:
+
+1. **Compression**: Find a simple representation that captures essential
+properties of the data. 
+
+1. **Focusing**: Narrow down to a subset of data that is sufficient to
+answer a question of interest. 
+
+&lt;div style="display: flex; justify-content: center; max-width: 700px;margin: 0 auto"&gt;
+    &lt;img src="figures/map.png" style="max-width: 70%; height: auto;"/&gt;
+    &lt;img src="figures/microscope.png" style="max-width: 30%; height: auto;"/&gt;
+&lt;/div&gt;
+
+---
+
+## Designing Effective Visualizations
+
+---
+
+### Encoding and Efficiency
+
+Different ways of encoding information are perceived with different accuracies.
+This means that any visualization implicitly prioritizes some comparisons over
+others.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/popout.png" width=1200/&gt;
+Figure from [1]
+&lt;/div&gt;
+
+---
+
+### Encoding and Efficiency
+
+Different ways of encoding information are perceived with different accuracies.
+This means that any visualization implicitly prioritizes some comparisons over
+others.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/ranking_encodings.png" width=700/&gt;
+
+Figure from [2].
+&lt;/div&gt;
+
+---
+
+### Information Density
+
+&gt; Premature summarization is the root of all evil in statistics.
+&gt;
+&gt; -- Susan Holmes
+
+Good visualizations let readers focus on the data, lend themselves to accurate
+interpretation, and are memorable.
+
+---
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/memorable_visualizations.png" width=900/&gt;&lt;br/&gt;
+Figure from [5].
+&lt;/div&gt;
+
+---
+
+### Faceting
+
+It's often surprisingly effective show many similar views in parallel. This is
+the basis for techniques like small multiples [6]
+and piling [7].
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/piling.png" width=1000/&gt;
+&lt;/div&gt;
+
+---
+
+### Focus-plus-Context
+
+We can let readers zoom into patterns of interest without losing relevant
+context.
+
+&gt; Overview first, zoom and filter, then details on demand.
+
+-- Schneiderman's "Visual Information Seeking Mantra", from [8].
+
+---
+
+&lt;iframe src="http://www.youtube.com/embed/RTQ0N4QY0yc?html5=1" style="height: 700px; width: 1200px"&gt;&lt;/iframe&gt;
+
+---
+
+## Microbiome Visualization
+
+---
+
+### MA Plot
+
+An MA plot [9] is a good first step in a differential abundance analysis.
+
+* Minus: Difference in log-abundances between groups.
+* Average: Average of log-abundances across groups
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/ma_plot_da.png" width=700/&gt;
+&lt;/div&gt;
+
+---
+
+### MA Plot
+
+Since phenotypes are usually only associated with a small fraction of taxa, we
+expect the `\(M\)` values to be centered around 0.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/ma_plot_da.png" width=850/&gt;
+&lt;/div&gt;
+
+---
+
+### ECDF Plots
+
+An empirical cumulative distribution function (ECDF) traces out the curve
+`\(\left(t, \mathbf{P}\left(X \leq t\right)\right)\)` for values of `\(t\)` between the minimum and
+maximum observed values of `\(X\)`. 
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/ecdf_overall.png"/&gt;
+&lt;/div&gt;
+
+---
+
+Unlike histograms, ECDFs don't require any choice of bin width. They 
+perform surprisingly well in studies of uncertainty visualization [10].
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/histogram_narrow.png"/&gt;
+&lt;/div&gt;
+
+---
+
+Unlike histograms, ECDFs don't require any choice of bin width. They 
+perform surprisingly well in studies of uncertainty visualization [10].
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/histogram_wide.png"/&gt;
+&lt;/div&gt;
+
+---
+
+### ECDF Interpretation
+
+Here are the ECDF plots for taxa that are differentially abundant across BMI
+groups in the Atlas study of healthy European adults [11].  Curves further to the right have systematically larger
+abundances.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/ecdf_testing.png"/&gt;
+&lt;/div&gt;
+
+---
+
+### Considerations
+
+1. What scale? Different variable transformations will emphasize some
+distributional differences over others.
+
+1. Which taxa? We typically order the panels using the result of a differential
+abundance analysis.
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img src="figures/ecdf_overall.png"/&gt;
+&lt;/div&gt;
+
+---
+
+### Considerations
+
+1. What scale? Different variable transformations will emphasize some
+distributional differences over others.
+
+1. Which taxa? We typically order the panels using the result of a differential
+abundance analysis.
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img src="figures/ecdf_log.png"/&gt;
+&lt;/div&gt;
+
+---
+
+### Principal Components Analysis
+
+A principal components analysis (PCA) finds the best low-dimensional linear
+approximation of a high-dimensional data cloud [12].
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true" width=800/&gt;
+&lt;/div&gt;
+
+---
+
+### Scree Plot
+
+The principal components are sorted according to the amount of variance that
+they explain. Dropoffs in the variance explained would suggest intrinsic
+low-dimensionality.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/pc_eigenvalues.png" width=800/&gt;
+&lt;/div&gt;
+
+---
+
+### Resulting "Maps"
+
+The samples are organized so that those with similar measurements are placed
+close to one another. Different dimensions give different views.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/pc_scores_1-2.png" width=1200/&gt;
+&lt;/div&gt;
+
+---
+
+### Resulting "Maps"
+
+The samples are organized so that those with similar measurements are placed
+close to one another. Different dimensions give different views.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/pc_scores_7-8.png" width=1200/&gt;
+&lt;/div&gt;
+
+---
+
+### Components
+
+The "components" in the PCA give a way of interpreting the axes of the map. The
+further we move in the PC1 direction, the more we increase the
+positive PC1 taxa, and vice versa for negative taxa.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/pca_loadings.png" width=1100/&gt;
+&lt;/div&gt;
+
+---
+### PCA Interpretation
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/focus_pc_1.png"/&gt;
+&lt;/div&gt;
+
+---
+
+### PCA Interpretation
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/focus_pc_2.png"/&gt;
+&lt;/div&gt;
+
+---
+
+### Identifying Dimensions
+
+Interesting variation can be buried in higher components. A ridgeplot [13] can help identify these.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/pc_ridge-4.png" width=1200/&gt;
+&lt;/div&gt;
+
+---
+
+### Considerations
+
+Like with ECDF plots, the output from a dimensionality reduction will depend on
+initial original data transformations.
+
+When there are many more features than samples, PCA can be unstable. Regularized
+versions, like the sparse PCA we used here [14], can be more stable.
+
+
+
+---
+
+### Topic Models
+
+&lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
+    &lt;div style="flex: 1; padding-right: 20px;"&gt;
+        1. Since components can have both positive and negative values, effects in PCA
+        can sometimes cancel out, complicating interpretations.&lt;br/&gt;&lt;br/&gt;
+        1. Topic models deal with this by requiring components to be nonnegative
+        [15; 16].
+        Therefore, they can be interpreted as latent communities &lt;span
+        class="cite" data-cite="sankaran2019latent"&gt;&lt;/span&gt;.
+    &lt;/div&gt;
+    &lt;img src="figures/latent_dirichlet_v2.png" width=600/&gt;
+&lt;/div&gt;
+
+---
+
+### Topic Models
+
+What were called components in PCA are now called _topics_. Each sample is a
+mixture of topics.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/latent_dirichlet_v2.png" width=750/&gt;
+&lt;/div&gt;
+
+---
+
+### STRUCTURE Plot
+
+The mixtures across the entire dataset can be visualized in stacked barplot.
+This dataset studied community dynamics after antibiotics treatment.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/antibiotic_memberships.png" width=2000/&gt;
+&lt;/div&gt;
+
+---
+
+### Simulation-based Checks
+
+Unlike PCA, topic models are a generative model. This allows us to evaluate model quality by comparing real with simulated samples. 
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/lda_posterior_predictive.jpeg" width=700/&gt;
+&lt;/div&gt;
+
+---
+
+### Topics
+
+We can also visualize the topics themselves. It helps to sort the taxa so that
+those that have the highest variation across topics are shown first.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/antibiotic_superheat.png" width=1000/&gt;
+&lt;/div&gt;
+
+---
+
+### Topics
+
+We can also visualize the topics themselves. It helps to sort the taxa so that
+those that have the highest variation across topics are shown first.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/beta_representatives.png" width=1000/&gt;
+&lt;/div&gt;
+
+---
+
+### Alto Plot
+
+The main hyperparameter in topic models is the number of topics `\(K\)`. It can be
+helpful to compare the topic model results across a range of `\(K\)`
+&lt;span class="cite" data-cite="Fukuyama2022"&gt;&lt;/span&gt;.
+
+&lt;img src="figures/alto_sketches_annotated alignment.png"&gt;
+
+---
+
+### Alto Plot
+
+Similar topics are often recovered across a wide range of `\(K\)`. We draw larger
+edges between topics that have similar latent communities.
+
+&lt;img src="figures/alto_sketches_annotated alignment.png"&gt;
+
+---
+
+### Alto Interpretation
+
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/pregnancy_sankey.jpg" width=650/&gt;
+&lt;/div&gt;
+
+---
+
+### MA Plot - Revisited
+
+1. MA plots are often helpful for identifying batch effects. 
+
+1. Instead of comparing treatments, compare batches.  If we see systematic
+differences, we know that we need to apply a batch effect correction method.
+
+---
+
+### Mediation Analysis
+
+If we have precise hypotheses about how datasets might be related, we can design
+visualization to evaluate them.
+
+For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/mediation_diagram.jpg" width=500/&gt;
+&lt;/div&gt;
+
+---
+
+### Mediation Analysis
+
+This faceted plot shows the paths with the strongest indirect effects in joint
+metabolome-microbiome analysis [17].
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/mediation_scatterplot.jpg" width=900/&gt;
+&lt;/div&gt;
+
+---
+
+### CCA Biplots
+
+The exploratory analog of PCA for multiple tables is called canonical
+correlation analysis (CCA).
+
+It builds PCA-like maps for each dataset so that they look as similar to one
+another as possible [18].
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;
+&lt;/div&gt;
+
+---
+
+### CCA Components
+
+Like in PCA, the directions in a CCA plot can be interpreted by analyzing the
+CCA components. Each data source has its own set of CCA components.
+
+&lt;img src="figures/sparse_cca_multitable.jpg"/&gt;
+
+---
+
+### Considerations
+
+CCA searches for shared variation across tables. To decompose variation into
+shared and distinct components, there are closely-related alternatives, like [19; 20].
+
+---
+
+### Conclusion
+
+* Other plots not discussed: Phylogeny, partial dependence plot, adjacency network plot.
+
+---
+
+class: reference
+
+### References
+
+[1] T. Munzner. _Visualization Analysis and Design_. AK Peters Visualization Series. London, England: CRC Press, Dec. 2014.
+
+[2] J. Heer et al. "Crowdsourcing graphical perception: using mechanical turk to assess visualization design". In: _Proceedings of the SIGCHI conference on human factors in computing
+systems_. 2010, pp. 203-212.
+
+[3] G. Alain et al. _Understanding intermediate layers using linear classifier probes_. 2017. URL:
+[https://openreview.net/forum?id=ryF7rTqgl](https://openreview.net/forum?id=ryF7rTqgl).
+
+[4] T. Munzner. _Perception, Frameworks, Color_. InfoVis MiniCourse, Lecture 1. Lecture. Presentation slides available at https://www.cs.ubc.ca/~tmm/talks/bord04.1/bord1.mgp.6up.pdf.
+Jun. 2004.
+
+[5] M. A. Borkin et al. "What Makes a Visualization Memorable?" In: _IEEE Transactions on Visualization and Computer Graphics_ 19.12 (Dec. 2013), p. 2306–2315. ISSN: 1077-2626. DOI:
+[10.1109/tvcg.2013.234](https://doi.org/10.1109%2Ftvcg.2013.234). URL: [http://dx.doi.org/10.1109/TVCG.2013.234](http://dx.doi.org/10.1109/TVCG.2013.234).
+
+[6] E. R. Tufte et al. _The visual display of quantitative information_. Vol. 2. 9. Graphics press Cheshire, CT, 1983.
+
+[7] F. Lekschas et al. "A generic framework and library for exploration of small multiples through interactive piling". In: _IEEE Transactions on Visualization and Computer Graphics_
+27.2 (2020), pp. 358-368.
+
+[8] B. Shneiderman. "The eyes have it: A task by data type taxonomy for information visualizations". In: _The craft of information visualization_. Elsevier, 2003, pp. 364-371.
+
+[9] S. Dudoit et al. "Statistical methods for identifying differentially expressed genes in replicated cDNA microarray experiments". In: _Statistica sinica_ (2002), pp. 111-139.
+
+[10] M. Kay et al. "When (ish) is My Bus?: User-centered Visualizations of Uncertainty in Everyday, Mobile Predictive Systems". In: _Proceedings of the 2016 CHI Conference on Human
+Factors in Computing Systems_. CHI’16. ACM, May. 2016. DOI: [10.1145/2858036.2858558](https://doi.org/10.1145%2F2858036.2858558). URL:
+[http://dx.doi.org/10.1145/2858036.2858558](http://dx.doi.org/10.1145/2858036.2858558).
+
+[11] L. Lahti et al. "Tipping elements in the human intestinal ecosystem". In: _Nature Communications_ 5.1 (Jul. 2014). ISSN: 2041-1723. DOI:
+[10.1038/ncomms5344](https://doi.org/10.1038%2Fncomms5344). URL: [http://dx.doi.org/10.1038/ncomms5344](http://dx.doi.org/10.1038/ncomms5344).
+
+[12] L. H. Nguyen et al. "Ten quick tips for effective dimensionality reduction". In: _PLOS Computational Biology_ 15.6 (Jun. 2019). Ed. by F. Ouellette, p. e1006907. ISSN: 1553-7358.
+DOI: [10.1371/journal.pcbi.1006907](https://doi.org/10.1371%2Fjournal.pcbi.1006907). URL:
+[http://dx.doi.org/10.1371/journal.pcbi.1006907](http://dx.doi.org/10.1371/journal.pcbi.1006907).
+
+[13] C. O. Wilke. "Package “ggridges”". In: _Ridgeline Plots in “ggplot2_ (2022).
+
+---
+
+### Figure Credits
+
+Microscope by Hilmy Abiyyu Asad from &lt;a href="https://thenounproject.com/browse/icons/term/microscope/" target="_blank" title="Microscope Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
