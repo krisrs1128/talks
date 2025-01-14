@@ -12,13 +12,17 @@ output:
     seal: false
 ---
 
-### Visualizing Microbiome Data
+# Visualizing Microbiome Data
 
 <div id="subtitle">
 Kris Sankaran <br/>
+AHRI Seminar <br/>
 17 | January | 2025 <br/>
+</div>
+<div id="subtitle_right">
+Slides: <a href="https://go.wisc.edu/i50k4t">go.wisc.edu/i50k4t</a><br/>
+Examples: <a href="https://go.wisc.edu/9416ze">go.wisc.edu/9416ze</a><br/>
 Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
-Slides: <a href="https://go.wisc.edu/pu3f5s">go.wisc.edu/pu3f5s</a><br/>
 </div>
 
 <!-- 40 minute talk -->
@@ -41,15 +45,7 @@ bib <- ReadBib("references.bib")
 
 ---
 
-### Outline
-
-1. Visualization Fundamentals
-
-1. Microbiome Gallery
-
----
-
-### Visualization Fundamentals
+## Visualization Fundamentals
 
 ---
 
@@ -120,23 +116,53 @@ This means that any visualization implicitly prioritizes some comparisons over
 others.
 
 <div style="text-align: center;">
-<img src="figures/ranking_encodings.png" width=700/>
-
+<img src="figures/ranking_encodings.png" width=600/><br/>
 Figure from `r Citep(bib, "heer2010crowdsourcing")`.
 </div>
 
 ---
 
-### Information Density
+### Data-to-Ink Ratio
 
 > Premature summarization is the root of all evil in statistics.
 >
 > -- Susan Holmes
 
-Good visualizations let readers focus on the data, lend themselves to accurate
-interpretation, and are memorable.
+.pull-left[
+Good visualizations show more of the data, faithfully represent it, and are
+memorable.
+]
+
+.pull-right[
+<div style="text-align: center;">
+<img src="figures/data_ink2.png" width=450/><br/>
+Figure from `r Citep(bib, "tufte1983visual")`.
+</div>
+]
 
 ---
+
+### Data-to-Ink Ratio
+
+> Premature summarization is the root of all evil in statistics.
+>
+> -- Susan Holmes
+
+.pull-left[
+Good visualizations show more of the data, faithfully represent it, and are
+memorable.
+]
+
+.pull-right[
+<div style="text-align: center;">
+<img src="figures/data_ink1.png" width=500/><br/>
+Figure from `r Citep(bib, "tufte1983visual")`.
+</div>
+]
+
+---
+
+exclude: true
 
 <div style="text-align: center;">
 <img src="figures/memorable_visualizations.png" width=900/><br/>
@@ -148,11 +174,11 @@ Figure from `r Citep(bib, "Borkin2013")`.
 ### Faceting
 
 It's often surprisingly effective show many similar views in parallel. This is
-the basis for techniques like small multiples `r Citep(bib, "tufte1983visual")`
-and piling `r Citep(bib, "lekschas2020generic")`.
+the basis for techniques like small multiples and piling `r Citep(bib, c("tufte1983visual", "lekschas2020generic"))`
 
 <div style="text-align: center;">
 <img src="figures/piling.png" width=1000/>
+Figure from `r Citep(bib, "lekschas2020generic")`.
 </div>
 
 ---
@@ -168,7 +194,7 @@ context.
 
 ---
 
-<iframe src="http://www.youtube.com/embed/RTQ0N4QY0yc?html5=1" style="height: 700px; width: 1200px"></iframe>
+<iframe src="http://www.youtube.com/embed/RTQ0N4QY0yc?html5=1" style="height: 620px; width: 900px"></iframe>
 
 ---
 
@@ -266,6 +292,30 @@ abundance analysis.
 
 <div style="text-align: center;">
     <img src="figures/ecdf_log.png"/>
+</div>
+
+---
+
+### Principal Components Analysis
+
+A principal components analysis (PCA) finds the best low-dimensional linear
+approximation of a high-dimensional data cloud `r Citep(bib, "Nguyen2019")`.
+
+<div style="text-align: center;">
+    <img src="figures/pca_q1.png"/><br/>
+    What is this object?
+</div>
+
+---
+
+### Principal Components Analysis
+
+A principal components analysis (PCA) finds the best low-dimensional linear
+approximation of a high-dimensional data cloud `r Citep(bib, "Nguyen2019")`.
+
+<div style="text-align: center;">
+    <img src="figures/pca_q2.png"/><br/>
+    Not so complicated now. Credit for this example goes to Julie Josse.
 </div>
 
 ---
@@ -446,8 +496,8 @@ helpful to compare the topic model results across a range of $K$
 
 ### Alto Plot
 
-Similar topics are often recovered across a wide range of $K$. We draw larger
-edges between topics that have similar latent communities.
+Similar topics are often recovered across many $K$. Our package draws
+larger edges between topics that have similar latent communities `r Citep(bib, "Fukuyama2022")`.
 
 <img src="figures/alto_sketches_annotated alignment.png">
 
@@ -457,17 +507,61 @@ edges between topics that have similar latent communities.
 
 
 <div style="text-align: center;">
-<img src="figures/pregnancy_sankey.jpg" width=650/>
+<img src="figures/pregnancy_sankey.jpg" width=500/><br/>
+
+Figure from `r Citep(bib, "symul2023sub")`.
 </div>
 
 ---
 
 ### MA Plot - Revisited
 
-1. MA plots are often helpful for identifying batch effects. 
+.pull-left[
+1. MA plots are often helpful for identifying sources of technical variation,
+like batch effects.
 
-1. Instead of comparing treatments, compare batches.  If we see systematic
-differences, we know that we need to apply a batch effect correction method.
+1. The example shown here compares microarray data from experiments that are
+identical except for the choice of dye `r Citep(bib, "tseng2001issues")`.
+]
+
+.pull-right[
+<div style="text-align: center;">
+<img src="figures/dye_effects.png" width=400/>
+</div>
+]
+
+---
+
+### CCA Biplots
+
+Canonical Correlation Analysis (CCA) builds PCA-like maps for each dataset so
+that they look as similar to one another as possible.
+
+<div style="text-align: center;">
+<img src="figures/sparse_cca_multitable.jpg" width=980/><br/>
+Figure from `r Citep(bib, "sankaran2019multitable")`.
+</div>
+
+---
+
+### CCA Components
+
+Like in PCA, the directions in a CCA plot can be interpreted by analyzing the
+CCA components. Each data source has its own set of CCA components.
+
+<div style="text-align: center;">
+<img src="figures/sparse_cca_multitable.jpg" width=980/><br/>
+Figure from `r Citep(bib, "sankaran2019multitable")`.
+</div>
+
+---
+
+### Considerations
+
+1. CCA searches for shared variation across tables. This can cause the results to ignore table-specific variation.
+
+1. To decompose variation into shared and distinct components, consider methods
+like `r Citep(bib, c("lin2023quantifying", "Palzer2022"))`.
 
 ---
 
@@ -493,41 +587,19 @@ metabolome-microbiome analysis `r Citep(bib, "Jiang2024")`.
 <img src="figures/mediation_scatterplot.jpg" width=900/>
 </div>
 
----
-
-### CCA Biplots
-
-The exploratory analog of PCA for multiple tables is called canonical
-correlation analysis (CCA).
-
-It builds PCA-like maps for each dataset so that they look as similar to one
-another as possible `r Citep(bib, "sankaran2019multitable")`.
-
-<div style="text-align: center;">
-<img src="figures/sparse_cca_multitable.jpg" width=980/>
-</div>
-
----
-
-### CCA Components
-
-Like in PCA, the directions in a CCA plot can be interpreted by analyzing the
-CCA components. Each data source has its own set of CCA components.
-
-<img src="figures/sparse_cca_multitable.jpg"/>
-
----
-
-### Considerations
-
-CCA searches for shared variation across tables. To decompose variation into
-shared and distinct components, there are closely-related alternatives, like `r Citep(bib, c("lin2023quantifying", "Palzer2022"))`.
 
 ---
 
 ### Conclusion
 
-* Other plots not discussed: Phylogeny, partial dependence plot, adjacency network plot.
+1. Visualization is helpful throughout the data analysis process --
+validation, discovery, and communication.
+
+1. The best visualizations are the product of repeated refinements, just like
+the best writing.
+
+1. Other helpful in microbiome research are residual plots `r Citep(bib, "faraway2002practical")`, partial dependence `r Citep(bib, c("sankaran2024mbtransfer", "friedman2001greedy"))`, phylogenetic `r Citep(bib, "mcmurdie2013phyloseq")`,
+and network visualizations `r Citep(bib, "tidygraph")`.
 
 ---
 
@@ -537,6 +609,16 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 24)
 ```
 
 ---

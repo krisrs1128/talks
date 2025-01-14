@@ -11,13 +11,17 @@
     <textarea id="source">
 
 
-### Visualizing Microbiome Data
+# Visualizing Microbiome Data
 
 &lt;div id="subtitle"&gt;
 Kris Sankaran &lt;br/&gt;
+AHRI Seminar &lt;br/&gt;
 17 | January | 2025 &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Slides: &lt;a href="https://go.wisc.edu/i50k4t"&gt;go.wisc.edu/i50k4t&lt;/a&gt;&lt;br/&gt;
+Examples: &lt;a href="https://go.wisc.edu/9416ze"&gt;go.wisc.edu/9416ze&lt;/a&gt;&lt;br/&gt;
 Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
-Slides: &lt;a href="https://go.wisc.edu/pu3f5s"&gt;go.wisc.edu/pu3f5s&lt;/a&gt;&lt;br/&gt;
 &lt;/div&gt;
 
 &lt;!-- 40 minute talk --&gt;
@@ -25,15 +29,7 @@ Slides: &lt;a href="https://go.wisc.edu/pu3f5s"&gt;go.wisc.edu/pu3f5s&lt;/a&gt;&
 
 ---
 
-### Outline
-
-1. Visualization Fundamentals
-
-1. Microbiome Gallery
-
----
-
-### Visualization Fundamentals
+## Visualization Fundamentals
 
 ---
 
@@ -104,23 +100,53 @@ This means that any visualization implicitly prioritizes some comparisons over
 others.
 
 &lt;div style="text-align: center;"&gt;
-&lt;img src="figures/ranking_encodings.png" width=700/&gt;
-
+&lt;img src="figures/ranking_encodings.png" width=600/&gt;&lt;br/&gt;
 Figure from [2].
 &lt;/div&gt;
 
 ---
 
-### Information Density
+### Data-to-Ink Ratio
 
 &gt; Premature summarization is the root of all evil in statistics.
 &gt;
 &gt; -- Susan Holmes
 
-Good visualizations let readers focus on the data, lend themselves to accurate
-interpretation, and are memorable.
+.pull-left[
+Good visualizations show more of the data, faithfully represent it, and are
+memorable.
+]
+
+.pull-right[
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/data_ink2.png" width=450/&gt;&lt;br/&gt;
+Figure from [6].
+&lt;/div&gt;
+]
 
 ---
+
+### Data-to-Ink Ratio
+
+&gt; Premature summarization is the root of all evil in statistics.
+&gt;
+&gt; -- Susan Holmes
+
+.pull-left[
+Good visualizations show more of the data, faithfully represent it, and are
+memorable.
+]
+
+.pull-right[
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/data_ink1.png" width=500/&gt;&lt;br/&gt;
+Figure from [6].
+&lt;/div&gt;
+]
+
+---
+
+exclude: true
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/memorable_visualizations.png" width=900/&gt;&lt;br/&gt;
@@ -132,11 +158,11 @@ Figure from [5].
 ### Faceting
 
 It's often surprisingly effective show many similar views in parallel. This is
-the basis for techniques like small multiples [6]
-and piling [7].
+the basis for techniques like small multiples and piling [6; 7]
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/piling.png" width=1000/&gt;
+Figure from [7].
 &lt;/div&gt;
 
 ---
@@ -152,7 +178,7 @@ context.
 
 ---
 
-&lt;iframe src="http://www.youtube.com/embed/RTQ0N4QY0yc?html5=1" style="height: 700px; width: 1200px"&gt;&lt;/iframe&gt;
+&lt;iframe src="http://www.youtube.com/embed/RTQ0N4QY0yc?html5=1" style="height: 620px; width: 900px"&gt;&lt;/iframe&gt;
 
 ---
 
@@ -250,6 +276,30 @@ abundance analysis.
 
 &lt;div style="text-align: center;"&gt;
     &lt;img src="figures/ecdf_log.png"/&gt;
+&lt;/div&gt;
+
+---
+
+### Principal Components Analysis
+
+A principal components analysis (PCA) finds the best low-dimensional linear
+approximation of a high-dimensional data cloud [12].
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img src="figures/pca_q1.png"/&gt;&lt;br/&gt;
+    What is this object?
+&lt;/div&gt;
+
+---
+
+### Principal Components Analysis
+
+A principal components analysis (PCA) finds the best low-dimensional linear
+approximation of a high-dimensional data cloud [12].
+
+&lt;div style="text-align: center;"&gt;
+    &lt;img src="figures/pca_q2.png"/&gt;&lt;br/&gt;
+    Not so complicated now. Credit for this example goes to Julie Josse.
 &lt;/div&gt;
 
 ---
@@ -430,8 +480,8 @@ helpful to compare the topic model results across a range of `\(K\)`
 
 ### Alto Plot
 
-Similar topics are often recovered across a wide range of `\(K\)`. We draw larger
-edges between topics that have similar latent communities.
+Similar topics are often recovered across many `\(K\)`. Our package draws
+larger edges between topics that have similar latent communities [23].
 
 &lt;img src="figures/alto_sketches_annotated alignment.png"&gt;
 
@@ -441,17 +491,61 @@ edges between topics that have similar latent communities.
 
 
 &lt;div style="text-align: center;"&gt;
-&lt;img src="figures/pregnancy_sankey.jpg" width=650/&gt;
+&lt;img src="figures/pregnancy_sankey.jpg" width=500/&gt;&lt;br/&gt;
+
+Figure from [22].
 &lt;/div&gt;
 
 ---
 
 ### MA Plot - Revisited
 
-1. MA plots are often helpful for identifying batch effects. 
+.pull-left[
+1. MA plots are often helpful for identifying sources of technical variation,
+like batch effects.
 
-1. Instead of comparing treatments, compare batches.  If we see systematic
-differences, we know that we need to apply a batch effect correction method.
+1. The example shown here compares microarray data from experiments that are
+identical except for the choice of dye [21].
+]
+
+.pull-right[
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/dye_effects.png" width=400/&gt;
+&lt;/div&gt;
+]
+
+---
+
+### CCA Biplots
+
+Canonical Correlation Analysis (CCA) builds PCA-like maps for each dataset so
+that they look as similar to one another as possible.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;&lt;br/&gt;
+Figure from [18].
+&lt;/div&gt;
+
+---
+
+### CCA Components
+
+Like in PCA, the directions in a CCA plot can be interpreted by analyzing the
+CCA components. Each data source has its own set of CCA components.
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;&lt;br/&gt;
+Figure from [18].
+&lt;/div&gt;
+
+---
+
+### Considerations
+
+1. CCA searches for shared variation across tables. This can cause the results to ignore table-specific variation.
+
+1. To decompose variation into shared and distinct components, consider methods
+like [19; 20].
 
 ---
 
@@ -477,41 +571,19 @@ metabolome-microbiome analysis [17].
 &lt;img src="figures/mediation_scatterplot.jpg" width=900/&gt;
 &lt;/div&gt;
 
----
-
-### CCA Biplots
-
-The exploratory analog of PCA for multiple tables is called canonical
-correlation analysis (CCA).
-
-It builds PCA-like maps for each dataset so that they look as similar to one
-another as possible [18].
-
-&lt;div style="text-align: center;"&gt;
-&lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;
-&lt;/div&gt;
-
----
-
-### CCA Components
-
-Like in PCA, the directions in a CCA plot can be interpreted by analyzing the
-CCA components. Each data source has its own set of CCA components.
-
-&lt;img src="figures/sparse_cca_multitable.jpg"/&gt;
-
----
-
-### Considerations
-
-CCA searches for shared variation across tables. To decompose variation into
-shared and distinct components, there are closely-related alternatives, like [19; 20].
 
 ---
 
 ### Conclusion
 
-* Other plots not discussed: Phylogeny, partial dependence plot, adjacency network plot.
+1. Visualization is helpful throughout the data analysis process --
+validation, discovery, and communication.
+
+1. The best visualizations are the product of repeated refinements, just like
+the best writing.
+
+1. Other helpful in microbiome research are residual plots [24], partial dependence [25; 26], phylogenetic [27],
+and network visualizations .
 
 ---
 
@@ -554,6 +626,41 @@ DOI: [10.1371/journal.pcbi.1006907](https://doi.org/10.1371%2Fjournal.pcbi.10069
 [http://dx.doi.org/10.1371/journal.pcbi.1006907](http://dx.doi.org/10.1371/journal.pcbi.1006907).
 
 [13] C. O. Wilke. "Package “ggridges”". In: _Ridgeline Plots in “ggplot2_ (2022).
+
+---
+
+class: reference
+
+### References
+
+[14] N. B. Erichson et al. _sparsepca: Sparse Principal Component Analysis (SPCA)_. R package version 0.1.2. 2018. URL:
+[https://CRAN.R-project.org/package=sparsepca](https://CRAN.R-project.org/package=sparsepca).
+
+[15] J. K. Pritchard et al. "Inference of population structure using multilocus genotype data". In: _Genetics_ 155.2 (2000), pp. 945-959.
+
+[16] D. M. Blei et al. "Latent dirichlet allocation". In: _Journal of machine Learning research_ 3.Jan (2003), pp. 993-1022.
+
+[17] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ (Dec. 2024). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+
+[18] K. Sankaran et al. "Multitable methods for microbiome data integration". In: _Frontiers in genetics_ 10 (2019), p. 627.
+
+[19] K. Z. Lin et al. "Quantifying common and distinct information in single-cell multimodal data with Tilted Canonical Correlation Analysis". In: _Proceedings of the National Academy
+of Sciences_ 120.32 (2023), p. e2303647120.
+
+[20] E. F. Palzer et al. "sJIVE: Supervised joint and individual variation explained". In: _Computational Statistics &amp;amp; Data Analysis_ 175 (Nov. 2022), p. 107547. ISSN: 0167-9473.
+DOI: [10.1016/j.csda.2022.107547](https://doi.org/10.1016%2Fj.csda.2022.107547). URL: [http://dx.doi.org/10.1016/j.csda.2022.107547](http://dx.doi.org/10.1016/j.csda.2022.107547).
+
+[21] G. C. Tseng et al. "Issues in cDNA microarray analysis: quality filtering, channel normalization, models of variations and assessment of gene effects". In: _Nucleic acids
+research_ 29.12 (2001), pp. 2549-2557.
+
+[22] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of the Royal Society B_ 290.2011 (2023), p. 20231461.
+
+[23] J. Fukuyama et al. "Multiscale analysis of count data through topic alignment". In: _Biostatistics_ 24.4 (Jun. 2022), p. 1045–1065. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxac018](https://doi.org/10.1093%2Fbiostatistics%2Fkxac018). URL:
+[http://dx.doi.org/10.1093/biostatistics/kxac018](http://dx.doi.org/10.1093/biostatistics/kxac018).
+
+[24] J. J. Faraway. _Practical regression and ANOVA using R._ Vol. 168. University of Bath Bath, 2002.
 
 ---
 
