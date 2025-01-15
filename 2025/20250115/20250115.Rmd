@@ -75,7 +75,7 @@ Figure from `r Citep(bib, "munzner2004perception")`.
 
 ---
 
-### Motivation
+### Strategy
 
 Statistical thinking allows us to get past this limitation:
 
@@ -96,16 +96,7 @@ answer a question of interest.
 
 ---
 
-### Encoding and Efficiency
-
-Different ways of encoding information are perceived with different accuracies.
-This means that any visualization implicitly prioritizes some comparisons over
-others.
-
-<div style="text-align: center;">
-<img src="figures/popout.png" width=1200/>
-Figure from `r Citep(bib, "Munzner2014-fj")`
-</div>
+### Graphical Encoding
 
 ---
 
@@ -118,6 +109,19 @@ others.
 <div style="text-align: center;">
 <img src="figures/ranking_encodings.png" width=600/><br/>
 Figure from `r Citep(bib, "heer2010crowdsourcing")`.
+</div>
+
+---
+
+### Encoding and Efficiency
+
+Different ways of encoding information are perceived with different accuracies.
+This means that any visualization implicitly prioritizes some comparisons over
+others.
+
+<div style="text-align: center;">
+<img src="figures/popout.png" width=1200/>
+Figure from `r Citep(bib, "Munzner2014-fj")`
 </div>
 
 ---
@@ -177,8 +181,8 @@ It's often surprisingly effective show many similar views in parallel. This is
 the basis for techniques like small multiples and piling `r Citep(bib, c("tufte1983visual", "lekschas2020generic"))`
 
 <div style="text-align: center;">
-<img src="figures/piling.png" width=1000/>
-Figure from `r Citep(bib, "lekschas2020generic")`.
+<img src="figures/biome_horizon.png" width=500/><br/>
+Figure from `r Citep(bib, "Fink2022")`.
 </div>
 
 ---
@@ -194,7 +198,8 @@ context.
 
 ---
 
-<iframe src="http://www.youtube.com/embed/RTQ0N4QY0yc?html5=1" style="height: 620px; width: 900px"></iframe>
+<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px"></iframe><br/>
+Figure from `r Citep(bib, "sankaran2018interactive")`.
 
 ---
 
