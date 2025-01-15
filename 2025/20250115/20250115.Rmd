@@ -182,7 +182,7 @@ the basis for techniques like small multiples and piling `r Citep(bib, c("tufte1
 
 <div style="text-align: center;">
 <img src="figures/biome_horizon.png" width=500/><br/>
-Figure from `r Citep(bib, "Fink2022")`.
+Horizon plot made using the BiomeHorizon package `r Citep(bib, "Fink2022")`.
 </div>
 
 ---
@@ -199,7 +199,7 @@ context.
 ---
 
 <iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px"></iframe><br/>
-Figure from `r Citep(bib, "sankaran2018interactive")`.
+Interactive sankey from the treelapse package `r Citep(bib, "sankaran2018interactive")`.
 
 ---
 
@@ -222,9 +222,8 @@ An MA plot `r Citep(bib, "dudoit2002statistical")` is a good first step in a dif
 
 ### MA Plot
 
-Since phenotypes are usually only associated with a small fraction of taxa, we
-expect the $M$ values to be centered around 0.
-
+This is an MA plot comparing low vs. high BMI groups in the Atlas study of
+healthy European adults `r Citep(bib, "Lahti2014")`.
 <div style="text-align: center;">
 <img src="figures/ma_plot_da.png" width=850/>
 </div>
@@ -233,9 +232,9 @@ expect the $M$ values to be centered around 0.
 
 ### ECDF Plots
 
-An empirical cumulative distribution function (ECDF) traces out the curve
-$\left(t, \mathbf{P}\left(X \leq t\right)\right)$ for values of $t$ between the minimum and
-maximum observed values of $X$. 
+If we want taxa-level detail, we can make an empirical cumulative distribution
+function (ECDF) plot.  This traces $\left(t, \mathbf{P}\left(X \leq
+t\right)\right)$ for across the range of observed values of $t$.
 
 <div style="text-align: center;">
 <img src="figures/ecdf_overall.png"/>
@@ -263,9 +262,8 @@ perform surprisingly well in studies of uncertainty visualization `r Citep(bib, 
 
 ### ECDF Interpretation
 
-Here are the ECDF plots for taxa that are differentially abundant across BMI
-groups in the Atlas study of healthy European adults `r Citep(bib, "Lahti2014")`.  Curves further to the right have systematically larger
-abundances.
+Here is an ECDF for the same BMI differential analysis from before. Curves further to the
+right have systematically larger abundances.
 
 <div style="text-align: center;">
 <img src="figures/ecdf_testing.png"/>
@@ -275,11 +273,11 @@ abundances.
 
 ### Considerations
 
-1. What scale? Different variable transformations will emphasize some
-distributional differences over others.
-
 1. Which taxa? We typically order the panels using the result of a differential
 abundance analysis.
+
+1. What scale? Different normalizations will prioritize some differences between
+groups over others.
 
 <div style="text-align: center;">
     <img src="figures/ecdf_overall.png"/>
@@ -289,11 +287,11 @@ abundance analysis.
 
 ### Considerations
 
-1. What scale? Different variable transformations will emphasize some
-distributional differences over others.
-
 1. Which taxa? We typically order the panels using the result of a differential
 abundance analysis.
+
+1. What scale? Different normalizations will prioritize some differences between
+groups over others.
 
 <div style="text-align: center;">
     <img src="figures/ecdf_log.png"/>
@@ -303,8 +301,8 @@ abundance analysis.
 
 ### Principal Components Analysis
 
-A principal components analysis (PCA) finds the best low-dimensional linear
-approximation of a high-dimensional data cloud `r Citep(bib, "Nguyen2019")`.
+Principal components analysis (PCA) gives an overview of all taxa
+simultaneously. It searches for views that maximize variance.
 
 <div style="text-align: center;">
     <img src="figures/pca_q1.png"/><br/>
@@ -315,8 +313,8 @@ approximation of a high-dimensional data cloud `r Citep(bib, "Nguyen2019")`.
 
 ### Principal Components Analysis
 
-A principal components analysis (PCA) finds the best low-dimensional linear
-approximation of a high-dimensional data cloud `r Citep(bib, "Nguyen2019")`.
+Principal components analysis (PCA) gives an overview of all taxa
+simultaneously. It searches for views that maximize variance.
 
 <div style="text-align: center;">
     <img src="figures/pca_q2.png"/><br/>
@@ -327,8 +325,8 @@ approximation of a high-dimensional data cloud `r Citep(bib, "Nguyen2019")`.
 
 ### Principal Components Analysis
 
-A principal components analysis (PCA) finds the best low-dimensional linear
-approximation of a high-dimensional data cloud `r Citep(bib, "Nguyen2019")`.
+You can think of each sample as a high-dimensional vector across taxa. PCA finds
+a low-dimensional view of those high-dimensional vectors.
 
 <div style="text-align: center;">
 <img src="https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true" width=800/>
