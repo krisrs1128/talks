@@ -3,6 +3,7 @@ title: Principal Components
 ---
 
 ```{r}
+library(ggrepel)
 library(ggridges)
 library(glue)
 library(mia)
@@ -32,6 +33,8 @@ atlas <- convertFromPhyloseq(atlas1006) |>
   ) |>
   filter(bmi_group %in% c("obese", "lean", "overweight"), time == 0) |>
   mutate(bmi_group = factor(bmi_group, levels = c("obese", "overweight", "lean")))
+rownames(atlas) <- str_remove(rownames(atlas), "et rel.|at rel.") |>
+  str_trim()
 ```
 
 ```{r, define-null}
@@ -40,17 +43,17 @@ x <- colData(atlas)$bmi_group
 ```
 
 ```{r}
-spca_result <- spca(t(asinh(y)), k = 130, alpha = 1e-2, beta = 1e-2)
+spca_result <- spca(t(asinh(y)), k = 20, alpha = 1e-4, beta = 1e-2)
 
 # dataframes to plot
 spca_df <- bind_cols(
-    set_names(data.frame(spca_result$scores), str_c("PC", 1:130)),
+    set_names(data.frame(spca_result$scores), str_c("PC", 1:20)),
     bmi_group = x
 )
 
 eigenvalues <- tibble(
     eigenvalue = spca_result$eigenvalues,
-    K = factor(1:130),
+    K = factor(1:20),
 ) |>
     mutate(prop = round(100 * eigenvalue / sum(eigenvalue), 2))
 
@@ -75,20 +78,20 @@ ggplot(spca_df, aes(x = PC1, y = PC2, color = bmi_group)) +
     theme(legend.text = element_text(size = 10))
 ggsave("..//figures/pc_scores_1-2.png", width = 7, height = 3, bg = "transparent")
 
-ggplot(spca_df, aes(x = PC7, y = PC8, color = bmi_group)) +
+ggplot(spca_df, aes(x = PC5, y = PC6, color = bmi_group)) +
     geom_point() +
     scale_color_brewer(palette = "Set2") +
     labs(
         col = "BMI Group",
-        x = glue("PC7 [{eigenvalues$prop[7]}% Variance]"),
-        y = glue("PC8 [{eigenvalues$prop[8]}% Variance]")
+        x = glue("PC5 [{eigenvalues$prop[5]}% Variance]"),
+        y = glue("PC6 [{eigenvalues$prop[6]}% Variance]")
     ) +
     theme(legend.text = element_text(size = 10))
-ggsave("..//figures/pc_scores_7-8.png", width = 7, height = 3, bg = "transparent")
-?geom_density_ridges()
+ggsave("..//figures/pc_scores_5-6.png", width = 7, height = 3, bg = "transparent")
+
 spca_df |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "score") |>
-    mutate(PC = factor(PC, levels = str_c("PC", 1:130))) |>
+    mutate(PC = factor(PC, levels = str_c("PC", 1:20))) |>
     filter(PC %in% glue("PC{1:9}")) |>
     ggplot() +
         geom_density_ridges2(aes(x = score, y = PC, fill = bmi_group), alpha = 1, scale = 3) +
@@ -104,13 +107,13 @@ ggsave("..//figures/pc_ridge-4.png", width = 10, height = 4, bg = "transparent")
 
 ```{r}
 loadings <- data.frame(spca_result$loadings) |>
-    set_names(str_c("PC", 1:130)) |>
+    set_names(str_c("PC", 1:20)) |>
     mutate(taxon = rownames(y))
 
 # Filter to top 20 taxa by absolute loading value for each PC
 tidy_loadings <- loadings |>
     pivot_longer(cols = starts_with("PC"), names_to = "PC", values_to = "loading") |>
-    mutate(PC = factor(PC, levels = str_c("PC", 1:130)))
+    mutate(PC = factor(PC, levels = str_c("PC", 1:20)))
 
 top_loadings <- tidy_loadings |>
     group_by(PC) |>
@@ -134,6 +137,43 @@ top_loadings |>
         panel.border = element_rect(color = "#b7b7b7", fill = NA, linewidth = 2),
     )
 ggsave("..//figures/pca_loadings.png", width = 10, height = 4, bg = "transparent")
+```
+
+```{r}
+paired_loadings <- list()
+loadings_init <- tidy_loadings |>
+    arrange(PC, taxon)
+
+for (K in seq(1, 6, by = 2)) {
+    paired_loadings[[K]] <- loadings_init |>
+        filter(PC == glue("PC{K}")) |>
+        left_join(
+             loadings_init |>
+                filter(PC == glue("PC{K + 1}")) |>
+                mutate(loading_next = loading) |>
+                select(taxon, loading_next)
+        ) |>
+        mutate(pair = glue("PC{K} ~ PC{K + 1}"))
+}
+
+paired_loadings <- bind_rows(paired_loadings) |>
+    group_by(pair) |>
+    slice_max(sqrt(loading ^ 2 + loading_next ^ 2), n = 10) |>
+    ungroup()
+
+ggplot(paired_loadings, aes(loading, loading_next)) +
+    geom_vline(xintercept = 0, col = "#b8b8b8") +
+    geom_hline(yintercept = 0, col = "#b8b8b8") +
+    geom_text_repel(aes(label = taxon), size = 3) +
+    geom_point(col = "#464646") +
+    #coord_fixed(sqrt(eigenvalues$eigenvalue[2] / eigenvalues$eigenvalue[1])) +
+    labs(x = "Principal Component", y = "Next Principal Component") +
+    facet_wrap(. ~ pair, scales = "free") +
+    theme(
+        axis.title= element_text(size = 10),
+        strip.text= element_text(size = 12)
+    )
+ggsave("..//figures/pca_loadings_grid.png", width = 10, height = 4, bg = "transparent")
 ```
 
 ```{r}
