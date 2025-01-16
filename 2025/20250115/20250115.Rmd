@@ -12,7 +12,17 @@ output:
     seal: false
 ---
 
+class: title
+
 # Visualizing Microbiome Data
+
+<style>
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+</style>
 
 <div id="subtitle">
 Kris Sankaran <br/>
@@ -49,7 +59,7 @@ bib <- ReadBib("references.bib")
 
 ---
 
-### Motivation
+### Motivation: Perception
 
 If our brains were built differently, we might be able to understand an entire
 experiment by glancing at a spreadsheet. Even though this is impossible, data
@@ -62,7 +72,7 @@ Figure from `r Citep(bib, "alain2017understanding")`.
 
 ---
 
-### Motivation
+### Motivation: Perception
 
 If our brains were built differently, we might be able to understand an entire
 experiment by glancing at a spreadsheet. Even though this is impossible, data
@@ -75,9 +85,9 @@ Figure from `r Citep(bib, "munzner2004perception")`.
 
 ---
 
-### Strategy
+### Motivation: Working Memory
 
-Statistical thinking allows us to get past this limitation:
+Statistical thinking allows us to get around our limited working memory.
 
 1. **Compression**: Find a simple representation that captures essential
 properties of the data. 
@@ -197,8 +207,29 @@ context.
 
 ---
 
-<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px" frameborder="0"></iframe><br/>
 Interactive sankey from the treelapse package `r Citep(bib, "sankaran2018interactive")`.
+
+<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px" frameborder="0"></iframe><br/>
+
+---
+
+### Dynamic Linking
+
+1. Multiple plots can be "linked" together through interaction. Queries made on
+one plot can prompt changes across several others.
+
+1. This is one way to implement focus-plus-context: An overview plot can be
+linked together with a zoomed-in focus.
+
+---
+
+### Linked Views
+
+Linking helped us explore a metabolomic dataset from the THOR model microbiome
+community `r Citep(bib, "chevrette2022microbiome")`. B, F, and K are different
+bacterial species.
+
+<iframe src="http://127.0.0.1:7879" style="height: 620px; width: 1000px" frameborder="0"></iframe><br/>
 
 ---
 
@@ -297,10 +328,27 @@ groups over others.
 
 ---
 
+## Dimensionality Reduction
+
+---
+
+### Multivariate Data
+
+One challenge of omics data is that each sample is associated with many
+features. This is often called multivariate data.
+
+```{r, echo=FALSE, class.source="small-code"}
+data(atlas1006, package = "microbiome")
+taxa_names(atlas1006) <- paste0("ASV", 1:ntaxa(atlas1006))
+t(otu_table(atlas1006))[, order(taxa_sums(atlas1006), decreasing = TRUE)]
+```
+
+---
+
 ### Principal Components Analysis
 
-Principal components analysis (PCA) gives an overview of all taxa
-simultaneously. It searches for views that maximize variance.
+Principal components analysis (PCA) gives an low-dimensional overview of the
+entire community.  It searches for views that maximize variance.
 
 <div style="text-align: center;">
     <img src="figures/pca_q1.png"/><br/>
@@ -311,8 +359,9 @@ simultaneously. It searches for views that maximize variance.
 
 ### Principal Components Analysis
 
-Principal components analysis (PCA) gives an overview of all taxa
-simultaneously. It searches for views that maximize variance.
+Principal components analysis (PCA) gives an low-dimensional overview of the
+entire community.  It searches for views that maximize variance.
+
 
 <div style="text-align: center;">
     <img src="figures/pca_q2.png"/><br/>
@@ -409,7 +458,8 @@ Interesting variation can be buried in higher components. A ridgeplot `r Citep(b
     <div style="flex: 1; padding-right: 20px;">
         1. Since components can have both positive and negative values, effects in PCA
         can cancel out, complicating interpretations.<br/><br/>
-        1. Topic models deal with this by requiring components to be nonnegative
+
+        2. Topic models deal with this by requiring components to be nonnegative
         `r Citep(bib, c("pritchard2000inference", "blei2003latent"))`.
         Therefore, they can be interpreted as latent communities `r Citep(bib, "sankaran2019latent")`.
     </div>
@@ -418,21 +468,10 @@ Interesting variation can be buried in higher components. A ridgeplot `r Citep(b
 
 ---
 
-### Topic Models
-
-What were called components in PCA are now called _topics_. Each sample is a
-mixture of topics.
-
-<div style="text-align: center;">
-<img src="figures/latent_dirichlet_v2.png" width=750/>
-</div>
-
----
-
 ### STRUCTURE Plot
 
 The mixtures across the entire dataset can be visualized in stacked barplot.
-This dataset studied community dynamics after antibiotics treatment.
+This dataset studied community dynamics after antibiotics treatment `r Citep(bib, "dethlefsen2011incomplete")`.
 
 <div style="text-align: center;">
 <img src="figures/antibiotic_memberships.png" width=2000/>
@@ -464,20 +503,12 @@ those that have the highest variation across topics are shown first.
 
 ### Alto Plot
 
-The main hyperparameter in topic models is the number of topics $K$. It can be
-helpful to compare the topic model results across a range of $K$
-<span class="cite" data-cite="Fukuyama2022"></span>.
+The main hyperparameter in topic models is the number of topics $K$. We wrote a
+package to make it easier to compare results across $K$ `r Citep(bib, "Fukuyama2022")`.
 
-<img src="figures/alto_sketches_annotated alignment.png">
-
----
-
-### Alto Plot
-
-Similar topics are often recovered across many $K$. Our package draws
-larger edges between topics that have similar latent communities `r Citep(bib, "Fukuyama2022")`.
-
-<img src="figures/alto_sketches_annotated alignment.png">
+<div style="text-align: center;">
+<img src="figures/alto_sketches_annotated alignment.png" width=940>
+</div>
 
 ---
 
@@ -489,6 +520,10 @@ larger edges between topics that have similar latent communities `r Citep(bib, "
 
 Figure from `r Citep(bib, "symul2023sub")`.
 </div>
+
+---
+
+## Integration
 
 ---
 
@@ -539,8 +574,8 @@ Figure from `r Citep(bib, "sankaran2019multitable")`.
 1. Like with ECDF plots, the output from a dimensionality reduction will depend on
 initial original data transformations.
 
-1. When there are many more features than samples, PCA can be unstable. Regularized
-versions, like the sparse PCA we used here `r Citep(bib, "spca")`, can be more stable `r Citep(bib, c("zou2006sparse", "mackey2008deflation"))`.
+1. When there are many more features than samples, PCA and CCA can be unstable.
+Regularized versions, like the sparse PCA and CCA we used here `r Citep(bib, "spca")`, can be more stable `r Citep(bib, c("zou2006sparse", "mackey2008deflation"))`.
 
 1. CCA searches for shared variation across tables. This can cause the results
 to ignore table-specific variation.  To decompose variation into shared and
@@ -578,7 +613,7 @@ metabolome-microbiome analysis `r Citep(bib, "Jiang2024")`.
 1. Visualization is helpful throughout the data analysis process --
 validation, discovery, and communication.
 
-1. Other helpful visualization in microbiome research are residual plots `r Citep(bib, "faraway2002practical")`, partial dependence `r Citep(bib, c("sankaran2024mbtransfer", "friedman2001greedy"))`, phylogenetic `r Citep(bib, "mcmurdie2013phyloseq")`,
+1. Other helpful visualization in microbiome research are heatmaps `r Citep(bib, "barter2018superheat")`, residual plots `r Citep(bib, "faraway2002practical")`, partial dependence `r Citep(bib, c("sankaran2024mbtransfer", "friedman2001greedy"))`, phylogenetic `r Citep(bib, "mcmurdie2013phyloseq")`,
 and network visualizations `r Citep(bib, c("lee2006task", "tidygraph"))`.
 
 1. The best visualizations are the product of repeated refinements, just like
