@@ -36,8 +36,8 @@ Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt
 ### Motivation
 
 If our brains were built differently, we might be able to understand an entire
-experiment by glancing at a spreadsheet. Data visualization allows us to use
-our strengths in visual perception to our advantage.
+experiment by glancing at a spreadsheet. Even though this is impossible, data
+visualization can make complex comparisons more automatic.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/lion_binary.png" width=1200/&gt;
@@ -49,8 +49,8 @@ Figure from [1].
 ### Motivation
 
 If our brains were built differently, we might be able to understand an entire
-experiment by glancing at a spreadsheet. Data visualization allows us to use
-our strengths in visual perception to our advantage.
+experiment by glancing at a spreadsheet. Even though this is impossible, data
+visualization can make complex comparisons more automatic.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/paradoxes.png" width=1200/&gt;
@@ -66,7 +66,7 @@ Statistical thinking allows us to get past this limitation:
 1. **Compression**: Find a simple representation that captures essential
 properties of the data. 
 
-1. **Focusing**: Narrow down to a subset of data that is sufficient to
+1. **Focusing**: Narrow down to a subset of the data that is sufficient to
 answer a question of interest. 
 
 &lt;div style="display: flex; justify-content: center; max-width: 700px;margin: 0 auto"&gt;
@@ -262,7 +262,7 @@ abundance analysis.
 groups over others.
 
 &lt;div style="text-align: center;"&gt;
-    &lt;img src="figures/ecdf_overall.png"/&gt;
+    &lt;img src="figures/ecdf_testing.png"/&gt;
 &lt;/div&gt;
 
 ---
@@ -345,7 +345,7 @@ The samples are organized so that those with similar measurements are placed
 close to one another. Different dimensions give different views.
 
 &lt;div style="text-align: center;"&gt;
-&lt;img src="figures/pc_scores_7-8.png" width=1200/&gt;
+&lt;img src="figures/pc_scores_5-6.png" width=1200/&gt;
 &lt;/div&gt;
 
 ---
@@ -357,7 +357,7 @@ we move in the PC1 direction, the more we increase the positive PC1 taxa, and
 vice versa for negative taxa.
 
 &lt;div style="text-align: center;"&gt;
-&lt;img src="figures/pca_loadings.png" width=1100/&gt;
+&lt;img src="figures/pca_loadings_grid.png" width=1100/&gt;
 &lt;/div&gt;
 
 ---
@@ -387,22 +387,15 @@ Interesting variation can be buried in higher components. A ridgeplot [14] can h
 
 ---
 
-### Considerations
-
-
-
----
-
 ### Topic Models
 
 &lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;
     &lt;div style="flex: 1; padding-right: 20px;"&gt;
         1. Since components can have both positive and negative values, effects in PCA
-        can sometimes cancel out, complicating interpretations.&lt;br/&gt;&lt;br/&gt;
+        can cancel out, complicating interpretations.&lt;br/&gt;&lt;br/&gt;
         1. Topic models deal with this by requiring components to be nonnegative
         [16; 17].
-        Therefore, they can be interpreted as latent communities &lt;span
-        class="cite" data-cite="sankaran2019latent"&gt;&lt;/span&gt;.
+        Therefore, they can be interpreted as latent communities [35].
     &lt;/div&gt;
     &lt;img src="figures/latent_dirichlet_v2.png" width=600/&gt;
 &lt;/div&gt;
@@ -427,16 +420,6 @@ This dataset studied community dynamics after antibiotics treatment.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/antibiotic_memberships.png" width=2000/&gt;
-&lt;/div&gt;
-
----
-
-### Simulation-based Checks
-
-Unlike PCA, topic models are a generative model. This allows us to evaluate model quality by comparing real with simulated samples. 
-
-&lt;div style="text-align: center;"&gt;
-&lt;img src="figures/lda_posterior_predictive.jpeg" width=700/&gt;
 &lt;/div&gt;
 
 ---
@@ -543,7 +526,6 @@ initial original data transformations.
 1. When there are many more features than samples, PCA can be unstable. Regularized
 versions, like the sparse PCA we used here [15], can be more stable [30; 31].
 
-
 1. CCA searches for shared variation across tables. This can cause the results
 to ignore table-specific variation.  To decompose variation into shared and
 distinct components, consider methods like [22; 23].
@@ -552,10 +534,10 @@ distinct components, consider methods like [22; 23].
 
 ### Mediation Analysis
 
-If we have precise hypotheses about how datasets might be related, we can design
+1. If we have precise hypotheses about how datasets might be related, we can design
 visualization to evaluate them.
 
-For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary.
+1. For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary [32; 33].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/mediation_diagram.jpg" width=500/&gt;
@@ -580,11 +562,24 @@ metabolome-microbiome analysis [24].
 1. Visualization is helpful throughout the data analysis process --
 validation, discovery, and communication.
 
+1. Other helpful visualization in microbiome research are residual plots [25], partial dependence [26; 27], phylogenetic [28],
+and network visualizations [34; 29].
+
 1. The best visualizations are the product of repeated refinements, just like
 the best writing.
 
-1. Other helpful in microbiome research are residual plots [25], partial dependence [26; 27], phylogenetic [28],
-and network visualizations [29].
+---
+
+.center[
+### Thank you!
+]
+
+* Contact: ksankaran@wisc.edu
+* Materials
+    - Slides: &lt;a href="https://go.wisc.edu/i50k4t"&gt;go.wisc.edu/i50k4t&lt;/a&gt;&lt;br/&gt;
+    - Examples: &lt;a href="https://go.wisc.edu/9416ze"&gt;go.wisc.edu/9416ze&lt;/a&gt;&lt;br/&gt;
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, Sam Merten
+* Funding: NIGMS R01GM152744
 
 ---
 
@@ -664,9 +659,21 @@ DOI: [10.1016/j.csda.2022.107547](https://doi.org/10.1016%2Fj.csda.2022.107547).
 
 ---
 
+### Simulation-based Checks
+
+Unlike PCA, topic models are a generative model. This allows us to evaluate model quality by comparing real with simulated samples. 
+
+&lt;div style="text-align: center;"&gt;
+&lt;img src="figures/lda_posterior_predictive.jpeg" width=700/&gt;
+&lt;/div&gt;
+
+---
+
 ### Figure Credits
 
 Microscope by Hilmy Abiyyu Asad from &lt;a href="https://thenounproject.com/browse/icons/term/microscope/" target="_blank" title="Microscope Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

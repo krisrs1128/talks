@@ -52,8 +52,8 @@ bib <- ReadBib("references.bib")
 ### Motivation
 
 If our brains were built differently, we might be able to understand an entire
-experiment by glancing at a spreadsheet. Data visualization allows us to use
-our strengths in visual perception to our advantage.
+experiment by glancing at a spreadsheet. Even though this is impossible, data
+visualization can make complex comparisons more automatic.
 
 <div style="text-align: center;">
 <img src="figures/lion_binary.png" width=1200/>
@@ -65,8 +65,8 @@ Figure from `r Citep(bib, "alain2017understanding")`.
 ### Motivation
 
 If our brains were built differently, we might be able to understand an entire
-experiment by glancing at a spreadsheet. Data visualization allows us to use
-our strengths in visual perception to our advantage.
+experiment by glancing at a spreadsheet. Even though this is impossible, data
+visualization can make complex comparisons more automatic.
 
 <div style="text-align: center;">
 <img src="figures/paradoxes.png" width=1200/>
@@ -82,7 +82,7 @@ Statistical thinking allows us to get past this limitation:
 1. **Compression**: Find a simple representation that captures essential
 properties of the data. 
 
-1. **Focusing**: Narrow down to a subset of data that is sufficient to
+1. **Focusing**: Narrow down to a subset of the data that is sufficient to
 answer a question of interest. 
 
 <div style="display: flex; justify-content: center; max-width: 700px;margin: 0 auto">
@@ -278,7 +278,7 @@ abundance analysis.
 groups over others.
 
 <div style="text-align: center;">
-    <img src="figures/ecdf_overall.png"/>
+    <img src="figures/ecdf_testing.png"/>
 </div>
 
 ---
@@ -361,7 +361,7 @@ The samples are organized so that those with similar measurements are placed
 close to one another. Different dimensions give different views.
 
 <div style="text-align: center;">
-<img src="figures/pc_scores_7-8.png" width=1200/>
+<img src="figures/pc_scores_5-6.png" width=1200/>
 </div>
 
 ---
@@ -373,7 +373,7 @@ we move in the PC1 direction, the more we increase the positive PC1 taxa, and
 vice versa for negative taxa.
 
 <div style="text-align: center;">
-<img src="figures/pca_loadings.png" width=1100/>
+<img src="figures/pca_loadings_grid.png" width=1100/>
 </div>
 
 ---
@@ -403,22 +403,15 @@ Interesting variation can be buried in higher components. A ridgeplot `r Citep(b
 
 ---
 
-### Considerations
-
-
-
----
-
 ### Topic Models
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <div style="flex: 1; padding-right: 20px;">
         1. Since components can have both positive and negative values, effects in PCA
-        can sometimes cancel out, complicating interpretations.<br/><br/>
+        can cancel out, complicating interpretations.<br/><br/>
         1. Topic models deal with this by requiring components to be nonnegative
         `r Citep(bib, c("pritchard2000inference", "blei2003latent"))`.
-        Therefore, they can be interpreted as latent communities <span
-        class="cite" data-cite="sankaran2019latent"></span>.
+        Therefore, they can be interpreted as latent communities `r Citep(bib, "sankaran2019latent")`.
     </div>
     <img src="figures/latent_dirichlet_v2.png" width=600/>
 </div>
@@ -443,16 +436,6 @@ This dataset studied community dynamics after antibiotics treatment.
 
 <div style="text-align: center;">
 <img src="figures/antibiotic_memberships.png" width=2000/>
-</div>
-
----
-
-### Simulation-based Checks
-
-Unlike PCA, topic models are a generative model. This allows us to evaluate model quality by comparing real with simulated samples. 
-
-<div style="text-align: center;">
-<img src="figures/lda_posterior_predictive.jpeg" width=700/>
 </div>
 
 ---
@@ -559,7 +542,6 @@ initial original data transformations.
 1. When there are many more features than samples, PCA can be unstable. Regularized
 versions, like the sparse PCA we used here `r Citep(bib, "spca")`, can be more stable `r Citep(bib, c("zou2006sparse", "mackey2008deflation"))`.
 
-
 1. CCA searches for shared variation across tables. This can cause the results
 to ignore table-specific variation.  To decompose variation into shared and
 distinct components, consider methods like `r Citep(bib, c("lin2023quantifying", "Palzer2022"))`.
@@ -568,10 +550,10 @@ distinct components, consider methods like `r Citep(bib, c("lin2023quantifying",
 
 ### Mediation Analysis
 
-If we have precise hypotheses about how datasets might be related, we can design
+1. If we have precise hypotheses about how datasets might be related, we can design
 visualization to evaluate them.
 
-For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary `r Citep(bib, c("clark2023methods", "vanderweele2016mediation"))`.
+1. For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary `r Citep(bib, c("clark2023methods", "vanderweele2016mediation"))`.
 
 <div style="text-align: center;">
 <img src="figures/mediation_diagram.jpg" width=500/>
@@ -596,11 +578,24 @@ metabolome-microbiome analysis `r Citep(bib, "Jiang2024")`.
 1. Visualization is helpful throughout the data analysis process --
 validation, discovery, and communication.
 
+1. Other helpful visualization in microbiome research are residual plots `r Citep(bib, "faraway2002practical")`, partial dependence `r Citep(bib, c("sankaran2024mbtransfer", "friedman2001greedy"))`, phylogenetic `r Citep(bib, "mcmurdie2013phyloseq")`,
+and network visualizations `r Citep(bib, c("lee2006task", "tidygraph"))`.
+
 1. The best visualizations are the product of repeated refinements, just like
 the best writing.
 
-1. Other helpful in microbiome research are residual plots `r Citep(bib, "faraway2002practical")`, partial dependence `r Citep(bib, c("sankaran2024mbtransfer", "friedman2001greedy"))`, phylogenetic `r Citep(bib, "mcmurdie2013phyloseq")`,
-and network visualizations `r Citep(bib, "tidygraph")`.
+---
+
+.center[
+### Thank you!
+]
+
+* Contact: ksankaran@wisc.edu
+* Materials
+    - Slides: <a href="https://go.wisc.edu/i50k4t">go.wisc.edu/i50k4t</a><br/>
+    - Examples: <a href="https://go.wisc.edu/9416ze">go.wisc.edu/9416ze</a><br/>
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, Sam Merten
+* Funding: NIGMS R01GM152744
 
 ---
 
@@ -624,6 +619,18 @@ PrintBibliography(bib, start = 14, end = 24)
 
 ---
 
+### Simulation-based Checks
+
+Unlike PCA, topic models are a generative model. This allows us to evaluate model quality by comparing real with simulated samples. 
+
+<div style="text-align: center;">
+<img src="figures/lda_posterior_predictive.jpeg" width=700/>
+</div>
+
+---
+
 ### Figure Credits
 
 Microscope by Hilmy Abiyyu Asad from <a href="https://thenounproject.com/browse/icons/term/microscope/" target="_blank" title="Microscope Icons">Noun Project</a> (CC BY 3.0)
+
+---
