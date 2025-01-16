@@ -96,10 +96,6 @@ answer a question of interest.
 
 ---
 
-### Graphical Encoding
-
----
-
 ### Encoding and Efficiency
 
 Different ways of encoding information are perceived with different accuracies.
@@ -113,15 +109,18 @@ Figure from `r Citep(bib, "heer2010crowdsourcing")`.
 
 ---
 
-### Encoding and Efficiency
-
-Different ways of encoding information are perceived with different accuracies.
-This means that any visualization implicitly prioritizes some comparisons over
-others.
+How many times larger is the circle on the right?
 
 <div style="text-align: center;">
-<img src="figures/popout.png" width=1200/>
-Figure from `r Citep(bib, "Munzner2014-fj")`
+<iframe src="figures/circles.html" style="height: 620px; width: 600px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
+How many times taller is the bar on the right?
+
+<div style="text-align: center;">
+<iframe src="figures/bars.html" style="height: 620px" frameborder="0"></iframe><br/>
 </div>
 
 ---
@@ -198,7 +197,7 @@ context.
 
 ---
 
-<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px"></iframe><br/>
+<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px" frameborder="0"></iframe><br/>
 Interactive sankey from the treelapse package `r Citep(bib, "sankaran2018interactive")`.
 
 ---
@@ -233,8 +232,7 @@ healthy European adults `r Citep(bib, "Lahti2014")`.
 ### ECDF Plots
 
 If we want taxa-level detail, we can make an empirical cumulative distribution
-function (ECDF) plot.  This traces $\left(t, \mathbf{P}\left(X \leq
-t\right)\right)$ for across the range of observed values of $t$.
+function (ECDF) plot.  This traces $\left(t, \mathbf{P}\left(X \leq t\right)\right)$ for across the range of observed values of $t$.
 
 <div style="text-align: center;">
 <img src="figures/ecdf_overall.png"/>
@@ -337,8 +335,8 @@ a low-dimensional view of those high-dimensional vectors.
 ### Scree Plot
 
 The principal components are sorted according to the amount of variance that
-they explain. Dropoffs in the variance explained would suggest intrinsic
-low-dimensionality.
+they explain. Pay attention to steep dropoffs -- these might suggest true
+numbers of communities.
 
 <div style="text-align: center;">
 <img src="figures/pc_eigenvalues.png" width=800/>
@@ -370,9 +368,9 @@ close to one another. Different dimensions give different views.
 
 ### Components
 
-The "components" in the PCA give a way of interpreting the axes of the map. The
-further we move in the PC1 direction, the more we increase the
-positive PC1 taxa, and vice versa for negative taxa.
+The PCA components give a way of interpreting the axes of the map. The further
+we move in the PC1 direction, the more we increase the positive PC1 taxa, and
+vice versa for negative taxa.
 
 <div style="text-align: center;">
 <img src="figures/pca_loadings.png" width=1100/>
@@ -406,12 +404,6 @@ Interesting variation can be buried in higher components. A ridgeplot `r Citep(b
 ---
 
 ### Considerations
-
-Like with ECDF plots, the output from a dimensionality reduction will depend on
-initial original data transformations.
-
-When there are many more features than samples, PCA can be unstable. Regularized
-versions, like the sparse PCA we used here `r Citep(bib, "spca")`, can be more stable.
 
 
 
@@ -561,10 +553,16 @@ Figure from `r Citep(bib, "sankaran2019multitable")`.
 
 ### Considerations
 
-1. CCA searches for shared variation across tables. This can cause the results to ignore table-specific variation.
+1. Like with ECDF plots, the output from a dimensionality reduction will depend on
+initial original data transformations.
 
-1. To decompose variation into shared and distinct components, consider methods
-like `r Citep(bib, c("lin2023quantifying", "Palzer2022"))`.
+1. When there are many more features than samples, PCA can be unstable. Regularized
+versions, like the sparse PCA we used here `r Citep(bib, "spca")`, can be more stable `r Citep(bib, c("zou2006sparse", "mackey2008deflation"))`.
+
+
+1. CCA searches for shared variation across tables. This can cause the results
+to ignore table-specific variation.  To decompose variation into shared and
+distinct components, consider methods like `r Citep(bib, c("lin2023quantifying", "Palzer2022"))`.
 
 ---
 
@@ -573,7 +571,7 @@ like `r Citep(bib, c("lin2023quantifying", "Palzer2022"))`.
 If we have precise hypotheses about how datasets might be related, we can design
 visualization to evaluate them.
 
-For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary.
+For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary `r Citep(bib, c("clark2023methods", "vanderweele2016mediation"))`.
 
 <div style="text-align: center;">
 <img src="figures/mediation_diagram.jpg" width=500/>

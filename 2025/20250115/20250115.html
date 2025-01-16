@@ -80,10 +80,6 @@ answer a question of interest.
 
 ---
 
-### Graphical Encoding
-
----
-
 ### Encoding and Efficiency
 
 Different ways of encoding information are perceived with different accuracies.
@@ -97,15 +93,18 @@ Figure from [3].
 
 ---
 
-### Encoding and Efficiency
-
-Different ways of encoding information are perceived with different accuracies.
-This means that any visualization implicitly prioritizes some comparisons over
-others.
+How many times larger is the circle on the right?
 
 &lt;div style="text-align: center;"&gt;
-&lt;img src="figures/popout.png" width=1200/&gt;
-Figure from [4]
+&lt;iframe src="figures/circles.html" style="height: 620px; width: 600px" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
+&lt;/div&gt;
+
+---
+
+How many times taller is the bar on the right?
+
+&lt;div style="text-align: center;"&gt;
+&lt;iframe src="figures/bars.html" style="height: 620px" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
 &lt;/div&gt;
 
 ---
@@ -182,7 +181,7 @@ context.
 
 ---
 
-&lt;iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px"&gt;&lt;/iframe&gt;&lt;br/&gt;
+&lt;iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
 Interactive sankey from the treelapse package [10].
 
 ---
@@ -207,7 +206,7 @@ An MA plot [11] is a good first step in a differential abundance analysis.
 ### MA Plot
 
 This is an MA plot comparing low vs. high BMI groups in the Atlas study of
-healthy European adults [13].
+healthy European adults [12].
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/ma_plot_da.png" width=850/&gt;
 &lt;/div&gt;
@@ -217,8 +216,7 @@ healthy European adults [13].
 ### ECDF Plots
 
 If we want taxa-level detail, we can make an empirical cumulative distribution
-function (ECDF) plot.  This traces $\left(t, \mathbf{P}\left(X \leq
-t\right)\right)$ for across the range of observed values of `\(t\)`.
+function (ECDF) plot.  This traces `\(\left(t, \mathbf{P}\left(X \leq t\right)\right)\)` for across the range of observed values of `\(t\)`.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/ecdf_overall.png"/&gt;
@@ -227,7 +225,7 @@ t\right)\right)$ for across the range of observed values of `\(t\)`.
 ---
 
 Unlike histograms, ECDFs don't require any choice of bin width. They 
-perform surprisingly well in studies of uncertainty visualization [12].
+perform surprisingly well in studies of uncertainty visualization [13].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/histogram_narrow.png"/&gt;
@@ -236,7 +234,7 @@ perform surprisingly well in studies of uncertainty visualization [12].
 ---
 
 Unlike histograms, ECDFs don't require any choice of bin width. They 
-perform surprisingly well in studies of uncertainty visualization [12].
+perform surprisingly well in studies of uncertainty visualization [13].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/histogram_wide.png"/&gt;
@@ -321,8 +319,8 @@ a low-dimensional view of those high-dimensional vectors.
 ### Scree Plot
 
 The principal components are sorted according to the amount of variance that
-they explain. Dropoffs in the variance explained would suggest intrinsic
-low-dimensionality.
+they explain. Pay attention to steep dropoffs -- these might suggest true
+numbers of communities.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/pc_eigenvalues.png" width=800/&gt;
@@ -354,9 +352,9 @@ close to one another. Different dimensions give different views.
 
 ### Components
 
-The "components" in the PCA give a way of interpreting the axes of the map. The
-further we move in the PC1 direction, the more we increase the
-positive PC1 taxa, and vice versa for negative taxa.
+The PCA components give a way of interpreting the axes of the map. The further
+we move in the PC1 direction, the more we increase the positive PC1 taxa, and
+vice versa for negative taxa.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/pca_loadings.png" width=1100/&gt;
@@ -381,7 +379,7 @@ positive PC1 taxa, and vice versa for negative taxa.
 
 ### Identifying Dimensions
 
-Interesting variation can be buried in higher components. A ridgeplot [15] can help identify these.
+Interesting variation can be buried in higher components. A ridgeplot [14] can help identify these.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/pc_ridge-4.png" width=1200/&gt;
@@ -390,12 +388,6 @@ Interesting variation can be buried in higher components. A ridgeplot [15] can h
 ---
 
 ### Considerations
-
-Like with ECDF plots, the output from a dimensionality reduction will depend on
-initial original data transformations.
-
-When there are many more features than samples, PCA can be unstable. Regularized
-versions, like the sparse PCA we used here [16], can be more stable.
 
 
 
@@ -408,7 +400,7 @@ versions, like the sparse PCA we used here [16], can be more stable.
         1. Since components can have both positive and negative values, effects in PCA
         can sometimes cancel out, complicating interpretations.&lt;br/&gt;&lt;br/&gt;
         1. Topic models deal with this by requiring components to be nonnegative
-        [17; 18].
+        [16; 17].
         Therefore, they can be interpreted as latent communities &lt;span
         class="cite" data-cite="sankaran2019latent"&gt;&lt;/span&gt;.
     &lt;/div&gt;
@@ -484,7 +476,7 @@ helpful to compare the topic model results across a range of `\(K\)`
 ### Alto Plot
 
 Similar topics are often recovered across many `\(K\)`. Our package draws
-larger edges between topics that have similar latent communities [19].
+larger edges between topics that have similar latent communities [18].
 
 &lt;img src="figures/alto_sketches_annotated alignment.png"&gt;
 
@@ -496,7 +488,7 @@ larger edges between topics that have similar latent communities [19].
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/pregnancy_sankey.jpg" width=500/&gt;&lt;br/&gt;
 
-Figure from [20].
+Figure from [19].
 &lt;/div&gt;
 
 ---
@@ -508,7 +500,7 @@ Figure from [20].
 like batch effects.
 
 1. The example shown here compares microarray data from experiments that are
-identical except for the choice of dye [21].
+identical except for the choice of dye [20].
 ]
 
 .pull-right[
@@ -526,7 +518,7 @@ that they look as similar to one another as possible.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;&lt;br/&gt;
-Figure from [22].
+Figure from [21].
 &lt;/div&gt;
 
 ---
@@ -538,17 +530,23 @@ CCA components. Each data source has its own set of CCA components.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;&lt;br/&gt;
-Figure from [22].
+Figure from [21].
 &lt;/div&gt;
 
 ---
 
 ### Considerations
 
-1. CCA searches for shared variation across tables. This can cause the results to ignore table-specific variation.
+1. Like with ECDF plots, the output from a dimensionality reduction will depend on
+initial original data transformations.
 
-1. To decompose variation into shared and distinct components, consider methods
-like [23; 24].
+1. When there are many more features than samples, PCA can be unstable. Regularized
+versions, like the sparse PCA we used here [15], can be more stable [30; 31].
+
+
+1. CCA searches for shared variation across tables. This can cause the results
+to ignore table-specific variation.  To decompose variation into shared and
+distinct components, consider methods like [22; 23].
 
 ---
 
@@ -568,7 +566,7 @@ For example, in mediation analysis, expect the treatment to affect an omic datas
 ### Mediation Analysis
 
 This faceted plot shows the paths with the strongest indirect effects in joint
-metabolome-microbiome analysis [25].
+metabolome-microbiome analysis [24].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/mediation_scatterplot.jpg" width=900/&gt;
@@ -585,8 +583,8 @@ validation, discovery, and communication.
 1. The best visualizations are the product of repeated refinements, just like
 the best writing.
 
-1. Other helpful in microbiome research are residual plots [26], partial dependence [27; 28], phylogenetic [29],
-and network visualizations [30].
+1. Other helpful in microbiome research are residual plots [25], partial dependence [26; 27], phylogenetic [28],
+and network visualizations [29].
 
 ---
 
@@ -622,12 +620,12 @@ systems_. 2010, pp. 203-212.
 
 [11] S. Dudoit et al. "Statistical methods for identifying differentially expressed genes in replicated cDNA microarray experiments". In: _Statistica sinica_ (2002), pp. 111-139.
 
-[12] M. Kay et al. "When (ish) is My Bus?: User-centered Visualizations of Uncertainty in Everyday, Mobile Predictive Systems". In: _Proceedings of the 2016 CHI Conference on Human
+[12] L. Lahti et al. "Tipping elements in the human intestinal ecosystem". In: _Nature Communications_ 5.1 (Jul. 2014). ISSN: 2041-1723. DOI:
+[10.1038/ncomms5344](https://doi.org/10.1038%2Fncomms5344). URL: [http://dx.doi.org/10.1038/ncomms5344](http://dx.doi.org/10.1038/ncomms5344).
+
+[13] M. Kay et al. "When (ish) is My Bus?: User-centered Visualizations of Uncertainty in Everyday, Mobile Predictive Systems". In: _Proceedings of the 2016 CHI Conference on Human
 Factors in Computing Systems_. CHI’16. ACM, May. 2016. DOI: [10.1145/2858036.2858558](https://doi.org/10.1145%2F2858036.2858558). URL:
 [http://dx.doi.org/10.1145/2858036.2858558](http://dx.doi.org/10.1145/2858036.2858558).
-
-[13] L. Lahti et al. "Tipping elements in the human intestinal ecosystem". In: _Nature Communications_ 5.1 (Jul. 2014). ISSN: 2041-1723. DOI:
-[10.1038/ncomms5344](https://doi.org/10.1038%2Fncomms5344). URL: [http://dx.doi.org/10.1038/ncomms5344](http://dx.doi.org/10.1038/ncomms5344).
 
 ---
 
@@ -635,35 +633,34 @@ class: reference
 
 ### References
 
-[14] L. H. Nguyen et al. "Ten quick tips for effective dimensionality reduction". In: _PLOS Computational Biology_ 15.6 (Jun. 2019). Ed. by F. Ouellette, p. e1006907. ISSN: 1553-7358.
-DOI: [10.1371/journal.pcbi.1006907](https://doi.org/10.1371%2Fjournal.pcbi.1006907). URL:
-[http://dx.doi.org/10.1371/journal.pcbi.1006907](http://dx.doi.org/10.1371/journal.pcbi.1006907).
+[14] C. O. Wilke. "Package “ggridges”". In: _Ridgeline Plots in “ggplot2_ (2022).
 
-[15] C. O. Wilke. "Package “ggridges”". In: _Ridgeline Plots in “ggplot2_ (2022).
-
-[16] N. B. Erichson et al. _sparsepca: Sparse Principal Component Analysis (SPCA)_. R package version 0.1.2. 2018. URL:
+[15] N. B. Erichson et al. _sparsepca: Sparse Principal Component Analysis (SPCA)_. R package version 0.1.2. 2018. URL:
 [https://CRAN.R-project.org/package=sparsepca](https://CRAN.R-project.org/package=sparsepca).
 
-[17] J. K. Pritchard et al. "Inference of population structure using multilocus genotype data". In: _Genetics_ 155.2 (2000), pp. 945-959.
+[16] J. K. Pritchard et al. "Inference of population structure using multilocus genotype data". In: _Genetics_ 155.2 (2000), pp. 945-959.
 
-[18] D. M. Blei et al. "Latent dirichlet allocation". In: _Journal of machine Learning research_ 3.Jan (2003), pp. 993-1022.
+[17] D. M. Blei et al. "Latent dirichlet allocation". In: _Journal of machine Learning research_ 3.Jan (2003), pp. 993-1022.
 
-[19] J. Fukuyama et al. "Multiscale analysis of count data through topic alignment". In: _Biostatistics_ 24.4 (Jun. 2022), p. 1045–1065. ISSN: 1468-4357. DOI:
+[18] J. Fukuyama et al. "Multiscale analysis of count data through topic alignment". In: _Biostatistics_ 24.4 (Jun. 2022), p. 1045–1065. ISSN: 1468-4357. DOI:
 [10.1093/biostatistics/kxac018](https://doi.org/10.1093%2Fbiostatistics%2Fkxac018). URL:
 [http://dx.doi.org/10.1093/biostatistics/kxac018](http://dx.doi.org/10.1093/biostatistics/kxac018).
 
-[20] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of the Royal Society B_ 290.2011 (2023), p. 20231461.
+[19] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of the Royal Society B_ 290.2011 (2023), p. 20231461.
 
-[21] G. C. Tseng et al. "Issues in cDNA microarray analysis: quality filtering, channel normalization, models of variations and assessment of gene effects". In: _Nucleic acids
+[20] G. C. Tseng et al. "Issues in cDNA microarray analysis: quality filtering, channel normalization, models of variations and assessment of gene effects". In: _Nucleic acids
 research_ 29.12 (2001), pp. 2549-2557.
 
-[22] K. Sankaran et al. "Multitable methods for microbiome data integration". In: _Frontiers in genetics_ 10 (2019), p. 627.
+[21] K. Sankaran et al. "Multitable methods for microbiome data integration". In: _Frontiers in genetics_ 10 (2019), p. 627.
 
-[23] K. Z. Lin et al. "Quantifying common and distinct information in single-cell multimodal data with Tilted Canonical Correlation Analysis". In: _Proceedings of the National Academy
+[22] K. Z. Lin et al. "Quantifying common and distinct information in single-cell multimodal data with Tilted Canonical Correlation Analysis". In: _Proceedings of the National Academy
 of Sciences_ 120.32 (2023), p. e2303647120.
 
-[24] E. F. Palzer et al. "sJIVE: Supervised joint and individual variation explained". In: _Computational Statistics &amp;amp; Data Analysis_ 175 (Nov. 2022), p. 107547. ISSN: 0167-9473.
+[23] E. F. Palzer et al. "sJIVE: Supervised joint and individual variation explained". In: _Computational Statistics &amp;amp; Data Analysis_ 175 (Nov. 2022), p. 107547. ISSN: 0167-9473.
 DOI: [10.1016/j.csda.2022.107547](https://doi.org/10.1016%2Fj.csda.2022.107547). URL: [http://dx.doi.org/10.1016/j.csda.2022.107547](http://dx.doi.org/10.1016/j.csda.2022.107547).
+
+[24] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ (Dec. 2024). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
 
 ---
 
