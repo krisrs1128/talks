@@ -39,8 +39,7 @@ one another, then an edge is drawn between them. For some questions, this list v
 
 1. For example, if I ask you how many steps there are between turing and infinity, it's immediate from the graph, but takes a bit more work for the list.
 
-1. The reason this happens is because people have relatively limited working
-memory, but we have great perceptual ability. The more that we can leverage our
+1. Give the definition of visualization. The more that we can leverage our
 perception and lift the burden on memory, the better we'll be able to reason
 about data.
 
@@ -48,10 +47,15 @@ about data.
 
 Strategy
 
-1. The essence of biostatistics is reflected in two themes. First, we can
-compress complex phenomena into summaries that can be fit effectively in our
-working memory. For example, later, we'll be talking about principal components,
-and this type of plot compresses a large dataset into a much smaller representation.
+A second general motivation is that people actually have relatively limited
+working memories. Even PhDs in statistics can only remember so many digits at a
+time. In fact, a lot of statistics is about turning larger datasets into
+reductions that we can hold in our heads and which are nonetheless faithful.
+
+1. First, we can compress complex phenomena into summaries that can be fit
+effectively in our working memory. For example, later, we'll be talking about
+principal components, and this type of plot compresses a large dataset into a
+much smaller representation.
 
 1. The second general strategy is to focus attention onto subsets of the data
 that are especially interesting. For example, later we'll talk a bit about
@@ -183,5 +187,15 @@ First, even with faceting, there are only so many taxa we can visualize at once
 PCA gives another overview of the data. You might have heard that it provides the views of the data that "maximize variance." The idea is actually very simple.
 
 Can anyone tell what this object is?
+
+---
+
+Introduction
+
+It's nice to be giving a talk about visualizations in a room that includes some
+really beautiful ones.
+
+Okay, I've heard that many of you are working on data analysis in your day to
+day work.
 
 ---

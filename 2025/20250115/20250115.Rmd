@@ -229,7 +229,7 @@ Linking helped us explore a metabolomic dataset from the THOR model microbiome
 community `r Citep(bib, "chevrette2022microbiome")`. B, F, and K are different
 bacterial species.
 
-<iframe src="http://127.0.0.1:7879" style="height: 620px; width: 1000px" frameborder="0"></iframe><br/>
+<iframe src="http://127.0.0.1:5189" style="height: 620px; width: 1000px" frameborder="0"></iframe><br/>
 
 ---
 
@@ -338,6 +338,7 @@ One challenge of omics data is that each sample is associated with many
 features. This is often called multivariate data.
 
 ```{r, echo=FALSE, class.source="small-code"}
+library(phyloseq)
 data(atlas1006, package = "microbiome")
 taxa_names(atlas1006) <- paste0("ASV", 1:ntaxa(atlas1006))
 t(otu_table(atlas1006))[, order(taxa_sums(atlas1006), decreasing = TRUE)]

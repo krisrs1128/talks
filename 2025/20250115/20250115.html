@@ -133,7 +133,7 @@ memorable.
 .pull-right[
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/data_ink2.png" width=450/&gt;&lt;br/&gt;
-Figure from [5].
+Figure from [4].
 &lt;/div&gt;
 ]
 
@@ -153,7 +153,7 @@ memorable.
 .pull-right[
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/data_ink1.png" width=500/&gt;&lt;br/&gt;
-Figure from [5].
+Figure from [4].
 &lt;/div&gt;
 ]
 
@@ -163,7 +163,7 @@ exclude: true
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/memorable_visualizations.png" width=900/&gt;&lt;br/&gt;
-Figure from [6].
+Figure from [5].
 &lt;/div&gt;
 
 ---
@@ -171,11 +171,11 @@ Figure from [6].
 ### Faceting
 
 It's often surprisingly effective show many similar views in parallel. This is
-the basis for techniques like small multiples and piling [5; 7]
+the basis for techniques like small multiples and piling [4; 6]
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/biome_horizon.png" width=500/&gt;&lt;br/&gt;
-Horizon plot made using the BiomeHorizon package [8].
+Horizon plot made using the BiomeHorizon package [7].
 &lt;/div&gt;
 
 ---
@@ -187,11 +187,11 @@ context.
 
 &gt; Overview first, zoom and filter, then details on demand.
 
--- Schneiderman's "Visual Information Seeking Mantra", from [9].
+-- Schneiderman's "Visual Information Seeking Mantra", from [8].
 
 ---
 
-Interactive sankey from the treelapse package [10].
+Interactive sankey from the treelapse package [9].
 
 &lt;iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#interpretation" style="height: 620px; width: 900px" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
 
@@ -210,10 +210,10 @@ linked together with a zoomed-in focus.
 ### Linked Views
 
 Linking helped us explore a metabolomic dataset from the THOR model microbiome
-community [37]. B, F, and K are different
+community [10]. B, F, and K are different
 bacterial species.
 
-&lt;iframe src="http://127.0.0.1:7879" style="height: 620px; width: 1000px" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
+&lt;iframe src="http://127.0.0.1:5189" style="height: 620px; width: 1000px" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
 
 ---
 
@@ -4295,8 +4295,8 @@ Interesting variation can be buried in higher components. A ridgeplot [14] can h
         can cancel out, complicating interpretations.&lt;br/&gt;&lt;br/&gt;
 
         2. Topic models deal with this by requiring components to be nonnegative
-        [16; 17].
-        Therefore, they can be interpreted as latent communities [35].
+        [15; 16].
+        Therefore, they can be interpreted as latent communities [17].
     &lt;/div&gt;
     &lt;img src="figures/latent_dirichlet_v2.png" width=600/&gt;
 &lt;/div&gt;
@@ -4306,7 +4306,7 @@ Interesting variation can be buried in higher components. A ridgeplot [14] can h
 ### STRUCTURE Plot
 
 The mixtures across the entire dataset can be visualized in stacked barplot.
-This dataset studied community dynamics after antibiotics treatment [38].
+This dataset studied community dynamics after antibiotics treatment [18].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/antibiotic_memberships.png" width=2000/&gt;
@@ -4339,7 +4339,7 @@ those that have the highest variation across topics are shown first.
 ### Alto Plot
 
 The main hyperparameter in topic models is the number of topics `\(K\)`. We wrote a
-package to make it easier to compare results across `\(K\)` [18].
+package to make it easier to compare results across `\(K\)` [19].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/alto_sketches_annotated alignment.png" width=940&gt;
@@ -4353,7 +4353,7 @@ package to make it easier to compare results across `\(K\)` [18].
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/pregnancy_sankey.jpg" width=500/&gt;&lt;br/&gt;
 
-Figure from [19].
+Figure from [20].
 &lt;/div&gt;
 
 ---
@@ -4369,7 +4369,7 @@ Figure from [19].
 like batch effects.
 
 1. The example shown here compares microarray data from experiments that are
-identical except for the choice of dye [20].
+identical except for the choice of dye [21].
 ]
 
 .pull-right[
@@ -4387,7 +4387,7 @@ that they look as similar to one another as possible.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;&lt;br/&gt;
-Figure from [21].
+Figure from [22].
 &lt;/div&gt;
 
 ---
@@ -4399,7 +4399,7 @@ CCA components. Each data source has its own set of CCA components.
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/sparse_cca_multitable.jpg" width=980/&gt;&lt;br/&gt;
-Figure from [21].
+Figure from [22].
 &lt;/div&gt;
 
 ---
@@ -4410,11 +4410,11 @@ Figure from [21].
 initial original data transformations.
 
 1. When there are many more features than samples, PCA and CCA can be unstable.
-Regularized versions, like the sparse PCA and CCA we used here [15], can be more stable [30; 31].
+Regularized versions, like the sparse PCA and CCA we used here [23], can be more stable [24; 25].
 
 1. CCA searches for shared variation across tables. This can cause the results
 to ignore table-specific variation.  To decompose variation into shared and
-distinct components, consider methods like [22; 23].
+distinct components, consider methods like [26; 27].
 
 ---
 
@@ -4423,7 +4423,7 @@ distinct components, consider methods like [22; 23].
 1. If we have precise hypotheses about how datasets might be related, we can design
 visualization to evaluate them.
 
-1. For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary [32; 33].
+1. For example, in mediation analysis, expect the treatment to affect an omic dataset indirectly through an intermediary [28; 29].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/mediation_diagram.jpg" width=500/&gt;
@@ -4434,7 +4434,7 @@ visualization to evaluate them.
 ### Mediation Analysis
 
 This faceted plot shows the paths with the strongest indirect effects in joint
-metabolome-microbiome analysis [24].
+metabolome-microbiome analysis [30].
 
 &lt;div style="text-align: center;"&gt;
 &lt;img src="figures/mediation_scatterplot.jpg" width=900/&gt;
@@ -4448,8 +4448,8 @@ metabolome-microbiome analysis [24].
 1. Visualization is helpful throughout the data analysis process --
 validation, discovery, and communication.
 
-1. Other helpful visualization in microbiome research are heatmaps [36], residual plots [25], partial dependence [26; 27], phylogenetic [28],
-and network visualizations [34; 29].
+1. Other helpful visualization in microbiome research are heatmaps [31], residual plots [32], partial dependence [33; 34], phylogenetic [35],
+and network visualizations [36; 37].
 
 1. The best visualizations are the product of repeated refinements, just like
 the best writing.
@@ -4482,22 +4482,23 @@ Jun. 2004.
 [3] J. Heer et al. "Crowdsourcing graphical perception: using mechanical turk to assess visualization design". In: _Proceedings of the SIGCHI conference on human factors in computing
 systems_. 2010, pp. 203-212.
 
-[4] T. Munzner. _Visualization Analysis and Design_. AK Peters Visualization Series. London, England: CRC Press, Dec. 2014.
+[4] E. R. Tufte et al. _The visual display of quantitative information_. Vol. 2. 9. Graphics press Cheshire, CT, 1983.
 
-[5] E. R. Tufte et al. _The visual display of quantitative information_. Vol. 2. 9. Graphics press Cheshire, CT, 1983.
-
-[6] M. A. Borkin et al. "What Makes a Visualization Memorable?" In: _IEEE Transactions on Visualization and Computer Graphics_ 19.12 (Dec. 2013), p. 2306–2315. ISSN: 1077-2626. DOI:
+[5] M. A. Borkin et al. "What Makes a Visualization Memorable?" In: _IEEE Transactions on Visualization and Computer Graphics_ 19.12 (Dec. 2013), p. 2306–2315. ISSN: 1077-2626. DOI:
 [10.1109/tvcg.2013.234](https://doi.org/10.1109%2Ftvcg.2013.234). URL: [http://dx.doi.org/10.1109/TVCG.2013.234](http://dx.doi.org/10.1109/TVCG.2013.234).
 
-[7] F. Lekschas et al. "A generic framework and library for exploration of small multiples through interactive piling". In: _IEEE Transactions on Visualization and Computer Graphics_
+[6] F. Lekschas et al. "A generic framework and library for exploration of small multiples through interactive piling". In: _IEEE Transactions on Visualization and Computer Graphics_
 27.2 (2020), pp. 358-368.
 
-[8] I. Fink et al. "BiomeHorizon  : Visualizing Microbiome Time Series Data in R". In: _mSystems_ 7.3 (Jun. 2022). Ed. by M. G. I. Langille. ISSN: 2379-5077. DOI:
+[7] I. Fink et al. "BiomeHorizon  : Visualizing Microbiome Time Series Data in R". In: _mSystems_ 7.3 (Jun. 2022). Ed. by M. G. I. Langille. ISSN: 2379-5077. DOI:
 [10.1128/msystems.01380-21](https://doi.org/10.1128%2Fmsystems.01380-21). URL: [http://dx.doi.org/10.1128/msystems.01380-21](http://dx.doi.org/10.1128/msystems.01380-21).
 
-[9] B. Shneiderman. "The eyes have it: A task by data type taxonomy for information visualizations". In: _The craft of information visualization_. Elsevier, 2003, pp. 364-371.
+[8] B. Shneiderman. "The eyes have it: A task by data type taxonomy for information visualizations". In: _The craft of information visualization_. Elsevier, 2003, pp. 364-371.
 
-[10] K. Sankaran et al. "Interactive visualization of hierarchically structured data". In: _Journal of Computational and Graphical Statistics_ 27.3 (2018), pp. 553-563.
+[9] K. Sankaran et al. "Interactive visualization of hierarchically structured data". In: _Journal of Computational and Graphical Statistics_ 27.3 (2018), pp. 553-563.
+
+[10] M. G. Chevrette et al. "Microbiome composition modulates secondary metabolism in a multispecies bacterial community". In: _Proceedings of the National Academy of Sciences_ 119.42
+(2022), p. e2212930119.
 
 [11] S. Dudoit et al. "Statistical methods for identifying differentially expressed genes in replicated cDNA microarray experiments". In: _Statistica sinica_ (2002), pp. 111-139.
 
@@ -4516,32 +4517,30 @@ class: reference
 
 [14] C. O. Wilke. "Package “ggridges”". In: _Ridgeline Plots in “ggplot2_ (2022).
 
-[15] N. B. Erichson et al. _sparsepca: Sparse Principal Component Analysis (SPCA)_. R package version 0.1.2. 2018. URL:
-[https://CRAN.R-project.org/package=sparsepca](https://CRAN.R-project.org/package=sparsepca).
+[15] J. K. Pritchard et al. "Inference of population structure using multilocus genotype data". In: _Genetics_ 155.2 (2000), pp. 945-959.
 
-[16] J. K. Pritchard et al. "Inference of population structure using multilocus genotype data". In: _Genetics_ 155.2 (2000), pp. 945-959.
+[16] D. M. Blei et al. "Latent dirichlet allocation". In: _Journal of machine Learning research_ 3.Jan (2003), pp. 993-1022.
 
-[17] D. M. Blei et al. "Latent dirichlet allocation". In: _Journal of machine Learning research_ 3.Jan (2003), pp. 993-1022.
+[17] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (2019), pp. 599-614.
 
-[18] J. Fukuyama et al. "Multiscale analysis of count data through topic alignment". In: _Biostatistics_ 24.4 (Jun. 2022), p. 1045–1065. ISSN: 1468-4357. DOI:
+[18] L. Dethlefsen et al. "Incomplete recovery and individualized responses of the human distal gut microbiota to repeated antibiotic perturbation". In: _Proceedings of the National
+Academy of Sciences_ 108.supplement\_1 (2011), pp. 4554-4561.
+
+[19] J. Fukuyama et al. "Multiscale analysis of count data through topic alignment". In: _Biostatistics_ 24.4 (Jun. 2022), p. 1045–1065. ISSN: 1468-4357. DOI:
 [10.1093/biostatistics/kxac018](https://doi.org/10.1093%2Fbiostatistics%2Fkxac018). URL:
 [http://dx.doi.org/10.1093/biostatistics/kxac018](http://dx.doi.org/10.1093/biostatistics/kxac018).
 
-[19] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of the Royal Society B_ 290.2011 (2023), p. 20231461.
+[20] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of the Royal Society B_ 290.2011 (2023), p. 20231461.
 
-[20] G. C. Tseng et al. "Issues in cDNA microarray analysis: quality filtering, channel normalization, models of variations and assessment of gene effects". In: _Nucleic acids
+[21] G. C. Tseng et al. "Issues in cDNA microarray analysis: quality filtering, channel normalization, models of variations and assessment of gene effects". In: _Nucleic acids
 research_ 29.12 (2001), pp. 2549-2557.
 
-[21] K. Sankaran et al. "Multitable methods for microbiome data integration". In: _Frontiers in genetics_ 10 (2019), p. 627.
+[22] K. Sankaran et al. "Multitable methods for microbiome data integration". In: _Frontiers in genetics_ 10 (2019), p. 627.
 
-[22] K. Z. Lin et al. "Quantifying common and distinct information in single-cell multimodal data with Tilted Canonical Correlation Analysis". In: _Proceedings of the National Academy
-of Sciences_ 120.32 (2023), p. e2303647120.
+[23] N. B. Erichson et al. _sparsepca: Sparse Principal Component Analysis (SPCA)_. R package version 0.1.2. 2018. URL:
+[https://CRAN.R-project.org/package=sparsepca](https://CRAN.R-project.org/package=sparsepca).
 
-[23] E. F. Palzer et al. "sJIVE: Supervised joint and individual variation explained". In: _Computational Statistics &amp;amp; Data Analysis_ 175 (Nov. 2022), p. 107547. ISSN: 0167-9473.
-DOI: [10.1016/j.csda.2022.107547](https://doi.org/10.1016%2Fj.csda.2022.107547). URL: [http://dx.doi.org/10.1016/j.csda.2022.107547](http://dx.doi.org/10.1016/j.csda.2022.107547).
-
-[24] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ (Dec. 2024). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
-[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+[24] H. Zou et al. "Sparse principal component analysis". In: _Journal of computational and graphical statistics_ 15.2 (2006), pp. 265-286.
 
 ---
 
