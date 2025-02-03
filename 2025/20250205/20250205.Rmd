@@ -1,0 +1,151 @@
+---
+title: Invitation to Data Visualization
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+# Invitation to STAT 436: Data Visualization
+
+<style>
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+</style>
+
+<div id="subtitle">
+Kris Sankaran <br/>
+STAT 371 <br/>
+05 | February | 2025 <br/>
+</div>
+<div id="subtitle_right">
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Readings: <a href="https://go.wisc.edu/5202r6">go.wisc.edu/5202r6</a><br/>
+Recordings: <a href="https://go.wisc.edu/f8d3qj">go.wisc.edu/f8d3qj</a><br/>
+Demos: <a href="https://go.wisc.edu/kgx306">go.wisc.edu/kgx306</a><br/>
+</div>
+
+<!-- 40 minute talk -->
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+library(RefManageR)
+
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+---
+
+### Motivation: Perception
+
+If our brains were built differently, we might be able to understand an entire
+experiment by glancing at a spreadsheet. Even though this is impossible, data
+visualization can make complex comparisons more automatic.
+
+<div style="text-align: center;">
+<img src="figures/lion_binary.png" width=1200/>
+Figure from `r Citep(bib, "alain2017understanding")`.
+</div>
+
+---
+
+### Course Topics
+
+We learn to tailor our visualizations to different data types (e.g., spatial,
+network, and text).
+
+<div style="text-align: center;">
+<img src="figures/visualization_types.png" width=600/><br/>
+Visualizing different data types, from the [course notes](https://krisrs1128.github.io/stat436_s25/index.html).
+</div>
+
+---
+
+### Course Topics
+
+We learn how to use interactivity to help readers search for information.
+
+<div style="text-align: center;">
+<iframe src="https://connect.doit.wisc.edu/content/6df2063a-1c7d-4f01-b98c-3aebed82d190/"/>
+An example of [linked brushing](https://krisrs1128.github.io/stat436_s25/posts/2024-12-27-week05-03/).
+</div>
+
+---
+
+### Course Topics
+
+We learn how to visualize the results from modern models, like those for
+dimensionality reduction and deep representation learning.
+
+<div style="text-align: center;">
+<img src="figures/playground.png" width=600/><br/>
+A simple neural network, from the [Tensorflow Playground](https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.96706&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false)
+</div>
+
+---
+
+### Critical Thinking
+
+One of the goals of STAT 436 is to help you think critically about
+visualizations. Different ways of showing information will prioritize some
+comparisons over others.
+
+<div style="text-align: center;">
+<img src="figures/ranking_encodings.png" width=600/><br/>
+Figure from `r Citep(bib, "heer2010crowdsourcing")`.
+</div>
+
+---
+
+How many times larger is the circle on the right?
+
+<div style="text-align: center;">
+<iframe src="figures/circles.html" style="height: 620px; width: 600px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
+How many times taller is the bar on the right?
+
+<div style="text-align: center;">
+<iframe src="figures/bars.html" style="height: 620px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
+### Past Projects
+
+.pull-left[
+The course gives you a chance to work on a few projects over the course of the
+semester. Here are examples of some past submissions.
+
+[https://go.wisc.edu/q15t5a](https://go.wisc.edu/q15t5a)
+]
+
+.pull-right[
+<div style="text-align: center;">
+<a src="https://krisrs1128.github.io/portfolio_site_436/">
+<img src="figures/portfolio.png" width=600/><br/>
+</a>
+</div>
+]
