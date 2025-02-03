@@ -30,7 +30,7 @@ STAT 371 <br/>
 05 | February | 2025 <br/>
 </div>
 <div id="subtitle_right">
-Slides: <a href="https://go.wisc.edu/l05y4n">go.wisc.edu/l05y4n</a><br/>
+Slides: <a href="https://go.wisc.edu/x3m9qi">go.wisc.edu/x3m9qi</a><br/>
 Readings: <a href="https://go.wisc.edu/5202r6">go.wisc.edu/5202r6</a><br/>
 Recordings: <a href="https://go.wisc.edu/f8d3qj">go.wisc.edu/f8d3qj</a><br/>
 Demos: <a href="https://go.wisc.edu/kgx306">go.wisc.edu/kgx306</a><br/>
