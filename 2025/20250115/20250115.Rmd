@@ -670,3 +670,12 @@ Unlike PCA, topic models are a generative model. This allows us to evaluate mode
 Microscope by Hilmy Abiyyu Asad from <a href="https://thenounproject.com/browse/icons/term/microscope/" target="_blank" title="Microscope Icons">Noun Project</a> (CC BY 3.0)
 
 ---
+
+For running the shiny app:
+
+```
+r$> library(shiny)
+runUrl("https://uwmadison.box.com/shared/static/h1b0r9tpxrv5nvxyyfv7g540w6hny2w8.zip")
+```
+
+---
