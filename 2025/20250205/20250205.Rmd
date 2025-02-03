@@ -30,7 +30,7 @@ STAT 371 <br/>
 05 | February | 2025 <br/>
 </div>
 <div id="subtitle_right">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/l05y4n">go.wisc.edu/l05y4n</a><br/>
 Readings: <a href="https://go.wisc.edu/5202r6">go.wisc.edu/5202r6</a><br/>
 Recordings: <a href="https://go.wisc.edu/f8d3qj">go.wisc.edu/f8d3qj</a><br/>
 Demos: <a href="https://go.wisc.edu/kgx306">go.wisc.edu/kgx306</a><br/>
@@ -71,12 +71,12 @@ Figure from `r Citep(bib, "alain2017understanding")`.
 
 ### Course Topics
 
-We learn to tailor our visualizations to different data types (e.g., spatial,
-network, and text).
+We learn to tailor our visualizations to different data types (e.g., network,
+spatial, image).
 
 <div style="text-align: center;">
-<img src="figures/visualization_types.png" width=600/><br/>
-Visualizing different data types, from the [course notes](https://krisrs1128.github.io/stat436_s25/index.html).
+<img src="figures/visualization_types.png" width=1000/><br/>
+Visualizing different data types, from the <a src="https://krisrs1128.github.io/stat436_s25/index.html">course notes</a>.
 </div>
 
 ---
@@ -86,8 +86,8 @@ Visualizing different data types, from the [course notes](https://krisrs1128.git
 We learn how to use interactivity to help readers search for information.
 
 <div style="text-align: center;">
-<iframe src="https://connect.doit.wisc.edu/content/6df2063a-1c7d-4f01-b98c-3aebed82d190/"/>
-An example of [linked brushing](https://krisrs1128.github.io/stat436_s25/posts/2024-12-27-week05-03/).
+<iframe src="https://connect.doit.wisc.edu/content/6df2063a-1c7d-4f01-b98c-3aebed82d190/" width=900 height=370 frameborder="0"></iframe><br/>
+An example of <a src="https://krisrs1128.github.io/stat436_s25/posts/2024-12-27-week05-03">linked brushing</a>.
 </div>
 
 ---
@@ -98,8 +98,8 @@ We learn how to visualize the results from modern models, like those for
 dimensionality reduction and deep representation learning.
 
 <div style="text-align: center;">
-<img src="figures/playground.png" width=600/><br/>
-A simple neural network, from the [Tensorflow Playground](https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.96706&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false)
+<img src="figures/playground.png" width=840/><br/>
+A simple neural network, from the <a src="https://playground.tensorflow.org">Tensorflow Playground</a>.
 </div>
 
 ---
