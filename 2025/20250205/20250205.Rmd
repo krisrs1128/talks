@@ -76,7 +76,7 @@ spatial, image).
 
 <div style="text-align: center;">
 <img src="figures/visualization_types.png" width=1000/><br/>
-Visualizing different data types, from the <a src="https://krisrs1128.github.io/stat436_s25/index.html">course notes</a>.
+Visualizing different data types, from the <a href="https://krisrs1128.github.io/stat436_s25/index.html">course notes</a>.
 </div>
 
 ---
@@ -87,7 +87,7 @@ We learn how to use interactivity to help readers search for information.
 
 <div style="text-align: center;">
 <iframe src="https://connect.doit.wisc.edu/content/6df2063a-1c7d-4f01-b98c-3aebed82d190/" width=900 height=370 frameborder="0"></iframe><br/>
-An example of <a src="https://krisrs1128.github.io/stat436_s25/posts/2024-12-27-week05-03">linked brushing</a>.
+An example of <a href="https://krisrs1128.github.io/stat436_s25/posts/2024-12-27-week05-03">linked brushing</a>.
 </div>
 
 ---
@@ -99,7 +99,7 @@ dimensionality reduction and deep representation learning.
 
 <div style="text-align: center;">
 <img src="figures/playground.png" width=840/><br/>
-A simple neural network, from the <a src="https://playground.tensorflow.org">Tensorflow Playground</a>.
+A simple neural network, from the <a href="https://playground.tensorflow.org">Tensorflow Playground</a>.
 </div>
 
 ---
@@ -144,7 +144,7 @@ semester. Here are examples of some past submissions.
 
 .pull-right[
 <div style="text-align: center;">
-<a src="https://krisrs1128.github.io/portfolio_site_436/">
+<a href="https://krisrs1128.github.io/portfolio_site_436/">
 <img src="figures/portfolio.png" width=600/><br/>
 </a>
 </div>
