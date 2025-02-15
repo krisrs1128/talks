@@ -1,0 +1,375 @@
+---
+title: Enhancing Microbiome Analysis with Semisynthetic Data
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+# Enhancing Microbiome Analysis with Semisynthetic Data
+
+<style>
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+</style>
+
+<div id="subtitle">
+Kris Sankaran <br/>
+UW Madison Plant Pathology Seminar<br/>
+18 | February | 2025 <br/>
+</div>
+<div id="subtitle_right">
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Readings: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Recordings: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Demos: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+</div>
+
+<!-- 55 minute talk -->
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+library(RefManageR)
+
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+---
+
+### Microbiome Data
+
+1. A microbiome is a microbe-scale ecosystem.  It can be described by taxonomic
+composition, genomic function, and biochemical features.
+
+1. Advances in sequencing technology have made it easier than ever to rapidly
+profile these taxonomic and genomic features in a range of sites, including in
+the human body, on plant roots, and in the oceans. For this reason, they have
+become an important part of medical, agricultural, and environmental questions.
+
+---
+
+### Statistical Challenges
+
+Developing the data analysis for a microbiome study can be complicated by a
+number of factors.
+
+* **Integration**: How should we analyze data gathered from multiple batches or
+technologies?
+
+* **Experimental Design**: How should we arrange sampling, assign treatments,
+and place controls so that we can have powerful statistical conclusions?
+
+* **Reproducibility**: How can we be sure our conclusions are trustworthy?
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+In June 2024, Nature retracted a paper `r Citep(bib, "Poore2020")` the claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
+about the data analysis.
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom
+signals. The first part is a simulation.
+
+.pull-left[
+<img src="figures/gth_sim1.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim2.png"/>
+]
+
+---
+
+### The Changing Simulation Landscape
+
+Historically, microbiome researchers have only rarely used simulation in
+their data analysis workflow.
+
+  * Time Consuming: The simulators would have to be written from scratch, which requires significant effort.
+  * Unrealistic: Even afterwards, the resulting data may not be realistic enough to use to guide any practical conclusions.
+
+However, in the last few years, the situation has changed quite noticeably.
+
+---
+
+### Semisynethic Data
+
+One of the major advances has been the design of algorithms that can leverage public data resources.
+
+* Semisynthetic Data: The output from a simulator that has been designed to mimic external, template data. 
+* Template Data: Previously gathered experimental data that can be used to train a simulator.
+
+These new algorithms lift some of the responsibility of the simulation designer
+-- it's no longer necessary to start from a blank slate.
+
+---
+
+### New Packages
+
+We also have many more well-designed packages that implement these new
+methodologies.
+
+.center[
+  <img src="figures"/>
+]
+
+---
+
+### Talk Outline
+
+This talk will center around examples of how simulated data can be applied to
+resolve questions in microbiome data analysis.
+
+1. Differential Abundance - Benchmarking
+1. Dimensionality Reduction - Power Analysis
+1. _Interlude on Evaluation_
+1. Data Integration - Reliability Analysis
+1. Mediation Analysis - Designing Models
+
+I hope you can share some examples of how you might want to use simulation in
+your own work.
+
+---
+
+## Differential Abundance Analysis
+
+---
+
+### Setup
+
+A common question in microbiome analysis is whether a given taxon is more vs.
+less abundant in some conditiosn vs. others. This can be framed as a multiple
+hypothesis testing problem. For example,
+
+\begin{align*}
+H_{0j}: \mu_{A} = \mu_{A}\\
+H_{1j}: \mu_{A} \neq \mu_{A}\\
+\end{align*}
+
+---
+
+### True and False Discoveries
+
+There are many methods available for this problem. They make different
+assumptions about the data and may be sensitive to different types of signal.
+Ideally, a method should,
+
+* Maximize Power: Recover all taxa that are truly differentially abundant.
+* Minimize False Discoveries: Don't accidentally flag uninteresting taxa.
+
+---
+
+### Simulation Example
+
+We can customize a benchmark to our particular data set. In this example, we
+
+1. Trained a simulator to mimic data from (tk: Give the study citation and dimensions)
+1. Deliberately removed the effects from the (tk: how many) taxa with the
+weakest effects according to a Wilcoxon signed rank test.
+
+Step (2) can be thought of as a _computational negative control_. Together, we
+can generate realistic data with ground truth signals.
+
+---
+
+### Benchmarking Analysis
+
+These are the results of three popular differential abundance methods across a
+range of sample sizes. We've run (tk) simulation replicates for each
+configuration.
+
+.center[
+<img src="figures"/>
+]
+
+All methods controlled the FDR and continue to benefit from more samples even
+after $n = 500%.
+
+---
+
+### Implementation
+
+1. For this simulator, we used a zero-inflated Negative Binomial variant of the
+scDesign3 model.
+
+1. This model can accommodate high overdispersion -- high variance even with low
+mean -- and high data sparsity. To create true positives, means and variances
+were allowed to vary across BMI groups.
+
+---
+
+## Supervised Dimensionality Reduction
+
+---
+
+### Community-wide Associations
+
+1. In DA analysis, we can draw conclusions one taxon at a time. In many
+problems, though, we are interested in the relationships across a collection of
+taxa.
+
+1. These analysis require more advanced methods, like network or dimensionality
+reduction techniques.
+
+---
+
+### Motivation: Power Analysis
+
+.pull-left[
+1. Power analyses are intended to prevent researchers from embarking on studies
+that have very little chance of detecting the hypothesized signals.
+
+1. While formulas are available for simple univariate analysis, no analogous
+power formulas are available for more complex, multivariate models.
+]
+
+---
+
+### sPLS-DA Setting
+
+Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
+(sPLS-DA) `r Citep(bib, c("Le_Cao2008-zz", "Le_Cao2011-kn", "Rohart2017-sa"))`. This topic is it's
+own full workshop, but let's review the core ideas.
+
+.pull-left[
+sPLS-DA helps with prediction when, 
+
+* s: Not all features are predictive
+* PLS: Many features are correlated with one another
+* DA: The response is one of $K$ classes
+]
+
+.pull-right[
+<img src="figure/PLS-setup.png" width=500/>
+]
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figure/PLS-step1.png" width=500/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figure/PLS-step2.png" width=240/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figure/PLS-step3.png" width=400/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### sPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figure/PLS-step4.png" width=150/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### sPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figure/PLS-step5.png" width=800/>
+]
+
+---
+
+### sPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figure/PLS-step6.png" width=800/>
+]
+
+---
+
+### sPLS-DA Intuition
+
+To get more than one dimension, we can repeat this process after removing any
+correlation with previously found patterns.
+
+.center[
+<img src="figure/PLS-step7.png" width=800/>
+]
+
+---
+
+---
