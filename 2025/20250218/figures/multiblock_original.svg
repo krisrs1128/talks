@@ -1,0 +1,662 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="httpgd" width="1192.00" height="336.00" viewBox="0 0 953.60 268.80">
+<defs>
+  <style type='text/css'><![CDATA[
+    .httpgd line, .httpgd polyline, .httpgd polygon, .httpgd path, .httpgd rect, .httpgd circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+<clipPath id="c0"><rect x="0.00" y="0.00" width="953.60" height="268.80"/></clipPath>
+<clipPath id="c1"><rect x="36.20" y="29.78" width="286.92" height="207.29"/></clipPath>
+<clipPath id="c2"><rect x="0.00" y="0.00" width="953.60" height="268.80"/></clipPath>
+<clipPath id="c3"><rect x="348.70" y="29.78" width="286.92" height="207.29"/></clipPath>
+<clipPath id="c4"><rect x="0.00" y="0.00" width="953.60" height="268.80"/></clipPath>
+<clipPath id="c5"><rect x="661.20" y="29.78" width="286.92" height="207.29"/></clipPath>
+<clipPath id="c6"><rect x="0.00" y="0.00" width="953.60" height="268.80"/></clipPath>
+<clipPath id="c7"><rect x="36.20" y="5.48" width="286.92" height="24.30"/></clipPath>
+<clipPath id="c8"><rect x="0.00" y="0.00" width="953.60" height="268.80"/></clipPath>
+<clipPath id="c9"><rect x="348.70" y="5.48" width="286.92" height="24.30"/></clipPath>
+<clipPath id="c10"><rect x="0.00" y="0.00" width="953.60" height="268.80"/></clipPath>
+<clipPath id="c11"><rect x="661.20" y="5.48" width="286.92" height="24.30"/></clipPath>
+<clipPath id="c12"><rect x="0.00" y="0.00" width="953.60" height="268.80"/></clipPath>
+</defs>
+<rect width="100%" height="100%" style="stroke: none;fill: #FFFFFF;"/>
+<g clip-path="url(#c0)">
+<rect x="0.00" y="0.00" width="953.60" height="268.80" style="stroke-width: 1.07;stroke: #FFFFFF;fill: #FFFFFF;"/>
+</g><g clip-path="url(#c1)">
+<rect x="36.20" y="29.78" width="286.92" height="207.29" style="stroke-width: 1.07;stroke: none;fill: #FFFFFF;"/>
+<polyline points="36.20,204.57 323.12,204.57" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="36.20,149.58 323.12,149.58" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="36.20,94.60 323.12,94.60" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="36.20,39.61 323.12,39.61" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="56.32,237.07 56.32,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="131.41,237.07 131.41,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="206.49,237.07 206.49,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="281.57,237.07 281.57,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="36.20,232.06 323.12,232.06" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="36.20,177.08 323.12,177.08" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="36.20,122.09 323.12,122.09" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="36.20,67.11 323.12,67.11" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="93.87,237.07 93.87,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="168.95,237.07 168.95,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="244.03,237.07 244.03,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="319.11,237.07 319.11,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<rect x="216.42" y="198.99" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="256.44" y="219.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="269.46" y="215.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="190.35" y="208.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="242.25" y="227.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="81.55" y="113.31" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="84.85" y="123.33" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="69.07" y="113.60" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="80.29" y="108.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="73.01" y="130.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="90.34" y="150.02" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="59.49" y="135.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="108.79" y="150.34" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="48.89" y="152.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="71.32" y="120.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="64.85" y="127.77" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="64.65" y="148.98" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="65.22" y="150.96" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="69.02" y="103.93" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="82.97" y="144.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="86.55" y="135.32" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="67.97" y="142.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="104.65" y="137.74" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="100.97" y="159.32" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="65.99" y="165.70" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="234.84" y="90.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="135.43" y="89.85" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="196.22" y="84.85" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="158.15" y="63.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="227.16" y="95.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="192.53" y="67.13" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="109.36" y="83.43" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="149.28" y="93.50" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="134.99" y="91.05" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="305.64" y="124.95" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="248.20" y="87.65" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="262.65" y="103.56" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="286.53" y="38.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="215.80" y="109.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="141.11" y="84.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="254.99" y="136.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="275.20" y="168.65" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="253.34" y="83.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="198.76" y="74.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="309.73" y="123.55" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="160.72" y="80.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="301.30" y="143.75" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="176.11" y="83.11" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="268.12" y="129.98" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="308.80" y="144.44" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="267.41" y="71.81" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="168.89" y="69.44" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="160.86" y="89.66" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="241.93" y="140.14" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="115.80" y="71.60" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="205.25" y="132.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="229.28" y="104.78" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="305.64" y="124.95" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="248.20" y="87.65" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="262.65" y="103.56" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="286.53" y="38.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="215.80" y="109.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="141.11" y="84.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="254.99" y="136.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="275.20" y="168.65" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="253.34" y="83.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="198.76" y="74.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="309.73" y="123.55" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="160.72" y="80.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="301.30" y="143.75" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="176.11" y="83.11" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="268.12" y="129.98" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="308.80" y="144.44" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="267.41" y="71.81" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="168.89" y="69.44" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="160.86" y="89.66" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="241.93" y="140.14" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="115.80" y="71.60" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="205.25" y="132.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="229.28" y="104.78" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<g><text x="305.99" y="128.37" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F1</text></g>
+<g><text x="248.56" y="91.06" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F10</text></g>
+<g><text x="263.01" y="106.97" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F11</text></g>
+<g><text x="286.88" y="42.26" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F12</text></g>
+<g><text x="216.16" y="112.70" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F13</text></g>
+<g><text x="141.47" y="88.35" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F14</text></g>
+<g><text x="255.34" y="139.49" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F15</text></g>
+<g><text x="275.55" y="172.06" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F16</text></g>
+<g><text x="253.70" y="87.03" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F17</text></g>
+<g><text x="199.11" y="77.87" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F18</text></g>
+<g><text x="310.08" y="126.97" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F19</text></g>
+<g><text x="161.07" y="83.57" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F2</text></g>
+<g><text x="301.66" y="147.17" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F20</text></g>
+<g><text x="176.47" y="86.53" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F21</text></g>
+<g><text x="268.48" y="133.40" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F23</text></g>
+<g><text x="309.16" y="147.85" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F24</text></g>
+<g><text x="267.77" y="75.23" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F3</text></g>
+<g><text x="169.25" y="72.86" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F4</text></g>
+<g><text x="161.22" y="93.08" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F5</text></g>
+<g><text x="242.28" y="143.55" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F6</text></g>
+<g><text x="116.16" y="75.02" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F7</text></g>
+<g><text x="205.60" y="136.36" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F8</text></g>
+<g><text x="229.64" y="108.19" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F9</text></g>
+<rect x="234.84" y="90.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="135.43" y="89.85" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="196.22" y="84.85" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="158.15" y="63.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="227.16" y="95.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="192.53" y="67.13" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="109.36" y="83.43" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="149.28" y="93.50" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="134.99" y="91.05" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<g><text x="235.20" y="94.03" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F25</text></g>
+<g><text x="135.79" y="93.26" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F26</text></g>
+<g><text x="196.58" y="88.26" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F27</text></g>
+<g><text x="158.51" y="67.36" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F28</text></g>
+<g><text x="227.52" y="98.81" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F29</text></g>
+<g><text x="192.88" y="70.55" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F30</text></g>
+<g><text x="109.71" y="86.85" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F31</text></g>
+<g><text x="149.63" y="96.91" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F32</text></g>
+<g><text x="135.34" y="94.47" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F33</text></g>
+<rect x="81.55" y="113.31" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="84.85" y="123.33" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="69.07" y="113.60" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="80.29" y="108.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="73.01" y="130.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="90.34" y="150.02" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="59.49" y="135.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="108.79" y="150.34" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="48.89" y="152.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="71.32" y="120.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="64.85" y="127.77" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="64.65" y="148.98" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="65.22" y="150.96" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="69.02" y="103.93" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="82.97" y="144.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="86.55" y="135.32" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="67.97" y="142.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="104.65" y="137.74" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="100.97" y="159.32" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="65.99" y="165.70" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<g><text x="81.90" y="116.72" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F34</text></g>
+<g><text x="85.20" y="126.75" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F35</text></g>
+<g><text x="69.43" y="117.02" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F36</text></g>
+<g><text x="80.64" y="111.58" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F37</text></g>
+<g><text x="73.36" y="133.88" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F38</text></g>
+<g><text x="90.70" y="153.43" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F39</text></g>
+<g><text x="59.85" y="138.82" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F40</text></g>
+<g><text x="109.14" y="153.76" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F41</text></g>
+<g><text x="49.24" y="155.69" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F42</text></g>
+<g><text x="71.68" y="123.70" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F43</text></g>
+<g><text x="65.20" y="131.18" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F44</text></g>
+<g><text x="65.01" y="152.39" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F45</text></g>
+<g><text x="65.57" y="154.37" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F46</text></g>
+<g><text x="69.37" y="107.35" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F47</text></g>
+<g><text x="83.32" y="147.56" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F48</text></g>
+<g><text x="86.91" y="138.73" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F49</text></g>
+<g><text x="68.33" y="145.64" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F51</text></g>
+<g><text x="105.00" y="141.15" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F53</text></g>
+<g><text x="101.33" y="162.73" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F54</text></g>
+<g><text x="66.35" y="169.12" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F55</text></g>
+<rect x="216.42" y="198.99" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="256.44" y="219.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="269.46" y="215.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="190.35" y="208.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="242.25" y="227.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<g><text x="216.77" y="202.40" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F50</text></g>
+<g><text x="256.79" y="222.46" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F52</text></g>
+<g><text x="269.81" y="218.49" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F57</text></g>
+<g><text x="190.70" y="211.58" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F58</text></g>
+<g><text x="242.60" y="230.70" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F59</text></g>
+<rect x="36.20" y="29.78" width="286.92" height="207.29" style="stroke-width: 1.07;stroke: #333333;"/>
+</g><g clip-path="url(#c3)">
+<rect x="348.70" y="29.78" width="286.92" height="207.29" style="stroke-width: 1.07;stroke: none;fill: #FFFFFF;"/>
+<polyline points="348.70,223.02 635.62,223.02" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="348.70,166.90 635.62,166.90" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="348.70,110.79 635.62,110.79" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="348.70,54.68 635.62,54.68" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="355.27,237.07 355.27,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="418.53,237.07 418.53,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="481.79,237.07 481.79,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="545.05,237.07 545.05,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="608.30,237.07 608.30,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="348.70,194.96 635.62,194.96" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="348.70,138.85 635.62,138.85" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="348.70,82.73 635.62,82.73" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="386.90,237.07 386.90,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="450.16,237.07 450.16,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="513.42,237.07 513.42,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="576.67,237.07 576.67,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<rect x="537.13" y="227.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="537.02" y="197.92" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="494.41" y="206.42" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="523.88" y="189.91" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="512.99" y="172.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="411.84" y="133.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="498.41" y="119.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="472.30" y="106.81" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="487.41" y="169.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="443.15" y="94.13" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="497.54" y="136.77" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="476.81" y="142.72" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="499.23" y="168.93" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="385.04" y="102.75" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="361.38" y="85.73" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="483.55" y="160.32" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="500.49" y="136.70" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="476.64" y="149.24" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="445.83" y="112.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="497.60" y="98.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="462.00" y="135.57" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="495.41" y="163.58" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="531.60" y="180.14" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="530.25" y="158.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="475.54" y="131.26" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="519.09" y="161.61" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="471.26" y="120.37" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="515.52" y="175.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="526.62" y="63.16" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="555.98" y="38.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="622.23" y="98.26" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="520.07" y="155.56" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="507.77" y="141.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="560.32" y="154.27" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="559.37" y="122.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="576.30" y="88.99" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="529.00" y="145.06" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="566.24" y="54.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="563.34" y="128.02" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="532.26" y="160.72" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="518.54" y="151.81" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.97" y="155.53" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="537.58" y="134.50" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="533.74" y="137.06" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="522.57" y="183.19" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="568.67" y="122.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="515.65" y="129.57" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="509.74" y="135.19" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.19" y="169.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="524.18" y="177.55" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="591.90" y="65.75" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="520.48" y="109.63" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="535.54" y="123.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.27" y="151.11" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="526.39" y="157.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.05" y="172.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="575.31" y="129.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="559.37" y="122.94" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="576.30" y="88.99" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="529.00" y="145.06" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="566.24" y="54.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="563.34" y="128.02" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="532.26" y="160.72" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="518.54" y="151.81" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.97" y="155.53" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="537.58" y="134.50" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="533.74" y="137.06" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="522.57" y="183.19" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="568.67" y="122.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="515.65" y="129.57" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="509.74" y="135.19" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.19" y="169.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="524.18" y="177.55" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="591.90" y="65.75" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="520.48" y="109.63" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="535.54" y="123.62" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.27" y="151.11" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="526.39" y="157.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="525.05" y="172.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="575.31" y="129.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<g><text x="559.73" y="126.35" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F1</text></g>
+<g><text x="576.66" y="92.41" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F10</text></g>
+<g><text x="529.36" y="148.47" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F11</text></g>
+<g><text x="566.59" y="58.03" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F12</text></g>
+<g><text x="563.70" y="131.43" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F13</text></g>
+<g><text x="532.61" y="164.13" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F14</text></g>
+<g><text x="518.89" y="155.23" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F15</text></g>
+<g><text x="526.32" y="158.94" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F16</text></g>
+<g><text x="537.94" y="137.91" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F17</text></g>
+<g><text x="534.09" y="140.47" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F18</text></g>
+<g><text x="522.92" y="186.60" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F19</text></g>
+<g><text x="569.02" y="125.46" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F2</text></g>
+<g><text x="516.00" y="132.98" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F20</text></g>
+<g><text x="510.09" y="138.60" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F21</text></g>
+<g><text x="525.54" y="172.81" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F23</text></g>
+<g><text x="524.53" y="180.97" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F24</text></g>
+<g><text x="592.25" y="69.16" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F3</text></g>
+<g><text x="520.83" y="113.04" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F4</text></g>
+<g><text x="535.89" y="127.03" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F5</text></g>
+<g><text x="525.62" y="154.53" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F6</text></g>
+<g><text x="526.74" y="161.28" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F7</text></g>
+<g><text x="525.41" y="175.45" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F8</text></g>
+<g><text x="575.66" y="132.58" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F9</text></g>
+<rect x="519.09" y="161.61" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="471.26" y="120.37" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="515.52" y="175.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="526.62" y="63.16" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="555.98" y="38.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="622.23" y="98.26" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="520.07" y="155.56" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="507.77" y="141.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="560.32" y="154.27" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<g><text x="519.44" y="165.03" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F25</text></g>
+<g><text x="471.62" y="123.78" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F26</text></g>
+<g><text x="515.88" y="179.25" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F27</text></g>
+<g><text x="526.98" y="66.58" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F28</text></g>
+<g><text x="556.34" y="42.26" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F29</text></g>
+<g><text x="622.58" y="101.67" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F30</text></g>
+<g><text x="520.42" y="158.97" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F31</text></g>
+<g><text x="508.13" y="144.69" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F32</text></g>
+<g><text x="560.67" y="157.68" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F33</text></g>
+<rect x="411.84" y="133.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="498.41" y="119.40" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="472.30" y="106.81" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="487.41" y="169.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="443.15" y="94.13" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="497.54" y="136.77" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="476.81" y="142.72" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="499.23" y="168.93" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="385.04" y="102.75" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="361.38" y="85.73" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="483.55" y="160.32" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="500.49" y="136.70" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="476.64" y="149.24" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="445.83" y="112.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="497.60" y="98.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="462.00" y="135.57" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="495.41" y="163.58" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="531.60" y="180.14" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="530.25" y="158.17" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="475.54" y="131.26" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<g><text x="412.19" y="136.81" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F34</text></g>
+<g><text x="498.77" y="122.82" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F35</text></g>
+<g><text x="472.66" y="110.22" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F36</text></g>
+<g><text x="487.76" y="172.50" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F37</text></g>
+<g><text x="443.50" y="97.55" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F38</text></g>
+<g><text x="497.89" y="140.19" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F39</text></g>
+<g><text x="477.16" y="146.13" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F40</text></g>
+<g><text x="499.58" y="172.35" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F41</text></g>
+<g><text x="385.40" y="106.17" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F42</text></g>
+<g><text x="361.74" y="89.14" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F43</text></g>
+<g><text x="483.90" y="163.74" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F44</text></g>
+<g><text x="500.85" y="140.11" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F45</text></g>
+<g><text x="476.99" y="152.66" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F46</text></g>
+<g><text x="446.18" y="115.64" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F47</text></g>
+<g><text x="497.96" y="102.26" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F48</text></g>
+<g><text x="462.35" y="138.98" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F49</text></g>
+<g><text x="495.76" y="167.00" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F51</text></g>
+<g><text x="531.95" y="183.55" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F53</text></g>
+<g><text x="530.60" y="161.58" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F54</text></g>
+<g><text x="475.89" y="134.68" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F55</text></g>
+<rect x="537.13" y="227.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="537.02" y="197.92" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="494.41" y="206.42" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="523.88" y="189.91" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="512.99" y="172.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<g><text x="537.48" y="230.70" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F50</text></g>
+<g><text x="537.37" y="201.33" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F52</text></g>
+<g><text x="494.77" y="209.83" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F57</text></g>
+<g><text x="524.24" y="193.32" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F58</text></g>
+<g><text x="513.34" y="175.71" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F59</text></g>
+<rect x="348.70" y="29.78" width="286.92" height="207.29" style="stroke-width: 1.07;stroke: #333333;"/>
+</g><g clip-path="url(#c5)">
+<rect x="661.20" y="29.78" width="286.92" height="207.29" style="stroke-width: 1.07;stroke: none;fill: #FFFFFF;"/>
+<polyline points="661.20,218.12 948.12,218.12" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,173.78 948.12,173.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,129.44 948.12,129.44" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,85.09 948.12,85.09" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,40.75 948.12,40.75" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="715.76,237.07 715.76,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="777.77,237.07 777.77,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="839.78,237.07 839.78,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="901.80,237.07 901.80,29.78" style="stroke-width: 0.53;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,195.95 948.12,195.95" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,151.61 948.12,151.61" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,107.26 948.12,107.26" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="661.20,62.92 948.12,62.92" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="684.75,237.07 684.75,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="746.77,237.07 746.77,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="808.78,237.07 808.78,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="870.79,237.07 870.79,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<polyline points="932.80,237.07 932.80,29.78" style="stroke-width: 1.07;stroke: #EBEBEB;stroke-linecap: butt;"/>
+<rect x="758.84" y="146.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="811.85" y="186.13" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="805.17" y="215.34" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="722.58" y="138.12" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="815.02" y="227.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="726.90" y="102.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="709.47" y="103.20" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="700.28" y="99.12" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="732.60" y="121.39" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="678.38" y="107.55" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="687.60" y="97.96" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="688.70" y="97.07" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="704.20" y="128.59" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="686.84" y="140.65" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="704.50" y="92.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="692.21" y="108.64" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="693.37" y="90.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="689.03" y="106.10" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="701.40" y="111.01" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="750.75" y="121.66" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="688.58" y="105.98" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="709.15" y="112.80" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="708.10" y="119.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="691.26" y="108.00" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="700.54" y="149.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="741.77" y="84.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="676.31" y="74.51" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="757.30" y="97.95" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="729.63" y="56.43" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="761.01" y="83.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="803.93" y="64.09" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="696.01" y="104.00" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="720.90" y="91.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="703.79" y="104.82" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="809.06" y="80.05" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="757.57" y="95.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="735.16" y="107.43" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="887.76" y="38.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="775.43" y="99.03" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="728.10" y="91.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="817.36" y="80.25" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="820.81" y="103.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="799.80" y="77.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="673.88" y="103.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="790.77" y="92.00" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="726.27" y="100.78" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="760.93" y="101.76" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="705.92" y="107.90" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="934.72" y="93.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="881.85" y="107.88" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="730.75" y="102.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="736.36" y="88.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="832.67" y="104.47" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="858.51" y="111.90" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="699.40" y="101.87" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="781.82" y="91.09" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="752.62" y="115.50" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="809.06" y="80.05" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="757.57" y="95.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="735.16" y="107.43" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="887.76" y="38.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="775.43" y="99.03" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="728.10" y="91.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="817.36" y="80.25" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="820.81" y="103.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="799.80" y="77.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="673.88" y="103.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="790.77" y="92.00" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="726.27" y="100.78" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="760.93" y="101.76" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="705.92" y="107.90" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="934.72" y="93.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="881.85" y="107.88" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="730.75" y="102.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="736.36" y="88.46" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="832.67" y="104.47" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="858.51" y="111.90" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="699.40" y="101.87" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="781.82" y="91.09" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<rect x="752.62" y="115.50" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #009E73;"/>
+<g><text x="809.41" y="83.47" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F1</text></g>
+<g><text x="757.92" y="99.28" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F10</text></g>
+<g><text x="735.51" y="110.85" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F11</text></g>
+<g><text x="888.11" y="42.26" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F12</text></g>
+<g><text x="775.79" y="102.44" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F13</text></g>
+<g><text x="728.45" y="94.64" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F14</text></g>
+<g><text x="817.71" y="83.67" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F15</text></g>
+<g><text x="821.17" y="106.88" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F16</text></g>
+<g><text x="800.15" y="80.64" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F17</text></g>
+<g><text x="674.24" y="107.27" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F18</text></g>
+<g><text x="791.12" y="95.41" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F19</text></g>
+<g><text x="726.62" y="104.20" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F2</text></g>
+<g><text x="761.29" y="105.17" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F20</text></g>
+<g><text x="706.27" y="111.31" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F21</text></g>
+<g><text x="935.08" y="96.49" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F23</text></g>
+<g><text x="882.20" y="111.29" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F24</text></g>
+<g><text x="731.11" y="105.49" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F3</text></g>
+<g><text x="736.72" y="91.88" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F4</text></g>
+<g><text x="833.02" y="107.88" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F5</text></g>
+<g><text x="858.87" y="115.31" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F6</text></g>
+<g><text x="699.76" y="105.28" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F7</text></g>
+<g><text x="782.17" y="94.51" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F8</text></g>
+<g><text x="752.97" y="118.92" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #009E73;" textLength="27.97px" lengthAdjust="spacingAndGlyphs">TKI_F9</text></g>
+<rect x="741.77" y="84.08" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="676.31" y="74.51" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="757.30" y="97.95" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="729.63" y="56.43" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="761.01" y="83.84" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="803.93" y="64.09" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="696.01" y="104.00" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="720.90" y="91.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<rect x="703.79" y="104.82" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #C2C2C2;"/>
+<g><text x="742.12" y="87.49" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F25</text></g>
+<g><text x="676.66" y="77.92" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F26</text></g>
+<g><text x="757.65" y="101.36" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F27</text></g>
+<g><text x="729.98" y="59.85" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F28</text></g>
+<g><text x="761.37" y="87.26" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F29</text></g>
+<g><text x="804.28" y="67.50" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F30</text></g>
+<g><text x="696.36" y="107.42" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F31</text></g>
+<g><text x="721.25" y="94.56" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F32</text></g>
+<g><text x="704.15" y="108.23" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #C2C2C2;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F33</text></g>
+<rect x="726.90" y="102.23" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="709.47" y="103.20" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="700.28" y="99.12" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="732.60" y="121.39" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="678.38" y="107.55" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="687.60" y="97.96" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="688.70" y="97.07" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="704.20" y="128.59" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="686.84" y="140.65" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="704.50" y="92.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="692.21" y="108.64" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="693.37" y="90.86" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="689.03" y="106.10" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="701.40" y="111.01" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="750.75" y="121.66" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="688.58" y="105.98" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="709.15" y="112.80" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="708.10" y="119.28" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="691.26" y="108.00" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<rect x="700.54" y="149.15" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #F68B33;"/>
+<g><text x="727.26" y="105.65" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F34</text></g>
+<g><text x="709.82" y="106.61" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F35</text></g>
+<g><text x="700.63" y="102.54" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F36</text></g>
+<g><text x="732.95" y="124.80" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F37</text></g>
+<g><text x="678.74" y="110.96" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F38</text></g>
+<g><text x="687.96" y="101.37" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F39</text></g>
+<g><text x="689.05" y="100.49" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F40</text></g>
+<g><text x="704.55" y="132.01" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F41</text></g>
+<g><text x="687.19" y="144.06" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F42</text></g>
+<g><text x="704.86" y="96.27" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F43</text></g>
+<g><text x="692.57" y="112.06" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F44</text></g>
+<g><text x="693.72" y="94.27" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F45</text></g>
+<g><text x="689.38" y="109.51" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F46</text></g>
+<g><text x="701.75" y="114.43" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F47</text></g>
+<g><text x="751.10" y="125.07" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F48</text></g>
+<g><text x="688.93" y="109.39" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F49</text></g>
+<g><text x="709.50" y="116.21" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F51</text></g>
+<g><text x="708.45" y="122.70" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F53</text></g>
+<g><text x="691.61" y="111.42" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F54</text></g>
+<g><text x="700.89" y="152.56" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #F68B33;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F55</text></g>
+<rect x="758.84" y="146.04" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="811.85" y="186.13" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="805.17" y="215.34" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="722.58" y="138.12" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<rect x="815.02" y="227.29" width="0.71" height="0.71" style="stroke-width: 0.71;stroke: #388ECC;"/>
+<g><text x="759.20" y="149.46" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F50</text></g>
+<g><text x="812.21" y="189.54" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F52</text></g>
+<g><text x="805.52" y="218.75" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F57</text></g>
+<g><text x="722.93" y="141.54" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F58</text></g>
+<g><text x="815.37" y="230.70" text-anchor="middle" style="font-family: Arial;font-size: 8.54px;fill: #388ECC;" textLength="32.72px" lengthAdjust="spacingAndGlyphs">TKI_F59</text></g>
+<rect x="661.20" y="29.78" width="286.92" height="207.29" style="stroke-width: 1.07;stroke: #333333;"/>
+</g><g clip-path="url(#c7)">
+<rect x="36.20" y="5.48" width="286.92" height="24.30" style="stroke-width: 1.07;stroke: #333333;fill: #D9D9D9;"/>
+<g><text x="179.66" y="23.57" text-anchor="middle" style="font-family: Arial;font-size: 16.50px;font-weight: bold;fill: #1A1A1A;" textLength="120.16px" lengthAdjust="spacingAndGlyphs">Block: Bacteria</text></g>
+</g><g clip-path="url(#c9)">
+<rect x="348.70" y="5.48" width="286.92" height="24.30" style="stroke-width: 1.07;stroke: #333333;fill: #D9D9D9;"/>
+<g><text x="492.16" y="23.57" text-anchor="middle" style="font-family: Arial;font-size: 16.50px;font-weight: bold;fill: #1A1A1A;" textLength="99.93px" lengthAdjust="spacingAndGlyphs">Block: Fungi</text></g>
+</g><g clip-path="url(#c11)">
+<rect x="661.20" y="5.48" width="286.92" height="24.30" style="stroke-width: 1.07;stroke: #333333;fill: #D9D9D9;"/>
+<g><text x="804.66" y="23.57" text-anchor="middle" style="font-family: Arial;font-size: 16.50px;font-weight: bold;fill: #1A1A1A;" textLength="114.66px" lengthAdjust="spacingAndGlyphs">Block: Viruses</text></g>
+</g><g clip-path="url(#c12)">
+<polyline points="93.87,239.81 93.87,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="168.95,239.81 168.95,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="244.03,239.81 244.03,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="319.11,239.81 319.11,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<g><text x="93.87" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="7.83px" lengthAdjust="spacingAndGlyphs">-5</text></g>
+<g><text x="168.95" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="4.90px" lengthAdjust="spacingAndGlyphs">0</text></g>
+<g><text x="244.03" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="4.90px" lengthAdjust="spacingAndGlyphs">5</text></g>
+<g><text x="319.11" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="9.79px" lengthAdjust="spacingAndGlyphs">10</text></g>
+<polyline points="386.90,239.81 386.90,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="450.16,239.81 450.16,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="513.42,239.81 513.42,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="576.67,239.81 576.67,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<g><text x="386.90" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="15.16px" lengthAdjust="spacingAndGlyphs">-5.0</text></g>
+<g><text x="450.16" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="15.16px" lengthAdjust="spacingAndGlyphs">-2.5</text></g>
+<g><text x="513.42" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">0.0</text></g>
+<g><text x="576.67" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">2.5</text></g>
+<polyline points="684.75,239.81 684.75,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="746.77,239.81 746.77,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="808.78,239.81 808.78,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="870.79,239.81 870.79,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="932.80,239.81 932.80,237.07" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<g><text x="684.75" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="15.16px" lengthAdjust="spacingAndGlyphs">-2.5</text></g>
+<g><text x="746.77" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">0.0</text></g>
+<g><text x="808.78" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">2.5</text></g>
+<g><text x="870.79" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">5.0</text></g>
+<g><text x="932.80" y="248.30" text-anchor="middle" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">7.5</text></g>
+<g><text x="656.26" y="199.10" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="15.16px" lengthAdjust="spacingAndGlyphs">-5.0</text></g>
+<g><text x="656.26" y="154.76" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="15.16px" lengthAdjust="spacingAndGlyphs">-2.5</text></g>
+<g><text x="656.26" y="110.42" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">0.0</text></g>
+<g><text x="656.26" y="66.08" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">2.5</text></g>
+<polyline points="658.46,195.95 661.20,195.95" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="658.46,151.61 661.20,151.61" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="658.46,107.26 661.20,107.26" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="658.46,62.92 661.20,62.92" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<g><text x="343.77" y="198.12" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="15.16px" lengthAdjust="spacingAndGlyphs">-2.5</text></g>
+<g><text x="343.77" y="142.00" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">0.0</text></g>
+<g><text x="343.77" y="85.89" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.23px" lengthAdjust="spacingAndGlyphs">2.5</text></g>
+<polyline points="345.96,194.96 348.70,194.96" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="345.96,138.85 348.70,138.85" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="345.96,82.73 348.70,82.73" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<g><text x="31.27" y="235.22" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="12.72px" lengthAdjust="spacingAndGlyphs">-10</text></g>
+<g><text x="31.27" y="180.23" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="7.83px" lengthAdjust="spacingAndGlyphs">-5</text></g>
+<g><text x="31.27" y="125.24" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="4.90px" lengthAdjust="spacingAndGlyphs">0</text></g>
+<g><text x="31.27" y="70.26" text-anchor="end" style="font-family: Arial;font-size: 8.80px;fill: #4D4D4D;" textLength="4.90px" lengthAdjust="spacingAndGlyphs">5</text></g>
+<polyline points="33.46,232.06 36.20,232.06" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="33.46,177.08 36.20,177.08" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="33.46,122.09 36.20,122.09" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="33.46,67.11 36.20,67.11" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<g><text x="492.16" y="260.89" text-anchor="middle" style="font-family: Arial;font-size: 11.00px;" textLength="42.19px" lengthAdjust="spacingAndGlyphs">variate 1</text></g>
+<g><text transform="translate(13.37,133.42) rotate(-90.00)" text-anchor="middle" style="font-family: Arial;font-size: 11.00px;" textLength="42.19px" lengthAdjust="spacingAndGlyphs">variate 2</text></g>
+</g>
+</svg>
