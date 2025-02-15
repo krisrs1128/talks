@@ -372,4 +372,236 @@ correlation with previously found patterns.
 
 ---
 
+### Example Output
+
+In this example, we are comparing mice with and without a mouse model of
+Huntington's Disease (HD). SPLS-DA allows us to find microbiome community
+composition patterns that are effectively distinguish healthy and disease
+groups.
+
+---
+
+### Problem Formulation
+
+1. How many samples are necessary before this method can recover the
+discriminating factors? To answer this, we need a simulator that accurately
+preserves the multivariate associations across the community.
+
+1. The approach will be:
+
+* Learn a simulator that mimics the true multivariate structure of the HD dataset
+* Simulate dataset with varying sample sizes and numbers of truly predictive taxa.
+* Evaluate the prediction performance of SPLS-DA applied to multiple replicates from each setting.
+
+---
+
+### Learned Associations
+
+Except for the "streaks" when taxa were not observed, our simulator seems to
+have preserved the essential bivariate relationships across taxa.
+
+
+This is admittedly a tiny subset of taxa. We will show a more quantitative
+evaluation soon.
+
+---
+
+### Power Analysis
+
+These are the results of our simulation experiment across varying sample sizes
+and proportions of truly associated taxa. When few taxa are truly predictive,
+many more samples are needed.
+
+---
+
+### Copula Models
+
+These are a type of model that "couple" a collection of known marginal
+distributions `r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))`.
+
+.center[
+<img src="figure/gene-gene_dependence.png" width=900/>
+]
+
+---
+
+### Starting Point
+
+**Question**: If we were asked to simulate a vector of five correlated variables on
+our computers right now, what would be the easiest thing to do?
+
+---
+
+### Starting Point
+
+**Question**: If we were asked to simulate a vector of five correlated variables on
+our computers right now, what would be the easiest thing to do?
+
+```{r}
+library(mvtnorm)
+D <- 5
+ones <- rep(1, D)
+Sigma <- 0.01 * diag(D) + 0.99 * ones %*% t(ones)
+rmvnorm(3, rep(0, D), Sigma)
+```
+
+The difficulty is that we usually want non-Gaussian margins $F_{1}, \dots, F_{D}$.
+
+---
+
+### Intuition
+
+* In the Gaussianized space, it's easy to model correlation.
+* The mapping back and forth is possible because we know the margins $F$.
+  - $\Phi$ represents the Gaussian CDF applied componentwise
+<br/>
+<br/>
+
+.center[
+<img src="figure/copula_transformation.png" width=700/>
+]
+
+---
+
+### Copula Models
+
+More formally, let $F_{1}, \dots, F_{D}$ be the target margins and let $\Phi$ be
+the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
+
+Estimate:
+
+1. Gaussianize the observed $\mathbf{x}_{i}$ to $\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]$
+1. Estimate the covariance $\hat{\Sigma}$ associated with $z_{i}$
+
+Simulate:
+
+1. Draw $\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
+1. Transform back $\mathbf{x}\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]$
+
+---
+
+### Variations
+
+1. We might expect the corelation structure to vary across groups. This can be
+accomplished by setting separate $\Sigma_{k}$ across groups $k$.
+
+1. In high-dimensions, the sample covariance $\hat{\Sigma}$ can destabilize. In
+this case, we should use high-dimensional covariance estimators `r Citep(bib, c("Meinshausen2006-cg,", "Friedman2008-cw", "Cai2011-ja"))`.
+
+.center[
+<img src="figure/copula_groups.png" width=700/>
+]
+
+---
+
+## Interlude - Evaluation
+
+---
+
+### Evaluation Taxonomy
+
+To be useful, simulated data need to be realistic. A few differences to be aware of:
+
+* Narrow vs. Broad Measures: Narrow measures focus on small subsets of taxa, while broad measures evaluate community-level properties.
+
+* Graphical vs. Quantative: Some checks are more easily quantifiable.
+
+* Fit-for-purpose measures: Evaluation can focus on specific parameter estimates or analysis results.
+
+Different types of realism should have higher priority depending on the
+downstream tasks.
+
+---
+
+# Examples
+
+* Graphical, Narrow: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa.
+* Graphical, Broad: Principal component plots of real vs. simulated dataset.
+* Quantitative, Narrow: Two-sample Kolmogorov-Smirnov test.
+* Quantitative, Broad: Performance of real vs. simulated data prediction.
+* Fit-for-Purpose: Linear model coefficients on real vs. simulated data.
+
+---
+
+### Simulation Evaluation through Classification
+
+Suppose we wanted to fit a model to these (simulated) data
+
+<center>
+<img src="figure/true_mixture.png" width="500"/>
+</center>
+
+---
+
+* A natural enough starting point is a Gaussian mixture model with $K = 4$.
+* We can simulate from the fit, but it seems quite far off.
+.pull-left[
+_Simulated_
+<img src="figure/Gaussian (Shared Covarince).png" width="430"/>
+]
+.pull-right[
+_Truth_
+<img src="figure/true_mixture.png" width="430"/>
+]
+
+---
+
+We can make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
+
+The prediction probabilies below come from a GBM discriminator, which has an
+out-of-sample prediction accuracy of 65.5%.
+
+.pull-left[
+_Simulated_
+<img src="figure/Gaussian (Shared Covarince)-prob.png" width="430"/>
+]
+
+.pull-right[
+_Truth_
+<img src="figure/true-Gaussian (Shared Covariance)-prob.png" width="430"/>
+]
+
+
+---
+
+As a next step,
+  * Increase number of components to $K = 5$.
+  * Fit different variances per component.
+  
+We still over-sample the gap between the two bottom-left clusters, but the GBM
+accuracy has dropped down to 55.5%.
+
+.pull-left[
+_Simulated_
+<img src="figure/Gaussian (Individual Covariance)-prob.png" width="350"/>
+]
+
+.pull-right[
+_Truth_
+<img src="figure/true-Gaussian (Individual Covariance)-prob.png" width="350"/>
+]
+
+---
+
+* We use a mixture of $t$ distributions next.
+* GBM accuracy is now 50.6%
+  - Unsurprisingly, this is the true mechanism that generated the data.
+
+.pull-left[
+_Simulated_
+<img src="figure/Student's t (Individual Covariance)-prob.png" width="350"/>
+
+.pull-right[
+_Truth_
+<img src="figure/true-Student's t (Individual Covariance)-prob.png" width="350"/>
+]
+
+---
+
+The discrimination probabilities become closer to 0.5 the more accurate the simulation becomes.
+
+<center>
+<img src="figure/modeling_iteration.png" width="800"/>
+</center>
+
 ---
