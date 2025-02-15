@@ -1,57 +1,41 @@
----
-title: Enhancing Microbiome Analysis with Semisynthetic Data
-output:
-  xaringan::moon_reader:
-    css: ["default", "css/xaringan-themer.css"]
-    lib_dir: libs
-    self_contained: false
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      ratio: "16:9"
-    seal: false
----
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Enhancing Microbiome Analysis with Semisynthetic Data</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
 
 class: title
 
 # Enhancing Microbiome Analysis with Semisynthetic Data
 
-<style>
+&lt;style&gt;
 .slide-background {
     background: url("figures/cover.png") no-repeat center center;
     background-size: cover;
     opacity: 0.5;
 }
-</style>
+&lt;/style&gt;
 
-<div id="subtitle">
-Kris Sankaran <br/>
-Plant Pathology Seminar<br/>
-18 | February | 2025 <br/>
-</div>
-<div id="subtitle_right">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
-Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
-</div>
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+Plant Pathology Seminar&lt;br/&gt;
+18 | February | 2025 &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;&lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
 
-<!-- 55 minute talk -->
+&lt;!-- 55 minute talk --&gt;
 
-```{r, echo = FALSE, warning = FALSE}
-library(knitr)
-library(RefManageR)
 
-opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
-BibOptions(
-  check.entries = FALSE,
-  bib.style = "numeric",
-  cite.style = "numeric",
-  style = "markdown",
-  hyperlink = FALSE,
-  dashed = FALSE,
-  max.names = 1
-)
-bib <- ReadBib("references.bib")
-```
 
 ---
 
@@ -82,23 +66,23 @@ and place controls so that we can have powerful statistical conclusions?
 
 ---
 
-### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+### Data Analysis Controversy 
 
 .center[
-    <img src="figures/retraction.png"/>
+    &lt;img src="figures/retraction.png"/&gt;
 ]
 
-In June 2024, Nature retracted a paper `r Citep(bib, "Poore2020")` the claimed
+In June 2024, Nature retracted a paper  the claimed
 identify microbiome signatures of cancer. This came after one year's worth of
-debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
+debate 
 about the data analysis.
 
 ---
 
-### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+### Data Analysis Controversy 
 
 .center[
-    <img src="figures/retraction.png"/>
+    &lt;img src="figures/retraction.png"/&gt;
 ]
 
 The "disease signature" was an artifact resulting from the use of a batch effect
@@ -109,14 +93,14 @@ to learn about batch effects and correction methods.
 
 ### Simulation to Resolve Controversy
 
-Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom
+Gerry Tonkin-Hill has an excellent re-analysis  of the data from  which sheds light what were likely the source of the phantom
 signals. The first part is a simulation.
 
 .pull-left[
-<img src="figures/gth_sim1.png"/>
+&lt;img src="figures/gth_sim1.png"/&gt;
 ]
 .pull-right[
-<img src="figures/gth_sim2.png"/>
+&lt;img src="figures/gth_sim2.png"/&gt;
 ]
 
 ---
@@ -151,7 +135,7 @@ We also have many more well-designed packages that implement these new
 methodologies.
 
 .center[
-  <img src="figures"/>
+  &lt;img src="figures"/&gt;
 ]
 
 ---
@@ -182,10 +166,10 @@ A common question in microbiome analysis is whether a given taxon is more vs.
 less abundant in some conditiosn vs. others. This can be framed as a multiple
 hypothesis testing problem. For example,
 
-\begin{align*}
+`\begin{align*}
 H_{0j}: \mu_{A} = \mu_{A}\\
 H_{1j}: \mu_{A} \neq \mu_{A}\\
-\end{align*}
+\end{align*}`
 
 ---
 
@@ -220,7 +204,7 @@ range of sample sizes. We've run (tk) simulation replicates for each
 configuration.
 
 .center[
-<img src="figures"/>
+&lt;img src="figures"/&gt;
 ]
 
 All methods controlled the FDR and continue to benefit from more samples even
@@ -269,7 +253,7 @@ power formulas are available for more complex, multivariate models.
 ### sPLS-DA Setting
 
 Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
-(sPLS-DA) `r Citep(bib, c("Le_Cao2008-zz", "Le_Cao2011-kn", "Rohart2017-sa"))`. This topic is it's
+(sPLS-DA) . This topic is it's
 own full workshop, but let's review the core ideas.
 
 .pull-left[
@@ -277,75 +261,65 @@ sPLS-DA helps with prediction when,
 
 * s: Not all features are predictive
 * PLS: Many features are correlated with one another
-* DA: The response is one of $K$ classes
+* DA: The response is one of `\(K\)` classes
 ]
 
 .pull-right[
-<img src="figure/PLS-setup.png" width=500/>
+&lt;img src="figure/PLS-setup.png" width=500/&gt;
 ]
 
 ---
 
 ### sPLS-DA Intuition
 
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
 .center[
-<img src="figure/PLS-step1.png" width=500/>
+&lt;img src="figure/PLS-step1.png" width=500/&gt;
 ]
 
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 ---
 
 ### sPLS-DA Intuition
 
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
 .center[
-<img src="figure/PLS-step2.png" width=240/>
+&lt;img src="figure/PLS-step2.png" width=240/&gt;
 ]
 
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 
 ---
 
 ### sPLS-DA Intuition
 
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
 .center[
-<img src="figure/PLS-step3.png" width=400/>
+&lt;img src="figure/PLS-step3.png" width=400/&gt;
 ]
 
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 ---
 
 ### sPLS-DA Intuition
 
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
 .center[
-<img src="figure/PLS-step4.png" width=150/>
+&lt;img src="figure/PLS-step4.png" width=150/&gt;
 ]
 
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
-
----
-
-### sPLS-DA Intuition
-
-Now we can compare samples from the two tables in a single, shared space.
-
-.center[
-<img src="figure/PLS-step5.png" width=800/>
-]
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
 
 ---
 
@@ -354,7 +328,17 @@ Now we can compare samples from the two tables in a single, shared space.
 Now we can compare samples from the two tables in a single, shared space.
 
 .center[
-<img src="figure/PLS-step6.png" width=800/>
+&lt;img src="figure/PLS-step5.png" width=800/&gt;
+]
+
+---
+
+### sPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+&lt;img src="figure/PLS-step6.png" width=800/&gt;
 ]
 
 ---
@@ -365,7 +349,7 @@ To get more than one dimension, we can repeat this process after removing any
 correlation with previously found patterns.
 
 .center[
-<img src="figure/PLS-step7.png" width=800/>
+&lt;img src="figure/PLS-step7.png" width=800/&gt;
 ]
 
 ---
@@ -415,10 +399,10 @@ many more samples are needed.
 ### Copula Models
 
 These are a type of model that "couple" a collection of known marginal
-distributions `r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))`.
+distributions .
 
 .center[
-<img src="figure/gene-gene_dependence.png" width=900/>
+&lt;img src="figure/gene-gene_dependence.png" width=900/&gt;
 ]
 
 ---
@@ -435,59 +419,59 @@ our computers right now, what would be the easiest thing to do?
 **Question**: If we were asked to simulate a vector of five correlated variables on
 our computers right now, what would be the easiest thing to do?
 
-```{r}
-library(mvtnorm)
-D <- 5
-ones <- rep(1, D)
-Sigma <- 0.01 * diag(D) + 0.99 * ones %*% t(ones)
-rmvnorm(3, rep(0, D), Sigma)
+
+```
+##            [,1]       [,2]       [,3]       [,4]       [,5]
+## [1,]  1.2642563  0.9470620  1.1815962  1.1566253  1.0749282
+## [2,]  1.6608800  1.5092128  1.7951493  1.8034738  1.7630364
+## [3,] -0.5207932 -0.5884701 -0.5580923 -0.8433107 -0.5117676
 ```
 
-The difficulty is that we usually want non-Gaussian margins $F_{1}, \dots, F_{D}$.
+The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
 
 ---
 
 ### Intuition
 
 * In the Gaussianized space, it's easy to model correlation.
-* The mapping back and forth is possible because we know the margins $F$.
-  - $\Phi$ represents the Gaussian CDF applied componentwise
-<br/>
-<br/>
+* The mapping back and forth is possible because we know the margins `\(F\)`.
+  - `\(\Phi\)` represents the Gaussian CDF applied componentwise
+&lt;br/&gt;
+&lt;br/&gt;
 
 .center[
-<img src="figure/copula_transformation.png" width=700/>
+&lt;img src="figure/copula_transformation.png" width=700/&gt;
 ]
 
 ---
 
 ### Copula Models
 
-More formally, let $F_{1}, \dots, F_{D}$ be the target margins and let $\Phi$ be
+More formally, let `\(F_{1}, \dots, F_{D}\)` be the target margins and let `\(\Phi\)` be
 the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
 
 Estimate:
 
-1. Gaussianize the observed $\mathbf{x}_{i}$ to $\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]$
-1. Estimate the covariance $\hat{\Sigma}$ associated with $z_{i}$
+1. Gaussianize the observed `\(\mathbf{x}_{i}\)` to `\(\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]\)`
+1. Estimate the covariance `\(\hat{\Sigma}\)` associated with `\(z_{i}\)`
 
 Simulate:
 
-1. Draw $\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
-1. Transform back $\mathbf{x}\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]$
+1. Draw `\(\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)\)` 
+1. Transform back `\(\mathbf{x}\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]\)`
 
 ---
 
 ### Variations
 
 1. We might expect the corelation structure to vary across groups. This can be
-accomplished by setting separate $\Sigma_{k}$ across groups $k$.
+accomplished by setting separate `\(\Sigma_{k}\)` across groups `\(k\)`.
 
-1. In high-dimensions, the sample covariance $\hat{\Sigma}$ can destabilize. In
-this case, we should use high-dimensional covariance estimators `r Citep(bib, c("Meinshausen2006-cg,", "Friedman2008-cw", "Cai2011-ja"))`.
+1. In high-dimensions, the sample covariance `\(\hat{\Sigma}\)` can destabilize. In
+this case, we should use high-dimensional covariance estimators .
 
 .center[
-<img src="figure/copula_groups.png" width=700/>
+&lt;img src="figure/copula_groups.png" width=700/&gt;
 ]
 
 ---
@@ -525,45 +509,45 @@ downstream tasks.
 
 Suppose we wanted to fit a model to these (simulated) data
 
-<center>
-<img src="figure/true_mixture.png" width="500"/>
-</center>
+&lt;center&gt;
+&lt;img src="figure/true_mixture.png" width="500"/&gt;
+&lt;/center&gt;
 
 ---
 
-* A natural enough starting point is a Gaussian mixture model with $K = 4$.
+* A natural enough starting point is a Gaussian mixture model with `\(K = 4\)`.
 * We can simulate from the fit, but it seems quite far off.
 .pull-left[
 _Simulated_
-<img src="figure/Gaussian (Shared Covarince).png" width="430"/>
+&lt;img src="figure/Gaussian (Shared Covarince).png" width="430"/&gt;
 ]
 .pull-right[
 _Truth_
-<img src="figure/true_mixture.png" width="430"/>
+&lt;img src="figure/true_mixture.png" width="430"/&gt;
 ]
 
 ---
 
-We can make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
+We can make our assessment quantitative using the discriminator idea of .
 
 The prediction probabilies below come from a GBM discriminator, which has an
 out-of-sample prediction accuracy of 65.5%.
 
 .pull-left[
 _Simulated_
-<img src="figure/Gaussian (Shared Covarince)-prob.png" width="430"/>
+&lt;img src="figure/Gaussian (Shared Covarince)-prob.png" width="430"/&gt;
 ]
 
 .pull-right[
 _Truth_
-<img src="figure/true-Gaussian (Shared Covariance)-prob.png" width="430"/>
+&lt;img src="figure/true-Gaussian (Shared Covariance)-prob.png" width="430"/&gt;
 ]
 
 
 ---
 
 As a next step,
-  * Increase number of components to $K = 5$.
+  * Increase number of components to `\(K = 5\)`.
   * Fit different variances per component.
   
 We still over-sample the gap between the two bottom-left clusters, but the GBM
@@ -571,36 +555,36 @@ accuracy has dropped down to 55.5%.
 
 .pull-left[
 _Simulated_
-<img src="figure/Gaussian (Individual Covariance)-prob.png" width="350"/>
+&lt;img src="figure/Gaussian (Individual Covariance)-prob.png" width="350"/&gt;
 ]
 
 .pull-right[
 _Truth_
-<img src="figure/true-Gaussian (Individual Covariance)-prob.png" width="350"/>
+&lt;img src="figure/true-Gaussian (Individual Covariance)-prob.png" width="350"/&gt;
 ]
 
 ---
 
-* We use a mixture of $t$ distributions next.
+* We use a mixture of `\(t\)` distributions next.
 * GBM accuracy is now 50.6%
   - Unsurprisingly, this is the true mechanism that generated the data.
 
 .pull-left[
 _Simulated_
-<img src="figure/Student's t (Individual Covariance)-prob.png" width="350"/>
+&lt;img src="figure/Student's t (Individual Covariance)-prob.png" width="350"/&gt;
 
 .pull-right[
 _Truth_
-<img src="figure/true-Student's t (Individual Covariance)-prob.png" width="350"/>
+&lt;img src="figure/true-Student's t (Individual Covariance)-prob.png" width="350"/&gt;
 ]
 
 ---
 
 The discrimination probabilities become closer to 0.5 the more accurate the simulation becomes.
 
-<center>
-<img src="figure/modeling_iteration.png" width="800"/>
-</center>
+&lt;center&gt;
+&lt;img src="figure/modeling_iteration.png" width="800"/&gt;
+&lt;/center&gt;
 
 ---
 
@@ -678,7 +662,7 @@ Applying Multiblock SPLS-DA to these data suggests that we are in an aggressive
 integration regime. 
 
 
-A reliability check like this might have helped `r Citep(bib, "Poore2020")`
+A reliability check like this might have helped 
 realize that their normalization procedure introduced spurious associations.
 
 ---
@@ -689,7 +673,7 @@ realize that their normalization procedure introduced spurious associations.
 
 ### Model Comparison
 
-It's relatively standard to compare $R^{2}$ or prediction performance when
+It's relatively standard to compare `\(R^{2}\)` or prediction performance when
 trying to decide whether one model is more plausible than another.
 
 
@@ -703,7 +687,7 @@ regression alone.
 
 1. There is growing evidence for a relationship between the microbiome and
 psychiatric conditions, both in mouse models and in observational human studies
-`r Citep(bib, c("morais2021gut", "bosch_gut_2022"))`.
+.
 2. Mindfulness interventions (e.g., meditation training) are known to alleviate
 symptoms associated with depression and anxiety.
 3. During one of its mindfulness training programs, the Center for Healthy Minds
@@ -734,10 +718,10 @@ intervention.
 1. We were concerned that the mindfulness intervention might be affect behavior,
 which in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and diet survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
+microbiome and diet survey data .
 
 .center[
-<img src="figures/mediation-dag.svg" width=450/>
+&lt;img src="figures/mediation-dag.svg" width=450/&gt;
 ]
 
 ---
@@ -798,3 +782,139 @@ out.
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
 * Funding: NIGMS R01GM152744
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
