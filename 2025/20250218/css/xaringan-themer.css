@@ -307,3 +307,34 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
     font-size: 16px;
     line-height: 21px;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+  
+.outline-container {
+  /* font-family: 'Playfair Display', serif; */
+  max-width: 800px;
+  /* margin: 2rem auto; */
+  /* padding: 2rem; */
+}
+
+.act-header {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.interlude {
+  font-style: italic;
+  color: #34495e;
+  font-size: 1.4rem;
+  margin: 1.5rem 0;
+  font-weight: 400;
+}
+
+.sub-item {
+  font-size: 1.1rem;
+  color: #576574;
+  margin-left: 2rem;
+  margin-bottom: 0.5rem;
+}
