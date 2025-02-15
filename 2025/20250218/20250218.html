@@ -260,8 +260,15 @@ reduction techniques.
 1. Power analyses are intended to prevent researchers from embarking on studies
 that have very little chance of detecting the hypothesized signals.
 
-1. While formulas are available for simple univariate analysis, no analogous
-power formulas are available for more complex, multivariate models.
+1. While there are formulas for certain univariate tests, there aren't any for 
+more complex, multivariate models.
+]
+
+.pull-right[
+&lt;img src="figures/lenth_power_calculator.png" width=500/&gt;
+&lt;span style="font-size: 18px;"&gt;
+Calculator from Russ Lenth's power and sample size webpage.
+&lt;/span&gt;
 ]
 
 ---
@@ -392,11 +399,11 @@ How many samples are necessary before this method can recover the
 discriminating factors? To answer this, we need a simulator that accurately
 preserves the multivariate associations across the community.
 
-* _Step 1 (Estimate)_: Train a simulator on the original data.
+* **Step 1 (Estimate)**: Train a simulator on the original data.
 
-* _Step 2 (Alter)_: Define negative control taxa with no association with T1D.
+* **Step 2 (Alter)**: Define negative control taxa with no association with T1D.
 
-* _Step 3 (Compare)_: Evaluate prediction performance of SPLS-DA applied to semisynthetic data with varying sample sizes and fractions of negative control taxa.
+* **Step 3 (Compare)**: Evaluate prediction performance of SPLS-DA applied to semisynthetic data with varying sample sizes and fractions of negative control taxa.
 
 ---
 
@@ -450,9 +457,9 @@ our computers right now, what would be the easiest thing to do?
 
 ```
 ##            [,1]       [,2]       [,3]       [,4]       [,5]
-## [1,]  1.0795830  1.2622832  0.8980918  0.9014483  0.8319261
-## [2,] -0.3974244 -0.1076275 -0.4530198 -0.3882798 -0.3681990
-## [3,] -1.0908736 -1.1397644 -1.1965894 -1.1305470 -1.0697275
+## [1,]  0.5464684  0.6165342  0.6514734  0.5416368  0.5488042
+## [2,] -0.2545897 -0.2833397 -0.4173181 -0.2684311 -0.2068180
+## [3,] -2.9393665 -2.8830019 -3.0340853 -2.7332251 -2.8060122
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -637,6 +644,9 @@ hypothetical scenarios that we can never be sure about in real data.
 To illustrate, let's consider a vertical data integration question. These are
 problems where we get complementary 'omics views of the same samples.
 
+.center[
+&lt;img src="figures/vertical_integration.png" width="1000"/&gt;
+]
 
 The goal is to prepare a unified analysis, one which potentially considers
 relationships across sources.
@@ -657,6 +667,10 @@ Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
 multiple tables. With sepsis status as the response variable, the method outputs
 plots like those below.
 
+.center[
+&lt;img src="figures/multiblock_original.svg" width="1000"/&gt;
+]
+
 ---
 
 ### Reliability Check
@@ -665,7 +679,9 @@ It's not obvious how we should interpret this output. The virus data must
 influence the bacteria plot, because the method integrated the sources, but how
 strong is the influence?
 
-
+.center[
+&lt;img src="figures/multiblock_original.svg" width="1000"/&gt;
+]
 
 Some integration methods are more vs. less aggressive than others.
 
@@ -689,8 +705,7 @@ These are the statistical details of our data generating mechanism.
 
 Applying Multiblock SPLS-DA to these data suggests that we are in an aggressive
 integration regime. 
-
-
+.center[&lt;img src="figures/multiblock_calibration.png" width=780/&gt;]
 A reliability check like this might have helped [1]
 realize that their normalization procedure introduced spurious associations.
 
@@ -731,6 +746,9 @@ Jo Handelsman (Dept. Plant Pathology) and Richie Davidson (Depts. Psychology,
 Psychiatry, and Neuroscience) have been leading several studies to explore these
 connections in more depth.
 
+.center[
+&lt;img src="figures/crossroads.png" width=670/&gt;
+]
 
 ---
 
@@ -762,12 +780,25 @@ We can then simulate microbiome profiles assuming either:
 1. Changes in the microbiome only result from diet changes.
 1. Changes in the microbiome has no relationship with diet.
 
+---
+
+.center[
+&lt;img src="figures/mindfulness-indirect-effects.png" width=900/&gt;
+]
 
 ---
 
-### Simulated Data
+.center[
+&lt;img src="figures/mindfulness-altered.png" width=800/&gt;
+]
 
-Here are profiles simulated according to these different pathways.
+---
+
+
+.center[
+&lt;img src="figures/synthetic_null_testing.png" width=900/&gt;
+]
+
 
 ---
 
@@ -777,11 +808,11 @@ Here are profiles simulated according to these different pathways.
 
 ### Software/Tutorials
 
-All the examples I discussed today (and more) can be reproduced in online
-tutorials we've written to accompany our papers:
+All the examples I discussed today can be run from online tutorials we've
+written to accompany our papers:
 
-* Simulation for Microbiome Analysis [go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9)
-* Generative Model: An Interdisciplinary Perspective [go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb)
+* Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
+* Generative Model: An Interdisciplinary Perspective ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
 
 The relevant R packages behind these analysis are:
 
@@ -810,7 +841,7 @@ out.
 
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
-* Funding: NIGMS R01GM152744
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
