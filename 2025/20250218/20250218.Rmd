@@ -787,9 +787,9 @@ studies `r Citep(bib, c("morais2021gut", "bosch_gut_2022", "Foster2013-bw", "zhe
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021, which gathered data from 54
-participants randomly assigned to either a mindfulness training intervention or
-a waitlist control (n = 27 each).
+1. We re-analyzed a pilot study from 2021 `r Citep(bib, "Grupe2021")`, which
+gathered data from 54 participants randomly assigned to either a mindfulness
+training intervention or a waitlist control (n = 27 each).
 
 1. The training lasted 2 months. Data were collected at the start, finish, and 2
 month follow-up.
