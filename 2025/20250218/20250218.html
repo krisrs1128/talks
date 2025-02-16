@@ -173,30 +173,21 @@ resolve questions in microbiome data analysis.
 ### Differential Abundance
 
 A common question in microbiome analysis is whether a given taxon is more vs.
-less abundant in some conditiosn vs. others. This can be framed as a multiple
-hypothesis testing problem. For example,
+less abundant in some conditions vs. others. Formally, consider
+  * Hypotheses of interest: `\(H_{1}, \dots, H_{M}\)`. Some of them are non-null, but you don't know which.
+  * Associated `\(p\)`-values: `\(p_{1}, \dots, p_{M}\)`.
+
+Goal: Reject as many non-null hypotheses as possible while controlling the _False Discovery Rate_,
 
 `\begin{align*}
-H_{0j}: \mu_{A} = \mu_{A}\\
-H_{1j}: \mu_{A} \neq \mu_{A}\\
+\text{FDR} := \mathbf{E}\left[\frac{|\text{False Positives}|}{|\text{Rejections}| \vee 1}\right]
 \end{align*}`
-
----
-
-### True and False Discoveries
-
-There are many methods available for this problem. They make different
-assumptions about the data and may be sensitive to different types of signal.
-Ideally, a method should,
-
-* Maximize Power: Recover all taxa that are truly differentially abundant.
-* Minimize False Discoveries: Don't accidentally flag uninteresting taxa.
 
 ---
 
 ### Simulation Example
 
-We can customize a benchmark to our particular data set. In this example, we
+We can define benchmark using our data. In this example, we
 
 1. Trained a simulator to mimic data from (tk: Give the study citation and dimensions)
 1. Deliberately removed the effects from the (tk: how many) taxa with the
@@ -209,8 +200,11 @@ can generate realistic data with ground truth signals.
 
 ### Example Simulated Data
 
+The semisynthetic data seems to capture group and taxa differences among these
+highly abundant taxa.
+
 .center[
-&lt;img src="figures/contrast-simulators-1.png" width=700/&gt;
+&lt;img src="figures/contrast-simulators-1.png" width=1000/&gt;
 ]
 
 ---
@@ -222,35 +216,42 @@ can generate realistic data with ground truth signals.
 ]
 
 .pull-three-quarters-right[
-These are the results of three popular differential abundance methods across a
-range of sample sizes. We've run (tk) simulation replicates for each
-configuration.
-
-All methods controlled the FDR and continue to benefit from more samples even
-after `\(n = 500\)`.
+All methods control the FDR. LIMMA has high variability in performance. Power
+only plateaus around `\(n = 1000\)` samples.
 ]
 
 ---
 
 ### Implementation
 
-1. For this simulator, we used a zero-inflated Negative Binomial variant of the
-scDesign3 model.
+For this simulator, we used a zero-inflated Negative Binomial variant of the
+scDesign3 model [6]. For the
+abundance of taxon `\(j\)` in sample `\(i\)`, we used:
+`\begin{align*}
+X_{ij} \sim \text{ZINB}\left(\mu_{g\left(i\right)j}, \varphi_{g\left(i\right)j}, \nu_{j}\right)
+\end{align*}`
+where `\(g\left(i\right)\)` is the BMI category of sample `\(i\)` and where 
+`\(\mu, \varphi\)`, and `\(\nu\)` are mean, dispersion, and zero-inflation parameters,
+respectively.
 
-1. This model can accommodate high overdispersion -- high variance even with low
-mean -- and high data sparsity. To create true positives, means and variances
-were allowed to vary across BMI groups.
+.center[
+&lt;img src="figures/zinb_cartoon.png" width=350/&gt;
+]
 
 ---
 
 ### Community-wide Associations
 
-1. In DA analysis, we can draw conclusions one taxon at a time. In many
-problems, though, we are interested in the relationships across a collection of
-taxa.
+In many problems, we are interested in the relationships across a collection of
+taxa. These analysis require more advanced methods, like network 
+[8; 9] or dimensionality 
+reduction [7] (see figure below) techniques.
 
-1. These analysis require more advanced methods, like network or dimensionality
-reduction techniques.
+.center[
+&lt;img src="figures/antibiotic_prototypes.png" width=840/&gt;&lt;br/&gt;
+&lt;span style="font-size: 18px;"&gt;
+&lt;/span&gt;
+]
 
 ---
 
@@ -457,9 +458,9 @@ our computers right now, what would be the easiest thing to do?
 
 ```
 ##            [,1]       [,2]       [,3]       [,4]       [,5]
-## [1,]  0.5464684  0.6165342  0.6514734  0.5416368  0.5488042
-## [2,] -0.2545897 -0.2833397 -0.4173181 -0.2684311 -0.2068180
-## [3,] -2.9393665 -2.8830019 -3.0340853 -2.7332251 -2.8060122
+## [1,] -0.9103577 -0.8425024 -0.9436386 -0.8740568 -0.9629081
+## [2,]  0.7775344  0.8740018  0.6222751  0.8484220  0.8944325
+## [3,]  0.8983645  1.1037966  0.8030363  0.9416065  0.8878633
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -633,9 +634,19 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 1. Beyond power and benchmarking analysis, simulations can clarify how to
 interpret a complicated workflow.
 
-1. We called this a *reliability check*, though this is not standard
-terminology. The checks use the fact that simulations allow us to construct
-hypothetical scenarios that we can never be sure about in real data.
+1. We have been calling this a *reliability check*.
+These checks construct hypothetical scenarios to understand how methods behave.
+
+&lt;div style="margin-left: 100px;"&gt;
+&lt;span style="font-family: 'Exo 2'; font-size: 18;"&gt;
+The analysis should not...&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;introduce spurious signals.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;give high confidence results on uncertain data.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;yield very different answers on similar datasets.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;drown out subtle effects.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;etc...
+&lt;/span&gt;
+&lt;/div&gt;
 
 ---
 
@@ -842,6 +853,49 @@ out.
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+---
+
+class: reference
+
+### References
+
+[1] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p. 567–574.
+ISSN: 1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
+[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
+
+[2] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511. DOI:
+[10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL: [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
+
+[3] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
+[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL: [http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
+
+[4] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_. &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
+
+[5] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+
+[6] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p.
+247–252. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
+
+[7] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
+[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
+
+[8] Y. Shen et al. "Estimating sparse direct effects in multivariate regression with the spike-and-slab LASSO". In: _Bayesian Anal._ -1.-1 (Jan. 2024).
+
+[9] Y. Shen et al. "The effect of the prior and the experimental design on the inference of the precision matrix in Gaussian chain graph models". En. In: _J. Agric. Biol.
+Environ. Stat._ (May. 2024).
+
+---
+
+class: reference
+
+### References
+
+
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

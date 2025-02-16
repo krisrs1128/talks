@@ -189,30 +189,21 @@ resolve questions in microbiome data analysis.
 ### Differential Abundance
 
 A common question in microbiome analysis is whether a given taxon is more vs.
-less abundant in some conditiosn vs. others. This can be framed as a multiple
-hypothesis testing problem. For example,
+less abundant in some conditions vs. others. Formally, consider
+  * Hypotheses of interest: $H_{1}, \dots, H_{M}$. Some of them are non-null, but you don't know which.
+  * Associated $p$-values: $p_{1}, \dots, p_{M}$.
+
+Goal: Reject as many non-null hypotheses as possible while controlling the _False Discovery Rate_,
 
 \begin{align*}
-H_{0j}: \mu_{A} = \mu_{A}\\
-H_{1j}: \mu_{A} \neq \mu_{A}\\
+\text{FDR} := \mathbf{E}\left[\frac{|\text{False Positives}|}{|\text{Rejections}| \vee 1}\right]
 \end{align*}
-
----
-
-### True and False Discoveries
-
-There are many methods available for this problem. They make different
-assumptions about the data and may be sensitive to different types of signal.
-Ideally, a method should,
-
-* Maximize Power: Recover all taxa that are truly differentially abundant.
-* Minimize False Discoveries: Don't accidentally flag uninteresting taxa.
 
 ---
 
 ### Simulation Example
 
-We can customize a benchmark to our particular data set. In this example, we
+We can define benchmark using our data. In this example, we
 
 1. Trained a simulator to mimic data from (tk: Give the study citation and dimensions)
 1. Deliberately removed the effects from the (tk: how many) taxa with the
@@ -225,8 +216,11 @@ can generate realistic data with ground truth signals.
 
 ### Example Simulated Data
 
+The semisynthetic data seems to capture group and taxa differences among these
+highly abundant taxa.
+
 .center[
-<img src="figures/contrast-simulators-1.png" width=700/>
+<img src="figures/contrast-simulators-1.png" width=1000/>
 ]
 
 ---
@@ -238,35 +232,42 @@ can generate realistic data with ground truth signals.
 ]
 
 .pull-three-quarters-right[
-These are the results of three popular differential abundance methods across a
-range of sample sizes. We've run (tk) simulation replicates for each
-configuration.
-
-All methods controlled the FDR and continue to benefit from more samples even
-after $n = 500$.
+All methods control the FDR. LIMMA has high variability in performance. Power
+only plateaus around $n = 1000$ samples.
 ]
 
 ---
 
 ### Implementation
 
-1. For this simulator, we used a zero-inflated Negative Binomial variant of the
-scDesign3 model.
+For this simulator, we used a zero-inflated Negative Binomial variant of the
+scDesign3 model `r Citep(bib, "Song_Wang_Yan_Liu_Sun_Li_2023")`. For the
+abundance of taxon $j$ in sample $i$, we used:
+\begin{align*}
+X_{ij} \sim \text{ZINB}\left(\mu_{g\left(i\right)j}, \varphi_{g\left(i\right)j}, \nu_{j}\right)
+\end{align*}
+where $g\left(i\right)$ is the BMI category of sample $i$ and where 
+$\mu, \varphi$, and $\nu$ are mean, dispersion, and zero-inflation parameters,
+respectively.
 
-1. This model can accommodate high overdispersion -- high variance even with low
-mean -- and high data sparsity. To create true positives, means and variances
-were allowed to vary across BMI groups.
+.center[
+<img src="figures/zinb_cartoon.png" width=350/>
+]
 
 ---
 
 ### Community-wide Associations
 
-1. In DA analysis, we can draw conclusions one taxon at a time. In many
-problems, though, we are interested in the relationships across a collection of
-taxa.
+In many problems, we are interested in the relationships across a collection of
+taxa. These analysis require more advanced methods, like network 
+`r Citep(bib, c("Shen2024-og", "Shen2024-kj"))` or dimensionality 
+reduction `r Citep(bib, "Sankaran2018")` (see figure below) techniques.
 
-1. These analysis require more advanced methods, like network or dimensionality
-reduction techniques.
+.center[
+<img src="figures/antibiotic_prototypes.png" width=840/><br/>
+<span style="font-size: 18px;">
+</span>
+]
 
 ---
 
@@ -649,9 +650,19 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 1. Beyond power and benchmarking analysis, simulations can clarify how to
 interpret a complicated workflow.
 
-1. We called this a *reliability check*, though this is not standard
-terminology. The checks use the fact that simulations allow us to construct
-hypothetical scenarios that we can never be sure about in real data.
+1. We have been calling this a *reliability check*.
+These checks construct hypothetical scenarios to understand how methods behave.
+
+<div style="margin-left: 100px;">
+<span style="font-family: 'Exo 2'; font-size: 18;">
+The analysis should not...<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;introduce spurious signals.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;give high confidence results on uncertain data.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;yield very different answers on similar datasets.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;drown out subtle effects.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;etc...
+</span>
+</div>
 
 ---
 
@@ -858,3 +869,25 @@ out.
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 24)
+```
+
+---
