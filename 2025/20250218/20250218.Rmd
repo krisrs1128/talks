@@ -751,38 +751,53 @@ It's common to compare models using $R^{2}$ or prediction performance. Less well
 known is that we can _also_ use semisynthetic data. This works even when
 regression language is insufficient.
 
+.center[
+<img src="figures/model_comparison.gif" width=600/>
+]
+
 ---
 
 ### Mindfulness Interventions
 
-1. There is growing evidence for a relationship between the microbiome and
-psychiatric conditions, both in mouse models and in observational human studies
-`r Citep(bib, c("morais2021gut", "bosch_gut_2022"))`.
-2. Mindfulness interventions (e.g., meditation training) are known to alleviate
-symptoms associated with depression and anxiety.
-3. During one of its mindfulness training programs, the Center for Healthy Minds
-gathered pre-post 16S data for both program participants and a waitlisted
-control.
+1. This type of model comparison was helpful in an ongoing collaboration with Jo
+Handelsman (Dept. Plant Pathology) and Richie Davidson (Depts.  Psychology,
+Psychiatry, and Neuroscience).
+
+1. The driving question is: 
+
+  _Is it possible to improve psychiatric treatment for a patient using knowledge of their microbiome?_
+
+  It seems like an unlikely connection, but it's one that might seem less
+  farfetched in the years to come.
+
+1. Indeed, there is growing evidence for a relationship between the microbiome
+and psychiatric conditions, both in mouse models and in observational human
+studies `r Citep(bib, c("morais2021gut", "bosch_gut_2022", "Foster2013-bw", "zheng2021gut"))`.
 
 ---
 
-### Ongoing Collaboration
-
-Jo Handelsman (Dept. Plant Pathology) and Richie Davidson (Depts. Psychology,
-Psychiatry, and Neuroscience) have been leading several studies to explore these
-connections in more depth.
+### Aside: Event in Two Weeks
 
 .center[
-<img src="figures/crossroads.png" width=670/>
+<img src="figures/crossroads.png" width=800/>
 ]
 
 ---
 
 ### Pilot Study
 
-We re-analyzed a pilot study from 2021, which gathered data from (tk) healthy
-participants and gathered microbiome data before and after a mindfulness
-intervention.
+.pull-left[
+1. We re-analyzed a pilot study from 2021, which gathered data from 54
+participants randomly assigned to either a mindfulness training intervention or
+a waitlist control (n = 27 each).
+
+1. The training lasted 2 months. Data were collected at the start, finish, and 2
+month follow-up.
+]
+
+.pull-right[
+<img src="figures/design.png" width=450/>
+]
 
 ---
 
@@ -791,7 +806,20 @@ intervention.
 1. We were concerned that the mindfulness intervention might be affect behavior,
 which in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and diet survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
+microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
+
+.center[
+<img src="figures/mediation-dag-terms.png" width=550/>
+]
+
+---
+
+### Mediation Analysis
+
+1. We were concerned that the mindfulness intervention might be affect behavior,
+which in turn influences microbiota composition.
+2. To explore this, we applied a form of mediation analysis to the 16S
+microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
 
 .center[
 <img src="figures/mediation-dag.svg" width=450/>
@@ -799,14 +827,10 @@ microbiome and diet survey data `r Citep(bib, c("imai2010general", "sohn2019comp
 
 ---
 
-### Alternative Pathways
+### Estimated Indirect Effects
 
-We can then simulate microbiome profiles assuming either:
-
-1. Changes in the microbiome only result from diet changes.
-1. Changes in the microbiome has no relationship with diet.
-
----
+These figures summarize the paths $T \to M \to Y$.</br>
+(i.e., color $\to$ x-axis $\to$ y-axis).
 
 .center[
 <img src="figures/mindfulness-indirect-effects.png" width=900/>
@@ -814,17 +838,29 @@ We can then simulate microbiome profiles assuming either:
 
 ---
 
+### Synthetic Null Data
+
+We can alter the simulator so that some pathways are "turned off." Estimates
+derived from these data provide a reference null distribution
+
 .center[
-<img src="figures/mindfulness-altered.png" width=800/>
+<img src="figures/mindfulness-altered.png" width=780/><br/>
+<span style="font-size: 24px;">
+The middle panel comes from a synthetic null: $T \nrightarrow M \to Y$.
+</span>
 ]
 
 ---
 
+### Synthetic Null Hypothesis Testing
+
+We can rank the effects learned from both the real and synthetic null reference
+data. The significance threshold is chosen to control the proportion of null
+estimates (false positives) that are included among the discoveries.
 
 .center[
 <img src="figures/synthetic_null_testing.png" width=900/>
 ]
-
 
 ---
 
@@ -832,7 +868,7 @@ We can then simulate microbiome profiles assuming either:
 
 ---
 
-### Software and Tutorials
+### Software and Resources
 
 All the examples I discussed today can be run from online tutorials we've
 written to accompany our papers:

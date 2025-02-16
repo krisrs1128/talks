@@ -457,10 +457,10 @@ our computers right now, what would be the easiest thing to do?
 
 
 ```
-##            [,1]       [,2]       [,3]      [,4]       [,5]
-## [1,] -0.3889271 -0.2354183 -0.3853199 -0.488968 -0.3675065
-## [2,] -1.7597348 -1.8336729 -2.0442459 -1.777946 -1.8570512
-## [3,]  0.9878085  1.1354586  1.0483354  1.153748  1.0872393
+##           [,1]      [,2]      [,3]       [,4]       [,5]
+## [1,] -1.652916 -1.608924 -1.665512 -1.7679608 -1.6363275
+## [2,] -0.098291 -0.302970 -0.317375 -0.1654036 -0.1370005
+## [3,]  1.207498  1.130953  1.367850  1.3283289  1.1965195
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -735,38 +735,53 @@ It's common to compare models using `\(R^{2}\)` or prediction performance. Less 
 known is that we can _also_ use semisynthetic data. This works even when
 regression language is insufficient.
 
+.center[
+&lt;img src="figures/model_comparison.gif" width=600/&gt;
+]
+
 ---
 
 ### Mindfulness Interventions
 
-1. There is growing evidence for a relationship between the microbiome and
-psychiatric conditions, both in mouse models and in observational human studies
-.
-2. Mindfulness interventions (e.g., meditation training) are known to alleviate
-symptoms associated with depression and anxiety.
-3. During one of its mindfulness training programs, the Center for Healthy Minds
-gathered pre-post 16S data for both program participants and a waitlisted
-control.
+1. This type of model comparison was helpful in an ongoing collaboration with Jo
+Handelsman (Dept. Plant Pathology) and Richie Davidson (Depts.  Psychology,
+Psychiatry, and Neuroscience).
+
+1. The driving question is: 
+
+  _Is it possible to improve psychiatric treatment for a patient using knowledge of their microbiome?_
+
+  It seems like an unlikely connection, but it's one that might seem less
+  farfetched in the years to come.
+
+1. Indeed, there is growing evidence for a relationship between the microbiome
+and psychiatric conditions, both in mouse models and in observational human
+studies [13; 14; 15; 16].
 
 ---
 
-### Ongoing Collaboration
-
-Jo Handelsman (Dept. Plant Pathology) and Richie Davidson (Depts. Psychology,
-Psychiatry, and Neuroscience) have been leading several studies to explore these
-connections in more depth.
+### Aside: Event in Two Weeks
 
 .center[
-&lt;img src="figures/crossroads.png" width=670/&gt;
+&lt;img src="figures/crossroads.png" width=800/&gt;
 ]
 
 ---
 
 ### Pilot Study
 
-We re-analyzed a pilot study from 2021, which gathered data from (tk) healthy
-participants and gathered microbiome data before and after a mindfulness
-intervention.
+.pull-left[
+1. We re-analyzed a pilot study from 2021, which gathered data from 54
+participants randomly assigned to either a mindfulness training intervention or
+a waitlist control (n = 27 each).
+
+1. The training lasted 2 months. Data were collected at the start, finish, and 2
+month follow-up.
+]
+
+.pull-right[
+&lt;img src="figures/design.png" width=450/&gt;
+]
 
 ---
 
@@ -775,7 +790,20 @@ intervention.
 1. We were concerned that the mindfulness intervention might be affect behavior,
 which in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and diet survey data .
+microbiome and survey data .
+
+.center[
+&lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
+]
+
+---
+
+### Mediation Analysis
+
+1. We were concerned that the mindfulness intervention might be affect behavior,
+which in turn influences microbiota composition.
+2. To explore this, we applied a form of mediation analysis to the 16S
+microbiome and survey data .
 
 .center[
 &lt;img src="figures/mediation-dag.svg" width=450/&gt;
@@ -783,14 +811,10 @@ microbiome and diet survey data .
 
 ---
 
-### Alternative Pathways
+### Estimated Indirect Effects
 
-We can then simulate microbiome profiles assuming either:
-
-1. Changes in the microbiome only result from diet changes.
-1. Changes in the microbiome has no relationship with diet.
-
----
+These figures summarize the paths `\(T \to M \to Y\)`.&lt;/br&gt;
+(i.e., color `\(\to\)` x-axis `\(\to\)` y-axis).
 
 .center[
 &lt;img src="figures/mindfulness-indirect-effects.png" width=900/&gt;
@@ -798,17 +822,29 @@ We can then simulate microbiome profiles assuming either:
 
 ---
 
+### Synthetic Null Data
+
+We can alter the simulator so that some pathways are "turned off." Estimates
+derived from these data provide a reference null distribution
+
 .center[
-&lt;img src="figures/mindfulness-altered.png" width=800/&gt;
+&lt;img src="figures/mindfulness-altered.png" width=780/&gt;&lt;br/&gt;
+&lt;span style="font-size: 24px;"&gt;
+The middle panel comes from a synthetic null: `\(T \nrightarrow M \to Y\)`.
+&lt;/span&gt;
 ]
 
 ---
 
+### Synthetic Null Hypothesis Testing
+
+We can rank the effects learned from both the real and synthetic null reference
+data. The significance threshold is chosen to control the proportion of null
+estimates (false positives) that are included among the discoveries.
 
 .center[
 &lt;img src="figures/synthetic_null_testing.png" width=900/&gt;
 ]
-
 
 ---
 
@@ -816,7 +852,7 @@ We can then simulate microbiome profiles assuming either:
 
 ---
 
-### Software and Tutorials
+### Software and Resources
 
 All the examples I discussed today can be run from online tutorials we've
 written to accompany our papers:
@@ -895,13 +931,22 @@ Environ. Stat._ (May. 2024).
 DOI: [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL:
 [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
 
+[13] L. H. Morais et al. "The gut microbiota-brain axis in behaviour and brain disorders". In: _Nature Reviews Microbiology_ 19.4 (2021), pp. 241-255.
+
 ---
 
 class: reference
 
 ### References
 
+[14] J. A. Bosch et al. "The gut microbiota and depressive symptoms across ethnic groups". En. In: _Nature Communications_ 13.1 (Dec. 2022), p. 7129. ISSN: 2041-1723.
+DOI: [10.1038/s41467-022-34504-1](https://doi.org/10.1038%2Fs41467-022-34504-1). URL:
+[https://www.nature.com/articles/s41467-022-34504-1](https://www.nature.com/articles/s41467-022-34504-1) (visited on 12/11/2022).
 
+[15] J. A. Foster et al. "Gut-brain axis: how the microbiome influences anxiety and depression". In: _Trends in Neurosciences_ 36.5 (May. 2013), pp. 305-312.
+
+[16] P. Zheng et al. "The gut microbiome modulates gut-brain axis glycerophospholipid metabolism in a region-specific manner in a nonhuman primate model of depression".
+In: _Molecular psychiatry_ 26.6 (2021), pp. 2380-2392.
 
 ---
 
