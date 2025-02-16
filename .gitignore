@@ -16,3 +16,4 @@
 *_files/
 .Rproj.user
 libs/
+.DS_Store
