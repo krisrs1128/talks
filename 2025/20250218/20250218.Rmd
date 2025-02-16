@@ -156,8 +156,8 @@ of the 11 packages discussed in our review `r Citep(bib, "Sankaran2024-gb")`.
 
 ### Talk Outline
 
-This talk gives examples of how simulated data can be applied to resolve
-questions in microbiome data analysis. It is based on references 
+This talk gives examples of how semisynthetic data can help microbiome data
+analysis. It is based on references 
 `r Citep(bib, c("Sankaran2023", "Jiang2025", "Sankaran2024-gb"))`.
 
 <hr/>
@@ -179,8 +179,6 @@ questions in microbiome data analysis. It is based on references
   <div class="sub-item">Mediation Analysis</div>
 </div>
 <hr/>
-
-
 
 ---
 
@@ -428,7 +426,7 @@ varying sample sizes and fractions of negative control taxa.
 
 ---
 
-### Learned Associations
+### Bivariate Relationships
 
 Except for the "streaks" when taxa were not observed, our simulator seems to
 have preserved the essential bivariate relationships across taxa.
@@ -749,13 +747,9 @@ realize that their normalization procedure introduced spurious associations.
 
 ### Model Comparison
 
-It's relatively standard to compare $R^{2}$ or prediction performance when
-trying to decide whether one model is more plausible than another.
-
-
-Semisynthetic data can be used in a similar way, and it's especially powerful
-when we want to reason about patterns of association that can't be captured by
-regression alone.
+It's common to compare models using $R^{2}$ or prediction performance. Less well
+known is that we can _also_ use semisynthetic data. This works even when
+regression language is insufficient.
 
 ---
 
@@ -854,7 +848,7 @@ The relevant R packages behind these analysis are:
 
 ---
 
-### Summary
+Simulation can turn a problem of logic into one of observation.
 
 .center[
 <img src="figures/simulation_summary.png" width=800/>

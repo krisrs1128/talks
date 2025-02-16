@@ -140,8 +140,8 @@ of the 11 packages discussed in our review [5].
 
 ### Talk Outline
 
-This talk gives examples of how simulated data can be applied to resolve
-questions in microbiome data analysis. It is based on references 
+This talk gives examples of how semisynthetic data can help microbiome data
+analysis. It is based on references 
 [11; 12; 5].
 
 &lt;hr/&gt;
@@ -163,8 +163,6 @@ questions in microbiome data analysis. It is based on references
   &lt;div class="sub-item"&gt;Mediation Analysis&lt;/div&gt;
 &lt;/div&gt;
 &lt;hr/&gt;
-
-
 
 ---
 
@@ -412,7 +410,7 @@ varying sample sizes and fractions of negative control taxa.
 
 ---
 
-### Learned Associations
+### Bivariate Relationships
 
 Except for the "streaks" when taxa were not observed, our simulator seems to
 have preserved the essential bivariate relationships across taxa.
@@ -459,10 +457,10 @@ our computers right now, what would be the easiest thing to do?
 
 
 ```
-##            [,1]        [,2]        [,3]       [,4]       [,5]
-## [1,]  1.0970188  0.76023965  0.99249034  0.9675211  0.9084993
-## [2,] -1.3366207 -1.35084367 -1.25546158 -1.1484100 -1.4436999
-## [3,]  0.2126204  0.08310641  0.07157703  0.1114475  0.1940046
+##            [,1]       [,2]       [,3]      [,4]       [,5]
+## [1,] -0.3889271 -0.2354183 -0.3853199 -0.488968 -0.3675065
+## [2,] -1.7597348 -1.8336729 -2.0442459 -1.777946 -1.8570512
+## [3,]  0.9878085  1.1354586  1.0483354  1.153748  1.0872393
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -733,13 +731,9 @@ realize that their normalization procedure introduced spurious associations.
 
 ### Model Comparison
 
-It's relatively standard to compare `\(R^{2}\)` or prediction performance when
-trying to decide whether one model is more plausible than another.
-
-
-Semisynthetic data can be used in a similar way, and it's especially powerful
-when we want to reason about patterns of association that can't be captured by
-regression alone.
+It's common to compare models using `\(R^{2}\)` or prediction performance. Less well
+known is that we can _also_ use semisynthetic data. This works even when
+regression language is insufficient.
 
 ---
 
@@ -838,7 +832,7 @@ The relevant R packages behind these analysis are:
 
 ---
 
-### Summary
+Simulation can turn a problem of logic into one of observation.
 
 .center[
 &lt;img src="figures/simulation_summary.png" width=800/&gt;
