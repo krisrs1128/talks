@@ -72,8 +72,8 @@ become an important part of medical, agricultural, and environmental questions.
 Developing the data analysis for a microbiome study can be complicated by a
 number of factors.
 
-* **Integration**: How should we analyze data gathered from multiple batches or
-technologies?
+* **Integration**: How should we transform and analyze data across
+batches or technologies, each with unique sources of technical variability?
 
 * **Experimental Design**: How should we arrange sampling, assign treatments,
 and place controls so that we can have powerful statistical conclusions?
@@ -140,8 +140,7 @@ One of the major advances has been the design of algorithms that can leverage pu
 * Semisynthetic Data: The output from a simulator that has been designed to mimic external, template data. 
 * Template Data: Previously gathered experimental data that can be used to train a simulator.
 
-These new algorithms lift some of the responsibility of the simulation designer
--- it's no longer necessary to start from a blank slate.
+It's no longer necessary to start from a blank slate.
 
 ---
 
@@ -157,8 +156,9 @@ of the 11 packages discussed in our review `r Citep(bib, "Sankaran2024-gb")`.
 
 ### Talk Outline
 
-This talk will center around examples of how simulated data can be applied to
-resolve questions in microbiome data analysis.
+This talk gives examples of how simulated data can be applied to resolve
+questions in microbiome data analysis. It is based on references 
+`r Citep(bib, c("Sankaran2023", "Jiang2025", "Sankaran2024-gb"))`.
 
 <hr/>
 <div class="outline-container">
@@ -179,6 +179,8 @@ resolve questions in microbiome data analysis.
   <div class="sub-item">Mediation Analysis</div>
 </div>
 <hr/>
+
+
 
 ---
 
@@ -413,14 +415,16 @@ groups.
 ### Problem Formulation
 
 How many samples are necessary before this method can recover the
-discriminating factors? To answer this, we need a simulator that accurately
-preserves the multivariate associations across the community.
+discriminating factors?
 
-* **Step 1 (Estimate)**: Train a simulator on the original data.
+* **Estimate**: Train a simulator on the original data.
+* **Alter/Sample**: Define negative control taxa with no association with T1D.
+* **Gather/Summarize**: Evaluate SPLS-DA performance on semisynthetic data with
+varying sample sizes and fractions of negative control taxa.
 
-* **Step 2 (Alter)**: Define negative control taxa with no association with T1D.
-
-* **Step 3 (Compare)**: Evaluate prediction performance of SPLS-DA applied to semisynthetic data with varying sample sizes and fractions of negative control taxa.
+.center[
+  <img src="figures/simulation_steps.png" width=600/>
+]
 
 ---
 
@@ -429,10 +433,8 @@ preserves the multivariate associations across the community.
 Except for the "streaks" when taxa were not observed, our simulator seems to
 have preserved the essential bivariate relationships across taxa.
 .center[
-<img src="figures/splsda-correlations.png" width=900/>
+<img src="figures/splsda-correlations.png" width=1000/>
 ]
-This is admittedly a tiny subset of taxa. We will show a more quantitative
-evaluation soon.
 
 ---
 
@@ -836,13 +838,13 @@ We can then simulate microbiome profiles assuming either:
 
 ---
 
-### Software/Tutorials
+### Software and Tutorials
 
 All the examples I discussed today can be run from online tutorials we've
 written to accompany our papers:
 
 * Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
-* Generative Model: An Interdisciplinary Perspective ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
+* Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
 
 The relevant R packages behind these analysis are:
 
@@ -852,16 +854,15 @@ The relevant R packages behind these analysis are:
 
 ---
 
-### Discussion
+### Summary
 
-1. By creating ground truth with which to analyze complex workflows, simulation
-can help us to think critically about our data analysis. Recent developments
-make data generation much more practical than it was in the past.
+.center[
+<img src="figures/simulation_summary.png" width=800/>
+]
 
-1. We need your help! As we build more simulation software, the most important
-factor for adoption is a large collection of authentic and interesting examples.
-If you have data or problems that could benefit from simulation, please reach
-out.
+We need your help! We are looking for more examples to help us write simulation
+workflows for `scDesigner`. If you have data or problems that could benefit from
+simulation, please reach out.
 
 ---
 
@@ -894,3 +895,9 @@ PrintBibliography(bib, start = 14, end = 24)
 ```
 
 ---
+
+<img src="figures/correlation_histogram.png" width=700/>
+
+---
+
+<img src="figures/covariance_hyperparameter_errors.png" width=700/>

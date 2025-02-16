@@ -56,8 +56,8 @@ become an important part of medical, agricultural, and environmental questions.
 Developing the data analysis for a microbiome study can be complicated by a
 number of factors.
 
-* **Integration**: How should we analyze data gathered from multiple batches or
-technologies?
+* **Integration**: How should we transform and analyze data across
+batches or technologies, each with unique sources of technical variability?
 
 * **Experimental Design**: How should we arrange sampling, assign treatments,
 and place controls so that we can have powerful statistical conclusions?
@@ -124,8 +124,7 @@ One of the major advances has been the design of algorithms that can leverage pu
 * Semisynthetic Data: The output from a simulator that has been designed to mimic external, template data. 
 * Template Data: Previously gathered experimental data that can be used to train a simulator.
 
-These new algorithms lift some of the responsibility of the simulation designer
--- it's no longer necessary to start from a blank slate.
+It's no longer necessary to start from a blank slate.
 
 ---
 
@@ -141,8 +140,9 @@ of the 11 packages discussed in our review [5].
 
 ### Talk Outline
 
-This talk will center around examples of how simulated data can be applied to
-resolve questions in microbiome data analysis.
+This talk gives examples of how simulated data can be applied to resolve
+questions in microbiome data analysis. It is based on references 
+[11; 12; 5].
 
 &lt;hr/&gt;
 &lt;div class="outline-container"&gt;
@@ -163,6 +163,8 @@ resolve questions in microbiome data analysis.
   &lt;div class="sub-item"&gt;Mediation Analysis&lt;/div&gt;
 &lt;/div&gt;
 &lt;hr/&gt;
+
+
 
 ---
 
@@ -244,8 +246,8 @@ respectively.
 
 In many problems, we are interested in the relationships across a collection of
 taxa. These analysis require more advanced methods, like network 
-[8; 9] or dimensionality 
-reduction [7] (see figure below) techniques.
+[7; 8] or dimensionality 
+reduction [9] (see figure below) techniques.
 
 .center[
 &lt;img src="figures/antibiotic_prototypes.png" width=840/&gt;&lt;br/&gt;
@@ -397,14 +399,16 @@ groups.
 ### Problem Formulation
 
 How many samples are necessary before this method can recover the
-discriminating factors? To answer this, we need a simulator that accurately
-preserves the multivariate associations across the community.
+discriminating factors?
 
-* **Step 1 (Estimate)**: Train a simulator on the original data.
+* **Estimate**: Train a simulator on the original data.
+* **Alter/Sample**: Define negative control taxa with no association with T1D.
+* **Gather/Summarize**: Evaluate SPLS-DA performance on semisynthetic data with
+varying sample sizes and fractions of negative control taxa.
 
-* **Step 2 (Alter)**: Define negative control taxa with no association with T1D.
-
-* **Step 3 (Compare)**: Evaluate prediction performance of SPLS-DA applied to semisynthetic data with varying sample sizes and fractions of negative control taxa.
+.center[
+  &lt;img src="figures/simulation_steps.png" width=600/&gt;
+]
 
 ---
 
@@ -413,10 +417,8 @@ preserves the multivariate associations across the community.
 Except for the "streaks" when taxa were not observed, our simulator seems to
 have preserved the essential bivariate relationships across taxa.
 .center[
-&lt;img src="figures/splsda-correlations.png" width=900/&gt;
+&lt;img src="figures/splsda-correlations.png" width=1000/&gt;
 ]
-This is admittedly a tiny subset of taxa. We will show a more quantitative
-evaluation soon.
 
 ---
 
@@ -457,10 +459,10 @@ our computers right now, what would be the easiest thing to do?
 
 
 ```
-##            [,1]       [,2]       [,3]       [,4]       [,5]
-## [1,]  0.3637813  0.3783542  0.2242715  0.5593457  0.5262666
-## [2,]  0.8013273  0.7915060  0.7386795  0.7114179  0.8630624
-## [3,] -0.8863848 -0.9896907 -1.0785656 -1.0487460 -1.0029636
+##            [,1]        [,2]        [,3]       [,4]       [,5]
+## [1,]  1.0970188  0.76023965  0.99249034  0.9675211  0.9084993
+## [2,] -1.3366207 -1.35084367 -1.25546158 -1.1484100 -1.4436999
+## [3,]  0.2126204  0.08310641  0.07157703  0.1114475  0.1940046
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -820,13 +822,13 @@ We can then simulate microbiome profiles assuming either:
 
 ---
 
-### Software/Tutorials
+### Software and Tutorials
 
 All the examples I discussed today can be run from online tutorials we've
 written to accompany our papers:
 
 * Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
-* Generative Model: An Interdisciplinary Perspective ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
+* Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
 
 The relevant R packages behind these analysis are:
 
@@ -836,16 +838,15 @@ The relevant R packages behind these analysis are:
 
 ---
 
-### Discussion
+### Summary
 
-1. By creating ground truth with which to analyze complex workflows, simulation
-can help us to think critically about our data analysis. Recent developments
-make data generation much more practical than it was in the past.
+.center[
+&lt;img src="figures/simulation_summary.png" width=800/&gt;
+]
 
-1. We need your help! As we build more simulation software, the most important
-factor for adoption is a large collection of authentic and interesting examples.
-If you have data or problems that could benefit from simulation, please reach
-out.
+We need your help! We are looking for more examples to help us write simulation
+workflows for `scDesigner`. If you have data or problems that could benefit from
+simulation, please reach out.
 
 ---
 
@@ -881,16 +882,24 @@ ISSN: 1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs415
 247–252. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
 [http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
-[7] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
+[7] Y. Shen et al. "Estimating sparse direct effects in multivariate regression with the spike-and-slab LASSO". In: _Bayesian Anal._ -1.-1 (Jan. 2024).
+
+[8] Y. Shen et al. "The effect of the prior and the experimental design on the inference of the precision matrix in Gaussian chain graph models". En. In: _J. Agric. Biol.
+Environ. Stat._ (May. 2024).
+
+[9] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
 [10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
 [http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
 
-[8] Y. Shen et al. "Estimating sparse direct effects in multivariate regression with the spike-and-slab LASSO". In: _Bayesian Anal._ -1.-1 (Jan. 2024).
-
-[9] Y. Shen et al. "The effect of the prior and the experimental design on the inference of the precision matrix in Gaussian chain graph models". En. In: _J. Agric. Biol.
-Environ. Stat._ (May. 2024).
-
 [10] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
+
+[11] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN:
+2326-831X. DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
+[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
+
+[12] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497.
+DOI: [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL:
+[http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
 
 ---
 
@@ -901,6 +910,12 @@ class: reference
 
 
 ---
+
+&lt;img src="figures/correlation_histogram.png" width=700/&gt;
+
+---
+
+&lt;img src="figures/covariance_hyperparameter_errors.png" width=700/&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
