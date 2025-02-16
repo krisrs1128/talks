@@ -682,17 +682,23 @@ relationships across sources.
 
 ### ICU Example
 
-The study (tk cite) used amplicon sequencing data to profile the bacterial,
-viral, and fungal composition of the blood (tk check) samples from patients at a
-hospital, including a subset who were experiencing sepsis.
+.pull-left[
+The study `r Citep(bib, "Haak2021-lu")` used amplicon sequencing data to profile
+the bacterial, viral, and fungal composition in gut microbiome samples from ICU
+patients at a hospital, including a subset who were experiencing sepsis.
+]
+
+.pull-right[
+<img src="figures/transkingdom_summary.png" width="500"/>
+]
 
 ---
 
 ### Multiblock SPLS-DA Analysis
 
 Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
-multiple tables. With sepsis status as the response variable, the method outputs
-plots like those below.
+multiple tables. With $\texttt{sepsis} \times \texttt{antibiotic use}$ status as
+the response variable, the method outputs the plots below.
 
 .center[
 <img src="figures/multiblock_original.svg" width="1000"/>
@@ -720,12 +726,9 @@ To calibrate our interpretation, we train a simulator using these data but then
 deliberately remove any association between the bacteria community profile and
 the sepsis response.
 
----
-
-### Semisynthetic Data
-
-These are the statistical details of our data generating mechanism.
-
+.center[
+<img src="figures/semisynthetic_transkingdom.png" width=820/>
+]
 ---
 
 ### Simulation Results
