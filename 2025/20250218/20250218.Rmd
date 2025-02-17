@@ -31,7 +31,7 @@ Plant Pathology Seminar<br/>
 </div>
 <div id="subtitle_right">
 Slides: <a href="https://go.wisc.edu/689h7c">go.wisc.edu/689h7c</a><br/>
-Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 
 <!-- 55 minute talk -->
@@ -62,9 +62,14 @@ composition, genomic function, and biochemical features.
 
 1. Advances in sequencing technology have made it easier than ever to rapidly
 profile these taxonomic and genomic features in a range of sites, including in
-the human body, on plant roots, and in the oceans. For this reason, they have
-become an important part of medical, agricultural, and environmental questions.
+the human gut, on plant roots, and in the oceans.
 
+.center[
+<span style="font-size: 18px">
+<img src="figures/spatial_earle.png" width=455/><br/>
+Spatial imaging of a microbial community along the gut lining, from `r Citep(bib, "Earle2015")`.
+</span>
+]
 ---
 
 ### Statistical Challenges
@@ -126,23 +131,31 @@ signals. The first part is a simulation.
 Historically, microbiome researchers have only rarely used simulation in
 their data analysis workflow.
 
-  * Time Consuming: The simulators would have to be written from scratch, which requires significant effort.
-  * Unrealistic: Even afterwards, the resulting data may not be realistic enough to use to guide any practical conclusions.
+.pull-left[
+  <img src="figures/noun-frustration-7442748.png" width=70/> The simulators would have to be written from scratch, which requires significant effort.
+]
 
-However, in the last few years, the situation has changed quite noticeably.
+.pull-right[
+  <img src="figures/noun-confused-7442754.png" width=70/> Even afterwards, the resulting data may not be realistic enough to use to guide any practical conclusions.
+]
+
+I know this firsthand from writing my PhD thesis `r Citep(bib, "sankaran2018")`... but the situation seems to be improving quite rapidly!!
 
 ---
 
 ### Semisynthetic Data
 
-One of the major advances has been the design of algorithms that can leverage public data resources.
+One of the major advances has been the design of algorithms that can leverage
+public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller2022", "microbiomedatasets", "microbiomedataHomeNational"))`.
 
-* Semisynthetic Data: The output from a simulator that has been designed to mimic external, template data. 
-* Template Data: Previously gathered experimental data that can be used to train a simulator.
+* **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator.
 
-It's no longer necessary to start from a blank slate.
+.center[
+<img src="figures/template_defn.png" width=670/>
+]
 
----
+--
 
 ### New Packages
 
@@ -193,7 +206,8 @@ less abundant in some conditions vs. others. Formally, consider
   * Hypotheses of interest: $H_{1}, \dots, H_{M}$. Some of them are non-null, but you don't know which.
   * Associated $p$-values: $p_{1}, \dots, p_{M}$.
 
-Goal: Reject as many non-null hypotheses as possible while controlling the _False Discovery Rate_,
+Goal: Reject as many non-null hypotheses as possible while controlling the
+_False Discovery Rate_ `r Citep(bib, c("benjamini1995controlling", "efron2012large"))`,
 
 \begin{align*}
 \text{FDR} := \mathbf{E}\left[\frac{|\text{False Positives}|}{|\text{Rejections}| \vee 1}\right]
@@ -205,12 +219,15 @@ Goal: Reject as many non-null hypotheses as possible while controlling the _Fals
 
 We can define benchmark using our data. In this example, we
 
-1. Trained a simulator to mimic data from (tk: Give the study citation and dimensions)
-1. Deliberately removed the effects from the (tk: how many) taxa with the
-weakest effects according to a Wilcoxon signed rank test.
+1. Train the simulator to mimic 130 genera from the study 
+`r Citep(bib, "Lahti2014")`, allowing means and variances to depend on BMI
+group.
 
-Step (2) can be thought of as a _computational negative control_. Together, we
-can generate realistic data with ground truth signals.
+1. Define _computational negative controls_ by removing effects from the
+genera with the weakest effects (insigificant at a cutoff $q = 0.1$).
+.center[
+<img src="figures/bmi_effect_cartoon.png" width=910/>
+]
 
 ---
 
@@ -547,19 +564,25 @@ downstream tasks.
 
 ---
 
-### Examples
+### Evaluation Taxonomy
 
-* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa.
+This is how some common techniques fall into this taxonomy.
+
+* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa (like the DA example).
+
 * **Graphical, Broad**: Principal component plots of real vs. simulated dataset.
+
 * **Quantitative, Narrow**: Two-sample Kolmogorov-Smirnov test.
-* **Quantitative, Broad**: Performance of real vs. simulated data prediction.
-* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data.
+
+* **Quantitative, Broad**: Simulation-through-classification (next example).
+
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data (`r Citep(bib, "Sankaran2024-gb")`, "Batch Effect Correction").
 
 ---
 
 ### Simulation Evaluation through Classification
 
-Suppose we wanted to fit a model to these (simulated) data
+What type of model would you use to simulate data like this?
 
 <center>
 <img src="figures/true_mixture.png" width="500"/>
@@ -931,3 +954,10 @@ PrintBibliography(bib, start = 14, end = 24)
 ---
 
 <img src="figures/covariance_hyperparameter_errors.png" width=700/>
+
+---
+
+### Acknowledgments
+
+frustration by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons">Noun Project</a> (CC BY 3.0)
+confused by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons">Noun Project</a> (CC BY 3.0)

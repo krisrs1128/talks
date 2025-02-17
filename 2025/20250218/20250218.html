@@ -30,7 +30,7 @@ Plant Pathology Seminar&lt;br/&gt;
 &lt;/div&gt;
 &lt;div id="subtitle_right"&gt;
 Slides: &lt;a href="https://go.wisc.edu/689h7c"&gt;go.wisc.edu/689h7c&lt;/a&gt;&lt;br/&gt;
-Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
 &lt;/div&gt;
 
 &lt;!-- 55 minute talk --&gt;
@@ -46,9 +46,14 @@ composition, genomic function, and biochemical features.
 
 1. Advances in sequencing technology have made it easier than ever to rapidly
 profile these taxonomic and genomic features in a range of sites, including in
-the human body, on plant roots, and in the oceans. For this reason, they have
-become an important part of medical, agricultural, and environmental questions.
+the human gut, on plant roots, and in the oceans.
 
+.center[
+&lt;span style="font-size: 18px"&gt;
+&lt;img src="figures/spatial_earle.png" width=455/&gt;&lt;br/&gt;
+Spatial imaging of a microbial community along the gut lining, from [18].
+&lt;/span&gt;
+]
 ---
 
 ### Statistical Challenges
@@ -110,23 +115,31 @@ signals. The first part is a simulation.
 Historically, microbiome researchers have only rarely used simulation in
 their data analysis workflow.
 
-  * Time Consuming: The simulators would have to be written from scratch, which requires significant effort.
-  * Unrealistic: Even afterwards, the resulting data may not be realistic enough to use to guide any practical conclusions.
+.pull-left[
+  &lt;img src="figures/noun-frustration-7442748.png" width=70/&gt; The simulators would have to be written from scratch, which requires significant effort.
+]
 
-However, in the last few years, the situation has changed quite noticeably.
+.pull-right[
+  &lt;img src="figures/noun-confused-7442754.png" width=70/&gt; Even afterwards, the resulting data may not be realistic enough to use to guide any practical conclusions.
+]
+
+I know this firsthand from writing my PhD thesis [19]... but the situation seems to be improving quite rapidly!!
 
 ---
 
 ### Semisynthetic Data
 
-One of the major advances has been the design of algorithms that can leverage public data resources.
+One of the major advances has been the design of algorithms that can leverage
+public data resources, like [20; 21; 22; 23].
 
-* Semisynthetic Data: The output from a simulator that has been designed to mimic external, template data. 
-* Template Data: Previously gathered experimental data that can be used to train a simulator.
+* **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator.
 
-It's no longer necessary to start from a blank slate.
+.center[
+&lt;img src="figures/template_defn.png" width=670/&gt;
+]
 
----
+--
 
 ### New Packages
 
@@ -142,7 +155,7 @@ of the 11 packages discussed in our review [5].
 
 This talk gives examples of how semisynthetic data can help microbiome data
 analysis. It is based on references 
-[11; 12; 5].
+[6; 7; 5].
 
 &lt;hr/&gt;
 &lt;div class="outline-container"&gt;
@@ -177,7 +190,8 @@ less abundant in some conditions vs. others. Formally, consider
   * Hypotheses of interest: `\(H_{1}, \dots, H_{M}\)`. Some of them are non-null, but you don't know which.
   * Associated `\(p\)`-values: `\(p_{1}, \dots, p_{M}\)`.
 
-Goal: Reject as many non-null hypotheses as possible while controlling the _False Discovery Rate_,
+Goal: Reject as many non-null hypotheses as possible while controlling the
+_False Discovery Rate_ [25; 24],
 
 `\begin{align*}
 \text{FDR} := \mathbf{E}\left[\frac{|\text{False Positives}|}{|\text{Rejections}| \vee 1}\right]
@@ -189,12 +203,15 @@ Goal: Reject as many non-null hypotheses as possible while controlling the _Fals
 
 We can define benchmark using our data. In this example, we
 
-1. Trained a simulator to mimic data from (tk: Give the study citation and dimensions)
-1. Deliberately removed the effects from the (tk: how many) taxa with the
-weakest effects according to a Wilcoxon signed rank test.
+1. Train the simulator to mimic 130 genera from the study 
+[26], allowing means and variances to depend on BMI
+group.
 
-Step (2) can be thought of as a _computational negative control_. Together, we
-can generate realistic data with ground truth signals.
+1. Define _computational negative controls_ by removing effects from the
+genera with the weakest effects (insigificant at a cutoff `\(q = 0.1\)`).
+.center[
+&lt;img src="figures/bmi_effect_cartoon.png" width=910/&gt;
+]
 
 ---
 
@@ -225,7 +242,7 @@ only plateaus around `\(n = 1000\)` samples.
 ### Implementation
 
 For this simulator, we used a zero-inflated Negative Binomial variant of the
-scDesign3 model [6]. For the
+scDesign3 model [8]. For the
 abundance of taxon `\(j\)` in sample `\(i\)`, we used:
 `\begin{align*}
 X_{ij} \sim \text{ZINB}\left(\mu_{g\left(i\right)j}, \varphi_{g\left(i\right)j}, \nu_{j}\right)
@@ -244,8 +261,8 @@ respectively.
 
 In many problems, we are interested in the relationships across a collection of
 taxa. These analysis require more advanced methods, like network 
-[7; 8] or dimensionality 
-reduction [9] (see figure below) techniques.
+[9; 10] or dimensionality 
+reduction [11] (see figure below) techniques.
 
 .center[
 &lt;img src="figures/antibiotic_prototypes.png" width=840/&gt;&lt;br/&gt;
@@ -457,10 +474,10 @@ our computers right now, what would be the easiest thing to do?
 
 
 ```
-##            [,1]        [,2]        [,3]       [,4]       [,5]
-## [1,] -1.7212196 -1.86062976 -1.98234035 -2.0049331 -1.7689391
-## [2,]  0.2573370  0.08941869  0.25384467  0.1995852  0.2474220
-## [3,] -0.1371487 -0.17948445 -0.07172728 -0.2315042 -0.2101107
+##           [,1]      [,2]      [,3]      [,4]      [,5]
+## [1,] 0.3457550 0.5576467 0.5177092 0.4326044 0.5900844
+## [2,] 1.0198971 0.8756630 1.0755203 0.8674583 0.8545575
+## [3,] 0.2474671 0.2202352 0.1221325 0.3600409 0.5606208
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -531,19 +548,25 @@ downstream tasks.
 
 ---
 
-### Examples
+### Evaluation Taxonomy
 
-* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa.
+This is how some common techniques fall into this taxonomy.
+
+* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa (like the DA example).
+
 * **Graphical, Broad**: Principal component plots of real vs. simulated dataset.
+
 * **Quantitative, Narrow**: Two-sample Kolmogorov-Smirnov test.
-* **Quantitative, Broad**: Performance of real vs. simulated data prediction.
-* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data.
+
+* **Quantitative, Broad**: Simulation-through-classification (next example).
+
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([5], "Batch Effect Correction").
 
 ---
 
 ### Simulation Evaluation through Classification
 
-Suppose we wanted to fit a model to these (simulated) data
+What type of model would you use to simulate data like this?
 
 &lt;center&gt;
 &lt;img src="figures/true_mixture.png" width="500"/&gt;
@@ -667,7 +690,7 @@ relationships across sources.
 ### ICU Example
 
 .pull-left[
-The study [10] used amplicon sequencing data to profile
+The study [12] used amplicon sequencing data to profile
 the bacterial, viral, and fungal composition in gut microbiome samples from ICU
 patients at a hospital, including a subset who were experiencing sepsis.
 ]
@@ -908,28 +931,27 @@ ISSN: 1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs415
 
 [5] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
 
-[6] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p.
-247–252. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
-[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
-
-[7] Y. Shen et al. "Estimating sparse direct effects in multivariate regression with the spike-and-slab LASSO". In: _Bayesian Anal._ -1.-1 (Jan. 2024).
-
-[8] Y. Shen et al. "The effect of the prior and the experimental design on the inference of the precision matrix in Gaussian chain graph models". En. In: _J. Agric. Biol.
-Environ. Stat._ (May. 2024).
-
-[9] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
-[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
-[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
-
-[10] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
-
-[11] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN:
+[6] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN:
 2326-831X. DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
 [http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
 
-[12] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497.
-DOI: [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL:
-[http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+[7] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+
+[8] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p.
+247–252. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
+
+[9] Y. Shen et al. "Estimating sparse direct effects in multivariate regression with the spike-and-slab LASSO". In: _Bayesian Anal._ -1.-1 (Jan. 2024).
+
+[10] Y. Shen et al. "The effect of the prior and the experimental design on the inference of the precision matrix in Gaussian chain graph models". En. In: _J. Agric.
+Biol. Environ. Stat._ (May. 2024).
+
+[11] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
+[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
+
+[12] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
 
 [13] L. H. Morais et al. "The gut microbiota-brain axis in behaviour and brain disorders". In: _Nature Reviews Microbiology_ 19.4 (2021), pp. 241-255.
 
@@ -952,6 +974,29 @@ In: _Molecular psychiatry_ 26.6 (2021), pp. 2380-2392.
 2021). ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
 [http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
 
+[18] K. A. Earle et al. "Quantitative Imaging of Gut Microbiota Spatial Organization". In: _Cell Host &amp;amp; Microbe_ 18.4 (Oct. 2015), p. 478–488. ISSN: 1931-3128. DOI:
+[10.1016/j.chom.2015.09.002](https://doi.org/10.1016%2Fj.chom.2015.09.002). URL:
+[http://dx.doi.org/10.1016/j.chom.2015.09.002](http://dx.doi.org/10.1016/j.chom.2015.09.002).
+
+[19] K. Sankaran. " Discovery and visualization of latent structure with applications to the microbiome". PhD thesis. Stanford University, 2018. URL:
+[https://purl.stanford.edu/nx110xz3452](https://purl.stanford.edu/nx110xz3452).
+
+[20] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
+
+[21] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct.
+2022). ISSN: 2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+
+[22] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut] (&lt;https://orcid.org/0000-0001-5537-637X&gt;),
+Sudarshan Shetty &lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_. 2021. DOI:
+[10.18129/B9.BIOC.MICROBIOMEDATASETS](https://doi.org/10.18129%2FB9.BIOC.MICROBIOMEDATASETS). URL:
+[https://bioconductor.org/packages/microbiomeDataSets](https://bioconductor.org/packages/microbiomeDataSets).
+
+[23] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+
+[24] B. Efron. _Large-scale inference: empirical Bayes methods for estimation, testing, and prediction_. Vol. 1. Cambridge University Press, 2012.
+
 ---
 
 &lt;img src="figures/correlation_histogram.png" width=700/&gt;
@@ -959,6 +1004,13 @@ In: _Molecular psychiatry_ 26.6 (2021), pp. 2380-2392.
 ---
 
 &lt;img src="figures/covariance_hyperparameter_errors.png" width=700/&gt;
+
+---
+
+### Acknowledgments
+
+frustration by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+confused by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
