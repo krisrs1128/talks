@@ -33,7 +33,7 @@
 
 .title::before {    
       content: "";
-      background-image: url("../figures/cover.png");
+      background-image: url("../figures/title_background.png");
       background-size: cover;
       position: absolute;
       top: 0px;
@@ -231,12 +231,11 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 25px;
-  width: 500px;
+  width: 310px;
   color: #5f558e;
   text-align: right;
   right: 20px;
   bottom: 25px;
-  opacity: 70%;
 }
 
 #under_title {
