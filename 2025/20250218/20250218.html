@@ -51,7 +51,7 @@ the human gut, on plant roots, and in the oceans.
 .center[
 &lt;span style="font-size: 18px"&gt;
 &lt;img src="figures/spatial_earle.png" width=455/&gt;&lt;br/&gt;
-Spatial imaging of a microbial community along the gut lining, from [18].
+Spatial imaging of a microbial community along the gut lining, from [1].
 &lt;/span&gt;
 ]
 ---
@@ -77,9 +77,9 @@ and place controls so that we can have powerful statistical conclusions?
     &lt;img src="figures/retraction.png"/&gt;
 ]
 
-In June 2024, _Nature_ retracted a paper [1] the claimed
+In June 2024, _Nature_ retracted a paper [2] the claimed
 identify microbiome signatures of cancer. This came after one year's worth of
-debate [2; 3]
+debate [3; 4]
 about the data analysis.
 
 ---
@@ -98,7 +98,7 @@ to learn about batch effects and correction methods.
 
 ### Simulation to Resolve Controversy
 
-Gerry Tonkin-Hill has an excellent re-analysis [4] of the data from [1] which sheds light what were likely the source of the phantom
+Gerry Tonkin-Hill has an excellent re-analysis [5] of the data from [2] which sheds light what were likely the source of the phantom
 signals. The first part is a simulation.
 
 .pull-left[
@@ -123,14 +123,14 @@ their data analysis workflow.
   &lt;img src="figures/noun-confused-7442754.png" width=70/&gt; Even afterwards, the resulting data may not be realistic enough to use to guide any practical conclusions.
 ]
 
-I know this firsthand from writing my PhD thesis [19]... but the situation seems to be improving quite rapidly!!
+I know this firsthand from writing my PhD thesis [6]... but the situation seems to be improving quite rapidly!!
 
 ---
 
 ### Semisynthetic Data
 
 One of the major advances has been the design of algorithms that can leverage
-public data resources, like [20; 21; 22; 23].
+public data resources, like [7; 8; 9; 10].
 
 * **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
 * **Template Data**: Previously gathered experimental data that can be used to train a simulator.
@@ -144,7 +144,7 @@ public data resources, like [20; 21; 22; 23].
 ### New Packages
 
 We also have many more packages that implement these new methods. Here are 6 out
-of the 11 packages discussed in our review [5].
+of the 11 packages discussed in our review [11].
 
 .center[
   &lt;img src="figures/simulation_packages_table.png" width=850/&gt;
@@ -155,7 +155,7 @@ of the 11 packages discussed in our review [5].
 
 This talk gives examples of how semisynthetic data can help microbiome data
 analysis. It is based on references 
-[6; 7; 5].
+[12; 13; 11].
 
 &lt;hr/&gt;
 &lt;div class="outline-container"&gt;
@@ -191,7 +191,7 @@ less abundant in some conditions vs. others. Formally, consider
   * Associated `\(p\)`-values: `\(p_{1}, \dots, p_{M}\)`.
 
 Goal: Reject as many non-null hypotheses as possible while controlling the
-_False Discovery Rate_ [25; 24],
+_False Discovery Rate_ [14; 15],
 
 `\begin{align*}
 \text{FDR} := \mathbf{E}\left[\frac{|\text{False Positives}|}{|\text{Rejections}| \vee 1}\right]
@@ -204,7 +204,7 @@ _False Discovery Rate_ [25; 24],
 We can define benchmark using our data. In this example, we
 
 1. Train the simulator to mimic 130 genera from the study 
-[26], allowing means and variances to depend on BMI
+[16], allowing means and variances to depend on BMI
 group.
 
 1. Define _computational negative controls_ by removing effects from the
@@ -242,7 +242,7 @@ only plateaus around `\(n = 1000\)` samples.
 ### Implementation
 
 For this simulator, we used a zero-inflated Negative Binomial variant of the
-scDesign3 model [8]. For the
+scDesign3 model [17]. For the
 abundance of taxon `\(j\)` in sample `\(i\)`, we used:
 `\begin{align*}
 X_{ij} \sim \text{ZINB}\left(\mu_{g\left(i\right)j}, \varphi_{g\left(i\right)j}, \nu_{j}\right)
@@ -261,8 +261,8 @@ respectively.
 
 In many problems, we are interested in the relationships across a collection of
 taxa. These analysis require more advanced methods, like network 
-[9; 10] or dimensionality 
-reduction [11] (see figure below) techniques.
+[18; 19] or dimensionality 
+reduction [20] (see figure below) techniques.
 
 .center[
 &lt;img src="figures/antibiotic_prototypes.png" width=840/&gt;&lt;br/&gt;
@@ -285,22 +285,22 @@ more complex, multivariate models.
 .pull-right[
 &lt;img src="figures/lenth_power_calculator.png" width=500/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Calculator from Russ Lenth's power and sample size webpage [29].
+Calculator from Russ Lenth's power and sample size webpage [21].
 &lt;/span&gt;
 ]
 
 ---
 
-### sPLS-DA Setting
+### SPLS-DA Setting
 
 Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
-(sPLS-DA) [28]. This topic is it's
-own full workshop, but let's review the core ideas.
+(SPLS-DA) [22].
+This topic could be its own full workshop, but let's review the core ideas.
 
 .pull-left[
-sPLS-DA helps with prediction when, 
+SPLS-DA helps with prediction when, 
 
-* s: Not all features are predictive
+* S: Not all features are predictive
 * PLS: Many features are correlated with one another
 * DA: The response is one of `\(K\)` classes
 ]
@@ -311,7 +311,7 @@ sPLS-DA helps with prediction when,
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
@@ -324,7 +324,7 @@ Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
@@ -338,7 +338,7 @@ Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
@@ -351,7 +351,7 @@ Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
 
@@ -364,7 +364,7 @@ Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 Now we can compare samples from the two tables in a single, shared space.
 
@@ -374,7 +374,7 @@ Now we can compare samples from the two tables in a single, shared space.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 Now we can compare samples from the two tables in a single, shared space.
 
@@ -384,7 +384,7 @@ Now we can compare samples from the two tables in a single, shared space.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 To get more than one dimension, we can repeat this process after removing any
 correlation with previously found patterns.
@@ -422,17 +422,18 @@ discriminating factors?
 varying sample sizes and fractions of negative control taxa.
 
 .center[
-  &lt;img src="figures/simulation_steps.png" width=600/&gt;
+  &lt;img src="figures/simulation_steps.png" width=700/&gt;
 ]
 
 ---
 
 ### Bivariate Relationships
 
-Except for the "streaks" when taxa were not observed, our simulator seems to
-have preserved the essential bivariate relationships across taxa.
+Here are example bivariate relationships learned by the simulator. Do you see
+anything off?
+
 .center[
-&lt;img src="figures/splsda-correlations.png" width=1000/&gt;
+&lt;img src="figures/splsda-correlations.png" width=1200/&gt;
 ]
 
 ---
@@ -474,10 +475,10 @@ our computers right now, what would be the easiest thing to do?
 
 
 ```
-##            [,1]       [,2]       [,3]       [,4]       [,5]
-## [1,] -1.4148973 -1.4744562 -1.4235160 -1.4796732 -1.4913239
-## [2,] -0.8997236 -0.8662670 -0.9140466 -0.9019890 -1.1209125
-## [3,]  0.3528034  0.2637699  0.4974872  0.3432528  0.2102979
+##             [,1]        [,2]        [,3]        [,4]        [,5]
+## [1,] -0.11098824 -0.11489284 -0.03186136  0.19237867  0.02686369
+## [2,] -0.13008609 -0.07604192  0.10249410 -0.06129811 -0.12766443
+## [3,] -0.02508597 -0.02029882  0.01155451  0.05614156 -0.20307025
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -521,7 +522,7 @@ Simulate:
 accomplished by setting separate `\(\Sigma_{k}\)` across groups `\(k\)`.
 
 1. In high-dimensions, the sample covariance `\(\hat{\Sigma}\)` can destabilize. In
-this case, we should use high-dimensional covariance estimators [31; 32].
+this case, we should use high-dimensional covariance estimators [23; 24].
 
 .center[
 &lt;img src="figures/copula_groups.png" width=700/&gt;
@@ -571,7 +572,7 @@ _Truth_
 
 ---
 
-We make our assessment quantitative using the discriminator idea of [27].
+We make our assessment quantitative using the discriminator idea of [25].
 
 The prediction probabilies below come from a gradient boosting model. Its 
 out-of-sample accuracy is 65.5%.
@@ -636,7 +637,7 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 interpret a complicated workflow.
 
 1. Following the lead of 
-[33; 34], we have been
+[26; 27], we have been
 calling this a *reliability check*.  These checks construct hypothetical
 scenarios to understand how methods behave.
 
@@ -655,8 +656,9 @@ The analysis should not...&lt;br/&gt;
 
 ### Vertical Data Integration
 
-To illustrate, let's consider a vertical data integration question. These are
-problems where we get complementary 'omics views of the same samples.
+To illustrate, let's consider a vertical data integration question 
+[35]. These are problems where we get complementary
+'omics views of the same samples.
 
 .center[
 &lt;img src="figures/vertical_integration.png" width="1000"/&gt;
@@ -670,7 +672,7 @@ sources.
 ### ICU Example
 
 .pull-left[
-The study [12] used amplicon sequencing data to profile
+The study [28] used amplicon sequencing data to profile
 the bacterial, viral, and fungal composition in the gut microbiome samples from
 ICU patients at a hospital, including a subset who were experiencing sepsis.
 ]
@@ -684,8 +686,8 @@ ICU patients at a hospital, including a subset who were experiencing sepsis.
 ### Multiblock SPLS-DA Analysis
 
 Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
-multiple tables [30]. With 
-`\(\texttt{sepsis} \times \texttt{antibiotic use}\)` status as the response
+multiple tables [29]. With 
+`\(\texttt{sepsis} \times \texttt{antibiotics}\)` status as the response
 variable, the method outputs the plots below.
 
 .center[
@@ -696,9 +698,9 @@ variable, the method outputs the plots below.
 
 ### Reliability Check
 
-It's not obvious how we should interpret this output. The virus data must
-influence the bacteria plot, because the method integrated the sources, but how
-strong is the influence?
+It's not obvious how we should interpret this output. For example, the virus
+data must influence the bacteria plot, because the method integrated across
+sources, but how strong is the influence?
 
 .center[
 &lt;img src="figures/multiblock_original.svg" width="1000"/&gt;
@@ -724,7 +726,7 @@ profiles and sepsis status.
 Applying Multiblock SPLS-DA to these data suggests that we are in an "aggressive
 integration" regime. 
 .center[&lt;img src="figures/multiblock_calibration.png" width=780/&gt;]
-A reliability check like this might have helped [1]
+A reliability check like this might have helped [2]
 realize that their normalization procedure introduced spurious associations.
 
 ---
@@ -755,7 +757,7 @@ Is it possible to improve psychiatric treatment for a patient using knowledge of
 &lt;br/&gt;
 Indeed, there is growing evidence for a relationship between the microbiome
 and psychiatric conditions, both in mouse models and in observational human
-studies [13; 14; 15; 16].
+studies [30; 31; 32; 33].
 
 ---
 
@@ -770,7 +772,7 @@ studies [13; 14; 15; 16].
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [17], which
+1. We re-analyzed a pilot study from 2021 [34], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 
@@ -893,85 +895,48 @@ class: reference
 
 ### References
 
-[1] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p. 567–574.
-ISSN: 1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
-[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
-
-[2] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511. DOI:
-[10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL: [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
-
-[3] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
-[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL: [http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
-
-[4] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_. &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
-
-[5] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
-
-[6] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN:
-2326-831X. DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
-[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
-
-[7] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
-[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
-
-[8] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p.
-247–252. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
-[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
-
-[9] Y. Shen et al. "Estimating sparse direct effects in multivariate regression with the spike-and-slab LASSO". In: _Bayesian Anal._ -1.-1 (Jan. 2024).
-
-[10] Y. Shen et al. "The effect of the prior and the experimental design on the inference of the precision matrix in Gaussian chain graph models". En. In: _J. Agric.
-Biol. Environ. Stat._ (May. 2024).
-
-[11] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
-[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
-[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
-
-[12] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
-
-[13] L. H. Morais et al. "The gut microbiota-brain axis in behaviour and brain disorders". In: _Nature Reviews Microbiology_ 19.4 (2021), pp. 241-255.
-
----
-
-class: reference
-
-### References
-
-[14] J. A. Bosch et al. "The gut microbiota and depressive symptoms across ethnic groups". En. In: _Nature Communications_ 13.1 (Dec. 2022), p. 7129. ISSN: 2041-1723.
-DOI: [10.1038/s41467-022-34504-1](https://doi.org/10.1038%2Fs41467-022-34504-1). URL:
-[https://www.nature.com/articles/s41467-022-34504-1](https://www.nature.com/articles/s41467-022-34504-1) (visited on 12/11/2022).
-
-[15] J. A. Foster et al. "Gut-brain axis: how the microbiome influences anxiety and depression". In: _Trends in Neurosciences_ 36.5 (May. 2013), pp. 305-312.
-
-[16] P. Zheng et al. "The gut microbiome modulates gut-brain axis glycerophospholipid metabolism in a region-specific manner in a nonhuman primate model of depression".
-In: _Molecular psychiatry_ 26.6 (2021), pp. 2380-2392.
-
-[17] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep.
-2021). ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
-[http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
-
-[18] K. A. Earle et al. "Quantitative Imaging of Gut Microbiota Spatial Organization". In: _Cell Host &amp;amp; Microbe_ 18.4 (Oct. 2015), p. 478–488. ISSN: 1931-3128. DOI:
+[1] K. A. Earle et al. "Quantitative Imaging of Gut Microbiota Spatial Organization". In: _Cell Host &amp;amp; Microbe_ 18.4 (Oct. 2015), p. 478–488. ISSN: 1931-3128. DOI:
 [10.1016/j.chom.2015.09.002](https://doi.org/10.1016%2Fj.chom.2015.09.002). URL:
 [http://dx.doi.org/10.1016/j.chom.2015.09.002](http://dx.doi.org/10.1016/j.chom.2015.09.002).
 
-[19] K. Sankaran. " Discovery and visualization of latent structure with applications to the microbiome". PhD thesis. Stanford University, 2018. URL:
+[2] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p. 567–574.
+ISSN: 1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
+[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
+
+[3] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511. DOI:
+[10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL: [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
+
+[4] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
+[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL: [http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
+
+[5] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_. &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
+
+[6] K. Sankaran. " Discovery and visualization of latent structure with applications to the microbiome". PhD thesis. Stanford University, 2018. URL:
 [https://purl.stanford.edu/nx110xz3452](https://purl.stanford.edu/nx110xz3452).
 
-[20] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[7] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
 [https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
 
-[21] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct.
+[8] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct.
 2022). ISSN: 2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
 [http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
 
-[22] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut] (&lt;https://orcid.org/0000-0001-5537-637X&gt;),
+[9] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut] (&lt;https://orcid.org/0000-0001-5537-637X&gt;),
 Sudarshan Shetty &lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_. 2021. DOI:
 [10.18129/B9.BIOC.MICROBIOMEDATASETS](https://doi.org/10.18129%2FB9.BIOC.MICROBIOMEDATASETS). URL:
 [https://bioconductor.org/packages/microbiomeDataSets](https://bioconductor.org/packages/microbiomeDataSets).
 
-[23] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+[10] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
 
-[24] B. Efron. _Large-scale inference: empirical Bayes methods for estimation, testing, and prediction_. Vol. 1. Cambridge University Press, 2012.
+[11] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+
+[12] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN:
+2326-831X. DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
+[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
+
+[13] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497.
+DOI: [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL:
+[http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
 
 ---
 
@@ -979,30 +944,70 @@ class: reference
 
 ### References
 
-[25] Y. Benjamini et al. "Controlling the false discovery rate: a practical and powerful approach to multiple testing". In: _Journal of the Royal statistical society:
+[14] Y. Benjamini et al. "Controlling the false discovery rate: a practical and powerful approach to multiple testing". In: _Journal of the Royal statistical society:
 series B (Methodological)_ 57.1 (1995), pp. 289-300.
 
-[26] L. Lahti et al. "Tipping elements in the human intestinal ecosystem". In: _Nature Communications_ 5.1 (Jul. 2014). ISSN: 2041-1723. DOI:
+[15] B. Efron. _Large-scale inference: empirical Bayes methods for estimation, testing, and prediction_. Vol. 1. Cambridge University Press, 2012.
+
+[16] L. Lahti et al. "Tipping elements in the human intestinal ecosystem". In: _Nature Communications_ 5.1 (Jul. 2014). ISSN: 2041-1723. DOI:
 [10.1038/ncomms5344](https://doi.org/10.1038%2Fncomms5344). URL: [http://dx.doi.org/10.1038/ncomms5344](http://dx.doi.org/10.1038/ncomms5344).
 
-[27] J. Friedman. _On multivariate goodness-of-fit and two-sample testing_. Tech. rep. Citeseer, 2004.
+[17] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p.
+247–252. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
-[28] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p. e1005752.
+[18] Y. Shen et al. "Estimating sparse direct effects in multivariate regression with the spike-and-slab LASSO". In: _Bayesian Anal._ -1.-1 (Jan. 2024).
 
-[29] R. Lenth. _Java applets for power and sample size - homepage.divms.uiowa.edu_. &lt;https://homepage.divms.uiowa.edu/~rlenth/Power/index.html&gt;. [Accessed 17-02-2025].
+[19] Y. Shen et al. "The effect of the prior and the experimental design on the inference of the precision matrix in Gaussian chain graph models". En. In: _J. Agric.
+Biol. Environ. Stat._ (May. 2024).
 
-[30] A. Singh et al. "DIABLO: an integrative approach for identifying key molecular drivers from multi-omics assays". In: _Bioinformatics_ 35.17 (Jan. 2019). Ed. by I.
+[20] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
+[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
+
+[21] R. Lenth. _Java applets for power and sample size - homepage.divms.uiowa.edu_. &lt;https://homepage.divms.uiowa.edu/~rlenth/Power/index.html&gt;. [Accessed 17-02-2025].
+
+[22] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p. e1005752.
+
+[23] J. Friedman et al. "Sparse inverse covariance estimation with the graphical lasso". En. In: _Biostatistics_ 9.3 (Jul. 2008), pp. 432-441.
+
+[24] T. Cai et al. "Adaptive Thresholding for Sparse Covariance Matrix Estimation". In: _J. Am. Stat. Assoc._ 106.494 (Jun. 2011), pp. 672-684.
+
+[25] J. Friedman. _On multivariate goodness-of-fit and two-sample testing_. Tech. rep. Citeseer, 2004.
+
+[26] D. Song et al. "PseudotimeDE: inference of differential gene expression along cell pseudotime with well-calibrated p-values from single-cell RNA sequencing data".
+In: _Genome biology_ 22.1 (2021), p. 124.
+
+[27] D. Song. "Improving Statistical Rigor in Single-Cell and Spatial Omics". PhD thesis. University of California, Los Angeles, 2024.
+
+[28] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
+
+---
+
+class: reference
+
+### References
+
+[29] A. Singh et al. "DIABLO: an integrative approach for identifying key molecular drivers from multi-omics assays". In: _Bioinformatics_ 35.17 (Jan. 2019). Ed. by I.
 Birol, p. 3055–3062. ISSN: 1367-4811. DOI: [10.1093/bioinformatics/bty1054](https://doi.org/10.1093%2Fbioinformatics%2Fbty1054). URL:
 [http://dx.doi.org/10.1093/bioinformatics/bty1054](http://dx.doi.org/10.1093/bioinformatics/bty1054).
 
-[31] J. Friedman et al. "Sparse inverse covariance estimation with the graphical lasso". En. In: _Biostatistics_ 9.3 (Jul. 2008), pp. 432-441.
+[30] L. H. Morais et al. "The gut microbiota-brain axis in behaviour and brain disorders". In: _Nature Reviews Microbiology_ 19.4 (2021), pp. 241-255.
 
-[32] T. Cai et al. "Adaptive Thresholding for Sparse Covariance Matrix Estimation". In: _J. Am. Stat. Assoc._ 106.494 (Jun. 2011), pp. 672-684.
+[31] J. A. Bosch et al. "The gut microbiota and depressive symptoms across ethnic groups". En. In: _Nature Communications_ 13.1 (Dec. 2022), p. 7129. ISSN: 2041-1723.
+DOI: [10.1038/s41467-022-34504-1](https://doi.org/10.1038%2Fs41467-022-34504-1). URL:
+[https://www.nature.com/articles/s41467-022-34504-1](https://www.nature.com/articles/s41467-022-34504-1) (visited on 12/11/2022).
 
-[33] D. Song et al. "PseudotimeDE: inference of differential gene expression along cell pseudotime with well-calibrated p-values from single-cell RNA sequencing data".
-In: _Genome biology_ 22.1 (2021), p. 124.
+[32] J. A. Foster et al. "Gut-brain axis: how the microbiome influences anxiety and depression". In: _Trends in Neurosciences_ 36.5 (May. 2013), pp. 305-312.
 
-[34] D. Song. "Improving Statistical Rigor in Single-Cell and Spatial Omics". PhD thesis. University of California, Los Angeles, 2024.
+[33] P. Zheng et al. "The gut microbiome modulates gut-brain axis glycerophospholipid metabolism in a region-specific manner in a nonhuman primate model of depression".
+In: _Molecular psychiatry_ 26.6 (2021), pp. 2380-2392.
+
+[34] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep.
+2021). ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
+[http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
+
+[35] K. Lê Cao et al. "Community-wide hackathons to identify central themes in single-cell multi-omics". In: _Genome biology_ 22 (2021), pp. 1-21.
 
 ---
 
@@ -1018,7 +1023,7 @@ This is how some common techniques fall into this taxonomy.
 
 * **Quantitative, Broad**: Evaluation through classification (next example).
 
-* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([5], "Batch Effect Correction").
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([11], "Batch Effect Correction").
 
 ---
 

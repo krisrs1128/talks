@@ -307,16 +307,16 @@ Calculator from Russ Lenth's power and sample size webpage `r Citep(bib, "uiowaJ
 
 ---
 
-### sPLS-DA Setting
+### SPLS-DA Setting
 
 Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
-(sPLS-DA) `r Citep(bib, c("Le_Cao2008-zz", "Le_Cao2011-kn", "Rohart2017-sa"))`. This topic is it's
-own full workshop, but let's review the core ideas.
+(SPLS-DA) `r Citep(bib, c("Le_Cao2008-zz", "Le_Cao2011-kn", "Rohart2017-sa"))`.
+This topic could be its own full workshop, but let's review the core ideas.
 
 .pull-left[
-sPLS-DA helps with prediction when, 
+SPLS-DA helps with prediction when, 
 
-* s: Not all features are predictive
+* S: Not all features are predictive
 * PLS: Many features are correlated with one another
 * DA: The response is one of $K$ classes
 ]
@@ -327,7 +327,7 @@ sPLS-DA helps with prediction when,
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
 
@@ -340,7 +340,7 @@ $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
 
@@ -354,7 +354,7 @@ $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
 
@@ -367,7 +367,7 @@ $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
 
@@ -380,7 +380,7 @@ $\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 Now we can compare samples from the two tables in a single, shared space.
 
@@ -390,7 +390,7 @@ Now we can compare samples from the two tables in a single, shared space.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 Now we can compare samples from the two tables in a single, shared space.
 
@@ -400,7 +400,7 @@ Now we can compare samples from the two tables in a single, shared space.
 
 ---
 
-### sPLS-DA Intuition
+### SPLS-DA Intuition
 
 To get more than one dimension, we can repeat this process after removing any
 correlation with previously found patterns.
@@ -438,17 +438,18 @@ discriminating factors?
 varying sample sizes and fractions of negative control taxa.
 
 .center[
-  <img src="figures/simulation_steps.png" width=600/>
+  <img src="figures/simulation_steps.png" width=700/>
 ]
 
 ---
 
 ### Bivariate Relationships
 
-Except for the "streaks" when taxa were not observed, our simulator seems to
-have preserved the essential bivariate relationships across taxa.
+Here are example bivariate relationships learned by the simulator. Do you see
+anything off?
+
 .center[
-<img src="figures/splsda-correlations.png" width=1000/>
+<img src="figures/splsda-correlations.png" width=1200/>
 ]
 
 ---
@@ -671,8 +672,9 @@ The analysis should not...<br/>
 
 ### Vertical Data Integration
 
-To illustrate, let's consider a vertical data integration question. These are
-problems where we get complementary 'omics views of the same samples.
+To illustrate, let's consider a vertical data integration question 
+`r Citep(bib, "le2021community")`. These are problems where we get complementary
+'omics views of the same samples.
 
 .center[
 <img src="figures/vertical_integration.png" width="1000"/>
@@ -701,7 +703,7 @@ ICU patients at a hospital, including a subset who were experiencing sepsis.
 
 Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
 multiple tables `r Citep(bib, "Singh2019")`. With 
-$\texttt{sepsis} \times \texttt{antibiotic use}$ status as the response
+$\texttt{sepsis} \times \texttt{antibiotics}$ status as the response
 variable, the method outputs the plots below.
 
 .center[
@@ -712,9 +714,9 @@ variable, the method outputs the plots below.
 
 ### Reliability Check
 
-It's not obvious how we should interpret this output. The virus data must
-influence the bacteria plot, because the method integrated the sources, but how
-strong is the influence?
+It's not obvious how we should interpret this output. For example, the virus
+data must influence the bacteria plot, because the method integrated across
+sources, but how strong is the influence?
 
 .center[
 <img src="figures/multiblock_original.svg" width="1000"/>
@@ -920,7 +922,7 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 24)
+PrintBibliography(bib, start = 14, end = 28)
 ```
 
 ---
@@ -930,7 +932,7 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 25, end = 38)
+PrintBibliography(bib, start = 29, end = 40)
 ```
 
 ---
