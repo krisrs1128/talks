@@ -309,7 +309,7 @@ Calculator from Russ Lenth's power and sample size webpage `r Citep(bib, "uiowaJ
 
 ### SPLS-DA Setting
 
-Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
+Our power analysis uses Sparse Partial Least Squares Discriminant Analysis
 (SPLS-DA) `r Citep(bib, c("Le_Cao2008-zz", "Le_Cao2011-kn", "Rohart2017-sa"))`.
 This topic could be its own full workshop, but let's review the core ideas.
 
@@ -428,23 +428,6 @@ The difficulty is that we usually want non-Gaussian margins $F_{1}, \dots, F_{D}
 .center[
 <img src="figures/copula_transformation.png" width=700/>
 ]
-
----
-
-### Copula Models
-
-More formally, let $F_{1}, \dots, F_{D}$ be the target margins and let $\Phi$ be
-the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
-
-Estimate:
-
-1. Gaussianize the observed $\mathbf{x}_{i}$ to $\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]$
-1. Estimate the covariance $\hat{\Sigma}$ associated with $z_{i}$
-
-Simulate:
-
-1. Draw $\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
-1. Transform back $\mathbf{x}\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]$
 
 ---
 
@@ -796,7 +779,7 @@ written to accompany our papers:
 The relevant R packages behind these analyses are:
 
 * `multimedia` - Mediation analysis for microbiome data.
-* `scDesign3` - An existing simulator for single cell data
+* `scDesign3` - An existing simulator for single cell data.
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -955,6 +938,24 @@ correlation with previously found patterns.
 ]
 
 ---
+
+### Copula Models
+
+More formally, let $F_{1}, \dots, F_{D}$ be the target margins and let $\Phi$ be
+the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
+
+Estimate:
+
+1. Gaussianize the observed $\mathbf{x}_{i}$ to $\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]$
+1. Estimate the covariance $\hat{\Sigma}$ associated with $z_{i}$
+
+Simulate:
+
+1. Draw $\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
+1. Transform back $\mathbf{x}^{\ast} := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]$
+
+---
+
 
 <img src="figures/correlation_histogram.png" width=700/>
 

@@ -293,7 +293,7 @@ Calculator from Russ Lenth's power and sample size webpage [21].
 
 ### SPLS-DA Setting
 
-Our power analysis uses Sparse Parital Least Squares Discriminant Analysis
+Our power analysis uses Sparse Partial Least Squares Discriminant Analysis
 (SPLS-DA) [22].
 This topic could be its own full workshop, but let's review the core ideas.
 
@@ -399,10 +399,10 @@ rmvnorm(3, rep(0, D), Sigma)
 ```
 
 ```
-##            [,1]       [,2]       [,3]      [,4]       [,5]
-## [1,] -1.1719613 -1.1554216 -1.2068898 -1.217644 -1.0644387
-## [2,]  0.4936048  0.5826661  0.3728637  0.461421  0.3012979
-## [3,]  0.8654678  1.1129944  1.0010864  1.106055  1.1188296
+##            [,1]       [,2]       [,3]       [,4]       [,5]
+## [1,] -0.9800037 -0.9979774 -0.9419255 -0.8202038 -0.8749182
+## [2,]  1.4060867  1.4352558  1.4819112  1.4008727  1.3636058
+## [3,]  0.7326696  0.6326349  0.6412391  0.6804125  0.6181781
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -420,23 +420,6 @@ The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{
 .center[
 &lt;img src="figures/copula_transformation.png" width=700/&gt;
 ]
-
----
-
-### Copula Models
-
-More formally, let `\(F_{1}, \dots, F_{D}\)` be the target margins and let `\(\Phi\)` be
-the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
-
-Estimate:
-
-1. Gaussianize the observed `\(\mathbf{x}_{i}\)` to `\(\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]\)`
-1. Estimate the covariance `\(\hat{\Sigma}\)` associated with `\(z_{i}\)`
-
-Simulate:
-
-1. Draw `\(\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)\)` 
-1. Transform back `\(\mathbf{x}\ast := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]\)`
 
 ---
 
@@ -788,7 +771,7 @@ written to accompany our papers:
 The relevant R packages behind these analyses are:
 
 * `multimedia` - Mediation analysis for microbiome data.
-* `scDesign3` - An existing simulator for single cell data
+* `scDesign3` - An existing simulator for single cell data.
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -1037,6 +1020,24 @@ correlation with previously found patterns.
 ]
 
 ---
+
+### Copula Models
+
+More formally, let `\(F_{1}, \dots, F_{D}\)` be the target margins and let `\(\Phi\)` be
+the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
+
+Estimate:
+
+1. Gaussianize the observed `\(\mathbf{x}_{i}\)` to `\(\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]\)`
+1. Estimate the covariance `\(\hat{\Sigma}\)` associated with `\(z_{i}\)`
+
+Simulate:
+
+1. Draw `\(\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)\)` 
+1. Transform back `\(\mathbf{x}^{\ast} := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]\)`
+
+---
+
 
 &lt;img src="figures/correlation_histogram.png" width=700/&gt;
 
