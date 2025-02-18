@@ -139,7 +139,7 @@ public data resources, like [7; 8; 9; 10].
 &lt;img src="figures/template_defn.png" width=670/&gt;
 ]
 
---
+---
 
 ### New Packages
 
@@ -170,7 +170,7 @@ analysis. It is based on references
   &lt;/div&gt;
   
   &lt;div class="act-header"&gt;
-    &lt;span class="tilde"&gt;&lt;/span&gt; Act II: Reliability and Attribution &lt;span class="tilde"&gt;&lt;/span&gt;
+    &lt;span class="tilde"&gt;&lt;/span&gt; Act II: Reliability and Mediation &lt;span class="tilde"&gt;&lt;/span&gt;
   &lt;/div&gt;
   &lt;div class="sub-item"&gt;Data Integration&lt;/div&gt;
   &lt;div class="sub-item"&gt;Mediation Analysis&lt;/div&gt;
@@ -311,90 +311,6 @@ SPLS-DA helps with prediction when,
 
 ---
 
-### SPLS-DA Intuition
-
-We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
-
-.center[
-&lt;img src="figures/PLS-step1.png" width=500/&gt;
-]
-
-Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
-`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
-
----
-
-### SPLS-DA Intuition
-
-We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
-
-.center[
-&lt;img src="figures/PLS-step2.png" width=240/&gt;
-]
-
-Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
-`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
-
-
----
-
-### SPLS-DA Intuition
-
-We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
-
-.center[
-&lt;img src="figures/PLS-step3.png" width=400/&gt;
-]
-
-Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
-`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
-
----
-
-### SPLS-DA Intuition
-
-We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
-
-.center[
-&lt;img src="figures/PLS-step4.png" width=150/&gt;
-]
-
-Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
-`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
-
----
-
-### SPLS-DA Intuition
-
-Now we can compare samples from the two tables in a single, shared space.
-
-.center[
-&lt;img src="figures/PLS-step5.png" width=800/&gt;
-]
-
----
-
-### SPLS-DA Intuition
-
-Now we can compare samples from the two tables in a single, shared space.
-
-.center[
-&lt;img src="figures/PLS-step6.png" width=800/&gt;
-]
-
----
-
-### SPLS-DA Intuition
-
-To get more than one dimension, we can repeat this process after removing any
-correlation with previously found patterns.
-
-.center[
-&lt;img src="figures/PLS-step7.png" width=800/&gt;
-]
-
----
-
 ### Example Output
 
 In this example, we are comparing mice with and without a mouse model of Type I
@@ -463,22 +379,30 @@ distributions .
 
 ### Starting Point
 
-**Question**: If we were asked to simulate a vector of five correlated variables on
+If we were asked to simulate a vector of five correlated variables on
 our computers right now, what would be the easiest thing to do?
 
 ---
 
 ### Starting Point
 
-**Question**: If we were asked to simulate a vector of five correlated variables on
+If we were asked to simulate a vector of five correlated variables on
 our computers right now, what would be the easiest thing to do?
 
 
+``` r
+library(mvtnorm)
+D &lt;- 5
+ones &lt;- rep(1, D)
+Sigma &lt;- 0.01 * diag(D) + 0.99 * ones %*% t(ones)
+rmvnorm(3, rep(0, D), Sigma)
 ```
-##             [,1]        [,2]        [,3]        [,4]        [,5]
-## [1,] -0.11098824 -0.11489284 -0.03186136  0.19237867  0.02686369
-## [2,] -0.13008609 -0.07604192  0.10249410 -0.06129811 -0.12766443
-## [3,] -0.02508597 -0.02029882  0.01155451  0.05614156 -0.20307025
+
+```
+##            [,1]       [,2]       [,3]      [,4]       [,5]
+## [1,] -1.1719613 -1.1554216 -1.2068898 -1.217644 -1.0644387
+## [2,]  0.4936048  0.5826661  0.3728637  0.461421  0.3012979
+## [3,]  0.8654678  1.1129944  1.0010864  1.106055  1.1188296
 ```
 
 The difficulty is that we usually want non-Gaussian margins `\(F_{1}, \dots, F_{D}\)`.
@@ -627,7 +551,7 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 
 ---
 
-## Act II: Reliability and Attribution
+## Act II: Reliability and Mediation
 
 ---
 
@@ -657,7 +581,7 @@ The analysis should not...&lt;br/&gt;
 ### Vertical Data Integration
 
 To illustrate, let's consider a vertical data integration question 
-[35]. These are problems where we get complementary
+[28]. These are problems where we get complementary
 'omics views of the same samples.
 
 .center[
@@ -672,7 +596,7 @@ sources.
 ### ICU Example
 
 .pull-left[
-The study [28] used amplicon sequencing data to profile
+The study [29] used amplicon sequencing data to profile
 the bacterial, viral, and fungal composition in the gut microbiome samples from
 ICU patients at a hospital, including a subset who were experiencing sepsis.
 ]
@@ -686,7 +610,7 @@ ICU patients at a hospital, including a subset who were experiencing sepsis.
 ### Multiblock SPLS-DA Analysis
 
 Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
-multiple tables [29]. With 
+multiple tables [30]. With 
 `\(\texttt{sepsis} \times \texttt{antibiotics}\)` status as the response
 variable, the method outputs the plots below.
 
@@ -757,7 +681,7 @@ Is it possible to improve psychiatric treatment for a patient using knowledge of
 &lt;br/&gt;
 Indeed, there is growing evidence for a relationship between the microbiome
 and psychiatric conditions, both in mouse models and in observational human
-studies [30; 31; 32; 33].
+studies [31; 32; 33; 34].
 
 ---
 
@@ -772,7 +696,7 @@ studies [30; 31; 32; 33].
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [34], which
+1. We re-analyzed a pilot study from 2021 [35], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 
@@ -888,6 +812,9 @@ benefit from simulation, please reach out.
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Co-authors: Hanying Jiang, Xinran Miao, Mara Beebe, Dan W. Grupe, Richie
+Davidson, Jo Handelsman, Saritha Kodikara, Jingyi Jessica Li, Kim-Anh Lê Cao,
+Susan Holmes
 
 ---
 
@@ -980,7 +907,7 @@ In: _Genome biology_ 22.1 (2021), p. 124.
 
 [27] D. Song. "Improving Statistical Rigor in Single-Cell and Spatial Omics". PhD thesis. University of California, Los Angeles, 2024.
 
-[28] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
+[28] K. Lê Cao et al. "Community-wide hackathons to identify central themes in single-cell multi-omics". In: _Genome biology_ 22 (2021), pp. 1-21.
 
 ---
 
@@ -988,26 +915,26 @@ class: reference
 
 ### References
 
-[29] A. Singh et al. "DIABLO: an integrative approach for identifying key molecular drivers from multi-omics assays". In: _Bioinformatics_ 35.17 (Jan. 2019). Ed. by I.
+[29] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
+
+[30] A. Singh et al. "DIABLO: an integrative approach for identifying key molecular drivers from multi-omics assays". In: _Bioinformatics_ 35.17 (Jan. 2019). Ed. by I.
 Birol, p. 3055–3062. ISSN: 1367-4811. DOI: [10.1093/bioinformatics/bty1054](https://doi.org/10.1093%2Fbioinformatics%2Fbty1054). URL:
 [http://dx.doi.org/10.1093/bioinformatics/bty1054](http://dx.doi.org/10.1093/bioinformatics/bty1054).
 
-[30] L. H. Morais et al. "The gut microbiota-brain axis in behaviour and brain disorders". In: _Nature Reviews Microbiology_ 19.4 (2021), pp. 241-255.
+[31] L. H. Morais et al. "The gut microbiota-brain axis in behaviour and brain disorders". In: _Nature Reviews Microbiology_ 19.4 (2021), pp. 241-255.
 
-[31] J. A. Bosch et al. "The gut microbiota and depressive symptoms across ethnic groups". En. In: _Nature Communications_ 13.1 (Dec. 2022), p. 7129. ISSN: 2041-1723.
+[32] J. A. Bosch et al. "The gut microbiota and depressive symptoms across ethnic groups". En. In: _Nature Communications_ 13.1 (Dec. 2022), p. 7129. ISSN: 2041-1723.
 DOI: [10.1038/s41467-022-34504-1](https://doi.org/10.1038%2Fs41467-022-34504-1). URL:
 [https://www.nature.com/articles/s41467-022-34504-1](https://www.nature.com/articles/s41467-022-34504-1) (visited on 12/11/2022).
 
-[32] J. A. Foster et al. "Gut-brain axis: how the microbiome influences anxiety and depression". In: _Trends in Neurosciences_ 36.5 (May. 2013), pp. 305-312.
+[33] J. A. Foster et al. "Gut-brain axis: how the microbiome influences anxiety and depression". In: _Trends in Neurosciences_ 36.5 (May. 2013), pp. 305-312.
 
-[33] P. Zheng et al. "The gut microbiome modulates gut-brain axis glycerophospholipid metabolism in a region-specific manner in a nonhuman primate model of depression".
+[34] P. Zheng et al. "The gut microbiome modulates gut-brain axis glycerophospholipid metabolism in a region-specific manner in a nonhuman primate model of depression".
 In: _Molecular psychiatry_ 26.6 (2021), pp. 2380-2392.
 
-[34] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep.
+[35] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep.
 2021). ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
 [http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
-
-[35] K. Lê Cao et al. "Community-wide hackathons to identify central themes in single-cell multi-omics". In: _Genome biology_ 22 (2021), pp. 1-21.
 
 ---
 
@@ -1024,6 +951,90 @@ This is how some common techniques fall into this taxonomy.
 * **Quantitative, Broad**: Evaluation through classification (next example).
 
 * **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([11], "Batch Effect Correction").
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step1.png" width=500/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step2.png" width=240/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step3.png" width=400/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step4.png" width=150/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+&lt;img src="figures/PLS-step5.png" width=800/&gt;
+]
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+&lt;img src="figures/PLS-step6.png" width=800/&gt;
+]
+
+---
+
+### SPLS-DA Intuition
+
+To get more than one dimension, we can repeat this process after removing any
+correlation with previously found patterns.
+
+.center[
+&lt;img src="figures/PLS-step7.png" width=800/&gt;
+]
 
 ---
 

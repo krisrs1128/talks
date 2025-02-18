@@ -155,7 +155,7 @@ public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller20
 <img src="figures/template_defn.png" width=670/>
 ]
 
---
+---
 
 ### New Packages
 
@@ -186,7 +186,7 @@ analysis. It is based on references
   </div>
   
   <div class="act-header">
-    <span class="tilde"></span> Act II: Reliability and Attribution <span class="tilde"></span>
+    <span class="tilde"></span> Act II: Reliability and Mediation <span class="tilde"></span>
   </div>
   <div class="sub-item">Data Integration</div>
   <div class="sub-item">Mediation Analysis</div>
@@ -327,90 +327,6 @@ SPLS-DA helps with prediction when,
 
 ---
 
-### SPLS-DA Intuition
-
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
-
-.center[
-<img src="figures/PLS-step1.png" width=500/>
-]
-
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
-
----
-
-### SPLS-DA Intuition
-
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
-
-.center[
-<img src="figures/PLS-step2.png" width=240/>
-]
-
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
-
-
----
-
-### SPLS-DA Intuition
-
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
-
-.center[
-<img src="figures/PLS-step3.png" width=400/>
-]
-
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
-
----
-
-### SPLS-DA Intuition
-
-We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
-
-.center[
-<img src="figures/PLS-step4.png" width=150/>
-]
-
-Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
-$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
-
----
-
-### SPLS-DA Intuition
-
-Now we can compare samples from the two tables in a single, shared space.
-
-.center[
-<img src="figures/PLS-step5.png" width=800/>
-]
-
----
-
-### SPLS-DA Intuition
-
-Now we can compare samples from the two tables in a single, shared space.
-
-.center[
-<img src="figures/PLS-step6.png" width=800/>
-]
-
----
-
-### SPLS-DA Intuition
-
-To get more than one dimension, we can repeat this process after removing any
-correlation with previously found patterns.
-
-.center[
-<img src="figures/PLS-step7.png" width=800/>
-]
-
----
-
 ### Example Output
 
 In this example, we are comparing mice with and without a mouse model of Type I
@@ -479,17 +395,17 @@ distributions `r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))`.
 
 ### Starting Point
 
-**Question**: If we were asked to simulate a vector of five correlated variables on
+If we were asked to simulate a vector of five correlated variables on
 our computers right now, what would be the easiest thing to do?
 
 ---
 
 ### Starting Point
 
-**Question**: If we were asked to simulate a vector of five correlated variables on
+If we were asked to simulate a vector of five correlated variables on
 our computers right now, what would be the easiest thing to do?
 
-```{r}
+```{r, echo = TRUE}
 library(mvtnorm)
 D <- 5
 ones <- rep(1, D)
@@ -643,7 +559,7 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 
 ---
 
-## Act II: Reliability and Attribution
+## Act II: Reliability and Mediation
 
 ---
 
@@ -904,6 +820,9 @@ benefit from simulation, please reach out.
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Co-authors: Hanying Jiang, Xinran Miao, Mara Beebe, Dan W. Grupe, Richie
+Davidson, Jo Handelsman, Saritha Kodikara, Jingyi Jessica Li, Kim-Anh Lê Cao,
+Susan Holmes
 
 ---
 
@@ -950,6 +869,90 @@ This is how some common techniques fall into this taxonomy.
 * **Quantitative, Broad**: Evaluation through classification (next example).
 
 * **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data (`r Citep(bib, "Sankaran2024-gb")`, "Batch Effect Correction").
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step1.png" width=500/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step2.png" width=240/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step3.png" width=400/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step4.png" width=150/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figures/PLS-step5.png" width=800/>
+]
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figures/PLS-step6.png" width=800/>
+]
+
+---
+
+### SPLS-DA Intuition
+
+To get more than one dimension, we can repeat this process after removing any
+correlation with previously found patterns.
+
+.center[
+<img src="figures/PLS-step7.png" width=800/>
+]
 
 ---
 
