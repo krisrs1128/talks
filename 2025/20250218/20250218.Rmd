@@ -195,7 +195,7 @@ analysis. It is based on references
 
 ---
 
-## Benchmarking and Power Analysis
+## Act I: Benchmarking and Power Analysis
 
 ---
 
@@ -301,7 +301,7 @@ more complex, multivariate models.
 .pull-right[
 <img src="figures/lenth_power_calculator.png" width=500/>
 <span style="font-size: 18px;">
-Calculator from Russ Lenth's power and sample size webpage.
+Calculator from Russ Lenth's power and sample size webpage `r Citep(bib, "uiowaJavaApplets")`.
 </span>
 ]
 
@@ -564,28 +564,12 @@ downstream tasks.
 
 ---
 
-### Evaluation Taxonomy
-
-This is how some common techniques fall into this taxonomy.
-
-* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa (like the DA example).
-
-* **Graphical, Broad**: Principal component plots of real vs. simulated dataset.
-
-* **Quantitative, Narrow**: Two-sample Kolmogorov-Smirnov test.
-
-* **Quantitative, Broad**: Simulation-through-classification (next example).
-
-* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data (`r Citep(bib, "Sankaran2024-gb")`, "Batch Effect Correction").
-
----
-
-### Simulation Evaluation through Classification
+### Evaluation through Classification
 
 What type of model would you use to simulate data like this?
 
 <center>
-<img src="figures/true_mixture.png" width="500"/>
+<img src="figures/true_mixture.png" width="550"/>
 </center>
 
 ---
@@ -594,46 +578,41 @@ What type of model would you use to simulate data like this?
 * We can simulate from the fit, but it seems quite far off.
 .pull-left[
 _Simulated_
-<img src="figures/Gaussian (Shared Covarince).png" width="430"/>
+<img src="figures/Gaussian (Shared Covarince).png" width="480"/>
 ]
 .pull-right[
 _Truth_
-<img src="figures/true_mixture.png" width="430"/>
+<img src="figures/true_mixture.png" width="480"/>
 ]
 
 ---
 
-We can make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
+We make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
 
-The prediction probabilies below come from a GBM discriminator, which has an
-out-of-sample prediction accuracy of 65.5%.
-
+The prediction probabilies below come from a gradient boosting model. Its 
+out-of-sample accuracy is 65.5%.
 .pull-left[
 _Simulated_
-<img src="figures/Gaussian (Shared Covarince)-prob.png" width="430"/>
+<img src="figures/Gaussian (Shared Covarince)-prob.png" width="480"/>
 ]
-
 .pull-right[
 _Truth_
-<img src="figures/true-Gaussian (Shared Covariance)-prob.png" width="430"/>
+<img src="figures/true-Gaussian (Shared Covariance)-prob.png" width="480"/>
 ]
-
 
 ---
 
-As a next step,
-* Increase number of components to $K = 5$.
-* Fit different variances per component.
+As a next step, we increase number of components to $K = 5$ and fit different variances per component.
 
 We still over-sample the gap between the two bottom-left clusters, but the GBM
-accuracy has dropped down to 55.5%.
+accuracy has dropped to 55.5%.
 .pull-left[
 _Simulated_<br/>
-<img src="figures/Gaussian (Individual Covariance)-prob.png" width="350"/>
+<img src="figures/Gaussian (Individual Covariance)-prob.png" width="440"/>
 ]
 .pull-right[
 _Truth_<br/>
-<img src="figures/true-Gaussian (Individual Covariance)-prob.png" width="350"/>
+<img src="figures/true-Gaussian (Individual Covariance)-prob.png" width="440"/>
 ]
 
 ---
@@ -645,13 +624,12 @@ _Truth_<br/>
 .pull-left[
 _Simulated_
 
-<img src="figures/Student's t (Individual Covariance)-prob.png" width="350"/>
+<img src="figures/Student's t (Individual Covariance)-prob.png" width="500"/>
 ]
-
 .pull-right[
 _Truth_
 
-<img src="figures/true-Student's t (Individual Covariance)-prob.png" width="350"/>
+<img src="figures/true-Student's t (Individual Covariance)-prob.png" width="500"/>
 ]
 
 ---
@@ -664,7 +642,7 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 
 ---
 
-## Act 2: Reliability and Attribution
+## Act II: Reliability and Attribution
 
 ---
 
@@ -673,8 +651,10 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 1. Beyond power and benchmarking analysis, simulations can clarify how to
 interpret a complicated workflow.
 
-1. We have been calling this a *reliability check*.
-These checks construct hypothetical scenarios to understand how methods behave.
+1. Following the lead of 
+`r Citep(bib, c("song2021pseudotimede", "song2024improving"))`, we have been
+calling this a *reliability check*.  These checks construct hypothetical
+scenarios to understand how methods behave.
 
 <div style="margin-left: 100px;">
 <span style="font-family: 'Exo 2'; font-size: 18;">
@@ -698,8 +678,8 @@ problems where we get complementary 'omics views of the same samples.
 <img src="figures/vertical_integration.png" width="1000"/>
 ]
 
-The goal is to prepare a unified analysis, one which potentially considers
-relationships across sources.
+The goal is to prepare a unified analysis which considers relationships across
+sources.
 
 ---
 
@@ -707,8 +687,8 @@ relationships across sources.
 
 .pull-left[
 The study `r Citep(bib, "Haak2021-lu")` used amplicon sequencing data to profile
-the bacterial, viral, and fungal composition in gut microbiome samples from ICU
-patients at a hospital, including a subset who were experiencing sepsis.
+the bacterial, viral, and fungal composition in the gut microbiome samples from
+ICU patients at a hospital, including a subset who were experiencing sepsis.
 ]
 
 .pull-right[
@@ -720,8 +700,9 @@ patients at a hospital, including a subset who were experiencing sepsis.
 ### Multiblock SPLS-DA Analysis
 
 Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
-multiple tables. With $\texttt{sepsis} \times \texttt{antibiotic use}$ status as
-the response variable, the method outputs the plots below.
+multiple tables `r Citep(bib, "Singh2019")`. With 
+$\texttt{sepsis} \times \texttt{antibiotic use}$ status as the response
+variable, the method outputs the plots below.
 
 .center[
 <img src="figures/multiblock_original.svg" width="1000"/>
@@ -745,9 +726,9 @@ Some integration methods are more vs. less aggressive than others.
 
 ### Semisynthetic Data
 
-To calibrate our interpretation, we train a simulator using these data but then
-deliberately remove any association between the bacteria community profile and
-the sepsis response.
+To calibrate our interpretation, we first fit a simulator using all data. We
+then deliberately remove all associations between the bacteria community
+profiles and sepsis status.
 
 .center[
 <img src="figures/semisynthetic_transkingdom.png" width=820/>
@@ -756,15 +737,11 @@ the sepsis response.
 
 ### Simulation Results
 
-Applying Multiblock SPLS-DA to these data suggests that we are in an aggressive
-integration regime. 
+Applying Multiblock SPLS-DA to these data suggests that we are in an "aggressive
+integration" regime. 
 .center[<img src="figures/multiblock_calibration.png" width=780/>]
 A reliability check like this might have helped `r Citep(bib, "Poore2020")`
 realize that their normalization procedure introduced spurious associations.
-
----
-
-## Mediation Analysis
 
 ---
 
@@ -782,18 +759,17 @@ regression language is insufficient.
 
 ### Mindfulness Interventions
 
-1. This type of model comparison was helpful in an ongoing collaboration with Jo
-Handelsman (Dept. Plant Pathology) and Richie Davidson (Depts.  Psychology,
-Psychiatry, and Neuroscience).
-
-1. The driving question is: 
-
-  _Is it possible to improve psychiatric treatment for a patient using knowledge of their microbiome?_
-
-  It seems like an unlikely connection, but it's one that might seem less
-  farfetched in the years to come.
-
-1. Indeed, there is growing evidence for a relationship between the microbiome
+This type of model comparison was helpful in an ongoing collaboration with Jo
+Handelsman (Plant Pathology) and Richie Davidson (Psychology and
+Psychiatry). The driving question is: 
+<br/>
+<br/>
+<div style="font-size: 32px; font-family: 'Nunito'; margin-left: 100px;">
+Is it possible to improve psychiatric treatment for a patient using knowledge of their microbiome?
+</div>
+<br/>
+<br/>
+Indeed, there is growing evidence for a relationship between the microbiome
 and psychiatric conditions, both in mouse models and in observational human
 studies `r Citep(bib, c("morais2021gut", "bosch_gut_2022", "Foster2013-bw", "zheng2021gut"))`.
 
@@ -899,7 +875,7 @@ written to accompany our papers:
 * Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
 * Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
 
-The relevant R packages behind these analysis are:
+The relevant R packages behind these analyses are:
 
 * `multimedia` - Mediation analysis for microbiome data.
 * `scDesign3` - An existing simulator for single cell data
@@ -913,9 +889,9 @@ Simulation can turn a problem of logic into one of observation.
 <img src="figures/simulation_summary.png" width=800/>
 ]
 
-We need your help! We are looking for more examples to help us write simulation
-workflows for `scDesigner`. If you have data or problems that could benefit from
-simulation, please reach out.
+P.S. We need your help! We are looking for more examples to include as
+simulation workflows in `scDesigner`. If you have data or problems that could
+benefit from simulation, please reach out.
 
 ---
 
@@ -946,6 +922,32 @@ class: reference
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 14, end = 24)
 ```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 25, end = 38)
+```
+
+---
+
+### Evaluation Taxonomy
+
+This is how some common techniques fall into this taxonomy.
+
+* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa (like the DA example).
+
+* **Graphical, Broad**: Principal component plots of real vs. simulated dataset.
+
+* **Quantitative, Narrow**: Two-sample Kolmogorov-Smirnov test.
+
+* **Quantitative, Broad**: Evaluation through classification (next example).
+
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data (`r Citep(bib, "Sankaran2024-gb")`, "Batch Effect Correction").
 
 ---
 
