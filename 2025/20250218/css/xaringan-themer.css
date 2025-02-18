@@ -76,8 +76,14 @@ h2 {
 }
 .remark-slide-content h2 {
   font-family: 'Raleway';
-  font-size: 55px;
+  font-size: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  margin: 0;
 }
+
 .remark-slide-content h3 {
   font-family: 'Raleway';
   font-size: 35px;
