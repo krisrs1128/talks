@@ -278,6 +278,19 @@ This model considers two sets of mixtures simultaneously.
 * Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of topics.
 * Topics: $\beta_{k}$ describes the composition of topic $k$.
 
+<center>
+<img src="figure/latent_dirichlet_v2.png" width=550/>
+</center>
+
+---
+
+### Simplex View
+
+This model considers two sets of mixtures simultaneously.
+
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of topics.
+* Topics: $\beta_{k}$ describes the composition of topic $k$.
+
 <img src="figure/topic_double_triangle.png"/>
 
 ---
