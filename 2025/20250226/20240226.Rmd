@@ -1,0 +1,928 @@
+---
+title: "Topic Models for Multiscale Analysis"
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+$\def\Dir{\text{Dir}}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\newcommand{\wout}{\tilde w_{\text{out}}}$
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+min_theme <- theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Topic Models in Microbiome Analysis
+
+<div id="subtitle_right">
+Kris Sankaran <br/>
+26 | February | 2025 <br/>
+<a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
+</div>
+
+<div id="subtitle_left">
+VUMC Department of Biostatistics<br/>
+Slides: <a href="https://go.wisc.edu/w380nq">go.wisc.edu/w380nq</a><br/>
+Paper: <a href="https://go.wisc.edu/tify36">go.wisc.edu/tify36</a>
+</div>
+
+---
+
+### Motivation: Enterotypes
+
+The study `r Citep(bib, "Arumugam2011")` argued that all human gut microbiomes
+could be divided into well-defined enterotypes:
+
+.pull-left[
+> ... We identified three robust clusters (enterotypes hereafter) that are not
+nation or continent-specific.
+]
+
+.pull-right[
+<img src="figure/enterotypes.png" width=300/><br/>
+<span style="font-size: 18px;">
+The visualization that motivated the definition of enterotypes.
+</span>
+]
+
+---
+
+### Motivation: Enterotypes
+
+This idea caught on. Could we have discovered something as fundamental as blood type?
+
+.center[
+<img src="figure/news-1.png" width=500/>
+]
+
+---
+
+### Motivation: Enterotypes
+
+This idea caught on. Could we have discovered something as fundamental as blood type?
+
+.center[
+<img src="figure/news-2.png" width=750/>
+]
+
+---
+
+### Motivation: Enterotypes
+
+This idea caught on. Could we have discovered something as fundamental as blood type?
+
+.center[
+<img src="figure/news-3.png" width=550/>
+]
+
+---
+
+### Motivation: Enterotypes
+
+Reality is more complex -- and interesting! Microbiomes
+are dynamic and not so easily categorized
+`r Citep(bib, c("Yong2012-ri", "Koren2013-tb", "Bulygin2023-up", "Knights2014-jv"))`.
+
+.center[
+<img src="figure/enterotype-rebuttal.png" width=300/>
+]
+
+<span style="font-size: 18px;">
+The same person can jump between clusters in longitudinal sampling `r Citep(bib, "Knights2014-jv")`, which
+complicates the simpler enterotypes story.
+</span>
+
+---
+
+### Improved Exploration
+
+Samples often can't be cleanly separated into clusters.  For more informative
+exploration of these data, it helps to consider,
+
+1. **Mixtures**: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. Multiple Scales: Allow transitions from coarse to fine-grained analysis.
+
+<span style="font-size: 18px;">
+.center[
+<img src="figure/clusters_vs_mixtures.png" width=565/><br/>
+Figure adapted from `r Citep(bib, "Symul2023")`.
+]
+</span>
+
+---
+
+### Improved Exploration
+
+Samples often can't be cleanly separated into clusters.  For more informative
+exploration of these data, it helps to consider,
+
+1. Mixtures: Instead of matching a sample to a single cluster centroid,
+view them as intermediates between multiple representatives.
+
+1. **Multiple Scales**: Allow transitions from coarse to fine-grained analysis.
+
+.center[
+<img src="figure/multiscale.png"/>
+]
+
+---
+
+class: middle
+
+.center[
+## Topic Models
+]
+
+---
+
+### Origins
+
+Topic models were independently developed for analyzing genotype and text
+data `r Citep(bib, c("Pritchard2000", "blei_lda"))` and are now widely used in
+computational genomics
+`r Citep(bib, c("Sankaran2018", "Kim2023", "Tataru2023", "Peng2023"))`.
+
+.center[
+<img src="figure/text_genotypes.png" width=1200/>
+]
+
+---
+
+### Example 1: GTEX
+
+How are genes co-expressed across tissues? We can apply topic models to GTEX
+Consortium data, following `r Citep(bib, c("Dey2017", "stephenslabGTEXAnalysis"))`.
+
+.center[
+<img src="figure/gtex_memberships.png" width=780/>
+]
+
+---
+
+### Example 1: GTEX
+
+These are the expression patterns associated with each of those topics.
+
+.center[
+<img src="figure/GTex-topics.png" width=730/>
+]
+
+<!-- [Example Interpretation](https://www.genecards.org/cgi-bin/carddisp.pl?id_type=hgnc&id=7939#summaries) -->
+
+---
+
+### Example 2: Gut Microbiome
+
+How do microbiome communities change in response to antibiotics? The study `r Citep(bib, "Dethlefsen2010")` gathered samples before and after antibiotic
+interventions.
+
+.center[
+<iframe src="https://krisrs1128.github.io/treelapse/pages/antibiotic.html#htmlwidget-f49f5eec4ced01f92314" width=800 height=360/>
+]
+
+---
+
+### Example 2: Gut Microbiome
+
+If we use topic models, we can see that <span style="color: #476b57;">Topic 2</span> increases after the antibiotic interventions,
+especially the first `r Citep(bib, "Sankaran2018")`.
+
+.center[
+<img src="figure/antibiotic_memberships.png" width=1000/>
+]
+
+---
+
+### Example 2: Gut Microbiome
+
+We can interpret topics by looking for representative taxa. These are species
+that have much higher probabilities in one topic compared to the others.
+
+.center[
+<img src="figure/antibiotic_prototypes.png" width=900/>
+]
+
+
+---
+
+### Model
+
+Topic models suppose that samples $x_i \in \mathbb{R}^{D}$ are drawn independently:
+\begin{align*}
+x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
+\gamma_{i} &\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
+\end{align*}
+where the columns $\beta_{k}$ of $\*B \in \Delta^{K}_{D}$ lie in the $D$-dimensional simplex and are themselves drawn independently from,
+\begin{align*}
+\beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
+\end{align*}
+
+We vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
+
+---
+
+### Simplex View
+
+This model considers two sets of mixtures simultaneously.
+
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of topics.
+* Topics: $\beta_{k}$ describes the composition of topic $k$.
+
+<img src="figure/topic_double_triangle.png"/>
+
+---
+
+class: middle
+
+.center[
+## Topic Alignment: Method
+]
+
+---
+
+### Choice of $K$
+
+> However, we stress that care should be taken in the interpretation of the
+inferred value of $K$. To begin with, due to the very high dimensionality of the
+parameter space, we found it difficult to obtain reliable estimates of
+$P\left(X \vert K\right)$... There are also biological reasons to be careful
+interpreting $K$.
+
+-- From `r Citep(bib, "Pritchard2000")`.
+
+In practice, it's common to check results and goodness-of-fit measures across
+many $K$ `r Citep(bib, c("Novembre2016", "Wallach2009EvaluationMF", "Lawson2018"))`.
+
+---
+
+### `alto`: Main Idea
+
+We will fit an ensemble of models of varying complexities. Then,
+post-estimation, we will build a compact representation of the result.
+
+.center[
+```{r, out.width = 750}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
+
+<span style="font-size: 20px;">
+In the Sankey diagram, columns are models and rectangles are topics.
+</span>
+]
+
+---
+
+### Alignment as a Graph
+
+We view an alignment as a graph across the ensemble. Index models by $m$ and
+topics by $k$. Then,
+* Nodes $V$ describe topics, parameterized by $\{\beta^m_{k}, \gamma^m_{k}\}$.
+* Edges $E$ link topics from neighboring models, i.e. $K$ to $K + 1$.
+* Weights $W$ encode the similarity between topics.
+
+```{r, out.width = 560}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
+
+---
+
+### Notation
+
+This graph-based view provides a convenient notation,
+
+* $m\left(v\right)$ is the model for node $v$
+* $k\left(v\right)$ is the topic for node $v$
+* $\Gamma\left(v\right) := \left(\gamma_{ v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
+mixed memberships for topic $v$
+* $\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}$ is the
+corresponding topic distribution
+* $e = \left(v, v'\right)$ is an edge linking topics $v$ and $v'$.
+
+```{r, out.width = 560}
+include_graphics("figure/alto_sketches_annotated alignment.png")
+```
+
+---
+
+### Estimating Weights: Product Approach
+
+.pull-left[
+To compute weights, we can use,
+\begin{align*}
+w\left(e\right) = \Gamma\left(v\right)^T\Gamma\left(v'\right)
+\end{align*}
+]
+
+.pull-right[
+```{r out.width = 500}
+include_graphics("figure/product_alignment_conceptual.png")
+```
+]
+
+---
+
+### Estimating Weights: Transport Approach
+
+Let $V_p$ and $V_q$ be two subsets of topics within the graph.
+
+* Let the total "mass" of $V_p$ be $p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$. Define $q$ similarly.
+* Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between the pair of topic distributions `r Citep(bib, "https://doi.org/10.48550/arxiv.1803.00567")`.
+
+```{r out.width = 420}
+include_graphics("figure/transport_alignment_conceptual.png")
+```
+
+---
+
+### Estimating Weights: Transport Approach
+
+
+The weights $W$ can be estimated by solving the optimal transport problem,
+\begin{align*}
+&\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right>
+\end{align*}
+<span style="font-size: 20px;">
+\begin{align*}
+\mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
+\end{align*}
+</span>
+
+```{r, out.width = 420}
+include_graphics("figure/transport_alignment_conceptual.png")
+```
+
+---
+
+### Estimating Weights: Transport Approach
+
+
+The weights $W$ can be estimated by solving the optimal transport problem,
+\begin{align*}
+&\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right>
+\end{align*}
+<span style="font-size: 20px;">
+\begin{align*}
+\mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
+\end{align*}
+</span>
+
+```{r, out.width = 800}
+include_graphics("figure/optimal_transport_matrices.png")
+```
+
+---
+
+### Diagnostics
+
+* Paths: Partitions the Sankey diagram into connected sets of topics.
+* Coherence: Measures transience of a topic along its path.
+* Refinement: Reflects degree of mixing between descendant topics.
+
+```{r}
+include_graphics("figure/alto_sketches_diagnotics.png")
+```
+
+---
+
+class: middle
+
+.center[
+## Topic Alignment: Examples
+]
+
+---
+
+### True Model
+
+Sanity check - What is the alignment when data are generated from a topic model?
+Can you guess the true $K$?
+
+* $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
+
+```{r, out.width = 480}
+include_graphics("figure/transport-true-lda.png")
+```
+
+---
+
+### Diagnostics
+
+The diagnostics suggest that the true $K$ is 5.
+
+```{r}
+include_graphics("figure/lda-combined.png")
+```
+
+---
+
+The diagnostics become more reliable as the sample size increases.
+
+```{r, out.width = 1000}
+include_graphics("figure/summary_alto_asymptotic_behavior.png")
+```
+
+---
+
+
+### Model with background variation
+
+Can we detect systematic departures from the assumed model?  Consider the
+following generative mechanism,
+
+\begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}
+
+where $\*B$ stacks the $\beta_k$ rowwise.
+
+---
+
+### Result
+
+The alignment structure is sensitive to changes in $\alpha$ and fragments when
+structure is not present.
+
+.pull-left[
+```{r, out.width = 300}
+include_graphics("figure/gradient_flow-1.png")
+include_graphics("figure/gradient_flow-2.png")
+```
+]
+
+.pull-right[
+```{r, out.width = 300}
+include_graphics("figure/gradient_flow-3.png")
+include_graphics("figure/gradient_flow-4.png")
+```
+]
+
+---
+
+### Diagnostics
+
+.pull-left-small[
+This structure is consistent across simulation runs, and the diagnostics
+quantify topic deterioration.
+]
+
+.pull-right-large[
+```{r, out.width = 635}
+include_graphics("figure/gradient-combined.png")
+```
+]
+
+---
+
+### Strain switching
+
+The final simulation mimics the strain switching problem `r Citep(bib, c("Jeganathan2021", "Reiter2022"))`.
+  * Small subsets of species switch between two otherwise similar topics
+  * Multiple resolutions are required to detect the difference
+
+.center[
+<img src="figure/strain_switching.png" width=850/>
+]
+
+---
+
+### Mechanism
+
+We construct related topics $\tilde{\beta}_k^r$ by perturbing an underlying
+collection of $\beta_{k}$. Then, for each sample $i$ and each $k$, we draw one
+member from the class,
+
+\begin{align*}
+\beta_{k}^{i} &\sim \Unif\left(\left\{\tilde{\beta}_{k}^{1}, \dots, \tilde{\beta}_{k}^{R}\right\}\right)
+\end{align*}
+
+stack the results into $\*B^{i}$, and then draw,
+
+\begin{align}
+x_{i} &\sim \Mult\left(n_{i}, \*B^{i}\gamma_{i}\right)
+\end{align}
+as in a standard topic model.
+
+---
+
+### Results
+* There are five topics, two of which exhibit strain switching
+* At smaller $K$, we recognize the five main topics.
+* At larger $K$, we can distinguish perturbed variants.
+
+.pull-left[
+```{r}
+include_graphics("figure/equivalence_flow.png")
+```
+]
+
+.pull-right[
+```{r}
+include_graphics("figure/equivalence_betas.png")
+```
+]
+
+---
+
+### Results
+* At smaller $K$, we recognize the main community structure, but don't see strain switching.
+* At larger $K$, we can recognize instances of switching.
+
+```{r out.width=650}
+include_graphics("figure/equivalence_similarity_hm.png")
+```
+
+---
+
+### Data Analysis Background
+
+.pull-left[
+Reference `r Citep(bib, "Ravel2010")` used clustering to identify 5 Community State Types (CSTs) in
+the vaginal microbiome.
+  - Four healthy CSTs are dominated by Lactobacillus variants.
+  - A fifth dysbiotic CST is more compositionally diverse and has been
+  implicated in preterm birth `r Citep(bib, c("Fettweis2019", "Gudnadottir2022"))` and HIV transmission `r Citep(bib, "Gosmann2017")`.
+]
+
+.pull-right[
+  <img src="figure/community_state_types.jpg" width=380/>
+  <span style="font-size: 18px;">
+
+  `r Citep(bib, 'Ravel2010')` grouped samples (columns) into CSTs.
+  </span>
+]
+
+---
+
+### Deconstructing CSTs
+
+.pull-left[
+The follow-up study `r Citep(bib, "Symul2023")` had many more samples than `r Citep(bib, 'Ravel2010')` and so could begin to tease additional structure lying
+behind CSTs.
+
+* They had 2179 samples from 135 women, sampled longitudinally.
+* The green and blue paths to the right reflect the known Lactobacillus CSTs.
+]
+
+.pull-right[
+```{r, echo = FALSE, message = FALSE}
+library(alto)
+library(purrr)
+data(vm_data)
+```
+<img src="figure/pregnancy_sankey.jpg" width=500/>
+]
+
+---
+
+### Coherence Scores
+
+.pull-left[
+* Overlaying coherence scores onto the alignment, we can distinguish distinguish
+between high and low-coherence topics.
+
+* Coherence is not a simple function of $K$ alone.
+]
+
+.pull-right[
+<img src="figure/coherence_on_tree.png" width=340/>
+]
+
+---
+
+### Metrics across Replicates
+
+.pull-left[
+* We can see dropoffs in topic quality for $K = 6 \to 7$ and $K = 9 \to 10$.
+* Each color in the top figure corresponds to a different set of topic models.
+]
+
+.pull-right[
+<img src="figure/alignment_scores_across_k.png"/>
+]
+
+---
+
+### Taxonomic Breakdown
+
+.center[
+<img src="figure/pregnancy_topics_heatmap.jpg" width=600/>
+]
+
+<span style="font-size: 18px;">
+At $K = 5$, four of the previously known CSTs are present. At $K = 9$, we can
+see additional community structure in the dysbiotic CST.
+</span>
+
+---
+
+### Time Series
+
+Like in the antibiotics study, we can visualize change in topics over time. This
+highlights smooth transitions in topic memberships.
+
+.center[
+<img src="figure/topic_trajectories_pregnancy.jpeg" width=700/>
+]
+
+---
+
+.pull-left[
+**Test set perplexity** `r Citep(bib, c("foulds2013", "Wallach2009EvaluationMF"))`
+  - Similar: Helps to choose $K$.
+  - Different (-): Doesn't give topic-level quality.
+  - Different (+): Evaluates generalization ability.
+]
+
+.pull-right[
+**Hierarchical Topic Models** `r Citep(bib, c("10.5555/2981345.2981348", "Smith2014"))`
+  - Similar: Learns topics at multiple levels of resolution.
+  - Different (-): Requires word-level representations.
+  - Different (+/-): Words belong to individual subtrees.
+]
+
+<img src="figure/hlda.png"/>
+
+---
+class: small-code
+
+### Software
+
+Topic alignment is implemented in the R package [alto](https://lasy.github.io/alto).
+
+.pull-left[
+```{r, echo = TRUE, warning = FALSE}
+library(purrr)
+library(alto)
+
+# Define LDA parameters
+params <- map(
+  set_names(1:10),
+  ~ list(k = .)
+)
+models <- run_lda_models(
+  vm_data$counts,
+  params
+)
+```
+]
+
+.pull-right[
+```{r, eval = TRUE, echo = TRUE}
+# Run alignment
+result <- align_topics(models, method = "transport")
+plot(result)
+```
+]
+
+All the simulations discussed today are vignettes in the package.
+
+---
+
+### Takeaways
+
+Topic alignment is a simple but useful addition to the exploratory data analysis
+toolbox for count data.
+
+.pull-three-quarters-left[
+<img src="figure/alto_sketches_annotated alignment.png" width=700/>
+]
+
+.pull-three-quarters-right[
+[Paper](https://go.wisc.edu/tify36)<br/>
+<img src="figure/qr-paper.png" width=80/>
+<br/>
+<br/>
+<br/>
+[Package](https://lasy.github.io/alto)<br/>
+<img src="figure/qr-package.png" width=80/>
+]
+
+---
+
+class: background-rivers
+
+.center[
+### Thank you!
+]
+
+* Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+.center[
+<img src="figure/Lena__credit_row_0.jpg"/>
+]
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 26)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 27, end = 34)
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-1.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-2.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-3.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-4.png")
+```
+
+---
+
+### Paths
+
+For each $v$, identify the incoming edge with the highest normalized weight,
+\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}
+
+* Iterate this process from large to small $l$ to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+```{r, out.width=270}
+include_graphics("figure/refinement-branches-5.png")
+```
+
+---
+
+### Coherence
+
+Coherence quantifies a topic's average connectedness to other topics along the same path,
+
+\begin{align*}
+ c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+\end{align*}
+
+* Transient topics (appearing at one $K$ and disappearing at
+ another) have low coherence scores
+* Consistently recovered topics across choices of $K$ have high coherence
+
+.pull-right[
+```{r, out.width=250}
+#include_graphics("figure/coherence-sketch.png")
+```
+]
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+```{r, out.width=350}
+include_graphics("figure/refinement_diagnostic_example.png")
+```
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+
+\begin{align*}
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} \wout \left(v, v_{m^{\prime}}^{\prime}\right) \win\left(v, v_{m^{\prime}}^{\prime}\right)
+\end{align*}
