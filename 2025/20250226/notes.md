@@ -39,7 +39,8 @@
 ---- 
 **Topic Models**
 1. For the rest of the talk, I'm first going to introduce topic models, which are a way of modeling mixtures. This is an idea that has been around for a long time.
-2. After this background, I'll introduce alignment idea, which will help us with multiscale analysis.
+2. After this background, I'll introduce the alignment idea, which will help us
+with multiscale analysis.
 ---- 
 **Origins**
 
@@ -54,21 +55,26 @@
 2. Here is an application to bulk RNA-seq data from the GTEX consortium. Each column is a sample, they are organized by tissues.
 3. The colors indicate the contributions coming from different topics. These are called memberships.
 4. For example, you can see that in the heart samples, there tends to be a lot of topic 9, 4 or 2. But you can be a bit of both.
----- 
-**Example 1: GTEX **
-1. To interpret these memberships, you make a plot like this. It shows which genes underlie each topic. For example, I liked up this first gene, and it's related to blood vessel thickness.
+----
+**Example 1: GTEX**
+1. To interpret these memberships, you make a plot like this. It shows which
+genes underlie each topic. For example, I looked up this first gene, and it's
+related to blood vessel thickness.
 2. It has high expression in topic 9, so it makes sense that it has high activity in heart tissue (flipping back to previous).
 ---- 
-**Example 2: Microbiome**\*\* 1. Here is another setting where it helps to think in terms of topics.
+**Example 2: Microbiome**
+1. Here is another setting where it helps to think in terms of topics.
 2. This was a study of how the gut microbiome responded to antibiotics.
 3. Each line is the abundance of one taxonomic group over time. You can kind of tell that there is a decrease at these two timepoints.
 ---- 
-**Example 2: Microbiome**\*\* 1. This is the same kind of plot as the GTEX plot, except the columns are timepoints and the groups are phases of sampling.
+**Example 2: Microbiome**
+1. This is the same kind of plot as the GTEX plot, except the columns are timepoints and the groups are phases of sampling.
 2. They introduced antibiotics here, removed it here, and give them it again here.
 3. You can see that there is a dramatic shift after the first time course, something new emerges in the interim. You can also see a group that was pretty strongly affected after the first course and which was less sensitive the second time around.
 ---- 
 **Example 2: Microbiome**
-1. You can go back and see which microbes are contributing the most to these topics. Here are those that are very close to the "corners." 
+1. You can go back and see which microbes are contributing the most to these
+topics. They are very abundant in those topics and rare in the rest.
 2. You can see some that are doing pretty well during the antibiotic time course.
 ---- 
 **Model**
@@ -81,7 +87,8 @@
 
 I realize this is a lot of notation, so if later you need a reminder for what anything means, please do ask.
 
-Before I move on are there any questions? (If no questions, asked them to relate this to PCA)
+!!Q: Before I move on are there any questions? (If no questions, asked them to relate this to PCA)!!
+
 ---- 
 **Topic Alignment: Method**
 Okay, so let's move on to topic alignment. This is going to allow us to work across scales, not just mixtures.
@@ -144,7 +151,6 @@ The quantitative measures back this up.
 1. We've simulated many datasets and computed metrics for each topic across the replicates. One point is a topic, the x-axis is the number of topics.
 2. You can see that the number of paths plateaus at K = 5, which is what we want.
 3. In these panels, I've added color showing how similar the estimated topic is to any of the true topics. We don't actually know color in reality. But you can can see that the topic quality improves as we get up to K = 5 and then drops off.
-Question: Which of these is closer to the true topic model, and which is drawn from the random Dirichlets?
 ---- 
 **No Title Diagnostics**
 There are two points to note: 
@@ -157,6 +163,7 @@ There are two points to note:
 3. We use a parameter $\alpha$ to mix between a true topic model and another where the probability vector is drawn randomly from a Dirichlet. You can think of the nu's as random, unstructured variation that corrupts the low-rank topic model.
 ---- 
 **Result**
+Question: Which of these is closer to the true topic model, and which is drawn from the random Dirichlets?
 1. In these four panels, the value of $\alpha$ ranges from all background variation to only the true LDA model.
 2. So, we can use this diagram to evaluate the extent to which a true low rank model is sufficient. If we see something like the bottom right, we are in good shape, otherwise we might want to consider a different analysis.
 ---- 
@@ -189,18 +196,18 @@ There are two points to note:
 ---- 
 **Time Series**
 1. It's also interesting to visualize change in the topic memberships over time. Here are scores for a single study participant.
-2. You can see that there are transitions from between topics. After two weeks, this participant leaves the "Green" topic and enters a mix of orange and turquoise. And at the onset of bleeding, the orange state becomes more prominent.
+2. You can see that there are transitions from between topics. After two weeks, this participant leaves the "Green" topic and enters a mix of orange and turquoise. And at the onset of menses, the orange state becomes more prominent.
 3. If you look carefully, you can see that the orange states are related to menstruation.
 ---- 
 **Test-set Perplexity**
 1. Okay, so that is the data analysis. I'm about to wrap up, but I want to mention some related ideas.
 2. First, you might be wondering how this is related to just evaluating test-set perplexity. They are definitely related, the main difference is that perplexity is a measure of the entire model, while our diagram helps to understand individual topics.
-3. Second, you might look at this diagram and think we might be able to get something like hierarchical topic models. At a superficial level, these are similar, but their actual generative mechanism is very different. In topic alignment, the tree is used in the generative mechanism for every single word. In topic alignment, the tree exists at the topic level.
+3. Second, you might look at this diagram and think we might be able to get something like hierarchical topic models. At a superficial level, these are similar, but their actual generative mechanism is very different. In hierarchical topic models, the tree is used in the generative mechanism for every single word. In topic alignment, the tree exists at the topic level.
 ---- 
 **Software**
 1. We've implemented this all in an R package.
 2. It's pretty easy to use, and all the simulations I talked about are on the package vigentte.
-3. Also, all the data analysis figures I showed are in the supplement to the sub-communities paper that I linked to above. It's an amazing supplement because you can compile it in Rmarkdown -- it's a 90 page Rmarkdown doc...
+3. Also, all the data analysis figures I showed are in the supplement to the sub-communities paper that I linked to above. It's an amazing supplement because you can compile it in Rmarkdown -- it's a 250 page Rmarkdown doc...
 ---- 
 **Takeaways**
 1. The basic idea of alignment is very simple, but I hope that it can help you with your exploratory data analysis.
