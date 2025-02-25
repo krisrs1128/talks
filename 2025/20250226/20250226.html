@@ -249,17 +249,6 @@ This model considers two sets of mixtures simultaneously.
 
 ---
 
-### Simplex View
-
-This model considers two sets of mixtures simultaneously.
-
-* Memberships: `\(\gamma_{i}\)` describes sample `\(x_i\)` as a mixture of topics.
-* Topics: `\(\beta_{k}\)` describes the composition of topic `\(k\)`.
-
-&lt;img src="figure/topic_double_triangle.png"/&gt;
-
----
-
 class: middle
 
 .center[
@@ -477,18 +466,18 @@ quantify topic deterioration.
 ### Data Analysis Background
 
 .pull-left[
-Reference [22] used clustering to identify 5 Community State Types (CSTs) in
+Reference [20] used clustering to identify 5 Community State Types (CSTs) in
 the vaginal microbiome.
   - Four healthy CSTs are dominated by Lactobacillus variants.
   - A fifth dysbiotic CST is more compositionally diverse and has been
-  implicated in preterm birth [23; 24] and HIV transmission [25].
+  implicated in preterm birth [21; 22] and HIV transmission [23].
 ]
 
 .pull-right[
   &lt;img src="figure/community_state_types.jpg" width=380/&gt;
   &lt;span style="font-size: 18px;"&gt;
 
-  [22] grouped samples (columns) into CSTs.
+  [20] grouped samples (columns) into CSTs.
   &lt;/span&gt;
 ]
 
@@ -497,7 +486,7 @@ the vaginal microbiome.
 ### Deconstructing CSTs
 
 .pull-left[
-The follow-up study [6] had many more samples than [22] and so could begin to tease additional structure lying
+The follow-up study [6] had many more samples than [20] and so could begin to tease additional structure lying
 behind CSTs.
 
 * They had 2179 samples from 135 women, sampled longitudinally.
@@ -564,14 +553,14 @@ highlights smooth transitions in topic memberships.
 ---
 
 .pull-left[
-**Test set perplexity** [26; 17]
+**Test set perplexity** [24; 17]
   - Similar: Helps to choose `\(K\)`.
   - Different (-): Doesn't give topic-level quality.
   - Different (+): Evaluates generalization ability.
 ]
 
 .pull-right[
-**Hierarchical Topic Models** [27; 28]
+**Hierarchical Topic Models** [25; 26]
   - Similar: Learns topics at multiple levels of resolution.
   - Different (-): Requires word-level representations.
   - Different (+/-): Words belong to individual subtrees.
@@ -612,7 +601,7 @@ result &lt;- align_topics(models, method = "transport")
 plot(result)
 ```
 
-&lt;img src="20240226_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="20250226_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 All the simulations discussed today are vignettes in the package.
@@ -729,31 +718,29 @@ URL: [http://dx.doi.org/10.1073/pnas.1000087107](http://dx.doi.org/10.1073/pnas.
 [19] G. Peyré et al. "Computational Optimal Transport".  (2018). DOI: [10.48550/ARXIV.1803.00567](https://doi.org/10.48550%2FARXIV.1803.00567). URL:
 [https://arxiv.org/abs/1803.00567](https://arxiv.org/abs/1803.00567).
 
-[20] P. Jeganathan et al. "A Statistical Perspective on the Challenges in Molecular Microbial Biology". In: _Journal of Agricultural, Biological and Environmental
-Statistics_ 26.2 (Mar. 2021), p. 131–160. ISSN: 1537-2693. DOI: [10.1007/s13253-021-00447-1](https://doi.org/10.1007%2Fs13253-021-00447-1). URL:
-[http://dx.doi.org/10.1007/s13253-021-00447-1](http://dx.doi.org/10.1007/s13253-021-00447-1).
-
-[21] T. E. Reiter et al. "Meta-analysis of metagenomes via machine learning and assembly graphs reveals strain switches in Crohn’s disease". In: _bioArxiv_ (Jul. 2022).
-DOI: [10.1101/2022.06.30.498290](https://doi.org/10.1101%2F2022.06.30.498290). URL:
-[http://dx.doi.org/10.1101/2022.06.30.498290](http://dx.doi.org/10.1101/2022.06.30.498290).
-
-[22] J. Ravel et al. "Vaginal microbiome of reproductive-age women". In: _Proceedings of the National Academy of Sciences_ 108.supplement_1 (Jun. 2010), p. 4680–4687.
+[20] J. Ravel et al. "Vaginal microbiome of reproductive-age women". In: _Proceedings of the National Academy of Sciences_ 108.supplement_1 (Jun. 2010), p. 4680–4687.
 ISSN: 1091-6490. DOI: [10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107). URL:
 [http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
 
-[23] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
+[21] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
 [10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2). URL: [http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
 
-[24] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth: a systematic review and network meta-analysis". In: _Scientific Reports_ 12.1 (May.
+[22] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth: a systematic review and network meta-analysis". In: _Scientific Reports_ 12.1 (May.
 2022). ISSN: 2045-2322. DOI: [10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9). URL:
 [http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
 
-[25] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial Communities Are Associated with Increased HIV Acquisition in Young South African Women". In:
+[23] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial Communities Are Associated with Increased HIV Acquisition in Young South African Women". In:
 _Immunity_ 46.1 (Jan. 2017), p. 29–37. ISSN: 1074-7613. DOI: [10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013). URL:
 [http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
 
-[26] J. Foulds et al. "Annealing paths for the evaluation of topic models". In: _Proceedings of the Empirical Methods in Natural Language Processing Conference (EMNLP
+[24] J. Foulds et al. "Annealing paths for the evaluation of topic models". In: _Proceedings of the Empirical Methods in Natural Language Processing Conference (EMNLP
 2013)_ (Jan. 2013).
+
+[25] D. M. Blei et al. "Hierarchical topic models and the nested chinese restaurant process". In: _Proceedings of the 16th International Conference on Neural Information
+Processing Systems_. NIPS'03. Whistler, British Columbia, Canada: MIT Press, 2003, p. 17–24.
+
+[26] A. Smith et al. "Hiearchie: Visualization for Hierarchical Topic Models".  (2014). DOI: [10.3115/v1/w14-3111](https://doi.org/10.3115%2Fv1%2Fw14-3111). URL:
+[http://dx.doi.org/10.3115/v1/W14-3111](http://dx.doi.org/10.3115/v1/W14-3111).
 
 ---
 
@@ -761,11 +748,7 @@ class: reference
 
 ### References
 
-[27] D. M. Blei et al. "Hierarchical topic models and the nested chinese restaurant process". In: _Proceedings of the 16th International Conference on Neural Information
-Processing Systems_. NIPS'03. Whistler, British Columbia, Canada: MIT Press, 2003, p. 17–24.
 
-[28] A. Smith et al. "Hiearchie: Visualization for Hierarchical Topic Models".  (2014). DOI: [10.3115/v1/w14-3111](https://doi.org/10.3115%2Fv1%2Fw14-3111). URL:
-[http://dx.doi.org/10.3115/v1/W14-3111](http://dx.doi.org/10.3115/v1/W14-3111).
 
 ---
 
