@@ -55,70 +55,18 @@ bib <- ReadBib("references.bib")
 
 ---
 
-### Data Analysis Controversy `r Citep(bib, "retraction2024")`
-
-.center[
-    <img src="figures/retraction.png"/>
-]
-
-In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` the claimed
-to identify microbiome signatures of cancer. This came after one year's worth of
-debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
-about the data analysis.
-
----
-
-### Data Analysis Controversy `r Citep(bib, "retraction2024")`
-
-.center[
-    <img src="figures/retraction.png"/>
-]
-
-The "disease signature" was an artifact resulting from the use of a batch effect
-correction method.  Before we can understand the nuances of the story, we need
-to learn about batch effects and correction methods.
-
----
-
-### Simulation to Resolve Controversy
-
-Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom
-signals. The first part is a simulation.
-
-.pull-left[
-<img src="figures/gth_sim1.png"/>
-]
-.pull-right[
-<img src="figures/gth_sim2.png"/>
-]
-
-
 ### Why Simulate?
 
 More broadly, there are myriad opportunities for using simulation in microbiome
 analysis. They can help us to...
 
-1. **Benchmark methods** and identify gaps in the literature.
+<img src="figures/noun-benchmark-7569457.png" width=40/> **Benchmark methods** and identify gaps in the literature.
+<br/>
 
-1. **Design experiments** that have high power to detect subtle signals.
+<img src="figures/noun-labs-99456.png" width=40/> **Design experiments** that have high power to detect subtle signals.
+<br/>
 
-1. **Check conclusions** that might be sensitive to technical processing steps.
-
----
-
-### The Changing Simulation Landscape
-
-Considering their potential, simulators are not so widely used.
-
-.pull-left[
-  <img src="figures/noun-frustration-7442748.png" width=70/> Often, simulators must be written from scratch, which requires significant effort.
-]
-
-.pull-right[
-  <img src="figures/noun-confused-7442754.png" width=70/> Even afterwards, the resulting data may not be realistic enough to be useful.
-]
-
-I know this firsthand from my past work `r Citep(bib, "sankaran2018")`... but the situation is improving quite rapidly!!
+<img src="figures/noun-checkmark-7518321.png" width=40/> **Check conclusions** that might be sensitive to technical processing steps.
 
 ---
 
@@ -344,26 +292,6 @@ PrintBibliography(bib, start = 1, end = 13)
 
 ---
 
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 28)
-```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 29, end = 40)
-```
-
----
-
 ### Evaluation Taxonomy
 
 This is how some common techniques fall into this taxonomy.
@@ -481,12 +409,23 @@ Simulate:
 
 ---
 
+### Real vs. Simulated Correlation
 
+.center[
 <img src="figures/correlation_histogram.png" width=700/>
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
 
 ---
 
+### Tuning High-Dimensional Covariance Estimator
+
+.center[
 <img src="figures/covariance_hyperparameter_errors.png" width=700/>
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
 
 ---
 
@@ -501,13 +440,6 @@ Simulate:
 .center[
 <img src="figures/copula_transformation.png" width=700/>
 ]
-
----
-
-### Figure Sources
-
-frustration by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons">Noun Project</a> (CC BY 3.0)
-confused by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons">Noun Project</a> (CC BY 3.0)
 
 ---
 
@@ -536,3 +468,13 @@ These figures summarize the paths $T \to M \to Y$.</br>
 .center[
 <img src="figures/mindfulness-indirect-effects.png" width=900/>
 ]
+
+---
+
+### Figure Sources
+
+frustration by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons">Noun Project</a> (CC BY 3.0)
+confused by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons">Noun Project</a> (CC BY 3.0)
+Benchmark by Sofiah from <a href="https://thenounproject.com/browse/icons/term/benchmark/" target="_blank" title="Benchmark Icons">Noun Project</a> (CC BY 3.0)
+checkmark by Asa Kharisma Dini from <a href="https://thenounproject.com/browse/icons/term/checkmark/" target="_blank" title="checkmark Icons">Noun Project</a> (CC BY 3.0)
+Lab glassware by Vectors Market from <a href="https://thenounproject.com/browse/icons/term/lab-glassware/" target="_blank" title="Lab glassware Icons">Noun Project</a> (CC BY 3.0)

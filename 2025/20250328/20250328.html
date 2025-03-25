@@ -24,7 +24,7 @@ class: title
 &lt;/style&gt;
 
 &lt;div id="subtitle_left"&gt;
-Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;&lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/46xtw9"&gt;go.wisc.edu/46xtw9&lt;/a&gt;&lt;br/&gt;
 Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
 &lt;/div&gt;
 &lt;div id="subtitle_right"&gt;
@@ -41,36 +41,23 @@ MCBIOS: Microbiome Symphony&lt;br/&gt;
 
 ### Why Simulate?
 
-There are endless opportunities for using simulation in microbiome analysis. They can help us to...
+More broadly, there are myriad opportunities for using simulation in microbiome
+analysis. They can help us to...
 
-1. **Benchmark methods** and identify gaps in the literature.
+&lt;img src="figures/noun-benchmark-7569457.png" width=40/&gt; **Benchmark methods** and identify gaps in the literature.
+&lt;br/&gt;
 
-1. **Design experiments** that have high power to detect subtle signals.
+&lt;img src="figures/noun-labs-99456.png" width=40/&gt; **Design experiments** that have high power to detect subtle signals.
+&lt;br/&gt;
 
-1. **Check conclusions** that might be sensitive to technical processing steps.
-
----
-
-### The Changing Simulation Landscape
-
-Considering their potential, simulators are not so widely used.
-
-.pull-left[
-  &lt;img src="figures/noun-frustration-7442748.png" width=70/&gt; Often, simulators must be written from scratch, which requires significant effort.
-]
-
-.pull-right[
-  &lt;img src="figures/noun-confused-7442754.png" width=70/&gt; Even afterwards, the resulting data may not be realistic enough to be useful.
-]
-
-I know this firsthand from my past work [1]... but the situation is improving quite rapidly!!
+&lt;img src="figures/noun-checkmark-7518321.png" width=40/&gt; **Check conclusions** that might be sensitive to technical processing steps.
 
 ---
 
 ### Semisynthetic Data
 
 One of the major advances has been the design of algorithms that can leverage
-public data resources, like [2; 3; 4; 5].
+public data resources, like [6; 7; 8; 9].
 
 * **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
 * **Template Data**: Previously gathered experimental data that can be used to train a simulator.
@@ -84,7 +71,7 @@ public data resources, like [2; 3; 4; 5].
 ### Example 1: Multivariate Power Analysis
 
 How would you run a power analysis for Sparse Partial Least Squares Discriminant
-Analysis (SPLS-DA) [8]?
+Analysis (SPLS-DA) [10]?
 .pull-left[
 SPLS-DA helps with prediction when, 
 
@@ -141,9 +128,8 @@ underlying data.
 
 We applied a Gaussian copula model  with a high-dimensional covariance estimator.
 
-
 .center[
-&lt;img src="figures/gene-gene_dependence.png" width=900/&gt;
+&lt;img src="figures/gene-gene_dependence.png" width=850/&gt;
 ]
 
 ---
@@ -177,7 +163,7 @@ Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
 dataset about the gut-brain axis.
 
 .pull-left[
-1. We re-analyzed the study 2021 [14], which
+1. We re-analyzed the study 2021 [11], which
 gathered data from 54 participants assigned to either a mindfulness training
 intervention or a waitlist control (n = 27 each).
 
@@ -193,8 +179,8 @@ month follow-up.
 
 ### Mediation Analysis
 
-1. We were concerned that the mindfulness intervention might be affect behavior,
-which in turn influences microbiota composition.
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
 microbiome and survey data .
 
@@ -206,24 +192,13 @@ microbiome and survey data .
 
 ### Mediation Analysis
 
-1. We were concerned that the mindfulness intervention might be affect behavior,
-which in turn influences microbiota composition.
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
 microbiome and survey data .
 
 .center[
 &lt;img src="figures/mediation-dag.svg" width=450/&gt;
-]
-
----
-
-### Estimated Indirect Effects
-
-These figures summarize the paths `\(T \to M \to Y\)`.&lt;/br&gt;
-(i.e., color `\(\to\)` x-axis `\(\to\)` y-axis).
-
-.center[
-&lt;img src="figures/mindfulness-indirect-effects.png" width=900/&gt;
 ]
 
 ---
@@ -244,9 +219,9 @@ The middle panel comes from a synthetic null: `\(T \nrightarrow M \to Y\)`.
 
 ### Synthetic Null Hypothesis Testing
 
-We can rank the effects learned from both the real and synthetic null reference
-data. The significance threshold is chosen to control the proportion of null
-estimates (false positives) that are included among the discoveries.
+We rank the effects learned from both the real and synthetic null reference
+data. The significance threshold is chosen to control the empirical false
+discovery based on synthetic data.
 
 .center[
 &lt;img src="figures/synthetic_null_testing.png" width=900/&gt;
@@ -295,63 +270,44 @@ class: reference
 
 ### References
 
-[1] K. Sankaran. " Discovery and visualization of latent structure with applications to the microbiome". PhD thesis. Stanford University, 2018. URL:
+[1] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p.
+567–574. ISSN: 1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
+[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
+
+[2] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511. DOI:
+[10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL: [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
+
+[3] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
+[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL:
+[http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
+
+[4] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_. &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
+
+[5] K. Sankaran. " Discovery and visualization of latent structure with applications to the microbiome". PhD thesis. Stanford University, 2018. URL:
 [https://purl.stanford.edu/nx110xz3452](https://purl.stanford.edu/nx110xz3452).
 
-[2] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[6] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
 [https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
 
-[3] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_
+[7] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_
 8.1 (Oct. 2022). ISSN: 2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
 [http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
 
-[4] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut]
+[8] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut]
 (&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty &lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_.
 2021. DOI: [10.18129/B9.BIOC.MICROBIOMEDATASETS](https://doi.org/10.18129%2FB9.BIOC.MICROBIOMEDATASETS). URL:
 [https://bioconductor.org/packages/microbiomeDataSets](https://bioconductor.org/packages/microbiomeDataSets).
 
-[5] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+[9] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
 
-[6] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
-
-[7] R. Lenth. _Java applets for power and sample size - homepage.divms.uiowa.edu_. &lt;https://homepage.divms.uiowa.edu/~rlenth/Power/index.html&gt;. [Accessed
-17-02-2025].
-
-[8] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p.
+[10] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p.
 e1005752.
 
-[9] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023),
-p. 247–252. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
-[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
-
-[10] L. H. Morais et al. "The gut microbiota-brain axis in behaviour and brain disorders". In: _Nature Reviews Microbiology_ 19.4 (2021), pp. 241-255.
-
-[11] J. A. Bosch et al. "The gut microbiota and depressive symptoms across ethnic groups". En. In: _Nature Communications_ 13.1 (Dec. 2022), p. 7129. ISSN:
-2041-1723. DOI: [10.1038/s41467-022-34504-1](https://doi.org/10.1038%2Fs41467-022-34504-1). URL:
-[https://www.nature.com/articles/s41467-022-34504-1](https://www.nature.com/articles/s41467-022-34504-1) (visited on 12/11/2022).
-
-[12] J. A. Foster et al. "Gut-brain axis: how the microbiome influences anxiety and depression". In: _Trends in Neurosciences_ 36.5 (May. 2013), pp. 305-312.
-
-[13] P. Zheng et al. "The gut microbiome modulates gut-brain axis glycerophospholipid metabolism in a region-specific manner in a nonhuman primate model of
-depression". In: _Molecular psychiatry_ 26.6 (2021), pp. 2380-2392.
-
----
-
-class: reference
-
-### References
-
-[14] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in
+[11] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in
 Psychology_ 12 (Sep. 2021). ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
 [http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
 
----
-
-class: reference
-
-### References
-
-
+[12] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
 
 ---
 
@@ -367,7 +323,7 @@ This is how some common techniques fall into this taxonomy.
 
 * **Quantitative, Broad**: Evaluation through classification (next example).
 
-* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([6], "Batch Effect Correction").
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([12], "Batch Effect Correction").
 
 ---
 
@@ -472,12 +428,23 @@ Simulate:
 
 ---
 
+### Real vs. Simulated Correlation
 
+.center[
 &lt;img src="figures/correlation_histogram.png" width=700/&gt;
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
 
 ---
 
+### Tuning High-Dimensional Covariance Estimator
+
+.center[
 &lt;img src="figures/covariance_hyperparameter_errors.png" width=700/&gt;
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
 
 ---
 
@@ -495,17 +462,10 @@ Simulate:
 
 ---
 
-### Figure Sources
-
-frustration by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
-confused by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
-
----
-
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [14], which
+1. We re-analyzed a pilot study from 2021 [11], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 
@@ -516,6 +476,27 @@ month follow-up.
 .pull-right[
 &lt;img src="figures/design.png" width=450/&gt;
 ]
+
+---
+
+### Estimated Indirect Effects
+
+These figures summarize the paths `\(T \to M \to Y\)`.&lt;/br&gt;
+(i.e., color `\(\to\)` x-axis `\(\to\)` y-axis).
+
+.center[
+&lt;img src="figures/mindfulness-indirect-effects.png" width=900/&gt;
+]
+
+---
+
+### Figure Sources
+
+frustration by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+confused by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+Benchmark by Sofiah from &lt;a href="https://thenounproject.com/browse/icons/term/benchmark/" target="_blank" title="Benchmark Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+checkmark by Asa Kharisma Dini from &lt;a href="https://thenounproject.com/browse/icons/term/checkmark/" target="_blank" title="checkmark Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+Lab glassware by Vectors Market from &lt;a href="https://thenounproject.com/browse/icons/term/lab-glassware/" target="_blank" title="Lab glassware Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
