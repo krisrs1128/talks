@@ -25,11 +25,12 @@ class: title
 
 &lt;div id="subtitle_left"&gt;
 Slides: &lt;a href="https://go.wisc.edu/46xtw9"&gt;go.wisc.edu/46xtw9&lt;/a&gt;&lt;br/&gt;
+Paper: &lt;a href="https://go.wisc.edu/p12o8w"&gt;go.wisc.edu/p12o8w&lt;/a&gt;&lt;br/&gt;
 Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
 &lt;/div&gt;
 &lt;div id="subtitle_right"&gt;
 Kris Sankaran &lt;br/&gt;
-MCBIOS: Microbiome Symphony&lt;br/&gt;
+&lt;a href="https://2025.mcbios.com/"&gt;MCBIOS: Microbiome Symphony&lt;/a&gt;&lt;br/&gt;
 28 | March | 2025 &lt;br/&gt;
 &lt;/div&gt;
 
@@ -41,8 +42,8 @@ MCBIOS: Microbiome Symphony&lt;br/&gt;
 
 ### Why Simulate?
 
-More broadly, there are myriad opportunities for using simulation in microbiome
-analysis. They can help us to...
+There are myriad opportunities for using simulation in microbiome analysis [1; 2]. They
+can help us to...
 
 &lt;img src="figures/noun-benchmark-7569457.png" width=40/&gt; **Benchmark methods** and identify gaps in the literature.
 &lt;br/&gt;
@@ -57,7 +58,7 @@ analysis. They can help us to...
 ### Semisynthetic Data
 
 One of the major advances has been the design of algorithms that can leverage
-public data resources, like [1; 2; 3; 4].
+public data resources, like [3; 4; 5; 6].
 
 * **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
 * **Template Data**: Previously gathered experimental data that can be used to train a simulator.
@@ -71,7 +72,7 @@ public data resources, like [1; 2; 3; 4].
 ### Example 1: Multivariate Power Analysis
 
 How would you run a power analysis for Sparse Partial Least Squares Discriminant
-Analysis (SPLS-DA) [5]?
+Analysis (SPLS-DA) [7]?
 .pull-left[
 SPLS-DA helps with prediction when, 
 
@@ -124,9 +125,8 @@ varying sample sizes and fractions of negative control taxa.
 ### Copula Simulation
 
 It is important that our simulator reflect the correlation structure of the
-underlying data.
-
-We applied a Gaussian copula model  with a high-dimensional covariance estimator.
+underlying data. We applied a Gaussian copula model  with a high-dimensional
+covariance estimator.
 
 .center[
 &lt;img src="figures/gene-gene_dependence.png" width=850/&gt;
@@ -163,7 +163,7 @@ Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
 dataset about the gut-brain axis.
 
 .pull-left[
-1. We re-analyzed the study 2021 [6], which
+1. We re-analyzed the study 2021 [8], which
 gathered data from 54 participants assigned to either a mindfulness training
 intervention or a waitlist control (n = 27 each).
 
@@ -182,7 +182,7 @@ month follow-up.
 1. We wondered whether mindfulness intervention might be affect behavior, which
 in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data .
+microbiome and survey data [9; 10].
 
 .center[
 &lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
@@ -195,7 +195,7 @@ microbiome and survey data .
 1. We wondered whether mindfulness intervention might be affect behavior, which
 in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data .
+microbiome and survey data [9; 10].
 
 .center[
 &lt;img src="figures/mediation-dag.svg" width=450/&gt;
@@ -239,8 +239,8 @@ written to accompany our papers:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data.
-* `scDesign3` - An existing simulator for single cell data.
+* `multimedia` - Mediation analysis for microbiome data [11].
+* `scDesign3` - An existing simulator for single cell data [12; 13; 14].
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -270,26 +270,57 @@ class: reference
 
 ### References
 
-[1] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[1] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p.
+325–352. ISSN: 2326-831X. DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
+[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
+
+[2] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+
+[3] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
 [https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
 
-[2] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_
+[4] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_
 8.1 (Oct. 2022). ISSN: 2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
 [http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
 
-[3] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut]
+[5] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut]
 (&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty &lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_.
-2021. DOI: [10.18129/B9.BIOC.MICROBIOMEDATASETS](https://doi.org/10.18129%2FB9.BIOC.MICROBIOMEDATASETS). URL:
-[https://bioconductor.org/packages/microbiomeDataSets](https://bioconductor.org/packages/microbiomeDataSets).
+2021.
 
-[4] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+[6] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
 
-[5] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p.
+[7] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p.
 e1005752.
 
-[6] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_
+[8] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_
 12 (Sep. 2021). ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
 [http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
+
+[9] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+
+[10] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+
+[11] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN:
+2165-0497. DOI: [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL:
+[http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+
+[12] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN:
+1367-4811. DOI: [10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
+
+[13] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In:
+_Genome Biology_ 22.1 (May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
+[http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
+
+---
+
+class: reference
+
+### References
+
+[14] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p.
+247–252. ISSN: 1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
 ---
 
@@ -305,7 +336,7 @@ This is how some common techniques fall into this taxonomy.
 
 * **Quantitative, Broad**: Evaluation through classification (next example).
 
-* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([7], "Batch Effect Correction").
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([2], "Batch Effect Correction").
 
 ---
 
@@ -447,7 +478,7 @@ A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-s
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [6], which
+1. We re-analyzed a pilot study from 2021 [8], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 
@@ -475,9 +506,13 @@ These figures summarize the paths `\(T \to M \to Y\)`.&lt;/br&gt;
 ### Figure Sources
 
 frustration by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
 confused by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
 Benchmark by Sofiah from &lt;a href="https://thenounproject.com/browse/icons/term/benchmark/" target="_blank" title="Benchmark Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
 checkmark by Asa Kharisma Dini from &lt;a href="https://thenounproject.com/browse/icons/term/checkmark/" target="_blank" title="checkmark Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
 Lab glassware by Vectors Market from &lt;a href="https://thenounproject.com/browse/icons/term/lab-glassware/" target="_blank" title="Lab glassware Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

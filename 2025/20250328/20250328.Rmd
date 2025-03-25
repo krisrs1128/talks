@@ -26,11 +26,12 @@ class: title
 
 <div id="subtitle_left">
 Slides: <a href="https://go.wisc.edu/46xtw9">go.wisc.edu/46xtw9</a><br/>
+Paper: <a href="https://go.wisc.edu/p12o8w">go.wisc.edu/p12o8w</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
-MCBIOS: Microbiome Symphony<br/>
+<a href="https://2025.mcbios.com/">MCBIOS: Microbiome Symphony</a><br/>
 28 | March | 2025 <br/>
 </div>
 
@@ -57,8 +58,8 @@ bib <- ReadBib("references.bib")
 
 ### Why Simulate?
 
-More broadly, there are myriad opportunities for using simulation in microbiome
-analysis. They can help us to...
+There are myriad opportunities for using simulation in microbiome analysis `r Citep(bib, c("Sankaran2023", "Sankaran2024-gb"))`. They
+can help us to...
 
 <img src="figures/noun-benchmark-7569457.png" width=40/> **Benchmark methods** and identify gaps in the literature.
 <br/>
@@ -140,9 +141,9 @@ varying sample sizes and fractions of negative control taxa.
 ### Copula Simulation
 
 It is important that our simulator reflect the correlation structure of the
-underlying data.
-
-We applied a Gaussian copula model `r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))` with a high-dimensional covariance estimator.
+underlying data. We applied a Gaussian copula model `r Citep(bib,
+c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))` with a high-dimensional
+covariance estimator.
 
 .center[
 <img src="figures/gene-gene_dependence.png" width=850/>
@@ -255,8 +256,8 @@ written to accompany our papers:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data.
-* `scDesign3` - An existing simulator for single cell data.
+* `multimedia` - Mediation analysis for microbiome data `r Citep(bib, "Jiang2025")`.
+* `scDesign3` - An existing simulator for single cell data `r Citep(bib, c("Li2019", "Sun2021", "Song2023"))`.
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -288,6 +289,16 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 28)
 ```
 
 ---
@@ -474,7 +485,11 @@ These figures summarize the paths $T \to M \to Y$.</br>
 ### Figure Sources
 
 frustration by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons">Noun Project</a> (CC BY 3.0)
+
 confused by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons">Noun Project</a> (CC BY 3.0)
+
 Benchmark by Sofiah from <a href="https://thenounproject.com/browse/icons/term/benchmark/" target="_blank" title="Benchmark Icons">Noun Project</a> (CC BY 3.0)
+
 checkmark by Asa Kharisma Dini from <a href="https://thenounproject.com/browse/icons/term/checkmark/" target="_blank" title="checkmark Icons">Noun Project</a> (CC BY 3.0)
+
 Lab glassware by Vectors Market from <a href="https://thenounproject.com/browse/icons/term/lab-glassware/" target="_blank" title="Lab glassware Icons">Noun Project</a> (CC BY 3.0)
