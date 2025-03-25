@@ -25,7 +25,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/46xtw9">go.wisc.edu/46xtw9</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
@@ -55,9 +55,48 @@ bib <- ReadBib("references.bib")
 
 ---
 
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` the claimed
+to identify microbiome signatures of cancer. This came after one year's worth of
+debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
+about the data analysis.
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom
+signals. The first part is a simulation.
+
+.pull-left[
+<img src="figures/gth_sim1.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim2.png"/>
+]
+
+
 ### Why Simulate?
 
-There are endless opportunities for using simulation in microbiome analysis. They can help us to...
+More broadly, there are myriad opportunities for using simulation in microbiome
+analysis. They can help us to...
 
 1. **Benchmark methods** and identify gaps in the literature.
 
@@ -157,9 +196,8 @@ underlying data.
 
 We applied a Gaussian copula model `r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))` with a high-dimensional covariance estimator.
 
-
 .center[
-<img src="figures/gene-gene_dependence.png" width=900/>
+<img src="figures/gene-gene_dependence.png" width=850/>
 ]
 
 ---
@@ -209,8 +247,8 @@ month follow-up.
 
 ### Mediation Analysis
 
-1. We were concerned that the mindfulness intervention might be affect behavior,
-which in turn influences microbiota composition.
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
 microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
 
@@ -222,24 +260,13 @@ microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositi
 
 ### Mediation Analysis
 
-1. We were concerned that the mindfulness intervention might be affect behavior,
-which in turn influences microbiota composition.
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
 microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
 
 .center[
 <img src="figures/mediation-dag.svg" width=450/>
-]
-
----
-
-### Estimated Indirect Effects
-
-These figures summarize the paths $T \to M \to Y$.</br>
-(i.e., color $\to$ x-axis $\to$ y-axis).
-
-.center[
-<img src="figures/mindfulness-indirect-effects.png" width=900/>
 ]
 
 ---
@@ -260,9 +287,9 @@ The middle panel comes from a synthetic null: $T \nrightarrow M \to Y$.
 
 ### Synthetic Null Hypothesis Testing
 
-We can rank the effects learned from both the real and synthetic null reference
-data. The significance threshold is chosen to control the proportion of null
-estimates (false positives) that are included among the discoveries.
+We rank the effects learned from both the real and synthetic null reference
+data. The significance threshold is chosen to control the empirical false
+discovery based on synthetic data.
 
 .center[
 <img src="figures/synthetic_null_testing.png" width=900/>
@@ -497,4 +524,15 @@ month follow-up.
 
 .pull-right[
 <img src="figures/design.png" width=450/>
+]
+
+---
+
+### Estimated Indirect Effects
+
+These figures summarize the paths $T \to M \to Y$.</br>
+(i.e., color $\to$ x-axis $\to$ y-axis).
+
+.center[
+<img src="figures/mindfulness-indirect-effects.png" width=900/>
 ]
