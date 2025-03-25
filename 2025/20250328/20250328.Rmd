@@ -498,5 +498,3 @@ month follow-up.
 .pull-right[
 <img src="figures/design.png" width=450/>
 ]
-
----
