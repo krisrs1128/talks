@@ -37,7 +37,7 @@ Kris Sankaran <br/>
 
 <!-- 13 minute talk -->
 
-```{r, echo = FALSE, warning = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(knitr)
 library(tidyverse)
 library(RefManageR)
