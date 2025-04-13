@@ -39,6 +39,7 @@ Kris Sankaran <br/>
 
 ```{r, echo = FALSE, warning = FALSE}
 library(knitr)
+library(tidyverse)
 library(RefManageR)
 
 opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
@@ -500,7 +501,6 @@ sce <- sce[1:10, ]
 ```
 
 ```{r wrap_into_simulator, echo = FALSE}
-library(tidyverse)
 library(splines)
 library(gamboostLSS)
 library(scDesigner)
@@ -522,7 +522,7 @@ ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
 point_opts <- list(size = 0.4, alpha = 0.3)
 ```
 
-```{r example_plot, out.width = 800, echo = FALSE}
+```{r example_plot, out.width = 800, echo = FALSE, fig.width = 8, fig.height = 4}
 plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4)
 ```
@@ -537,7 +537,7 @@ plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, 
 altered <- mutate(simulator@margins, Chga:Ins1, link = ~ pseudotime) |>
   estimate(sce)
 ```
-```{r plot_alteration, out.width = 800, echo = FALSE}
+```{r plot_alteration, out.width = 800, echo = FALSE, fig.width = 8, fig.heigth = 4}
 plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
   facet_wrap(~ feature, ncol = 4)
 ```
@@ -616,7 +616,7 @@ This assumes that we have samples where all features are measured.
 
 Alternatively, we can combine two simulators by conditioning them on shared latent structure.
 
-```{r join_simulators}
+```{r join_simulators, message = FALSE, warning = FALSE}
 sim_joined <- join_pamona(sims)
 ```
 
