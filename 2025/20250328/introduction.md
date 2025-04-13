@@ -1,0 +1,2 @@
+
+Kris Sankaran is an assistant professor in the Statistics Department at UW-Madison and a discovery fellow at the Wisconsin Institute for Discovery. His group focuses on visualization and statistical analysis for microbiome data. He completed his postdoc at the Mila - Quebec AI Institute in 2020 and his PhD from Stanford University in 2018.
