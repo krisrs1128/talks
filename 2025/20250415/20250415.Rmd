@@ -158,11 +158,8 @@ varying sample sizes and fractions of negative control taxa.
 
 ### Copula Simulation
 
-It is important that our simulator reflect the correlation structure of the
-underlying data. When the data are normalized (like here), it is enough to use a
-multivariate Gaussian model. More generally, we have found copula models useful
-`r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))`. In both cases,
-it's important to apply a high-dimensional covariance estimator.
+Here, we used a multivariate Gaussian model. More generally, we have found copula models useful `r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))`. In both cases, it helps to apply
+a high-dimensional covariance estimator.
 
 .center[
 <img src="figures/gene-gene_dependence.png" width=850/>
