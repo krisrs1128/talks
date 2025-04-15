@@ -32,7 +32,7 @@ Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org
 <div id="subtitle_right">
 Kris Sankaran <br/>
 <a href="https://sites.google.com/view/wiscmllm/home">Machine Learning Lunch Meetings</a><br/>
-25 | April | 2025 <br/>
+15 | April | 2025 <br/>
 </div>
 
 <!-- 13 minute talk -->
@@ -55,8 +55,10 @@ BibOptions(
 bib <- ReadBib("references.bib")
 th <- theme_minimal() + 
   theme(
+    rect = element_rect(fill = "transparent"),
     panel.grid.minor = element_blank(),
-    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.background = element_rect(fill = NA, color = "#0c0c0c"),
+    plot.background = element_rect(fill = NA, color = "#0c0c0c"),
     panel.border = element_rect(fill = NA, color = "#0c0c0c"),
     axis.text = element_text(size = 20),
     axis.title = element_text(size = 24),
@@ -157,9 +159,10 @@ varying sample sizes and fractions of negative control taxa.
 ### Copula Simulation
 
 It is important that our simulator reflect the correlation structure of the
-underlying data. We applied a Gaussian copula model `r Citep(bib,
-c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))` with a high-dimensional
-covariance estimator.
+underlying data. When the data are normalized (like here), it is enough to use a
+multivariate Gaussian model. More generally, we have found copula models useful
+`r Citep(bib, c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))`. In both cases,
+it's important to apply a high-dimensional covariance estimator.
 
 .center[
 <img src="figures/gene-gene_dependence.png" width=850/>
@@ -169,8 +172,7 @@ covariance estimator.
 
 ### Bivariate Relationships
 
-Here are example bivariate relationships learned by the simulator. Do you see
-anything off?
+Here are example bivariate relationships learned by the simulator.
 
 .center[
 <img src="figures/splsda-correlations.png" width=1200/>
@@ -187,105 +189,6 @@ many more samples are needed.
 .center[
 <img src="figures/multivariate_power_isolated.png" width=700/>
 ]
-
----
-
-.center[
-## Evaluation
-]
-
----
-
-### Evaluation Taxonomy
-
-To be useful, simulated data need to be realistic. A few differences to be aware of:
-
-* **Narrow/Broad Measures**: Narrow measures focus on small subsets of taxa, while broad measures evaluate community-level properties.
-
-* **Graphical/Quantative**: Some checks are more easily quantifiable.
-
-* **Fit-for-purpose measures**: Evaluation can focus on specific parameter estimates or analysis results.
-
-Different types of realism should have higher priority depending on the
-downstream tasks.
-
----
-
-### Evaluation through Classification
-
-What type of model would you use to simulate data like this?
-
-<center>
-<img src="figures/true_mixture.png" width="550"/>
-</center>
-
----
-
-* A natural enough starting point is a Gaussian mixture model with $K = 4$.
-* We can simulate from the fit, but it seems quite far off.
-.pull-left[
-_Simulated_
-<img src="figures/Gaussian (Shared Covarince).png" width="480"/>
-]
-.pull-right[
-_Truth_
-<img src="figures/true_mixture.png" width="480"/>
-]
-
----
-
-We make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
-
-The prediction probabilies below come from a gradient boosting model. Its 
-out-of-sample accuracy is 65.5%.
-.pull-left[
-_Simulated_
-<img src="figures/Gaussian (Shared Covarince)-prob.png" width="480"/>
-]
-.pull-right[
-_Truth_
-<img src="figures/true-Gaussian (Shared Covariance)-prob.png" width="480"/>
-]
-
----
-
-As a next step, we increase number of components to $K = 5$ and fit different variances per component.
-
-We still over-sample the gap between the two bottom-left clusters, but the GBM
-accuracy has dropped to 55.5%.
-.pull-left[
-_Simulated_<br/>
-<img src="figures/Gaussian (Individual Covariance)-prob.png" width="440"/>
-]
-.pull-right[
-_Truth_<br/>
-<img src="figures/true-Gaussian (Individual Covariance)-prob.png" width="440"/>
-]
-
----
-
-* We use a mixture of $t$ distributions next.
-* GBM accuracy is now 50.6%
-  - Unsurprisingly, this is the true mechanism that generated the data.
-
-.pull-left[
-_Simulated_
-
-<img src="figures/Student's t (Individual Covariance)-prob.png" width="500"/>
-]
-.pull-right[
-_Truth_
-
-<img src="figures/true-Student's t (Individual Covariance)-prob.png" width="500"/>
-]
-
----
-
-The discrimination probabilities become closer to 0.5 the more accurate the simulation becomes.
-
-<center>
-<img src="figures/modeling_iteration.png" width="800"/>
-</center>
 
 ---
 
@@ -476,6 +379,105 @@ realize that their normalization procedure introduced spurious associations.
 ---
 
 .center[
+## Evaluation
+]
+
+---
+
+### Evaluation Taxonomy
+
+To be useful, simulated data need to be realistic. A few differences to be aware of:
+
+* **Narrow/Broad Measures**: Narrow measures focus on small subsets of taxa, while broad measures evaluate community-level properties.
+
+* **Graphical/Quantative**: Some checks are more easily quantifiable.
+
+* **Fit-for-purpose measures**: Evaluation can focus on specific parameter estimates or analysis results.
+
+Different types of realism should have higher priority depending on the
+downstream tasks.
+
+---
+
+### Evaluation through Classification
+
+What type of model would you use to simulate data like this?
+
+<center>
+<img src="figures/true_mixture.png" width="550"/>
+</center>
+
+---
+
+* A natural enough starting point is a Gaussian mixture model with $K = 4$.
+* We can simulate from the fit, but it seems quite far off.
+.pull-left[
+_Simulated_
+<img src="figures/Gaussian (Shared Covarince).png" width="480"/>
+]
+.pull-right[
+_Truth_
+<img src="figures/true_mixture.png" width="480"/>
+]
+
+---
+
+We make our assessment quantitative using the discriminator idea of `r Citep(bib, "friedman2004multivariate")`.
+
+The prediction probabilies below come from a gradient boosting model. Its 
+out-of-sample accuracy is 65.5%.
+.pull-left[
+_Simulated_
+<img src="figures/Gaussian (Shared Covarince)-prob.png" width="480"/>
+]
+.pull-right[
+_Truth_
+<img src="figures/true-Gaussian (Shared Covariance)-prob.png" width="480"/>
+]
+
+---
+
+As a next step, we increase number of components to $K = 5$ and fit different variances per component.
+
+We still over-sample the gap between the two bottom-left clusters, but the GBM
+accuracy has dropped to 55.5%.
+.pull-left[
+_Simulated_<br/>
+<img src="figures/Gaussian (Individual Covariance)-prob.png" width="440"/>
+]
+.pull-right[
+_Truth_<br/>
+<img src="figures/true-Gaussian (Individual Covariance)-prob.png" width="440"/>
+]
+
+---
+
+* We use a mixture of $t$ distributions next.
+* GBM accuracy is now 50.6%
+  - Unsurprisingly, this is the true mechanism that generated the data.
+
+.pull-left[
+_Simulated_
+
+<img src="figures/Student's t (Individual Covariance)-prob.png" width="500"/>
+]
+.pull-right[
+_Truth_
+
+<img src="figures/true-Student's t (Individual Covariance)-prob.png" width="500"/>
+]
+
+---
+
+The discrimination probabilities become closer to 0.5 the more accurate the simulation becomes.
+
+<center>
+<img src="figures/modeling_iteration.png" width="800"/>
+</center>
+
+---
+
+.center[
   ## Software Design
 ]
 
@@ -515,38 +517,9 @@ simulator <- setup_simulator(
 
 ---
 
-### Verbs: <span style="color: #D94E4E">Plot</span>
-```{r, echo = FALSE}
-line_opts <- list(col = "#8C2E62", linewidth = 2)
-ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
-point_opts <- list(size = 0.4, alpha = 0.3)
-```
-
-```{r example_plot, out.width = 800, echo = FALSE, fig.width = 8, fig.height = 4}
-plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
-  facet_wrap(~ feature, ncol = 4)
-```
-
----
-
 ### Verbs: <span style="color:#025E73">Mutate</span>
 
-`mutate` lets you modify a few elements from a larger simulator.
-
-```{r second_alteration, out.width = 800}
-altered <- mutate(simulator@margins, Chga:Ins1, link = ~ pseudotime) |>
-  estimate(sce)
-```
-```{r plot_alteration, out.width = 800, echo = FALSE, fig.width = 8, fig.heigth = 4}
-plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
-  facet_wrap(~ feature, ncol = 4)
-```
-
----
-
-### Verbs: <span style="color:#025E73">Mutate</span>
-
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. `mutate` lets you modify a few elements from a larger simulator.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -560,7 +533,7 @@ plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opt
 
 ### Verbs: <span style="color:#025E73">Mutate</span>
 
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. `mutate` lets you modify a few elements from a larger simulator.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -584,7 +557,7 @@ rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
 rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
 ```
 
-```{r illustrate_joins}
+```{r illustrate_joins, echo = TRUE}
 experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
 families <- list(~ BI(), ~ GaussianLSS())
 sims <- experiments |>
@@ -599,7 +572,7 @@ sims <- experiments |>
 
 One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
 
-```{r, join_simulators_glasso, eval = FALSE}
+```{r, join_simulators_glasso, eval = FALSE, echo = TRUE}
 sim_joined <- map(sims, estimate, nu = 0.1) |>
   join_copula(copula_glasso())
 ```
@@ -616,7 +589,7 @@ This assumes that we have samples where all features are measured.
 
 Alternatively, we can combine two simulators by conditioning them on shared latent structure.
 
-```{r join_simulators, message = FALSE, warning = FALSE}
+```{r join_simulators, message = FALSE, warning = FALSE, echo = TRUE}
 sim_joined <- join_pamona(sims)
 ```
 
@@ -632,7 +605,7 @@ This used partial manifold alignment `r Citep(bib, "Cao2020ManifoldAF")` to
 learn shared latent variables across assays and works even in the diagonal
 integration setting.
 
-```{r print_joined}
+```{r print_joined, echo = TRUE}
 sim_joined
 ```
 

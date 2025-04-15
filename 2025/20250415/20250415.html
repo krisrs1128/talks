@@ -31,7 +31,7 @@ Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microb
 &lt;div id="subtitle_right"&gt;
 Kris Sankaran &lt;br/&gt;
 &lt;a href="https://sites.google.com/view/wiscmllm/home"&gt;Machine Learning Lunch Meetings&lt;/a&gt;&lt;br/&gt;
-25 | April | 2025 &lt;br/&gt;
+15 | April | 2025 &lt;br/&gt;
 &lt;/div&gt;
 
 &lt;!-- 13 minute talk --&gt;
@@ -129,8 +129,10 @@ varying sample sizes and fractions of negative control taxa.
 ### Copula Simulation
 
 It is important that our simulator reflect the correlation structure of the
-underlying data. We applied a Gaussian copula model  with a high-dimensional
-covariance estimator.
+underlying data. When the data are normalized (like here), it is enough to use a
+multivariate Gaussian model. More generally, we have found copula models useful
+. In both cases,
+it's important to apply a high-dimensional covariance estimator.
 
 .center[
 &lt;img src="figures/gene-gene_dependence.png" width=850/&gt;
@@ -140,8 +142,7 @@ covariance estimator.
 
 ### Bivariate Relationships
 
-Here are example bivariate relationships learned by the simulator. Do you see
-anything off?
+Here are example bivariate relationships learned by the simulator.
 
 .center[
 &lt;img src="figures/splsda-correlations.png" width=1200/&gt;
@@ -158,6 +159,192 @@ many more samples are needed.
 .center[
 &lt;img src="figures/multivariate_power_isolated.png" width=700/&gt;
 ]
+
+---
+
+.center[
+## Example 2: Mediation Analysis
+]
+
+---
+
+### Motivating Study
+
+Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
+dataset about the gut-brain axis.
+
+.pull-left[
+1. We re-analyzed the study 2021 [8], which
+gathered data from 54 participants assigned to either a mindfulness training
+intervention or a waitlist control (n = 27 each).
+
+1. The training lasted 2 months. Data were collected at the start, finish, and 2
+month follow-up.
+]
+
+.pull-right[
+&lt;img src="figures/design.png" width=450/&gt;
+]
+
+---
+
+### Mediation Analysis
+
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
+2. To explore this, we applied a form of mediation analysis to the 16S
+microbiome and survey data [9; 10].
+
+.center[
+&lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
+]
+
+---
+
+### Mediation Analysis
+
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
+2. To explore this, we applied a form of mediation analysis to the 16S
+microbiome and survey data [9; 10].
+
+.center[
+&lt;img src="figures/mediation-dag.svg" width=450/&gt;
+]
+
+---
+
+### Synthetic Null Data
+
+We can alter the simulator so that some pathways are "turned off." Estimates
+derived from these data provide a reference null distribution
+
+.center[
+&lt;img src="figures/mindfulness-altered.png" width=780/&gt;&lt;br/&gt;
+&lt;span style="font-size: 24px;"&gt;
+The middle panel comes from a synthetic null: `\(T \nrightarrow M \to Y\)`.
+&lt;/span&gt;
+]
+
+---
+
+### Synthetic Null Hypothesis Testing
+
+We rank the effects learned from both the real and synthetic null reference
+data. The significance threshold is chosen to control the empirical false
+discovery based on synthetic data.
+
+.center[
+&lt;img src="figures/synthetic_null_testing.png" width=900/&gt;
+]
+
+---
+
+.center[
+## Example 3: Data Integration
+]
+
+
+---
+
+### Reliability Checks
+
+1. Beyond power and benchmarking analysis, simulations can clarify how to
+interpret a complicated workflow.
+
+1. Following the lead of 
+[11; 12], we have been
+calling this a *reliability check*.  These checks construct hypothetical
+scenarios to understand how methods behave.
+
+&lt;div style="margin-left: 100px;"&gt;
+&lt;span style="font-family: 'Exo 2'; font-size: 18;"&gt;
+The analysis should not...&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;introduce spurious signals.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;give high confidence results on uncertain data.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;yield very different answers on similar datasets.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;drown out subtle effects.&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;etc...
+&lt;/span&gt;
+&lt;/div&gt;
+
+---
+
+### Vertical Data Integration
+
+To illustrate, let's consider a vertical data integration question 
+[13]. These are problems where we get complementary
+'omics views of the same samples.
+
+.center[
+&lt;img src="figures/vertical_integration.png" width="1000"/&gt;
+]
+
+The goal is to prepare a unified analysis which considers relationships across
+sources.
+
+---
+
+### ICU Example
+
+.pull-left[
+The study [14] used amplicon sequencing data to profile
+the bacterial, viral, and fungal composition in the gut microbiome samples from
+ICU patients at a hospital, including a subset who were experiencing sepsis.
+]
+
+.pull-right[
+&lt;img src="figures/transkingdom_summary.png" width="500"/&gt;
+]
+
+---
+
+### Multiblock SPLS-DA Analysis
+
+Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
+multiple tables [15]. With 
+`\(\texttt{sepsis} \times \texttt{antibiotics}\)` status as the response
+variable, the method outputs the plots below.
+
+.center[
+&lt;img src="figures/multiblock_original.svg" width="1000"/&gt;
+]
+
+---
+
+### Reliability Check
+
+It's not obvious how we should interpret this output. For example, the virus
+data must influence the bacteria plot, because the method integrated across
+sources, but how strong is the influence?
+
+.center[
+&lt;img src="figures/multiblock_original.svg" width="1000"/&gt;
+]
+
+Some integration methods are more vs. less aggressive than others.
+
+---
+
+### Semisynthetic Data
+
+To calibrate our interpretation, we first fit a simulator using all data. We
+then deliberately remove all associations between the bacteria community
+profiles and sepsis status.
+
+.center[
+&lt;img src="figures/semisynthetic_transkingdom.png" width=820/&gt;
+]
+---
+
+### Simulation Results
+
+Applying Multiblock SPLS-DA to these data suggests that we are in an "aggressive
+integration" regime. 
+.center[&lt;img src="figures/multiblock_calibration.png" width=780/&gt;]
+A reliability check like this might have helped [16]
+realize that their normalization procedure introduced spurious associations.
+
 
 ---
 
@@ -205,7 +392,7 @@ _Truth_
 
 ---
 
-We make our assessment quantitative using the discriminator idea of [8].
+We make our assessment quantitative using the discriminator idea of [17].
 
 The prediction probabilies below come from a gradient boosting model. Its 
 out-of-sample accuracy is 65.5%.
@@ -261,192 +448,6 @@ The discrimination probabilities become closer to 0.5 the more accurate the simu
 ---
 
 .center[
-## Example 2: Mediation Analysis
-]
-
----
-
-### Motivating Study
-
-Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
-dataset about the gut-brain axis.
-
-.pull-left[
-1. We re-analyzed the study 2021 [9], which
-gathered data from 54 participants assigned to either a mindfulness training
-intervention or a waitlist control (n = 27 each).
-
-1. The training lasted 2 months. Data were collected at the start, finish, and 2
-month follow-up.
-]
-
-.pull-right[
-&lt;img src="figures/design.png" width=450/&gt;
-]
-
----
-
-### Mediation Analysis
-
-1. We wondered whether mindfulness intervention might be affect behavior, which
-in turn influences microbiota composition.
-2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data [10; 11].
-
-.center[
-&lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
-]
-
----
-
-### Mediation Analysis
-
-1. We wondered whether mindfulness intervention might be affect behavior, which
-in turn influences microbiota composition.
-2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data [10; 11].
-
-.center[
-&lt;img src="figures/mediation-dag.svg" width=450/&gt;
-]
-
----
-
-### Synthetic Null Data
-
-We can alter the simulator so that some pathways are "turned off." Estimates
-derived from these data provide a reference null distribution
-
-.center[
-&lt;img src="figures/mindfulness-altered.png" width=780/&gt;&lt;br/&gt;
-&lt;span style="font-size: 24px;"&gt;
-The middle panel comes from a synthetic null: `\(T \nrightarrow M \to Y\)`.
-&lt;/span&gt;
-]
-
----
-
-### Synthetic Null Hypothesis Testing
-
-We rank the effects learned from both the real and synthetic null reference
-data. The significance threshold is chosen to control the empirical false
-discovery based on synthetic data.
-
-.center[
-&lt;img src="figures/synthetic_null_testing.png" width=900/&gt;
-]
-
----
-
-.center[
-## Example 3: Data Integration
-]
-
-
----
-
-### Reliability Checks
-
-1. Beyond power and benchmarking analysis, simulations can clarify how to
-interpret a complicated workflow.
-
-1. Following the lead of 
-[12; 13], we have been
-calling this a *reliability check*.  These checks construct hypothetical
-scenarios to understand how methods behave.
-
-&lt;div style="margin-left: 100px;"&gt;
-&lt;span style="font-family: 'Exo 2'; font-size: 18;"&gt;
-The analysis should not...&lt;br/&gt;
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;introduce spurious signals.&lt;br/&gt;
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;give high confidence results on uncertain data.&lt;br/&gt;
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;yield very different answers on similar datasets.&lt;br/&gt;
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;drown out subtle effects.&lt;br/&gt;
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;etc...
-&lt;/span&gt;
-&lt;/div&gt;
-
----
-
-### Vertical Data Integration
-
-To illustrate, let's consider a vertical data integration question 
-[14]. These are problems where we get complementary
-'omics views of the same samples.
-
-.center[
-&lt;img src="figures/vertical_integration.png" width="1000"/&gt;
-]
-
-The goal is to prepare a unified analysis which considers relationships across
-sources.
-
----
-
-### ICU Example
-
-.pull-left[
-The study [15] used amplicon sequencing data to profile
-the bacterial, viral, and fungal composition in the gut microbiome samples from
-ICU patients at a hospital, including a subset who were experiencing sepsis.
-]
-
-.pull-right[
-&lt;img src="figures/transkingdom_summary.png" width="500"/&gt;
-]
-
----
-
-### Multiblock SPLS-DA Analysis
-
-Multiblock SPLS-DA generalizes SPLS-DA to incorporate measurements across
-multiple tables [16]. With 
-`\(\texttt{sepsis} \times \texttt{antibiotics}\)` status as the response
-variable, the method outputs the plots below.
-
-.center[
-&lt;img src="figures/multiblock_original.svg" width="1000"/&gt;
-]
-
----
-
-### Reliability Check
-
-It's not obvious how we should interpret this output. For example, the virus
-data must influence the bacteria plot, because the method integrated across
-sources, but how strong is the influence?
-
-.center[
-&lt;img src="figures/multiblock_original.svg" width="1000"/&gt;
-]
-
-Some integration methods are more vs. less aggressive than others.
-
----
-
-### Semisynthetic Data
-
-To calibrate our interpretation, we first fit a simulator using all data. We
-then deliberately remove all associations between the bacteria community
-profiles and sepsis status.
-
-.center[
-&lt;img src="figures/semisynthetic_transkingdom.png" width=820/&gt;
-]
----
-
-### Simulation Results
-
-Applying Multiblock SPLS-DA to these data suggests that we are in an "aggressive
-integration" regime. 
-.center[&lt;img src="figures/multiblock_calibration.png" width=780/&gt;]
-A reliability check like this might have helped [17]
-realize that their normalization procedure introduced spurious associations.
-
-
----
-
-.center[
   ## Software Design
 ]
 
@@ -471,25 +472,9 @@ solve problems we may not have anticipated.
 
 ---
 
-### Verbs: &lt;span style="color: #D94E4E"&gt;Plot&lt;/span&gt;
-
-
-&lt;img src="20250415_files/figure-html/example_plot-1.png" width="800" style="display: block; margin: auto;" /&gt;
-
----
-
 ### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
-`mutate` lets you modify a few elements from a larger simulator.
-
-
-&lt;img src="20250415_files/figure-html/plot_alteration-1.png" width="800" style="display: block; margin: auto;" /&gt;
-
----
-
-### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
-
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. `mutate` lets you modify a few elements from a larger simulator.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -503,7 +488,7 @@ solve problems we may not have anticipated.
 
 ### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. `mutate` lets you modify a few elements from a larger simulator.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -521,6 +506,12 @@ We should make it possible to combine simulators like Lego blocks.
 
 
 
+``` r
+experiments &lt;- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
+families &lt;- list(~ BI(), ~ GaussianLSS())
+sims &lt;- experiments |&gt;
+  map2(families, \(x, y) setup_simulator(x, ~ cell_type, y))
+```
 
 &lt;img src="figures/simulator_join_motivation.png"/&gt;
 
@@ -531,6 +522,10 @@ We should make it possible to combine simulators like Lego blocks.
 One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
 
 
+``` r
+sim_joined &lt;- map(sims, estimate, nu = 0.1) |&gt;
+  join_copula(copula_glasso())
+```
 
 This assumes that we have samples where all features are measured.
 
@@ -545,6 +540,9 @@ This assumes that we have samples where all features are measured.
 Alternatively, we can combine two simulators by conditioning them on shared latent structure.
 
 
+``` r
+sim_joined &lt;- join_pamona(sims)
+```
 
 .center[
 &lt;img src="figures/simulator_join.png" width = 800/&gt;
@@ -558,6 +556,10 @@ This used partial manifold alignment  to
 learn shared latent variables across assays and works even in the diagonal
 integration setting.
 
+
+``` r
+sim_joined
+```
 
 ```
 ## $methylation
@@ -668,42 +670,60 @@ class: reference
 
 ### References
 
-[1] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p.
-325–352. ISSN: 2326-831X. DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
+[1] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In:
+_Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352.
+ISSN: 2326-831X. DOI:
+[10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134).
+URL:
 [http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
 
-[2] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+[2] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis".
+En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
 
-[3] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[3] E. Pasolli et al. "Accessible, curated metagenomic data through
+ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
 [https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
 
-[4] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_
-8.1 (Oct. 2022). ISSN: 2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[4] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated
+resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1
+(Oct. 2022). ISSN: 2055-5008. DOI:
+[10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
 [http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
 
-[5] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut]
-(&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty &lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_.
-2021.
+[5] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre]
+(&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut]
+(&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty
+&lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;).
+_microbiomeDataSets_. 2021.
 
-[6] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+[6] _Home - National Microbiome Data Collaborative - microbiomedata.org_.
+&lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
 
-[7] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p.
+[7] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and
+multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p.
 e1005752.
 
-[8] J. Friedman. _On multivariate goodness-of-fit and two-sample testing_. Tech. rep. Citeseer, 2004.
-
-[9] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_
-12 (Sep. 2021). ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
+[8] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer
+Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in
+Psychology_ 12 (Sep. 2021). ISSN: 1664-1078. DOI:
+[10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
 [http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
 
-[10] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+[9] K. Imai et al. "A general approach to causal mediation analysis." In:
+_Psychological methods_ 15.4 (2010), p. 309.
 
-[11] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+[10] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies".
+In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
 
-[12] D. Song et al. "PseudotimeDE: inference of differential gene expression along cell pseudotime with well-calibrated p-values from single-cell RNA sequencing
+[11] D. Song et al. "PseudotimeDE: inference of differential gene expression along
+cell pseudotime with well-calibrated p-values from single-cell RNA sequencing
 data". In: _Genome biology_ 22.1 (2021), p. 124.
 
-[13] D. Song. "Improving Statistical Rigor in Single-Cell and Spatial Omics". PhD thesis. University of California, Los Angeles, 2024.
+[12] D. Song. "Improving Statistical Rigor in Single-Cell and Spatial Omics". PhD
+thesis. University of California, Los Angeles, 2024.
+
+[13] K. Lê Cao et al. "Community-wide hackathons to identify central themes in
+single-cell multi-omics". In: _Genome biology_ 22 (2021), pp. 1-21.
 
 ---
 
@@ -711,33 +731,48 @@ class: reference
 
 ### References
 
-[14] K. Lê Cao et al. "Community-wide hackathons to identify central themes in single-cell multi-omics". In: _Genome biology_ 22 (2021), pp. 1-21.
+[14] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in
+antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar. 2021).
 
-[15] B. W. Haak et al. "Integrative transkingdom analysis of the gut microbiome in antibiotic perturbation and critical illness". En. In: _mSystems_ 6.2 (Mar.
-2021).
-
-[16] A. Singh et al. "DIABLO: an integrative approach for identifying key molecular drivers from multi-omics assays". In: _Bioinformatics_ 35.17 (Jan. 2019).
-Ed. by I. Birol, p. 3055–3062. ISSN: 1367-4811. DOI: [10.1093/bioinformatics/bty1054](https://doi.org/10.1093%2Fbioinformatics%2Fbty1054). URL:
+[15] A. Singh et al. "DIABLO: an integrative approach for identifying key
+molecular drivers from multi-omics assays". In: _Bioinformatics_ 35.17 (Jan.
+2019). Ed. by I. Birol, p. 3055–3062. ISSN: 1367-4811. DOI:
+[10.1093/bioinformatics/bty1054](https://doi.org/10.1093%2Fbioinformatics%2Fbty1054).
+URL:
 [http://dx.doi.org/10.1093/bioinformatics/bty1054](http://dx.doi.org/10.1093/bioinformatics/bty1054).
 
-[17] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p.
-567–574. ISSN: 1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
+[16] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and
+tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p.
+567–574. ISSN: 1476-4687. DOI:
+[10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
 [http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
 
-[18] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN:
-2165-0497. DOI: [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL:
+[17] J. Friedman. _On multivariate goodness-of-fit and two-sample testing_. Tech.
+rep. Citeseer, 2004.
+
+[18] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome
+data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN:
+2165-0497. DOI:
+[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL:
 [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
 
-[19] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN:
-1367-4811. DOI: [10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
+[19] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq
+experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN:
+1367-4811. DOI:
+[10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321).
+URL:
 [http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
 
-[20] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In:
-_Genome Biology_ 22.1 (May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
+[20] T. Sun et al. "scDesign2: a transparent simulator that generates
+high-fidelity single-cell gene expression count data with gene correlations
+captured". In: _Genome Biology_ 22.1 (May. 2021). ISSN: 1474-760X. DOI:
+[10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
 [http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
 
-[21] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p.
-247–252. ISSN: 1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[21] D. Song et al. "scDesign3 generates realistic in silico data for multimodal
+single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p.
+247–252. ISSN: 1546-1696. DOI:
+[10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
 [http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
 ---
@@ -880,7 +915,7 @@ A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-s
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [9], which
+1. We re-analyzed a pilot study from 2021 [8], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 
