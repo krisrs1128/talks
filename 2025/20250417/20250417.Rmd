@@ -17,7 +17,7 @@ class: title
 # Multiscale Topic Modeling with Alto
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/54f161">go.wisc.edu/54f161</a><br/>
 Paper: <a href="https://go.wisc.edu/tify36">go.wisc.edu/tify36</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
