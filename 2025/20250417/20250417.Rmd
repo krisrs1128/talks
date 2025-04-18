@@ -18,7 +18,7 @@ class: title
 
 <div id="subtitle_left">
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
-Paper: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Paper: <a href="https://go.wisc.edu/tify36">go.wisc.edu/tify36</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
@@ -109,4 +109,4 @@ include_graphics("figures/nmf_result.png")
 
 ### Code Demo
 
-Follow along: https://go.wisc.edu/
+Follow along: https://go.wisc.edu/d26lb4
