@@ -29,12 +29,12 @@
 
 .title h2 {
   padding-left: 25px;
-  width: 1000px;
+  width: 1500px;
 }
 
 .title::before {    
       content: "";
-      background-image: url("../figure/background_figure.png");
+      background-image: url("../figures/background_figure.png");
       background-size: cover;
       position: absolute;
       top: 0px;
