@@ -1,0 +1,63 @@
+---
+title: Alto Code Demo
+author: Kris Sankaran
+---
+
+```{r}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+If the package isn't already available, make sure to install it!
+
+```{r eval = FALSE}
+devtools::install_github("lasy/alto")
+```
+
+Let's first set some hyperparameters.
+
+```{r hyperparameters}
+K <- 5
+V <- 100
+N <- 50
+```
+
+This block loads the necessary libraries.
+
+```{r libraries}
+library(MCMCpack)
+library(tidyverse)
+library(alto)
+source("https://go.wisc.edu/s034jh")
+```
+
+This block simulates example LDA data.
+
+```{r simulate}
+lambdas <- list(beta = 0.1, gamma = .5, count = 1e4)
+betas <- rdirichlet(K, rep(lambdas$beta, V))
+gammas <- rdirichlet(N, rep(lambdas$gamma, K))
+x <- simulate_lda(betas, gammas, lambda = lambdas$count)
+```
+
+This block runs LDA.
+
+```{r fit}
+params <- map(set_names(1:10), ~ list(k = ., method = "VEM"))
+models <- run_lda_models(x, params)
+```
+
+Now that we have fitted topic models, we can run a topic alignment.
+
+```{r}
+alignment <- align_topics(models, method = "transport")
+plot(alignment)
+```
+
+We can access the essential topic modeling and alignment data using the helper
+methods below:
+
+```{r}
+topics(alignment)
+models(alignment)
+weights(alignment)
+```
