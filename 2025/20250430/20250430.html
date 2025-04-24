@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Topic Models for Multiscale Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+`\(\def\Dir{\text{Dir}}\)`
+`\(\def\Mult{\text{Mult}}\)`
+`\(\def\*#1{\mathbf{#1}}\)`
+`\(\def\m#1{\boldsymbol{#1}}\)`
+`\(\def\Unif{\text{Unif}}\)`
+`\(\def\win{\tilde{w}_{\text{in}}}\)`
+`\(\def\reals{\mathbb{R}}\)`
+`\(\newcommand{\wout}{\tilde w_{\text{out}}}\)`
+
+
+
+## Topic Models for Multiscale Analysis
+
+&lt;div id="subtitle"&gt;
+Kris Sankaran &lt;br/&gt;
+27 | December | 2024 &lt;br/&gt;
+Lab: &lt;a href="https://go.wisc.edu/pgb8nl"&gt;go.wisc.edu/pgb8nl&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;div id="subtitle_right"&gt;
+IISA 2024&lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/337726"&gt;go.wisc.edu/337726&lt;/a&gt;&lt;br/&gt;
+Paper: &lt;a href="https://go.wisc.edu/tify36"&gt;go.wisc.edu/tify36&lt;/a&gt;
+&lt;/div&gt;
+
+---
+
+### Model
+
+Topic models suppose that samples `\(x_i \in \mathbb{R}^{D}\)` are drawn independently:
+`\begin{align*}
+x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
+\gamma_{i} &amp;\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
+\end{align*}`
+where the columns `\(\beta_{k}\)` of `\(\*B \in \Delta^{K}_{D}\)` lie in the `\(D\)`-dimensional simplex and are themselves drawn independently from,
+`\begin{align*}
+\beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
+\end{align*}`
+
+We vertically stack the `\(N\)` `\(\gamma_i\)`'s into `\(\Gamma \in \Delta^{N}_{K}\)`.
+
+---
+
+### Simplex View
+
+This model considers two sets of mixtures simultaneously.
+
+* Memberships: `\(\gamma_{i}\)` describes sample `\(x_i\)` as a mixture of topics.
+* Topics: `\(\beta_{k}\)` describes the composition of topic `\(k\)`.
+
+&lt;img src="figure/topic_double_triangle.png"/&gt;
+
+---
+
+### Example: Gut Microbiome
+
+If we use topic models, we can see that &lt;span style="color: #476b57;"&gt;Topic 2&lt;/span&gt; increases during the antibiotic interventions,
+especially the first [1].
+
+.center[
+&lt;img src="figure/antibiotic_memberships.png" width=1000/&gt;
+]
+
+---
+
+### Example: Gut Microbiome
+
+We can interpret topics by looking for representative taxa. These are species
+that have much higher probabilities in one topic compared to the others.
+
+.center[
+&lt;img src="figure/antibiotic_prototypes.png" width=900/&gt;
+]
+
+---
+
+class: middle
+
+.center[
+## Topic Alignment: Method
+]
+
+---
+
+### Choice of `\(K\)`
+
+&gt; However, we stress that care should be taken in the interpretation of the
+inferred value of `\(K\)`. To begin with, due to the very high dimensionality of the
+parameter space, we found it difficult to obtain reliable estimates of
+`\(P\left(X \vert K\right)\)`... There are also biological reasons to be careful
+interpreting `\(K\)`.
+
+-- From [2].
+
+In practice, it's common to check results and goodness-of-fit measures across
+many `\(K\)` [3; 4; 5].
+
+---
+
+### `alto`: Main Idea
+
+We will fit an ensemble of models of varying complexities. Then,
+post-estimation, we will build a compact representation of the result.
+
+.center[
+&lt;img src="figure/alto_sketches_annotated alignment.png" width="750" style="display: block; margin: auto;" /&gt;
+
+&lt;span style="font-size: 20px;"&gt;
+In the Sankey diagram, columns are models and rectangles are topics.
+&lt;/span&gt;
+]
+
+---
+
+### Alignment as a Graph
+
+We view an alignment as a graph across the ensemble. Index models by `\(m\)` and
+topics by `\(k\)`. Then,
+* Nodes `\(V\)` describe topics, parameterized by `\(\{\beta^m_{k}, \gamma^m_{k}\}\)`.
+* Edges `\(E\)` link topics from neighboring models, i.e. `\(K\)` to `\(K + 1\)`.
+* Weights `\(W\)` encode the similarity between topics.
+
+&lt;img src="figure/alto_sketches_annotated alignment.png" width="560" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Notation
+
+This graph-based view provides a convenient notation,
+
+* `\(m\left(v\right)\)` is the model for node `\(v\)`
+* `\(k\left(v\right)\)` is the topic for node `\(v\)`
+* `\(\Gamma\left(v\right) := \left(\gamma_{ v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}\)` is the vector of
+mixed memberships for topic `\(v\)`
+* `\(\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}\)` is the
+corresponding topic distribution
+* `\(e = \left(v, v'\right)\)` is an edge linking topics `\(v\)` and `\(v'\)`.
+
+&lt;img src="figure/alto_sketches_annotated alignment.png" width="560" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Estimating Weights
+
+Let `\(V_p\)` and `\(V_q\)` be two subsets of topics within the graph.
+
+* Let the total "mass" of `\(V_p\)` be `\(p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}\)`. Define `\(q\)` similarly.
+* Define the transport cost `\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)`, the Jensen-Shannon divergence between the pair of topic distributions [6].
+
+&lt;img src="figure/transport_alignment_conceptual.png" width="420" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Estimating Weights
+
+
+The weights `\(W\)` can be estimated by solving the optimal transport problem,
+`\begin{align*}
+&amp;\min_{W \in \mathcal{U}\left(p, q\right)} \left&lt;C,W\right&gt;
+\end{align*}`
+&lt;span style="font-size: 20px;"&gt;
+`\begin{align*}
+\mathcal{U}\left(p, q\right) := &amp;\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
+\end{align*}`
+&lt;/span&gt;
+
+&lt;img src="figure/transport_alignment_conceptual.png" width="420" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Diagnostics
+
+* Paths: Partitions the Sankey diagram into connected sets of topics.
+* Coherence: Measures transience of a topic along its path.
+* Refinement: Reflects degree of mixing between descendant topics.
+
+&lt;img src="figure/alto_sketches_diagnotics.png" width="2696" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+.center[
+## Topic Alignment: Examples
+]
+
+---
+
+### True Model
+
+Sanity check - What is the alignment when data are generated from a topic model?
+Can you guess the true `\(K\)`?
+
+* `\(N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1\)`
+
+&lt;img src="figure/transport-true-lda.png" width="480" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Diagnostics
+
+The diagnostics suggest that the true `\(K\)` is 5.
+
+&lt;img src="figure/lda-combined.png" width="2003" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Model with background variation
+
+Can we detect systematic departures from the assumed model?  Consider the
+following generative mechanism,
+
+`\begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &amp;\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &amp;\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &amp;\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}`
+
+where `\(\*B\)` stacks the `\(\beta_k\)` rowwise.
+
+---
+
+### Result
+
+The alignment structure is sensitive to changes in `\(\alpha\)` and fragments when
+structure is not present.
+
+.pull-left[
+&lt;img src="figure/gradient_flow-1.png" width="300" style="display: block; margin: auto;" /&gt;&lt;img src="figure/gradient_flow-2.png" width="300" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="figure/gradient_flow-3.png" width="300" style="display: block; margin: auto;" /&gt;&lt;img src="figure/gradient_flow-4.png" width="300" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Diagnostics
+
+.pull-left-small[
+This structure is consistent across simulation runs, and the diagnostics
+quantify topic deterioration.
+]
+
+.pull-right-large[
+&lt;img src="figure/gradient-combined.png" width="635" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Data Analysis Background
+
+.pull-left[
+[7] used clustering to identify 5 Community State Types (CSTs) in
+the vaginal microbiome.
+  - Four healthy CSTs are dominated by Lactobacillus variants.
+  - A fifth dysbiotic CST is more compositionally diverse and has been
+  implicated in preterm birth [8; 9] and HIV transmission [10].
+]
+
+.pull-right[
+  &lt;img src="figure/community_state_types.jpg" width=380/&gt;
+  &lt;span style="font-size: 18px;"&gt;
+
+  [7] grouped samples (columns) into CSTs.
+  &lt;/span&gt;
+]
+
+---
+
+### Deconstructing CSTs
+
+.pull-left[
+The follow-up study [11] had many more samples than [7] and so could begin to tease additional structure lying
+behind CSTs.
+
+* They had 2179 samples from 135 women, sampled longitudinally.
+* The green and blue paths to the right reflect the known Lactobacillus CSTs.
+]
+
+.pull-right[
+
+&lt;img src="figure/pregnancy_sankey.jpg" width=500/&gt;
+]
+
+---
+
+### Coherence Scores
+
+.pull-left[
+* Overlaying coherence scores onto the alignment, we can distinguish distinguish
+between high and low-coherence topics.
+
+* Coherence is not a simple function of `\(K\)` alone.
+]
+
+.pull-right[
+&lt;img src="figure/coherence_on_tree.png" width=340/&gt;
+]
+
+---
+
+### Metrics across Replicates
+
+.pull-left[
+* We can see dropoffs in topic quality for `\(K = 6 \to 7\)` and `\(K = 9 \to 10\)`.
+* Each color in the top figure corresponds to a different set of topic models.
+]
+
+.pull-right[
+&lt;img src="figure/alignment_scores_across_k.png"/&gt;
+]
+
+---
+
+### Time Series
+
+Like in the antibiotics study, we can visualize change in topics over time. This
+highlights smooth transitions in topic memberships.
+
+.center[
+&lt;img src="figure/topic_trajectories_pregnancy.jpeg" width=700/&gt;
+]
+
+---
+
+class: small-code
+
+### Software
+
+Topic alignment is implemented in the R package [alto](https://lasy.github.io/alto).
+
+.pull-left[
+
+``` r
+library(purrr)
+library(alto)
+
+# Define LDA parameters
+params &lt;- map(
+  set_names(1:10),
+  ~ list(k = .)
+)
+models &lt;- run_lda_models(
+  vm_data$counts,
+  params
+)
+```
+]
+
+.pull-right[
+
+``` r
+# Run alignment
+result &lt;- align_topics(models, method = "transport")
+plot(result)
+```
+
+&lt;img src="20250430_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+All the simulations discussed today are vignettes in the package.
+
+---
+
+### Takeaways
+
+Topic alignment is a simple but useful addition to the exploratory data analysis
+toolbox for count data.
+
+.pull-three-quarters-left[
+&lt;img src="figure/alto_sketches_annotated alignment.png" width=700/&gt;
+]
+
+.pull-three-quarters-right[
+[Paper](https://go.wisc.edu/tify36)&lt;br/&gt;
+&lt;img src="figure/qr-paper.png" width=80/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+[Package](https://lasy.github.io/alto)&lt;br/&gt;
+&lt;img src="figure/qr-package.png" width=80/&gt;
+]
+
+---
+
+class: background-rivers
+
+.center[
+### Thank you!
+]
+
+* Collaborators: Laura Symul (UCLouvain), Julia Fukuyama (IU Bloomington)
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Kai Cui, Sam Merten
+* Funding: NIGMS R01GM152744
+
+.center[
+&lt;img src="figure/Lena__credit_row_0.jpg"/&gt;
+]
+
+---
+
+class: reference
+
+### References
+
+[1] K. Sankaran et al. "Latent variable modeling for the microbiome". In: _Biostatistics_ 20.4 (Jun. 2018), p. 599–614. ISSN: 1468-4357. DOI:
+[10.1093/biostatistics/kxy018](https://doi.org/10.1093%2Fbiostatistics%2Fkxy018). URL:
+[http://dx.doi.org/10.1093/biostatistics/kxy018](http://dx.doi.org/10.1093/biostatistics/kxy018).
+
+[2] J. K. Pritchard et al. "Inference of Population Structure Using Multilocus Genotype Data". In: _Genetics_ 155.2 (Jun. 2000), p. 945–959. ISSN: 1943-2631. DOI:
+[10.1093/genetics/155.2.945](https://doi.org/10.1093%2Fgenetics%2F155.2.945). URL: [http://dx.doi.org/10.1093/genetics/155.2.945](http://dx.doi.org/10.1093/genetics/155.2.945).
+
+[3] J. Novembre. "Pritchard, Stephens, and Donnelly on Population Structure". In: _Genetics_ 204.2 (Oct. 2016), p. 391–393. ISSN: 1943-2631. DOI:
+[10.1534/genetics.116.195164](https://doi.org/10.1534%2Fgenetics.116.195164). URL: [http://dx.doi.org/10.1534/genetics.116.195164](http://dx.doi.org/10.1534/genetics.116.195164).
+
+[4] H. M. Wallach et al. "Evaluation methods for topic models". In: _International Conference on Machine Learning_ (2009). URL:
+[https://api.semanticscholar.org/CorpusID:10910725](https://api.semanticscholar.org/CorpusID:10910725).
+
+[5] D. J. Lawson et al. "A tutorial on how not to over-interpret STRUCTURE and ADMIXTURE bar plots". In: _Nature Communications_ 9.1 (Aug. 2018). ISSN: 2041-1723. DOI:
+[10.1038/s41467-018-05257-7](https://doi.org/10.1038%2Fs41467-018-05257-7). URL: [http://dx.doi.org/10.1038/s41467-018-05257-7](http://dx.doi.org/10.1038/s41467-018-05257-7).
+
+[6] G. Peyré et al. "Computational Optimal Transport".  (2018). DOI: [10.48550/ARXIV.1803.00567](https://doi.org/10.48550%2FARXIV.1803.00567). URL:
+[https://arxiv.org/abs/1803.00567](https://arxiv.org/abs/1803.00567).
+
+[7] J. Ravel et al. "Vaginal microbiome of reproductive-age women". In: _Proceedings of the National Academy of Sciences_ 108.supplement_1 (Jun. 2010), p. 4680–4687. ISSN: 1091-6490.
+DOI: [10.1073/pnas.1002611107](https://doi.org/10.1073%2Fpnas.1002611107). URL: [http://dx.doi.org/10.1073/pnas.1002611107](http://dx.doi.org/10.1073/pnas.1002611107).
+
+[8] J. M. Fettweis et al. "The vaginal microbiome and preterm birth". In: _Nature Medicine_ 25.6 (May. 2019), p. 1012–1021. ISSN: 1546-170X. DOI:
+[10.1038/s41591-019-0450-2](https://doi.org/10.1038%2Fs41591-019-0450-2). URL: [http://dx.doi.org/10.1038/s41591-019-0450-2](http://dx.doi.org/10.1038/s41591-019-0450-2).
+
+[9] U. Gudnadottir et al. "The vaginal microbiome and the risk of preterm birth: a systematic review and network meta-analysis". In: _Scientific Reports_ 12.1 (May. 2022). ISSN:
+2045-2322. DOI: [10.1038/s41598-022-12007-9](https://doi.org/10.1038%2Fs41598-022-12007-9). URL:
+[http://dx.doi.org/10.1038/s41598-022-12007-9](http://dx.doi.org/10.1038/s41598-022-12007-9).
+
+[10] C. Gosmann et al. "Lactobacillus-Deficient Cervicovaginal Bacterial Communities Are Associated with Increased HIV Acquisition in Young South African Women". In: _Immunity_ 46.1
+(Jan. 2017), p. 29–37. ISSN: 1074-7613. DOI: [10.1016/j.immuni.2016.12.013](https://doi.org/10.1016%2Fj.immuni.2016.12.013). URL:
+[http://dx.doi.org/10.1016/j.immuni.2016.12.013](http://dx.doi.org/10.1016/j.immuni.2016.12.013).
+
+[11] L. Symul et al. "Sub-communities of the vaginal microbiota in pregnant and non-pregnant women". In: _Proceedings of the Royal Society B: Biological Sciences_ 290.2011 (Nov.
+2023). ISSN: 1471-2954. DOI: [10.1098/rspb.2023.1461](https://doi.org/10.1098%2Frspb.2023.1461). URL:
+[http://dx.doi.org/10.1098/rspb.2023.1461](http://dx.doi.org/10.1098/rspb.2023.1461).
+
+---
+
+class: reference
+
+### References
+
+
+
+---
+
+### Paths
+
+For each `\(v\)`, identify the incoming edge with the highest normalized weight,
+`\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}`
+
+* Iterate this process from large to small `\(l\)` to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+&lt;img src="figure/refinement-branches-1.png" width="270" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Paths
+
+For each `\(v\)`, identify the incoming edge with the highest normalized weight,
+`\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}`
+
+* Iterate this process from large to small `\(l\)` to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+&lt;img src="figure/refinement-branches-2.png" width="270" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Paths
+
+For each `\(v\)`, identify the incoming edge with the highest normalized weight,
+`\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}`
+
+* Iterate this process from large to small `\(l\)` to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+&lt;img src="figure/refinement-branches-3.png" width="270" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Paths
+
+For each `\(v\)`, identify the incoming edge with the highest normalized weight,
+`\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}`
+
+* Iterate this process from large to small `\(l\)` to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+&lt;img src="figure/refinement-branches-4.png" width="270" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Paths
+
+For each `\(v\)`, identify the incoming edge with the highest normalized weight,
+`\begin{align*}
+  e^\ast\left(v\right) = \arg \max_{e : \text{target}\left(e\right) = v} \tilde{w}_{\text{out}}\left(e\right) + \tilde{w}_{\text{in}}\left(e\right).
+\end{align*}`
+
+* Iterate this process from large to small `\(l\)` to construct a set of distinct paths along the alignment
+* The number of unique paths is a useful property of an alignment
+
+&lt;img src="figure/refinement-branches-5.png" width="270" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Coherence
+
+Coherence quantifies a topic's average connectedness to other topics along the same path,
+
+`\begin{align*}
+ c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+\end{align*}`
+
+* Transient topics (appearing at one `\(K\)` and disappearing at
+ another) have low coherence scores
+* Consistently recovered topics across choices of `\(K\)` have high coherence
+
+.pull-right[
+
+]
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+&lt;img src="figure/refinement_diagnostic_example.png" width="350" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+
+`\begin{align*}
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} \wout \left(v, v_{m^{\prime}}^{\prime}\right) \win\left(v, v_{m^{\prime}}^{\prime}\right)
+\end{align*}`
+
+---
+
+The diagnostics become more reliable as the sample size increases.
+
+&lt;img src="figure/summary_alto_asymptotic_behavior.png" width="1000" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+.pull-left[
+**Test set perplexity** [12; 4]
+  - Similar: Helps to choose `\(K\)`.
+  - Different (-): Doesn't give topic-level quality.
+  - Different (+): Evaluates generalization ability.
+]
+
+.pull-right[
+**Hierarchical Topic Models** [13; 14]
+  - Similar: Learns topics at multiple levels of resolution.
+  - Different (-): Requires word-level representations.
+  - Different (+/-): Words belong to individual subtrees.
+]
+
+&lt;img src="figure/hlda.png"/&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
