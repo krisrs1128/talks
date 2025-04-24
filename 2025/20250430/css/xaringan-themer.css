@@ -29,12 +29,12 @@
 
 .title h2 {
   padding-left: 25px;
-  width: 1500px;
+  width: 1000px;
 }
 
 .title::before {    
       content: "";
-      background-image: url("../figures/background_figure.png");
+      background-image: url("../figure/background_figure.png");
       background-size: cover;
       position: absolute;
       top: 0px;
@@ -244,7 +244,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
-  width: 300px;
+  width: 480px;
   color: #5f558e;
   text-align: right;
   right: 20px;
@@ -256,7 +256,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   font-family: Raleway;
   position: absolute;
   color: #858585;
-  width: 1100px;
+  width: 600px;
   left: 60px;
   top: 280px;
 }
@@ -266,7 +266,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 24px;
-  width: 550px;
+  width: 375px;
   color: #5f558e;
   text-align: left;
   left: 20px;

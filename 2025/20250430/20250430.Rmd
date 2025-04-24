@@ -65,12 +65,12 @@ bib <- ReadBib("references.bib")
 <div id="subtitle">
 Kris Sankaran <br/>
 30 | April | 2025 <br/>
-Lab: <a href="https://go.wisc.edu/pgb8nl">go.wisc.edu/pgb8nl</a> <br/>
+Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 
 <div id="subtitle_right">
 SDSS 2025<br/>
-Slides: <a href="https://go.wisc.edu/337726">go.wisc.edu/337726</a><br/>
+Slides: <a href="https://go.wisc.edu/9q5ls4">go.wisc.edu/9q5ls4</a><br/>
 Paper: <a href="https://go.wisc.edu/tify36">go.wisc.edu/tify36</a>
 </div>
 
@@ -482,16 +482,6 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
-```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 26)
 ```
 
 ---
