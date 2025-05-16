@@ -1,5 +1,5 @@
 ---
-title: "Topic Models for Multiscale Analysis"
+title: "Multiscale Topic Modeling with the Alto Package"
 author: "Kris Sankaran"
 output:
   xaringan::moon_reader:
@@ -60,12 +60,12 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Topic Models for Multiscale Analysis
+## Multiscale Topic Modeling with the Alto Package
 
 <div id="subtitle">
 Kris Sankaran <br/>
 30 | April | 2025 <br/>
-Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
+<a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 
 <div id="subtitle_right">
@@ -376,19 +376,6 @@ between high and low-coherence topics.
 
 .pull-right[
 <img src="figure/coherence_on_tree.png" width=340/>
-]
-
----
-
-### Metrics across Replicates
-
-.pull-left[
-* We can see dropoffs in topic quality for $K = 6 \to 7$ and $K = 9 \to 10$.
-* Each color in the top figure corresponds to a different set of topic models.
-]
-
-.pull-right[
-<img src="figure/alignment_scores_across_k.png"/>
 ]
 
 ---
