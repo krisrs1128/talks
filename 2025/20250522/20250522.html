@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Enhancing Microbiome Analysis with Semisynthetic Data</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+# Enhancing Microbiome Analysis with Semisynthetic Data
+
+&lt;style&gt;
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+&lt;/style&gt;
+
+&lt;div id="subtitle_left"&gt;
+Slides: &lt;a href="https://go.wisc.edu/46xtw9"&gt;go.wisc.edu/46xtw9&lt;/a&gt;&lt;br/&gt;
+Paper: &lt;a href="https://go.wisc.edu/p12o8w"&gt;go.wisc.edu/p12o8w&lt;/a&gt;&lt;br/&gt;
+Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Kris Sankaran &lt;br/&gt;
+&lt;a href="https://2025.mcbios.com/"&gt;STATGEN 2025&lt;/a&gt;&lt;br/&gt;
+22 | May | 2025 &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;!-- 20 minute talk --&gt;
+
+
+
+---
+
+### Why Simulate?
+
+There are myriad opportunities for using simulation in microbiome analysis [1; 2]. They
+can help us to...
+
+&lt;img src="figures/noun-benchmark-7569457.png" width=40/&gt; **Benchmark methods** and identify gaps in the literature.
+&lt;br/&gt;
+
+&lt;img src="figures/noun-labs-99456.png" width=40/&gt; **Design experiments** that have high power to detect subtle signals.
+&lt;br/&gt;
+
+&lt;img src="figures/noun-checkmark-7518321.png" width=40/&gt; **Check conclusions** that might be sensitive to technical processing steps.
+
+---
+
+### Semisynthetic Data
+
+One of the major advances has been the design of algorithms that can leverage
+public data resources, like [3; 4; 5; 6].
+
+* **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator.
+
+.center[
+&lt;img src="figures/template_defn.png" width=670/&gt;
+]
+
+---
+
+### Example 1: Multivariate Power Analysis
+
+How would you run a power analysis for Sparse Partial Least Squares Discriminant
+Analysis (SPLS-DA) [7]?
+.pull-left[
+SPLS-DA helps with prediction when, 
+
+* S: Not all features are predictive
+* PLS: Many features are correlated with one another
+* DA: The response is one of `\(K\)` classes
+
+Unfortunately, it doesn't come with any analytical power formulas.
+]
+
+
+.pull-right[
+&lt;img src="figures/PLS-setup.png" width=500/&gt;
+]
+
+---
+
+### Example Output
+
+In this example, we are comparing mice with and without a mouse model of Type I
+diabetes (T1D). SPLS-DA helps us find taxa that distinguish healthy and disease
+groups.
+
+.pull-left[
+&lt;img src="figures/t1d-true-data.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/t1d-true-data-factors.png"/&gt;
+]
+
+
+---
+
+### Overall Approach
+
+How many samples are necessary before this method can recover the
+discriminating factors?
+
+* **Estimate**: Train a simulator on the original data.
+* **Alter/Sample**: Define negative control taxa with no association with T1D.
+* **Gather/Summarize**: Evaluate SPLS-DA performance on semisynthetic data with
+varying sample sizes and fractions of negative control taxa.
+
+.center[
+  &lt;img src="figures/simulation_steps.png" width=700/&gt;
+]
+
+---
+
+### Copula Simulation
+
+It is important that our simulator reflect the correlation structure of the
+underlying data. We applied a Gaussian copula model  with a high-dimensional
+covariance estimator.
+
+.center[
+&lt;img src="figures/gene-gene_dependence.png" width=850/&gt;
+]
+
+---
+
+### Bivariate Relationships
+
+Here are example bivariate relationships learned by the simulator. Do you see
+anything off?
+
+.center[
+&lt;img src="figures/splsda-correlations.png" width=1200/&gt;
+]
+
+---
+
+### Power Curves
+
+These are the results of our simulation experiment across varying sample sizes
+and proportions of truly associated taxa. When few taxa are truly predictive,
+many more samples are needed.
+
+.center[
+&lt;img src="figures/multivariate_power_isolated.png" width=700/&gt;
+]
+
+---
+
+### Example 2: Mediation Analysis
+
+Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
+dataset about the gut-brain axis.
+
+.pull-left[
+1. We re-analyzed the study 2021 [8], which
+gathered data from 54 participants assigned to either a mindfulness training
+intervention or a waitlist control (n = 27 each).
+
+1. The training lasted 2 months. Data were collected at the start, finish, and 2
+month follow-up.
+]
+
+.pull-right[
+&lt;img src="figures/design.png" width=450/&gt;
+]
+
+---
+
+### Mediation Analysis
+
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
+2. To explore this, we applied a form of mediation analysis to the 16S
+microbiome and survey data [9; 10].
+
+.center[
+&lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
+]
+
+---
+
+### Mediation Analysis
+
+1. We wondered whether mindfulness intervention might be affect behavior, which
+in turn influences microbiota composition.
+2. To explore this, we applied a form of mediation analysis to the 16S
+microbiome and survey data [9; 10].
+
+.center[
+&lt;img src="figures/mediation-dag.svg" width=450/&gt;
+]
+
+---
+
+### Synthetic Null Data
+
+We can alter the simulator so that some pathways are "turned off." Estimates
+derived from these data provide a reference null distribution
+
+.center[
+&lt;img src="figures/mindfulness-altered.png" width=780/&gt;&lt;br/&gt;
+&lt;span style="font-size: 24px;"&gt;
+The middle panel comes from a synthetic null: `\(T \nrightarrow M \to Y\)`.
+&lt;/span&gt;
+]
+
+---
+
+### Synthetic Null Hypothesis Testing
+
+We rank the effects learned from both the real and synthetic null reference
+data. The significance threshold is chosen to control the empirical false
+discovery based on synthetic data.
+
+.center[
+&lt;img src="figures/synthetic_null_testing.png" width=900/&gt;
+]
+
+---
+
+### Software and Resources
+
+All the examples I discussed today can be run from online tutorials we've
+written to accompany our papers:
+
+* Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
+* Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
+
+The relevant R packages behind these analyses are:
+
+* `multimedia` - Mediation analysis for microbiome data [11].
+* `scDesign3` - An existing simulator for single cell data [12; 13; 14].
+* `scDesigner` - Under-development version used in the first tutorial.
+
+---
+
+Simulation turns abstract, conceptual questions into simple empirical ones.
+
+.center[
+&lt;img src="figures/simulation_summary.png" width=1000/&gt;
+]
+
+---
+
+.center[
+### Thank you!
+]
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Co-authors: Hanying Jiang, Xinran Miao, Mara Beebe, Dan W. Grupe, Richie
+Davidson, Jo Handelsman, Saritha Kodikara, Jingyi Jessica Li, Kim-Anh Lê Cao,
+Susan Holmes
+
+---
+
+class: reference
+
+### References
+
+[1] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN: 2326-831X.
+DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
+[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
+
+[2] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+
+[3] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
+
+[4] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct. 2022). ISSN:
+2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+
+[5] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut] (&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty
+&lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_. 2021.
+
+[6] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+
+[7] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p. e1005752.
+
+[8] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep. 2021). ISSN:
+1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
+[http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
+
+[9] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+
+[10] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+
+[11] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+
+[12] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
+[10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
+
+[13] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
+(May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
+[http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
+
+---
+
+class: reference
+
+### References
+
+[14] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. ISSN:
+1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
+
+---
+
+### Evaluation Taxonomy
+
+This is how some common techniques fall into this taxonomy.
+
+* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa (like the DA example).
+
+* **Graphical, Broad**: Principal component plots of real vs. simulated dataset.
+
+* **Quantitative, Narrow**: Two-sample Kolmogorov-Smirnov test.
+
+* **Quantitative, Broad**: Evaluation through classification (next example).
+
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([2], "Batch Effect Correction").
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step1.png" width=500/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step2.png" width=240/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step3.png" width=400/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of `\(\mathbf{X}\)` and `\(\mathbf{Y}\)` within tables until the patterns look similar.
+
+.center[
+&lt;img src="figures/PLS-step4.png" width=150/&gt;
+]
+
+Roughly, choose weights `\(\mathbf{a}\)` and `\(\mathbf{b}\)` to maximize
+`\(\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)\)`.
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+&lt;img src="figures/PLS-step5.png" width=800/&gt;
+]
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+&lt;img src="figures/PLS-step6.png" width=800/&gt;
+]
+
+---
+
+### SPLS-DA Intuition
+
+To get more than one dimension, we can repeat this process after removing any
+correlation with previously found patterns.
+
+.center[
+&lt;img src="figures/PLS-step7.png" width=800/&gt;
+]
+
+---
+
+### Copula Models
+
+More formally, let `\(F_{1}, \dots, F_{D}\)` be the target margins and let `\(\Phi\)` be
+the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
+
+Estimate:
+
+1. Gaussianize the observed `\(\mathbf{x}_{i}\)` to `\(\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]\)`
+1. Estimate the covariance `\(\hat{\Sigma}\)` associated with `\(z_{i}\)`
+
+Simulate:
+
+1. Draw `\(\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)\)` 
+1. Transform back `\(\mathbf{x}^{\ast} := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]\)`
+
+---
+
+### Real vs. Simulated Correlation
+
+.center[
+&lt;img src="figures/correlation_histogram.png" width=700/&gt;
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
+
+---
+
+### Tuning High-Dimensional Covariance Estimator
+
+.center[
+&lt;img src="figures/covariance_hyperparameter_errors.png" width=700/&gt;
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
+
+---
+
+### Intuition
+
+* In the Gaussianized space, it's easy to model correlation.
+* The mapping back and forth is possible because we know the margins `\(F\)`.
+  - `\(\Phi\)` represents the Gaussian CDF applied componentwise
+&lt;br/&gt;
+&lt;br/&gt;
+
+.center[
+&lt;img src="figures/copula_transformation.png" width=700/&gt;
+]
+
+---
+
+### Pilot Study
+
+.pull-left[
+1. We re-analyzed a pilot study from 2021 [8], which
+gathered data from 54 participants randomly assigned to either a mindfulness
+training intervention or a waitlist control (n = 27 each).
+
+1. The training lasted 2 months. Data were collected at the start, finish, and 2
+month follow-up.
+]
+
+.pull-right[
+&lt;img src="figures/design.png" width=450/&gt;
+]
+
+---
+
+### Estimated Indirect Effects
+
+These figures summarize the paths `\(T \to M \to Y\)`.&lt;/br&gt;
+(i.e., color `\(\to\)` x-axis `\(\to\)` y-axis).
+
+.center[
+&lt;img src="figures/mindfulness-indirect-effects.png" width=900/&gt;
+]
+
+---
+
+### Figure Sources
+
+frustration by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+confused by Rikas Dzihab from &lt;a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+Benchmark by Sofiah from &lt;a href="https://thenounproject.com/browse/icons/term/benchmark/" target="_blank" title="Benchmark Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+checkmark by Asa Kharisma Dini from &lt;a href="https://thenounproject.com/browse/icons/term/checkmark/" target="_blank" title="checkmark Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+
+Lab glassware by Vectors Market from &lt;a href="https://thenounproject.com/browse/icons/term/lab-glassware/" target="_blank" title="Lab glassware Icons"&gt;Noun Project&lt;/a&gt; (CC BY 3.0)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
