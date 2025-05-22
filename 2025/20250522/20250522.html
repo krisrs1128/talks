@@ -24,13 +24,13 @@ class: title
 &lt;/style&gt;
 
 &lt;div id="subtitle_left"&gt;
-Slides: &lt;a href="https://go.wisc.edu/46xtw9"&gt;go.wisc.edu/46xtw9&lt;/a&gt;&lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/1s4gi3"&gt;go.wisc.edu/1s4gi3&lt;/a&gt;&lt;br/&gt;
 Paper: &lt;a href="https://go.wisc.edu/p12o8w"&gt;go.wisc.edu/p12o8w&lt;/a&gt;&lt;br/&gt;
 Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
 &lt;/div&gt;
 &lt;div id="subtitle_right"&gt;
 Kris Sankaran &lt;br/&gt;
-&lt;a href="https://2025.mcbios.com/"&gt;STATGEN 2025&lt;/a&gt;&lt;br/&gt;
+&lt;a href="https://www.sph.umn.edu/events-calendar/statgen-2025/"&gt;STATGEN 2025&lt;/a&gt;&lt;br/&gt;
 22 | May | 2025 &lt;br/&gt;
 &lt;/div&gt;
 
@@ -42,16 +42,18 @@ Kris Sankaran &lt;br/&gt;
 
 ### Why Simulate?
 
-There are myriad opportunities for using simulation in microbiome analysis [1; 2]. They
-can help us to...
-
-&lt;img src="figures/noun-benchmark-7569457.png" width=40/&gt; **Benchmark methods** and identify gaps in the literature.
-&lt;br/&gt;
+Simulations lie behind the many types of skills microbiome statisticians must master [1; 2]. They help us to...
 
 &lt;img src="figures/noun-labs-99456.png" width=40/&gt; **Design experiments** that have high power to detect subtle signals.
 &lt;br/&gt;
 
+&lt;img src="figures/noun-benchmark-7569457.png" width=40/&gt; **Benchmark methods** and identify gaps in the literature.
+&lt;br/&gt;
+
 &lt;img src="figures/noun-checkmark-7518321.png" width=40/&gt; **Check conclusions** that might be sensitive to technical processing steps.
+
+It's worthwhile to treat simulation design with the same formality as methods
+development.
 
 ---
 
@@ -69,90 +71,82 @@ public data resources, like [3; 4; 5; 6].
 
 ---
 
-### Example 1: Multivariate Power Analysis
+### Example 1: Microbiome Network Inference
 
-How would you run a power analysis for Sparse Partial Least Squares Discriminant
-Analysis (SPLS-DA) [7]?
+1. Benchmarking methods for microbiome network inference is challenging. We
+can't directly observe microbe-microbe interactions, which stands in the way of
+ground truth labeling.
+
+1. To illustrate how simulation can help, we will use data from the American Gut
+Project as the template for our comparison. We have 261 samples and have
+filtered to the 45 most abundant taxa.
+
+---
+
+### Simulation Mechanism
+
+We used scDesign3 [14] to estimate a
+Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
+
+.center[
+&lt;img src="figures/zinb_marginals.png" width=700/&gt;
+]
+
+---
+
+### Estimated Correlation
+
+The resulting correlation estimate lacks substantial banding or blocks. We can
+also sanity check some of the highly correlated pairs.
+
 .pull-left[
-SPLS-DA helps with prediction when, 
-
-* S: Not all features are predictive
-* PLS: Many features are correlated with one another
-* DA: The response is one of `\(K\)` classes
-
-Unfortunately, it doesn't come with any analytical power formulas.
-]
-
-
-.pull-right[
-&lt;img src="figures/PLS-setup.png" width=500/&gt;
-]
-
----
-
-### Example Output
-
-In this example, we are comparing mice with and without a mouse model of Type I
-diabetes (T1D). SPLS-DA helps us find taxa that distinguish healthy and disease
-groups.
-
-.pull-left[
-&lt;img src="figures/t1d-true-data.png"/&gt;
+&lt;img src="figures/estimated_correlation.png" width=900/&gt;
 ]
 .pull-right[
-&lt;img src="figures/t1d-true-data-factors.png"/&gt;
-]
-
-
----
-
-### Overall Approach
-
-How many samples are necessary before this method can recover the
-discriminating factors?
-
-* **Estimate**: Train a simulator on the original data.
-* **Alter/Sample**: Define negative control taxa with no association with T1D.
-* **Gather/Summarize**: Evaluate SPLS-DA performance on semisynthetic data with
-varying sample sizes and fractions of negative control taxa.
-
-.center[
-  &lt;img src="figures/simulation_steps.png" width=700/&gt;
+&lt;img src="figures/correlated_pair.png" width=400/&gt;
 ]
 
 ---
 
-### Copula Simulation
+### Establishing Ground Truth
 
-It is important that our simulator reflect the correlation structure of the
-underlying data. We applied a Gaussian copula model  with a high-dimensional
-covariance estimator.
+To create a basis for methods comparison, we modified the ZINB copula to use a
+block correlation matrix with varying intra-block correlation strength.
 
 .center[
-&lt;img src="figures/gene-gene_dependence.png" width=850/&gt;
+  &lt;img src="figures/ground_truth_corr.png" width=450/&gt;
 ]
 
 ---
 
-### Bivariate Relationships
+### Methods Comparison
 
-Here are example bivariate relationships learned by the simulator. Do you see
-anything off?
+We compared SpiecEasi [15], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [16] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
-&lt;img src="figures/splsda-correlations.png" width=1200/&gt;
+  &lt;img src="figures/comparison_difference.png" width=800/&gt;
 ]
 
 ---
 
-### Power Curves
+### Methods Comparison
 
-These are the results of our simulation experiment across varying sample sizes
-and proportions of truly associated taxa. When few taxa are truly predictive,
-many more samples are needed.
+We compared SpiecEasi [15], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [16] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
-&lt;img src="figures/multivariate_power_isolated.png" width=700/&gt;
+  &lt;img src="figures/correlation_comparison_scatter.png" width=700/&gt;
+]
+
+---
+
+### Generalizing
+
+In our review, we consider a wider range of underlying correlation matrices.
+
+.center[
+  &lt;img src="figures/network_comparison.png" width=1200/&gt;
 ]
 
 ---
@@ -163,9 +157,9 @@ Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
 dataset about the gut-brain axis.
 
 .pull-left[
-1. We re-analyzed the study 2021 [8], which
-gathered data from 54 participants assigned to either a mindfulness training
-intervention or a waitlist control (n = 27 each).
+1. We re-analyzed the study [7], which gathered data
+from 54 participants assigned to either a mindfulness training intervention or a
+waitlist control (n = 27 each).
 
 1. The training lasted 2 months. Data were collected at the start, finish, and 2
 month follow-up.
@@ -179,10 +173,10 @@ month follow-up.
 
 ### Mediation Analysis
 
-1. We wondered whether mindfulness intervention might be affect behavior, which
+1. We wondered whether mindfulness intervention might affect behavior, which
 in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data [9; 10].
+microbiome and survey data [8; 9].
 
 .center[
 &lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
@@ -190,23 +184,10 @@ microbiome and survey data [9; 10].
 
 ---
 
-### Mediation Analysis
-
-1. We wondered whether mindfulness intervention might be affect behavior, which
-in turn influences microbiota composition.
-2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data [9; 10].
-
-.center[
-&lt;img src="figures/mediation-dag.svg" width=450/&gt;
-]
-
----
-
 ### Synthetic Null Data
 
 We can alter the simulator so that some pathways are "turned off." Estimates
-derived from these data provide a reference null distribution
+derived from these data provide a reference null distribution.
 
 .center[
 &lt;img src="figures/mindfulness-altered.png" width=780/&gt;&lt;br/&gt;
@@ -239,8 +220,8 @@ written to accompany our papers:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data [11].
-* `scDesign3` - An existing simulator for single cell data [12; 13; 14].
+* `multimedia` - Mediation analysis for microbiome data [10].
+* `scDesign3` - An existing simulator for single cell data [11; 12; 13].
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -288,26 +269,28 @@ DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannure
 
 [6] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
 
-[7] F. Rohart et al. "mixOmics: An R package for 'omics feature selection and multiple data integration". En. In: _PLoS Comput. Biol._ 13.11 (Nov. 2017), p. e1005752.
-
-[8] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep. 2021). ISSN:
+[7] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep. 2021). ISSN:
 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
 [http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
 
-[9] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+[8] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
 
-[10] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+[9] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
 
-[11] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[10] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
 [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
 
-[12] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
+[11] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
 [10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
 [http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
 
-[13] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
+[12] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
 (May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
 [http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
+
+[13] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. ISSN:
+1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
 ---
 
@@ -315,9 +298,14 @@ class: reference
 
 ### References
 
-[14] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. ISSN:
-1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
-[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
+[14] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. DOI:
+[10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL: [http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
+
+[15] Z. D. Kurtz et al. "Sparse and compositionally robust inference of microbial ecological networks". En. In: _PLoS Comput. Biol._ 11.5 (May. 2015), p. e1004226.
+
+[16] O. Ledoit et al. "A well-conditioned estimator for large-dimensional covariance matrices". In: _Journal of Multivariate Analysis_ 88.2 (Feb. 2004), p. 365–411. ISSN: 0047-259X.
+DOI: [10.1016/s0047-259x(03)00096-4](https://doi.org/10.1016%2Fs0047-259x%2803%2900096-4). URL:
+[http://dx.doi.org/10.1016/S0047-259X(03)00096-4](http://dx.doi.org/10.1016/S0047-259X(03)00096-4).
 
 ---
 
@@ -475,7 +463,7 @@ A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-s
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [8], which
+1. We re-analyzed a pilot study from 2021 [7], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 

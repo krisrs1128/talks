@@ -25,13 +25,13 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/46xtw9">go.wisc.edu/46xtw9</a><br/>
+Slides: <a href="https://go.wisc.edu/1s4gi3">go.wisc.edu/1s4gi3</a><br/>
 Paper: <a href="https://go.wisc.edu/p12o8w">go.wisc.edu/p12o8w</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
-<a href="https://2025.mcbios.com/">STATGEN 2025</a><br/>
+<a href="https://www.sph.umn.edu/events-calendar/statgen-2025/">STATGEN 2025</a><br/>
 22 | May | 2025 <br/>
 </div>
 
@@ -58,16 +58,18 @@ bib <- ReadBib("references.bib")
 
 ### Why Simulate?
 
-There are myriad opportunities for using simulation in microbiome analysis `r Citep(bib, c("Sankaran2023", "Sankaran2024-gb"))`. They
-can help us to...
-
-<img src="figures/noun-benchmark-7569457.png" width=40/> **Benchmark methods** and identify gaps in the literature.
-<br/>
+Simulations lie behind the many types of skills microbiome statisticians must master `r Citep(bib, c("Sankaran2023", "Sankaran2024-gb"))`. They help us to...
 
 <img src="figures/noun-labs-99456.png" width=40/> **Design experiments** that have high power to detect subtle signals.
 <br/>
 
+<img src="figures/noun-benchmark-7569457.png" width=40/> **Benchmark methods** and identify gaps in the literature.
+<br/>
+
 <img src="figures/noun-checkmark-7518321.png" width=40/> **Check conclusions** that might be sensitive to technical processing steps.
+
+It's worthwhile to treat simulation design with the same formality as methods
+development.
 
 ---
 
@@ -85,91 +87,82 @@ public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller20
 
 ---
 
-### Example 1: Multivariate Power Analysis
+### Example 1: Microbiome Network Inference
 
-How would you run a power analysis for Sparse Partial Least Squares Discriminant
-Analysis (SPLS-DA) `r Citep(bib, c("Le_Cao2008-zz", "Le_Cao2011-kn", "Rohart2017-sa"))`?
+1. Benchmarking methods for microbiome network inference is challenging. We
+can't directly observe microbe-microbe interactions, which stands in the way of
+ground truth labeling.
+
+1. To illustrate how simulation can help, we will use data from the American Gut
+Project as the template for our comparison. We have 261 samples and have
+filtered to the 45 most abundant taxa.
+
+---
+
+### Simulation Mechanism
+
+We used scDesign3 `r Citep(bib, "Song_Wang_Yan_Liu_Sun_Li_2023")` to estimate a
+Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
+
+.center[
+<img src="figures/zinb_marginals.png" width=700/>
+]
+
+---
+
+### Estimated Correlation
+
+The resulting correlation estimate lacks substantial banding or blocks. We can
+also sanity check some of the highly correlated pairs.
+
 .pull-left[
-SPLS-DA helps with prediction when, 
-
-* S: Not all features are predictive
-* PLS: Many features are correlated with one another
-* DA: The response is one of $K$ classes
-
-Unfortunately, it doesn't come with any analytical power formulas.
-]
-
-
-.pull-right[
-<img src="figures/PLS-setup.png" width=500/>
-]
-
----
-
-### Example Output
-
-In this example, we are comparing mice with and without a mouse model of Type I
-diabetes (T1D). SPLS-DA helps us find taxa that distinguish healthy and disease
-groups.
-
-.pull-left[
-<img src="figures/t1d-true-data.png"/>
+<img src="figures/estimated_correlation.png" width=900/>
 ]
 .pull-right[
-<img src="figures/t1d-true-data-factors.png"/>
-]
-
-
----
-
-### Overall Approach
-
-How many samples are necessary before this method can recover the
-discriminating factors?
-
-* **Estimate**: Train a simulator on the original data.
-* **Alter/Sample**: Define negative control taxa with no association with T1D.
-* **Gather/Summarize**: Evaluate SPLS-DA performance on semisynthetic data with
-varying sample sizes and fractions of negative control taxa.
-
-.center[
-  <img src="figures/simulation_steps.png" width=700/>
+<img src="figures/correlated_pair.png" width=400/>
 ]
 
 ---
 
-### Copula Simulation
+### Establishing Ground Truth
 
-It is important that our simulator reflect the correlation structure of the
-underlying data. We applied a Gaussian copula model `r Citep(bib,
-c("Joe2023-xb", "Deek2023-dc", "Sun2021-lg"))` with a high-dimensional
-covariance estimator.
+To create a basis for methods comparison, we modified the ZINB copula to use a
+block correlation matrix with varying intra-block correlation strength.
 
 .center[
-<img src="figures/gene-gene_dependence.png" width=850/>
+  <img src="figures/ground_truth_corr.png" width=450/>
 ]
 
 ---
 
-### Bivariate Relationships
+### Methods Comparison
 
-Here are example bivariate relationships learned by the simulator. Do you see
-anything off?
+We compared SpiecEasi `r Citep(bib, "Kurtz2015-tf")`, a method designed for microbiome networks,
+with the Ledoit-Wolf estimator `r Citep(bib, "Ledoit2004")` on $\log\left(1 + x\right)$ transformed counts.
 
 .center[
-<img src="figures/splsda-correlations.png" width=1200/>
+  <img src="figures/comparison_difference.png" width=800/>
 ]
 
 ---
 
-### Power Curves
+### Methods Comparison
 
-These are the results of our simulation experiment across varying sample sizes
-and proportions of truly associated taxa. When few taxa are truly predictive,
-many more samples are needed.
+We compared SpiecEasi `r Citep(bib, "Kurtz2015-tf")`, a method designed for microbiome networks,
+with the Ledoit-Wolf estimator `r Citep(bib, "Ledoit2004")` on $\log\left(1 + x\right)$ transformed counts.
 
 .center[
-<img src="figures/multivariate_power_isolated.png" width=700/>
+  <img src="figures/correlation_comparison_scatter.png" width=700/>
+]
+
+---
+
+### Generalizing
+
+In our review, we consider a wider range of underlying correlation matrices.
+
+.center[
+  <img src="figures/network_comparison.png" width=1200/>
 ]
 
 ---
@@ -180,9 +173,9 @@ Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
 dataset about the gut-brain axis.
 
 .pull-left[
-1. We re-analyzed the study 2021 `r Citep(bib, "Grupe2021")`, which
-gathered data from 54 participants assigned to either a mindfulness training
-intervention or a waitlist control (n = 27 each).
+1. We re-analyzed the study `r Citep(bib, "Grupe2021")`, which gathered data
+from 54 participants assigned to either a mindfulness training intervention or a
+waitlist control (n = 27 each).
 
 1. The training lasted 2 months. Data were collected at the start, finish, and 2
 month follow-up.
@@ -196,7 +189,7 @@ month follow-up.
 
 ### Mediation Analysis
 
-1. We wondered whether mindfulness intervention might be affect behavior, which
+1. We wondered whether mindfulness intervention might affect behavior, which
 in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
 microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
@@ -207,23 +200,10 @@ microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositi
 
 ---
 
-### Mediation Analysis
-
-1. We wondered whether mindfulness intervention might be affect behavior, which
-in turn influences microbiota composition.
-2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
-
-.center[
-<img src="figures/mediation-dag.svg" width=450/>
-]
-
----
-
 ### Synthetic Null Data
 
 We can alter the simulator so that some pathways are "turned off." Estimates
-derived from these data provide a reference null distribution
+derived from these data provide a reference null distribution.
 
 .center[
 <img src="figures/mindfulness-altered.png" width=780/><br/>
