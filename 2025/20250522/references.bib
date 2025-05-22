@@ -728,3 +728,71 @@ diagnostic approach},
   month = mar,
   pages = {325–352}
 }
+
+@ARTICLE{Kurtz2015-tf,
+  title     = "Sparse and compositionally robust inference of microbial
+               ecological networks",
+  author    = "Kurtz, Zachary D and M{\"u}ller, Christian L and Miraldi, Emily
+               R and Littman, Dan R and Blaser, Martin J and Bonneau, Richard A",
+  abstract  = "16S ribosomal RNA (rRNA) gene and other environmental sequencing
+               techniques provide snapshots of microbial communities, revealing
+               phylogeny and the abundances of microbial populations across
+               diverse ecosystems. While changes in microbial community
+               structure are demonstrably associated with certain environmental
+               conditions (from metabolic and immunological health in mammals
+               to ecological stability in soils and oceans), identification of
+               underlying mechanisms requires new statistical tools, as these
+               datasets present several technical challenges. First, the
+               abundances of microbial operational taxonomic units (OTUs) from
+               amplicon-based datasets are compositional. Counts are normalized
+               to the total number of counts in the sample. Thus, microbial
+               abundances are not independent, and traditional statistical
+               metrics (e.g., correlation) for the detection of OTU-OTU
+               relationships can lead to spurious results. Secondly, microbial
+               sequencing-based studies typically measure hundreds of OTUs on
+               only tens to hundreds of samples; thus, inference of OTU-OTU
+               association networks is severely under-powered, and additional
+               information (or assumptions) are required for accurate
+               inference. Here, we present SPIEC-EASI (SParse InversE
+               Covariance Estimation for Ecological Association Inference), a
+               statistical method for the inference of microbial ecological
+               networks from amplicon sequencing datasets that addresses both
+               of these issues. SPIEC-EASI combines data transformations
+               developed for compositional data analysis with a graphical model
+               inference framework that assumes the underlying ecological
+               association network is sparse. To reconstruct the network,
+               SPIEC-EASI relies on algorithms for sparse neighborhood and
+               inverse covariance selection. To provide a synthetic benchmark
+               in the absence of an experimentally validated gold-standard
+               network, SPIEC-EASI is accompanied by a set of computational
+               tools to generate OTU count data from a set of diverse
+               underlying network topologies. SPIEC-EASI outperforms
+               state-of-the-art methods to recover edges and network properties
+               on synthetic data under a variety of scenarios. SPIEC-EASI also
+               reproducibly predicts previously unknown microbial associations
+               using data from the American Gut project.",
+  journal   = "PLoS Comput. Biol.",
+  publisher = "Public Library of Science (PLoS)",
+  volume    =  11,
+  number    =  5,
+  pages     = "e1004226",
+  month     =  may,
+  year      =  2015,
+  copyright = "http://creativecommons.org/licenses/by/4.0/",
+  language  = "en"
+}
+
+@article{Ledoit2004,
+  title = {A well-conditioned estimator for large-dimensional covariance matrices},
+  volume = {88},
+  ISSN = {0047-259X},
+  url = {http://dx.doi.org/10.1016/S0047-259X(03)00096-4},
+  DOI = {10.1016/s0047-259x(03)00096-4},
+  number = {2},
+  journal = {Journal of Multivariate Analysis},
+  publisher = {Elsevier BV},
+  author = {Ledoit,  Olivier and Wolf,  Michael},
+  year = {2004},
+  month = feb,
+  pages = {365–411}
+}
