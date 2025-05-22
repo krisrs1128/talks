@@ -1,51 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 472 360.6">
-  <!-- Generator: Adobe Illustrator 29.3.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 146)  -->
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 472 360.6">
+  <!-- Generator: Adobe Illustrator 29.5.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 141)  -->
   <defs>
     <style>
       .st0 {
-        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-family: ArialMT, Arial;
         font-size: 24px;
       }
 
-      .st1 {
+      .st0, .st1 {
+        isolation: isolate;
+      }
+
+      .st2 {
         fill: #fff;
       }
 
-      .st1, .st2 {
+      .st2, .st3 {
         stroke: #000;
         stroke-miterlimit: 10;
       }
 
-      .st2 {
+      .st3 {
         fill: none;
         stroke-width: 5px;
       }
     </style>
   </defs>
   <g>
-    <line class="st2" x1="236.7" y1="187.2" x2="371.2" y2="189.6"/>
+    <line class="st3" x1="236.7" y1="187.2" x2="371.2" y2="189.6"/>
     <polygon points="367.3 202 389.1 189.9 367.8 177.1 367.3 202"/>
   </g>
   <g>
-    <line class="st2" x1="362.4" y1="67.4" x2="406.8" y2="134.7"/>
+    <line class="st3" x1="362.4" y1="67.4" x2="406.8" y2="134.7"/>
     <polygon points="394.4 138.5 416.7 149.6 415.2 124.8 394.4 138.5"/>
   </g>
   <g>
-    <line class="st2" x1="219.9" y1="157.9" x2="294.1" y2="83"/>
+    <line class="st3" x1="219.9" y1="157.9" x2="294.1" y2="83"/>
     <polygon points="300.4 94.4 306.7 70.3 282.6 76.9 300.4 94.4"/>
   </g>
-  <path class="st1" d="M167.4,40.2"/>
+  <path class="st2" d="M167.4,40.2"/>
   <g>
-    <path class="st2" d="M32.5,276C14.9,146.3,129.7,40.2,252.6,28.1"/>
+    <path class="st3" d="M32.5,276C14.9,146.3,129.7,40.2,252.6,28.1"/>
     <polygon points="250.2 41 270.4 26.3 247.6 16.2 250.2 41"/>
   </g>
   <g>
-    <path class="st2" d="M403.2,249.7c-86.1,71.7-204.2,96.6-314.3,90"/>
+    <path class="st3" d="M403.2,249.7c-86.1,71.7-204.2,96.6-314.3,90"/>
     <polygon points="392.2 242.6 416.7 237.9 408.6 261.5 392.2 242.6"/>
   </g>
-  <text class="st0" transform="translate(288.4 38.5)"><tspan x="0" y="0">Sleep and Diet</tspan></text>
-  <text class="st0" transform="translate(407 197.4)"><tspan x="0" y="0">Microbiome</tspan></text>
-  <text class="st0" transform="translate(94 178.4)"><tspan x="0" y="0">Mindfulness</tspan><tspan x="0" y="28.8">Intervention</tspan></text>
-  <text class="st0" transform="translate(-18.7 312.3)"><tspan x="0" y="0">Person </tspan><tspan x="0" y="28.8">Intercept</tspan></text>
+  <g class="st1">
+    <text class="st0" transform="translate(288.4 38.5)"><tspan x="0" y="0">Multiomics</tspan></text>
+  </g>
+  <g class="st1">
+    <text class="st0" transform="translate(407 189.4)"><tspan x="0" y="0">L. crispatus</tspan><tspan x="0" y="28.8">establishment</tspan></text>
+  </g>
+  <g class="st1">
+    <text class="st0" transform="translate(94 178.4)"><tspan x="0" y="0">Lactin-V</tspan></text>
+    <text class="st0" transform="translate(94 207.2)"><tspan x="0" y="0">Intervention</tspan></text>
+  </g>
+  <g class="st1">
+    <text class="st0" transform="translate(-18.7 312.3)"><tspan x="0" y="0">Baseline</tspan></text>
+    <text class="st0" transform="translate(-18.7 341.1)"><tspan x="0" y="0">features</tspan></text>
+  </g>
 </svg>
