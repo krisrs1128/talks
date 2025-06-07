@@ -142,24 +142,11 @@ This is similar in spirit to Tissot's indicatrix in the cartography literature.
 ]
 
 ---
-
-### Mammoth
-
-This example comes from `r Citep(bib, c("paircodeUnderstandingUMAP", "maxnoichlNoichlFlattening"))`. The 3D skeleton scans were produced by the
-Smithsonian, and we can use nonlinear dimensionality reduction to "flatten" the
-skeleton into 2D.
-
-.pull-right[
-<img src="figures/mammoth.gif" width=300/>
-]
-
----
-
 ### Diffusion-Based Metrics
 
 The graph laplacian induces a metric in the original manifold. Intuitively, two
 points are close to one another if a random walk started at one point has a high
-probability ending up at the other after $t$ steps. $t$ is a scale parameter.
+probability ending up at the other after $t$ steps.
 
 ---
 
@@ -168,11 +155,11 @@ probability ending up at the other after $t$ steps. $t$ is a scale parameter.
 This random walk information is captured by the normalized graph laplacian:
 
 \begin{align*}
-L_{\epsilon} = \frac{1}{\epsilon}\left[I - P_{\epsilon}]
+L_{\epsilon} = \frac{1}{\epsilon}\left[I - P_{\epsilon}\right]
 \end{align*}
 where we set 
 \begin{align*}
-P_{\epsilon}\left(x, y\right) &= \frac{k_{\epsilon}\left(x, y\right)}{\int k_{\epsilon}\left(x, y) q\left(y\right)dy} \\
+P_{\epsilon}\left(x, y\right) &= \frac{k_{\epsilon}\left(x, y\right)}{\int k_{\epsilon}\left(x, y\right) q\left(y\right)dy} \\
 k_{\epsilon}\left(x, y\right) &= \frac{k_{\epsilon}\left(x, y\right)}{q_{\epsilon}\left(x\right)q_{\epsilon}\left(y\right)}\\
 q_{\epsilon}\left(x\right) &= \int k_{\epsilon}\left(x, y\right)q\left(y\right) dy
 \end{align*}
@@ -216,11 +203,11 @@ apply the original metric $g$. Specifically, for any $q \in \mathcal{N}$, set
 
 ### Toy Example
 
-* Let $\mathcal{M} = \left[0, 1\right]^{2}$ with the metric induced by the inner product $g\left(x, x'\right) = x^{\top}x'.
+* Let $\mathcal{M} = \left[0, 1\right]^{2}$ with the metric induced by the inner product $g\left(x, y\right) = x^{\top}y$.
 * Consider:
 
 \begin{align*}
-\varphi\begin{pmatrix} x_{1} \\ x_{2} \end{pmatrix} &= \begin{pmatrix} x_{1} \\ x_{2}^{2} \end{pmatrix}
+\varphi: \begin{pmatrix} x_{1} \\ x_{2} \end{pmatrix} \to \begin{pmatrix} x_{1} \\ x_{2}^{2} \end{pmatrix}
 \end{align*}
 
 ---
@@ -233,11 +220,11 @@ d \varphi_{q}^{-1} = \begin{pmatrix} 1 & 0 \\ 0 & \frac{1}{2}z_{2}^{-\frac{1}{2}
 \end{align*}
 which induces the metric,
 \begin{align*}
-\left(\varphi_{\ast}g\right)_{q}\left(x, y\right) = x^\top \begin{pmatrix}
+\left(\varphi_{\ast}g\right)_{q}\left(x, y\right) &= x^\top \begin{pmatrix}
 1 & 0 \\
-0 & \frac{1}{4z_{2}} y
-\end{pmatrix} \\
-&:= x^\top G^{-1} y
+0 & \frac{1}{4}z_{2}^{-1}
+\end{pmatrix}y \\
+&:= x^\top G^{-1}_{q} y
 \end{align*}
 
 ---
@@ -267,10 +254,7 @@ G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \l
 These two clusters are generated as:
 
 \begin{align*}
-x_{i}\vert z \sim \begin{cases}
-\mathcal{N}\left(0, 1\right) \text{if } z_{i} = A\\
-\mathcal{N}\left(10, 10\right)\text{if } z_{i} = B
-\end{cases}
+x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 1\right) + \frac{1}{2}\mathcal{N}\left(10, 10\right)
 \end{align*}
 ]
 
@@ -309,15 +293,11 @@ h^\ast = \sum_{n = 1}^{N}\left[\frac{k_{\gamma_2}\left(f_n, f^\ast\right)}{\sum_
 ### Example
 
 .pull-left[
-These $\text{Unif}\left[0, 1\right]^{2}$ data have been transformed using the
-transformation $\left(x, y\right) \to \left(x, y^2\right)$. We can analytically calculate the local metrics as
-
+Revisiting the toy example of uniform data transformed by,
 \begin{align*}
-h_{n} = \begin{pmatrix}
-1 & 0 \\
-0 & 2 y_{n}
-\end{pmatrix}
+\varphi\begin{pmatrix} x_{1} \\ x_{2} \end{pmatrix} &= \begin{pmatrix} x_{1} \\ x_{2}^{2} \end{pmatrix}
 \end{align*}
+the local isometrization takes the form in this figure.
 ]
 
 .pull-right[
@@ -328,6 +308,18 @@ h_{n} = \begin{pmatrix}
 
 .center[
 ## Examples
+]
+
+---
+
+### Mammoth
+
+This example comes from `r Citep(bib, c("paircodeUnderstandingUMAP", "maxnoichlNoichlFlattening"))`. The 3D skeleton scans were produced by the
+Smithsonian, and we can use nonlinear dimensionality reduction to "flatten" the
+skeleton into 2D.
+
+.pull-right[
+<img src="figures/mammoth.gif" width=300/>
 ]
 
 ---
