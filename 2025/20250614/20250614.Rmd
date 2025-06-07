@@ -61,10 +61,10 @@ bib <- ReadBib("references.bib")
 
  When making maps, we know that any projection introduces some degree of
  distortion. It's impossible to map the 3D earth into a 2D map while preserving
- all metric properties.
+ all metric propertiesj
  
 .center[
-<img src="figures/" width=300/>
+<img src="figures/mercator-old.png" width=450/>
 ]
  
 Gerardus Mercator's 1569 map of the world.
@@ -78,46 +78,66 @@ northern latitudes. But it perfectly preserves angles, and this was extremely
 important for ocean navigation.
 
 .center[
-<img src="figures/" width=300/>
+<img src="figures/mercator.jpg" width=500/>
 ]
- 
+
 ---
 
 ### High-Dimensional Distortions
 
 The same is true for high-dimensional data. Despite the popularity of nonlinear
 dimensionality reductions like UMAP and t-SNE, we know that they introduce
-distortions.
+distortions. For example, they may not preserve density within different
+regions of the plot.
+
+.center[
+<img src="figures/densmap_example.png" width=1000/>
+]
+Example from `r Citep(bib, "narayan2021assessing")`.
 
 ---
 
 ### High-Dimensional Distortions
 
-For example, they may not preserve density within different regions of the plot.
+They can make high-dimensional random walks look artificially smooth...
+
+.center[<img src="figures/gaussian_rw.png" width=600/> ]
+Example from `r Citep(bib, "wattenberg2016how")`.
 
 ---
 
 ### High-Dimensional Distortions
 
-Similarly, they can create an artificial smoothness in the appearance of a
-random walk in high dimensions.
+They can also fail to preserve the topology of the underlying data...
+
+.center[
+<img src="figures/tsne-initialization.png" width=600/>
+]
+Example from `r Citep(bib, "Kobak2021")`.
 
 ---
 
 ### Consequences
 
 These are not mere technical curiosities -- they can significantly impact
-scientific interpretation. For example, UMAP is ubiquitious in single cell
-genomics research papers, but they have been known to create the appearance of
-spurious cell types.
+scientific interpretation. For example, they have been known to create
+misleading differences between cell types that are actually quite similar.
+
+.center[
+<img src="figures/scdeed-example.png" width=700/>
+]
+Example from `r Citep(bib, "xia2024statistical")`.
 
 ---
 
 ### Backlash
 
 More generally, nonlinear dimensionality reduction has become the source of
-major controversy in the single cell literature.
+major controversy in the single cell literature `r Citep(bib, "Chari2023")`.
 
+.center[
+<img src="figures/specious_art.png" width=600/>
+]
 
 Anecdotally, I have heard this has influenced paper and grant reviews.
 
@@ -130,10 +150,12 @@ characterize the distortion. Our idea is to augment our usual visualizations
 with measures of local distortion which are already available in the literature.
 
 .center[
-<img src="figures/" width=300/>
+<img src="figures/tissot-1.png" width=300/>
+<img src="figures/tissot-2.png" width=300/>
 ]
 
-This is similar in spirit to Tissot's indicatrix in the cartography literature.
+This is similar in spirit to Tissot's indicatrix in the cartography literature
+`r Citep(bib, "laskowski1989traditional")`.
 
 ---
 
@@ -183,10 +205,10 @@ We will review the approach of `r Citep(bib, "metriclearn")`.
 
 Question: How can we define a metric on $\mathcal{N}$?
 
-* $\mathcal{M}$ - The original manifold
-* $T_{p}$ - The tangent space of $p \in \mathcal{M}$.
-* $g_{p}: T_{p} \times T_{p} \to \mathbb{R}$ - A metric on $\mathcal{M}$.
-* $\varphi: \mathcal{M} \to \mathcal{N}$ - Transformation (assumed smooth and invertible) from $\mathcal{M}$ to $\mathcal{N}$.
+* $\mathcal{M}$: The original manifold
+* $T_{p}$: The tangent space of $p \in \mathcal{M}$.
+* $g_{p}: T_{p} \times T_{p} \to \mathbb{R}$: A metric on $\mathcal{M}$.
+* $\varphi: \mathcal{M} \to \mathcal{N}$: A smooth and invertible transformation from $\mathcal{M}$ to $\mathcal{N}$.
 
 ---
 
@@ -361,6 +383,8 @@ metrics.
 
 ---
 
+class: reference
+
 ### References
 
 ```{r, results='asis', echo = FALSE}
@@ -368,6 +392,8 @@ PrintBibliography(bib, start = 1, end = 13)
 ```
 
 ---
+
+class: reference
 
 ### References
 
