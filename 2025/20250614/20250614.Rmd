@@ -227,27 +227,37 @@ apply the original metric $g$. Specifically, for any $q \in \mathcal{N}$, set
 
 ### Toy Example
 
-Then at any point $q = \left(y_1, y_2\right)$, we have the map:
-
+Then at any point $q = \left(z_1, z_2\right)$, we have the map:
 \begin{align*}
-d \varphi_{q}^{-1} = \begin{pmatrix} 1 & 0 \\ 0 & \frac{1}{2}y_{2}^{-\frac{1}{2}} \end{pmatrix}
+d \varphi_{q}^{-1} = \begin{pmatrix} 1 & 0 \\ 0 & \frac{1}{2}z_{2}^{-\frac{1}{2}} \end{pmatrix}
+\end{align*}
+which induces the metric,
+\begin{align*}
+\left(\varphi_{\ast}g\right)_{q}\left(x, y\right) = x^\top \begin{pmatrix}
+1 & 0 \\
+0 & \frac{1}{4z_{2}} y
+\end{pmatrix} \\
+&:= x^\top G^{-1} y
 \end{align*}
 
-which induces the metric,
+---
 
+### Toy Example
 
+Visually, we represent these distorted metrics using ellipses. Directions that
+are compressed means that the distance in the original space was larger than the
+distance we see after the transformation.
 
 ---
 
-### Computation
+### Local Metric for Laplacians
 
----
+Suppose that the $k^{th}$ dimension of the embedding algorithm is $z_{k} \in \mathbb{R}^{N}$. 
+It turns out that the diffusion metric in the original space is transformed in the embedding space according to the local metrics:
 
-### Ellipses
-
-A simple modification is to display the embedding as ellipses that encode the
-local metrics. The size and orientation of the ellipses reflect the singular
-values and vectors of $H$.
+\begin{align*}
+G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
+\end{align*}
 
 ---
 
