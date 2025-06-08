@@ -61,7 +61,7 @@ bib <- ReadBib("references.bib")
 
  When making maps, we know that any projection introduces some degree of
  distortion. It's impossible to map the 3D earth into a 2D map while preserving
- all metric propertiesj
+ all metric properties.
  
 .center[
 <img src="figures/mercator-old.png" width=450/>
@@ -73,9 +73,9 @@ Gerardus Mercator's 1569 map of the world.
 
 ### Map Distortions
 
-For example, the Mercator projection makes artificially inflates areas in 
-northern latitudes. But it perfectly preserves angles, and this was extremely
-important for ocean navigation.
+For example, the Mercator projection artificially inflates areas in northern
+latitudes. But it perfectly preserves angles, and this was extremely important
+for ocean navigation.
 
 .center[
 <img src="figures/mercator.jpg" width=500/>
@@ -130,13 +130,13 @@ Example from `r Citep(bib, "xia2024statistical")`.
 
 ---
 
-### Backlash
+### Controversy
 
 More generally, nonlinear dimensionality reduction has become the source of
-major controversy in the single cell literature `r Citep(bib, "Chari2023")`.
+widespread concern in the single cell literature `r Citep(bib, "Chari2023")`.
 
 .center[
-<img src="figures/specious_art.png" width=600/>
+<img src="figures/specious_art.png" width=700/>
 ]
 
 ---
@@ -148,8 +148,8 @@ characterize the distortion. Our idea is to augment our usual visualizations
 with measures of local distortion which are already available in the literature.
 
 .center[
-<img src="figures/tissot-1.png" width=300/>
-<img src="figures/tissot-2.png" width=300/>
+<img src="figures/tissot-1.png" width=400/>
+<img src="figures/tissot-2.png" width=400/>
 ]
 
 This is similar in spirit to Tissot's indicatrix in the cartography literature
@@ -319,40 +319,72 @@ difference is captured in the local metrics.
 
 ---
 
-### Broken Neighborhoods
+### Distance Preservation
 
-We can also highlight the cells with exceptionally large distortion. Bringing
-the mouse near to the distorted regions highlights the neighborhoods in the
-original space.
+.pull-left[
+We can compare the distance to nearest neighbors in the original vs. embedding
+space. 
+
+In this scatterplot, the outliers in the top left are far apart in the embedding
+space, but close to one another in the original data.
+]
+
+.pull-right[
+<img src="figures/distance_preservation.png" width=400/>
+]
+
+---
+
+### Flagging Broken Neighborhoods
+
+Some neighborhoods are "broken" in the sense that all neighbors of a point have
+poorly preserved distances. One approach is:
+
+* Fit the running median in a scatterplot of true vs. embedding distances.
+* Compute the IQR of the residuals within each bin. Those above $3\times$ IQR are considered poorly preserved outliers.
+* If a large enough fraction of a point's neighbor links are poorly preserved, then that point is flagged as "broken."
+
+We have also implemented the scDEED algorithm for flagging problematic points `r Citep(bib, "xia2024statistical")`.
+
+---
+
+### Flagging Broken Neighborhoods
+
+We can summarize this approach graphically:
+
+.center[
+<img src="figures/brokenness-heuristic.svg" width=800/>
+]
 
 ---
 
 ### Local Isometrization
 
-Since we know the metrics locally, we can reverse them to "smooth out" the
-distortion within a neighborhood of the user interaction:
+Since we know the metrics locally, we can invert the distortion within a
+neighborhood of the user interaction. For example, here we adapt the embeddings
+in the uniform data example to reflect the metric close to where the user's
+mouse is hovering.
 
-\begin{align*}
-f_n \to k_{\gamma_1}\left(f_n, f^\ast\right)\tilde{f}_{n} + \left(1 - k_{\gamma_1}\left(f_n, f^\ast\right)\right)f_n
-\end{align*}
-
-where we have defined,
-
-\begin{align*}
-\tilde{f}_n^{\ast} := \left(h^{\ast}\right)^{\frac{1}{2}}\left(f_n - f^{\ast}\right) + f^{\ast}\\
-h^\ast = \sum_{n = 1}^{N}\left[\frac{k_{\gamma_2}\left(f_n, f^\ast\right)}{\sum_{n' = 1}^{N}k_{\gamma_2}\left(f_{n'}, f^\ast\right)}\right]h_{n}
-\end{align*}
+.center[
+<img src="figures/uniform_interaction.gif" width=600/>
+]
 
 ---
 
-### Example
+### Local Isometrization Details
 
-Here is the local isometrization applied to the uniform data example. The local
-metrics have been computed analytically (not estimated from the laplacian).
+Depending on the user's mouse location $z^\ast$, we modify the embeddings
+$z_{n}$ according to the local metrics $H_{n} = G_{n}^{-1}$.
 
-.pull-right[
-<img src="figures/uniform_interaction.gif" width=300/>
-]
+\begin{align*}
+z_n \to k_{\gamma_1}\left(z_n, f^\ast\right)\tilde{z}_{n} + \left(1 - k_{\gamma_1}\left(z_n, z^\ast\right)\right)z_n
+\end{align*}
+where we have defined,
+\begin{align*}
+\tilde{z}_n^{\ast} &:= \sqrt{H^{\ast}}\left(z_n - z^{\ast}\right) + z^{\ast}\\
+H^\ast &= \sum_{n = 1}^{N}\left[\frac{k_{\gamma_2}\left(z_n, z^\ast\right)}{\sum_{n' = 1}^{N}k_{\gamma_2}\left(z_{n'}, z^\ast\right)}\right]H_{n}
+\end{align*}
+and $\gamma_{1}, \gamma_{2}$ control the size of the transformed region and influence of neighborhing $H_{n}$, respectively.
 
 ---
 
@@ -361,8 +393,8 @@ metrics have been computed analytically (not estimated from the laplacian).
 This applies isometrization to the two clusters data. When we hover over either
 cluster, we can notice the difference in the true cluster variances.
 
-.pull-right[
-<img src="figures/two_cluster_interaction.gif" width=500/>
+.center[
+<img src="figures/two_cluster_interaction.gif" width=700/>
 ]
 
 ---
