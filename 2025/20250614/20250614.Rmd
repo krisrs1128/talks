@@ -257,6 +257,10 @@ Visually, we represent these distorted metrics using ellipses. Directions that
 are compressed means that the distance in the original space was larger than the
 distance we see after the transformation.
 
+.center[
+<img src="figures/distortion_toy.png" width=700/>
+]
+
 ---
 
 ### Local Metric for Laplacians
@@ -272,16 +276,25 @@ G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \l
 
 ### Example
 
-.pull-left[
 These two clusters are generated as:
 
 \begin{align*}
 x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 1\right) + \frac{1}{2}\mathcal{N}\left(10, 10\right)
 \end{align*}
+
+.center[
+<img src="figures/unequal_variances.png" width=700/>
 ]
 
-.pull-right[
-<img src="figures/unequal_variances.png" width=300/>
+---
+
+### Example
+
+The UMAP embeddings lose information about the cluster density, but the
+difference is captured in the local metrics.
+
+.center[
+<img src="figures/unequal_variances_ellipse.png" width=700/>
 ]
 
 ---
@@ -296,8 +309,8 @@ original space.
 
 ### Local Isometrization
 
-Since we know the metrics locally, we can reverse them to remove the distortion
-within a neighborhood of the user interaction:
+Since we know the metrics locally, we can reverse them to "smooth out" the
+distortion within a neighborhood of the user interaction:
 
 \begin{align*}
 f_n \to k_{\gamma_1}\left(f_n, f^\ast\right)\tilde{f}_{n} + \left(1 - k_{\gamma_1}\left(f_n, f^\ast\right)\right)f_n
@@ -314,16 +327,22 @@ h^\ast = \sum_{n = 1}^{N}\left[\frac{k_{\gamma_2}\left(f_n, f^\ast\right)}{\sum_
 
 ### Example
 
-.pull-left[
-Revisiting the toy example of uniform data transformed by,
-\begin{align*}
-\varphi\begin{pmatrix} x_{1} \\ x_{2} \end{pmatrix} &= \begin{pmatrix} x_{1} \\ x_{2}^{2} \end{pmatrix}
-\end{align*}
-the local isometrization takes the form in this figure.
-]
+Here is the local isometrization applied to the uniform data example. The local
+metrics have been computed analytically (not estimated from the laplacian).
 
 .pull-right[
-<img src="figures/uniform_data.png" width=300/>
+<img src="figures/uniform_interaction.gif" width=300/>
+]
+
+---
+
+### Example
+
+This applies isometrization to the two clusters data. When we hover over either
+cluster, we can notice the difference in the true cluster variances.
+
+.pull-right[
+<img src="figures/two_cluster_interaction.gif" width=500/>
 ]
 
 ---
