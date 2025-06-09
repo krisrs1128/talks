@@ -335,10 +335,10 @@ space, but close to one another in the original data.
 
 ---
 
-### Flagging Broken Neighborhoods
+### Flagging Distorted Neighborhoods
 
-Some neighborhoods are "broken" in the sense that all neighbors of a point have
-poorly preserved distances. One approach is:
+Some neighborhoods have poorly preserved distances. To detect this, one approach
+is:
 
 * Fit the running median in a scatterplot of true vs. embedding distances.
 * Compute the IQR of the residuals within each bin. Those above $3\times$ IQR are considered poorly preserved outliers.
@@ -350,7 +350,7 @@ We have also implemented the scDEED algorithm for flagging problematic points `r
 
 ### Flagging Broken Neighborhoods
 
-We can summarize this approach graphically:
+Here is a graphical summary:
 
 .center[
 <img src="figures/brokenness-heuristic.svg" width=800/>
@@ -400,7 +400,7 @@ cluster, we can notice the difference in the true cluster variances.
 ---
 
 .center[
-## Examples
+## Case Studies
 ]
 
 ---
@@ -411,8 +411,31 @@ This example comes from `r Citep(bib, c("paircodeUnderstandingUMAP", "maxnoichlN
 Smithsonian, and we can use nonlinear dimensionality reduction to "flatten" the
 skeleton into 2D.
 
-.pull-right[
-<img src="figures/mammoth.gif" width=300/>
+.center[
+<img src="figures/mammoth_truth.gif" width=600/>
+]
+
+---
+
+### Mammoth
+
+This is the embedding when applying UMAP with a 10 nearest neighbor graph and
+`min_dist = 0.5`.
+
+.center[
+<img src="figures/mammoth_embedding.png" width=400/>
+]
+
+---
+
+### Mammoth
+
+Parts of the shoulders, head, and tail are further apart in the embedding
+compared to the original data. Most of other distortions are points that are
+placed too close to one another.
+
+.center[
+<img src="figures/mammoth_embedding.gif" width=390/>
 ]
 
 ---
@@ -433,8 +456,17 @@ can be improved by overlaying distortion information.
 
 ### Limitations: Link Data
 
- our visualization approach doesn't resolve all problems.  our estimates of
+ Our visualization approach doesn't resolve all problems. For example, 
  distortion are inherently local and sometimes problems can arise globally.
+
+.center[
+<img src="figures/links-d1.png" width=300/>
+<img src="figures/links-d2.png" width=300/>
+<img src="figures/links-d3.png" width=300/>
+]
+
+The original data are interlocking links. The color is the $x$-axis value and
+would be unknown in practice.
 
 ---
 
