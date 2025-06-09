@@ -446,11 +446,57 @@ This is a standard single cell gene expression data set used in the introductory
 UMAP tutorial in the scanpy package. We will see that even this tutorial example
 can be improved by overlaying distortion information.
 
+.center[
+<img src="figures/pbmc_original.png" width=470/>
+]
+
+---
+
+### PBMC Dataset
+
+.center[
+<img src="figures/pbmc_links.gif" width=470/>
+]
+
+---
+
+### PBMC Dataset
+
+.center[
+<img src="figures/pbmc_original_n50.png" width=470/>
+]
+
+---
+
+### PBMC Dataset
+
+.center[
+<img src="figures/pbmc_links_n50.gif" width=470/>
+]
+
 ---
 
 ### Hydra Cell Atlas
 
+.center[
+<img src="figures/hydra_perplexity_80.gif" width=470/>
+]
 
+---
+
+### Hydra Cell Atlas
+
+.center[
+<img src="figures/hydra_perplexity_500.gif" width=470/>
+]
+
+---
+
+### Hydra Cell Atlas
+
+.center[
+<img src="figures/hydra_isometry.gif" width=470/>
+]
 
 ---
 
