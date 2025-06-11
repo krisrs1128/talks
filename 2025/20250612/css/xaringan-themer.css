@@ -30,6 +30,7 @@
 
 .title h1 {
   width: 900px;
+  text-align:center;
 }
 
 .title h2 {
@@ -45,7 +46,7 @@
       right: 0px;
       bottom: 0px;
       left: 0px;
-      opacity: 0.4;
+      opacity: 1;
       z-index: -1;
 }
 
@@ -241,7 +242,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 25px;
-  width: 500px;
+  width: 200px;
   color: #5f558e;
   text-align: right;
   right: 20px;
@@ -263,7 +264,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 25px;
-  width: 700px;
+  width: 600px;
   color: #5f558e;
   text-align: left;
   left: 20px;

@@ -29,11 +29,11 @@ class: title
 <div id="subtitle_left">
 Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
+Joint w/
+Shuzhen Zhang, Chenab, Marina Meila <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
-Joint work with <br/>
-Shuzhen Zhang, Chenab, Marina Meila <br/>
 IISA 2025 <br/>
 12 | June | 2025 <br/>
 </div>
@@ -121,8 +121,8 @@ Example from `r Citep(bib, "Kobak2021")`.
 
 ### Consequences
 
-These are not mere technical curiosities -- they can significantly impact
-scientific interpretation. For example, they have been known to create
+These distortions are not mere technical curiosities -- they can significantly
+impact scientific interpretation `r Citep(bib, c("Liu2025", "Kobak2021"))`. For example, they have been known to create
 misleading differences between cell types that are actually quite similar.
 
 .center[
@@ -379,11 +379,11 @@ Depending on the user's mouse location $z^\ast$, we modify the embeddings
 $z_{n}$ according to the local metrics $H_{n} = G_{n}^{-1}$.
 
 \begin{align*}
-z_n \to k_{\gamma_1}\left(z_n, f^\ast\right)\tilde{z}_{n} + \left(1 - k_{\gamma_1}\left(z_n, z^\ast\right)\right)z_n
+z_n \to k_{\gamma_1}\left(z_n, z^\ast\right)\tilde{z}_{n} + \left(1 - k_{\gamma_1}\left(z_n, z^\ast\right)\right)z_n
 \end{align*}
 where we have defined,
 \begin{align*}
-\tilde{z}_n^{\ast} &:= \sqrt{H^{\ast}}\left(z_n - z^{\ast}\right) + z^{\ast}\\
+\tilde{z}_n &:= \sqrt{H^{\ast}}\left(z_n - z^{\ast}\right) + z^{\ast}\\
 H^\ast &= \sum_{n = 1}^{N}\left[\frac{k_{\gamma_2}\left(z_n, z^\ast\right)}{\sum_{n' = 1}^{N}k_{\gamma_2}\left(z_{n'}, z^\ast\right)}\right]H_{n}
 \end{align*}
 and $\gamma_{1}, \gamma_{2}$ control the size of the transformed region and influence of neighborhing $H_{n}$, respectively.
@@ -445,8 +445,8 @@ placed too close to one another.
 ### PBMC Dataset
 
 This single cell gene expression data set used in the introductory data
-visualization tutorial from the scanpy package `r Citep(bib, )`. Each point is
-the UMAP embedding of a cell's high-dimensional gene expression data.
+visualization tutorial from the scanpy package `r Citep(bib, "scanpytutorialsAnalysisVisualization")`. Each point is the UMAP embedding of a
+cell's high-dimensional gene expression data.
 
 .center[
 <img src="figures/pbmc_original.png" width=470/>
@@ -489,12 +489,12 @@ some issues remain with the monocytes.
 
 ### Hydra Cell Atlas
 
-Here is an application to a more realistic hydra cell atlas dataset, which was
-also used to study distortion in `r Citep(bib, "xia2024statistical")`. We fit
-t-SNE with the perplexity hyperparameter set to 80. Points around the boundary
-are collapsed, and between-cluster distances are exaggerated.
+.pull-left[
+Here is an application to a more realistic hydra cell atlas dataset `r Citep(bib, c("Siebert2019", "xia2024statistical"))`. We fit t-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
+exaggerated.
+]
 
-.center[
+.pull-right[
 <img src="figures/hydra_perplexity_80.gif" width=470/>
 ]
 
@@ -502,10 +502,12 @@ are collapsed, and between-cluster distances are exaggerated.
 
 ### Hydra Cell Atlas
 
-When we increase perplexity to 500, the clusters are more reliable, but samples
-along the boundary of the visualization are in fact closer than they appear.
+.pull-left[
+Increasing perplexity to 500, the clusters are more reliable, but samples along
+the boundary of the visualization are in fact closer than they appear.
+]
 
-.center[
+.pull-right[
 <img src="figures/hydra_perplexity_500.gif" width=470/>
 ]
 
@@ -513,10 +515,12 @@ along the boundary of the visualization are in fact closer than they appear.
 
 ### Hydra Cell Atlas
 
+.pull-left[
 Applying the local isometry visualization, we can see that some of the "threads"
 are actually more spread out in the original data.
+]
 
-.center[
+.pull-right[
 <img src="figures/hydra_isometry.gif" width=470/>
 ]
 
@@ -524,9 +528,8 @@ are actually more spread out in the original data.
 
 ### Counterexample
 
-Our visualization approach can still fail when local neighborhood information
-isn't enough. In this example, the two rings are overlapping in the original
-data, but with centers further and further appart.
+Our visualization approach fails when local neighborhood information isn't
+enough. These two rings are overlapping in the original data.
 
 .center[
 <img src="figures/links-d1.png" width=300/>
@@ -564,14 +567,3 @@ class: reference
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
 ```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 28)
-```
----

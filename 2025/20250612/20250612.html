@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Interactively Resolving Distortion in Nonlinear Dimensionality Reduction</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <meta name="date" content="2025-06-11" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+# Interactively Resolving Distortion in Nonlinear Dimensionality Reduction
+
+&lt;style&gt;
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+&lt;/style&gt;
+
+&lt;div id="subtitle_left"&gt;
+Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;&lt;br/&gt;
+Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
+Joint w/
+Shuzhen Zhang, Chenab, Marina Meila &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Kris Sankaran &lt;br/&gt;
+IISA 2025 &lt;br/&gt;
+12 | June | 2025 &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;!-- 25 minute talk --&gt;
+
+
+
+---
+
+### Map Distortions
+
+ When making maps, we know that any projection introduces some degree of
+ distortion. It's impossible to map the 3D earth into a 2D map while preserving
+ all metric properties.
+ 
+.center[
+&lt;img src="figures/mercator-old.png" width=450/&gt;
+]
+ 
+Gerardus Mercator's 1569 map of the world.
+ 
+---
+
+### Map Distortions
+
+For example, the Mercator projection artificially inflates areas in northern
+latitudes. But it perfectly preserves angles, and this was extremely important
+for ocean navigation.
+
+.center[
+&lt;img src="figures/mercator.jpg" width=500/&gt;
+]
+
+---
+
+### High-Dimensional Distortions
+
+The same is true for high-dimensional data. Despite the popularity of nonlinear
+dimensionality reductions like UMAP and t-SNE, we know that they introduce
+distortions. For example, they may not preserve density within different
+regions of the plot.
+
+.center[
+&lt;img src="figures/densmap_example.png" width=1000/&gt;
+]
+Example from [1].
+
+---
+
+### High-Dimensional Distortions
+
+They can make high-dimensional random walks look artificially smooth...
+
+.center[&lt;img src="figures/gaussian_rw.png" width=600/&gt; ]
+Example from [2].
+
+---
+
+### High-Dimensional Distortions
+
+They can also fail to preserve the topology of the underlying data...
+
+.center[
+&lt;img src="figures/tsne-initialization.png" width=600/&gt;
+]
+Example from [3].
+
+---
+
+### Consequences
+
+These distortions are not mere technical curiosities -- they can significantly
+impact scientific interpretation [13; 3]. For example, they have been known to create
+misleading differences between cell types that are actually quite similar.
+
+.center[
+&lt;img src="figures/scdeed-example.png" width=700/&gt;
+]
+Example from [4].
+
+---
+
+### Controversy
+
+More generally, nonlinear dimensionality reduction has become the source of
+widespread concern in the single cell literature [5].
+
+.center[
+&lt;img src="figures/specious_art.png" width=700/&gt;
+]
+
+---
+
+### Approach
+
+We shouldn't abandon nonlinear dimensionality reduction, but we should try to
+characterize the distortion. Our idea is to augment our usual visualizations
+with measures of local distortion which are already available in the literature.
+
+.center[
+&lt;img src="figures/tissot-1.png" width=400/&gt;
+&lt;img src="figures/tissot-2.png" width=400/&gt;
+]
+
+This is similar in spirit to Tissot's indicatrix in the cartography literature
+[6].
+
+---
+
+.center[
+## Implementation
+]
+
+---
+### Diffusion-Based Metrics
+
+The graph laplacian induces a metric in the original manifold. Intuitively, two
+points are close to one another if a random walk started at one point has a high
+probability ending up at the other after `\(t\)` steps.
+
+.center[
+&lt;img src="figures/random-walk-laplacian.svg" width=800/&gt;
+]
+
+---
+
+### Graph Laplacian
+
+This random walk information is encoded in the normalized graph laplacian. 
+
+.pull-left[
+`\begin{align}
+K_{nn'} &amp;= \text{exp}\left(-\frac{1}{\epsilon}\|x_{n} - x_{n'}\|^2\right)\\
+D &amp;= \text{diag}\left(K \mathbf{1}_{N}\right)\\
+\tilde{K} &amp;= D^{-1}K D^{-1}
+\end{align}`
+]
+
+.pull-right[
+`\begin{align}
+\tilde{D} &amp;= \text{diag}\left(K \mathbf{1}_{N}\right) \\
+L &amp;= \frac{1}{\epsilon}\left[I - \tilde{D}^{-1}\tilde{K}\right] \\
+\end{align}`
+]
+
+---
+
+### Pushforward Metric
+
+When we apply a nonlinear dimensionality reduction method, we distort this
+metric. To understand exactly how it is warped, we apply the language of
+Riemannian geometry, following [7; 8].
+
+.center[
+&lt;img src="figures/riemann_transformation.svg" width=800/&gt;
+]
+
+---
+
+### Setup
+
+Question: We have a diffusion-based metric on the original space `\(\mathcal{M}\)`.
+How can we define an associated metric on the embedding space `\(\mathcal{N}\)`?
+
+* `\(T_{p}\)`: The tangent space of `\(p \in \mathcal{M}\)`.
+* `\(g_{p}: T_{p} \times T_{p} \to \mathbb{R}\)`: The metric on `\(\mathcal{M}\)` at the point `\(p\)`.
+* `\(\varphi: \mathcal{M} \to \mathcal{N}\)`: A smooth and invertible transformation from `\(\mathcal{M}\)` to `\(\mathcal{N}\)`.
+
+.center[
+&lt;img src="figures/riemann_transformation-label-2.svg" width=650/&gt;
+]
+
+---
+
+### Pushforward Metric
+
+To define a metric on `\(\mathcal{N}\)`, we map points back onto `\(\mathcal{M}\)` and
+apply the original metric `\(g\)`. Specifically, for any `\(q \in \mathcal{N}\)`, set
+
+`\begin{align*}
+\left(\varphi_{\ast}g\right)_{q}\left(x, y\right) = g_{\varphi^{-1}\left(q\right)}\left(d\varphi_{q}^{-1}\left(x\right), d\varphi_{q}^{-1}\left(y\right)\right)
+\end{align*}`
+
+.center[
+&lt;img src="figures/riemann_transformation-label-3.svg" width=700/&gt;
+]
+
+---
+
+### Toy Example
+
+Let `\(\mathcal{M} = \left[0, 1\right]^{2}\)` with the metric induced by the inner
+product `\(g\left(x, y\right) = x^{\top}y\)`, and consider the transformation
+
+`\begin{align*}
+\varphi: \begin{pmatrix} x_{1} \\ x_{2} \end{pmatrix} \to \begin{pmatrix} x_{1} \\ x_{2}^{2} \end{pmatrix}
+\end{align*}`
+
+.center[
+&lt;img src="figures/transformation_uniform.svg" width=690/&gt;
+]
+
+
+
+---
+
+### Toy Example
+
+Then at any point `\(q = \left(z_1, z_2\right)\)`, we have the map:
+`\begin{align*}
+d \varphi_{q}^{-1} = \begin{pmatrix} 1 &amp; 0 \\ 0 &amp; \frac{1}{2}z_{2}^{-\frac{1}{2}} \end{pmatrix}
+\end{align*}`
+which induces the metric,
+`\begin{align*}
+\left(\varphi_{\ast}g\right)_{q}\left(x, y\right) &amp;= x^\top \begin{pmatrix}
+1 &amp; 0 \\
+0 &amp; \frac{1}{4}z_{2}^{-1}
+\end{pmatrix}y \\
+&amp;:= x^\top G^{-1}_{q} y
+\end{align*}`
+
+---
+
+### Toy Example
+
+Visually, we represent these distorted metrics using ellipses. Directions that
+are compressed means that the distance in the original space was larger than the
+distance we see after the transformation.
+
+.center[
+&lt;img src="figures/distortion_toy.png" width=700/&gt;
+]
+
+---
+
+### Local Metric for Laplacians
+
+Suppose that the `\(k^{th}\)` dimension of the embedding algorithm is `\(z_{k} \in \mathbb{R}^{N}\)`. 
+It turns out that the diffusion metric in the original space is transformed in the embedding space according to the local metrics:
+
+`\begin{align*}
+G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
+\end{align*}`
+
+---
+
+### Example
+
+These two clusters are generated as:
+
+`\begin{align*}
+x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 1\right) + \frac{1}{2}\mathcal{N}\left(10, 10\right)
+\end{align*}`
+
+.center[
+&lt;img src="figures/unequal_variances.png" width=700/&gt;
+]
+
+---
+
+### Example
+
+The UMAP embeddings lose information about the cluster density, but the
+difference is captured in the local metrics.
+
+.center[
+&lt;img src="figures/unequal_variances_ellipse.png" width=700/&gt;
+]
+
+---
+
+### Distance Preservation
+
+.pull-left[
+We can compare the distance to nearest neighbors in the original vs. embedding
+space. 
+
+In this scatterplot, the outliers in the top left are far apart in the embedding
+space, but close to one another in the original data.
+]
+
+.pull-right[
+&lt;img src="figures/distance_preservation.png" width=400/&gt;
+]
+
+---
+
+### Flagging Distorted Neighborhoods
+
+Some neighborhoods have poorly preserved distances. To detect this, one approach
+is:
+
+* Fit the running median in a scatterplot of true vs. embedding distances.
+* Compute the IQR of the residuals within each bin. Those above `\(3\times\)` IQR are considered poorly preserved outliers.
+* If a large enough fraction of a point's neighbor links are poorly preserved, then that point is flagged as "broken."
+
+We have also implemented the scDEED algorithm for flagging problematic points [4].
+
+---
+
+### Flagging Broken Neighborhoods
+
+Here is a graphical summary:
+
+.center[
+&lt;img src="figures/brokenness-heuristic.svg" width=800/&gt;
+]
+
+---
+
+### Local Isometrization
+
+Since we know the metrics locally, we can invert the distortion within a
+neighborhood of the user interaction. For example, here we adapt the embeddings
+in the uniform data example to reflect the metric close to where the user's
+mouse is hovering.
+
+.center[
+&lt;img src="figures/uniform_interaction.gif" width=600/&gt;
+]
+
+---
+
+### Local Isometrization Details
+
+Depending on the user's mouse location `\(z^\ast\)`, we modify the embeddings
+`\(z_{n}\)` according to the local metrics `\(H_{n} = G_{n}^{-1}\)`.
+
+`\begin{align*}
+z_n \to k_{\gamma_1}\left(z_n, z^\ast\right)\tilde{z}_{n} + \left(1 - k_{\gamma_1}\left(z_n, z^\ast\right)\right)z_n
+\end{align*}`
+where we have defined,
+`\begin{align*}
+\tilde{z}_n &amp;:= \sqrt{H^{\ast}}\left(z_n - z^{\ast}\right) + z^{\ast}\\
+H^\ast &amp;= \sum_{n = 1}^{N}\left[\frac{k_{\gamma_2}\left(z_n, z^\ast\right)}{\sum_{n' = 1}^{N}k_{\gamma_2}\left(z_{n'}, z^\ast\right)}\right]H_{n}
+\end{align*}`
+and `\(\gamma_{1}, \gamma_{2}\)` control the size of the transformed region and influence of neighborhing `\(H_{n}\)`, respectively.
+
+---
+
+### Example
+
+This applies isometrization to the two clusters data. When we hover over either
+cluster, we can notice the difference in the true cluster variances.
+
+.center[
+&lt;img src="figures/two_cluster_interaction.gif" width=700/&gt;
+]
+
+---
+
+.center[
+## Case Studies
+]
+
+---
+
+### Mammoth
+
+This example comes from [9; 10]. The 3D skeleton scans were produced by the
+Smithsonian, and we can use nonlinear dimensionality reduction to "flatten" the
+skeleton into 2D.
+
+.center[
+&lt;img src="figures/mammoth_truth.gif" width=600/&gt;
+]
+
+---
+
+### Mammoth
+
+This is the embedding when applying UMAP with a 10 nearest neighbor graph and
+`min_dist = 0.5`.
+
+.center[
+&lt;img src="figures/mammoth_embedding.png" width=400/&gt;
+]
+
+---
+
+### Mammoth
+
+Parts of the shoulders, head, and tail are further apart in the embedding
+compared to the original data. Most of other distortions are points that are
+placed too close to one another.
+
+.center[
+&lt;img src="figures/mammoth_embedding.gif" width=390/&gt;
+]
+
+---
+
+### PBMC Dataset
+
+This single cell gene expression data set used in the introductory data
+visualization tutorial from the scanpy package [11]. Each point is the UMAP embedding of a
+cell's high-dimensional gene expression data.
+
+.center[
+&lt;img src="figures/pbmc_original.png" width=470/&gt;
+]
+
+---
+
+### PBMC Dataset
+
+* Local distances should not be interpreted in the same way across all the clusters.
+* Cells on the boundary of some of the clusters are neighbors with cells in clusters that are not the closest in the embedding space.
+
+.center[
+&lt;img src="figures/pbmc_links.gif" width=470/&gt;
+]
+
+---
+
+### PBMC Dataset
+
+Here are the analogous embeddings when increasing the number of neighbors used
+in the UMAP construction from 15 to 50.
+
+.center[
+&lt;img src="figures/pbmc_original_n50.png" width=470/&gt;
+]
+
+---
+
+### PBMC Dataset
+
+In this case, the plasma and dendritic cells are less distorted than before, but
+some issues remain with the monocytes.
+
+.center[
+&lt;img src="figures/pbmc_links_n50.gif" width=470/&gt;
+]
+
+---
+
+### Hydra Cell Atlas
+
+.pull-left[
+Here is an application to a more realistic hydra cell atlas dataset [12; 4]. We fit t-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
+exaggerated.
+]
+
+.pull-right[
+&lt;img src="figures/hydra_perplexity_80.gif" width=470/&gt;
+]
+
+---
+
+### Hydra Cell Atlas
+
+.pull-left[
+Increasing perplexity to 500, the clusters are more reliable, but samples along
+the boundary of the visualization are in fact closer than they appear.
+]
+
+.pull-right[
+&lt;img src="figures/hydra_perplexity_500.gif" width=470/&gt;
+]
+
+---
+
+### Hydra Cell Atlas
+
+.pull-left[
+Applying the local isometry visualization, we can see that some of the "threads"
+are actually more spread out in the original data.
+]
+
+.pull-right[
+&lt;img src="figures/hydra_isometry.gif" width=470/&gt;
+]
+
+---
+
+### Counterexample
+
+Our visualization approach fails when local neighborhood information isn't
+enough. These two rings are overlapping in the original data.
+
+.center[
+&lt;img src="figures/links-d1.png" width=300/&gt;
+&lt;img src="figures/links-d2.png" width=300/&gt;
+&lt;img src="figures/links-d3.png" width=300/&gt;
+]
+
+The original data are interlocking links. The color is the `\(x\)`-axis value and
+would be unknown in practice.
+
+---
+
+### Summary
+
+1. Distortion in nonlinear dimensionality reduction may be inevitable, but there
+are ways to systematically characterize it.
+
+1. Interactivity makes it possible to progressively reveal extra information
+related to distortion depending on the analysts' priorities.
+
+---
+
+### Thank you!
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+---
+
+class: reference
+
+### References
+
+[1] A. Narayan et al. "Assessing single-cell transcriptomic variability through density-preserving data visualization". In: _Nature biotechnology_ 39.6 (2021), pp. 765-774.
+
+[2] M. Wattenberg et al. "How to Use t-SNE Effectively". In: _Distill_ (2016). DOI: [10.23915/distill.00002](https://doi.org/10.23915%2Fdistill.00002). URL:
+[http://distill.pub/2016/misread-tsne](http://distill.pub/2016/misread-tsne).
+
+[3] D. Kobak et al. "Initialization is critical for preserving global data structure in both t-SNE and UMAP". In: _Nature Biotechnology_ 39.2 (Feb. 2021), p. 156–157. ISSN:
+1546-1696. DOI: [10.1038/s41587-020-00809-z](https://doi.org/10.1038%2Fs41587-020-00809-z). URL:
+[http://dx.doi.org/10.1038/s41587-020-00809-z](http://dx.doi.org/10.1038/s41587-020-00809-z).
+
+[4] L. Xia et al. "Statistical method scDEED for detecting dubious 2D single-cell embeddings and optimizing t-SNE and UMAP hyperparameters". In: _Nature Communications_ 15.1 (2024),
+p. 1753.
+
+[5] T. Chari et al. "The specious art of single-cell genomics". In: _PLOS Computational Biology_ 19.8 (Aug. 2023). Ed. by J. A. Papin, p. e1011288. ISSN: 1553-7358. DOI:
+[10.1371/journal.pcbi.1011288](https://doi.org/10.1371%2Fjournal.pcbi.1011288). URL: [http://dx.doi.org/10.1371/journal.pcbi.1011288](http://dx.doi.org/10.1371/journal.pcbi.1011288).
+
+[6] P. H. Laskowski. "The traditional and modern look at Tissot's Indicatrix". In: _The American Cartographer_ 16.2 (1989), pp. 123-133.
+
+[7] D. Perrault-Joncas et al. "Metric Learning of Manifolds". In: _Semisupervised Learn_ 1 (2006), pp. 293-306.
+
+[8] J. McQueen et al. "Nearly isometric embedding by relaxation". In: _Advances in Neural Information Processing Systems_ 29 (2016).
+
+[9] _Understanding UMAP - pair-code.github.io_. &lt;https://pair-code.github.io/understanding-umap/&gt;. [Accessed 06-06-2025].
+
+[10] M. Noichl. _Max Noichl | Flattening Mammoths - maxnoichl.eu_. &lt;https://www.maxnoichl.eu/projects/mammoth/&gt;. [Accessed 06-06-2025].
+
+[11] _Analysis and visualization of spatial transcriptomics data &amp;#x2014; scanpy-tutorials 0.1.dev50+g37c26f3 documentation - scanpy-tutorials.readthedocs.io_.
+&lt;https://scanpy-tutorials.readthedocs.io/en/latest/spatial/basic-analysis.html&gt;. [Accessed 11-06-2025].
+
+[12] S. Siebert et al. "Stem cell differentiation trajectories in Hydra resolved at single-cell resolution". In: _Science_ 365.6451 (Jul. 2019). ISSN: 1095-9203. DOI:
+[10.1126/science.aav9314](https://doi.org/10.1126%2Fscience.aav9314). URL: [http://dx.doi.org/10.1126/science.aav9314](http://dx.doi.org/10.1126/science.aav9314).
+
+[13] Z. Liu et al. "Assessing and improving reliability of neighbor embedding methods: a map-continuity perspective". In: _Nature Communications_ 16.1 (May. 2025). ISSN: 2041-1723.
+DOI: [10.1038/s41467-025-60434-9](https://doi.org/10.1038%2Fs41467-025-60434-9). URL: [http://dx.doi.org/10.1038/s41467-025-60434-9](http://dx.doi.org/10.1038/s41467-025-60434-9).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
