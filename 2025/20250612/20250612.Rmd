@@ -27,11 +27,13 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/1s4gi3</a><br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
+Joint work with <br/>
+Shuzhen Zhang, Chenab, Marina Meila <br/>
 IISA 2025 <br/>
 12 | June | 2025 <br/>
 </div>
@@ -442,9 +444,9 @@ placed too close to one another.
 
 ### PBMC Dataset
 
-This is a standard single cell gene expression data set used in the introductory
-UMAP tutorial in the scanpy package. We will see that even this tutorial example
-can be improved by overlaying distortion information.
+This single cell gene expression data set used in the introductory data
+visualization tutorial from the scanpy package `r Citep(bib, )`. Each point is
+the UMAP embedding of a cell's high-dimensional gene expression data.
 
 .center[
 <img src="figures/pbmc_original.png" width=470/>
@@ -454,6 +456,9 @@ can be improved by overlaying distortion information.
 
 ### PBMC Dataset
 
+* Local distances should not be interpreted in the same way across all the clusters.
+* Cells on the boundary of some of the clusters are neighbors with cells in clusters that are not the closest in the embedding space.
+
 .center[
 <img src="figures/pbmc_links.gif" width=470/>
 ]
@@ -461,6 +466,9 @@ can be improved by overlaying distortion information.
 ---
 
 ### PBMC Dataset
+
+Here are the analogous embeddings when increasing the number of neighbors used
+in the UMAP construction from 15 to 50.
 
 .center[
 <img src="figures/pbmc_original_n50.png" width=470/>
@@ -470,6 +478,9 @@ can be improved by overlaying distortion information.
 
 ### PBMC Dataset
 
+In this case, the plasma and dendritic cells are less distorted than before, but
+some issues remain with the monocytes.
+
 .center[
 <img src="figures/pbmc_links_n50.gif" width=470/>
 ]
@@ -477,6 +488,11 @@ can be improved by overlaying distortion information.
 ---
 
 ### Hydra Cell Atlas
+
+Here is an application to a more realistic hydra cell atlas dataset, which was
+also used to study distortion in `r Citep(bib, "xia2024statistical")`. We fit
+t-SNE with the perplexity hyperparameter set to 80. Points around the boundary
+are collapsed, and between-cluster distances are exaggerated.
 
 .center[
 <img src="figures/hydra_perplexity_80.gif" width=470/>
@@ -486,6 +502,9 @@ can be improved by overlaying distortion information.
 
 ### Hydra Cell Atlas
 
+When we increase perplexity to 500, the clusters are more reliable, but samples
+along the boundary of the visualization are in fact closer than they appear.
+
 .center[
 <img src="figures/hydra_perplexity_500.gif" width=470/>
 ]
@@ -494,16 +513,20 @@ can be improved by overlaying distortion information.
 
 ### Hydra Cell Atlas
 
+Applying the local isometry visualization, we can see that some of the "threads"
+are actually more spread out in the original data.
+
 .center[
 <img src="figures/hydra_isometry.gif" width=470/>
 ]
 
 ---
 
-### Limitations: Link Data
+### Counterexample
 
- Our visualization approach doesn't resolve all problems. For example, 
- distortion are inherently local and sometimes problems can arise globally.
+Our visualization approach can still fail when local neighborhood information
+isn't enough. In this example, the two rings are overlapping in the original
+data, but with centers further and further appart.
 
 .center[
 <img src="figures/links-d1.png" width=300/>
@@ -518,8 +541,11 @@ would be unknown in practice.
 
 ### Summary
 
-The `distortion` package makes it easy to derive and visualize distortion
-metrics.
+1. Distortion in nonlinear dimensionality reduction may be inevitable, but there
+are ways to systematically characterize it.
+
+1. Interactivity makes it possible to progressively reveal extra information
+related to distortion depending on the analysts' priorities.
 
 ---
 
@@ -528,7 +554,6 @@ metrics.
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
-* Co-authors: Chenab, Shuzhen Zhang, Marina Meila
 
 ---
 
