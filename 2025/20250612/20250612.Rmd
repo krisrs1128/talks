@@ -27,7 +27,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/y74jh3">go.wisc.edu/y74jh3</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 Joint w/
 Shuzhen Zhang, Chenab, Marina Meila <br/>
@@ -75,9 +75,9 @@ Gerardus Mercator's 1569 map of the world.
 
 ### Map Distortions
 
-For example, the Mercator projection artificially inflates areas in northern
-latitudes. But it perfectly preserves angles, and this was extremely important
-for ocean navigation.
+For example, the Mercator projection artificially inflates areas at the poles.
+But it perfectly preserves angles, and this was extremely important for ocean
+navigation.
 
 .center[
 <img src="figures/mercator.jpg" width=500/>
