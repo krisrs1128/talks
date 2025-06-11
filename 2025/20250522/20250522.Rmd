@@ -93,9 +93,13 @@ public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller20
 can't directly observe microbe-microbe interactions, which stands in the way of
 ground truth labeling.
 
-1. To illustrate how simulation can help, we will use data from the American Gut
-Project as the template for our comparison. We have 261 samples and have
-filtered to the 45 most abundant taxa.
+1. We use the following choices in the design of our simulation,
+
+- **Template**: American Gut Project (261 samples, 45 most abundant taxa)
+- **Estimator**: Zero-Inflated Negative Binomial Copula
+- **Goodness-of-Fit**: Graphical Checks
+- **Ground Truth**: Copula correlation matrix
+- **Summarization**: Estimated vs. ground-truth correlation
 
 ---
 

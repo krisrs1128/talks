@@ -77,15 +77,19 @@ public data resources, like [3; 4; 5; 6].
 can't directly observe microbe-microbe interactions, which stands in the way of
 ground truth labeling.
 
-1. To illustrate how simulation can help, we will use data from the American Gut
-Project as the template for our comparison. We have 261 samples and have
-filtered to the 45 most abundant taxa.
+1. We use the following choices in the design of our simulation,
+
+- **Template**: American Gut Project (261 samples, 45 most abundant taxa)
+- **Estimator**: Zero-Inflated Negative Binomial Copula
+- **Goodness-of-Fit**: Graphical Checks
+- **Ground Truth**: Copula correlation matrix
+- **Summarization**: Estimated vs. ground-truth correlation
 
 ---
 
 ### Simulation Mechanism
 
-We used scDesign3 [14] to estimate a
+We used scDesign3 [7] to estimate a
 Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
 
 .center[
@@ -121,8 +125,8 @@ block correlation matrix with varying intra-block correlation strength.
 
 ### Methods Comparison
 
-We compared SpiecEasi [15], a method designed for microbiome networks,
-with the Ledoit-Wolf estimator [16] on `\(\log\left(1 + x\right)\)` transformed counts.
+We compared SpiecEasi [8], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [9] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
   &lt;img src="figures/comparison_difference.png" width=800/&gt;
@@ -132,8 +136,8 @@ with the Ledoit-Wolf estimator [16] on `\(\log\left(1 + x\right)\)` transformed 
 
 ### Methods Comparison
 
-We compared SpiecEasi [15], a method designed for microbiome networks,
-with the Ledoit-Wolf estimator [16] on `\(\log\left(1 + x\right)\)` transformed counts.
+We compared SpiecEasi [8], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [9] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
   &lt;img src="figures/correlation_comparison_scatter.png" width=700/&gt;
@@ -157,7 +161,7 @@ Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
 dataset about the gut-brain axis.
 
 .pull-left[
-1. We re-analyzed the study [7], which gathered data
+1. We re-analyzed the study [10], which gathered data
 from 54 participants assigned to either a mindfulness training intervention or a
 waitlist control (n = 27 each).
 
@@ -176,7 +180,7 @@ month follow-up.
 1. We wondered whether mindfulness intervention might affect behavior, which
 in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data [8; 9].
+microbiome and survey data [11; 12].
 
 .center[
 &lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
@@ -220,8 +224,8 @@ written to accompany our papers:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data [10].
-* `scDesign3` - An existing simulator for single cell data [11; 12; 13].
+* `multimedia` - Mediation analysis for microbiome data [13].
+* `scDesign3` - An existing simulator for single cell data [14; 15; 16].
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -269,28 +273,25 @@ DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannure
 
 [6] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
 
-[7] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep. 2021). ISSN:
-1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
+[7] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. DOI:
+[10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL: [http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
+
+[8] Z. D. Kurtz et al. "Sparse and compositionally robust inference of microbial ecological networks". En. In: _PLoS Comput. Biol._ 11.5 (May. 2015), p. e1004226.
+
+[9] O. Ledoit et al. "A well-conditioned estimator for large-dimensional covariance matrices". In: _Journal of Multivariate Analysis_ 88.2 (Feb. 2004), p. 365–411. ISSN: 0047-259X.
+DOI: [10.1016/s0047-259x(03)00096-4](https://doi.org/10.1016%2Fs0047-259x%2803%2900096-4). URL:
+[http://dx.doi.org/10.1016/S0047-259X(03)00096-4](http://dx.doi.org/10.1016/S0047-259X(03)00096-4).
+
+[10] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep. 2021).
+ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
 [http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
 
-[8] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+[11] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
 
-[9] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+[12] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
 
-[10] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[13] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
 [10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
-
-[11] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
-[10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
-[http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
-
-[12] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
-(May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
-[http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
-
-[13] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. ISSN:
-1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
-[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
 ---
 
@@ -298,14 +299,17 @@ class: reference
 
 ### References
 
-[14] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". En. In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. DOI:
-[10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL: [http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
+[14] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
+[10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
 
-[15] Z. D. Kurtz et al. "Sparse and compositionally robust inference of microbial ecological networks". En. In: _PLoS Comput. Biol._ 11.5 (May. 2015), p. e1004226.
+[15] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
+(May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
+[http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
 
-[16] O. Ledoit et al. "A well-conditioned estimator for large-dimensional covariance matrices". In: _Journal of Multivariate Analysis_ 88.2 (Feb. 2004), p. 365–411. ISSN: 0047-259X.
-DOI: [10.1016/s0047-259x(03)00096-4](https://doi.org/10.1016%2Fs0047-259x%2803%2900096-4). URL:
-[http://dx.doi.org/10.1016/S0047-259X(03)00096-4](http://dx.doi.org/10.1016/S0047-259X(03)00096-4).
+[16] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. ISSN:
+1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
+[http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
 ---
 
@@ -463,7 +467,7 @@ A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-s
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [7], which
+1. We re-analyzed a pilot study from 2021 [10], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 
