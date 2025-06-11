@@ -1,0 +1,526 @@
+---
+title: Semisynthetic Controls for Cancer Microbiome Analysis
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+# Semisynthetic Controls for Cancer Microbiome Analysis
+
+<style>
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+</style>
+
+<div id="subtitle_left">
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Paper: <a href="https://go.wisc.edu/p12o8w">go.wisc.edu/p12o8w</a><br/>
+Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
+</div>
+<div id="subtitle_right">
+Kris Sankaran <br/>
+<a href="https://symposium2025.icsa.org/">ICSA 2025</a><br/>
+17 | June | 2025 <br/>
+</div>
+
+<!-- 20 minute talk -->
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+library(RefManageR)
+
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+---
+
+### Outline
+
+1. Cancer and the microbiome
+  - Recent developments
+  - Statistical challenges
+
+1. Semi-Synthetic Data
+  - Conceptual overview
+  - Examples
+
+---
+
+## Cancer $\iff$ Microbiome
+
+---
+
+Cancer development/progression
+
+- Individual species
+- Community byproducts
+
+Cancer treatments
+
+- Immune modulation
+
+---
+
+### Cancer development
+
+
+---
+
+### Treatment
+
+
+---
+
+.center[
+## Simulation 
+]
+
+---
+
+Tonkin-Hill Example
+
+---
+
+### Why Simulate?
+
+Simulations lie behind the many types of skills microbiome statisticians must master `r Citep(bib, c("Sankaran2023", "Sankaran2024-gb"))`. They help us to...
+
+<img src="figures/noun-labs-99456.png" width=40/> **Design experiments** that have high power to detect subtle signals.
+<br/>
+
+<img src="figures/noun-benchmark-7569457.png" width=40/> **Benchmark methods** and identify gaps in the literature.
+<br/>
+
+<img src="figures/noun-checkmark-7518321.png" width=40/> **Check conclusions** that might be sensitive to technical processing steps.
+
+It's worthwhile to treat simulation design with the same formality as methods
+development.
+
+---
+
+### Semisynthetic Data
+
+One of the major advances has been the design of algorithms that can leverage
+public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller2022", "microbiomedatasets", "microbiomedataHomeNational"))`.
+
+* **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator.
+
+.center[
+<img src="figures/template_defn.png" width=670/>
+]
+
+---
+
+### Example 1: Microbiome Network Inference
+
+1. Benchmarking methods for microbiome network inference is challenging. We
+can't directly observe microbe-microbe interactions, which stands in the way of
+ground truth labeling.
+
+1. We use the following choices in the design of our simulation,
+
+- **Template**: American Gut Project (261 samples, 45 most abundant taxa)
+- **Estimator**: Zero-Inflated Negative Binomial Copula
+- **Goodness-of-Fit**: Graphical Checks
+- **Ground Truth**: Copula correlation matrix
+- **Summarization**: Estimated vs. ground-truth correlation
+
+---
+
+### Simulation Mechanism
+
+We used scDesign3 `r Citep(bib, "Song_Wang_Yan_Liu_Sun_Li_2023")` to estimate a
+Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
+
+.center[
+<img src="figures/zinb_marginals.png" width=700/>
+]
+
+---
+
+### Estimated Correlation
+
+The resulting correlation estimate lacks substantial banding or blocks. We can
+also sanity check some of the highly correlated pairs.
+
+.pull-left[
+<img src="figures/estimated_correlation.png" width=900/>
+]
+.pull-right[
+<img src="figures/correlated_pair.png" width=400/>
+]
+
+---
+
+### Establishing Ground Truth
+
+To create a basis for methods comparison, we modified the ZINB copula to use a
+block correlation matrix with varying intra-block correlation strength.
+
+.center[
+  <img src="figures/ground_truth_corr.png" width=450/>
+]
+
+---
+
+### Methods Comparison
+
+We compared SpiecEasi `r Citep(bib, "Kurtz2015-tf")`, a method designed for microbiome networks,
+with the Ledoit-Wolf estimator `r Citep(bib, "Ledoit2004")` on $\log\left(1 + x\right)$ transformed counts.
+
+.center[
+  <img src="figures/comparison_difference.png" width=800/>
+]
+
+---
+
+### Methods Comparison
+
+We compared SpiecEasi `r Citep(bib, "Kurtz2015-tf")`, a method designed for microbiome networks,
+with the Ledoit-Wolf estimator `r Citep(bib, "Ledoit2004")` on $\log\left(1 + x\right)$ transformed counts.
+
+.center[
+  <img src="figures/correlation_comparison_scatter.png" width=700/>
+]
+
+---
+
+### Generalizing
+
+In our review, we consider a wider range of underlying correlation matrices.
+
+.center[
+  <img src="figures/network_comparison.png" width=1200/>
+]
+
+---
+
+### Example 2: Mediation Analysis
+
+Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
+dataset about the gut-brain axis.
+
+.pull-left[
+1. We re-analyzed the study `r Citep(bib, "Grupe2021")`, which gathered data
+from 54 participants assigned to either a mindfulness training intervention or a
+waitlist control (n = 27 each).
+
+1. The training lasted 2 months. Data were collected at the start, finish, and 2
+month follow-up.
+]
+
+.pull-right[
+<img src="figures/design.png" width=450/>
+]
+
+---
+
+### Mediation Analysis
+
+1. We wondered whether mindfulness intervention might affect behavior, which
+in turn influences microbiota composition.
+2. To explore this, we applied a form of mediation analysis to the 16S
+microbiome and survey data `r Citep(bib, c("imai2010general", "sohn2019compositional"))`.
+
+.center[
+<img src="figures/mediation-dag-terms.png" width=550/>
+]
+
+---
+
+### Synthetic Null Data
+
+We can alter the simulator so that some pathways are "turned off." Estimates
+derived from these data provide a reference null distribution.
+
+.center[
+<img src="figures/mindfulness-altered.png" width=780/><br/>
+<span style="font-size: 24px;">
+The middle panel comes from a synthetic null: $T \nrightarrow M \to Y$.
+</span>
+]
+
+---
+
+### Synthetic Null Hypothesis Testing
+
+We rank the effects learned from both the real and synthetic null reference
+data. The significance threshold is chosen to control the empirical false
+discovery based on synthetic data.
+
+.center[
+<img src="figures/synthetic_null_testing.png" width=900/>
+]
+
+---
+
+### Software and Resources
+
+All the examples I discussed today can be run from online tutorials we've
+written to accompany our papers:
+
+* Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
+* Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
+
+The relevant R packages behind these analyses are:
+
+* `multimedia` - Mediation analysis for microbiome data `r Citep(bib, "Jiang2025")`.
+* `scDesign3` - An existing simulator for single cell data `r Citep(bib, c("Li2019", "Sun2021", "Song2023"))`.
+* `scDesigner` - Under-development version used in the first tutorial.
+
+---
+
+Simulation turns abstract, conceptual questions into simple empirical ones.
+
+.center[
+<img src="figures/simulation_summary.png" width=1000/>
+]
+
+---
+
+.center[
+### Thank you!
+]
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Co-authors: Hanying Jiang, Xinran Miao, Mara Beebe, Dan W. Grupe, Richie
+Davidson, Jo Handelsman, Saritha Kodikara, Jingyi Jessica Li, Kim-Anh Lê Cao,
+Susan Holmes
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 28)
+```
+
+---
+
+### Evaluation Taxonomy
+
+This is how some common techniques fall into this taxonomy.
+
+* **Graphical, Narrow**: Boxplots or cumulative distribution function plots comparing real vs. simulated taxa (like the DA example).
+
+* **Graphical, Broad**: Principal component plots of real vs. simulated dataset.
+
+* **Quantitative, Narrow**: Two-sample Kolmogorov-Smirnov test.
+
+* **Quantitative, Broad**: Evaluation through classification (next example).
+
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data (`r Citep(bib, "Sankaran2024-gb")`, "Batch Effect Correction").
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step1.png" width=500/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step2.png" width=240/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step3.png" width=400/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### SPLS-DA Intuition
+
+We "blend" columns of $\mathbf{X}$ and $\mathbf{Y}$ within tables until the patterns look similar.
+
+.center[
+<img src="figures/PLS-step4.png" width=150/>
+]
+
+Roughly, choose weights $\mathbf{a}$ and $\mathbf{b}$ to maximize
+$\text{cor}\left(\mathbf{Xa}, \mathbf{Yb}\right)$.
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figures/PLS-step5.png" width=800/>
+]
+
+---
+
+### SPLS-DA Intuition
+
+Now we can compare samples from the two tables in a single, shared space.
+
+.center[
+<img src="figures/PLS-step6.png" width=800/>
+]
+
+---
+
+### SPLS-DA Intuition
+
+To get more than one dimension, we can repeat this process after removing any
+correlation with previously found patterns.
+
+.center[
+<img src="figures/PLS-step7.png" width=800/>
+]
+
+---
+
+### Copula Models
+
+More formally, let $F_{1}, \dots, F_{D}$ be the target margins and let $\Phi$ be
+the CDF of the Gaussian distribution. Gaussian Copula modeling has these steps.
+
+Estimate:
+
+1. Gaussianize the observed $\mathbf{x}_{i}$ to $\mathbf{z}_{i} := \left[\Phi^{-1}\left(F_{1}\left(x_{i1}\right)\right), \dots, \Phi^{-1}\left(F_{D}\left(x_{iD}\right)\right)\right]$
+1. Estimate the covariance $\hat{\Sigma}$ associated with $z_{i}$
+
+Simulate:
+
+1. Draw $\mathbf{z}^\ast \sim \mathcal{N}\left(0, \Sigma\right)$ 
+1. Transform back $\mathbf{x}^{\ast} := \left[F_{1}^{-1}\left(\Phi\left(z_{i1}^\ast\right)\right), \dots, F_{D}^{-1}\left(\Phi\left(z_{iD}^\ast\right)\right)\right]$
+
+---
+
+### Real vs. Simulated Correlation
+
+.center[
+<img src="figures/correlation_histogram.png" width=700/>
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
+
+---
+
+### Tuning High-Dimensional Covariance Estimator
+
+.center[
+<img src="figures/covariance_hyperparameter_errors.png" width=700/>
+]
+
+A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-simulation/multivariate-power-analysis.html#evaluation).
+
+---
+
+### Intuition
+
+* In the Gaussianized space, it's easy to model correlation.
+* The mapping back and forth is possible because we know the margins $F$.
+  - $\Phi$ represents the Gaussian CDF applied componentwise
+<br/>
+<br/>
+
+.center[
+<img src="figures/copula_transformation.png" width=700/>
+]
+
+---
+
+### Pilot Study
+
+.pull-left[
+1. We re-analyzed a pilot study from 2021 `r Citep(bib, "Grupe2021")`, which
+gathered data from 54 participants randomly assigned to either a mindfulness
+training intervention or a waitlist control (n = 27 each).
+
+1. The training lasted 2 months. Data were collected at the start, finish, and 2
+month follow-up.
+]
+
+.pull-right[
+<img src="figures/design.png" width=450/>
+]
+
+---
+
+### Estimated Indirect Effects
+
+These figures summarize the paths $T \to M \to Y$.</br>
+(i.e., color $\to$ x-axis $\to$ y-axis).
+
+.center[
+<img src="figures/mindfulness-indirect-effects.png" width=900/>
+]
+
+---
+
+### Figure Sources
+
+frustration by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/frustration/" target="_blank" title="frustration Icons">Noun Project</a> (CC BY 3.0)
+
+confused by Rikas Dzihab from <a href="https://thenounproject.com/browse/icons/term/confused/" target="_blank" title="confused Icons">Noun Project</a> (CC BY 3.0)
+
+Benchmark by Sofiah from <a href="https://thenounproject.com/browse/icons/term/benchmark/" target="_blank" title="Benchmark Icons">Noun Project</a> (CC BY 3.0)
+
+checkmark by Asa Kharisma Dini from <a href="https://thenounproject.com/browse/icons/term/checkmark/" target="_blank" title="checkmark Icons">Noun Project</a> (CC BY 3.0)
+
+Lab glassware by Vectors Market from <a href="https://thenounproject.com/browse/icons/term/lab-glassware/" target="_blank" title="Lab glassware Icons">Noun Project</a> (CC BY 3.0)
