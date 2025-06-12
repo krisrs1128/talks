@@ -164,6 +164,44 @@ This is similar in spirit to Tissot's indicatrix in the cartography literature
 ]
 
 ---
+
+### Distance Preservation
+
+.pull-left[
+We can compare the distance to nearest neighbors in the original vs. embedding
+space. 
+
+In this scatterplot, the outliers in the top left are far apart in the embedding
+space, but close to one another in the original data.
+]
+
+.pull-right[
+<img src="figures/distance_preservation.png" width=400/>
+]
+
+---
+
+### Flagging Distorted Neighborhoods
+
+Some neighborhoods have poorly preserved distances. To detect this, one approach
+is:
+
+* Fit the running median in a scatterplot of true vs. embedding distances.
+* Compute the IQR within each bin. Points above $3\times$ IQR are considered poorly preserved outliers.
+* If a large enough fraction of a point's neighbor links are poorly preserved, then that point is flagged as "broken."
+
+---
+
+### Flagging Broken Neighborhoods
+
+Here is a graphical summary:
+
+.center[
+<img src="figures/brokenness-heuristic.svg" width=800/>
+]
+
+
+---
 ### Diffusion-Based Metrics
 
 The graph laplacian induces a metric in the original manifold. Intuitively, two
@@ -172,27 +210,6 @@ probability ending up at the other after $t$ steps.
 
 .center[
 <img src="figures/random-walk-laplacian.svg" width=800/>
-]
-
----
-
-### Graph Laplacian
-
-This random walk information is encoded in the normalized graph laplacian. 
-
-.pull-left[
-\begin{align}
-K_{nn'} &= \text{exp}\left(-\frac{1}{\epsilon}\|x_{n} - x_{n'}\|^2\right)\\
-D &= \text{diag}\left(K \mathbf{1}_{N}\right)\\
-\tilde{K} &= D^{-1}K D^{-1}
-\end{align}
-]
-
-.pull-right[
-\begin{align}
-\tilde{D} &= \text{diag}\left(K \mathbf{1}_{N}\right) \\
-L &= \frac{1}{\epsilon}\left[I - \tilde{D}^{-1}\tilde{K}\right] \\
-\end{align}
 ]
 
 ---
@@ -291,8 +308,12 @@ Suppose that the $k^{th}$ dimension of the embedding algorithm is $z_{k} \in \ma
 It turns out that the diffusion metric in the original space is transformed in the embedding space according to the local metrics:
 
 \begin{align*}
-G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
+G_{\cdot, kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
 \end{align*}
+
+.center[
+<img src="figures/g_kl.png" width=350/>
+]
 
 ---
 
@@ -301,7 +322,7 @@ G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \l
 These two clusters are generated as:
 
 \begin{align*}
-x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 1\right) + \frac{1}{2}\mathcal{N}\left(10, 10\right)
+x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\left(100, 1\right)
 \end{align*}
 
 .center[
@@ -317,45 +338,6 @@ difference is captured in the local metrics.
 
 .center[
 <img src="figures/unequal_variances_ellipse.png" width=700/>
-]
-
----
-
-### Distance Preservation
-
-.pull-left[
-We can compare the distance to nearest neighbors in the original vs. embedding
-space. 
-
-In this scatterplot, the outliers in the top left are far apart in the embedding
-space, but close to one another in the original data.
-]
-
-.pull-right[
-<img src="figures/distance_preservation.png" width=400/>
-]
-
----
-
-### Flagging Distorted Neighborhoods
-
-Some neighborhoods have poorly preserved distances. To detect this, one approach
-is:
-
-* Fit the running median in a scatterplot of true vs. embedding distances.
-* Compute the IQR of the residuals within each bin. Those above $3\times$ IQR are considered poorly preserved outliers.
-* If a large enough fraction of a point's neighbor links are poorly preserved, then that point is flagged as "broken."
-
-We have also implemented the scDEED algorithm for flagging problematic points `r Citep(bib, "xia2024statistical")`.
-
----
-
-### Flagging Broken Neighborhoods
-
-Here is a graphical summary:
-
-.center[
-<img src="figures/brokenness-heuristic.svg" width=800/>
 ]
 
 ---
@@ -456,8 +438,8 @@ cell's high-dimensional gene expression data.
 
 ### PBMC Dataset
 
-* Local distances should not be interpreted in the same way across all the clusters.
-* Cells on the boundary of some of the clusters are neighbors with cells in clusters that are not the closest in the embedding space.
+* Distance scales vary across clusters.
+* Some boundary cells are neighbors with non-adjacent clusters in embedding space.
 
 .center[
 <img src="figures/pbmc_links.gif" width=470/>
@@ -567,3 +549,24 @@ class: reference
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
 ```
+
+---
+
+### Graph Laplacian
+
+This random walk information is encoded in the normalized graph laplacian. 
+
+.pull-left[
+\begin{align}
+K_{nn'} &= \text{exp}\left(-\frac{1}{\epsilon}\|x_{n} - x_{n'}\|^2\right)\\
+D &= \text{diag}\left(K \mathbf{1}_{N}\right)\\
+\tilde{K} &= D^{-1}K D^{-1}
+\end{align}
+]
+
+.pull-right[
+\begin{align}
+\tilde{D} &= \text{diag}\left(K \mathbf{1}_{N}\right) \\
+L &= \frac{1}{\epsilon}\left[I - \tilde{D}^{-1}\tilde{K}\right] \\
+\end{align}
+]

@@ -106,20 +106,20 @@ Example from [3].
 ### Consequences
 
 These distortions are not mere technical curiosities -- they can significantly
-impact scientific interpretation [13; 3]. For example, they have been known to create
+impact scientific interpretation [4; 3]. For example, they have been known to create
 misleading differences between cell types that are actually quite similar.
 
 .center[
 &lt;img src="figures/scdeed-example.png" width=700/&gt;
 ]
-Example from [4].
+Example from [5].
 
 ---
 
 ### Controversy
 
 More generally, nonlinear dimensionality reduction has become the source of
-widespread concern in the single cell literature [5].
+widespread concern in the single cell literature [6].
 
 .center[
 &lt;img src="figures/specious_art.png" width=700/&gt;
@@ -139,13 +139,51 @@ with measures of local distortion which are already available in the literature.
 ]
 
 This is similar in spirit to Tissot's indicatrix in the cartography literature
-[6].
+[7].
 
 ---
 
 .center[
 ## Implementation
 ]
+
+---
+
+### Distance Preservation
+
+.pull-left[
+We can compare the distance to nearest neighbors in the original vs. embedding
+space. 
+
+In this scatterplot, the outliers in the top left are far apart in the embedding
+space, but close to one another in the original data.
+]
+
+.pull-right[
+&lt;img src="figures/distance_preservation.png" width=400/&gt;
+]
+
+---
+
+### Flagging Distorted Neighborhoods
+
+Some neighborhoods have poorly preserved distances. To detect this, one approach
+is:
+
+* Fit the running median in a scatterplot of true vs. embedding distances.
+* Compute the IQR within each bin. Points above `\(3\times\)` IQR are considered poorly preserved outliers.
+* If a large enough fraction of a point's neighbor links are poorly preserved, then that point is flagged as "broken."
+
+---
+
+### Flagging Broken Neighborhoods
+
+Here is a graphical summary:
+
+.center[
+&lt;img src="figures/brokenness-heuristic.svg" width=800/&gt;
+]
+
 
 ---
 ### Diffusion-Based Metrics
@@ -160,32 +198,11 @@ probability ending up at the other after `\(t\)` steps.
 
 ---
 
-### Graph Laplacian
-
-This random walk information is encoded in the normalized graph laplacian. 
-
-.pull-left[
-`\begin{align}
-K_{nn'} &amp;= \text{exp}\left(-\frac{1}{\epsilon}\|x_{n} - x_{n'}\|^2\right)\\
-D &amp;= \text{diag}\left(K \mathbf{1}_{N}\right)\\
-\tilde{K} &amp;= D^{-1}K D^{-1}
-\end{align}`
-]
-
-.pull-right[
-`\begin{align}
-\tilde{D} &amp;= \text{diag}\left(K \mathbf{1}_{N}\right) \\
-L &amp;= \frac{1}{\epsilon}\left[I - \tilde{D}^{-1}\tilde{K}\right] \\
-\end{align}`
-]
-
----
-
 ### Pushforward Metric
 
 When we apply a nonlinear dimensionality reduction method, we distort this
 metric. To understand exactly how it is warped, we apply the language of
-Riemannian geometry, following [7; 8].
+Riemannian geometry, following [8; 9].
 
 .center[
 &lt;img src="figures/riemann_transformation.svg" width=800/&gt;
@@ -275,8 +292,12 @@ Suppose that the `\(k^{th}\)` dimension of the embedding algorithm is `\(z_{k} \
 It turns out that the diffusion metric in the original space is transformed in the embedding space according to the local metrics:
 
 `\begin{align*}
-G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
+G_{\cdot, kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
 \end{align*}`
+
+.center[
+&lt;img src="figures/g_kl.png" width=350/&gt;
+]
 
 ---
 
@@ -285,7 +306,7 @@ G_{kl}^{-1} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \l
 These two clusters are generated as:
 
 `\begin{align*}
-x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 1\right) + \frac{1}{2}\mathcal{N}\left(10, 10\right)
+x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\left(100, 1\right)
 \end{align*}`
 
 .center[
@@ -301,45 +322,6 @@ difference is captured in the local metrics.
 
 .center[
 &lt;img src="figures/unequal_variances_ellipse.png" width=700/&gt;
-]
-
----
-
-### Distance Preservation
-
-.pull-left[
-We can compare the distance to nearest neighbors in the original vs. embedding
-space. 
-
-In this scatterplot, the outliers in the top left are far apart in the embedding
-space, but close to one another in the original data.
-]
-
-.pull-right[
-&lt;img src="figures/distance_preservation.png" width=400/&gt;
-]
-
----
-
-### Flagging Distorted Neighborhoods
-
-Some neighborhoods have poorly preserved distances. To detect this, one approach
-is:
-
-* Fit the running median in a scatterplot of true vs. embedding distances.
-* Compute the IQR of the residuals within each bin. Those above `\(3\times\)` IQR are considered poorly preserved outliers.
-* If a large enough fraction of a point's neighbor links are poorly preserved, then that point is flagged as "broken."
-
-We have also implemented the scDEED algorithm for flagging problematic points [4].
-
----
-
-### Flagging Broken Neighborhoods
-
-Here is a graphical summary:
-
-.center[
-&lt;img src="figures/brokenness-heuristic.svg" width=800/&gt;
 ]
 
 ---
@@ -393,7 +375,7 @@ cluster, we can notice the difference in the true cluster variances.
 
 ### Mammoth
 
-This example comes from [9; 10]. The 3D skeleton scans were produced by the
+This example comes from [10; 11]. The 3D skeleton scans were produced by the
 Smithsonian, and we can use nonlinear dimensionality reduction to "flatten" the
 skeleton into 2D.
 
@@ -429,7 +411,7 @@ placed too close to one another.
 ### PBMC Dataset
 
 This single cell gene expression data set used in the introductory data
-visualization tutorial from the scanpy package [11]. Each point is the UMAP embedding of a
+visualization tutorial from the scanpy package [12]. Each point is the UMAP embedding of a
 cell's high-dimensional gene expression data.
 
 .center[
@@ -440,8 +422,8 @@ cell's high-dimensional gene expression data.
 
 ### PBMC Dataset
 
-* Local distances should not be interpreted in the same way across all the clusters.
-* Cells on the boundary of some of the clusters are neighbors with cells in clusters that are not the closest in the embedding space.
+* Distance scales vary across clusters.
+* Some boundary cells are neighbors with non-adjacent clusters in embedding space.
 
 .center[
 &lt;img src="figures/pbmc_links.gif" width=470/&gt;
@@ -474,7 +456,7 @@ some issues remain with the monocytes.
 ### Hydra Cell Atlas
 
 .pull-left[
-Here is an application to a more realistic hydra cell atlas dataset [12; 4]. We fit t-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
+Here is an application to a more realistic hydra cell atlas dataset [13; 5]. We fit t-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
 exaggerated.
 ]
 
@@ -557,30 +539,51 @@ class: reference
 1546-1696. DOI: [10.1038/s41587-020-00809-z](https://doi.org/10.1038%2Fs41587-020-00809-z). URL:
 [http://dx.doi.org/10.1038/s41587-020-00809-z](http://dx.doi.org/10.1038/s41587-020-00809-z).
 
-[4] L. Xia et al. "Statistical method scDEED for detecting dubious 2D single-cell embeddings and optimizing t-SNE and UMAP hyperparameters". In: _Nature Communications_ 15.1 (2024),
+[4] Z. Liu et al. "Assessing and improving reliability of neighbor embedding methods: a map-continuity perspective". In: _Nature Communications_ 16.1 (May. 2025). ISSN: 2041-1723.
+DOI: [10.1038/s41467-025-60434-9](https://doi.org/10.1038%2Fs41467-025-60434-9). URL: [http://dx.doi.org/10.1038/s41467-025-60434-9](http://dx.doi.org/10.1038/s41467-025-60434-9).
+
+[5] L. Xia et al. "Statistical method scDEED for detecting dubious 2D single-cell embeddings and optimizing t-SNE and UMAP hyperparameters". In: _Nature Communications_ 15.1 (2024),
 p. 1753.
 
-[5] T. Chari et al. "The specious art of single-cell genomics". In: _PLOS Computational Biology_ 19.8 (Aug. 2023). Ed. by J. A. Papin, p. e1011288. ISSN: 1553-7358. DOI:
+[6] T. Chari et al. "The specious art of single-cell genomics". In: _PLOS Computational Biology_ 19.8 (Aug. 2023). Ed. by J. A. Papin, p. e1011288. ISSN: 1553-7358. DOI:
 [10.1371/journal.pcbi.1011288](https://doi.org/10.1371%2Fjournal.pcbi.1011288). URL: [http://dx.doi.org/10.1371/journal.pcbi.1011288](http://dx.doi.org/10.1371/journal.pcbi.1011288).
 
-[6] P. H. Laskowski. "The traditional and modern look at Tissot's Indicatrix". In: _The American Cartographer_ 16.2 (1989), pp. 123-133.
+[7] P. H. Laskowski. "The traditional and modern look at Tissot's Indicatrix". In: _The American Cartographer_ 16.2 (1989), pp. 123-133.
 
-[7] D. Perrault-Joncas et al. "Metric Learning of Manifolds". In: _Semisupervised Learn_ 1 (2006), pp. 293-306.
+[8] D. Perrault-Joncas et al. "Metric Learning of Manifolds". In: _Semisupervised Learn_ 1 (2006), pp. 293-306.
 
-[8] J. McQueen et al. "Nearly isometric embedding by relaxation". In: _Advances in Neural Information Processing Systems_ 29 (2016).
+[9] J. McQueen et al. "Nearly isometric embedding by relaxation". In: _Advances in Neural Information Processing Systems_ 29 (2016).
 
-[9] _Understanding UMAP - pair-code.github.io_. &lt;https://pair-code.github.io/understanding-umap/&gt;. [Accessed 06-06-2025].
+[10] _Understanding UMAP - pair-code.github.io_. &lt;https://pair-code.github.io/understanding-umap/&gt;. [Accessed 06-06-2025].
 
-[10] M. Noichl. _Max Noichl | Flattening Mammoths - maxnoichl.eu_. &lt;https://www.maxnoichl.eu/projects/mammoth/&gt;. [Accessed 06-06-2025].
+[11] M. Noichl. _Max Noichl | Flattening Mammoths - maxnoichl.eu_. &lt;https://www.maxnoichl.eu/projects/mammoth/&gt;. [Accessed 06-06-2025].
 
-[11] _Analysis and visualization of spatial transcriptomics data &amp;#x2014; scanpy-tutorials 0.1.dev50+g37c26f3 documentation - scanpy-tutorials.readthedocs.io_.
+[12] _Analysis and visualization of spatial transcriptomics data &amp;#x2014; scanpy-tutorials 0.1.dev50+g37c26f3 documentation - scanpy-tutorials.readthedocs.io_.
 &lt;https://scanpy-tutorials.readthedocs.io/en/latest/spatial/basic-analysis.html&gt;. [Accessed 11-06-2025].
 
-[12] S. Siebert et al. "Stem cell differentiation trajectories in Hydra resolved at single-cell resolution". In: _Science_ 365.6451 (Jul. 2019). ISSN: 1095-9203. DOI:
+[13] S. Siebert et al. "Stem cell differentiation trajectories in Hydra resolved at single-cell resolution". In: _Science_ 365.6451 (Jul. 2019). ISSN: 1095-9203. DOI:
 [10.1126/science.aav9314](https://doi.org/10.1126%2Fscience.aav9314). URL: [http://dx.doi.org/10.1126/science.aav9314](http://dx.doi.org/10.1126/science.aav9314).
 
-[13] Z. Liu et al. "Assessing and improving reliability of neighbor embedding methods: a map-continuity perspective". In: _Nature Communications_ 16.1 (May. 2025). ISSN: 2041-1723.
-DOI: [10.1038/s41467-025-60434-9](https://doi.org/10.1038%2Fs41467-025-60434-9). URL: [http://dx.doi.org/10.1038/s41467-025-60434-9](http://dx.doi.org/10.1038/s41467-025-60434-9).
+---
+
+### Graph Laplacian
+
+This random walk information is encoded in the normalized graph laplacian. 
+
+.pull-left[
+`\begin{align}
+K_{nn'} &amp;= \text{exp}\left(-\frac{1}{\epsilon}\|x_{n} - x_{n'}\|^2\right)\\
+D &amp;= \text{diag}\left(K \mathbf{1}_{N}\right)\\
+\tilde{K} &amp;= D^{-1}K D^{-1}
+\end{align}`
+]
+
+.pull-right[
+`\begin{align}
+\tilde{D} &amp;= \text{diag}\left(K \mathbf{1}_{N}\right) \\
+L &amp;= \frac{1}{\epsilon}\left[I - \tilde{D}^{-1}\tilde{K}\right] \\
+\end{align}`
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
