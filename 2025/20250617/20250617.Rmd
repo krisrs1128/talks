@@ -68,9 +68,55 @@ bib <- ReadBib("references.bib")
 
 ---
 
-## Cancer $\iff$ Microbiome
+.center[
+## Cancer and the Microbiome
+]
 
 ---
+
+### High-level Connections
+
+The relationship between the microbiome and cancer is strong but complex.
+
+1. Microbes can alter (1) gene pathways, (2) immunological activity, and (3)
+metabolic environments in ways that can accelerate or protect against cancer
+development or progression.
+
+1. Since in principle the microbiome could be altered, there is interest in
+optimizing it to improve responses to cancer therapies.
+
+---
+
+### Carcinogenesis - Direct
+
+.pull-left[
+The study `r Citep(bib, "Castellarin2012")` found _F. nucleatum_ at 400X higher
+levels in colorectal cancer vs. healthy tissue. It's believed that when this
+bacteria binds to a cell's surface, it activates production of proinflammatory
+cytokines that increase the chance of epithelial-to-mesenchymal transition.
+]
+
+---
+
+### Carcinogenesis - Indirect
+
+In a mouse model of liver cancer, `r Citep(bib, "")` found that the microbiome
+can produce metabolites that convert primary to secondary bile acids. The
+primary bile acids up-regulate CXCL16 production, which protects against
+metastasis -- essentially, the microbiome weakens this protection.
+
+---
+
+### Chemotherapy
+
+---
+
+### Immune Checkpoint Inhibitors
+
+
+---
+
+### Controllability
 
 Cancer development/progression
 
@@ -83,13 +129,15 @@ Cancer treatments
 
 ---
 
-### Cancer development
+### Statistical Challenges
 
+> Overall, there is not a great deal of overlap between specific bacterial taxa associated with response [to therapy]...differences may be related to several different factors--including differences in techniques used to analyze samples...suggesting the importance of developing standardized approaches for microbiome analysis.
+
+-- `r Citep(bib, "Gopalakrishnan2023")`
 
 ---
 
-### Treatment
-
+### 
 
 ---
 
