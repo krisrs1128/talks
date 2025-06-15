@@ -56,15 +56,17 @@ bib <- ReadBib("references.bib")
 
 ---
 
+exclude: true
+
 ### Outline
 
 1. Cancer and the microbiome
   - Recent developments
   - Statistical challenges
 
-1. Semi-Synthetic Data
+1. Semisynthetic Data
   - Conceptual overview
-  - Examples
+  - Analysis examples
 
 ---
 
@@ -74,45 +76,64 @@ bib <- ReadBib("references.bib")
 
 ---
 
-### High-level Connections
+### Overview
 
-The relationship between the microbiome and cancer is strong but complex.
+The relationship between the microbiome and cancer is well-established but
+complex `r Citep(bib, c("Gopalakrishnan2018", "Liu2022", "Helmink2019", "Cullin2021"))`.
 
 1. Microbes can alter (1) gene pathways, (2) immunological activity, and (3)
 metabolic environments in ways that can accelerate or protect against cancer
 development or progression.
 
-1. Since in principle the microbiome could be altered, there is interest in
-optimizing it to improve responses to cancer therapies.
+1. The microbiome, unlike the human genome, is potentially alterable.
+Researchers are studying ways it can be optimized to improve treatment.
 
 ---
 
 ### Carcinogenesis - Direct
 
-.pull-left[
-The study `r Citep(bib, "Castellarin2012")` found _F. nucleatum_ at 400X higher
-levels in colorectal cancer vs. healthy tissue. It's believed that when this
-bacteria binds to a cell's surface, it activates production of proinflammatory
-cytokines that increase the chance of epithelial-to-mesenchymal transition.
+Some species can promote cancer. For example, `r Citep(bib, "Castellarin2011")` found enrichment of _F. nucleatum_ in matched colorectal
+cancer vs. healthy tissue. These bacteria can bind to cell surfaces and activate
+cancer-inducing cytokines.
+
+.center[
+  <img src="figures/fnucleatum_matched_pairs.png" width=575/>
 ]
 
 ---
 
 ### Carcinogenesis - Indirect
 
-In a mouse model of liver cancer, `r Citep(bib, "")` found that the microbiome
-can produce metabolites that convert primary to secondary bile acids. The
-primary bile acids up-regulate CXCL16 production, which protects against
-metastasis -- essentially, the microbiome weakens this protection.
+.pull-left[
+In a mouse model of liver cancer, `r Citep(bib, c("Ma2018"))` found that the microbiome
+can produce metabolites that convert primary to secondary bile acids. 
+
+The primary bile acids up-regulate CXCL16 production, which protects against
+metastasis -- the microbiome weakens this effect.
+]
+
+.pull-right[
+  <div class="caption">
+  <img src="figures/bile_acids.jpeg" width=320/><br/>
+  Figure from `r Citep(bib, "Hartmann2018")`.
+  </div>
+]
 
 ---
 
 ### Chemotherapy
 
-.pull-left[
 Microbiome changes induced by chemotherapy can exacerbate adverse events, like
 diarrhea and mucositis, which then limit the dosage and duration of chemotherapy
-treatments `r Citep(bib, "Chalif20225")`.
+treatments `r Citep(bib, c("Arthur2012", "Lightfoot2013", "Chalif2025"))`.
+<br/>
+<br/>
+
+.center[
+  <div class="caption">
+<img src="figures/chemotherapy.png"/>
+Figure adapted from `r Citep(bib, "Francescone2014")`.
+</div>
 ]
 
 ---
@@ -121,9 +142,16 @@ treatments `r Citep(bib, "Chalif20225")`.
 
 .pull-left[
 Gut microbiome composition has been associated with the effectiveness of immune
-checkpoint inhibitors `r Citep(bib, "Vetizou2015", "Sivan2015")`. This fact has
+checkpoint inhibitors `r Citep(bib, "Vetizou2015", "sivan2015commensal")`. This fact has
 been exploited in clinical trials where participants undergo FMT before
 immunotherapy treatment.
+]
+
+.pull-right[
+  <div class="caption">
+  <img src="figures/immunotherapy.png"/>
+  Figure adapted from `r Citep(bib, "Vetizou2015")`.
+  </div>
 ]
 
 ---
