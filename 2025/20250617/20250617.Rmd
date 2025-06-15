@@ -25,7 +25,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/02hl09">go.wisc.edu/02hl09</a><br/>
 Paper: <a href="https://go.wisc.edu/p12o8w">go.wisc.edu/p12o8w</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
@@ -92,12 +92,36 @@ Researchers are studying ways it can be optimized to improve treatment.
 
 ### Carcinogenesis - Direct
 
+.pull-left[
 Some species can promote cancer. For example, `r Citep(bib, "Castellarin2011")` found enrichment of _F. nucleatum_ in matched colorectal
 cancer vs. healthy tissue. These bacteria can bind to cell surfaces and activate
 cancer-inducing cytokines.
+]
 
-.center[
+.pull-right[
+  <div class="caption">
+  <img src="figures/fnulceatum_cartoon.jpg" width=250/>
+  <br/>
+  A summary of pathways triggered by an oncogenic microbe from `r Citep(bib, "Cullin2021")`.
+  </div>
+]
+
+---
+
+### Carcinogenesis - Direct
+
+.pull-left[
+Some species can promote cancer. For example, `r Citep(bib, "Castellarin2011")` found enrichment of _F. nucleatum_ in matched colorectal
+cancer vs. healthy tissue. These bacteria can bind to cell surfaces and activate
+cancer-inducing cytokines.
+]
+
+.pull-right[
+  <div class="caption">
   <img src="figures/fnucleatum_matched_pairs.png" width=575/>
+  <br/>
+  The original data presented in `r Citep(bib, "Castellarin2011")`
+  </div>
 ]
 
 ---
@@ -160,15 +184,11 @@ immunotherapy treatment.
 
 > Technically, such big data harmonization and integration is far from trivial, while "in-house" meethodologies, even when applied to the same datasets, may lead to nonoverlapping conclusions"
 
--- `r Citep(bib, "Culling2021")`
-
----
-
-### Statistical Challenges
+  -- _Microbiome and cancer_ `r Citep(bib, "Cullin2021")`
 
 > Overall, there is not a great deal of overlap between specific bacterial taxa associated with response [to therapy]...differences may be related to several different factors--including differences in techniques used to analyze samples...suggesting the importance of developing standardized approaches for microbiome analysis.
 
--- `r Citep(bib, "Gopalakrishnan2023")`
+  -- _The influence of the gut microbiome on cancer, immunity, and cancer immunotherapy_ `r Citep(bib, "Gopalakrishnan2018")`
 
 ---
 
@@ -178,7 +198,42 @@ immunotherapy treatment.
 
 ---
 
-Tonkin-Hill Example
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` the claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
+about the data analysis.
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom
+signals. The first part is a simulation.
+
+.pull-left[
+<img src="figures/gth_sim1.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim2.png"/>
+]
 
 ---
 
@@ -231,7 +286,7 @@ ground truth labeling.
 
 ### Simulation Mechanism
 
-We used scDesign3 `r Citep(bib, "Song_Wang_Yan_Liu_Sun_Li_2023")` to estimate a
+We used scDesign3 `r Citep(bib, "Song2023")` to estimate a
 Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
 
 .center[
@@ -385,7 +440,7 @@ Simulation turns abstract, conceptual questions into simple empirical ones.
 ]
 
 * Contact: ksankaran@wisc.edu
-* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
 * Co-authors: Hanying Jiang, Xinran Miao, Mara Beebe, Dan W. Grupe, Richie
 Davidson, Jo Handelsman, Saritha Kodikara, Jingyi Jessica Li, Kim-Anh Lê Cao,
@@ -398,7 +453,7 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 13)
+PrintBibliography(bib, start = 1, end = 12)
 ```
 
 ---
@@ -408,7 +463,17 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 14, end = 28)
+PrintBibliography(bib, start = 13, end = 24)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 25, end = 40)
 ```
 
 ---
