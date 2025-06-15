@@ -109,23 +109,30 @@ metastasis -- essentially, the microbiome weakens this protection.
 
 ### Chemotherapy
 
+.pull-left[
+Microbiome changes induced by chemotherapy can exacerbate adverse events, like
+diarrhea and mucositis, which then limit the dosage and duration of chemotherapy
+treatments `r Citep(bib, "Chalif20225")`.
+]
+
 ---
 
 ### Immune Checkpoint Inhibitors
 
+.pull-left[
+Gut microbiome composition has been associated with the effectiveness of immune
+checkpoint inhibitors `r Citep(bib, "Vetizou2015", "Sivan2015")`. This fact has
+been exploited in clinical trials where participants undergo FMT before
+immunotherapy treatment.
+]
 
 ---
 
-### Controllability
+### Statistical Challenges
 
-Cancer development/progression
+> Technically, such big data harmonization and integration is far from trivial, while "in-house" meethodologies, even when applied to the same datasets, may lead to nonoverlapping conclusions"
 
-- Individual species
-- Community byproducts
-
-Cancer treatments
-
-- Immune modulation
+-- `r Citep(bib, "Culling2021")`
 
 ---
 
@@ -134,10 +141,6 @@ Cancer treatments
 > Overall, there is not a great deal of overlap between specific bacterial taxa associated with response [to therapy]...differences may be related to several different factors--including differences in techniques used to analyze samples...suggesting the importance of developing standardized approaches for microbiome analysis.
 
 -- `r Citep(bib, "Gopalakrishnan2023")`
-
----
-
-### 
 
 ---
 
