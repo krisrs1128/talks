@@ -104,7 +104,9 @@ cancer-inducing cytokines.
   &lt;div class="caption"&gt;
   &lt;img src="figures/fnucleatum_matched_pairs.png" width=575/&gt;
   &lt;br/&gt;
-  The original data presented in [5]
+  The original data presented in [5]. Each bar is
+  a patient, and the y-value is the estimated relative change in abundance
+  between disease vs. matched healthy tissue.
   &lt;/div&gt;
 ]
 
@@ -150,7 +152,7 @@ Figure adapted from [11].
 
 .pull-left[
 Gut microbiome composition has been associated with the effectiveness of immune
-checkpoint inhibitors [27; 12]. This fact has
+checkpoint inhibitors [12; 13]. This fact has
 been exploited in clinical trials where participants undergo FMT before
 immunotherapy treatment.
 ]
@@ -158,7 +160,22 @@ immunotherapy treatment.
 .pull-right[
   &lt;div class="caption"&gt;
   &lt;img src="figures/immunotherapy.png"/&gt;
-  Figure adapted from [27].
+  Figure adapted from [12].
+  &lt;/div&gt;
+]
+
+---
+
+### Drug Delivery
+
+There are bacteria that are known to home in on tumor environments. The study 
+[14] engineered a system for delivering them through
+alternating periods of periodic growth and lysis.
+
+.center[
+  &lt;div class="caption"&gt;
+  &lt;img src="figures/tumor_bacteria_delivery.png"/&gt;
+  Figure adapted from [14].
   &lt;/div&gt;
 ]
 
@@ -188,9 +205,9 @@ immunotherapy treatment.
     &lt;img src="figures/retraction.png"/&gt;
 ]
 
-In June 2024, _Nature_ retracted a paper [28] the claimed
+In June 2024, _Nature_ retracted a paper [15] the claimed
 identify microbiome signatures of cancer. This came after one year's worth of
-debate [29; 30]
+debate [16; 17]
 about the data analysis.
 
 ---
@@ -209,7 +226,7 @@ to learn about batch effects and correction methods.
 
 ### Simulation to Resolve Controversy
 
-Gerry Tonkin-Hill has an excellent re-analysis [31] of the data from [28] which sheds light what were likely the source of the phantom
+Gerry Tonkin-Hill has an excellent re-analysis [18] of the data from [15] which sheds light what were likely the source of the phantom
 signals. The first part is a simulation.
 
 .pull-left[
@@ -223,7 +240,7 @@ signals. The first part is a simulation.
 
 ### Why Simulate?
 
-Simulations lie behind the many types of skills microbiome statisticians must master [13; 14]. They help us to...
+Simulations lie behind the many types of skills microbiome statisticians must master [19; 20]. They help us to...
 
 &lt;img src="figures/noun-labs-99456.png" width=40/&gt; **Design experiments** that have high power to detect subtle signals.
 &lt;br/&gt;
@@ -241,7 +258,7 @@ development.
 ### Semisynthetic Data
 
 One of the major advances has been the design of algorithms that can leverage
-public data resources, like [15; 16; 17; 18].
+public data resources, like [21; 22; 23; 24].
 
 * **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
 * **Template Data**: Previously gathered experimental data that can be used to train a simulator.
@@ -270,7 +287,7 @@ ground truth labeling.
 
 ### Simulation Mechanism
 
-We used scDesign3 [26] to estimate a
+We used scDesign3 [25] to estimate a
 Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
 
 .center[
@@ -342,7 +359,7 @@ Working with microbiologists and psychologists at UW-Madison, we re-analyzed a
 dataset about the gut-brain axis.
 
 .pull-left[
-1. We re-analyzed the study [20], which gathered data
+1. We re-analyzed the study [26], which gathered data
 from 54 participants assigned to either a mindfulness training intervention or a
 waitlist control (n = 27 each).
 
@@ -361,7 +378,7 @@ month follow-up.
 1. We wondered whether mindfulness intervention might affect behavior, which
 in turn influences microbiota composition.
 2. To explore this, we applied a form of mediation analysis to the 16S
-microbiome and survey data [21; 22].
+microbiome and survey data [27; 28].
 
 .center[
 &lt;img src="figures/mediation-dag-terms.png" width=550/&gt;
@@ -405,8 +422,8 @@ written to accompany our papers:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data [23].
-* `scDesign3` - An existing simulator for single cell data [24; 25; 26].
+* `multimedia` - Mediation analysis for microbiome data [29].
+* `scDesign3` - An existing simulator for single cell data [30; 31; 25].
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -436,86 +453,41 @@ class: reference
 
 ### References
 
-[1] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
-
-[2] J. C. Arthur et al. "Intestinal Inflammation Targets Cancer-Inducing Activity of the Microbiota". In: _Science_ 338.6103 (Oct. 2012), p. 120–123. ISSN: 1095-9203. DOI:
-[10.1126/science.1224820](https://doi.org/10.1126%2Fscience.1224820). URL: [http://dx.doi.org/10.1126/science.1224820](http://dx.doi.org/10.1126/science.1224820).
-
-[3] M. Castellarin et al. "Fusobacterium nucleatum infection is prevalent in human colorectal carcinoma". In: _Genome Research_ 22.2 (Oct. 2011), p. 299–306. ISSN: 1088-9051. DOI:
-[10.1101/gr.126516.111](https://doi.org/10.1101%2Fgr.126516.111). URL: [http://dx.doi.org/10.1101/gr.126516.111](http://dx.doi.org/10.1101/gr.126516.111).
-
-[4] J. Chalif et al. "The Role of the Microbiome in Cancer Therapies". In: _Hematology/Oncology Clinics of North America_ 39.2 (Apr. 2025), p. 269–294. ISSN: 0889-8588. DOI:
-[10.1016/j.hoc.2024.12.005](https://doi.org/10.1016%2Fj.hoc.2024.12.005). URL: [http://dx.doi.org/10.1016/j.hoc.2024.12.005](http://dx.doi.org/10.1016/j.hoc.2024.12.005).
-
-[5] N. Cullin et al. "Microbiome and cancer". In: _Cancer Cell_ 39.10 (Oct. 2021), p. 1317–1341. ISSN: 1535-6108. DOI:
-[10.1016/j.ccell.2021.08.006](https://doi.org/10.1016%2Fj.ccell.2021.08.006). URL: [http://dx.doi.org/10.1016/j.ccell.2021.08.006](http://dx.doi.org/10.1016/j.ccell.2021.08.006).
-
-[6] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut] (&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty
-&lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_. 2021.
-
-[7] R. Francescone et al. "Microbiome, Inflammation, and Cancer". In: _The Cancer Journal_ 20.3 (May. 2014), p. 181–189. ISSN: 1528-9117. DOI:
-[10.1097/ppo.0000000000000048](https://doi.org/10.1097%2Fppo.0000000000000048). URL: [http://dx.doi.org/10.1097/PPO.0000000000000048](http://dx.doi.org/10.1097/PPO.0000000000000048).
-
-[8] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511. DOI:
-[10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL: [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
-
-[9] V. Gopalakrishnan et al. "The Influence of the Gut Microbiome on Cancer, Immunity, and Cancer Immunotherapy". In: _Cancer Cell_ 33.4 (Apr. 2018), p. 570–580. ISSN: 1535-6108.
+[1] V. Gopalakrishnan et al. "The Influence of the Gut Microbiome on Cancer, Immunity, and Cancer Immunotherapy". In: _Cancer Cell_ 33.4 (Apr. 2018), p. 570–580. ISSN: 1535-6108.
 DOI: [10.1016/j.ccell.2018.03.015](https://doi.org/10.1016%2Fj.ccell.2018.03.015). URL:
 [http://dx.doi.org/10.1016/j.ccell.2018.03.015](http://dx.doi.org/10.1016/j.ccell.2018.03.015).
 
-[10] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep. 2021).
-ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
-[http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
+[2] L. Liu et al. "The Potential of the Gut Microbiome to Reshape the Cancer Therapy Paradigm: A Review". In: _JAMA Oncology_ 8.7 (Jul. 2022), p. 1059. ISSN: 2374-2437. DOI:
+[10.1001/jamaoncol.2022.0494](https://doi.org/10.1001%2Fjamaoncol.2022.0494). URL: [http://dx.doi.org/10.1001/jamaoncol.2022.0494](http://dx.doi.org/10.1001/jamaoncol.2022.0494).
 
-[11] N. Hartmann et al. "Cancer immunity thwarted by the microbiome". In: _Science_ 360.6391 (May. 2018), p. 858–859. ISSN: 1095-9203. DOI:
-[10.1126/science.aat8289](https://doi.org/10.1126%2Fscience.aat8289). URL: [http://dx.doi.org/10.1126/science.aat8289](http://dx.doi.org/10.1126/science.aat8289).
-
-[12] B. A. Helmink et al. "The microbiome, cancer, and cancer therapy". In: _Nature Medicine_ 25.3 (Mar. 2019), p. 377–388. ISSN: 1546-170X. DOI:
+[3] B. A. Helmink et al. "The microbiome, cancer, and cancer therapy". In: _Nature Medicine_ 25.3 (Mar. 2019), p. 377–388. ISSN: 1546-170X. DOI:
 [10.1038/s41591-019-0377-7](https://doi.org/10.1038%2Fs41591-019-0377-7). URL: [http://dx.doi.org/10.1038/s41591-019-0377-7](http://dx.doi.org/10.1038/s41591-019-0377-7).
 
----
+[4] N. Cullin et al. "Microbiome and cancer". In: _Cancer Cell_ 39.10 (Oct. 2021), p. 1317–1341. ISSN: 1535-6108. DOI:
+[10.1016/j.ccell.2021.08.006](https://doi.org/10.1016%2Fj.ccell.2021.08.006). URL: [http://dx.doi.org/10.1016/j.ccell.2021.08.006](http://dx.doi.org/10.1016/j.ccell.2021.08.006).
 
-class: reference
-
-### References
-
-[1] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
-
-[2] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
-[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
-
-[3] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
-[10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
-[http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
-
-[4] Y. L. Lightfoot et al. "Tailoring gut immune responses with lipoteichoic acid-deficient Lactobacillus acidophilus". In: _Frontiers in Immunology_ 4 (2013). ISSN: 1664-3224. DOI:
-[10.3389/fimmu.2013.00025](https://doi.org/10.3389%2Ffimmu.2013.00025). URL: [http://dx.doi.org/10.3389/fimmu.2013.00025](http://dx.doi.org/10.3389/fimmu.2013.00025).
-
-[5] L. Liu et al. "The Potential of the Gut Microbiome to Reshape the Cancer Therapy Paradigm: A Review". In: _JAMA Oncology_ 8.7 (Jul. 2022), p. 1059. ISSN: 2374-2437. DOI:
-[10.1001/jamaoncol.2022.0494](https://doi.org/10.1001%2Fjamaoncol.2022.0494). URL: [http://dx.doi.org/10.1001/jamaoncol.2022.0494](http://dx.doi.org/10.1001/jamaoncol.2022.0494).
+[5] M. Castellarin et al. "Fusobacterium nucleatum infection is prevalent in human colorectal carcinoma". In: _Genome Research_ 22.2 (Oct. 2011), p. 299–306. ISSN: 1088-9051. DOI:
+[10.1101/gr.126516.111](https://doi.org/10.1101%2Fgr.126516.111). URL: [http://dx.doi.org/10.1101/gr.126516.111](http://dx.doi.org/10.1101/gr.126516.111).
 
 [6] C. Ma et al. "Gut microbiome–mediated bile acid metabolism regulates liver cancer via NKT cells". In: _Science_ 360.6391 (May. 2018). ISSN: 1095-9203. DOI:
 [10.1126/science.aan5931](https://doi.org/10.1126%2Fscience.aan5931). URL: [http://dx.doi.org/10.1126/science.aan5931](http://dx.doi.org/10.1126/science.aan5931).
 
-[7] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct. 2022). ISSN:
-2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
-[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+[7] N. Hartmann et al. "Cancer immunity thwarted by the microbiome". In: _Science_ 360.6391 (May. 2018), p. 858–859. ISSN: 1095-9203. DOI:
+[10.1126/science.aat8289](https://doi.org/10.1126%2Fscience.aat8289). URL: [http://dx.doi.org/10.1126/science.aat8289](http://dx.doi.org/10.1126/science.aat8289).
 
-[8] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
-[https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
+[8] J. C. Arthur et al. "Intestinal Inflammation Targets Cancer-Inducing Activity of the Microbiota". In: _Science_ 338.6103 (Oct. 2012), p. 120–123. ISSN: 1095-9203. DOI:
+[10.1126/science.1224820](https://doi.org/10.1126%2Fscience.1224820). URL: [http://dx.doi.org/10.1126/science.1224820](http://dx.doi.org/10.1126/science.1224820).
 
-[9] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p. 567–574. ISSN:
-1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
-[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
+[9] Y. L. Lightfoot et al. "Tailoring gut immune responses with lipoteichoic acid-deficient Lactobacillus acidophilus". In: _Frontiers in Immunology_ 4 (2013). ISSN: 1664-3224. DOI:
+[10.3389/fimmu.2013.00025](https://doi.org/10.3389%2Ffimmu.2013.00025). URL: [http://dx.doi.org/10.3389/fimmu.2013.00025](http://dx.doi.org/10.3389/fimmu.2013.00025).
 
-[10] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN: 2326-831X.
-DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
-[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
+[10] J. Chalif et al. "The Role of the Microbiome in Cancer Therapies". In: _Hematology/Oncology Clinics of North America_ 39.2 (Apr. 2025), p. 269–294. ISSN: 0889-8588. DOI:
+[10.1016/j.hoc.2024.12.005](https://doi.org/10.1016%2Fj.hoc.2024.12.005). URL: [http://dx.doi.org/10.1016/j.hoc.2024.12.005](http://dx.doi.org/10.1016/j.hoc.2024.12.005).
 
-[11] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+[11] R. Francescone et al. "Microbiome, Inflammation, and Cancer". In: _The Cancer Journal_ 20.3 (May. 2014), p. 181–189. ISSN: 1528-9117. DOI:
+[10.1097/ppo.0000000000000048](https://doi.org/10.1097%2Fppo.0000000000000048). URL: [http://dx.doi.org/10.1097/PPO.0000000000000048](http://dx.doi.org/10.1097/PPO.0000000000000048).
 
-[12] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
-[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL: [http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
+[12] M. Vétizou et al. "Anticancer immunotherapy by CTLA-4 blockade relies on the gut microbiota". En. In: _Science_ 350.6264 (Nov. 2015), pp. 1079-1084.
 
 ---
 
@@ -523,21 +495,69 @@ class: reference
 
 ### References
 
-[1] A. Sivan et al. "Commensal Bifidobacterium promotes antitumor immunity and facilitates anti-PD-L1 efficacy". In: _Science_ 350.6264 (2015), pp. 1084-1089.
+[13] A. Sivan et al. "Commensal Bifidobacterium promotes antitumor immunity and facilitates anti-PD-L1 efficacy". In: _Science_ 350.6264 (2015), pp. 1084-1089.
 
-[2] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+[14] M. O. Din et al. "Synchronized cycles of bacterial lysis for in vivo delivery". In: _Nature_ 536.7614 (Jul. 2016), p. 81–85. ISSN: 1476-4687. DOI:
+[10.1038/nature18930](https://doi.org/10.1038%2Fnature18930). URL: [http://dx.doi.org/10.1038/nature18930](http://dx.doi.org/10.1038/nature18930).
 
-[3] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. ISSN:
+[15] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p. 567–574. ISSN:
+1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
+[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
+
+[16] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511. DOI:
+[10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL: [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
+
+[17] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
+[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL: [http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
+
+[18] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_. &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
+
+[19] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN: 2326-831X.
+DOI: [10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
+[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
+
+[20] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+
+[21] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
+
+[22] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct. 2022). ISSN:
+2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+
+[23] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut] (&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty
+&lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_. 2021.
+
+[24] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+
+---
+
+class: reference
+
+### References
+
+[25] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ 42.2 (May. 2023), p. 247–252. ISSN:
 1546-1696. DOI: [10.1038/s41587-023-01772-1](https://doi.org/10.1038%2Fs41587-023-01772-1). URL:
 [http://dx.doi.org/10.1038/s41587-023-01772-1](http://dx.doi.org/10.1038/s41587-023-01772-1).
 
-[4] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
+[26] D. W. Grupe et al. "The Impact of Mindfulness Training on Police Officer Stress, Mental Health, and Salivary Cortisol Levels". In: _Frontiers in Psychology_ 12 (Sep. 2021).
+ISSN: 1664-1078. DOI: [10.3389/fpsyg.2021.720753](https://doi.org/10.3389%2Ffpsyg.2021.720753). URL:
+[http://dx.doi.org/10.3389/fpsyg.2021.720753](http://dx.doi.org/10.3389/fpsyg.2021.720753).
+
+[27] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+
+[28] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+
+[29] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+
+[30] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
+[10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
+
+[31] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
 (May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
 [http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
-
-[5] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_. &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
-
-[6] M. Vétizou et al. "Anticancer immunotherapy by CTLA-4 blockade relies on the gut microbiota". En. In: _Science_ 350.6264 (Nov. 2015), pp. 1079-1084.
 
 ---
 
@@ -553,7 +573,7 @@ This is how some common techniques fall into this taxonomy.
 
 * **Quantitative, Broad**: Evaluation through classification (next example).
 
-* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([14], "Batch Effect Correction").
+* **Fit-for-Purpose**: Linear model coefficients on real vs. simulated data ([20], "Batch Effect Correction").
 
 ---
 
@@ -695,7 +715,7 @@ A detailed explanation is given [here](https://krisrs1128.github.io/microbiome-s
 ### Pilot Study
 
 .pull-left[
-1. We re-analyzed a pilot study from 2021 [20], which
+1. We re-analyzed a pilot study from 2021 [26], which
 gathered data from 54 participants randomly assigned to either a mindfulness
 training intervention or a waitlist control (n = 27 each).
 

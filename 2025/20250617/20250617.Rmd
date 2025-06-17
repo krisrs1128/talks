@@ -120,7 +120,9 @@ cancer-inducing cytokines.
   <div class="caption">
   <img src="figures/fnucleatum_matched_pairs.png" width=575/>
   <br/>
-  The original data presented in `r Citep(bib, "Castellarin2011")`
+  The original data presented in `r Citep(bib, "Castellarin2011")`. Each bar is
+  a patient, and the y-value is the estimated relative change in abundance
+  between disease vs. matched healthy tissue.
   </div>
 ]
 
@@ -175,6 +177,21 @@ immunotherapy treatment.
   <div class="caption">
   <img src="figures/immunotherapy.png"/>
   Figure adapted from `r Citep(bib, "Vetizou2015")`.
+  </div>
+]
+
+---
+
+### Drug Delivery
+
+There are bacteria that are known to home in on tumor environments. The study 
+`r Citep(bib, "Din2016")` engineered a system for delivering them through
+alternating periods of periodic growth and lysis.
+
+.center[
+  <div class="caption">
+  <img src="figures/tumor_bacteria_delivery.png"/>
+  Figure adapted from `r Citep(bib, "Din2016")`.
   </div>
 ]
 
