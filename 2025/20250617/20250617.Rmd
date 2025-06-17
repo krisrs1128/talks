@@ -1,5 +1,5 @@
 ---
-title: Semisynthetic Controls for Cancer Microbiome Analysis
+title: Semisynthetic Controls and Cancer Microbiome Analysis
 output:
   xaringan::moon_reader:
     css: ["default", "css/xaringan-themer.css"]
@@ -14,7 +14,7 @@ output:
 
 class: title
 
-# Semisynthetic Controls for Cancer Microbiome Analysis
+# Semisynthetic Controls and Cancer Microbiome Analysis
 
 <style>
 .slide-background {
@@ -108,26 +108,6 @@ cancer-inducing cytokines.
 
 ---
 
-### Carcinogenesis - Direct
-
-.pull-left[
-Some species can promote cancer. For example, `r Citep(bib, "Castellarin2011")` found enrichment of _F. nucleatum_ in matched colorectal
-cancer vs. healthy tissue. These bacteria can bind to cell surfaces and activate
-cancer-inducing cytokines.
-]
-
-.pull-right[
-  <div class="caption">
-  <img src="figures/fnucleatum_matched_pairs.png" width=575/>
-  <br/>
-  The original data presented in `r Citep(bib, "Castellarin2011")`. Each bar is
-  a patient, and the y-value is the estimated relative change in abundance
-  between disease vs. matched healthy tissue.
-  </div>
-]
-
----
-
 ### Carcinogenesis - Indirect
 
 .pull-left[
@@ -199,7 +179,7 @@ alternating periods of periodic growth and lysis.
 
 ### Statistical Challenges
 
-> Technically, such big data harmonization and integration is far from trivial, while "in-house" meethodologies, even when applied to the same datasets, may lead to nonoverlapping conclusions"
+> Technically, such big data harmonization and integration is far from trivial, while "in-house" methodologies, even when applied to the same datasets, may lead to nonoverlapping conclusions"
 
   -- _Microbiome and cancer_ `r Citep(bib, "Cullin2021")`
 
@@ -251,6 +231,47 @@ signals. The first part is a simulation.
 .pull-right[
 <img src="figures/gth_sim2.png"/>
 ]
+
+---
+
+### Simulation and Supervised Normalization
+
+This setting is balanced -- each condition is equally likely across batches. In
+this case, SVN batch effect correction `r Citep(bib, "mecham2010supervised")`
+works well.
+
+.pull-left[
+<img src="figures/gth_sim3.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim4.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+But what happens if there is imbalance?
+
+.pull-left[
+<img src="figures/gth_sim5.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim6.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+In this case, the SVN correction introduces an artificial difference.
+
+.center[
+<img src="figures/gth_sim7.png" width=500/>
+]
+
+This should cause concern about the original analysis: Hospitals specialize in
+cancer types. Then again, this simulation is quite unrealistic.
 
 ---
 
@@ -413,6 +434,29 @@ derived from these data provide a reference null distribution.
 The middle panel comes from a synthetic null: $T \nrightarrow M \to Y$.
 </span>
 ]
+
+---
+
+These are analogous comparisons for the simulated microbiomes.
+.center[
+<img src="figures/alteration_plot-1.png" width=650/><br/>
+]
+
+---
+
+### Synthetic Null Hypothesis Testing
+
+Let 
+$\left(\hat{\theta}_{d}^{0}\right)_{d = 1}^{D}$ 
+and $\left(\hat{\theta}_{d}^{1}\right)_{d = 1}^{D}$ 
+be estimates derived on the real and the semisynthetic data, respectively.  We
+rank the effects learned from both the real and synthetic null reference data.
+The significance threshold is chosen to control the empirical false discovery
+based on synthetic data.
+
+\begin{align*}
+\widehat{\text{FDR}}(t) := \frac{\# \left\{ d : \left| \hat{\theta}_{d}^{0} \right| > t \right\}}{\# \left\{ d : \left| \hat{\theta}_{d}^{0} \right| > t \right\} + \# \left\{ d : \left| \hat{\theta}_{d}^{1} \right| > t \right\}}
+\end{align*}
 
 ---
 
