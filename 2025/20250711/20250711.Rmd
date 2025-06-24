@@ -58,6 +58,21 @@ bib <- ReadBib("references.bib")
 
 ### S5, S6 `r Citep(bib, "Fukuyama2017")`
 
+My first published simulation study: How do internal and external controls
+compare in longitudinal microbiome analysis?
+
+---
+
+### S5, S6 `r Citep(bib, "Fukuyama2017")`
+
+For all my good intentions, this simulation does seem naive in retrospect.
+
+---
+
+> That a composer of symphonies and operas would consider a ballet score his best work was remarkable for the time. Before Tchaikovsky, ballet was something of a neglected stepchild as far as the musical world was concerned.
+
+I think simulation is the neglected stepchild of statistics...
+
 ---
 
 ### Data Analysis Controversy `r Citep(bib, "retraction2024")`
@@ -229,6 +244,17 @@ example_simu <- scdesign3(
     nonzerovar = FALSE
   )
 ```
+]
+
+---
+
+### Challenges
+
+Simulation interfaces often suffer from what researchers in human-computer interfaces call interaction gulfs `r Citep(bib, "Hutchins1985-oz")`. 
+It is hard to quickly specify a data generating process, evaluate its properties, and then iterate.
+
+.center[
+<img src="figures/interaction_gulfs.png" width=600/>
 ]
 
 ---
@@ -565,15 +591,46 @@ In our review, we consider a wider range of underlying correlation matrices.
 
 ---
 
-### Workshops
-
----
-
 ### Future Work
+
+We've led a few workshops to get feedback on our package, and two questions
+repeatedly come up:
+
+1. Is there any way to make this faster?
+1. How can I know when my simulator is good enough?
+
+We've been adapting literature on scalable GLM modeling and model diagnostics to
+answer these questions.
 
 ---
 
 ### Hypothetical Thinking
+
+1. Statistics is ultimately about hypothetical thinking `r Citep(bib, c("donoho2019s", "Mosteller1977-mk"))`.
+
+1. Communicating this effectively is one of the biggest challenges of any
+collaborative work in computational biology. Simulation can help!
+
+---
+
+### Software and Resources
+
+All the examples I discussed today can be run from online tutorials we've
+written to accompany our papers:
+
+* Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
+* Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
+
+Our workshop materials are online:
+
+* UW-Madison Plant Pathology [slides](https://krisrs1128.github.io/talks/2024/20240207/20240207.html#1), [colab](https://colab.research.google.com/drive/1IyMEQJwkslPzL9FYd5atvyGORqW9IrCI?usp=sharing)
+* UniMelb Integrative Genomics [notebooks](https://github.com/krisrs1128/intro-to-simulation/), slides [1](https://go.wisc.edu/54tmr9), [2](https://go.wisc.edu/rc776i), [3](https://go.wisc.edu/gfj36r).
+
+The relevant R packages behind these analyses are:
+
+* `multimedia` - Mediation analysis for microbiome data `r Citep(bib, "Jiang2025")`.
+* `scDesign3` - An existing simulator for single cell data `r Citep(bib, c("Li2019", "Sun2021", "Song2023"))`.
+* `scDesigner` - Under-development version used in the first tutorial.
 
 ---
 
