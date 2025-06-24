@@ -1,0 +1,594 @@
+---
+title: Towards Veridical Microbiome Analysis through Semisynthetic Data
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+# Towards Veridical Microbiome Analysis through Semisynthetic Data
+
+<style>
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+</style>
+
+<div id="subtitle_left">
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Paper: <a href="https://go.wisc.edu/p12o8w">go.wisc.edu/p12o8w</a><br/>
+Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
+</div>
+<div id="subtitle_right">
+Kris Sankaran <br/>
+<a href="https://www.eventbrite.com/e/veridical-data-science-for-biology-2025-tickets-1384456339179/">VDSB 2025</a><br/>
+11 | July | 2025 <br/>
+</div>
+
+<!-- 20 minute talk, 3 min Q&A -->
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+library(RefManageR)
+
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+---
+
+### S5, S6 `r Citep(bib, "Fukuyama2017")`
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` the claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
+about the data analysis.
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom
+signals. The first part is a simulation.
+
+.pull-left[
+<img src="figures/gth_sim1.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim2.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+This setting is balanced -- each condition is equally likely across batches. In
+this case, SVN batch effect correction `r Citep(bib, "mecham2010supervised")`
+works well.
+
+.pull-left[
+<img src="figures/gth_sim3.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim4.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+But what happens if there is imbalance?
+
+.pull-left[
+<img src="figures/gth_sim5.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim6.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+In this case, the SVN correction introduces an artificial difference.
+
+.center[
+<img src="figures/gth_sim7.png" width=500/>
+]
+
+This should cause concern about the original analysis: Hospitals specialize in
+cancer types. Then again, this simulation is quite unrealistic.
+
+---
+
+### Why Simulate?
+
+Simulations lie behind the many types of skills microbiome statisticians must master `r Citep(bib, c("Sankaran2023", "Sankaran2024-gb"))`. They help us to...
+
+<img src="figures/noun-labs-99456.png" width=40/> **Design experiments** that have high power to detect subtle signals.
+<br/>
+
+<img src="figures/noun-benchmark-7569457.png" width=40/> **Benchmark methods** and identify gaps in the literature.
+<br/>
+
+<img src="figures/noun-checkmark-7518321.png" width=40/> **Check conclusions** that might be sensitive to technical processing steps.
+
+It's worthwhile to treat simulation design with the same formality as methods
+development.
+
+---
+
+### Semisynthetic Data
+
+One of the major advances has been the design of algorithms that can leverage
+public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller2022", "microbiomedatasets", "microbiomedataHomeNational"))`.
+
+* **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator.
+
+.center[
+<img src="figures/template_defn.png" width=670/>
+]
+
+---
+
+### Existing Interfaces
+
+This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) `r Citep(bib, "Zappia2017SplatterSO")`. 
+It's the package behind `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`'s TCGA re-analysis.
+
+```{r, eval = FALSE}
+params <- setParams(params, mean.shape = 0.5, de.prob = 0.2)
+params
+#> A Params object of class SplatParams 
+#> Parameters can be (estimable) or [not estimable], 'Default' or  'NOT DEFAULT' 
+#> Secondary parameters are usually set during simulation
+#> 
+#> Global: 
+#> (GENES)  (Cells)   [SEED] 
+#>    8000      100   694289 
+#> 
+#> 29 additional parameters 
+#> 
+#> Batches: 
+#>     [Batches]  [Batch Cells]     [Location]        [Scale]       [Remove] 
+#>             1            100            0.1            0.1          FALSE 
+#> 
+#> Mean: 
+#>  (RATE)  (SHAPE) 
+#>     0.5      0.5 
+```
+
+---
+
+### Existing Interfaces
+
+.pull-left[
+Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) `r Citep(bib, "Song2023scDesign3GR")`.
+This package has the most generally applicable statistical methodology.
+]
+
+.pull-right[
+```{r, eval = FALSE}
+example_simu <- scdesign3(
+    sce = example_sce,
+    assay_use = "counts",
+    celltype = "cell_type",
+    pseudotime = "pseudotime",
+    spatial = NULL,
+    other_covariates = NULL,
+    mu_formula = "s(pseudotime, k = 10, bs = 'cr')",
+    sigma_formula = "1", # If you want your dispersion also varies along pseudotime, use "s(pseudotime, k = 5, bs = 'cr')"
+    family_use = "nb",
+    n_cores = 2,
+    usebam = FALSE,
+    corr_formula = "1",
+    copula = "gaussian",
+    DT = TRUE,
+    pseudo_obs = FALSE,
+    return_model = FALSE,
+    nonzerovar = FALSE
+  )
+```
+]
+
+---
+
+<g style="font-size: 36px">
+<b>Main Idea: Apply interactive computing principles to multi-omics simulation.</b>
+</g>
+
+<img src="figures/Lego_Brick_4.svg" width=50/> <span style="color:#025E73">Modularity</span>: We should be able to build
+problem-specific simulators by composing simple pieces.
+
+<img src="figures/computer_mouse.png" width=35/> <span style="color:#D94E4E">Interactivity</span>: We should give domain
+researchers agency in designing, evaluating, and modifying statistical
+hypotheses.
+
+<img src="figures/speech_bubbles.png" width=70/> <span style="color:#378C5C">Cooperation</span>: Science is a social activity, and good
+tools  allow researchers to build upon one another's work.
+
+---
+
+### Related: simChef
+
+* summarize similar goals
+* clarify some distinctions
+
+---
+
+### `scDesign3` Review
+
+The rest of the talk will be about using these principles to develop a new
+version of `scDesign3`. Let's review that package's approach.
+
+.center[
+<img src="figures/scdesignOverview.png" width=800/>
+]
+
+First, we estimate models $\hat{F}_{g}\left(y_{i} \vert \mathbf{x}_{i}\right)$ for each gene $g$.
+
+* Can use a variety of families: Gaussian, Poisson, Negative Binomial,...
+* Can learn relationships for each parameter $\theta\left(\mathbf{x}_{i}\right)$.
+
+---
+
+### `scDesign3` Review
+
+.pull-left[
+<img src="figures/scdesignOverview2.png" width=400/>
+]
+
+.pull-right[
+1. Next, we model the joint distribution of quantiles using a copula model.
+
+1. This correlates genes even after conditioning on the same $\mathbf{x}_{i}$.
+]
+
+---
+
+.section[
+## Interface Design
+]
+
+---
+
+### Nouns & Verbs
+
+We can break the interface design question into two parts.
+
+1. **Data Structures**: How can we represent the simulator in a way that is both
+transparent to a human and precise enough for a computer?
+
+1. **Operations**: How can we encourage users to study and tinker with the data
+structures?
+
+If the resulting grammar is expressive enough, then researchers will be able to
+solve problems we may not have anticipated.
+
+```{r, read_data, echo = FALSE}
+sce <- readRDS(url("https://go.wisc.edu/77uf3h"))[1:10, ]
+```
+
+---
+
+### Nouns: Gene-Level Models
+
+For each gene, we can specify the regression formula and distributional family.
+
+```{r, setup_margins}
+margins <- setup_margins(sce, ~ ns(pseudotime, 3),  ~ ZINBLSS())
+margins
+```
+
+```{r, estimate_margins, echo = FALSE}
+margins <- estimate(margins, sce)
+```
+
+---
+
+### Nouns: Copula Models
+
+We can tie together a collection of marginals using a copula model.
+
+.center[
+  <img src="figures/gene-gene_dependence.png" width=900/>
+]
+
+
+```{r wrap_into_simulator, echo = FALSE}
+simulator <- setup_simulator(
+  sce,
+  ~ ns(pseudotime, 3),
+  ~ ZINBLSS(),
+  copula = copula_gaussian()
+) |>
+  estimate()
+```
+
+---
+
+### Extensibility
+
+For the marginals, we can borrow from existing LSS packages `r Citep(bib, c("Rigby2005GeneralizedAM", "Hofner2014gamboostLSSAR"))` to implement gene-wise regressions,
+
+* Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
+
+We can also build a unified interface to various copula estimation routines,
+
+* Vine copulas for capturing higher-order moments.
+* Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
+
+---
+
+### Verbs: <span style="color: #D94E4E">Plot</span>
+```{r, echo = FALSE}
+line_opts <- list(col = "#8C2E62", linewidth = 2)
+ribbon_opts <- list(col = "#8C2E62", alpha = 0.1)
+point_opts <- list(size = 0.4, alpha = 0.3)
+```
+
+```{r example_plot, out.width = 800, echo = FALSE}
+plot(simulator, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
+  facet_wrap(~ feature, ncol = 4)
+```
+
+---
+
+### Verbs: <span style="color:#025E73">Mutate</span>
+
+`mutate` lets you modify a few elements from a larger simulator.
+
+```{r second_alteration, out.width = 800}
+altered <- mutate(margins, Chga:Ins1, link = ~ pseudotime) |>
+  estimate(sce)
+```
+```{r plot_alteration, out.width = 800, echo = FALSE}
+plot(altered, sce, "pseudotime", line_opts = line_opts, ribbon_opts = ribbon_opts, point_opts = point_opts) +
+  facet_wrap(~ feature, ncol = 4)
+```
+
+---
+
+### Verbs: <span style="color:#025E73">Mutate</span>
+
+1. Here is a more realistic example from a longitudinal microbiome study.
+2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
+
+.pull-three-quarters-left[
+<img src="figures/nulls_unaltered.png"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors.png"/>
+]
+
+---
+
+### Verbs: <span style="color:#025E73">Mutate</span>
+
+1. Here is a more realistic example from a longitudinal microbiome study.
+2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
+
+.pull-three-quarters-left[
+<img src="figures/altered_ns.png"/>
+]
+.pull-three-quarters-right[
+<img src="figures/pairwise_cors_altered.png"/>
+]
+
+---
+
+### Verbs: <span style="color:#025E73">Join</span>
+
+We should make it possible to combine simulators like Lego blocks.
+```{r, echo = FALSE}
+SCGEMMETH_sce <- readRDS(url("https://go.wisc.edu/q712e3"))
+SCGEMRNA_sce <-readRDS(url("https://go.wisc.edu/9n6u1y"))
+
+rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
+rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
+```
+
+```{r illustrate_joins}
+experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
+families <- list(~ BI(), ~ GaussianLSS())
+sims <- experiments |>
+  map2(families, \(x, y) setup_simulator(x, ~ cell_type, y))
+```
+
+<img src="figures/simulator_join_motivation.png"/>
+
+---
+
+### Verbs: <span style="color:#025E73">Join</span> (Copula)
+
+One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
+
+```{r, join_simulators_glasso, eval = FALSE}
+sim_joined <- map(sims, estimate, nu = 0.1) |>
+  join_copula(copula_glasso())
+```
+
+This assumes that we have samples where all features are measured.
+
+.center[
+<img src="figures/copula_join.png" width = 680/>
+]
+
+---
+
+### Verbs: <span style="color:#025E73">Join</span> (Conditioning)
+
+Alternatively, we can combine two simulators by conditioning them on shared latent structure.
+
+```{r join_simulators}
+sim_joined <- join_pamona(sims)
+```
+
+.center[
+<img src="figures/simulator_join.png" width = 800/>
+]
+
+---
+
+### Verbs: <span style="color:#025E73">Join</span> (Conditioning)
+
+This used partial manifold alignment `r Citep(bib, "Cao2020ManifoldAF")` to
+learn shared latent variables across assays and works even in the diagonal
+integration setting.
+
+```{r print_joined}
+sim_joined
+```
+
+
+### Example: Microbiome Network Inference
+
+1. Benchmarking methods for microbiome network inference is challenging. We
+can't directly observe microbe-microbe interactions, which stands in the way of
+ground truth labeling.
+
+1. We use the following choices in the design of our simulation,
+
+- **Template**: American Gut Project (261 samples, 45 most abundant taxa)
+- **Estimator**: Zero-Inflated Negative Binomial Copula
+- **Goodness-of-Fit**: Graphical Checks
+- **Ground Truth**: Copula correlation matrix
+- **Summarization**: Estimated vs. ground-truth correlation
+
+---
+
+### Simulation Mechanism
+
+We used scDesign3 `r Citep(bib, "Song2023")` to estimate a
+Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
+
+.center[
+<img src="figures/zinb_marginals.png" width=700/>
+]
+
+---
+
+### Estimated Correlation
+
+The resulting correlation estimate lacks substantial banding or blocks. We can
+also sanity check some of the highly correlated pairs.
+
+.pull-left[
+<img src="figures/estimated_correlation.png" width=900/>
+]
+.pull-right[
+<img src="figures/correlated_pair.png" width=400/>
+]
+
+---
+
+### Establishing Ground Truth
+
+To create a basis for methods comparison, we modified the ZINB copula to use a
+block correlation matrix with varying intra-block correlation strength.
+
+.center[
+  <img src="figures/ground_truth_corr.png" width=450/>
+]
+
+---
+
+### Methods Comparison
+
+We compared SpiecEasi `r Citep(bib, "Kurtz2015-tf")`, a method designed for microbiome networks,
+with the Ledoit-Wolf estimator `r Citep(bib, "Ledoit2004")` on $\log\left(1 + x\right)$ transformed counts.
+
+.center[
+  <img src="figures/comparison_difference.png" width=800/>
+]
+
+---
+
+### Methods Comparison
+
+We compared SpiecEasi `r Citep(bib, "Kurtz2015-tf")`, a method designed for microbiome networks,
+with the Ledoit-Wolf estimator `r Citep(bib, "Ledoit2004")` on $\log\left(1 + x\right)$ transformed counts.
+
+.center[
+  <img src="figures/correlation_comparison_scatter.png" width=700/>
+]
+
+---
+
+### Generalizing
+
+In our review, we consider a wider range of underlying correlation matrices.
+
+.center[
+  <img src="figures/network_comparison.png" width=1200/>
+]
+
+---
+
+### Workshops
+
+---
+
+### Future Work
+
+---
+
+### Hypothetical Thinking
+
+---
+
+### Thank you!
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```

@@ -1,0 +1,75 @@
+---
+title:  Modular software for mediation analysis of microbiome data
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+#  Modular software for mediation analysis of microbiome data
+
+<style>
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+</style>
+
+<div id="subtitle_left">
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Package: <a href="https://go.wisc.edu/830110">go.wisc.edu/830110</a><br/>
+Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
+</div>
+<div id="subtitle_right">
+Kris Sankaran <br/>
+<a href="https://www.birs.ca/events/2025/5-day-workshops/25w5324/">Novel Approaches for Multi-Omics</a><br/>
+17 | July | 2025 <br/>
+</div>
+
+<!-- 25 minute talk (including Q&A) -->
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+library(RefManageR)
+
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+---
+
+---
+
+### Thank you!
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
