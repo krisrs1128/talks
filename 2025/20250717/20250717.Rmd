@@ -56,6 +56,220 @@ bib <- ReadBib("references.bib")
 
 ---
 
+### Microbiome as Mediator
+
+We're just beginning to understand the ways in which the microbiome might
+mediate the relationship between environmental exposures and human health.
+
+Gastric surgery can change cholesterol levels. Part of the effect can be
+attributed to the microbiome.
+
+---
+
+### Microbiome as Mediator
+
+We're just beginning to understand the ways in which the microbiome might
+mediate the relationship between environmental exposures and human health.
+
+
+In cancer, both adverse events and treatment effectiveness appear mediated by
+the microbiome. This has sparked interest in modifying the microbiome to improve
+treatments
+
+---
+
+### Causal Inference Formalism
+
+Causal mediation analysis is becoming the workhorse to drive these studies.
+Traditional methods from social science and epidemiology need to be adapted to
+reflect properties of microbiome data.
+
+.center[
+<img src="figures/mediation-dag.svg" width=500/>
+]
+
+---
+
+### Counterfactual Notation
+
+Under the generalized causal mediation analysis framework, we imagine
+counterfactuals for both mediators and outcomes, depending on treatments that we
+may never have seen.
+
+_Mediator under treatment $t$_: 
+\begin{align*}
+M\left(t\right)
+\end{align*}
+
+_Outcome under treatment combination_ $\left(t, t'\right)$:
+\begin{align*}
+Y\left(t, M\left(t'\right)\right)
+\end{align*}
+
+Note that this is not observable whenever $t \neq t'$, but we can reason about
+it abstractly.
+
+---
+
+### Direct vs. Indirect Effects
+
+Suppose that the treatments belong to two groups, $T \in \{0, 1\}$. Then, direct
+and indirect effects are defined as
+
+\begin{align*}
+\bar{\delta} = \frac{1}{2} \sum_{t=0}^{1} \mathbb{E}\{Y(t, M(1)) - Y(t, M(0))\}\\
+\bar{\zeta} = \frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(1, M(t')) - Y(0, M(t'))\}
+\end{align*}
+
+When many mediators are present, we may also want to know:
+
+\begin{align*}
+\bar{\omega}_k = \frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(t', M_k(1), M_{-k}(t')) - Y(t', M_k(0), M_{-k}(t'))\}
+\end{align*}
+
+Under appropriate sequential ignorability assumptions, these effects can be
+identified.
+
+---
+
+### Geometric Interpretation
+
+<img src="figures/geometric_1.svg" width=800/>
+
+---
+
+### Geometric Interpretation
+
+<img src="figures/geometric_2.svg" width=800/>
+
+---
+
+### Geometric Interpretation
+
+<img src="figures/geometric_3.svg" width=800/>
+
+---
+
+### Compositional Mediation Analysis
+
+
+
+---
+
+### Integration Challenge
+
+Our interest in this project came from an attempt to re-analyze a dataset about
+the gut brain axis. Participants were randomized into either a mindfulness
+intervention or a control group. In this case, the microbiome is an outcome, and
+the survey measurements are mediators.
+
+---
+
+### Integration Challenge
+
+A similar issue arises when applying mediation to support metabolomic
+integration. This is a quote from a study on the microbiome and metabolome of
+inflammatory bowel disease `r Citep(bib, "Franzosa2018")`:
+
+<div style="font-size: 20px">
+> The CD-associated compounds eicosatrienoic (ETA) and docosapentaenoic (DPA)
+acid were involved in negative associations with control-associated species and
+positive associations with IBD-associated species. ETA and DPA are
+polyunsaturated long-chain fatty acids (PUFAs) [which] possess bactericidal
+activity by virtue of their hydrophobic nature and potential to disrupt
+bacterial cell membranes. 
+</div>
+
+As in the previous example, we can imagine a mediation analysis with a
+high-dimensional microbiome outcome.
+
+---
+
+.center[
+## Package Design
+]
+
+---
+
+### High-Dimensional Outcomes
+
+---
+
+### Design Principles
+
+1. Bazaar, not Cathedral:
+1. City, not Private Island:
+1. 
+
+---
+
+### Data Formats
+
+---
+
+### Estimation
+
+---
+
+### Inference: Bootstrap
+
+---
+
+### Inference: Synthetic Data
+
+---
+
+### Inference: Sensitivity Analysis
+
+---
+
+.center[
+## Example
+]
+
+---
+
+### Study Background
+
+> 
+
+---
+
+### Data Preprocessing
+
+---
+
+### Model Setup
+
+---
+
+### Estimated Effects
+
+---
+
+### Example Effects
+
+---
+
+### Sensitivity Analysis
+
+---
+
+### Alternative: Hurdle Model
+
+---
+
+### Takeaways
+
+* integration can benefit from some of the formal language of causal inference
+
+---
+
+### Resources
+
+* Documentation
+* Paper
+
 ---
 
 ### Thank you!
