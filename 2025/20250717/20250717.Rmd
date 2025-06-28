@@ -101,6 +101,12 @@ treatments
 
 ---
 
+### Microbiome as Mediator
+
+(Screenshot from the Sun and Xia book)
+
+---
+
 ### Causal Inference Formalism
 
 Causal mediation analysis is becoming the workhorse to drive these studies.
@@ -414,7 +420,29 @@ altered_ty <- nullify(fit, "T->Y") |>
 
 ---
 
-### Synthetic Data
+### Synthetic Null Mediators
+
+Here is the same principle applied to the mindfulness study. The synthetic null
+survey responses have been generated from mediation models with $\alpha = 0$.
+
+.center[
+<img src="figures/mindfulness-altered.png" width=780/><br/>
+<span style="font-size: 24px;">
+The middle panel comes from a synthetic null: $T \nrightarrow M \to Y$.
+</span>
+]
+
+---
+
+### Synthetic Outcomes
+
+These are analogous comparisons for the simulated microbiomes. Being able to
+sample from the fitted mediation models can help with model goodness-of-fit
+checking.
+
+.center[
+<img src="figures/alteration_plot-1.png" width=650/><br/>
+]
 
 ---
 
@@ -465,31 +493,95 @@ mediator-outcome pairs $G$ over which to test sensitivity.
 
 ### Study Background
 
-> 
+1. The study `r Citep(bib, "")` attempted an integrative analysis to discover
+metabolite and taxonomic markers that might have diagnostic or therapeutic
+potential.
 
----
+1. They gathered untargeted metabolomics + whole genome sequencing microbiome
+data on a cohort of 220 patients with inflammatory bowel disease (Ulcerative
+Colitis and Crohn's Disease). 
 
-### Data Preprocessing
+1. This resulted in 8.8K and 11.7K metabolite and genus features, respectively,
+all available on the [Curated Metabolome-Microbiome repository](https://github.com/borenstein-lab/microbiome-metabolome-curated-data/tree/main).
 
 ---
 
 ### Model Setup
 
+1. We applied centered log-ratio and $\log\left(1 + x\right)$ transformations to
+the microbiome and metabolome data, respectively. Both were then filtered to ~
+150 - 200 of the most abundant features.
+
+1. We treat the microbiome as the mediators and the metabolome as the outcome.
+This direction could be debated, but is consistent with the discussion in `r
+Citep(bib, )`. 
+
+1. Microbe abundance depends only on treatment status. Each metabolite's
+abundance is a sparse linear function of a few microbes.
+
+.center[
+```{r eval = FALSE}
+model <- multimedia(exper, glmnet_model(lambda = 0.1))
+```
+]
+
 ---
 
-### Estimated Effects
+### Indirect Effects
+
+Here we've visualized the samples using a multidimensional scaling (MDS) based
+on _only_ the microbiome data. The size of the points reflects the metabolite
+abundance. There is only a systematic association between metabolite abundance
+and MDS coordinate for the outcomes with large indirect effects.
+
+.center[
+<img src="figures/indirect_effects_metabolites.png"/>
+]
 
 ---
 
-### Example Effects
+### Pathwise Indirect Effects
+
+The top pathwise indirect effects are similar to the geometric interpretation we
+saw in the introduction!
+
+.center[
+<img src="figures/indirect_effects_pathwise-metabolites.png"/>
+]
 
 ---
 
 ### Sensitivity Analysis
 
+In this sensitivity analysis, we simulate unmeasured confounding between the
+abundances of the Enterocloster genus (mediator) and the metabolites (outcomes)
+hydrocinnamic_acid, lithocholate, and arginine.
+
+.center[
+<img src="figures/indirect_effects_sensitivity.png"/>
+]
+
 ---
 
 ### Alternative: Hurdle Model
+
+The interface makes it easy to swap in new models. For example, here we replaced
+the lasso regression on log-normalized metabolite abundances with a hurdle model
+that directly models zero-inflated nonnegative data.
+
+```{r, eval = FALSE}
+model <- multimedia(
+    exper2, # version without log transformation
+    brms_model(family = hurdle_lognormal()) # new outcome model
+) |>
+    estimate(exper2)
+```
+
+---
+
+### Alternative: Hurdle Model
+
+<img src="hurdle_model_indirect.png"/>
 
 ---
 
@@ -537,7 +629,7 @@ where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}
 ]
 
 .pull-right[
-```{r, fig.align = "center"}
+```{r, fig.align = "center", echo = FALSE}
 include_graphics("figures/lnm.svg")
 ```
 ]
