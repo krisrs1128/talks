@@ -25,7 +25,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/5q8xvl">go.wisc.edu/5q8xvl</a><br/>
 Paper: <a href="https://go.wisc.edu/p12o8w">go.wisc.edu/p12o8w</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
@@ -63,6 +63,8 @@ bib <- ReadBib("references.bib")
 
 ### S5, S6 `r Citep(bib, "Fukuyama2017")`
 
+A simulation experiment from the supplement,
+
 > [We] discussed the motivation behind dividing each subject into treatment and
 control timepoints, rather than allocating separate study subjects as
 controls...  To quantitatively characterize the impact of this choice, we
@@ -81,7 +83,7 @@ analysis?
 - Columns: Increasing perturbation effect size.
 
 .center[
-<img src="figures/multidomain_simulation.png"/>
+<img src="figures/multidomain_simulation.png" width=1200/>
 ]
 
 ---
@@ -269,7 +271,7 @@ Simulation interfaces often suffer from what researchers in human-computer inter
 It is hard to quickly specify a data generating process, evaluate its properties, and then iterate.
 
 .center[
-<img src="figures/interaction_gulfs.png" width=600/>
+<img src="figures/interaction_gulfs.png" width=800/>
 ]
 
 ---
@@ -352,55 +354,6 @@ sce <- readRDS(url("https://go.wisc.edu/77uf3h"))[1:10, ]
 
 ---
 
-### Nouns: Gene-Level Models
-
-For each gene, we can specify the regression formula and distributional family.
-
-```{r, setup_margins}
-margins <- setup_margins(sce, ~ ns(pseudotime, 3),  ~ ZINBLSS())
-margins
-```
-
-```{r, estimate_margins, echo = FALSE}
-margins <- estimate(margins, sce)
-```
-
----
-
-### Nouns: Copula Models
-
-We can tie together a collection of marginals using a copula model.
-
-.center[
-  <img src="figures/gene-gene_dependence.png" width=900/>
-]
-
-
-```{r wrap_into_simulator, echo = FALSE}
-simulator <- setup_simulator(
-  sce,
-  ~ ns(pseudotime, 3),
-  ~ ZINBLSS(),
-  copula = copula_gaussian()
-) |>
-  estimate()
-```
-
----
-
-### Extensibility
-
-For the marginals, we can borrow from existing LSS packages `r Citep(bib, c("Rigby2005GeneralizedAM", "Hofner2014gamboostLSSAR"))` to implement gene-wise regressions,
-
-* Gaussian, Gamma, Poisson, Binomial, Negative-Binomial, Zero-Inflated Poisson, Zero Inflated Negative Binomial,…
-
-We can also build a unified interface to various copula estimation routines,
-
-* Vine copulas for capturing higher-order moments.
-* Gaussian and Student-t copulas with standard sample covariance, shrunken covariance, or graphical lasso precision estimates.
-
----
-
 ### Verbs: <span style="color:#025E73">Mutate</span>
 
 1. Here is a more realistic example from a longitudinal microbiome study.
@@ -463,7 +416,7 @@ sim_joined <- map(sims, estimate, nu = 0.1) |>
 This assumes that we have samples where all features are measured.
 
 .center[
-<img src="figures/copula_join.png" width = 680/>
+<img src="figures/copula_join.png" width = 950/>
 ]
 
 ---
@@ -477,7 +430,7 @@ sim_joined <- join_pamona(sims)
 ```
 
 .center[
-<img src="figures/simulator_join.png" width = 800/>
+<img src="figures/simulator_join.png" width = 1000/>
 ]
 
 ---
@@ -590,7 +543,7 @@ answer these questions.
 
 ---
 
-### Philosophy
+### Bigger Picture
 
 1. Communicating hypothetical experimental outcomes effectively is one of the
 biggest challenges of any collaborative work in computational biology.
@@ -598,16 +551,18 @@ Simulation can help!
 
 1. In statistics research, simulation is at once familiar yet underappreciated.
 
+Analogy...
+
 > That a composer of symphonies and operas would consider a ballet score his
 best work was remarkable for the time... ballet was something of a neglected
-stepchild as far as the musical world was concerned.
+stepchild as far as the musical world was concerned. 
+-- From `r Citep(bib, "houstonsymphony")`
 
 ---
 
 ### Software and Resources
 
-All the examples I discussed today can be run from online tutorials we've
-written to accompany our papers:
+All the examples I discussed today can be run from online tutorials:
 
 * Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
 * Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
@@ -639,4 +594,41 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 14)
+```
+
+
+---
+
+### Nouns: Gene-Level Models
+
+For each gene, we can specify the regression formula and distributional family.
+
+```{r, setup_margins}
+margins <- setup_margins(sce, ~ ns(pseudotime, 3),  ~ ZINBLSS())
+margins
+```
+
+```{r, estimate_margins, echo = FALSE}
+margins <- estimate(margins, sce)
+```
+
+---
+
+### Nouns: Copula Models
+
+We can tie together a collection of marginals using a copula model.
+
+.center[
+  <img src="figures/gene-gene_dependence.png" width=900/>
+]
+
+
+```{r wrap_into_simulator, echo = FALSE}
+simulator <- setup_simulator(
+  sce,
+  ~ ns(pseudotime, 3),
+  ~ ZINBLSS(),
+  copula = copula_gaussian()
+) |>
+  estimate()
 ```

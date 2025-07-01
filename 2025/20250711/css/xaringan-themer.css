@@ -29,7 +29,7 @@
 }
 
 .title h1 {
-  width: 650px;
+  width: 900px;
 }
 
 .title h2 {
@@ -263,7 +263,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 25px;
-  width: 500px;
+  width: 900px;
   color: #5f558e;
   text-align: left;
   left: 20px;
