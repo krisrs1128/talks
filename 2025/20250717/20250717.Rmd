@@ -44,7 +44,7 @@ library(knitr)
 library(phyloseq)
 library(tidyverse)
 
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 BibOptions(
   check.entries = FALSE,
   bib.style = "numeric",
@@ -81,29 +81,33 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
 ### Microbiome as Mediator
 
-We're just beginning to understand the ways in which the microbiome might
-mediate the relationship between environmental exposures and human health.
+We're just beginning to understand how the microbiome mediates the relationship
+between environmental exposures and human health.
 
-Gastric surgery can change cholesterol levels. Part of the effect can be
-attributed to the microbiome.
-
----
-
-### Microbiome as Mediator
-
-We're just beginning to understand the ways in which the microbiome might
-mediate the relationship between environmental exposures and human health.
-
-
-In cancer, both adverse events and treatment effectiveness appear mediated by
-the microbiome. This has sparked interest in modifying the microbiome to improve
-treatments
+.center[
+<div class="caption">
+<img src="figures/akkermansia_cholesterol.jpg" width=400/><br/>
+Figure adapted from `r Citep(bib, "Jia2023-if")`.
+</div>
+]
 
 ---
 
 ### Microbiome as Mediator
 
-(Screenshot from the Sun and Xia book)
+We're just beginning to understand how the microbiome mediates the relationship
+between environmental exposures and human health.
+
+.center[
+  <div class="caption">
+<img src="figures/chemotherapy.png"/>
+Figure adapted from `r Citep(bib, "Francescone2014")`.
+</div>
+]
+
+Chemotherapy-induced microbiome changes can worsen adverse events, like
+diarrhea and mucositis, limiting treatment dosage and duration 
+`r Citep(bib, c("Arthur2012", "Lightfoot2013", "Chalif2025"))`.
 
 ---
 
@@ -235,10 +239,12 @@ Indirect effect: $\alpha \beta_m$
 
 We could imagine writing a function to implement this analysis.
 
+.large-code[
 ```{r, eval = FALSE}
 model <- mediation(y, m, t)
 effects(model)
 ```
+]
 
 But how can we adopt the more general counterfactual perspective, without
 restricting ourselves to linear models?
@@ -247,15 +253,17 @@ restricting ourselves to linear models?
 
 ### Code Interface
 
-The `mediation` package `r Citep(bib, "")` solves this problem by instead
-creating an interface like:
+The `mediation` package `r Citep(bib, c("imai2010general", "imai2010causal"))`
+solves this problem by instead creating an interface like:
 
+.large-code[
 ```{r, eval = FALSE}
 f1 <- lm(y ~ t + m)
 f2 <- lm(m ~ t)
 model <- mediation(f1, f2)
 effects(model)
 ```
+]
 
 We can now accommodate any mediation or outcome model, not just linear ones!
 Indeed, it's easy to use `glm` in the `mediation` package.
@@ -264,11 +272,12 @@ Indeed, it's easy to use `glm` in the `mediation` package.
 
 ### Multimedia Interface
 
-`multimedia` generalizes this interface to support multivariate responses and
-outcomes that are helpful for microbiome data. For example, for the mindfulness
-study introduce above, we can use a logistic-normal multinomial model for the
-outcome and a lasso regression for the mediators .
+`multimedia` generalizes this interface for multivariate responses and outcomes
+appropriate to microbiome data. For example, for the mindfulness study, we use a
+logistic-normal multinomial model for the outcomes and lasso regression for the
+mediators.
 
+.large-code[
 ```{r, eval = FALSE}
 model <- multimedia(
     exper, # dataset
@@ -276,6 +285,7 @@ model <- multimedia(
     glmnet_model(lambda = 0.5, alpha = 0) # mediation model
 )
 ```
+]
 
 We fit each model separately, but this can still accommodate a few commonly used
 approaches.
@@ -434,11 +444,8 @@ The middle panel comes from a synthetic null: $T \nrightarrow M \to Y$.
 
 ---
 
-### Synthetic Outcomes
-
-These are analogous comparisons for the simulated microbiomes. Being able to
-sample from the fitted mediation models can help with model goodness-of-fit
-checking.
+These are analogous comparisons for the simulated microbiomes. Sampling from the
+fitted mediation models can help with model checking.
 
 .center[
 <img src="figures/alteration_plot-1.png" width=650/><br/>
@@ -513,13 +520,12 @@ the microbiome and metabolome data, respectively. Both were then filtered to ~
 150 - 200 of the most abundant features.
 
 1. We treat the microbiome as the mediators and the metabolome as the outcome.
-This direction could be debated, but is consistent with the discussion in `r
-Citep(bib, )`. 
+This direction could be debated, but follows the discussion in `r Citep(bib, "Franzosa2018")`. 
 
 1. Microbe abundance depends only on treatment status. Each metabolite's
 abundance is a sparse linear function of a few microbes.
 
-.center[
+.large-code[
 ```{r eval = FALSE}
 model <- multimedia(exper, glmnet_model(lambda = 0.1))
 ```
@@ -529,13 +535,12 @@ model <- multimedia(exper, glmnet_model(lambda = 0.1))
 
 ### Indirect Effects
 
-Here we've visualized the samples using a multidimensional scaling (MDS) based
-on _only_ the microbiome data. The size of the points reflects the metabolite
-abundance. There is only a systematic association between metabolite abundance
-and MDS coordinate for the outcomes with large indirect effects.
+This multidimensional scaling (MDS) is based on only microbiome data. Point size
+reflects metabolite abundances. Associations between metabolites and the MDS
+appear only for outcomes with large indirect effects.
 
 .center[
-<img src="figures/indirect_effects_metabolites.png"/>
+<img src="figures/indirect_effects_metabolites.png" width=900/>
 ]
 
 ---
@@ -560,28 +565,6 @@ hydrocinnamic_acid, lithocholate, and arginine.
 .center[
 <img src="figures/indirect_effects_sensitivity.png"/>
 ]
-
----
-
-### Alternative: Hurdle Model
-
-The interface makes it easy to swap in new models. For example, here we replaced
-the lasso regression on log-normalized metabolite abundances with a hurdle model
-that directly models zero-inflated nonnegative data.
-
-```{r, eval = FALSE}
-model <- multimedia(
-    exper2, # version without log transformation
-    brms_model(family = hurdle_lognormal()) # new outcome model
-) |>
-    estimate(exper2)
-```
-
----
-
-### Alternative: Hurdle Model
-
-<img src="hurdle_model_indirect.png"/>
 
 ---
 
@@ -634,3 +617,28 @@ include_graphics("figures/lnm.svg")
 ```
 ]
 
+---
+
+### Alternative: Hurdle Model
+
+The interface makes it easy to swap in new models. For example, here we replaced
+the lasso regression on log-normalized metabolite abundances with a hurdle model
+that directly models zero-inflated nonnegative data.
+
+.large-code[
+```{r, eval = FALSE}
+model <- multimedia(
+    exper2, # version without log transformation
+    brms_model(family = hurdle_lognormal()) # new outcome model
+) |>
+    estimate(exper2)
+```
+]
+
+---
+
+### Alternative: Hurdle Model
+
+.center[
+<img src="figures/hurdle_model_indirect.png" width=700/>
+]

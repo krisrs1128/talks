@@ -297,6 +297,8 @@ tools  allow researchers to build upon one another's work.
 * summarize similar goals
 * clarify some distinctions
 
+<img src="figures/simchef_title.png"/>
+
 ---
 
 ### `scDesign3` Review
