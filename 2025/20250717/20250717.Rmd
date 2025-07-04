@@ -86,10 +86,14 @@ between environmental exposures and human health.
 
 .center[
 <div class="caption">
-<img src="figures/akkermansia_cholesterol.jpg" width=400/><br/>
+<img src="figures/akkermansia_cholesterol.jpg" width=540/><br/>
 Figure adapted from `r Citep(bib, "Jia2023-if")`.
 </div>
 ]
+
+For example, _Akkermansia muciniphila_ can help regulate cholesterol levels by producing
+proteins that activate important pathways for cholesterol absorption and
+metabolism `r Citep(bib, "Plovier2016")`.
 
 ---
 
@@ -111,9 +115,49 @@ diarrhea and mucositis, limiting treatment dosage and duration
 
 ---
 
+
+### Microbiome as Mediator
+
+We're just beginning to understand how the microbiome mediates the relationship
+between environmental exposures and human health.
+
+<br/>
+
+.center[
+  <div class="caption">
+<img src="figures/examples-dag.png" width=1300/>
+</div>
+]
+
+---
+
 ### Causal Inference Formalism
 
-Causal mediation analysis is becoming the workhorse to drive these studies.
+Causal mediation analysis is often a good match for carrying out these studies.
+Traditional methods from social science and epidemiology need to be adapted to
+reflect properties of microbiome data.
+
+.center[
+<img src="figures/mediation-dag-terms.png" width=600/>
+]
+
+---
+
+### Causal Inference Formalism
+
+Causal mediation analysis is often a good match for carrying out these studies.
+Traditional methods from social science and epidemiology need to be adapted to
+reflect properties of microbiome data.
+
+.center[
+<img src="figures/mediation-dag.svg" width=500/>
+]
+
+---
+
+### Causal Inference Formalism
+
+Causal mediation analysis is often a good match for carrying out these studies.
 Traditional methods from social science and epidemiology need to be adapted to
 reflect properties of microbiome data.
 
