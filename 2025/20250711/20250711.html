@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Towards Veridical Microbiome Analysis through Semisynthetic Data</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+# Towards Veridical Microbiome Analysis through Semisynthetic Data
+
+&lt;style&gt;
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+&lt;/style&gt;
+
+&lt;div id="subtitle_left"&gt;
+Slides: &lt;a href="https://go.wisc.edu/5q8xvl"&gt;go.wisc.edu/5q8xvl&lt;/a&gt;&lt;br/&gt;
+Paper: &lt;a href="https://go.wisc.edu/p12o8w"&gt;go.wisc.edu/p12o8w&lt;/a&gt;&lt;br/&gt;
+Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Kris Sankaran &lt;br/&gt;
+&lt;a href="https://www.eventbrite.com/e/veridical-data-science-for-biology-2025-tickets-1384456339179/"&gt;VDSB 2025&lt;/a&gt;&lt;br/&gt;
+11 | July | 2025 &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;!-- 20 minute talk, 3 min Q&amp;A --&gt;
+
+
+
+---
+
+### An Early Simulation Study
+
+The supplement to [1] considers some experimental
+design questions,
+
+&gt; [We] discussed the motivation behind dividing each subject into treatment and
+control timepoints, rather than allocating separate study subjects as
+controls...  To quantitatively characterize the impact of this choice, we
+performed this simulation experiment...
+
+.center[
+&lt;img src="figures/multidomain_title.png" width=630/&gt;
+]
+
+---
+
+How do internal and external controls compare in longitudinal microbiome
+analysis?
+
+- Rows: Increasing subject-to-subject variability.
+- Columns: Increasing perturbation effect size.
+
+.center[
+&lt;img src="figures/multidomain_simulation.png" width=1200/&gt;
+]
+
+---
+
+Sometimes it takes a long time to appreciate the things you understood as a
+beginner...
+
+.center[
+&lt;img src="figures/multidomain_title-date.png" width=800/&gt;
+]
+
+---
+
+### Data Analysis Controversy 
+
+.center[
+    &lt;img src="figures/retraction.png"/&gt;
+]
+
+In June 2024, _Nature_ retracted a paper  that claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate 
+about the data analysis.
+
+---
+
+### Data Analysis Controversy 
+
+.center[
+    &lt;img src="figures/retraction.png"/&gt;
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis 
+ of the data from 
+ which sheds light what was likely the source of the
+phantom signals. The first part is a simulation.
+
+.pull-left[
+&lt;img src="figures/gth_sim1.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim2.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+This setting is balanced -- each condition is equally likely across batches. In
+this case, SVN batch effect correction 
+works well.
+.pull-left[
+&lt;img src="figures/gth_sim3.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim4.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+But what happens if there is imbalance?
+
+.pull-left[
+&lt;img src="figures/gth_sim5.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim6.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+In this case, the SVN correction introduces an artificial difference.
+.center[ &lt;img src="figures/gth_sim7.png" width=500/&gt; ]
+This should cause concern about the original analysis: Hospitals specialize in
+cancer types. Then again, this simulation is quite unrealistic.
+
+---
+
+### Why Simulate?
+
+Simulations underlie the skills microbiome statisticians must master 
+[11; 12]. They help us to...
+
+&lt;img src="figures/noun-labs-99456.png" width=40/&gt; **Design experiments** that have high power to detect subtle signals.
+&lt;br/&gt;
+
+&lt;img src="figures/noun-benchmark-7569457.png" width=40/&gt; **Benchmark methods** and identify gaps in the literature.
+&lt;br/&gt;
+
+&lt;img src="figures/noun-checkmark-7518321.png" width=40/&gt; **Check conclusions** that might be sensitive to technical processing steps.
+
+It's worthwhile to treat simulation design with the same formality as methods
+development.
+
+---
+
+### Semisynthetic Data
+
+One of the major advances has been the design of algorithms that can leverage
+public data resources, like [7; 8; 9; 10].
+
+* **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator [12].
+
+.center[
+&lt;img src="figures/template_defn.png" width=665/&gt;
+]
+
+---
+
+### Existing Interfaces
+
+This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) [2]. 
+It's the package behind 's TCGA re-analysis.
+
+
+``` r
+params &lt;- setParams(params, mean.shape = 0.5, de.prob = 0.2)
+params
+#&gt; A Params object of class SplatParams 
+#&gt; Parameters can be (estimable) or [not estimable], 'Default' or  'NOT DEFAULT' 
+#&gt; Secondary parameters are usually set during simulation
+#&gt; 
+#&gt; Global: 
+#&gt; (GENES)  (Cells)   [SEED] 
+#&gt;    8000      100   694289 
+#&gt; 
+#&gt; 29 additional parameters 
+#&gt; 
+#&gt; Batches: 
+#&gt;     [Batches]  [Batch Cells]     [Location]        [Scale]       [Remove] 
+#&gt;             1            100            0.1            0.1          FALSE 
+#&gt; 
+#&gt; Mean: 
+#&gt;  (RATE)  (SHAPE) 
+#&gt;     0.5      0.5 
+```
+
+---
+
+### Existing Interfaces
+
+.pull-left[
+Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) [3].
+This package has the most generally applicable statistical methodology.
+]
+
+.pull-right[
+
+``` r
+example_simu &lt;- scdesign3(
+    sce = example_sce,
+    assay_use = "counts",
+    celltype = "cell_type",
+    pseudotime = "pseudotime",
+    spatial = NULL,
+    other_covariates = NULL,
+    mu_formula = "s(pseudotime, k = 10, bs = 'cr')",
+    sigma_formula = "1", # If you want your dispersion also varies along pseudotime, use "s(pseudotime, k = 5, bs = 'cr')"
+    family_use = "nb",
+    n_cores = 2,
+    usebam = FALSE,
+    corr_formula = "1",
+    copula = "gaussian",
+    DT = TRUE,
+    pseudo_obs = FALSE,
+    return_model = FALSE,
+    nonzerovar = FALSE
+  )
+```
+]
+
+---
+
+### Challenges
+
+Simulation interfaces often suffer from what researchers in human-computer interfaces call interaction gulfs [4]. 
+It is hard to quickly specify a data generating process, evaluate its properties, and then iterate.
+
+.center[
+&lt;img src="figures/interaction_gulfs.png" width=800/&gt;
+]
+
+---
+
+&lt;g style="font-size: 36px"&gt;
+&lt;b&gt;Main Idea: Apply interactive computing principles to multi-omics simulation.&lt;/b&gt;
+&lt;/g&gt;
+
+&lt;img src="figures/Lego_Brick_4.svg" width=50/&gt; &lt;span style="color:#025E73"&gt;Modularity&lt;/span&gt;: We should be able to build
+problem-specific simulators by composing simple pieces.
+
+&lt;img src="figures/computer_mouse.png" width=35/&gt; &lt;span style="color:#D94E4E"&gt;Interactivity&lt;/span&gt;: We should give domain
+researchers agency in designing, evaluating, and modifying statistical
+hypotheses.
+
+&lt;img src="figures/speech_bubbles.png" width=70/&gt; &lt;span style="color:#378C5C"&gt;Cooperation&lt;/span&gt;: Science is a social activity, and good
+tools  allow researchers to build upon one another's work.
+
+---
+
+### Related: simChef
+
+simChef  makes it easier to specify and execute simulators by
+creating a tidy interface for specification and drawing from parallelization
+routines for computation.  Our study focuses on how to create DGP modules for
+high-dimensional omics applications.
+
+.center[
+&lt;img src="figures/simchef_title.png" width=700/&gt;
+]
+
+---
+
+### `scDesign3` Review
+
+The rest of the talk will be about using these principles to develop a new
+version of `scDesign3`. Let's review that package's approach.
+
+.center[
+&lt;img src="figures/scdesignOverview.png" width=800/&gt;
+]
+
+First, we estimate models `\(\hat{F}_{g}\left(y_{i} \vert \mathbf{x}_{i}\right)\)` for each gene `\(g\)`.
+
+* Can use a variety of families: Gaussian, Poisson, Negative Binomial,...
+* Can learn relationships for each parameter `\(\theta\left(\mathbf{x}_{i}\right)\)`.
+
+---
+
+### `scDesign3` Review
+
+.pull-left[
+&lt;img src="figures/scdesignOverview2.png" width=400/&gt;
+]
+
+.pull-right[
+1. Next, we model the joint distribution of quantiles using a copula model.
+
+1. This correlates genes even after conditioning on the same `\(\mathbf{x}_{i}\)`.
+]
+
+---
+
+.section[
+## Interface Design
+]
+
+---
+
+### Nouns &amp; Verbs
+
+We can break the interface design question into two parts.
+
+1. **Data Structures**: How can we represent the simulator in a way that is both
+transparent to a human and precise enough for a computer?
+
+1. **Operations**: How can we encourage users to study and tinker with the data
+structures?
+
+If the resulting grammar is expressive enough, then researchers will be able to
+solve problems we may not have anticipated.
+
+
+
+---
+
+### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
+
+1. Here is a more realistic example from a longitudinal microbiome study.
+2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
+
+.pull-three-quarters-left[
+&lt;img src="figures/nulls_unaltered.png"/&gt;
+]
+.pull-three-quarters-right[
+&lt;img src="figures/pairwise_cors.png"/&gt;
+]
+
+---
+
+### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
+
+1. Here is a more realistic example from a longitudinal microbiome study.
+2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
+
+.pull-three-quarters-left[
+&lt;img src="figures/altered_ns.png"/&gt;
+]
+.pull-three-quarters-right[
+&lt;img src="figures/pairwise_cors_altered.png"/&gt;
+]
+
+---
+
+### Verbs: &lt;span style="color:#025E73"&gt;Join&lt;/span&gt;
+
+We should make it possible to combine simulators like Lego blocks.
+
+
+
+
+&lt;img src="figures/simulator_join_motivation.png"/&gt;
+
+---
+
+### Verbs: &lt;span style="color:#025E73"&gt;Join&lt;/span&gt; (Copula)
+
+One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
+
+
+
+This assumes that we have samples where all features are measured.
+
+.center[
+&lt;img src="figures/copula_join.png" width = 950/&gt;
+]
+
+---
+
+### Verbs: &lt;span style="color:#025E73"&gt;Join&lt;/span&gt; (Conditioning)
+
+Alternatively, we can combine two simulators by conditioning them on shared latent structure.
+
+
+
+.center[
+&lt;img src="figures/simulator_join.png" width = 1000/&gt;
+]
+
+---
+
+### Verbs: &lt;span style="color:#025E73"&gt;Join&lt;/span&gt; (Conditioning)
+
+This used partial manifold alignment [5] to
+learn shared latent variables across assays and works even in the diagonal
+integration setting.
+
+
+```
+## $methylation
+## [Marginals]
+## Plan:
+## # A tibble: 6 × 3
+##     feature  family                       link
+##   &lt;gene_id&gt; &lt;distn&gt;                     &lt;link&gt;
+## 1  AK123759 BI [mu] ~cell_type + UMAP1 + UMAP2
+## 2    ADAM33 BI [mu] ~cell_type + UMAP1 + UMAP2
+## 3      NFIX BI [mu] ~cell_type + UMAP1 + UMAP2
+## 4     FOXD2 BI [mu] ~cell_type + UMAP1 + UMAP2
+## 5   HLX.AS1 BI [mu] ~cell_type + UMAP1 + UMAP2
+## 6  LY86.AS1 BI [mu] ~cell_type + UMAP1 + UMAP2
+## AK123759, ADAM33, NFIX, and 24 other features need fitting.
+## Estimates:
+## # A tibble: 0 × 0
+## 
+## [Dependence]
+## 
+## [Template Data]
+## class: SingleCellExperiment 
+## dim: 27 142 
+## metadata(0):
+## assays(1): counts
+## rownames(27): AK123759 ADAM33 ... KCNQ2 CDH22
+## rowData names(0):
+## colnames(142): CellMeth1 CellMeth2 ... CellMeth141 CellMeth142
+## colData names(10): X1 X2 ... UMAP1 UMAP2
+## reducedDimNames(0):
+## mainExpName: NULL
+## altExpNames(0):
+## 
+## $rna
+## [Marginals]
+## Plan:
+## # A tibble: 6 × 3
+##     feature              family                       link
+##   &lt;gene_id&gt;             &lt;distn&gt;                     &lt;link&gt;
+## 1      ZIC3 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
+## 2     KCNQ2 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
+## 3     ZFP42 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
+## 4      OTX2 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
+## 5     SALL4 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
+## 6     NANOG Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
+## ZIC3, KCNQ2, ZFP42, and 29 other features need fitting.
+## Estimates:
+## # A tibble: 0 × 0
+## 
+## [Dependence]
+## 
+## [Template Data]
+## class: SingleCellExperiment 
+## dim: 32 177 
+## metadata(0):
+## assays(1): logcounts
+## rownames(32): ZIC3 KCNQ2 ... NESTIN MYC
+## rowData names(0):
+## colnames(177): CellRNA1 CellRNA2 ... CellRNA176 CellRNA177
+## colData names(10): X1 X2 ... UMAP1 UMAP2
+## reducedDimNames(0):
+## mainExpName: NULL
+## altExpNames(0):
+```
+
+
+### Example: Microbiome Network Inference
+
+1. Benchmarking methods for microbiome network inference is challenging. We
+can't directly observe microbe-microbe interactions, which stands in the way of
+ground truth labeling.
+
+1. We use the following choices in the design of our simulation,
+
+- **Template**: American Gut Project (261 samples, 45 most abundant taxa)
+- **Estimator**: Zero-Inflated Negative Binomial Copula
+- **Goodness-of-Fit**: Graphical Checks
+- **Ground Truth**: Copula correlation matrix
+- **Summarization**: Estimated vs. ground-truth correlation
+
+---
+
+### Simulation Mechanism
+
+We used scDesign3  to estimate a
+Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
+
+.center[
+&lt;img src="figures/zinb_marginals.png" width=700/&gt;
+]
+
+---
+
+### Estimated Correlation
+
+The resulting correlation estimate lacks substantial banding or blocks. We can
+also sanity check some of the highly correlated pairs.
+
+.pull-left[
+&lt;img src="figures/estimated_correlation.png" width=900/&gt;
+]
+.pull-right[
+&lt;img src="figures/correlated_pair.png" width=400/&gt;
+]
+
+---
+
+### Establishing Ground Truth
+
+To create a basis for methods comparison, we modified the ZINB copula to use a
+block correlation matrix with varying intra-block correlation strength.
+
+.center[
+  &lt;img src="figures/ground_truth_corr.png" width=450/&gt;
+]
+
+---
+
+### Methods Comparison
+
+We compared SpiecEasi , a method designed for microbiome networks,
+with the Ledoit-Wolf estimator  on `\(\log\left(1 + x\right)\)` transformed counts.
+
+.center[
+  &lt;img src="figures/comparison_difference.png" width=800/&gt;
+]
+
+---
+
+### Methods Comparison
+
+We compared SpiecEasi , a method designed for microbiome networks,
+with the Ledoit-Wolf estimator  on `\(\log\left(1 + x\right)\)` transformed counts.
+
+.center[
+  &lt;img src="figures/correlation_comparison_scatter.png" width=700/&gt;
+]
+
+---
+
+### Generalizing
+
+In our review, we consider a wider range of underlying correlation matrices.
+
+.center[
+  &lt;img src="figures/network_comparison.png" width=1200/&gt;
+]
+
+---
+
+### Future Work
+
+We've led workshops to get feedback on our package, and two questions repeatedly
+arise:
+
+1. Is there any way to make this faster?
+1. How can I know when my simulator is good enough?
+
+We've been adapting literature on scalable GLM modeling and model diagnostics 
+[11] to answer these questions.
+
+---
+
+### Bigger Picture
+
+1. Communicating hypothetical experimental outcomes effectively is one of the
+biggest challenges of any collaborative computational biology project.
+Simulation can help!
+
+1. In statistics research, simulation is at once familiar yet underappreciated.
+
+Analogy...
+
+&gt; That a composer of symphonies and operas would consider a ballet score his
+best work was remarkable for the time... ballet was something of a neglected
+stepchild as far as the musical world was concerned. 
+-- From [6]
+
+---
+
+### Software and Resources
+
+All the examples I discussed today can be run from online tutorials:
+
+* Simulation for Microbiome Analysis ([go.wisc.edu/wnj5p9](https://go.wisc.edu/wnj5p9))
+* Generative Models Examples ([go.wisc.edu/ax73qb](https://go.wisc.edu/ax73qb))
+
+Our workshop materials are online:
+
+* UW-Madison Plant Pathology [slides](https://krisrs1128.github.io/talks/2024/20240207/20240207.html#1), [colab](https://colab.research.google.com/drive/1IyMEQJwkslPzL9FYd5atvyGORqW9IrCI?usp=sharing)
+* UniMelb Integrative Genomics [notebooks](https://github.com/krisrs1128/intro-to-simulation/), slides [1](https://go.wisc.edu/54tmr9), [2](https://go.wisc.edu/rc776i), [3](https://go.wisc.edu/gfj36r).
+
+The relevant R packages behind these analyses are:
+
+* `multimedia` - Mediation analysis for microbiome data .
+* `scDesign3` - An existing simulator for single cell data .
+* `scDesigner` - Under-development version used in the first tutorial.
+
+---
+
+### Thank you!
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+---
+
+class: reference
+
+### References
+
+[1] J. Fukuyama et al. "Multidomain analyses of a longitudinal human microbiome intestinal cleanout perturbation experiment". In: _PLOS Computational Biology_ 13.8 (Aug. 2017). Ed.
+by E. Borenstein, p. e1005706. ISSN: 1553-7358. DOI: [10.1371/journal.pcbi.1005706](https://doi.org/10.1371%2Fjournal.pcbi.1005706). URL:
+[http://dx.doi.org/10.1371/journal.pcbi.1005706](http://dx.doi.org/10.1371/journal.pcbi.1005706).
+
+[2] D. Donoho. "What’s Missing From Today’s Machine Intelligence Juggernaut?" In: _Harvard Data Science Review_ 1.1 (2019).
+
+[3] F. Mosteller et al. _Data analysis and regression_. En. Addison-Wesley series in behavioral science. quantitative methods. Upper Saddle River, NJ: Pearson, Jan. 1977.
+
+[4] L. Zappia et al. "Splatter: simulation of single-cell RNA sequencing data". In: _Genome Biology_ 18 (2017). URL:
+[https://api.semanticscholar.org/CorpusID:9332625](https://api.semanticscholar.org/CorpusID:9332625).
+
+[5] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ (2023), pp. 1-6. URL:
+[https://api.semanticscholar.org/CorpusID:258638565](https://api.semanticscholar.org/CorpusID:258638565).
+
+[6] R. A. Rigby et al. "Generalized additive models for location, scale and shape". In: _Journal of the Royal Statistical Society: Series C (Applied Statistics)_ 54 (2005). URL:
+[https://api.semanticscholar.org/CorpusID:56076930](https://api.semanticscholar.org/CorpusID:56076930).
+
+[7] B. Hofner et al. "gamboostLSS: An R Package for Model Building and Variable Selection in the GAMLSS Framework". In: _arXiv: Computation_ (2014). URL:
+[https://api.semanticscholar.org/CorpusID:62302678](https://api.semanticscholar.org/CorpusID:62302678).
+
+[8] K. Cao et al. "Manifold alignment for heterogeneous single-cell multi-omics data integration using Pamona". In: _Bioinformatics_ 38 (2020), pp. 211 - 219. URL:
+[https://api.semanticscholar.org/CorpusID:226959190](https://api.semanticscholar.org/CorpusID:226959190).
+
+[9] E. L. Hutchins et al. "Direct manipulation interfaces". En. In: _Hum.-Comput. Interact._ 1.4 (Dec. 1985), pp. 311-338.
+
+
+---
+
+### Nouns: Gene-Level Models
+
+For each gene, we can specify the regression formula and distributional family.
+
+
+```
+## Plan:
+## # A tibble: 6 × 3
+##     feature              family               link
+##   &lt;gene_id&gt;             &lt;distn&gt;             &lt;link&gt;
+## 1       Pyy ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## 2      Iapp ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## 3      Chgb ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## 4      Rbp4 ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## 5      Spp1 ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## 6      Chga ZINBI [mu,sigma,nu] ~ns(pseudotime, 3)
+## Pyy, Iapp, Chgb, and 7 other features need fitting.
+## Estimates:
+## # A tibble: 0 × 0
+```
+
+
+
+---
+
+### Nouns: Copula Models
+
+We can tie together a collection of marginals using a copula model.
+
+.center[
+  &lt;img src="figures/gene-gene_dependence.png" width=900/&gt;
+]
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

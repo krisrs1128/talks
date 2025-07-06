@@ -37,7 +37,7 @@ Kris Sankaran <br/>
 
 <!-- 20 minute talk, 3 min Q&A -->
 
-```{r, echo = FALSE, warning = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(RefManageR)
 library(gamboostLSS)
 library(gamlss)
@@ -61,9 +61,10 @@ bib <- ReadBib("references.bib")
 
 ---
 
-### S5, S6 `r Citep(bib, "Fukuyama2017")`
+### An Early Simulation Study
 
-A simulation experiment from the supplement,
+The supplement to `r Citep(bib, "Fukuyama2017")` considers some experimental
+design questions,
 
 > [We] discussed the motivation behind dividing each subject into treatment and
 control timepoints, rather than allocating separate study subjects as
@@ -71,7 +72,7 @@ controls...  To quantitatively characterize the impact of this choice, we
 performed this simulation experiment...
 
 .center[
-<img src="figures/multidomain_title.png" width=650/>
+<img src="figures/multidomain_title.png" width=630/>
 ]
 
 ---
@@ -103,7 +104,7 @@ beginner...
     <img src="figures/retraction.png"/>
 ]
 
-In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` the claimed
+In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` that claimed
 identify microbiome signatures of cancer. This came after one year's worth of
 debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
 about the data analysis.
@@ -124,8 +125,10 @@ to learn about batch effects and correction methods.
 
 ### Simulation to Resolve Controversy
 
-Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom
-signals. The first part is a simulation.
+Gerry Tonkin-Hill has an excellent re-analysis 
+`r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from 
+`r Citep(bib, "Poore2020")` which sheds light what was likely the source of the
+phantom signals. The first part is a simulation.
 
 .pull-left[
 <img src="figures/gth_sim1.png"/>
@@ -174,7 +177,8 @@ cancer types. Then again, this simulation is quite unrealistic.
 
 ### Why Simulate?
 
-Simulations lie behind the many types of skills microbiome statisticians must master `r Citep(bib, c("Sankaran2023", "Sankaran2024-gb"))`. They help us to...
+Simulations underlie the skills microbiome statisticians must master 
+`r Citep(bib, c("Sankaran2023", "Sankaran2024-gb"))`. They help us to...
 
 <img src="figures/noun-labs-99456.png" width=40/> **Design experiments** that have high power to detect subtle signals.
 <br/>
@@ -195,7 +199,7 @@ One of the major advances has been the design of algorithms that can leverage
 public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller2022", "microbiomedatasets", "microbiomedataHomeNational"))`.
 
 * **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
-* **Template Data**: Previously gathered experimental data that can be used to train a simulator.
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator `r Citep(bib, "Sankaran2024-gb")`.
 
 .center[
 <img src="figures/template_defn.png" width=665/>
@@ -294,10 +298,14 @@ tools  allow researchers to build upon one another's work.
 
 ### Related: simChef
 
-* summarize similar goals
-* clarify some distinctions
+simChef `r Citep(bib, "")` makes it easier to specify and execute simulators by
+creating a tidy interface for specification and drawing from parallelization
+routines for computation.  Our study focuses on how to create DGP modules for
+high-dimensional omics applications.
 
-<img src="figures/simchef_title.png"/>
+.center[
+<img src="figures/simchef_title.png" width=700/>
+]
 
 ---
 
@@ -534,21 +542,21 @@ In our review, we consider a wider range of underlying correlation matrices.
 
 ### Future Work
 
-We've led a few workshops to get feedback on our package, and two questions
-repeatedly come up:
+We've led workshops to get feedback on our package, and two questions repeatedly
+arise:
 
 1. Is there any way to make this faster?
 1. How can I know when my simulator is good enough?
 
-We've been adapting literature on scalable GLM modeling and model diagnostics to
-answer these questions.
+We've been adapting literature on scalable GLM modeling and model diagnostics 
+`r Citep(bib, "Sankaran2023")` to answer these questions.
 
 ---
 
 ### Bigger Picture
 
 1. Communicating hypothetical experimental outcomes effectively is one of the
-biggest challenges of any collaborative work in computational biology.
+biggest challenges of any collaborative computational biology project.
 Simulation can help!
 
 1. In statistics research, simulation is at once familiar yet underappreciated.
