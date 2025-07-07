@@ -211,28 +211,32 @@ identified.
 
 ### Geometric Interpretation
 
-<img src="figures/geometric_1.svg" width=800/>
+<img src="figures/geometric_1.png" width=800/>
 
 ---
 
 ### Geometric Interpretation
 
-<img src="figures/geometric_2.svg" width=800/>
+<img src="figures/geometric_2.png" width=800/>
 
 ---
 
 ### Geometric Interpretation
 
-<img src="figures/geometric_3.svg" width=800/>
+<img src="figures/geometric_3.png" width=800/>
 
 ---
 
 ### Integration Challenge
 
 Our interest in this project came from an attempt to re-analyze a dataset about
-the gut brain axis. Participants were randomized into either a mindfulness
+the gut-brain axis. Participants were randomized into either a mindfulness
 intervention or a control group. In this case, the microbiome is an outcome, and
 the survey measurements are mediators.
+
+.center[
+<img src="figures/mediation-dag-mindfulness.png" width=550/>
+]
 
 ---
 
@@ -274,8 +278,8 @@ m_{i} = \alpha t_i + \epsilon_{i}^{m_{i}}
 
 In this case, the direct and indirect effects are straightforward:
 
-Direct effect: $\beta_t$
-Indirect effect: $\alpha \beta_m$
+- Direct effect: $\beta_t$
+- Indirect effect: $\alpha \beta_m$
 
 ---
 
@@ -337,7 +341,6 @@ approaches.
 ---
 
 ### Data Formats
-
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
@@ -499,10 +502,11 @@ fitted mediation models can help with model checking.
 
 ### Sensitivity Analysis
 
-1. Mediation analysis relies on untestable assumptions. Nonetheless, the
-consequences of their violation can be explored using sensitivity analysis.
+1. For identification of direct and indirect effects, it's necessary to make
+untestable assumptions (listed in the appendix). Nonetheless, the consequences
+of their violation can be explored using sensitivity analysis.
 
-1. We provide methods for simulation counterfactual mediator and outcome
+1. We provide methods for simulating counterfactual mediator and outcome
 variables with correlated noise terms, capturing the situation where the
 assumption of no pretreatment confounding is violated.
 
@@ -544,16 +548,18 @@ mediator-outcome pairs $G$ over which to test sensitivity.
 
 ### Study Background
 
-1. The study `r Citep(bib, "")` attempted an integrative analysis to discover
-metabolite and taxonomic markers that might have diagnostic or therapeutic
-potential.
+1. The study `r Citep(bib, "Franzosa2018")` carried out an integrative analysis
+to discover metabolite and taxonomic markers with diagnostic or therapeutic
+potential for inflammatory bowel disease (Ulcerative Colitis and Crohn's
+Disease).
 
 1. They gathered untargeted metabolomics + whole genome sequencing microbiome
-data on a cohort of 220 patients with inflammatory bowel disease (Ulcerative
-Colitis and Crohn's Disease). 
+data on a cohort of 220 patients with the disease.
 
 1. This resulted in 8.8K and 11.7K metabolite and genus features, respectively,
-all available on the [Curated Metabolome-Microbiome repository](https://github.com/borenstein-lab/microbiome-metabolome-curated-data/tree/main).
+all available on the 
+[Curated Metabolome-Microbiome repository](https://github.com/borenstein-lab/microbiome-metabolome-curated-data/tree/main)
+`r Citep(bib, "Muller2022")`.
 
 ---
 
@@ -567,7 +573,7 @@ between 150 - 200 of the most abundant features.
 This direction could be debated, but follows the discussion in `r Citep(bib, "Franzosa2018")`. 
 
 1. Microbe abundance depends only on treatment status. Each metabolite's
-abundance is a sparse linear function of a few microbes.
+abundance is treated as a sparse linear function of a few microbes.
 
 .large-code[
 ```{r eval = FALSE}
@@ -627,6 +633,7 @@ be applied to a wide range of study applications.
 ### Thank you!
 
 Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
+
 Package: [go.wisc.edu/830110](https://go.wisc.edu/830110)
 
 * Contact: ksankaran@wisc.edu
@@ -662,6 +669,32 @@ where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}
 include_graphics("figures/lnm.svg")
 ```
 ]
+
+---
+
+### Identification of Overall Direct/Indirect Effects
+
+These sequential ignorability assumptions are sufficient for identification of
+overall direct and indirect effects `r Citep(bib, "imai2010general")`. For any
+$t, t', x$, we require,
+
+1. Treatment ignorability: $\left\{Y\left(t^{\prime}, m\right), M(t)\right\} \perp T \mid X=x$
+1. Mediator ignorability: $Y\left(t^{\prime}, m\right) \perp M(t) \mid T=t, X=x$
+1. Positivity: $\mathbb{P}(T=t \mid X=x)>0$
+1. Positivity for mediator: $p_{M(t)}(m \mid T=t, X=x)>0$
+
+---
+
+### Identification of Pathwise Indirect EFfects
+
+Pathwise indirect effects require a generalization of sequential ignorability assumptions `r Citep(bib, "")`.
+For any $t, t', t'', m, x, w$ we require,
+
+1. Treatment ignorability: $\left\{Y(t, m, w), M_k\left(t^{\prime}\right), M_{-k}\left(t^{\prime \prime}\right)\right\} \perp T \mid X=x$
+1. Mediator ignorability: $Y\left(t^{\prime}, m, M_{-k}\left(t^{\prime}\right)\right) \perp M_k \mid T=t, X=x$
+1. Mediator $k$ ignorability: $Y\left(t^{\prime}, M_k\left(t^{\prime}\right), w\right) \perp M_{-k} \mid T=t, X=x$
+1. Positivity: $\mathbb{P}(T=t \mid X=x)>0$
+1. Mediator positivity: $p_{\left(M_k t, M_{-k}(t)\right)}(m, w \mid T=t, X=x)>0$
 
 ---
 
