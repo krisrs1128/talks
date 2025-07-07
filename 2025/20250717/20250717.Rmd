@@ -25,7 +25,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/5ms623">go.wisc.edu/5ms623</a><br/>
 Package: <a href="https://go.wisc.edu/830110">go.wisc.edu/830110</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
@@ -499,7 +499,7 @@ fitted mediation models can help with model checking.
 
 ### Sensitivity Analysis
 
-1. Mediation analysis relies on untestable assumptions. Noentheless, the
+1. Mediation analysis relies on untestable assumptions. Nonetheless, the
 consequences of their violation can be explored using sensitivity analysis.
 
 1. We provide methods for simulation counterfactual mediator and outcome
@@ -560,8 +560,8 @@ all available on the [Curated Metabolome-Microbiome repository](https://github.c
 ### Model Setup
 
 1. We applied centered log-ratio and $\log\left(1 + x\right)$ transformations to
-the microbiome and metabolome data, respectively. Both were then filtered to ~
-150 - 200 of the most abundant features.
+the microbiome and metabolome data, respectively. Both were then filtered to
+between 150 - 200 of the most abundant features.
 
 1. We treat the microbiome as the mediators and the metabolome as the outcome.
 This direction could be debated, but follows the discussion in `r Citep(bib, "Franzosa2018")`. 
@@ -604,7 +604,7 @@ saw in the introduction!
 
 In this sensitivity analysis, we simulate unmeasured confounding between the
 abundances of the Enterocloster genus (mediator) and the metabolites (outcomes)
-hydrocinnamic_acid, lithocholate, and arginine.
+`hydrocinnamic_acid`, `lithocholate`, and `arginine`.
 
 .center[
 <img src="figures/indirect_effects_sensitivity.png"/>
@@ -614,18 +614,20 @@ hydrocinnamic_acid, lithocholate, and arginine.
 
 ### Takeaways
 
-* integration can benefit from some of the formal language of causal inference
+1. Mediation analysis is a useful framework for relating environment, host, and
+microbiome features. More generally, counterfactual language can guide
+multi-omics data integration.
 
----
+1. Modular software design can ensure that a few core statistical components can
+be applied to a wide range of study applications.
 
-### Resources
-
-* Documentation
-* Paper
 
 ---
 
 ### Thank you!
+
+Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
+Package: [go.wisc.edu/830110](https://go.wisc.edu/830110)
 
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang

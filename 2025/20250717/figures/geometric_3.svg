@@ -7,39 +7,35 @@
         fill: none;
       }
 
-      .st7 {
-        font-family: SourceSansPro-Regular, 'Source Sans Pro';
-      }
-
-      .st7, .st8 {
-        font-size: 48px;
-      }
-
-      .st7, .st8, .st9, .st10 {
-        isolation: isolate;
-      }
-
-      .st1, .st2, .st3, .st4, .st11, .st5, .st12, .st6, .st13 {
+      .st1, .st2, .st3, .st4, .st7, .st5, .st8, .st6, .st9 {
         stroke-miterlimit: 10;
       }
 
-      .st1, .st2, .st13 {
+      .st1, .st2, .st9 {
         stroke: #9e005d;
       }
 
-      .st1, .st4, .st11, .st13 {
+      .st1, .st4, .st7, .st9 {
         stroke-width: 5px;
       }
 
-      .st2, .st3, .st5, .st12, .st6 {
+      .st2, .st3, .st5, .st8, .st6 {
         stroke-width: 8px;
       }
 
-      .st3, .st11 {
+      .st3, .st7 {
         stroke: #04aa9e;
       }
 
-      .st8, .st10 {
+      .st10 {
+        font-size: 48px;
+      }
+
+      .st10, .st11, .st12 {
+        isolation: isolate;
+      }
+
+      .st10, .st12 {
         font-family: ArialMT, Arial;
       }
 
@@ -47,11 +43,11 @@
         stroke: #00a99d;
       }
 
-      .st11 {
+      .st7 {
         fill: #04aa9e;
       }
 
-      .st11, .st13 {
+      .st7, .st9 {
         fill-opacity: .2;
       }
 
@@ -63,22 +59,22 @@
         stroke: #000;
       }
 
-      .st10 {
+      .st12 {
         font-size: 30px;
       }
 
-      .st12 {
+      .st8 {
         fill: #fff;
         stroke: #cacbcd;
       }
 
-      .st13 {
+      .st9 {
         fill: #9e005d;
       }
     </style>
   </defs>
-  <path class="st12" d="M275.5,0v590"/>
-  <path class="st12" d="M272.8,587.2h1028"/>
+  <path class="st8" d="M275.5,0v590"/>
+  <path class="st8" d="M272.8,587.2h1028"/>
   <path class="st4" d="M277.6,542c73.1,9.3,147.2-6.1,218-24.8,91.2-24.1,180.5-53.9,267.1-88.9,52.8-21.4,104.9-44.8,160.2-60.4,91.1-25.7,187.9-29.4,281.8-45.1"/>
   <path class="st1" d="M274.7,514.9c75.7-5.8,153.7-12.3,220.9-44.9,85.3-41.4,141.4-118.9,202-188,62.8-71.7,134.7-137.8,220.7-184.7s187.2-73.5,286.4-62.9"/>
   <line class="st5" x1="586.3" y1="405.6" x2="586.3" y2="487.6"/>
@@ -86,26 +82,34 @@
   <line class="st2" x1="909.1" y1="102.4" x2="909.1" y2="613.9"/>
   <line class="st5" x1="918.1" y1="110.4" x2="918.1" y2="405.6"/>
   <line class="st6" x1="587.2" y1="405.6" x2="908" y2="405.6"/>
-  <path class="st11" d="M908,590.1c-62.5,15.7-120.3,49.7-164.3,96.8-35.4,38-61.7,83.6-96,122.5-15,17-34.2,33.7-56.8,32.9-18.3-.7-34.2-12.9-47-26.1-37.5-38.6-60.3-88.6-89.7-133.6-29.5-45-70-87.8-122.9-97.3"/>
-  <path class="st13" d="M1283.9,588.4c-69.9,9.5-136.5,41.6-187.5,90.3-44.7,42.8-81.6,100.3-141.3,116.4-56,15.1-115-12.1-160.7-47.9s-84.2-80.8-133.9-110.6c-62.7-37.6-137.4-48-209.9-57.6"/>
+  <path class="st7" d="M908,590.1c-62.5,15.7-120.3,49.7-164.3,96.8-35.4,38-61.7,83.6-96,122.5-15,17-34.2,33.7-56.8,32.9-18.3-.7-34.2-12.9-47-26.1-37.5-38.6-60.3-88.6-89.7-133.6-29.5-45-70-87.8-122.9-97.3"/>
+  <path class="st9" d="M1283.9,588.4c-69.9,9.5-136.5,41.6-187.5,90.3-44.7,42.8-81.6,100.3-141.3,116.4-56,15.1-115-12.1-160.7-47.9s-84.2-80.8-133.9-110.6c-62.7-37.6-137.4-48-209.9-57.6"/>
   <rect class="st0" x="33.9" y="140" width="183.5" height="37.5"/>
   <rect class="st0" x="699.2" y="624.7" width="166" height="60"/>
   <g id="_x39_M3Rwj.tif">
-    <image id="Layer_0" class="st9" width="155" height="147" transform="translate(225 133.2) scale(.3)" xlink:href="geometric_3-1.png"/>
+    <image id="Layer_0" class="st11" width="156" height="144" transform="translate(224.7 133.5) scale(.3)" xlink:href="geometric_3-1.png"/>
   </g>
   <g id="YoKUEA.tif">
-    <image id="Layer_01" data-name="Layer_0" class="st9" width="175" height="100" transform="translate(812.6 629.8) scale(.3)" xlink:href="geometric_3-2.png"/>
+    <image id="Layer_01" class="st11" width="175" height="100" transform="translate(812.6 629.8) scale(.3)" xlink:href="geometric_3-2.png"/>
   </g>
   <g id="wFLYAc.tif">
-    <image id="Layer_02" data-name="Layer_0" class="st9" width="717" height="213" transform="translate(1110.7 55.9) scale(.2)" xlink:href="geometric_3-3.png"/>
+    <image id="Layer_02" class="st11" width="717" height="213" transform="translate(1110.7 55.9) scale(.2)" xlink:href="geometric_3-3.png"/>
   </g>
   <g id="ldwu5p.tif">
-    <image id="Layer_03" data-name="Layer_0" class="st9" width="717" height="205" transform="translate(1095.3 362.3) scale(.2 .2)" xlink:href="geometric_3-4.png"/>
+    <image id="Layer_03" class="st11" width="715" height="190" transform="translate(1094.9 363.6) scale(.2)" xlink:href="geometric_3-4.png"/>
   </g>
   <rect class="st0" x="930.5" y="174.4" width="311.1" height="83.6"/>
-  <text class="st10" transform="translate(930.5 195.8)"><tspan x="0" y="0">Indirect effect</tspan></text>
+  <g class="st11">
+    <text class="st12" transform="translate(930.5 195.8)"><tspan x="0" y="0">Indirect effect</tspan></text>
+  </g>
   <rect class="st0" x="603.1" y="416.1" width="290.2" height="53"/>
-  <text class="st10" transform="translate(603.1 437.4)"><tspan x="0" y="0">Direct effect</tspan></text>
-  <text class="st7" transform="translate(10.5 165.4)"><tspan x="0" y="0">Response</tspan></text>
-  <text class="st8" transform="translate(607.4 658.4)"><tspan x="0" y="0">Mediator</tspan></text>
+  <g class="st11">
+    <text class="st12" transform="translate(603.1 437.4)"><tspan x="0" y="0">Direct effect</tspan></text>
+  </g>
+  <g class="st11">
+    <text class="st10" transform="translate(10.5 165.4)"><tspan x="0" y="0">Response</tspan></text>
+  </g>
+  <g class="st11">
+    <text class="st10" transform="translate(607.4 658.4)"><tspan x="0" y="0">Mediator</tspan></text>
+  </g>
 </svg>
