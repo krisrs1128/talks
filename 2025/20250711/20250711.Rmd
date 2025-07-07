@@ -98,83 +98,6 @@ beginner...
 
 ---
 
-### Data Analysis Controversy `r Citep(bib, "retraction2024")`
-
-.center[
-    <img src="figures/retraction.png"/>
-]
-
-In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` that claimed
-identify microbiome signatures of cancer. This came after one year's worth of
-debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
-about the data analysis.
-
----
-
-### Data Analysis Controversy `r Citep(bib, "retraction2024")`
-
-.center[
-    <img src="figures/retraction.png"/>
-]
-
-The "disease signature" was an artifact resulting from the use of a batch effect
-correction method.  Before we can understand the nuances of the story, we need
-to learn about batch effects and correction methods.
-
----
-
-### Simulation to Resolve Controversy
-
-Gerry Tonkin-Hill has an excellent re-analysis 
-`r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from 
-`r Citep(bib, "Poore2020")` which sheds light what was likely the source of the
-phantom signals. The first part is a simulation.
-
-.pull-left[
-<img src="figures/gth_sim1.png"/>
-]
-.pull-right[
-<img src="figures/gth_sim2.png"/>
-]
-
----
-
-### Simulation and Supervised Normalization
-
-This setting is balanced -- each condition is equally likely across batches. In
-this case, SVN batch effect correction `r Citep(bib, "mecham2010supervised")`
-works well.
-.pull-left[
-<img src="figures/gth_sim3.png"/>
-]
-.pull-right[
-<img src="figures/gth_sim4.png"/>
-]
-
----
-
-### Simulation and Supervised Normalization
-
-But what happens if there is imbalance?
-
-.pull-left[
-<img src="figures/gth_sim5.png"/>
-]
-.pull-right[
-<img src="figures/gth_sim6.png"/>
-]
-
----
-
-### Simulation and Supervised Normalization
-
-In this case, the SVN correction introduces an artificial difference.
-.center[ <img src="figures/gth_sim7.png" width=500/> ]
-This should cause concern about the original analysis: Hospitals specialize in
-cancer types. Then again, this simulation is quite unrealistic.
-
----
-
 ### Why Simulate?
 
 Simulations underlie the skills microbiome statisticians must master 
@@ -210,7 +133,8 @@ public data resources, like `r Citep(bib, c("Pasolli2017AccessibleCM", "Muller20
 ### Existing Interfaces
 
 This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) `r Citep(bib, "Zappia2017SplatterSO")`. 
-It's the package behind `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`'s TCGA re-analysis.
+It has a thoughtfully designed interface and has been used to critique
+microbiome studies `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.
 
 ```{r, eval = FALSE, echo = TRUE}
 params <- setParams(params, mean.shape = 0.5, de.prob = 0.2)
@@ -298,10 +222,10 @@ tools  allow researchers to build upon one another's work.
 
 ### Related: simChef
 
-simChef `r Citep(bib, "")` makes it easier to specify and execute simulators by
-creating a tidy interface for specification and drawing from parallelization
-routines for computation.  Our study focuses on how to create DGP modules for
-high-dimensional omics applications.
+The simChef package `r Citep(bib, "Duncan2024")` simplifies simulator
+specification and execution through a tidy interface and parallel computation.
+Our study focuses on how to create DGP modules for high-dimensional omics
+applications.
 
 .center[
 <img src="figures/simchef_title.png" width=700/>
@@ -311,8 +235,8 @@ high-dimensional omics applications.
 
 ### `scDesign3` Review
 
-The rest of the talk will be about using these principles to develop a new
-version of `scDesign3`. Let's review that package's approach.
+The rest of the talk will be about preparing a tidy-like interface fo
+`scDesign3` `r Citep(bib, "Song2023scDesign3GR")`.  Let's review that package's approach.
 
 .center[
 <img src="figures/scdesignOverview.png" width=800/>
@@ -339,12 +263,6 @@ First, we estimate models $\hat{F}_{g}\left(y_{i} \vert \mathbf{x}_{i}\right)$ f
 
 ---
 
-.section[
-## Interface Design
-]
-
----
-
 ### Nouns & Verbs
 
 We can break the interface design question into two parts.
@@ -366,7 +284,8 @@ sce <- readRDS(url("https://go.wisc.edu/77uf3h"))[1:10, ]
 
 ### Verbs: <span style="color:#025E73">Mutate</span>
 
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. This example is from a longitudinal microbiome study about the proteins 
+present in a mouse model of Huntington's Disease `r Citep(bib, "kong2020microbiome")`.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -380,7 +299,9 @@ sce <- readRDS(url("https://go.wisc.edu/77uf3h"))[1:10, ]
 
 ### Verbs: <span style="color:#025E73">Mutate</span>
 
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. This example is from a longitudinal microbiome study about the proteins 
+present in a mouse model of Huntington's Disease 
+`r Citep(bib, "kong2020microbiome")`.
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -445,17 +366,6 @@ sim_joined <- join_pamona(sims)
 
 ---
 
-### Verbs: <span style="color:#025E73">Join</span> (Conditioning)
-
-This used partial manifold alignment `r Citep(bib, "Cao2020ManifoldAF")` to
-learn shared latent variables across assays and works even in the diagonal
-integration setting.
-
-```{r print_joined}
-sim_joined
-```
-
-
 ### Example: Microbiome Network Inference
 
 1. Benchmarking methods for microbiome network inference is challenging. We
@@ -474,7 +384,7 @@ ground truth labeling.
 
 ### Simulation Mechanism
 
-We used scDesign3 `r Citep(bib, "Song2023")` to estimate a
+We used scDesign3 to estimate a
 Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
 
 .center[
@@ -585,7 +495,7 @@ Our workshop materials are online:
 The relevant R packages behind these analyses are:
 
 * `multimedia` - Mediation analysis for microbiome data `r Citep(bib, "Jiang2025")`.
-* `scDesign3` - An existing simulator for single cell data `r Citep(bib, c("Li2019", "Sun2021", "Song2023"))`.
+* `scDesign3` - An existing simulator for single cell data `r Citep(bib, c("Li2019", "Sun2021", "Song2023scDesign3GR"))`.
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -603,7 +513,17 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 14)
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 27)
 ```
 
 
@@ -642,3 +562,80 @@ simulator <- setup_simulator(
 ) |>
   estimate()
 ```
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+In June 2024, _Nature_ retracted a paper `r Citep(bib, "Poore2020")` that claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
+about the data analysis.
+
+---
+
+### Data Analysis Controversy `r Citep(bib, "retraction2024")`
+
+.center[
+    <img src="figures/retraction.png"/>
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis 
+`r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from 
+`r Citep(bib, "Poore2020")` which sheds light what was likely the source of the
+phantom signals. The first part is a simulation.
+
+.pull-left[
+<img src="figures/gth_sim1.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim2.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+This setting is balanced -- each condition is equally likely across batches. In
+this case, SVN batch effect correction `r Citep(bib, "mecham2010supervised")`
+works well.
+.pull-left[
+<img src="figures/gth_sim3.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim4.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+But what happens if there is imbalance?
+
+.pull-left[
+<img src="figures/gth_sim5.png"/>
+]
+.pull-right[
+<img src="figures/gth_sim6.png"/>
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+In this case, the SVN correction introduces an artificial difference.
+.center[ <img src="figures/gth_sim7.png" width=500/> ]
+This should cause concern about the original analysis: Hospitals specialize in
+cancer types. Then again, this simulation is quite unrealistic.

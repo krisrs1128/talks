@@ -77,87 +77,10 @@ beginner...
 
 ---
 
-### Data Analysis Controversy 
-
-.center[
-    &lt;img src="figures/retraction.png"/&gt;
-]
-
-In June 2024, _Nature_ retracted a paper  that claimed
-identify microbiome signatures of cancer. This came after one year's worth of
-debate 
-about the data analysis.
-
----
-
-### Data Analysis Controversy 
-
-.center[
-    &lt;img src="figures/retraction.png"/&gt;
-]
-
-The "disease signature" was an artifact resulting from the use of a batch effect
-correction method.  Before we can understand the nuances of the story, we need
-to learn about batch effects and correction methods.
-
----
-
-### Simulation to Resolve Controversy
-
-Gerry Tonkin-Hill has an excellent re-analysis 
- of the data from 
- which sheds light what was likely the source of the
-phantom signals. The first part is a simulation.
-
-.pull-left[
-&lt;img src="figures/gth_sim1.png"/&gt;
-]
-.pull-right[
-&lt;img src="figures/gth_sim2.png"/&gt;
-]
-
----
-
-### Simulation and Supervised Normalization
-
-This setting is balanced -- each condition is equally likely across batches. In
-this case, SVN batch effect correction 
-works well.
-.pull-left[
-&lt;img src="figures/gth_sim3.png"/&gt;
-]
-.pull-right[
-&lt;img src="figures/gth_sim4.png"/&gt;
-]
-
----
-
-### Simulation and Supervised Normalization
-
-But what happens if there is imbalance?
-
-.pull-left[
-&lt;img src="figures/gth_sim5.png"/&gt;
-]
-.pull-right[
-&lt;img src="figures/gth_sim6.png"/&gt;
-]
-
----
-
-### Simulation and Supervised Normalization
-
-In this case, the SVN correction introduces an artificial difference.
-.center[ &lt;img src="figures/gth_sim7.png" width=500/&gt; ]
-This should cause concern about the original analysis: Hospitals specialize in
-cancer types. Then again, this simulation is quite unrealistic.
-
----
-
 ### Why Simulate?
 
 Simulations underlie the skills microbiome statisticians must master 
-[11; 12]. They help us to...
+[6; 7]. They help us to...
 
 &lt;img src="figures/noun-labs-99456.png" width=40/&gt; **Design experiments** that have high power to detect subtle signals.
 &lt;br/&gt;
@@ -175,10 +98,10 @@ development.
 ### Semisynthetic Data
 
 One of the major advances has been the design of algorithms that can leverage
-public data resources, like [7; 8; 9; 10].
+public data resources, like [8; 9; 10; 11].
 
 * **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
-* **Template Data**: Previously gathered experimental data that can be used to train a simulator [12].
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator [7].
 
 .center[
 &lt;img src="figures/template_defn.png" width=665/&gt;
@@ -188,8 +111,9 @@ public data resources, like [7; 8; 9; 10].
 
 ### Existing Interfaces
 
-This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) [2]. 
-It's the package behind 's TCGA re-analysis.
+This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) [12]. 
+It has a thoughtfully designed interface and has been used to critique
+microbiome studies [5].
 
 
 ``` r
@@ -219,7 +143,7 @@ params
 ### Existing Interfaces
 
 .pull-left[
-Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) [3].
+Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) [13].
 This package has the most generally applicable statistical methodology.
 ]
 
@@ -252,7 +176,7 @@ example_simu &lt;- scdesign3(
 
 ### Challenges
 
-Simulation interfaces often suffer from what researchers in human-computer interfaces call interaction gulfs [4]. 
+Simulation interfaces often suffer from what researchers in human-computer interfaces call interaction gulfs [14]. 
 It is hard to quickly specify a data generating process, evaluate its properties, and then iterate.
 
 .center[
@@ -279,10 +203,10 @@ tools  allow researchers to build upon one another's work.
 
 ### Related: simChef
 
-simChef  makes it easier to specify and execute simulators by
-creating a tidy interface for specification and drawing from parallelization
-routines for computation.  Our study focuses on how to create DGP modules for
-high-dimensional omics applications.
+The simChef package [15] simplifies simulator
+specification and execution through a tidy interface and parallel computation.
+Our study focuses on how to create DGP modules for high-dimensional omics
+applications.
 
 .center[
 &lt;img src="figures/simchef_title.png" width=700/&gt;
@@ -292,8 +216,8 @@ high-dimensional omics applications.
 
 ### `scDesign3` Review
 
-The rest of the talk will be about using these principles to develop a new
-version of `scDesign3`. Let's review that package's approach.
+The rest of the talk will be about preparing a tidy-like interface fo
+`scDesign3` [13].  Let's review that package's approach.
 
 .center[
 &lt;img src="figures/scdesignOverview.png" width=800/&gt;
@@ -320,12 +244,6 @@ First, we estimate models `\(\hat{F}_{g}\left(y_{i} \vert \mathbf{x}_{i}\right)\
 
 ---
 
-.section[
-## Interface Design
-]
-
----
-
 ### Nouns &amp; Verbs
 
 We can break the interface design question into two parts.
@@ -345,7 +263,8 @@ solve problems we may not have anticipated.
 
 ### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. This example is from a longitudinal microbiome study about the proteins 
+present in a mouse model of Huntington's Disease [23].
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -359,7 +278,9 @@ solve problems we may not have anticipated.
 
 ### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
-1. Here is a more realistic example from a longitudinal microbiome study.
+1. This example is from a longitudinal microbiome study about the proteins 
+present in a mouse model of Huntington's Disease 
+[23].
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -408,78 +329,6 @@ Alternatively, we can combine two simulators by conditioning them on shared late
 
 ---
 
-### Verbs: &lt;span style="color:#025E73"&gt;Join&lt;/span&gt; (Conditioning)
-
-This used partial manifold alignment [5] to
-learn shared latent variables across assays and works even in the diagonal
-integration setting.
-
-
-```
-## $methylation
-## [Marginals]
-## Plan:
-## # A tibble: 6 × 3
-##     feature  family                       link
-##   &lt;gene_id&gt; &lt;distn&gt;                     &lt;link&gt;
-## 1  AK123759 BI [mu] ~cell_type + UMAP1 + UMAP2
-## 2    ADAM33 BI [mu] ~cell_type + UMAP1 + UMAP2
-## 3      NFIX BI [mu] ~cell_type + UMAP1 + UMAP2
-## 4     FOXD2 BI [mu] ~cell_type + UMAP1 + UMAP2
-## 5   HLX.AS1 BI [mu] ~cell_type + UMAP1 + UMAP2
-## 6  LY86.AS1 BI [mu] ~cell_type + UMAP1 + UMAP2
-## AK123759, ADAM33, NFIX, and 24 other features need fitting.
-## Estimates:
-## # A tibble: 0 × 0
-## 
-## [Dependence]
-## 
-## [Template Data]
-## class: SingleCellExperiment 
-## dim: 27 142 
-## metadata(0):
-## assays(1): counts
-## rownames(27): AK123759 ADAM33 ... KCNQ2 CDH22
-## rowData names(0):
-## colnames(142): CellMeth1 CellMeth2 ... CellMeth141 CellMeth142
-## colData names(10): X1 X2 ... UMAP1 UMAP2
-## reducedDimNames(0):
-## mainExpName: NULL
-## altExpNames(0):
-## 
-## $rna
-## [Marginals]
-## Plan:
-## # A tibble: 6 × 3
-##     feature              family                       link
-##   &lt;gene_id&gt;             &lt;distn&gt;                     &lt;link&gt;
-## 1      ZIC3 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
-## 2     KCNQ2 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
-## 3     ZFP42 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
-## 4      OTX2 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
-## 5     SALL4 Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
-## 6     NANOG Gaussian [mu,sigma] ~cell_type + UMAP1 + UMAP2
-## ZIC3, KCNQ2, ZFP42, and 29 other features need fitting.
-## Estimates:
-## # A tibble: 0 × 0
-## 
-## [Dependence]
-## 
-## [Template Data]
-## class: SingleCellExperiment 
-## dim: 32 177 
-## metadata(0):
-## assays(1): logcounts
-## rownames(32): ZIC3 KCNQ2 ... NESTIN MYC
-## rowData names(0):
-## colnames(177): CellRNA1 CellRNA2 ... CellRNA176 CellRNA177
-## colData names(10): X1 X2 ... UMAP1 UMAP2
-## reducedDimNames(0):
-## mainExpName: NULL
-## altExpNames(0):
-```
-
-
 ### Example: Microbiome Network Inference
 
 1. Benchmarking methods for microbiome network inference is challenging. We
@@ -498,7 +347,7 @@ ground truth labeling.
 
 ### Simulation Mechanism
 
-We used scDesign3  to estimate a
+We used scDesign3 to estimate a
 Zero-Inflated Negative Binomial Copula with the formula `~ log(sequencing_depth) + BMI` for each taxon. These are example simulated marginals.
 
 .center[
@@ -534,8 +383,8 @@ block correlation matrix with varying intra-block correlation strength.
 
 ### Methods Comparison
 
-We compared SpiecEasi , a method designed for microbiome networks,
-with the Ledoit-Wolf estimator  on `\(\log\left(1 + x\right)\)` transformed counts.
+We compared SpiecEasi [18], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [19] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
   &lt;img src="figures/comparison_difference.png" width=800/&gt;
@@ -545,8 +394,8 @@ with the Ledoit-Wolf estimator  on `\(\log\left(1 + x\right)\)` transformed coun
 
 ### Methods Comparison
 
-We compared SpiecEasi , a method designed for microbiome networks,
-with the Ledoit-Wolf estimator  on `\(\log\left(1 + x\right)\)` transformed counts.
+We compared SpiecEasi [18], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [19] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
   &lt;img src="figures/correlation_comparison_scatter.png" width=700/&gt;
@@ -573,7 +422,7 @@ arise:
 1. How can I know when my simulator is good enough?
 
 We've been adapting literature on scalable GLM modeling and model diagnostics 
-[11] to answer these questions.
+[6] to answer these questions.
 
 ---
 
@@ -590,7 +439,7 @@ Analogy...
 &gt; That a composer of symphonies and operas would consider a ballet score his
 best work was remarkable for the time... ballet was something of a neglected
 stepchild as far as the musical world was concerned. 
--- From [6]
+-- From [17]
 
 ---
 
@@ -608,8 +457,8 @@ Our workshop materials are online:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data .
-* `scDesign3` - An existing simulator for single cell data .
+* `multimedia` - Mediation analysis for microbiome data [20].
+* `scDesign3` - An existing simulator for single cell data [21; 22; 13].
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -626,30 +475,78 @@ class: reference
 
 ### References
 
-[1] J. Fukuyama et al. "Multidomain analyses of a longitudinal human microbiome intestinal cleanout perturbation experiment". In: _PLOS Computational Biology_ 13.8 (Aug. 2017). Ed.
-by E. Borenstein, p. e1005706. ISSN: 1553-7358. DOI: [10.1371/journal.pcbi.1005706](https://doi.org/10.1371%2Fjournal.pcbi.1005706). URL:
+[1] J. Fukuyama et al. "Multidomain analyses of a longitudinal human microbiome intestinal cleanout perturbation experiment". In: _PLOS Computational Biology_ 13.8 (Aug. 2017). Ed. by
+E. Borenstein, p. e1005706. ISSN: 1553-7358. DOI: [10.1371/journal.pcbi.1005706](https://doi.org/10.1371%2Fjournal.pcbi.1005706). URL:
 [http://dx.doi.org/10.1371/journal.pcbi.1005706](http://dx.doi.org/10.1371/journal.pcbi.1005706).
 
-[2] D. Donoho. "What’s Missing From Today’s Machine Intelligence Juggernaut?" In: _Harvard Data Science Review_ 1.1 (2019).
+[2] G. D. Poore et al. "RETRACTED ARTICLE: Microbiome analyses of blood and tissues suggest cancer diagnostic approach". In: _Nature_ 579.7800 (Mar. 2020), p. 567–574. ISSN:
+1476-4687. DOI: [10.1038/s41586-020-2095-1](https://doi.org/10.1038%2Fs41586-020-2095-1). URL:
+[http://dx.doi.org/10.1038/s41586-020-2095-1](http://dx.doi.org/10.1038/s41586-020-2095-1).
 
-[3] F. Mosteller et al. _Data analysis and regression_. En. Addison-Wesley series in behavioral science. quantitative methods. Upper Saddle River, NJ: Pearson, Jan. 1977.
+[3] A. Gihawi et al. "Major data analysis errors invalidate cancer microbiome findings". In: _mBio_ 14.5 (Oct. 2023). Ed. by I. B. Zhulin. ISSN: 2150-7511. DOI:
+[10.1128/mbio.01607-23](https://doi.org/10.1128%2Fmbio.01607-23). URL: [http://dx.doi.org/10.1128/mbio.01607-23](http://dx.doi.org/10.1128/mbio.01607-23).
 
-[4] L. Zappia et al. "Splatter: simulation of single-cell RNA sequencing data". In: _Genome Biology_ 18 (2017). URL:
+[4] G. D. Sepich-Poore et al. "Reply to: Caution Regarding the Specificities of Pan-Cancer Microbial Structure".  (Feb. 2023). DOI:
+[10.1101/2023.02.10.528049](https://doi.org/10.1101%2F2023.02.10.528049). URL: [http://dx.doi.org/10.1101/2023.02.10.528049](http://dx.doi.org/10.1101/2023.02.10.528049).
+
+[5] G. Tonkin-Hill. _GitHub - gtonkinhill/TCGA\_analysis - github.com_. &lt;https://github.com/gtonkinhill/TCGA_analysis&gt;. [Accessed 21-06-2024]. 2023.
+
+[6] K. Sankaran et al. "Generative Models: An Interdisciplinary Perspective". In: _Annual Review of Statistics and Its Application_ 10.1 (Mar. 2023), p. 325–352. ISSN: 2326-831X. DOI:
+[10.1146/annurev-statistics-033121-110134](https://doi.org/10.1146%2Fannurev-statistics-033121-110134). URL:
+[http://dx.doi.org/10.1146/annurev-statistics-033121-110134](http://dx.doi.org/10.1146/annurev-statistics-033121-110134).
+
+[7] K. Sankaran et al. "Semisynthetic simulation for microbiome data analysis". En. In: _Brief. Bioinform._ 26.1 (Nov. 2024).
+
+[8] E. Pasolli et al. "Accessible, curated metagenomic data through ExperimentHub". In: _Nature Methods_ 14 (2017), pp. 1023-1024. URL:
+[https://api.semanticscholar.org/CorpusID:3403081](https://api.semanticscholar.org/CorpusID:3403081).
+
+[9] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct. 2022). ISSN:
+2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+
+[10] Felix G.M. Ernst &lt;felix.gm.ernst@outlook.com&gt; [aut, cre] (&lt;https://orcid.org/0000-0001-5064-0928&gt;), Leo Lahti [aut] (&lt;https://orcid.org/0000-0001-5537-637X&gt;), Sudarshan Shetty
+&lt;sudarshanshetty9@gmail.com&gt; [aut] (&lt;https://orcid.org/0000-0001-7280-9915&gt;). _microbiomeDataSets_. 2021.
+
+[11] _Home - National Microbiome Data Collaborative - microbiomedata.org_. &lt;https://microbiomedata.org/&gt;. [Accessed 17-02-2025].
+
+[12] L. Zappia et al. "Splatter: simulation of single-cell RNA sequencing data". In: _Genome Biology_ 18 (2017). URL:
 [https://api.semanticscholar.org/CorpusID:9332625](https://api.semanticscholar.org/CorpusID:9332625).
 
-[5] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ (2023), pp. 1-6. URL:
+[13] D. Song et al. "scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics". In: _Nature Biotechnology_ (2023), pp. 1-6. URL:
 [https://api.semanticscholar.org/CorpusID:258638565](https://api.semanticscholar.org/CorpusID:258638565).
 
-[6] R. A. Rigby et al. "Generalized additive models for location, scale and shape". In: _Journal of the Royal Statistical Society: Series C (Applied Statistics)_ 54 (2005). URL:
-[https://api.semanticscholar.org/CorpusID:56076930](https://api.semanticscholar.org/CorpusID:56076930).
+---
 
-[7] B. Hofner et al. "gamboostLSS: An R Package for Model Building and Variable Selection in the GAMLSS Framework". In: _arXiv: Computation_ (2014). URL:
-[https://api.semanticscholar.org/CorpusID:62302678](https://api.semanticscholar.org/CorpusID:62302678).
+class: reference
 
-[8] K. Cao et al. "Manifold alignment for heterogeneous single-cell multi-omics data integration using Pamona". In: _Bioinformatics_ 38 (2020), pp. 211 - 219. URL:
+### References
+
+[14] E. L. Hutchins et al. "Direct manipulation interfaces". En. In: _Hum.-Comput. Interact._ 1.4 (Dec. 1985), pp. 311-338.
+
+[15] J. Duncan et al. "simChef: High-quality data science simulations in R". In: _Journal of Open Source Software_ 9.95 (Mar. 2024), p. 6156. ISSN: 2475-9066. DOI:
+[10.21105/joss.06156](https://doi.org/10.21105%2Fjoss.06156). URL: [http://dx.doi.org/10.21105/joss.06156](http://dx.doi.org/10.21105/joss.06156).
+
+[16] K. Cao et al. "Manifold alignment for heterogeneous single-cell multi-omics data integration using Pamona". In: _Bioinformatics_ 38 (2020), pp. 211 - 219. URL:
 [https://api.semanticscholar.org/CorpusID:226959190](https://api.semanticscholar.org/CorpusID:226959190).
 
-[9] E. L. Hutchins et al. "Direct manipulation interfaces". En. In: _Hum.-Comput. Interact._ 1.4 (Dec. 1985), pp. 311-338.
+[17] C. Dotsey. _Everybody Dance Now: Tchaikovsky's Sleeping Beauty - houstonsymphony.org_. &lt;https://houstonsymphony.org/tchaikovsky-sleeping-beauty/&gt;. [Accessed 01-07-2025].
+
+[18] Z. D. Kurtz et al. "Sparse and compositionally robust inference of microbial ecological networks". En. In: _PLoS Comput. Biol._ 11.5 (May. 2015), p. e1004226.
+
+[19] O. Ledoit et al. "A well-conditioned estimator for large-dimensional covariance matrices". In: _Journal of Multivariate Analysis_ 88.2 (Feb. 2004), p. 365–411. ISSN: 0047-259X.
+DOI: [10.1016/s0047-259x(03)00096-4](https://doi.org/10.1016%2Fs0047-259x%2803%2900096-4). URL:
+[http://dx.doi.org/10.1016/S0047-259X(03)00096-4](http://dx.doi.org/10.1016/S0047-259X(03)00096-4).
+
+[20] H. Jiang et al. "Multimedia: multimodal mediation analysis of microbiome data". In: _Microbiology Spectrum_ 13.2 (Feb. 2025). Ed. by J. Claesen. ISSN: 2165-0497. DOI:
+[10.1128/spectrum.01131-24](https://doi.org/10.1128%2Fspectrum.01131-24). URL: [http://dx.doi.org/10.1128/spectrum.01131-24](http://dx.doi.org/10.1128/spectrum.01131-24).
+
+[21] W. V. Li et al. "A statistical simulator scDesign for rational scRNA-seq experimental design". In: _Bioinformatics_ 35.14 (Jul. 2019), p. i41–i50. ISSN: 1367-4811. DOI:
+[10.1093/bioinformatics/btz321](https://doi.org/10.1093%2Fbioinformatics%2Fbtz321). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz321](http://dx.doi.org/10.1093/bioinformatics/btz321).
+
+[22] T. Sun et al. "scDesign2: a transparent simulator that generates high-fidelity single-cell gene expression count data with gene correlations captured". In: _Genome Biology_ 22.1
+(May. 2021). ISSN: 1474-760X. DOI: [10.1186/s13059-021-02367-2](https://doi.org/10.1186%2Fs13059-021-02367-2). URL:
+[http://dx.doi.org/10.1186/s13059-021-02367-2](http://dx.doi.org/10.1186/s13059-021-02367-2).
 
 
 ---
@@ -689,6 +586,83 @@ We can tie together a collection of marginals using a copula model.
 
 
 
+
+---
+
+### Data Analysis Controversy 
+
+.center[
+    &lt;img src="figures/retraction.png"/&gt;
+]
+
+In June 2024, _Nature_ retracted a paper [2] that claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate [3; 4]
+about the data analysis.
+
+---
+
+### Data Analysis Controversy 
+
+.center[
+    &lt;img src="figures/retraction.png"/&gt;
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis 
+[5] of the data from 
+[2] which sheds light what was likely the source of the
+phantom signals. The first part is a simulation.
+
+.pull-left[
+&lt;img src="figures/gth_sim1.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim2.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+This setting is balanced -- each condition is equally likely across batches. In
+this case, SVN batch effect correction 
+works well.
+.pull-left[
+&lt;img src="figures/gth_sim3.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim4.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+But what happens if there is imbalance?
+
+.pull-left[
+&lt;img src="figures/gth_sim5.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim6.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+In this case, the SVN correction introduces an artificial difference.
+.center[ &lt;img src="figures/gth_sim7.png" width=500/&gt; ]
+This should cause concern about the original analysis: Hospitals specialize in
+cancer types. Then again, this simulation is quite unrealistic.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -83,7 +83,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60vh;
+  height: 40vh;
   margin: 0;
 }
 
@@ -263,7 +263,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 25px;
-  width: 900px;
+  width: 500px;
   color: #5f558e;
   text-align: left;
   left: 20px;
