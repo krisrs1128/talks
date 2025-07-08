@@ -167,7 +167,8 @@ clear enough, then users will be able to compose their own kinds of simulators.
 
 Verbs: Mutate - 1
 
-Since I don't have that much time, I wanna focus on just a couple different kinds of verbs.
+Since I don't have that much time, I wanna focus on just a couple different
+kinds of verbs.
 
 One of the verbs is mutate. The idea is that after having initially fit a
 simulator to some template data we might want to alter that simulator to
@@ -191,58 +192,134 @@ seems to generally reflect the original data.
 
 Verbs: Join
 
+A second that we consider that's especially important for multiomics
+applications is join. The idea is that if we've fit simulators for two different
+comics, we want to be able to have a new simulator for a multiomic study. You
+imagine having initially fit two different simulators first to bulk RNA-seq and
+then second to methylation data. You would like to have operation that allows
+you to combine those two simulators into a joint RNA and methylation simulator
+
 ---
 
 Verbs: Join - Copula
 
+There are a few different ways that we carry out this joint. One simple idea is
+just refit the copula. So here we discarded the copula that were estimated in
+the initial simulators and simply use the marginal models from the two separate
+simulators and learn a new correlation structure across all the features
+simultaneously.
+
 ---
 
 Verbs: Join - Conditioning
 
----
-
-Verbs: Join - Conditioning
+Another way that we have implemented the joint operation is to condition on
+latent structure. For example, you can learn something like partial manifold
+alignment, which works, even when the samples are not exactly aligned, and use
+that to obtain latent structure shared across all the omics. By simulating with
+a shared conditional variable, we can induce correlation across the two omics.
 
 ---
 
 Example: Microbiome Network Inference
 
+Here are template data comes from the American gut project. We filter to adjust
+45 abundant taxa. Will estimate a zero inflated negative binomial copula, model,
+insert some ground truth in the copula covariance matrix, and then compare how
+well different algorithms can capture that ground truth correlation.
+
 ---
 
 Simulation Mechanism
+
+Here is a visualization of some of the samples. Each panel corresponds to one
+taxon. We conditioned on the total sequencing depth and BMI because that was a
+significant feature in the original study. Blue gives the real data while green
+gives the simulation. For most taxer we fit relatively well though it's
+interesting that the zero inflation tends to overestimate the number of zeros.
 
 ---
 
 Estimated Correlation
 
+This is the corresponding correlation matrix for the underlying copula. I'm
+showing a pair of species plotted against each other which I've high estimated
+correlation. This gives us some check that the correlation isn't due to a few
+outliers, for example.
+
 ---
 
 Establishing Ground Truth
+
+We can create some ground truth for our benchmarking by defining a true
+covariance matrix. Here there are three blocks with gradually decreasing
+correlation structure .8.6.4.
 
 ---
 
 Methods Comparison - 1
 
+Here's a comparison of two different algorithms speakeasy was designed for
+microbio data while the wolf estimator is more generic for high dimensional
+data. They both do a good job discovering that there are three main blocks in
+this data, but it's kind of interesting that speakeasy thinks that there are
+some negative correlation between the blocks.
+
 ---
 
 Methods Comparison - 2
+
+Here's another view of the same data. Now I have the ground truth versus the
+estimated correlation on the two axis. Now the estimated negative correlations
+are very clear in speakeasy, and in retrospect that this occurs is not too
+surprising. This model assumes a sort of compositional structure and that
+induces negative correlation. You can also tell that the wolf estimator has a
+little bit of shrinkage, which makes sense because it was designed for the high
+dimensional setting.
 
 ---
 
 Generalizing
 
+The block dependent structure is just one of many plausible structures from
+Microbiome data. In our review, we consider also scale free, banded, and random
+networks for example
+
 ---
 
 Future Work
+
+We have run a few workshops based on a prototype of this simulator and two
+questions come up often. When is how do we make this a bit faster and second is
+how can we make sure that the generator data are useful enough for whatever
+downstream task we have and I have a lot of thoughts on this and we are updating
+our work to refle so happy to talk about this off-line
 
 ---
 
 Bigger Picture
 
+So stepping back one thing, I really enjoy about this project is that it has
+helped really overcome some of the communication barriers that arise when doing
+collaborative work in biology it's much easier to communicate different kinds of
+outcomes of an analysis when we have a simulation that we can point to. It tears
+a little quote that I like that I think of a lot in the context of simulation.
+People who know here probably know that I also really enjoy classical music and
+this quote is something I think about in the context of simulation so the story
+is that before Tchaikovsky ballet music was always kind of an afterthought the
+main point of the valet was the dancing so we need a good music and I think
+about this simulation sometimes because when I'm reviewing papers, I often see
+people use stimulation and ask just a kind of cursory thing not something to
+take very seriously, but I really think that there's a lot of value in taking
+simulation seriously.
+
 ---
 
 Software and Resources
 
+OK, so about wrapping up on the slides, I have a bunch of links for more
+resources examples from the workshop and the paper. 
+
 ---
 
-Thank You
+Thank you for your attention.
