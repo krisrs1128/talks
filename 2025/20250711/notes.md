@@ -3,30 +3,28 @@
 
 title slide
 
-Good morning everyone my name is Kris Sankaran. I mainly work in analysis of
-microbiome data. Related to the theme of today's workshop, I thought it would be
-interesting to share how simulation has helped in these kind of data analysis.
-Most of what I'll be talking about is discussed in this review paper linked here
-below. You can also check out the slide at this link in case you want to see
-what references I'm talking about as we go through.
+Thank you for the introduction, and to the organizers for putting together this
+workshop.  Today, I wanted to share some thoughts on simulation for microbiome
+data, this is the topic of the review paper linked over here. I'd also like to
+share some thoughts on how we could design package interfaces that make these
+simulations easier to use. I hope that by the end of this talk, you'll have
+learned a few tricks that might help in the design of your own simulations.
 
 ---
 
 An Early Simulation Study
 
-The organizers gave us an interesting instruction, which is to give a more
-personal take than I would usually give. So in that spirit, I wanted to start
-with, but I think it's the first time I ever use simulation in a publication
-which comes from this paper. The topic of the paper was to do a kind of multi
-mic analysis of some longitude or data about the micro b and I remember one of
-the questions from the reviewers was why exactly did you use this design? so the
-design was every single person was traced overtime, and they were given an
-intervention over the course of this experiment. This is pretty different from
-if you were just taken cross-sectional data and then divide the group into a
-treatment group and a control group. So in response to the reviewer, we ran a
-small extra simulation experiment to understand. What are the trade-offs between
-doing a pure case control study and a study where you intervene within a
-longitudinal structure, and those experiments ended up in our supplement.
+This screenshot comes from the first time I ever use simulation in a
+publication.  The topic of the paper was to do a kind of multiomic analysis of
+some longitudinal data about the microbiom and I remember one of the questions
+from the reviewers was why exactly did you use this design? so the design was
+every single person was traced overtime, and they were given an intervention
+over the course of this experiment. This is pretty different from if you were
+just taken cross-sectional data and then divide the group into a treatment group
+and a control group. So in response to the reviewer, we ran a small extra
+simulation experiment to understand. What are the trade-offs between doing a
+pure case control study and a study where you intervene within a longitudinal
+structure, and those experiments ended up in our supplement.
 
 ---
 
