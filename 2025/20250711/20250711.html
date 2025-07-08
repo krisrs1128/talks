@@ -80,7 +80,7 @@ beginner...
 ### Why Simulate?
 
 Simulations underlie the skills microbiome statisticians must master 
-[6; 7]. They help us to...
+[2; 3]. They help us to...
 
 &lt;img src="figures/noun-labs-99456.png" width=40/&gt; **Design experiments** that have high power to detect subtle signals.
 &lt;br/&gt;
@@ -98,10 +98,10 @@ development.
 ### Semisynthetic Data
 
 One of the major advances has been the design of algorithms that can leverage
-public data resources, like [8; 9; 10; 11].
+public data resources, like [4; 5; 6; 7].
 
 * **Semisynthetic Data**: The output from a simulator that has been designed to mimic external, template data. 
-* **Template Data**: Previously gathered experimental data that can be used to train a simulator [7].
+* **Template Data**: Previously gathered experimental data that can be used to train a simulator [3].
 
 .center[
 &lt;img src="figures/template_defn.png" width=665/&gt;
@@ -111,9 +111,9 @@ public data resources, like [8; 9; 10; 11].
 
 ### Existing Interfaces
 
-This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) [12]. 
+This is from the [`splatter` introductory vignette](https://bioconductor.org/packages/devel/bioc/vignettes/splatter/inst/doc/splatter.html#2_Quickstart) [8]. 
 It has a thoughtfully designed interface and has been used to critique
-microbiome studies [5].
+microbiome studies [9].
 
 
 ``` r
@@ -143,7 +143,7 @@ params
 ### Existing Interfaces
 
 .pull-left[
-Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) [13].
+Here is an example from [`scDesign3`](https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3.html) [10].
 This package has the most generally applicable statistical methodology.
 ]
 
@@ -176,7 +176,7 @@ example_simu &lt;- scdesign3(
 
 ### Challenges
 
-Simulation interfaces often suffer from what researchers in human-computer interfaces call interaction gulfs [14]. 
+Simulation interfaces often suffer from what researchers in human-computer interfaces call interaction gulfs [11]. 
 It is hard to quickly specify a data generating process, evaluate its properties, and then iterate.
 
 .center[
@@ -203,7 +203,7 @@ tools  allow researchers to build upon one another's work.
 
 ### Related: simChef
 
-The simChef package [15] simplifies simulator
+The simChef package [12] simplifies simulator
 specification and execution through a tidy interface and parallel computation.
 Our study focuses on how to create DGP modules for high-dimensional omics
 applications.
@@ -217,7 +217,7 @@ applications.
 ### `scDesign3` Review
 
 The rest of the talk will be about preparing a tidy-like interface fo
-`scDesign3` [13].  Let's review that package's approach.
+`scDesign3` [10].  Let's review that package's approach.
 
 .center[
 &lt;img src="figures/scdesignOverview.png" width=800/&gt;
@@ -264,7 +264,7 @@ solve problems we may not have anticipated.
 ### Verbs: &lt;span style="color:#025E73"&gt;Mutate&lt;/span&gt;
 
 1. This example is from a longitudinal microbiome study about the proteins 
-present in a mouse model of Huntington's Disease [23].
+present in a mouse model of Huntington's Disease [13].
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -280,7 +280,7 @@ present in a mouse model of Huntington's Disease [23].
 
 1. This example is from a longitudinal microbiome study about the proteins 
 present in a mouse model of Huntington's Disease 
-[23].
+[13].
 2. We can use `mutate` to define a synthetic null with no disease effect for a known subset of genes.
 
 .pull-three-quarters-left[
@@ -384,8 +384,8 @@ block correlation matrix with varying intra-block correlation strength.
 
 ### Methods Comparison
 
-We compared SpiecEasi [18], a method designed for microbiome networks,
-with the Ledoit-Wolf estimator [19] on `\(\log\left(1 + x\right)\)` transformed counts.
+We compared SpiecEasi [14], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [15] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
   &lt;img src="figures/comparison_difference.png" width=800/&gt;
@@ -395,8 +395,8 @@ with the Ledoit-Wolf estimator [19] on `\(\log\left(1 + x\right)\)` transformed 
 
 ### Methods Comparison
 
-We compared SpiecEasi [18], a method designed for microbiome networks,
-with the Ledoit-Wolf estimator [19] on `\(\log\left(1 + x\right)\)` transformed counts.
+We compared SpiecEasi [14], a method designed for microbiome networks,
+with the Ledoit-Wolf estimator [15] on `\(\log\left(1 + x\right)\)` transformed counts.
 
 .center[
   &lt;img src="figures/correlation_comparison_scatter.png" width=700/&gt;
@@ -414,36 +414,6 @@ In our review, we consider a wider range of underlying correlation matrices.
 
 ---
 
-### Future Work
-
-We've led workshops to get feedback on our package, and two questions repeatedly
-arise:
-
-1. Is there any way to make this faster?
-1. How can I know when my simulator is good enough?
-
-We've been adapting literature on scalable GLM modeling and model diagnostics 
-[6] to answer these questions.
-
----
-
-### Bigger Picture
-
-1. Communicating hypothetical experimental outcomes effectively is one of the
-biggest challenges of any collaborative computational biology project.
-Simulation can help!
-
-1. In statistics research, simulation is at once familiar yet underappreciated.
-
-Analogy...
-
-&gt; That a composer of symphonies and operas would consider a ballet score his
-best work was remarkable for the time... ballet was something of a neglected
-stepchild as far as the musical world was concerned. 
--- From [17]
-
----
-
 ### Software and Resources
 
 All the examples I discussed today can be run from online tutorials:
@@ -458,8 +428,8 @@ Our workshop materials are online:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data [20].
-* `scDesign3` - An existing simulator for single cell data [21; 22; 13].
+* `multimedia` - Mediation analysis for microbiome data [17].
+* `scDesign3` - An existing simulator for single cell data [18; 19; 10].
 * `scDesigner` - Under-development version used in the first tutorial.
 
 ---
@@ -596,9 +566,9 @@ We can tie together a collection of marginals using a copula model.
     &lt;img src="figures/retraction.png"/&gt;
 ]
 
-In June 2024, _Nature_ retracted a paper [2] that claimed
+In June 2024, _Nature_ retracted a paper [20] that claimed
 identify microbiome signatures of cancer. This came after one year's worth of
-debate [3; 4]
+debate [21; 22]
 about the data analysis.
 
 ---
@@ -618,8 +588,8 @@ to learn about batch effects and correction methods.
 ### Simulation to Resolve Controversy
 
 Gerry Tonkin-Hill has an excellent re-analysis 
-[5] of the data from 
-[2] which sheds light what was likely the source of the
+[9] of the data from 
+[20] which sheds light what was likely the source of the
 phantom signals. The first part is a simulation.
 
 .pull-left[
@@ -664,6 +634,36 @@ In this case, the SVN correction introduces an artificial difference.
 .center[ &lt;img src="figures/gth_sim7.png" width=500/&gt; ]
 This should cause concern about the original analysis: Hospitals specialize in
 cancer types. Then again, this simulation is quite unrealistic.
+
+---
+
+### Future Work
+
+We've led workshops to get feedback on our package, and two questions repeatedly
+arise:
+
+1. Is there any way to make this faster?
+1. How can I know when my simulator is good enough?
+
+We've been adapting literature on scalable GLM modeling and model diagnostics 
+[2] to answer these questions.
+
+---
+
+### Bigger Picture
+
+1. Communicating hypothetical experimental outcomes effectively is one of the
+biggest challenges of any collaborative computational biology project.
+Simulation can help!
+
+1. In statistics research, simulation is at once familiar yet underappreciated.
+
+Analogy...
+
+&gt; That a composer of symphonies and operas would consider a ballet score his
+best work was remarkable for the time... ballet was something of a neglected
+stepchild as far as the musical world was concerned. 
+-- From [16]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

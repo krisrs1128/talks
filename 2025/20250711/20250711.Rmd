@@ -451,36 +451,6 @@ In our review, we consider a wider range of underlying correlation matrices.
 
 ---
 
-### Future Work
-
-We've led workshops to get feedback on our package, and two questions repeatedly
-arise:
-
-1. Is there any way to make this faster?
-1. How can I know when my simulator is good enough?
-
-We've been adapting literature on scalable GLM modeling and model diagnostics 
-`r Citep(bib, "Sankaran2023")` to answer these questions.
-
----
-
-### Bigger Picture
-
-1. Communicating hypothetical experimental outcomes effectively is one of the
-biggest challenges of any collaborative computational biology project.
-Simulation can help!
-
-1. In statistics research, simulation is at once familiar yet underappreciated.
-
-Analogy...
-
-> That a composer of symphonies and operas would consider a ballet score his
-best work was remarkable for the time... ballet was something of a neglected
-stepchild as far as the musical world was concerned. 
--- From `r Citep(bib, "houstonsymphony")`
-
----
-
 ### Software and Resources
 
 All the examples I discussed today can be run from online tutorials:
@@ -640,3 +610,33 @@ In this case, the SVN correction introduces an artificial difference.
 .center[ <img src="figures/gth_sim7.png" width=500/> ]
 This should cause concern about the original analysis: Hospitals specialize in
 cancer types. Then again, this simulation is quite unrealistic.
+
+---
+
+### Future Work
+
+We've led workshops to get feedback on our package, and two questions repeatedly
+arise:
+
+1. Is there any way to make this faster?
+1. How can I know when my simulator is good enough?
+
+We've been adapting literature on scalable GLM modeling and model diagnostics 
+`r Citep(bib, "Sankaran2023")` to answer these questions.
+
+---
+
+### Bigger Picture
+
+1. Communicating hypothetical experimental outcomes effectively is one of the
+biggest challenges of any collaborative computational biology project.
+Simulation can help!
+
+1. In statistics research, simulation is at once familiar yet underappreciated.
+
+Analogy...
+
+> That a composer of symphonies and operas would consider a ballet score his
+best work was remarkable for the time... ballet was something of a neglected
+stepchild as far as the musical world was concerned. 
+-- From `r Citep(bib, "houstonsymphony")`
