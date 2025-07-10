@@ -51,6 +51,8 @@ and reproducible methods in computational biology?
 
 - I've seen people like Susan who created the phyloseq package without any grant
 money (I think it was considered innovative enough)
+- People take visualization seriously. I learned ggplot2 from microbiome
+researchers, and now I teach a class on it at UW Madison.
 - I've seen a few people who are willing to question the assumptions behind very
 commonly used practices. (example about the assumptions behind Harmony integration)
 - I think we could learn things from ML: Ideas like codalab and huggingface

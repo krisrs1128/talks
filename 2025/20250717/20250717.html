@@ -13,7 +13,7 @@
 
 class: title
 
-#  Modular software for mediation analysis of microbiome data
+#  Modular Software for Mediation Analysis of Microbiome Data
 
 &lt;style&gt;
 .slide-background {
@@ -66,24 +66,6 @@ We're just beginning to understand how the microbiome mediates the relationship
 between environmental exposures and human health.
 
 .center[
-&lt;div class="caption"&gt;
-&lt;img src="figures/akkermansia_cholesterol.jpg" width=540/&gt;&lt;br/&gt;
-Figure adapted from [1].
-&lt;/div&gt;
-]
-
-For example, _Akkermansia muciniphila_ can help regulate cholesterol levels by producing
-proteins that activate important pathways for cholesterol absorption and
-metabolism [2].
-
----
-
-### Microbiome as Mediator
-
-We're just beginning to understand how the microbiome mediates the relationship
-between environmental exposures and human health.
-
-.center[
   &lt;div class="caption"&gt;
 &lt;img src="figures/chemotherapy.png"/&gt;
 Figure adapted from [3].
@@ -114,9 +96,9 @@ between environmental exposures and human health.
 
 ### Causal Inference Formalism
 
-Causal mediation analysis is often a good match for carrying out these studies.
-Traditional methods from social science and epidemiology need to be adapted to
-reflect properties of microbiome data.
+Causal mediation analysis is often a good match for carrying out these studies
+\cite{}.  Traditional methods from social science and epidemiology need to be
+adapted to reflect properties of microbiome data.
 
 .center[
 &lt;img src="figures/mediation-dag-terms.png" width=600/&gt;
@@ -126,21 +108,9 @@ reflect properties of microbiome data.
 
 ### Causal Inference Formalism
 
-Causal mediation analysis is often a good match for carrying out these studies.
-Traditional methods from social science and epidemiology need to be adapted to
-reflect properties of microbiome data.
-
-.center[
-&lt;img src="figures/mediation-dag.svg" width=500/&gt;
-]
-
----
-
-### Causal Inference Formalism
-
-Causal mediation analysis is often a good match for carrying out these studies.
-Traditional methods from social science and epidemiology need to be adapted to
-reflect properties of microbiome data.
+Causal mediation analysis is often a good match for carrying out these studies
+\cite{}.  Traditional methods from social science and epidemiology need to be
+adapted to reflect properties of microbiome data.
 
 .center[
 &lt;img src="figures/mediation-dag.svg" width=500/&gt;
@@ -186,7 +156,7 @@ When many mediators are present, we may also want to know:
 \end{align*}`
 
 Under appropriate sequential ignorability assumptions, these effects can be
-identified.
+identified (see supplemental slides).
 
 ---
 
@@ -210,10 +180,10 @@ identified.
 
 ### Integration Challenge
 
-Our interest in this project came from an attempt to re-analyze a dataset about
-the gut-brain axis. Participants were randomized into either a mindfulness
-intervention or a control group. In this case, the microbiome is an outcome, and
-the survey measurements are mediators.
+Our interest in this project came from a re-analysis of a gut-brain axis
+microbiome study. Participants were randomized into either a mindfulness
+intervention or a control group. In this case, the the taxonomic community
+composition is an outcome, and the survey measurements are mediators.
 
 .center[
 &lt;img src="figures/mediation-dag-mindfulness.png" width=550/&gt;
@@ -224,20 +194,13 @@ the survey measurements are mediators.
 ### Integration Challenge
 
 A similar issue arises when applying mediation to support metabolomic
-integration. This is a quote from a study on the microbiome and metabolome of
-inflammatory bowel disease [6]:
+integration. Motivated by [6]'s discussion of the
+microbiome and metabolome of inflammatory bowel disease (IBD), we could
+consider:
 
-&lt;div style="font-size: 20px"&gt;
-&gt; The CD-associated compounds eicosatrienoic (ETA) and docosapentaenoic (DPA)
-acid were involved in negative associations with control-associated species and
-positive associations with IBD-associated species. ETA and DPA are
-polyunsaturated long-chain fatty acids (PUFAs) [which] possess bactericidal
-activity by virtue of their hydrophobic nature and potential to disrupt
-bacterial cell membranes. 
-&lt;/div&gt;
-
-As in the previous example, we can imagine a mediation analysis with a
-high-dimensional microbiome outcome.
+.center[
+&lt;img src="figures/mediation-dag-ibd.png" width=550/&gt;
+]
 
 ---
 
@@ -305,8 +268,8 @@ Indeed, it's easy to use `glm` in the `mediation` package.
 
 `multimedia` generalizes this interface for multivariate responses and outcomes
 appropriate to microbiome data. For example, for the mindfulness study, we use a
-logistic-normal multinomial model for the outcomes and lasso regression for the
-mediators.
+logistic-normal multinomial model \cite{} for the outcomes and lasso regression
+\cite{} for the mediators.
 
 .large-code[
 
@@ -328,7 +291,7 @@ approaches.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax to categorize variables.
+selection syntax \cite{} to categorize variables.
 
 
 ``` r
@@ -360,7 +323,7 @@ These are the data from the motivating IBD study as a raw `data.frame`.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax to categorize variables.
+selection syntax \cite{} to categorize variables.
 
 
 ``` r
@@ -399,7 +362,7 @@ estimate the associated direct and indirect effects.
 ### Bootstrap
 
 We can gauge uncertainty in the estimated effects by re-estimating both mediator
-and outcome models on bootstrap resampled versions of the original data.  Here
+and outcome models on bootstrap resampled versions of the original data. Here
 are the metabolites with the largest indirect and direct effects in the IBD
 example. 
 .center[
@@ -461,20 +424,9 @@ fitted mediation models can help with model checking.
 
 ### Sensitivity Analysis
 
-1. For identification of direct and indirect effects, it's necessary to make
-untestable assumptions (listed in the appendix). Nonetheless, the consequences
-of their violation can be explored using sensitivity analysis.
-
-1. We provide methods for simulating counterfactual mediator and outcome
-variables with correlated noise terms, capturing the situation where the
-assumption of no pretreatment confounding is violated.
-
----
-
-### Sensitivity Analysis
-
-For example, once we have fit mediation and outcome models, we can simulate
-according to:
+Sensitivity analysis can show which conclusions might be changed if any
+identification assumptions are violated (listed in the appendix).  For example,
+once we have fit mediation and outcome models, we can simulate according to:
 
 `\begin{align*}
 Y^*(t, m)=\hat{Y}(t, m)+\epsilon^y \\
@@ -487,7 +439,7 @@ A caveat is that this only makes sense for continuous outcomes and mediators.
 
 ### Sensitivity Analysis
 
-We draw `\(\left(\epsilon^y, \epsilon^m\right)\)` from a gaussian with mean zero and covariance,
+We draw `\(\left(\epsilon^y, \epsilon^m\right)\)` from a Gaussian with mean zero and covariance,
 `\begin{align*}
 \Sigma(\rho, G):=\left(\begin{array}{cc}
 \operatorname{diag}\left(\hat{\sigma}_M^2\right) &amp; \rho \hat{\sigma}_M \hat{\sigma}_Y^{\top} \odot \mathbf{1}_G \\
@@ -509,8 +461,7 @@ mediator-outcome pairs `\(G\)` over which to test sensitivity.
 
 1. The study [6] carried out an integrative analysis
 to discover metabolite and taxonomic markers with diagnostic or therapeutic
-potential for inflammatory bowel disease (Ulcerative Colitis and Crohn's
-Disease).
+potential for IBD.
 
 1. They gathered untargeted metabolomics + whole genome sequencing microbiome
 data on a cohort of 220 patients with the disease.
@@ -529,9 +480,10 @@ the microbiome and metabolome data, respectively. Both were then filtered to
 between 150 - 200 of the most abundant features.
 
 1. We treat the microbiome as the mediators and the metabolome as the outcome.
-This direction could be debated, but follows the discussion in [6]. 
+This direction could be debated, but follows the discussion in 
+[6]. 
 
-1. Microbe abundance depends only on treatment status. Each metabolite's
+1. Taxonomic composition depends only on treatment status. Each metabolite's
 abundance is treated as a sparse linear function of a few microbes.
 
 .large-code[
@@ -569,8 +521,8 @@ saw in the introduction!
 ### Sensitivity Analysis
 
 In this sensitivity analysis, we simulate unmeasured confounding between the
-abundances of the Enterocloster genus (mediator) and the metabolites (outcomes)
-`hydrocinnamic_acid`, `lithocholate`, and `arginine`.
+abundances of the _Enterocloster_ genus (mediator) and the metabolites
+(outcomes) hydrocinnamici acid, lithocholate, and arginine.
 
 .center[
 &lt;img src="figures/indirect_effects_sensitivity.png"/&gt;
@@ -679,6 +631,34 @@ model &lt;- multimedia(
 .center[
 &lt;img src="figures/hurdle_model_indirect.png" width=700/&gt;
 ]
+
+---
+
+### Microbiome as Mediator
+
+We're just beginning to understand how the microbiome mediates the relationship
+between environmental exposures and human health.
+
+.center[
+&lt;div class="caption"&gt;
+&lt;img src="figures/akkermansia_cholesterol.jpg" width=540/&gt;&lt;br/&gt;
+Figure adapted from [1].
+&lt;/div&gt;
+]
+
+For example, _Akkermansia muciniphila_ can help regulate cholesterol levels by
+producing proteins that activate pathways for cholesterol absorption and
+metabolism [2].
+
+---
+
+### Sensitivity Analysis
+
+1. We provide methods for simulating counterfactual mediator and outcome
+variables with correlated noise terms, capturing the situation where the
+assumption of no pretreatment confounding is violated.
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
