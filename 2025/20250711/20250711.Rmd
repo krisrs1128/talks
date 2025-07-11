@@ -474,8 +474,8 @@ The relevant R packages behind these analyses are:
 ### Thank you!
 
 * Contact: ksankaran@wisc.edu
-* Lab Members: Margaret Thairu, Hanying Jiang, Shuchen Yan, Yuliang Peng, Helena Huang
-* Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates 072185
 
 ---
 

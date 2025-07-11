@@ -589,8 +589,8 @@ Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
 Package: [go.wisc.edu/830110](https://go.wisc.edu/830110)
 
 * Contact: ksankaran@wisc.edu
-* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
-* Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates 072185
 
 ---
 
