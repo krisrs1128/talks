@@ -13,7 +13,7 @@
 
 class: title
 
-#  Modular Software for Mediation Analysis of Microbiome Data
+# Modular Software for Mediation Analysis of Microbiome Data
 
 &lt;style&gt;
 .slide-background {
@@ -57,7 +57,6 @@ Kris Sankaran &lt;br/&gt;
 `\(\def\reals{\mathbb{R}}\)`
 `\(\newcommand{\wout}{\tilde w_{\text{out}}}\)`
 
-
 ---
 
 ### Microbiome as Mediator
@@ -66,51 +65,45 @@ We're just beginning to understand how the microbiome mediates the relationship
 between environmental exposures and human health.
 
 .center[
-  &lt;div class="caption"&gt;
+&lt;div class="caption"&gt;
 &lt;img src="figures/chemotherapy.png"/&gt;
-Figure adapted from [3].
+Figure adapted from [1].
 &lt;/div&gt;
 ]
+
 
 Chemotherapy-induced microbiome changes can worsen adverse events, like
 diarrhea and mucositis, limiting treatment dosage and duration 
-[4; 5].
+[2; 3].
 
 ---
 
+### Alternative Mediators
 
-### Microbiome as Mediator
-
-We're just beginning to understand how the microbiome mediates the relationship
-between environmental exposures and human health.
-
-&lt;br/&gt;
+More generally, for microbiome research that seeks to explain mechanisms, it is
+often necssary to analyze indirect effects.
 
 .center[
   &lt;div class="caption"&gt;
-&lt;img src="figures/examples-dag.png" width=1300/&gt;
+&lt;img src="figures/akkermansia_cholesterol.jpg" width=540/&gt;&lt;br/&gt;
+Figure adapted from [4].
 &lt;/div&gt;
 ]
 
----
+For example, _Akkermansia muciniphila_ can help regulate cholesterol levels by producing
+proteins that activate important pathways for cholesterol absorption and
+metabolism [5].
 
-### Causal Inference Formalism
-
-Causal mediation analysis is often a good match for carrying out these studies
-\cite{}.  Traditional methods from social science and epidemiology need to be
-adapted to reflect properties of microbiome data.
-
-.center[
-&lt;img src="figures/mediation-dag-terms.png" width=600/&gt;
-]
 
 ---
 
 ### Causal Inference Formalism
 
-Causal mediation analysis is often a good match for carrying out these studies
-\cite{}.  Traditional methods from social science and epidemiology need to be
-adapted to reflect properties of microbiome data.
+Causal mediation analysis is often a good match for carrying out these studies 
+[12; 13].  Traditional methods
+from social science and epidemiology need to be adapted to reflect properties of
+microbiome data 
+[14; 15; 16].
 
 .center[
 &lt;img src="figures/mediation-dag.svg" width=500/&gt;
@@ -120,7 +113,8 @@ adapted to reflect properties of microbiome data.
 
 ### Counterfactual Notation
 
-Under the generalized causal mediation analysis framework, we imagine
+Under the counterfactual causal mediation analysis framework 
+[7; 8], we imagine
 counterfactuals for both mediators and outcomes, depending on treatments that we
 may never have seen.
 
@@ -268,8 +262,10 @@ Indeed, it's easy to use `glm` in the `mediation` package.
 
 `multimedia` generalizes this interface for multivariate responses and outcomes
 appropriate to microbiome data. For example, for the mindfulness study, we use a
-logistic-normal multinomial model \cite{} for the outcomes and lasso regression
-\cite{} for the mediators.
+logistic-normal multinomial model 
+[17; 18] for the outcomes
+and lasso regression [19] for the
+mediators.
 
 .large-code[
 
@@ -291,7 +287,7 @@ approaches.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax \cite{} to categorize variables.
+selection syntax [20] to categorize variables.
 
 
 ``` r
@@ -300,12 +296,12 @@ head(ibd_data, 4)
 
 ```
 ## # A tibble: 4 × 341
-##   m0031_phenyllactate m0045_azelate m0171_palmitic_acid m0219_2_hydroxyhexadecanoate m0244_alpha_linoleni…¹ m0246_linoleic_acid m0250_oleic_acid m0256_stearic_acid m0354_arachidonic_acid m0393_1213_diHOME
-##                 &lt;dbl&gt;         &lt;dbl&gt;               &lt;dbl&gt;                        &lt;dbl&gt;                  &lt;dbl&gt;               &lt;dbl&gt;            &lt;dbl&gt;              &lt;dbl&gt;                  &lt;dbl&gt;             &lt;dbl&gt;
-## 1                9.44          7.18                8.26                        10.0                    7.02                8.86             9.28               8.13                   7.92              6.23
-## 2                8.92          6.47                8.19                         9.57                   6.29               10.4             11.1                9.10                   5.47              5.10
-## 3                6.36          8.16                7.39                        10.4                    7.49                8.88             8.65               7.60                   8.74              4.82
-## 4                8.24          5.46                9.44                         9.83                   5.78                8.53             8.68               8.83                   6.54              6.94
+##   m0031_phenyllactate m0045_azelate m0171_palmitic_acid m0219_2_hydroxyhexadecanoate m0244_alpha_linolenic…¹ m0246_linoleic_acid m0250_oleic_acid m0256_stearic_acid m0354_arachidonic_acid m0393_1213_diHOME
+##                 &lt;dbl&gt;         &lt;dbl&gt;               &lt;dbl&gt;                        &lt;dbl&gt;                   &lt;dbl&gt;               &lt;dbl&gt;            &lt;dbl&gt;              &lt;dbl&gt;                  &lt;dbl&gt;             &lt;dbl&gt;
+## 1                9.44          7.18                8.26                        10.0                     7.02                8.86             9.28               8.13                   7.92              6.23
+## 2                8.92          6.47                8.19                         9.57                    6.29               10.4             11.1                9.10                   5.47              5.10
+## 3                6.36          8.16                7.39                        10.4                     7.49                8.88             8.65               7.60                   8.74              4.82
+## 4                8.24          5.46                9.44                         9.83                    5.78                8.53             8.68               8.83                   6.54              6.94
 ## # ℹ abbreviated name: ¹​m0244_alpha_linolenic_acid
 ## # ℹ 331 more variables: m0472_docosahexaenoic_acid &lt;dbl&gt;, m0731_lithocholic_acid &lt;dbl&gt;, m0830_hyodeoxycholateursodeoxycholate &lt;dbl&gt;, m1129_chenodeoxycholate &lt;dbl&gt;,
 ## #   m1360_chenodeoxycholatedeoxycholate &lt;dbl&gt;, m0833_deoxycholic_acid &lt;dbl&gt;, m0900_ketodeoxycholate &lt;dbl&gt;, m0930_cholate &lt;dbl&gt;, m1258_cholate &lt;dbl&gt;, m1303_lithocholate &lt;dbl&gt;, m1403_cholate &lt;dbl&gt;,
@@ -323,7 +319,7 @@ These are the data from the motivating IBD study as a raw `data.frame`.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax \cite{} to categorize variables.
+selection syntax [20] to categorize variables.
 
 
 ``` r
@@ -530,6 +526,8 @@ abundances of the _Enterocloster_ genus (mediator) and the metabolites
 
 ---
 
+exclude: true
+
 ### Takeaways
 
 1. Mediation analysis is a useful framework for relating environment, host, and
@@ -546,11 +544,11 @@ be applied to a wide range of study applications.
 
 Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
 
-Package: [go.wisc.edu/830110](https://go.wisc.edu/830110)
+Package: [go.wisc.edu/830110](https://go.wisc.edu/830110) (also on CRAN)
 
 * Contact: ksankaran@wisc.edu
-* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
-* Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates 072185
 
 ---
 
@@ -558,8 +556,64 @@ class: reference
 
 ### References
 
-[1] E. A. Franzosa et al. "Gut microbiome structure and metabolic activity in inflammatory bowel disease". In: _Nature Microbiology_ 4.2 (Dec. 2018), p. 293–305. ISSN: 2058-5276.
-DOI: [10.1038/s41564-018-0306-4](https://doi.org/10.1038%2Fs41564-018-0306-4). URL: [http://dx.doi.org/10.1038/s41564-018-0306-4](http://dx.doi.org/10.1038/s41564-018-0306-4).
+[1] R. Francescone et al. "Microbiome, Inflammation, and Cancer". In: _The Cancer Journal_ 20.3 (May. 2014), p. 181–189. ISSN: 1528-9117. DOI:
+[10.1097/ppo.0000000000000048](https://doi.org/10.1097%2Fppo.0000000000000048). URL: [http://dx.doi.org/10.1097/PPO.0000000000000048](http://dx.doi.org/10.1097/PPO.0000000000000048).
+
+[2] J. C. Arthur et al. "Intestinal Inflammation Targets Cancer-Inducing Activity of the Microbiota". In: _Science_ 338.6103 (Oct. 2012), p. 120–123. ISSN: 1095-9203. DOI:
+[10.1126/science.1224820](https://doi.org/10.1126%2Fscience.1224820). URL: [http://dx.doi.org/10.1126/science.1224820](http://dx.doi.org/10.1126/science.1224820).
+
+[3] Y. L. Lightfoot et al. "Tailoring gut immune responses with lipoteichoic acid-deficient Lactobacillus acidophilus". In: _Frontiers in Immunology_ 4 (2013). ISSN: 1664-3224. DOI:
+[10.3389/fimmu.2013.00025](https://doi.org/10.3389%2Ffimmu.2013.00025). URL: [http://dx.doi.org/10.3389/fimmu.2013.00025](http://dx.doi.org/10.3389/fimmu.2013.00025).
+
+[4] B. Jia et al. "Gut microbiome-mediated mechanisms for reducing cholesterol levels: implications for ameliorating cardiovascular disease". En. In: _Trends Microbiol._ 31.1 (Jan.
+2023), pp. 76-91.
+
+[5] H. Plovier et al. "A purified membrane protein from Akkermansia muciniphila or the pasteurized bacterium improves metabolism in obese and diabetic mice". In: _Nature Medicine_
+23.1 (Nov. 2016), p. 107–113. ISSN: 1546-170X. DOI: [10.1038/nm.4236](https://doi.org/10.1038%2Fnm.4236). URL: [http://dx.doi.org/10.1038/nm.4236](http://dx.doi.org/10.1038/nm.4236).
+
+[6] E. A. Franzosa et al. "Gut microbiome structure and metabolic activity in inflammatory bowel disease". In: _Nature Microbiology_ 4.2 (Dec. 2018), p. 293–305. ISSN: 2058-5276. DOI:
+[10.1038/s41564-018-0306-4](https://doi.org/10.1038%2Fs41564-018-0306-4). URL: [http://dx.doi.org/10.1038/s41564-018-0306-4](http://dx.doi.org/10.1038/s41564-018-0306-4).
+
+[7] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+
+[8] K. Imai et al. "Causal mediation analysis using R". In: _Advances in social science research using R_. Springer, 2010, pp. 129-154.
+
+[9] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct. 2022). ISSN:
+2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+
+[10] K. Imai et al. "Identification and Sensitivity Analysis for Multiple Causal Mechanisms: Revisiting Evidence from Framing Experiments". In: _Political Analysis_ 21.2 (2013), p.
+141–171. ISSN: 1476-4989. DOI: [10.1093/pan/mps040](https://doi.org/10.1093%2Fpan%2Fmps040). URL: [http://dx.doi.org/10.1093/pan/mps040](http://dx.doi.org/10.1093/pan/mps040).
+
+[11] A. Jérolon et al. "Causal mediation analysis in presence of multiple mediators uncausally related". In: _The International Journal of Biostatistics_ 17.2 (2021), pp. 191-221.
+
+[12] V. Celli. "Causal mediation analysis in economics: Objectives, assumptions, models". In: _Journal of Economic Surveys_ 36.1 (Jul. 2021), p. 214–234. ISSN: 1467-6419. DOI:
+[10.1111/joes.12452](https://doi.org/10.1111%2Fjoes.12452). URL: [http://dx.doi.org/10.1111/joes.12452](http://dx.doi.org/10.1111/joes.12452).
+
+---
+
+class: reference
+
+### References
+
+[13] L. Richiardi et al. "Mediation analysis in epidemiology: methods, interpretation and bias". In: _International journal of epidemiology_ 42.5 (2013), pp. 1511-1519.
+
+[14] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+
+[15] C. Wang et al. "Estimating and testing the microbial causal mediation effect with high-dimensional and compositional microbiome data". In: _Bioinformatics_ 36.2 (Jul. 2019). Ed.
+by I. Birol, p. 347–355. ISSN: 1367-4811. DOI: [10.1093/bioinformatics/btz565](https://doi.org/10.1093%2Fbioinformatics%2Fbtz565). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz565](http://dx.doi.org/10.1093/bioinformatics/btz565).
+
+[16] K. M. Carter et al. "An Information-Based Approach for Mediation Analysis on High-Dimensional Metagenomic Data". In: _Frontiers in Genetics_ 11 (Mar. 2020). ISSN: 1664-8021. DOI:
+[10.3389/fgene.2020.00148](https://doi.org/10.3389%2Ffgene.2020.00148). URL: [http://dx.doi.org/10.3389/fgene.2020.00148](http://dx.doi.org/10.3389/fgene.2020.00148).
+
+[17] J. Atchison et al. "Logistic-normal distributions: Some properties and uses". In: _Biometrika_ 67.2 (1980), pp. 261-272.
+
+[18] F. Xia et al. "A logistic normal multinomial regression model for microbiome compositional data analysis". In: _Biometrics_ 69.4 (2013), pp. 1053-1063.
+
+[19] R. Tibshirani. "Regression shrinkage and selection via the lasso". In: _Journal of the Royal Statistical Society Series B: Statistical Methodology_ 58.1 (1996), pp. 267-288.
+
+[20] H. Wickham et al. "Welcome to the Tidyverse". In: _Journal of open source software_ 4.43 (2019), p. 1686.
 
 ---
 
@@ -596,8 +650,9 @@ overall direct and indirect effects [7]. For any
 
 ### Identification of Pathwise Indirect EFfects
 
-Pathwise indirect effects require a generalization of sequential ignorability assumptions .
-For any `\(t, t', t'', m, x, w\)` we require,
+Pathwise indirect effects require a generalization of sequential ignorability
+assumptions [10; 11]. For any $t, t',
+t'', m, x, w$ we require,
 
 1. Treatment ignorability: `\(\left\{Y(t, m, w), M_k\left(t^{\prime}\right), M_{-k}\left(t^{\prime \prime}\right)\right\} \perp T \mid X=x\)`
 1. Mediator ignorability: `\(Y\left(t^{\prime}, m, M_{-k}\left(t^{\prime}\right)\right) \perp M_k \mid T=t, X=x\)`
@@ -631,34 +686,6 @@ model &lt;- multimedia(
 .center[
 &lt;img src="figures/hurdle_model_indirect.png" width=700/&gt;
 ]
-
----
-
-### Microbiome as Mediator
-
-We're just beginning to understand how the microbiome mediates the relationship
-between environmental exposures and human health.
-
-.center[
-&lt;div class="caption"&gt;
-&lt;img src="figures/akkermansia_cholesterol.jpg" width=540/&gt;&lt;br/&gt;
-Figure adapted from [1].
-&lt;/div&gt;
-]
-
-For example, _Akkermansia muciniphila_ can help regulate cholesterol levels by
-producing proteins that activate pathways for cholesterol absorption and
-metabolism [2].
-
----
-
-### Sensitivity Analysis
-
-1. We provide methods for simulating counterfactual mediator and outcome
-variables with correlated noise terms, capturing the situation where the
-assumption of no pretreatment confounding is violated.
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

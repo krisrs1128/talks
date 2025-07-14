@@ -14,7 +14,7 @@ output:
 
 class: title
 
-#  Modular Software for Mediation Analysis of Microbiome Data
+# Modular Software for Mediation Analysis of Microbiome Data
 
 <style>
 .slide-background {
@@ -44,7 +44,7 @@ library(knitr)
 library(phyloseq)
 library(tidyverse)
 
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 BibOptions(
   check.entries = FALSE,
   bib.style = "numeric",
@@ -76,7 +76,6 @@ $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
 $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
-
 ---
 
 ### Microbiome as Mediator
@@ -85,11 +84,12 @@ We're just beginning to understand how the microbiome mediates the relationship
 between environmental exposures and human health.
 
 .center[
-  <div class="caption">
+<div class="caption">
 <img src="figures/chemotherapy.png"/>
 Figure adapted from `r Citep(bib, "Francescone2014")`.
 </div>
 ]
+
 
 Chemotherapy-induced microbiome changes can worsen adverse events, like
 diarrhea and mucositis, limiting treatment dosage and duration 
@@ -97,39 +97,32 @@ diarrhea and mucositis, limiting treatment dosage and duration
 
 ---
 
+### Alternative Mediators
 
-### Microbiome as Mediator
-
-We're just beginning to understand how the microbiome mediates the relationship
-between environmental exposures and human health.
-
-<br/>
+More generally, for microbiome research that seeks to explain mechanisms, it is
+often necssary to analyze indirect effects.
 
 .center[
   <div class="caption">
-<img src="figures/examples-dag.png" width=1300/>
+<img src="figures/akkermansia_cholesterol.jpg" width=540/><br/>
+Figure adapted from `r Citep(bib, "Jia2023-if")`.
 </div>
 ]
 
----
+For example, _Akkermansia muciniphila_ can help regulate cholesterol levels by producing
+proteins that activate important pathways for cholesterol absorption and
+metabolism `r Citep(bib, "Plovier2016")`.
 
-### Causal Inference Formalism
-
-Causal mediation analysis is often a good match for carrying out these studies
-\cite{}.  Traditional methods from social science and epidemiology need to be
-adapted to reflect properties of microbiome data.
-
-.center[
-<img src="figures/mediation-dag-terms.png" width=600/>
-]
 
 ---
 
 ### Causal Inference Formalism
 
-Causal mediation analysis is often a good match for carrying out these studies
-\cite{}.  Traditional methods from social science and epidemiology need to be
-adapted to reflect properties of microbiome data.
+Causal mediation analysis is often a good match for carrying out these studies 
+`r Citep(bib, c("Celli2021", "richiardi2013mediation"))`.  Traditional methods
+from social science and epidemiology need to be adapted to reflect properties of
+microbiome data 
+`r Citep(bib, c("sohn2019compositional", "Wang2019", "Carter2020"))`.
 
 .center[
 <img src="figures/mediation-dag.svg" width=500/>
@@ -139,7 +132,8 @@ adapted to reflect properties of microbiome data.
 
 ### Counterfactual Notation
 
-Under the generalized causal mediation analysis framework, we imagine
+Under the counterfactual causal mediation analysis framework 
+`r Citep(bib, c("imai2010general", "imai2010causal"))`, we imagine
 counterfactuals for both mediators and outcomes, depending on treatments that we
 may never have seen.
 
@@ -285,8 +279,10 @@ Indeed, it's easy to use `glm` in the `mediation` package.
 
 `multimedia` generalizes this interface for multivariate responses and outcomes
 appropriate to microbiome data. For example, for the mindfulness study, we use a
-logistic-normal multinomial model \cite{} for the outcomes and lasso regression
-\cite{} for the mediators.
+logistic-normal multinomial model 
+`r Citep(bib, c("atchison1980logistic", "xia2013logistic"))` for the outcomes
+and lasso regression `r Citep(bib, "tibshirani1996regression")` for the
+mediators.
 
 .large-code[
 ```{r, eval = FALSE}
@@ -307,7 +303,7 @@ approaches.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax \cite{} to categorize variables.
+selection syntax `r Citep(bib, "wickham2019welcome")` to categorize variables.
 ```{r, echo = FALSE}
 filter_mean <- function(x, threshold = 3) {
     x[, colMeans(x) > threshold]
@@ -374,7 +370,7 @@ These are the data from the motivating IBD study as a raw `data.frame`.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax \cite{} to categorize variables.
+selection syntax `r Citep(bib, "wickham2019welcome")` to categorize variables.
 
 ```{r}
 library(multimedia)
@@ -570,6 +566,8 @@ abundances of the _Enterocloster_ genus (mediator) and the metabolites
 
 ---
 
+exclude: true
+
 ### Takeaways
 
 1. Mediation analysis is a useful framework for relating environment, host, and
@@ -586,7 +584,7 @@ be applied to a wide range of study applications.
 
 Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
 
-Package: [go.wisc.edu/830110](https://go.wisc.edu/830110)
+Package: [go.wisc.edu/830110](https://go.wisc.edu/830110) (also on CRAN)
 
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
@@ -599,7 +597,17 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 13)
+PrintBibliography(bib, start = 1, end = 12)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 13, end = 25)
 ```
 
 ---
@@ -639,8 +647,9 @@ $t, t', x$, we require,
 
 ### Identification of Pathwise Indirect EFfects
 
-Pathwise indirect effects require a generalization of sequential ignorability assumptions `r Citep(bib, "")`.
-For any $t, t', t'', m, x, w$ we require,
+Pathwise indirect effects require a generalization of sequential ignorability
+assumptions `r Citep(bib, c("Imai2013", "jerolon2021causal"))`. For any $t, t',
+t'', m, x, w$ we require,
 
 1. Treatment ignorability: $\left\{Y(t, m, w), M_k\left(t^{\prime}\right), M_{-k}\left(t^{\prime \prime}\right)\right\} \perp T \mid X=x$
 1. Mediator ignorability: $Y\left(t^{\prime}, m, M_{-k}\left(t^{\prime}\right)\right) \perp M_k \mid T=t, X=x$
@@ -673,31 +682,3 @@ model <- multimedia(
 .center[
 <img src="figures/hurdle_model_indirect.png" width=700/>
 ]
-
----
-
-### Microbiome as Mediator
-
-We're just beginning to understand how the microbiome mediates the relationship
-between environmental exposures and human health.
-
-.center[
-<div class="caption">
-<img src="figures/akkermansia_cholesterol.jpg" width=540/><br/>
-Figure adapted from `r Citep(bib, "Jia2023-if")`.
-</div>
-]
-
-For example, _Akkermansia muciniphila_ can help regulate cholesterol levels by
-producing proteins that activate pathways for cholesterol absorption and
-metabolism `r Citep(bib, "Plovier2016")`.
-
----
-
-### Sensitivity Analysis
-
-1. We provide methods for simulating counterfactual mediator and outcome
-variables with correlated noise terms, capturing the situation where the
-assumption of no pretreatment confounding is violated.
-
----
