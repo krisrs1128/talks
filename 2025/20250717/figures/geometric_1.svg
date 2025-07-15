@@ -68,27 +68,33 @@
   <path class="st4" d="M281,534c73.1,9.3,147.2-6.1,218-24.9,91.2-24.1,180.5-53.9,267.1-88.9,52.8-21.4,104.9-44.8,160.2-60.4,91.1-25.7,187.9-29.4,281.8-45.1"/>
   <path class="st2" d="M278.1,506.9c75.7-5.8,153.7-12.3,221-44.9,85.3-41.4,141.4-118.9,202-188,62.8-71.7,134.7-137.8,220.7-184.7s187.2-73.5,286.4-62.9"/>
   <rect class="st0" x="37.4" y="123.8" width="183.5" height="37.5"/>
-  <text class="st9" transform="translate(12.9 149.4)"><tspan x="0" y="0">Response</tspan></text>
+  <g class="st10">
+    <text class="st9" transform="translate(-16.3 153.5)"><tspan x="0" y="0">Response</tspan></text>
+  </g>
   <line class="st5" x1="826.6" y1="153.5" x2="826.6" y2="394.7"/>
   <line class="st3" x1="826.6" y1="153.5" x2="826.6" y2="595.5"/>
   <line class="st1" x1="829" y1="150.7" x2="829" y2="592.7"/>
   <line class="st5" x1="837.5" y1="150.7" x2="837.5" y2="386.8"/>
   <path class="st6" d="M290.5,583c107.5,10.8,212.8,42.3,308.6,92.3,67.1,35,131.7,79.9,206.6,91.3,92,14.1,184.6-25.3,260.9-78.7,34.1-23.8,66.2-50.7,102.7-70.6,36.3-19.8,76.4-32.5,117.5-37.1"/>
-  <path class="st7" d="M287.2,589.3c86.6-8.6,172.4,21.2,250.9,58.8s153.3,83.7,235.8,111.2c27.2,9.1,55.4,16.1,84.1,15.8,49.7-.5,96.5-23,138-50.5s79.3-60.2,122.2-85.2c53.2-31,113.7-49.4,174.8-54.2-.3.6-.6,1.2-.9,1.8"/>
+  <path class="st7" d="M287.2,589.3c86.6-8.6,172.4,21.2,250.9,58.8,78.5,37.6,153.3,83.7,235.8,111.2,27.2,9.1,55.4,16.1,84.1,15.8,49.7-.5,96.5-23,138-50.5,41.5-27.5,79.3-60.2,122.2-85.2,53.2-31,113.7-49.4,174.8-54.2-.3.6-.6,1.2-.9,1.8"/>
   <rect class="st0" x="724.7" y="621.5" width="166" height="60"/>
-  <text class="st9" transform="translate(634.2 657.2)"><tspan x="0" y="0">Mediator</tspan></text>
+  <g class="st10">
+    <text class="st9" transform="translate(634.2 657.2)"><tspan x="0" y="0">Mediator</tspan></text>
+  </g>
   <rect class="st0" x="860.5" y="231.2" width="259.4" height="42.3"/>
-  <text class="st9" transform="translate(860.5 265.4)"><tspan x="0" y="0">Direct effect</tspan></text>
+  <g class="st10">
+    <text class="st9" transform="translate(860.5 265.4)"><tspan x="0" y="0">Direct effect</tspan></text>
+  </g>
   <g id="_x39_M3Rwj.tif">
-    <image id="Layer_0" class="st10" width="155" height="147" transform="translate(228.5 117) scale(.3)" xlink:href="geometric_1-1.png"/>
+    <image id="Layer_0" class="st10" width="156" height="148" transform="translate(228.5 117) scale(.3)" xlink:href="geometric_1-1.png"/>
   </g>
   <g id="YoKUEA.tif">
-    <image id="Layer_01" data-name="Layer_0" class="st10" width="175" height="100" transform="translate(838.2 626.5) scale(.3)" xlink:href="geometric_1-2.png"/>
+    <image id="Layer_01" class="st10" width="175" height="99" transform="translate(838.1 626.6) scale(.3)" xlink:href="geometric_1-2.png"/>
   </g>
   <g id="wFLYAc.tif">
-    <image id="Layer_02" data-name="Layer_0" class="st10" width="717" height="213" transform="translate(1136.2 39.6) scale(.2)" xlink:href="geometric_1-3.png"/>
+    <image id="Layer_02" class="st10" width="717" height="212" transform="translate(1136.2 39.7) scale(.2)" xlink:href="geometric_1-3.png"/>
   </g>
   <g id="ldwu5p.tif">
-    <image id="Layer_03" data-name="Layer_0" class="st10" width="717" height="200" transform="translate(1120.8 346.5) scale(.2 .2)" xlink:href="geometric_1-4.png"/>
+    <image id="Layer_03" class="st10" width="715" height="187" transform="translate(1120.5 347.7) scale(.2)" xlink:href="geometric_1-4.png"/>
   </g>
 </svg>

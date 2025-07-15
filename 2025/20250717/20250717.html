@@ -25,7 +25,7 @@ class: title
 
 &lt;div id="subtitle_left"&gt;
 Slides: &lt;a href="https://go.wisc.edu/5ms623"&gt;go.wisc.edu/5ms623&lt;/a&gt;&lt;br/&gt;
-Package: &lt;a href="https://go.wisc.edu/830110"&gt;go.wisc.edu/830110&lt;/a&gt;&lt;br/&gt;
+Paper: &lt;a href="https://go.wisc.edu/ebm917"&gt;go.wisc.edu/ebm917&lt;/a&gt;&lt;br/&gt;
 Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
 &lt;/div&gt;
 &lt;div id="subtitle_right"&gt;
@@ -97,13 +97,13 @@ metabolism [5].
 
 ---
 
-### Causal Inference Formalism
+### Causal Inference Setup
 
 Causal mediation analysis is often a good match for carrying out these studies 
-[12; 13].  Traditional methods
+[6; 7].  Traditional methods
 from social science and epidemiology need to be adapted to reflect properties of
 microbiome data 
-[14; 15; 16].
+[8; 9; 10].
 
 .center[
 &lt;img src="figures/mediation-dag.svg" width=500/&gt;
@@ -111,10 +111,39 @@ microbiome data
 
 ---
 
+### Multiple Mediators
+
+In most multi-omics applications, the mediators are high-dimensional. Each might
+represent a gene, methylation site, or microbial taxon, for example.
+
+.center[
+&lt;img src="figures/multivariate-mediation-unlabeled.png" width=600/&gt;
+]
+
+---
+
+### Two-Step Linear Regression
+
+During estimation, we might add a feature selection step/penalty to ensure that
+most mediators do not play a role for the outcome.
+
+`\begin{align*}
+M&amp;=\alpha T+\zeta_M^{\top} X+\E\\
+Y&amp;=\eta T+\beta^{\top} M+\zeta_Y^{\top} X+\epsilon
+\end{align*}`
+
+* `\(\eta \in \mathbb{R}\)`: Direct effect.
+* `\(\alpha^\top \beta\)`: Overall indirect effect.
+* `\(\alpha_{k}\beta_{k}\)`: The indirect effect through path `\(k\)`.
+
+What if we want to go beyond a linear model?
+
+---
+
 ### Counterfactual Notation
 
 Under the counterfactual causal mediation analysis framework 
-[7; 8], we imagine
+[11; 12], we imagine
 counterfactuals for both mediators and outcomes, depending on treatments that we
 may never have seen.
 
@@ -136,21 +165,16 @@ it abstractly.
 ### Direct vs. Indirect Effects
 
 Suppose that the treatments belong to two groups, `\(T \in \{0, 1\}\)`. Then, direct
-and indirect effects are defined as
-
+and indirect effects are defined as:
 `\begin{align*}
-\bar{\delta} = \frac{1}{2} \sum_{t=0}^{1} \mathbb{E}\{Y(t, M(1)) - Y(t, M(0))\}\\
-\bar{\zeta} = \frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(1, M(t')) - Y(0, M(t'))\}
+\frac{1}{2} \sum_{t=0}^{1} \mathbb{E}\{Y(t, M(1)) - Y(t, M(0))\}\\
+\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(1, M(t')) - Y(0, M(t'))\}
 \end{align*}`
 
-When many mediators are present, we may also want to know:
-
+We may also want to know the pathwise indirect effect through mediator `\(k\)`:
 `\begin{align*}
-\bar{\omega}_k = \frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(t', M_k(1), M_{-k}(t')) - Y(t', M_k(0), M_{-k}(t'))\}
+\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(t', M_k(1), M_{-k}(t')) - Y(t', M_k(0), M_{-k}(t'))\}
 \end{align*}`
-
-Under appropriate sequential ignorability assumptions, these effects can be
-identified (see supplemental slides).
 
 ---
 
@@ -172,6 +196,17 @@ identified (see supplemental slides).
 
 ---
 
+### Identification
+
+We need to generalize the ignorability to support causal identification of these
+three effects. The complete required conditions are given in the backup slides.
+
+.center[
+&lt;img src="figures/identification.png"/&gt;
+]
+
+---
+
 ### Integration Challenge
 
 Our interest in this project came from a re-analysis of a gut-brain axis
@@ -187,13 +222,30 @@ composition is an outcome, and the survey measurements are mediators.
 
 ### Integration Challenge
 
-A similar issue arises when applying mediation to support metabolomic
-integration. Motivated by [6]'s discussion of the
-microbiome and metabolome of inflammatory bowel disease (IBD), we could
-consider:
+We can also use mediation analysis to guide microbiome-metabolome integration.
+This this quote comes from a study of inflammatory bowel disease (IBD) 
+[13]:
 
+&lt;div style="font-size: 20px"&gt;
+&gt; The CD-associated compounds eicosatrienoic (ETA) and docosapentaenoic (DPA)
+acid were involved in negative associations with control-associated species and
+positive associations with IBD-associated species. ETA and DPA are
+polyunsaturated long-chain fatty acids (PUFAs) [which] possess bactericidal
+activity by virtue of their hydrophobic nature and potential to disrupt
+bacterial cell membranes. 
+&lt;/div&gt;
+
+As in the previous example, we can imagine a mediation analysis with a
+high-dimensional microbiome outcome.
+
+---
+
+### Multiple Mediators and Outcomes
+
+These applications require multivariate outcomes. The effect definitions
+directly generalize to individual outcomes `\(Y_{j}\left(t\right)\)`.
 .center[
-&lt;img src="figures/mediation-dag-ibd.png" width=550/&gt;
+&lt;img src="figures/multivariate-mediation-outcomes.png" width=600/&gt;
 ]
 
 ---
@@ -240,7 +292,7 @@ restricting ourselves to linear models?
 
 ### Code Interface
 
-The `mediation` package [7; 8]
+The `mediation` package [11; 12]
 solves this problem by instead creating an interface like:
 
 .large-code[
@@ -263,8 +315,8 @@ Indeed, it's easy to use `glm` in the `mediation` package.
 `multimedia` generalizes this interface for multivariate responses and outcomes
 appropriate to microbiome data. For example, for the mindfulness study, we use a
 logistic-normal multinomial model 
-[17; 18] for the outcomes
-and lasso regression [19] for the
+[14; 15] for the outcomes
+and lasso regression [16] for the
 mediators.
 
 .large-code[
@@ -283,11 +335,29 @@ approaches.
 
 ---
 
+### Available Models
+
+The LNM model is designed to have multivariate responses. The remaining options
+apply the same type of model in parallel across all outcomes.
+
+1. `lnm_model`: A logistic normal multinomial model [17].
+
+1. `glmnet_model`: A call to `glmnet` for lasso or elastic net regression 
+[18].
+
+1. `rf_model`: A call to `ranger` for random forest regression 
+[19].
+
+1. `brms_model`: A call to `brms`, which can be customized likelihoods for
+`lognormal()`, `hurdle_negbinomial()`, `cox()`, etc. [20].
+
+---
+
 ### Data Formats
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax [20] to categorize variables.
+selection syntax [21] to categorize variables.
 
 
 ``` r
@@ -319,7 +389,7 @@ These are the data from the motivating IBD study as a raw `data.frame`.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax [20] to categorize variables.
+selection syntax [21] to categorize variables.
 
 
 ``` r
@@ -342,19 +412,6 @@ mediation_data(
 
 ---
 
-### Effect Estimates
-
-Once we have fitted mediator `\(\hat{M}\)` and outcome `\(\hat{Y}\)` models, we can
-estimate the associated direct and indirect effects.
-
-`\begin{gathered}
-\widehat{\bar{\delta}}=\frac{1}{2} \sum_{t=0}^1 \sum_{i=1}^n \widehat{Y}_i\left(t, \widehat{M}_i(1)\right)-\widehat{Y}_i\left(t, \widehat{M}_i(0)\right), \\
-\widehat{\bar{\zeta}}=\frac{1}{2} \sum_{t^{\prime}=0}^1 \sum_{i=1}^n \widehat{Y}_i\left(1, \widehat{M}_i\left(t^{\prime}\right)\right)-\widehat{Y}_i\left(0, \widehat{M}_i\left(t^{\prime}\right)\right), \\
-\widehat{\bar{\omega}}=\frac{1}{2} \sum_{t^{\prime}=0}^1 \sum_{i=1}^n\left\{\widehat{Y}_i\left(t^{\prime}, \widehat{M}_{i k}(1), \widehat{M}_{i,-k}\left(t^{\prime}\right)\right)-\widehat{Y}_i\left(t^{\prime}, \widehat{M}_{i k}(0), \widehat{M}_{i,-k}\left(t^{\prime}\right)\right)\right\}
-\end{gathered}`
-
----
-
 ### Bootstrap
 
 We can gauge uncertainty in the estimated effects by re-estimating both mediator
@@ -362,7 +419,7 @@ and outcome models on bootstrap resampled versions of the original data. Here
 are the metabolites with the largest indirect and direct effects in the IBD
 example. 
 .center[
-&lt;img src="figures/lasso_bootstrap_vis-1.png" width=800/&gt;
+&lt;img src="figures/lasso_bootstrap_vis-1.png" width=900/&gt;
 ]
 
 ---
@@ -433,6 +490,8 @@ A caveat is that this only makes sense for continuous outcomes and mediators.
 
 ---
 
+exclude: true
+
 ### Sensitivity Analysis
 
 We draw `\(\left(\epsilon^y, \epsilon^m\right)\)` from a Gaussian with mean zero and covariance,
@@ -455,7 +514,7 @@ mediator-outcome pairs `\(G\)` over which to test sensitivity.
 
 ### Study Background
 
-1. The study [6] carried out an integrative analysis
+1. The study [13] carried out an integrative analysis
 to discover metabolite and taxonomic markers with diagnostic or therapeutic
 potential for IBD.
 
@@ -465,7 +524,7 @@ data on a cohort of 220 patients with the disease.
 1. This resulted in 8.8K and 11.7K metabolite and genus features, respectively,
 all available on the 
 [Curated Metabolome-Microbiome repository](https://github.com/borenstein-lab/microbiome-metabolome-curated-data/tree/main)
-[9].
+[22].
 
 ---
 
@@ -475,9 +534,8 @@ all available on the
 the microbiome and metabolome data, respectively. Both were then filtered to
 between 150 - 200 of the most abundant features.
 
-1. We treat the microbiome as the mediators and the metabolome as the outcome.
-This direction could be debated, but follows the discussion in 
-[6]. 
+1. We treat the microbiome as the mediators and the metabolome as the outcome,
+following the discussion from our quote above.
 
 1. Taxonomic composition depends only on treatment status. Each metabolite's
 abundance is treated as a sparse linear function of a few microbes.
@@ -498,7 +556,7 @@ reflects metabolite abundances. Associations between metabolites and the MDS
 appear only for outcomes with large indirect effects.
 
 .center[
-&lt;img src="figures/indirect_effects_metabolites.png" width=900/&gt;
+&lt;img src="figures/indirect_effects_metabolites.png" width=820/&gt;
 ]
 
 ---
@@ -509,7 +567,7 @@ The top pathwise indirect effects are similar to the geometric interpretation we
 saw in the introduction!
 
 .center[
-&lt;img src="figures/indirect_effects_pathwise-metabolites.png"/&gt;
+&lt;img src="figures/indirect_effects_pathwise-metabolites.png" width=/&gt;
 ]
 
 ---
@@ -571,24 +629,23 @@ class: reference
 [5] H. Plovier et al. "A purified membrane protein from Akkermansia muciniphila or the pasteurized bacterium improves metabolism in obese and diabetic mice". In: _Nature Medicine_
 23.1 (Nov. 2016), p. 107–113. ISSN: 1546-170X. DOI: [10.1038/nm.4236](https://doi.org/10.1038%2Fnm.4236). URL: [http://dx.doi.org/10.1038/nm.4236](http://dx.doi.org/10.1038/nm.4236).
 
-[6] E. A. Franzosa et al. "Gut microbiome structure and metabolic activity in inflammatory bowel disease". In: _Nature Microbiology_ 4.2 (Dec. 2018), p. 293–305. ISSN: 2058-5276. DOI:
-[10.1038/s41564-018-0306-4](https://doi.org/10.1038%2Fs41564-018-0306-4). URL: [http://dx.doi.org/10.1038/s41564-018-0306-4](http://dx.doi.org/10.1038/s41564-018-0306-4).
-
-[7] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
-
-[8] K. Imai et al. "Causal mediation analysis using R". In: _Advances in social science research using R_. Springer, 2010, pp. 129-154.
-
-[9] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct. 2022). ISSN:
-2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
-[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
-
-[10] K. Imai et al. "Identification and Sensitivity Analysis for Multiple Causal Mechanisms: Revisiting Evidence from Framing Experiments". In: _Political Analysis_ 21.2 (2013), p.
-141–171. ISSN: 1476-4989. DOI: [10.1093/pan/mps040](https://doi.org/10.1093%2Fpan%2Fmps040). URL: [http://dx.doi.org/10.1093/pan/mps040](http://dx.doi.org/10.1093/pan/mps040).
-
-[11] A. Jérolon et al. "Causal mediation analysis in presence of multiple mediators uncausally related". In: _The International Journal of Biostatistics_ 17.2 (2021), pp. 191-221.
-
-[12] V. Celli. "Causal mediation analysis in economics: Objectives, assumptions, models". In: _Journal of Economic Surveys_ 36.1 (Jul. 2021), p. 214–234. ISSN: 1467-6419. DOI:
+[6] V. Celli. "Causal mediation analysis in economics: Objectives, assumptions, models". In: _Journal of Economic Surveys_ 36.1 (Jul. 2021), p. 214–234. ISSN: 1467-6419. DOI:
 [10.1111/joes.12452](https://doi.org/10.1111%2Fjoes.12452). URL: [http://dx.doi.org/10.1111/joes.12452](http://dx.doi.org/10.1111/joes.12452).
+
+[7] L. Richiardi et al. "Mediation analysis in epidemiology: methods, interpretation and bias". In: _International journal of epidemiology_ 42.5 (2013), pp. 1511-1519.
+
+[8] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+
+[9] C. Wang et al. "Estimating and testing the microbial causal mediation effect with high-dimensional and compositional microbiome data". In: _Bioinformatics_ 36.2 (Jul. 2019). Ed.
+by I. Birol, p. 347–355. ISSN: 1367-4811. DOI: [10.1093/bioinformatics/btz565](https://doi.org/10.1093%2Fbioinformatics%2Fbtz565). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz565](http://dx.doi.org/10.1093/bioinformatics/btz565).
+
+[10] K. M. Carter et al. "An Information-Based Approach for Mediation Analysis on High-Dimensional Metagenomic Data". In: _Frontiers in Genetics_ 11 (Mar. 2020). ISSN: 1664-8021. DOI:
+[10.3389/fgene.2020.00148](https://doi.org/10.3389%2Ffgene.2020.00148). URL: [http://dx.doi.org/10.3389/fgene.2020.00148](http://dx.doi.org/10.3389/fgene.2020.00148).
+
+[11] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+
+[12] K. Imai et al. "Causal mediation analysis using R". In: _Advances in social science research using R_. Springer, 2010, pp. 129-154.
 
 ---
 
@@ -596,24 +653,37 @@ class: reference
 
 ### References
 
-[13] L. Richiardi et al. "Mediation analysis in epidemiology: methods, interpretation and bias". In: _International journal of epidemiology_ 42.5 (2013), pp. 1511-1519.
+[13] E. A. Franzosa et al. "Gut microbiome structure and metabolic activity in inflammatory bowel disease". In: _Nature Microbiology_ 4.2 (Dec. 2018), p. 293–305. ISSN: 2058-5276.
+DOI: [10.1038/s41564-018-0306-4](https://doi.org/10.1038%2Fs41564-018-0306-4). URL: [http://dx.doi.org/10.1038/s41564-018-0306-4](http://dx.doi.org/10.1038/s41564-018-0306-4).
 
-[14] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+[14] J. Atchison et al. "Logistic-normal distributions: Some properties and uses". In: _Biometrika_ 67.2 (1980), pp. 261-272.
 
-[15] C. Wang et al. "Estimating and testing the microbial causal mediation effect with high-dimensional and compositional microbiome data". In: _Bioinformatics_ 36.2 (Jul. 2019). Ed.
-by I. Birol, p. 347–355. ISSN: 1367-4811. DOI: [10.1093/bioinformatics/btz565](https://doi.org/10.1093%2Fbioinformatics%2Fbtz565). URL:
-[http://dx.doi.org/10.1093/bioinformatics/btz565](http://dx.doi.org/10.1093/bioinformatics/btz565).
+[15] F. Xia et al. "A logistic normal multinomial regression model for microbiome compositional data analysis". In: _Biometrics_ 69.4 (2013), pp. 1053-1063.
 
-[16] K. M. Carter et al. "An Information-Based Approach for Mediation Analysis on High-Dimensional Metagenomic Data". In: _Frontiers in Genetics_ 11 (Mar. 2020). ISSN: 1664-8021. DOI:
-[10.3389/fgene.2020.00148](https://doi.org/10.3389%2Ffgene.2020.00148). URL: [http://dx.doi.org/10.3389/fgene.2020.00148](http://dx.doi.org/10.3389/fgene.2020.00148).
+[16] R. Tibshirani. "Regression shrinkage and selection via the lasso". In: _Journal of the Royal Statistical Society Series B: Statistical Methodology_ 58.1 (1996), pp. 267-288.
 
-[17] J. Atchison et al. "Logistic-normal distributions: Some properties and uses". In: _Biometrika_ 67.2 (1980), pp. 261-272.
+[17] K. Sankaran. _miniLNM: Miniature Logistic-Normal Multinomial Models_. Sep. 2024. DOI: [10.32614/cran.package.minilnm](https://doi.org/10.32614%2Fcran.package.minilnm). URL:
+[http://dx.doi.org/10.32614/CRAN.package.miniLNM](http://dx.doi.org/10.32614/CRAN.package.miniLNM).
 
-[18] F. Xia et al. "A logistic normal multinomial regression model for microbiome compositional data analysis". In: _Biometrics_ 69.4 (2013), pp. 1053-1063.
+[18] J. Friedman et al. "Regularization Paths for Generalized Linear Models via Coordinate Descent". In: _Journal of Statistical Software_ 33.1 (2010), pp. 1-22. DOI:
+[10.18637/jss.v033.i01](https://doi.org/10.18637%2Fjss.v033.i01).
 
-[19] R. Tibshirani. "Regression shrinkage and selection via the lasso". In: _Journal of the Royal Statistical Society Series B: Statistical Methodology_ 58.1 (1996), pp. 267-288.
+[19] M. N. Wright et al. "ranger: A Fast Implementation of Random Forests for High Dimensional Data in C++ and R". In: _Journal of Statistical Software_ 77.1 (2017), pp. 1-17. DOI:
+[10.18637/jss.v077.i01](https://doi.org/10.18637%2Fjss.v077.i01).
 
-[20] H. Wickham et al. "Welcome to the Tidyverse". In: _Journal of open source software_ 4.43 (2019), p. 1686.
+[20] P. Bürkner. "brms: An R Package for Bayesian Multilevel Models Using Stan". In: _Journal of Statistical Software_ 80.1 (2017), pp. 1-28. DOI:
+[10.18637/jss.v080.i01](https://doi.org/10.18637%2Fjss.v080.i01).
+
+[21] H. Wickham et al. "Welcome to the Tidyverse". In: _Journal of open source software_ 4.43 (2019), p. 1686.
+
+[22] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and Microbiomes_ 8.1 (Oct. 2022). ISSN:
+2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+
+[23] K. Imai et al. "Identification and Sensitivity Analysis for Multiple Causal Mechanisms: Revisiting Evidence from Framing Experiments". In: _Political Analysis_ 21.2 (2013), p.
+141–171. ISSN: 1476-4989. DOI: [10.1093/pan/mps040](https://doi.org/10.1093%2Fpan%2Fmps040). URL: [http://dx.doi.org/10.1093/pan/mps040](http://dx.doi.org/10.1093/pan/mps040).
+
+[24] A. Jérolon et al. "Causal mediation analysis in presence of multiple mediators uncausally related". In: _The International Journal of Biostatistics_ 17.2 (2021), pp. 191-221.
 
 ---
 
@@ -638,7 +708,7 @@ where `\(\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1
 ### Identification of Overall Direct/Indirect Effects
 
 These sequential ignorability assumptions are sufficient for identification of
-overall direct and indirect effects [7]. For any
+overall direct and indirect effects [11]. For any
 `\(t, t', x\)`, we require,
 
 1. Treatment ignorability: `\(\left\{Y\left(t^{\prime}, m\right), M(t)\right\} \perp T \mid X=x\)`
@@ -651,7 +721,7 @@ overall direct and indirect effects [7]. For any
 ### Identification of Pathwise Indirect EFfects
 
 Pathwise indirect effects require a generalization of sequential ignorability
-assumptions [10; 11]. For any $t, t',
+assumptions [23; 24]. For any $t, t',
 t'', m, x, w$ we require,
 
 1. Treatment ignorability: `\(\left\{Y(t, m, w), M_k\left(t^{\prime}\right), M_{-k}\left(t^{\prime \prime}\right)\right\} \perp T \mid X=x\)`
@@ -678,6 +748,12 @@ model &lt;- multimedia(
     estimate(exper2)
 ```
 ]
+
+---
+
+### Identification
+
+&lt;img src="figures/uncausally-correlated.png" width=800/&gt;
 
 ---
 

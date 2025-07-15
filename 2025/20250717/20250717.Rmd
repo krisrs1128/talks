@@ -26,7 +26,7 @@ class: title
 
 <div id="subtitle_left">
 Slides: <a href="https://go.wisc.edu/5ms623">go.wisc.edu/5ms623</a><br/>
-Package: <a href="https://go.wisc.edu/830110">go.wisc.edu/830110</a><br/>
+Paper: <a href="https://go.wisc.edu/ebm917">go.wisc.edu/ebm917</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
@@ -116,7 +116,7 @@ metabolism `r Citep(bib, "Plovier2016")`.
 
 ---
 
-### Causal Inference Formalism
+### Causal Inference Setup
 
 Causal mediation analysis is often a good match for carrying out these studies 
 `r Citep(bib, c("Celli2021", "richiardi2013mediation"))`.  Traditional methods
@@ -127,6 +127,35 @@ microbiome data
 .center[
 <img src="figures/mediation-dag.svg" width=500/>
 ]
+
+---
+
+### Multiple Mediators
+
+In most multi-omics applications, the mediators are high-dimensional. Each might
+represent a gene, methylation site, or microbial taxon, for example.
+
+.center[
+<img src="figures/multivariate-mediation-unlabeled.png" width=600/>
+]
+
+---
+
+### Two-Step Linear Regression
+
+During estimation, we might add a feature selection step/penalty to ensure that
+most mediators do not play a role for the outcome.
+
+\begin{align*}
+M&=\alpha T+\zeta_M^{\top} X+\E\\
+Y&=\eta T+\beta^{\top} M+\zeta_Y^{\top} X+\epsilon
+\end{align*}
+
+* $\eta \in \mathbb{R}$: Direct effect.
+* $\alpha^\top \beta$: Overall indirect effect.
+* $\alpha_{k}\beta_{k}$: The indirect effect through path $k$.
+
+What if we want to go beyond a linear model?
 
 ---
 
@@ -155,21 +184,16 @@ it abstractly.
 ### Direct vs. Indirect Effects
 
 Suppose that the treatments belong to two groups, $T \in \{0, 1\}$. Then, direct
-and indirect effects are defined as
-
+and indirect effects are defined as:
 \begin{align*}
-\bar{\delta} = \frac{1}{2} \sum_{t=0}^{1} \mathbb{E}\{Y(t, M(1)) - Y(t, M(0))\}\\
-\bar{\zeta} = \frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(1, M(t')) - Y(0, M(t'))\}
+\frac{1}{2} \sum_{t=0}^{1} \mathbb{E}\{Y(t, M(1)) - Y(t, M(0))\}\\
+\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(1, M(t')) - Y(0, M(t'))\}
 \end{align*}
 
-When many mediators are present, we may also want to know:
-
+We may also want to know the pathwise indirect effect through mediator $k$:
 \begin{align*}
-\bar{\omega}_k = \frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(t', M_k(1), M_{-k}(t')) - Y(t', M_k(0), M_{-k}(t'))\}
+\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(t', M_k(1), M_{-k}(t')) - Y(t', M_k(0), M_{-k}(t'))\}
 \end{align*}
-
-Under appropriate sequential ignorability assumptions, these effects can be
-identified (see supplemental slides).
 
 ---
 
@@ -191,6 +215,17 @@ identified (see supplemental slides).
 
 ---
 
+### Identification
+
+We need to generalize the ignorability to support causal identification of these
+three effects. The complete required conditions are given in the backup slides.
+
+.center[
+<img src="figures/identification.png"/>
+]
+
+---
+
 ### Integration Challenge
 
 Our interest in this project came from a re-analysis of a gut-brain axis
@@ -206,13 +241,30 @@ composition is an outcome, and the survey measurements are mediators.
 
 ### Integration Challenge
 
-A similar issue arises when applying mediation to support metabolomic
-integration. Motivated by `r Citep(bib, "Franzosa2018")`'s discussion of the
-microbiome and metabolome of inflammatory bowel disease (IBD), we could
-consider:
+We can also use mediation analysis to guide microbiome-metabolome integration.
+This this quote comes from a study of inflammatory bowel disease (IBD) 
+`r Citep(bib, "Franzosa2018")`:
 
+<div style="font-size: 20px">
+> The CD-associated compounds eicosatrienoic (ETA) and docosapentaenoic (DPA)
+acid were involved in negative associations with control-associated species and
+positive associations with IBD-associated species. ETA and DPA are
+polyunsaturated long-chain fatty acids (PUFAs) [which] possess bactericidal
+activity by virtue of their hydrophobic nature and potential to disrupt
+bacterial cell membranes. 
+</div>
+
+As in the previous example, we can imagine a mediation analysis with a
+high-dimensional microbiome outcome.
+
+---
+
+### Multiple Mediators and Outcomes
+
+These applications require multivariate outcomes. The effect definitions
+directly generalize to individual outcomes $Y_{j}\left(t\right)$.
 .center[
-<img src="figures/mediation-dag-ibd.png" width=550/>
+<img src="figures/multivariate-mediation-outcomes.png" width=600/>
 ]
 
 ---
@@ -296,6 +348,24 @@ model <- multimedia(
 
 We fit each model separately, but this can still accommodate a few commonly used
 approaches.
+
+---
+
+### Available Models
+
+The LNM model is designed to have multivariate responses. The remaining options
+apply the same type of model in parallel across all outcomes.
+
+1. `lnm_model`: A logistic normal multinomial model `r Citep(bib, "Sankaran2024")`.
+
+1. `glmnet_model`: A call to `glmnet` for lasso or elastic net regression 
+`r Citep(bib, "glmnet")`.
+
+1. `rf_model`: A call to `ranger` for random forest regression 
+`r Citep(bib, "ranger")`.
+
+1. `brms_model`: A call to `brms`, which can be customized likelihoods for
+`lognormal()`, `hurdle_negbinomial()`, `cox()`, etc. `r Citep(bib, "brms")`.
 
 ---
 
@@ -384,19 +454,6 @@ mediation_data(
 
 ---
 
-### Effect Estimates
-
-Once we have fitted mediator $\hat{M}$ and outcome $\hat{Y}$ models, we can
-estimate the associated direct and indirect effects.
-
-\begin{gathered}
-\widehat{\bar{\delta}}=\frac{1}{2} \sum_{t=0}^1 \sum_{i=1}^n \widehat{Y}_i\left(t, \widehat{M}_i(1)\right)-\widehat{Y}_i\left(t, \widehat{M}_i(0)\right), \\
-\widehat{\bar{\zeta}}=\frac{1}{2} \sum_{t^{\prime}=0}^1 \sum_{i=1}^n \widehat{Y}_i\left(1, \widehat{M}_i\left(t^{\prime}\right)\right)-\widehat{Y}_i\left(0, \widehat{M}_i\left(t^{\prime}\right)\right), \\
-\widehat{\bar{\omega}}=\frac{1}{2} \sum_{t^{\prime}=0}^1 \sum_{i=1}^n\left\{\widehat{Y}_i\left(t^{\prime}, \widehat{M}_{i k}(1), \widehat{M}_{i,-k}\left(t^{\prime}\right)\right)-\widehat{Y}_i\left(t^{\prime}, \widehat{M}_{i k}(0), \widehat{M}_{i,-k}\left(t^{\prime}\right)\right)\right\}
-\end{gathered}
-
----
-
 ### Bootstrap
 
 We can gauge uncertainty in the estimated effects by re-estimating both mediator
@@ -404,7 +461,7 @@ and outcome models on bootstrap resampled versions of the original data. Here
 are the metabolites with the largest indirect and direct effects in the IBD
 example. 
 .center[
-<img src="figures/lasso_bootstrap_vis-1.png" width=800/>
+<img src="figures/lasso_bootstrap_vis-1.png" width=900/>
 ]
 
 ---
@@ -474,6 +531,8 @@ A caveat is that this only makes sense for continuous outcomes and mediators.
 
 ---
 
+exclude: true
+
 ### Sensitivity Analysis
 
 We draw $\left(\epsilon^y, \epsilon^m\right)$ from a Gaussian with mean zero and covariance,
@@ -516,9 +575,8 @@ all available on the
 the microbiome and metabolome data, respectively. Both were then filtered to
 between 150 - 200 of the most abundant features.
 
-1. We treat the microbiome as the mediators and the metabolome as the outcome.
-This direction could be debated, but follows the discussion in 
-`r Citep(bib, "Franzosa2018")`. 
+1. We treat the microbiome as the mediators and the metabolome as the outcome,
+following the discussion from our quote above.
 
 1. Taxonomic composition depends only on treatment status. Each metabolite's
 abundance is treated as a sparse linear function of a few microbes.
@@ -538,7 +596,7 @@ reflects metabolite abundances. Associations between metabolites and the MDS
 appear only for outcomes with large indirect effects.
 
 .center[
-<img src="figures/indirect_effects_metabolites.png" width=900/>
+<img src="figures/indirect_effects_metabolites.png" width=820/>
 ]
 
 ---
@@ -549,7 +607,7 @@ The top pathwise indirect effects are similar to the geometric interpretation we
 saw in the introduction!
 
 .center[
-<img src="figures/indirect_effects_pathwise-metabolites.png"/>
+<img src="figures/indirect_effects_pathwise-metabolites.png" width=/>
 ]
 
 ---
@@ -607,7 +665,7 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 13, end = 25)
+PrintBibliography(bib, start = 13, end = 26)
 ```
 
 ---
@@ -674,6 +732,12 @@ model <- multimedia(
     estimate(exper2)
 ```
 ]
+
+---
+
+### Identification
+
+<img src="figures/uncausally-correlated.png" width=800/>
 
 ---
 

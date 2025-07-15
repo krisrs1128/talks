@@ -82,19 +82,25 @@
   <rect class="st0" x="39.8" y="155.5" width="183.5" height="37.5"/>
   <rect class="st0" x="705" y="640.2" width="166" height="60"/>
   <g id="_x39_M3Rwj.tif">
-    <image id="Layer_0" class="st11" width="155" height="147" transform="translate(230.8 148.7) scale(.3)" xlink:href="geometric_2-1.png"/>
+    <image id="Layer_0" class="st11" width="155" height="146" transform="translate(230.7 148.8) scale(.3)" xlink:href="geometric_2-1.png"/>
   </g>
   <g id="YoKUEA.tif">
-    <image id="Layer_01" data-name="Layer_0" class="st11" width="175" height="97" transform="translate(817.9 645.3) scale(.3)" xlink:href="geometric_2-2.png"/>
+    <image id="Layer_01" class="st11" width="175" height="96" transform="translate(817.8 645.4) scale(.3)" xlink:href="geometric_2-2.png"/>
   </g>
   <g id="wFLYAc.tif">
-    <image id="Layer_02" data-name="Layer_0" class="st11" width="717" height="213" transform="translate(1153.8 122.6) scale(.2)" xlink:href="geometric_2-3.png"/>
+    <image id="Layer_02" class="st11" width="718" height="212" transform="translate(1153.8 122.7) scale(.2)" xlink:href="geometric_2-3.png"/>
   </g>
   <g id="ldwu5p.tif">
-    <image id="Layer_03" data-name="Layer_0" class="st11" width="717" height="200" transform="translate(1152.9 201.3) scale(.2 .2)" xlink:href="geometric_2-4.png"/>
+    <image id="Layer_03" class="st11" width="718" height="186" transform="translate(1152.5 202.6) scale(.2)" xlink:href="geometric_2-4.png"/>
   </g>
   <rect class="st0" x="942.2" y="351.8" width="311" height="83.6"/>
-  <text class="st12" transform="translate(942.2 373.1)"><tspan x="0" y="0">Indirect effect</tspan></text>
-  <text class="st10" transform="translate(18 183.4)"><tspan x="0" y="0">Response</tspan></text>
-  <text class="st10" transform="translate(615 676.4)"><tspan x="0" y="0">Mediator</tspan></text>
+  <g class="st11">
+    <text class="st12" transform="translate(942.2 373.1)"><tspan x="0" y="0">Indirect effect</tspan></text>
+  </g>
+  <g class="st11">
+    <text class="st10" transform="translate(-12.3 185.9)"><tspan x="0" y="0">Response</tspan></text>
+  </g>
+  <g class="st11">
+    <text class="st10" transform="translate(615 676.4)"><tspan x="0" y="0">Mediator</tspan></text>
+  </g>
 </svg>

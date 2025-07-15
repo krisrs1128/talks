@@ -1,7 +1,11 @@
 
 title
 
-
+Thank you to the organizers for putting together this workshop. Today I want to
+talk about how mediation analysis can help integrate multi-omics microbiome
+data. Our package is described in this paper. I hope that by the end of this
+talk, you'll have some references about how causal mediation helps in microbiome
+analysis and also an idea of the main functionalities of our package.
 
 ---
 
@@ -19,8 +23,8 @@ Alternative Mediators
 The mediators don't necessarily have to be microbes. For example, in cholesterol
 research, it's known that a specific bacteria can influence protein production
 in the gut which has an effect on cholesterol levels. In this case, the
-metabolites are lie on the indirect path between the presence of this bacteria
-and host phenotype.
+metabolites lie on the indirect path between the presence of this bacteria and
+host phenotype.
 
 ---
 
@@ -50,9 +54,9 @@ see different response Y(t, M(t')) depending on the value of t.
 
 Direct vs. indirect effects 
 
-The advantage of this generalized approach is that you can define direct and
-indirect effects using only the counterfactual values. We don't have to refer to
-any particular model parameters, and this gives more flexibility in how we might
+The advantage of this approach is that you can define direct and indirect
+effects using only the counterfactual values. We don't have to refer to any
+particular model parameters, and this gives more flexibility in how we might
 model M(t) nad Y(t, m).
 
 ---
@@ -111,7 +115,7 @@ metabolites were more common when the IBD associated species were present.
 
 Package Design
 
-We'll revisit that study at the end. But first I want to talk about how we
+We'll revisit that study at the end. But next I want to talk about how we
 designed a package to support mediation analysis in this multi-omics setting. We
 call this package `multimedia`.
 
@@ -126,8 +130,8 @@ analysis. Both the mediator and the response are one dimensional,
 
 Code Interfaces - 1
 
-One approach is to give teh response, mediator, and treatment as inputs to a
-function whose responsibility is to estimate teh direct and indirect effects
+One approach is to give the response, mediator, and treatment as inputs to a
+function whose responsibility is to estimate the direct and indirect effects
 that we're interested in.
 
 ---
@@ -231,9 +235,7 @@ re-analyze the multi-omics data from the IBD study that I quoted from earlier.
 
 Here are details of that study. They have taxonomic community profiles using
 whole genome sequencing, and they got metabolomics profiles using untargeted
-metabolomics. This was exciting because before people had only considered
-targeted metabolomics -- here there was a potential to discover associations
-with metabolites that people might not have thought of before.
+metabolomics. 
 
 ---
 
