@@ -100,7 +100,7 @@ diarrhea and mucositis, limiting treatment dosage and duration
 ### Alternative Mediators
 
 More generally, for microbiome research that seeks to explain mechanisms, it is
-often necssary to analyze indirect effects.
+often necessary to analyze indirect effects.
 
 .center[
   <div class="caption">
@@ -125,7 +125,7 @@ microbiome data
 `r Citep(bib, c("sohn2019compositional", "Wang2019", "Carter2020"))`.
 
 .center[
-<img src="figures/mediation-dag.svg" width=500/>
+<img src="figures/mediation-dag.png" width=500/>
 ]
 
 ---
@@ -147,7 +147,7 @@ During estimation, we might add a feature selection step/penalty to ensure that
 most mediators do not play a role for the outcome.
 
 \begin{align*}
-M&=\alpha T+\zeta_M^{\top} X+\E\\
+M&=\alpha T+\zeta_M^{\top} X+E\\
 Y&=\eta T+\beta^{\top} M+\zeta_Y^{\top} X+\epsilon
 \end{align*}
 
@@ -186,13 +186,13 @@ it abstractly.
 Suppose that the treatments belong to two groups, $T \in \{0, 1\}$. Then, direct
 and indirect effects are defined as:
 \begin{align*}
-\frac{1}{2} \sum_{t=0}^{1} \mathbb{E}\{Y(t, M(1)) - Y(t, M(0))\}\\
-\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(1, M(t')) - Y(0, M(t'))\}
+\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\left[Y(1, M(t')) - Y(0, M(t'))\right] \text{   (Direct Effect)}\\
+\frac{1}{2} \sum_{t=0}^{1} \mathbb{E}\left[Y(t, M(1)) - Y(t, M(0))\right] \text{   (Indirect Effect)}
 \end{align*}
 
 We may also want to know the pathwise indirect effect through mediator $k$:
 \begin{align*}
-\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\{Y(t', M_k(1), M_{-k}(t')) - Y(t', M_k(0), M_{-k}(t'))\}
+\frac{1}{2} \sum_{t'=0}^{1} \mathbb{E}\left[Y(t', M_k(1), M_{-k}(t')) - Y(t', M_k(0), M_{-k}(t'))\right]
 \end{align*}
 
 ---
@@ -270,25 +270,25 @@ directly generalize to individual outcomes $Y_{j}\left(t\right)$.
 ---
 
 .center[
-## Package Design
+## `multimedia` &nbsp; Package Design
 ]
 
 ---
 
 ### Univariate Mediation Analysis
 
-The most straightforward implementation of mediation analysis with univariate
-mediators and outcomes is a two-step linear regression:
+In the case of univariate mediators and outcomes, we have simple expressions for
+the two-step regression:
 
 \begin{align*}
-y_i = \beta_t t_{i} + \beta_{m}m_i + \epsilon_i^y\\
-m_{i} = \alpha t_i + \epsilon_{i}^{m_{i}}
+m_{i} = \alpha t_i + \epsilon_{i}^{m_{i}}\\
+y_i = \eta t_{i} + \beta m_i + \epsilon_i^y
 \end{align*}
 
-In this case, the direct and indirect effects are straightforward:
+In this case, the direct and indirect effects reduce to:
 
-- Direct effect: $\beta_t$
-- Indirect effect: $\alpha \beta_m$
+- Direct effect: $\eta$
+- Indirect effect: $\alpha \beta$
 
 ---
 
@@ -429,7 +429,7 @@ ibd_data <- metabolites |>
     as_tibble()
 ```
 ```{r}
-head(ibd_data, 4)
+head(ibd_data)
 ```
 
 These are the data from the motivating IBD study as a raw `data.frame`.
@@ -461,7 +461,7 @@ and outcome models on bootstrap resampled versions of the original data. Here
 are the metabolites with the largest indirect and direct effects in the IBD
 example. 
 .center[
-<img src="figures/lasso_bootstrap_vis-1.png" width=900/>
+<img src="figures/lasso_bootstrap_vis-1.svg" width=900/>
 ]
 
 ---
@@ -507,11 +507,13 @@ The middle panel comes from a synthetic null: $T \nrightarrow M \to Y$.
 
 ---
 
-These are analogous comparisons for the simulated microbiomes. Sampling from the
-fitted mediation models can help with model checking.
+.pull-three-quarters-left[
+<img src="figures/alteration_plot-1.png" width=720/>
+]
 
-.center[
-<img src="figures/alteration_plot-1.png" width=650/><br/>
+.pull-three-quarters-right[
+These are analogous comparisons for the simulated microbiomes. Sampling from the
+fitted mediation models helps with model checking.
 ]
 
 ---
@@ -585,6 +587,20 @@ abundance is treated as a sparse linear function of a few microbes.
 ```{r eval = FALSE}
 model <- multimedia(exper, glmnet_model(lambda = 0.1))
 ```
+]
+
+---
+
+### Direct Effects
+
+.pull-left[
+These are the metabolites with the largest direct effects from our bootstrap
+analysis. Their variation in abundance can't be attributed to microbiome
+community changes.
+]
+
+.pull-right[
+<img src="figures/ibd_direct_effects.svg" width=500/>
 ]
 
 ---
@@ -693,7 +709,7 @@ include_graphics("figures/lnm.svg")
 ### Identification of Overall Direct/Indirect Effects
 
 These sequential ignorability assumptions are sufficient for identification of
-overall direct and indirect effects `r Citep(bib, "imai2010general")`. For any
+overall direct and indirect effects `r Citep(bib, "imai2010general")`. For any 
 $t, t', x$, we require,
 
 1. Treatment ignorability: $\left\{Y\left(t^{\prime}, m\right), M(t)\right\} \perp T \mid X=x$
@@ -703,11 +719,11 @@ $t, t', x$, we require,
 
 ---
 
-### Identification of Pathwise Indirect EFfects
+### Identification of Pathwise Indirect Effects
 
 Pathwise indirect effects require a generalization of sequential ignorability
-assumptions `r Citep(bib, c("Imai2013", "jerolon2021causal"))`. For any $t, t',
-t'', m, x, w$ we require,
+assumptions `r Citep(bib, c("Imai2013", "jerolon2021causal"))`. For any 
+$t, t', t'', m, x, w$ we require,
 
 1. Treatment ignorability: $\left\{Y(t, m, w), M_k\left(t^{\prime}\right), M_{-k}\left(t^{\prime \prime}\right)\right\} \perp T \mid X=x$
 1. Mediator ignorability: $Y\left(t^{\prime}, m, M_{-k}\left(t^{\prime}\right)\right) \perp M_k \mid T=t, X=x$
@@ -735,14 +751,14 @@ model <- multimedia(
 
 ---
 
-### Identification
-
-<img src="figures/uncausally-correlated.png" width=800/>
-
----
-
 ### Alternative: Hurdle Model
 
 .center[
 <img src="figures/hurdle_model_indirect.png" width=700/>
 ]
+
+---
+
+### Identification
+
+<img src="figures/uncausally-correlated.png" width=800/>
