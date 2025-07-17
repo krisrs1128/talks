@@ -3,9 +3,10 @@ title
 
 Thank you to the organizers for putting together this workshop. Today I want to
 talk about how mediation analysis can help integrate multi-omics microbiome
-data. Our package is described in this paper. I hope that by the end of this
-talk, you'll have some references about how causal mediation helps in microbiome
-analysis and also an idea of the main functionalities of our package.
+data.  In the first part, I'll give a brief tutorial on mediation analysis.
+After that, I want to review an R package that we've released, it's called
+multimedia for multi-omics mediation analysis.  The package is designed to make
+it easy to try out and compare mediation analysis methods for microbiome data.
 
 ---
 
@@ -24,7 +25,10 @@ The mediators don't necessarily have to be microbes. For example, in cholesterol
 research, it's known that a specific bacteria can influence protein production
 in the gut which has an effect on cholesterol levels. In this case, the
 metabolites lie on the indirect path between the presence of this bacteria and
-host phenotype.
+host phenotype.  Something that I think is interesting in both of these examples
+is that they don't explicitly use causal inference methods, but the language
+they use about indirect effects sounds like what we would say in mediation
+analysis.
 
 ---
 
