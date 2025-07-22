@@ -25,17 +25,17 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/5ms623">go.wisc.edu/5ms623</a><br/>
+Slides: <a href="https://go.wisc.edu/a9k4zo">go.wisc.edu/a9k4zo</a><br/>
 Paper: <a href="https://go.wisc.edu/ebm917">go.wisc.edu/ebm917</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
-<a href="https://www.birs.ca/events/2025/5-day-workshops/25w5324/">Novel Approaches for Multi-Omics</a><br/>
-17 | July | 2025 <br/>
+<a href="http://computationalgenomics.bioinformatics.ucla.edu//">CGSI 2025</a><br/>
+22 | July | 2025 <br/>
 </div>
 
-<!-- 25 minute talk (including Q&A) -->
+<!-- 45 minute talk (including Q&A) -->
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(RefManageR)
@@ -44,7 +44,7 @@ library(knitr)
 library(phyloseq)
 library(tidyverse)
 
-opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
 BibOptions(
   check.entries = FALSE,
   bib.style = "numeric",
@@ -235,6 +235,8 @@ influence one another.
 <img src="figures/uncausally-correlated.png" width=800/>
 ]
 
+---
+
 ### Integration Challenge
 
 Our interest in this project came from a re-analysis of a gut-brain axis
@@ -290,8 +292,8 @@ In the case of univariate mediators and outcomes, we have simple expressions for
 the two-step regression:
 
 \begin{align*}
-m_{i} = \alpha t_i + \epsilon_{i}^{m_{i}}\\
-y_i = \eta t_{i} + \beta m_i + \epsilon_i^y
+m_{i} &= \alpha t_i + \epsilon_{i}^{m_{i}}\\
+y_i &= \eta t_{i} + \beta m_i + \epsilon_i^y
 \end{align*}
 
 In this case, the direct and indirect effects reduce to:
@@ -385,15 +387,15 @@ probability vector `r Citep(bib, "Xia2013")`.
 
 .pull-left[
 \begin{align*}
-x_{i} \sim \Mult\left(N_{i}, \varphi^{-1}\left(z_{i}\right)\right) \\
-z_i \sim \Gsn\left(\mu, \Sigma\right)
+x_{i} &\sim \Mult\left(N_{i}, \varphi^{-1}\left(z_{i}\right)\right) \\
+z_i &\sim \Gsn\left(\mu, \Sigma\right)
 \end{align*}
 where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$
 ]
 
 .pull-right[
 ```{r, fig.align = "center", echo = FALSE}
-include_graphics("figures/lnm.svg")
+include_graphics("figures/lnm.png")
 ```
 ]
 
@@ -408,6 +410,12 @@ transformation in the mediation model (see also `r Citep(bib, "Sohn2019")`).
 M \sim \Mult\left(N_{i}, \varphi^{-1}\left(Z\right)\right) \\
 Z \sim \Gsn\left(\alpha T + \zeta_{M}^\top X, \Sigma\right)
 \end{align*}
+
+.center[
+```{r, fig.align = "center", echo = FALSE, out.width= 600}
+include_graphics("figures/lnm.png")
+```
+]
 
 ---
 
@@ -703,20 +711,14 @@ The first step is to take a PCA of the residuals from the mediator model.
 
 \begin{align*}
 \hat{E}_i &= M_i - \hat{\alpha} T_i+\hat{\zeta}_M^{\top} X_i\\
-\hat{V} &:= \text{PCA}\left(\hat{E}_1, \dots, \hat{E}_{n}\right) \in \reals^{N \times K}
+\hat{V} &:= \text{PrincipalComponents}\begin{pmatrix}\hat{E}_1 \\ \vdots \\ \hat{E}_{n}\end{pmatrix}
 \end{align*}
-
----
-
-### Future Work: Mediation with Dimensionality Reduction
 
 Then we can fit the outcome model where the mediators are replaced with their
 low-dimensional projections.
 
 \begin{align*}
-\hat{E}_i &= M_i - \hat{\alpha} T_i+\hat{\zeta}_M^{\top} X_i\\
-\hat{V} &:= \text{PCA}\left(\hat{E}_1, \dots, \hat{E}_{n}\right) \in \reals^{N \times K}\\
-Y &= \eta T + \beta^\top \left(\left(I - P_{T}\right)M V\right) + \zeta_Y
+Y &= \eta T + \beta^\top \left(V^\top P_{T}^{\perp}M\right) + \zeta_Y^\top X
 \end{align*}
 
 ---
@@ -785,7 +787,7 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 16, end = 27)
+PrintBibliography(bib, start = 16, end = 29)
 ```
 
 ---
@@ -840,5 +842,3 @@ model <- multimedia(
 .center[
 <img src="figures/hurdle_model_indirect.png" width=700/>
 ]
-
----
