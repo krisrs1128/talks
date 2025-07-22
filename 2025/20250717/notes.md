@@ -4,7 +4,7 @@ title
 Thank you to the organizers for putting together this workshop. Today I want to
 talk about how mediation analysis can help integrate multi-omics microbiome
 data.  In the first part, I'll give a brief tutorial on mediation analysis.
-After that, I want to review an R package that we've released, it's called
+After that, I want to review an R package that we've released called
 multimedia for multi-omics mediation analysis.  The package is designed to make
 it easy to try out and compare mediation analysis methods for microbiome data.
 
