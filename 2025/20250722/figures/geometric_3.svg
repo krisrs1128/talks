@@ -78,8 +78,8 @@
   <path class="st4" d="M277.6,542c73.1,9.3,147.2-6.1,218-24.8,91.2-24.1,180.5-53.9,267.1-88.9,52.8-21.4,104.9-44.8,160.2-60.4,91.1-25.7,187.9-29.4,281.8-45.1"/>
   <path class="st1" d="M274.7,514.9c75.7-5.8,153.7-12.3,220.9-44.9,85.3-41.4,141.4-118.9,202-188,62.8-71.7,134.7-137.8,220.7-184.7s187.2-73.5,286.4-62.9"/>
   <line class="st5" x1="586.3" y1="405.6" x2="586.3" y2="487.6"/>
-  <line class="st3" x1="579.5" y1="411.9" x2="579.5" y2="613.9"/>
-  <line class="st2" x1="909.1" y1="102.4" x2="909.1" y2="613.9"/>
+  <line class="st3" x1="579.5" y1="411.9" x2="579.5" y2="585.3"/>
+  <line class="st2" x1="909.1" y1="102.4" x2="908" y2="590.1"/>
   <line class="st5" x1="918.1" y1="110.4" x2="918.1" y2="405.6"/>
   <line class="st6" x1="587.2" y1="405.6" x2="908" y2="405.6"/>
   <path class="st7" d="M908,590.1c-62.5,15.7-120.3,49.7-164.3,96.8-35.4,38-61.7,83.6-96,122.5-15,17-34.2,33.7-56.8,32.9-18.3-.7-34.2-12.9-47-26.1-37.5-38.6-60.3-88.6-89.7-133.6-29.5-45-70-87.8-122.9-97.3"/>
@@ -100,16 +100,32 @@
   </g>
   <rect class="st0" x="930.5" y="174.4" width="311.1" height="83.6"/>
   <g class="st11">
-    <text class="st12" transform="translate(930.5 195.8)"><tspan x="0" y="0">Indirect effect</tspan></text>
+    <g class="st11">
+      <g class="st11">
+        <text class="st12" transform="translate(930.5 195.8)"><tspan x="0" y="0">Indirect effect</tspan></text>
+      </g>
+    </g>
   </g>
   <rect class="st0" x="603.1" y="416.1" width="290.2" height="53"/>
   <g class="st11">
-    <text class="st12" transform="translate(603.1 437.4)"><tspan x="0" y="0">Direct effect</tspan></text>
+    <g class="st11">
+      <g class="st11">
+        <text class="st12" transform="translate(603.1 437.4)"><tspan x="0" y="0">Direct effect</tspan></text>
+      </g>
+    </g>
   </g>
   <g class="st11">
-    <text class="st10" transform="translate(10.5 165.4)"><tspan x="0" y="0">Response</tspan></text>
+    <g class="st11">
+      <g class="st11">
+        <text class="st10" transform="translate(-21.7 165.4)"><tspan x="0" y="0">Response</tspan></text>
+      </g>
+    </g>
   </g>
   <g class="st11">
-    <text class="st10" transform="translate(607.4 658.4)"><tspan x="0" y="0">Mediator</tspan></text>
+    <g class="st11">
+      <g class="st11">
+        <text class="st10" transform="translate(607.4 658.4)"><tspan x="0" y="0">Mediator</tspan></text>
+      </g>
+    </g>
   </g>
 </svg>
