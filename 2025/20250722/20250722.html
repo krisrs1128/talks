@@ -99,10 +99,10 @@ metabolism [5].
 ### Causal Inference Setup
 
 Causal mediation analysis is often a good match for carrying out these studies 
-[14; 15].  Traditional methods
+[6; 7].  Traditional methods
 from social science and epidemiology need to be adapted to reflect properties of
 microbiome data 
-[22; 23; 24].
+[8; 9; 10].
 
 .center[
 &lt;img src="figures/mediation-dag.png" width=500/&gt;
@@ -142,7 +142,7 @@ What if we want to go beyond a linear model?
 ### Counterfactual Notation
 
 Under the counterfactual causal mediation analysis framework 
-[6; 7], we imagine
+[11; 12], we imagine
 counterfactuals for both mediators and outcomes, depending on treatments that we
 may never have seen.
 
@@ -235,7 +235,7 @@ composition is an outcome, and the survey measurements are mediators.
 
 We can also use mediation analysis to guide microbiome-metabolome integration.
 This this quote comes from a study of inflammatory bowel disease (IBD) 
-[8]:
+[13]:
 
 &lt;div style="font-size: 20px"&gt;
 &gt; The CD-associated compounds eicosatrienoic (ETA) and docosapentaenoic (DPA)
@@ -303,7 +303,7 @@ restricting ourselves to linear models?
 
 ### Code Interface
 
-The `mediation` package [6; 7]
+The `mediation` package [11; 12]
 solves this problem by instead creating an interface like:
 
 .large-code[
@@ -326,7 +326,7 @@ Indeed, it's easy to use `glm` in the `mediation` package.
 `multimedia` generalizes this interface for multivariate responses and outcomes
 appropriate to microbiome data. For example, for the mindfulness study, we use a
 logistic-normal multinomial model 
-[25; 26] for the outcomes
+[14; 15] for the outcomes
 and lasso regression [16] for the
 mediators.
 
@@ -367,11 +367,11 @@ apply the same type of model in parallel across all outcomes.
 ### Example: Logistic-Normal Multinomial Mediation
 
 The LNM uses a log-ratio transformation to relate predictors to a multinomial
-probability vector [9].
+probability vector [21].
 
 .pull-left[
 `\begin{align*}
-x_{i} &amp;\sim \Mult\left(N_{i}, \varphi^{-1}\left(z_{i}\right)\right) \\
+x_{i} \vert z_i &amp;\sim \Mult\left(N_{i}, \varphi^{-1}\left(z_{i}\right)\right) \\
 z_i &amp;\sim \Gsn\left(\mu, \Sigma\right)
 \end{align*}`
 where `\(\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)\)`
@@ -386,7 +386,7 @@ where `\(\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1
 ### Example: Logistic-Normal Multinomial Mediation
 
 If we want to treat microbiome composition as a mediator, then we can apply this
-transformation in the mediation model (see also [10]).
+transformation in the mediation model (see also [22]).
 
 `\begin{align*}
 M \sim \Mult\left(N_{i}, \varphi^{-1}\left(Z\right)\right) \\
@@ -403,7 +403,7 @@ Z \sim \Gsn\left(\alpha T + \zeta_{M}^\top X, \Sigma\right)
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax [21] to categorize variables.
+selection syntax [23] to categorize variables.
 
 
 ``` r
@@ -437,7 +437,7 @@ These are the data from the motivating IBD study as a raw `data.frame`.
 
 Besides modeling, `multimedia` has data structures that make it easier to
 manipulate real and counterfactual data. For example, we can use `tidy`
-selection syntax [21] to categorize variables.
+selection syntax [23] to categorize variables.
 
 
 ``` r
@@ -564,7 +564,7 @@ mediator-outcome pairs `\(G\)` over which to test sensitivity.
 
 ### Study Background
 
-1. The study [8] carried out an integrative analysis
+1. The study [13] carried out an integrative analysis
 to discover metabolite and taxonomic markers with diagnostic or therapeutic
 potential for IBD.
 
@@ -574,7 +574,7 @@ data on a cohort of 220 patients with the disease.
 1. This resulted in 8.8K and 11.7K metabolite and genus features, respectively,
 all available on the 
 [Curated Metabolome-Microbiome repository](https://github.com/borenstein-lab/microbiome-metabolome-curated-data/tree/main)
-[11].
+[24].
 
 ---
 
@@ -652,7 +652,7 @@ abundances of the _Enterocloster_ genus (mediator) and the metabolites
 
 If the mediators are effectively low-dimensional, then a dimensionality
 reduction step on the mediators can improve statistical efficiency 
-[12; 13]. For example, we can transform the
+[25; 26]. For example, we can transform the
 high-dimensional mediators into low-dimensional versions using (reguarlized)
 PCA.
 
@@ -696,7 +696,7 @@ coordinates.
 ### Future Work: Mediation with Dimensionality Reduction
 
 This has previously been applied to support mediation analysis with brain
-imaging data [12].
+imaging data [25].
 
 .center[
 &lt;img src="figures/zhao_mediation.png" width=550/&gt;
@@ -840,7 +840,7 @@ Biostatistics_ 17.2 (2021), pp. 191-221.
 ### Identification of Overall Direct/Indirect Effects
 
 These sequential ignorability assumptions are sufficient for identification of
-overall direct and indirect effects [6]. For any 
+overall direct and indirect effects [11]. For any 
 `\(t, t', x\)`, we require,
 
 1. Treatment ignorability: `\(\left\{Y\left(t^{\prime}, m\right), M(t)\right\} \perp T \mid X=x\)`

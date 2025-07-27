@@ -387,7 +387,7 @@ probability vector `r Citep(bib, "Xia2013")`.
 
 .pull-left[
 \begin{align*}
-x_{i} &\sim \Mult\left(N_{i}, \varphi^{-1}\left(z_{i}\right)\right) \\
+x_{i} \vert z_i &\sim \Mult\left(N_{i}, \varphi^{-1}\left(z_{i}\right)\right) \\
 z_i &\sim \Gsn\left(\mu, \Sigma\right)
 \end{align*}
 where $\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)$
@@ -718,7 +718,7 @@ Then we can fit the outcome model where the mediators are replaced with their
 low-dimensional projections.
 
 \begin{align*}
-Y &= \eta T + \beta^\top \left(V^\top P_{T}^{\perp}M\right) + \zeta_Y^\top X
+Y &= \eta T + \beta^\top \left(\hat{V}^\top P_{T}^{\perp}M\right) + \zeta_Y^\top X
 \end{align*}
 
 ---
