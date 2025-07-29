@@ -22,7 +22,7 @@ MathJax.Hub.Config({
       mygreen: ["{\\color{mygreen}{#1}}", 1],
       reals: "{\\mathbb{R}}",
       "\*": ["{\\mathbf{#1}}", 1],
-      "bm": ["{\\mathbf{#1}}", 1],
+      bm: ["{\\mathbf{#1}}", 1],
       diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
     },
     loader: {load: ['[tex]/color']},
@@ -55,6 +55,18 @@ Kris Sankaran &lt;br/&gt;
 &lt;/div&gt;
 
 &lt;!-- 30 minute talk --&gt;
+
+---
+
+### Learning Outcomes
+
+1. **Imagine**: Why might batch effects appear in your data?
+
+1. **Derive**: Interpret algebraic expressions used to represent batch effect correction methods.
+
+1. **Check**: Reason about checks that can give more confidence in a batch effect correction method's output.
+
+1. **Improve**: Explain the potential for replication and controls to improve batch effect correction methods
 
 ---
 
@@ -239,8 +251,8 @@ design, which is why there are so many available methods.
 
 Today and next week, we'll consider:
 
-1. ComBat [12] Linear Model.
-1. CellAnova [13] Clustering + Linear Model.
+1. ComBat [12] (2007, 7.6K citations). Linear Model.
+1. CellAnova  (preprint, 2023). Clustering + Linear Model.
 
 ---
 
@@ -257,11 +269,11 @@ sizes, `\(n \approx 5 - 20\)` per batch, and it has inspired many variants.
 
 ### ComBat - Model
 
-If sample `\(i\)` is in batch `\(m\)`, then it is assumed to be drawn from:
+Sample `\(i\)` is assumed to be drawn from:
 
-\begin{align}
-\bm{y}_i = \mu + \bm{W} \bm{x}_i + \bm{b}_m + \Lambda_m \epsilon_i
-\end{align}
+`\begin{align*}
+\*y_{i} = \mu + \*W \*x_{i} + \*b_{m(i)} + \Lambda_{m(i)}\*\epsilon_i
+\end{align*}`
 
 where `\(\Lambda_{m} = \diag{\delta_{mg}}\)` rescales the noise `\(\epsilon_i \sim \mathcal{N}\left(0, \diag{\sigma_g^2}\right)\)`.
 
@@ -403,7 +415,6 @@ replication and controls [19; 20; 21].
 
 1. Any variation that is only present after a step of data generation must be
 due to the measurement mechanism, rather than the true biology.
-
 ---
 
 ### CellAnova
@@ -421,10 +432,10 @@ each cell type.
 
 ### Pool-of-Controls
 
-- [**Notation**] Let `\(\*Y^1, ..., \*Y^M\)` be measurements across `\(M\)` biological samples. 
+1. [**Notation**] Let `\(\*Y^1, ..., \*Y^M\)` be measurements across `\(M\)` biological samples. 
   - Let the first `\(M_0\)` samples are controls. 
   - Each `\(\*Y^m \in \reals^{N_{m} \times G}\)`.
-- [**Controls**] The control samples are assumed to be biologically comparable
+2. [**Controls**] The control samples are assumed to be biologically comparable
   - Time course: All pre-treatment samples
   - Multi-omics: All healthy subjects regardless of sequencing technology
 
@@ -432,50 +443,45 @@ each cell type.
 
 ### Assumed Model
 
-\begin{align}
-\bm{Y}^m &amp;= \bm{C}^m(\mu + \bm{B}^m \bm{V}^\top + \bm{T}^m \bm{W}^\top) + \text{noise} \\\\
+`\begin{align*}
+\bm{Y}^m &amp;= \bm{C}^m(\mu + \bm{B}^m \bm{V}^\top + \bm{X}^m \bm{W}^\top) + \text{noise} \\\\
 &amp;:= \bm{C}^m \left(\bm{R}^m\right)^\top + \text{noise}
-\end{align}
+\end{align*}`
 
 As input, we expect:
 - `\(\*C^m\)`: Cell-level encodings (e.g., cell types) in sample `\(m\)`
 
 We want to estimate:
 - `\(\mu\)`: Global mean
-- `\(\*B^m \*V^\top\)`: Batch effects component  
-- `\(\*T^m \*W^\top\)`: Real biological variation component
-
+- `\(\*B^m \*V^\top\)`: Batch effects
+- `\(\*X^m \*W^\top\)`: Real biological variation
 
 ---
 
 ### CellAnova: Detect Batch Effects
 
-* Step 1: Estimate the batch effects subspace,
-\begin{align}
-\begin{pmatrix}
-\bm{R}^1-\overline{\bm{{R}}}^0 \\\\
-\vdots \\\\
-\bm{{R}}^{M_0}-\overline{\bm{{R}}}^0
-\end{pmatrix} \in \reals^{K_c M_0 \times G} \xrightarrow{\mathrm{SVD}} \bm{V} \in \mathbb{R}^{G \times K_b}
-\end{align}
+**Step 1**: Estimate the batch effects subspace,
+`\begin{align}
+\left[\bm{R}^1-\overline{\bm{R}}^0 \;\; \cdots \;\; \bm{R}^{M_0}-\overline{\bm{R}}^0\right]^\top \in \reals^{K_c M_0 \times G} \xrightarrow{\mathrm{SVD}} \bm{V} \in \reals^{G \times K_b}
+\end{align}`
 This should reflect hospital, technician, or platform-level effects.
 
-* Step 2: Evaluate the coordinates of each sample with respect to this subspace,
-\begin{align}
+**Step 2**: Evaluate the coordinates of each sample with respect to this subspace,
+`\begin{align}
 \bm{B}^m=\left(\bm{R}^m-\overline{\bm{R}}\right) \bm{V}
-\end{align}
+\end{align}`
 
 ---
 
 ### Decomposing Variation: Biology
 
-* Step 3: Project out the batch effects and identify a subspace spanning the remaining variation:
+**Step 3**: Project out the batch effects and identify a subspace spanning the remaining variation:
 
-\begin{align}
-\begin{bmatrix} \bm{R}^1 - \overline{\bm{R}} \\\\ \vdots \\\\ \bm{R}^M - \overline{\bm{R}} \end{bmatrix}(I - \bm{V}\bm{V}^\top) \xrightarrow{\text{SVD}} W
-\end{align}
+`\begin{align}
+\begin{bmatrix} \bm{R}^1 - \overline{\bm{R}} \\\\ \vdots \\\\ \bm{R}^M - \overline{\bm{R}} \end{bmatrix}(I - \bm{V}\bm{V}^\top) \xrightarrow{\text{SVD}} \bm{W}
+\end{align}`
 
-Then `\(\bm{T}^m = (\bm{R}^m - \overline{\bm{R}})\bm{W}\)` are coordinates with respect to real
+Then `\(\bm{X}^m = (\bm{R}^m - \overline{\bm{R}})\bm{W}\)` are coordinates with respect to real
 biological variation.
 
 ---
@@ -484,19 +490,19 @@ biological variation.
 
 The CellAnova paper uses notation that stacks the expressions like those we saw
 in ComBat.
-\begin{align}
+`\begin{align}
 \bm{y}_i = \mu + \bm{W} \bm{x}_i + \bm{b}_m + \Lambda_m \epsilon_i
-\end{align}
+\end{align}`
 vs.
-\begin{align}
-\bm{Y} = \bm{C}\left(\bm{M} + \bm{X} \bm{W}^\top + \bm{B} \bm{V}^\top\right)
-\end{align}
+`\begin{align}
+\bm{Y} = \bm{C}\left(\bm{M} + \bm{X} \bm{W}^\top + \bm{B} \bm{V}^\top\right) + \text{noise}
+\end{align}`
 
 Both methods shed light on why batch effects appears.
 
 ---
 
-### Conclusion
+### Takeaways
 
 1. **Garbage In, Garbage Out**: If the main source of variation in the data comes
 from batch effects, then even the most sophisticated methodology will fail to
@@ -598,6 +604,10 @@ URL: [http://dx.doi.org/10.1093/biostatistics/kxv026](http://dx.doi.org/10.1093/
 [21] D. Gerard et al. "Unifying and Generalizing Methods for Removing Unwanted Variation Based on Negative Controls". In: _Statistica Sinica_
 (2021). ISSN: 1017-0405. DOI: [10.5705/ss.202018.0345](https://doi.org/10.5705%2Fss.202018.0345). URL:
 [http://dx.doi.org/10.5705/ss.202018.0345](http://dx.doi.org/10.5705/ss.202018.0345).
+
+[22] I. Korsunsky et al. "Fast, sensitive and accurate integration of single-cell data with Harmony". In: _Nature Methods_ 16.12 (Nov. 2019), p.
+1289–1296. ISSN: 1548-7105. DOI: [10.1038/s41592-019-0619-0](https://doi.org/10.1038%2Fs41592-019-0619-0). URL:
+[http://dx.doi.org/10.1038/s41592-019-0619-0](http://dx.doi.org/10.1038/s41592-019-0619-0).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
