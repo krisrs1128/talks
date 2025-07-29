@@ -62,7 +62,7 @@ BibOptions(cite.style = "numeric")
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/7nt69k">go.wisc.edu/7nt69k</a><br/>
+Slides: <a href="https://go.wisc.edu/vzhdt1">go.wisc.edu/vzhdt1</a><br/>
 Paper: <a href="https://go.wisc.edu/ebm917">go.wisc.edu/ebm917</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
