@@ -49,6 +49,17 @@
       z-index: -1;
 }
 
+#title {
+  position: absolute;
+  color: #10040f;
+  font-family: 'Raleway';
+  font-size: 45px;
+  width: 1100px;
+  left: 40px;
+  top: 260px;
+}
+
+
 body {
   font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
   color: #0c0c0c;
