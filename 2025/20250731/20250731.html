@@ -58,24 +58,6 @@ Kris Sankaran &lt;br/&gt;
 
 ---
 
-### Learning Outcomes
-
-1. **Imagine**: Why might batch effects appear in your data?
-
-1. **Derive**: Interpret algebraic expressions used to represent batch effect correction methods.
-
-1. **Check**: Reason about checks that can give more confidence in a batch effect correction method's output.
-
-1. **Improve**: Explain the potential for replication and controls to improve batch effect correction methods
-
----
-
-.center[
-## Motivation
-]
-
----
-
 ### Cancer Microbiome Controversy [1]
 
 .center[
@@ -196,17 +178,6 @@ study, discussed in [10].
 &lt;/p&gt;
 ]
 
----
-
-### Improving Credibility
-
-&gt; If all goes well, then the article... has shown mammal kidney structure; if all goes badly, it shrinks to three hamsters in one laboratory in 1984.
-&gt;
-&gt; -- Bruno Latour in [11]
-
-To dispute a scientific fact, a dissenter can always argue that the
-conditions that led to its production are not generalizable. To guard against
-this, we need to understand batch-to-batch variation.
 
 ---
 
@@ -249,10 +220,10 @@ design, which is why there are so many available methods.
 
 ### Exemplar Methods
 
-Today and next week, we'll consider:
+In this overview, we'll consider,
 
-1. ComBat [12] (2007, 7.6K citations). Linear Model.
-1. CellAnova  (preprint, 2023). Clustering + Linear Model.
+1. ComBat [12] (2007). Linear Model.
+1. CellAnova  (2024). Embeddings + Linear Model.
 
 ---
 
@@ -495,7 +466,7 @@ in ComBat.
 \end{align}`
 vs.
 `\begin{align}
-\bm{Y} = \bm{C}\left(\bm{M} + \bm{X} \bm{W}^\top + \bm{B} \bm{V}^\top\right) + \text{noise}
+\bm{Y} = \bm{C}\left(\mu + \bm{X} \bm{W}^\top + \bm{B} \bm{V}^\top\right) + \text{noise}
 \end{align}`
 
 Both methods shed light on why batch effects appears.
@@ -608,6 +579,18 @@ URL: [http://dx.doi.org/10.1093/biostatistics/kxv026](http://dx.doi.org/10.1093/
 [22] I. Korsunsky et al. "Fast, sensitive and accurate integration of single-cell data with Harmony". In: _Nature Methods_ 16.12 (Nov. 2019), p.
 1289–1296. ISSN: 1548-7105. DOI: [10.1038/s41592-019-0619-0](https://doi.org/10.1038%2Fs41592-019-0619-0). URL:
 [http://dx.doi.org/10.1038/s41592-019-0619-0](http://dx.doi.org/10.1038/s41592-019-0619-0).
+
+---
+
+### Improving Credibility
+
+&gt; If all goes well, then the article... has shown mammal kidney structure; if all goes badly, it shrinks to three hamsters in one laboratory in 1984.
+&gt;
+&gt; -- Bruno Latour in [11]
+
+To dispute a scientific fact, a dissenter can always argue that the
+conditions that led to its production are not generalizable. To guard against
+this, we need to understand batch-to-batch variation.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

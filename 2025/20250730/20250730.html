@@ -53,7 +53,7 @@ MathJax.Hub.Config({
 &lt;/style&gt;
 
 &lt;div id="subtitle_left"&gt;
-Slides: &lt;a href="https://go.wisc.edu/7nt69k"&gt;go.wisc.edu/7nt69k&lt;/a&gt;&lt;br/&gt;
+Slides: &lt;a href="https://go.wisc.edu/vzhdt1"&gt;go.wisc.edu/vzhdt1&lt;/a&gt;&lt;br/&gt;
 Paper: &lt;a href="https://go.wisc.edu/ebm917"&gt;go.wisc.edu/ebm917&lt;/a&gt;&lt;br/&gt;
 Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
 &lt;/div&gt;
@@ -135,7 +135,7 @@ A good visualization is:
 .center[
 &lt;div class="caption"&gt;
 &lt;img src="figures/information_density.png"/&gt;&lt;br/&gt;
-Figure from [9].
+Figure from [3].
 &lt;/div&gt;
 ]
 
@@ -144,7 +144,7 @@ Figure from [9].
 ### Interactivity
 
 Current AI interfaces often suffer from what researchers in human-computer
-interfaces call interaction gulfs [10].  It is hard
+interfaces call interaction gulfs [4].  It is hard
 to quickly specify a query about a model, evaluate the response, and then
 iterate.
 
@@ -378,7 +378,7 @@ v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \i
 
 If for the row corresponding to subset `\(S\)` we use weights
 `\begin{align*}
-\frac{D - 1}{{D \choose \left|S\right|} \left|S\right|\left(D - \left|S\right|\right)}
+\frac{D - 1}{\binom{D}{|S|} \left|S\right|\left(D - \left|S\right|\right)}
 \end{align*}`
 then the resulting weighted linear regression exactly recovers the Shapley
 values `\(\varphi_{\*x}\left(f, d\right)\)`.
@@ -435,7 +435,7 @@ Let `\(N_{k}\left(i\right)\)` be all the features within distance `\(k\)` of fea
 
 1. When `\(k\)` is small, this will be an efficient approximation.
 
-1. This is called `\(L\)`-Shapley. `\(L\)` is short for local [15].
+1. This is called `\(L\)`-Shapley. `\(L\)` is short for local [5].
 
 .center[
 &lt;img width="400" src="figures/l-c-shapley.png"/&gt; 
@@ -478,7 +478,7 @@ orientations.
 .pull-right[
 &lt;img width="340" src="figures/fig2_zeiler.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Figure from [11].
+Figure from [6].
 &lt;/span&gt;
 ]
 
@@ -498,7 +498,7 @@ orientations.
 .pull-right[
 &lt;img width="240" src="figures/fig1_bengio.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Figure from [12].
+Figure from [7].
 &lt;/span&gt;
 ]
 
@@ -512,7 +512,7 @@ learn meaningful abstractions.
 .center[
 &lt;img width="900" src="figures/fig2_karpathy.png"/&gt; &lt;br/&gt;
 &lt;span style="font-size: 18px;"&gt;
-Figure from [13].
+Figure from [8].
 &lt;/span&gt;
 ]
 
@@ -523,7 +523,7 @@ understand, like whether a string of text lies within quotes.
 
 ### Dictionary Learning Formulation
 
-Following [14], suppose `\(\*x_{n}\)` are the concatenated
+Following [9], suppose `\(\*x_{n}\)` are the concatenated
 activations across all layers in the network. Then solve:
 
 .pull-left[
@@ -595,7 +595,7 @@ more automatic.
 can learn more abstract representations.
 
 1. Using dictionary learning, we can test this by comparing features with more
-weight on high vs. lower parts of the network [14].
+weight on high vs. lower parts of the network [9].
 
 .center[
 &lt;span style="font-size: 18px;"&gt;
@@ -718,7 +718,7 @@ standard ML quantitative benchmarks.
 .pull-right[
 &lt;img src="figures/polyjuice.png"/&gt;
 
-An example task from an interpretability study  [3].
+An example task from an interpretability study  [10].
 ]
 
 ---
@@ -737,7 +737,7 @@ An example task from an interpretability study  [3].
 .pull-right[
 &lt;img src="figures/complementarity.png"/&gt;
 
-An example of unpredictable effects during deployment [4].
+An example of unpredictable effects during deployment [11].
 ]
 
 ---
@@ -766,39 +766,38 @@ _Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discov
 [2] T. Gu, B. Dolan-Gavitt, and S. Garg. "BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain". In: _ArXiv_
 abs/1708.06733 (2017).
 
-[3] T. S. Wu, M. T. Ribeiro, J. Heer, et al. "Polyjuice: Generating Counterfactuals for Explaining, Evaluating, and Improving Models". In: _Annual
-Meeting of the Association for Computational Linguistics_. 2021.
+[3] T. Munzner. _Visualization analysis and design_. CRC press, 2014.
 
-[4] G. Bansal, T. S. Wu, J. Zhou, et al. "Does the Whole Exceed its Parts? The Effect of AI Explanations on Complementary Team Performance". In:
-_Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems_ (2020).
+[4] E. L. Hutchins, J. D. Hollan, and D. A. Norman. "Direct manipulation interfaces". En. In: _Hum.-Comput. Interact._ 1.4 (Dec. 1985), pp. 311-338.
 
-[5] Z. C. Lipton. "The mythos of model interpretability". In: _Communications of the ACM_ 61 (2016), pp. 36 - 43.
+[5] J. Chen, L. Song, M. J. Wainwright, et al. "L-shapley and c-shapley: Efficient model interpretation for structured data". In: _arXiv preprint
+arXiv:1808.02610_ (2018).
 
-[6] J. Adebayo, J. Gilmer, M. Muelly, et al. "Sanity Checks for Saliency Maps". In: _Neural Information Processing Systems_. 2018.
-
-[7] C. Rudin. "Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead". In: _Nature
-Machine Intelligence_ 1 (2018), pp. 206 - 215.
-
-[8] W. J. Murdoch, C. Singh, K. Kumbier, et al. "Definitions, methods, and applications in interpretable machine learning". In: _Proceedings of the
-National Academy of Sciences_ 116 (2019), pp. 22071 - 22080.
-
-[9] T. Munzner. _Visualization analysis and design_. CRC press, 2014.
-
-[10] E. L. Hutchins, J. D. Hollan, and D. A. Norman. "Direct manipulation interfaces". En. In: _Hum.-Comput. Interact._ 1.4 (Dec. 1985), pp.
-311-338.
-
-[11] M. D. Zeiler and R. Fergus. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International
+[6] M. D. Zeiler and R. Fergus. "Visualizing and Understanding Convolutional Networks". In: _Computer Vision – ECCV 2014_. Springer International
 Publishing, 2014, p. 818–833. ISBN: 9783319105901. DOI: 10.1007/978-3-319-10590-1_53. &lt;http://dx.doi.org/10.1007/978-3-319-10590-1_53&gt;.
 
-[12] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
+[7] Y. Bengio. "Learning Deep Architectures for AI". In: _Foundations and Trends® in Machine Learning_ 2.1 (2009), p. 1–127. ISSN: 1935-8245. DOI:
 10.1561/2200000006. &lt;http://dx.doi.org/10.1561/2200000006&gt;.
 
-[13] A. Karpathy, J. Johnson, and L. Fei-Fei. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: 10.48550/ARXIV.1506.02078.
+[8] A. Karpathy, J. Johnson, and L. Fei-Fei. _Visualizing and Understanding Recurrent Networks_. 2015. DOI: 10.48550/ARXIV.1506.02078.
 &lt;https://arxiv.org/abs/1506.02078&gt;.
 
-[14] Z. Yun, Y. Chen, B. Olshausen, et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of
+[9] Z. Yun, Y. Chen, B. Olshausen, et al. "Transformer visualization via dictionary learning: contextualized embedding as a linear superposition of
 transformer factors". In: _Proceedings of Deep Learning Inside Out (DeeLIO): The 2nd Workshop on Knowledge Extraction and Integration for Deep
 Learning Architectures_. Online: Association for Computational Linguistics, 2021.
+
+[10] T. S. Wu, M. T. Ribeiro, J. Heer, et al. "Polyjuice: Generating Counterfactuals for Explaining, Evaluating, and Improving Models". In: _Annual
+Meeting of the Association for Computational Linguistics_. 2021.
+
+[11] G. Bansal, T. S. Wu, J. Zhou, et al. "Does the Whole Exceed its Parts? The Effect of AI Explanations on Complementary Team Performance". In:
+_Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems_ (2020).
+
+[12] Z. C. Lipton. "The mythos of model interpretability". In: _Communications of the ACM_ 61 (2016), pp. 36 - 43.
+
+[13] J. Adebayo, J. Gilmer, M. Muelly, et al. "Sanity Checks for Saliency Maps". In: _Neural Information Processing Systems_. 2018.
+
+[14] C. Rudin. "Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead". In: _Nature
+Machine Intelligence_ 1 (2018), pp. 206 - 215.
 
 ---
 
@@ -806,8 +805,8 @@ class: reference
 
 ### References
 
-[15] J. Chen, L. Song, M. J. Wainwright, et al. "L-shapley and c-shapley: Efficient model interpretation for structured data". In: _arXiv preprint
-arXiv:1808.02610_ (2018).
+[15] W. J. Murdoch, C. Singh, K. Kumbier, et al. "Definitions, methods, and applications in interpretable machine learning". In: _Proceedings of the
+National Academy of Sciences_ 116 (2019), pp. 22071 - 22080.
 
 ---
 
@@ -835,7 +834,7 @@ bacterium by Maria Zamchy from &lt;a href="https://thenounproject.com/browse/ico
 removed this requirement, creating a new need for post-hoc expalnations.
 
 1. **Critical Self-Reflection**: Experiments highlight issues in common assumptions
-and commentaries attempt to establish shared vocabulary [5; 6; 7; 8].
+and commentaries attempt to establish shared vocabulary [12; 13; 14; 15].
 
 1. **Systematic Evaluation**: Systematic progress depends on shared tasks, objective
 evaluation, and substantive theory -- these are beginning to emerge.
