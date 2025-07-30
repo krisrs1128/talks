@@ -42,7 +42,9 @@ MathJax.Hub.Config({
 
 
 
-# Interactive and Interpretable Machine Learning
+&lt;div id="title"&gt;
+Interactive and Interpretable Machine Learning
+&lt;/div&gt;
 
 &lt;style&gt;
 .slide-background {
@@ -158,7 +160,7 @@ iterate.
 
 1. **Interpretable Model**: A model that, by virtue of its design, is easy for
 its stakeholders to accurately describe and alter.
-1. **Explainability Technique**: A method that shapes our mental models about
+1. **Explainability Technique**: A method that describes properties of arbitrary
 black box systems.
 
 .center[
@@ -352,7 +354,7 @@ regression.
 .pull-left[
 &lt;span style="font-size: 20px;"&gt;
 `\begin{align*}
-v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
+v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, \emptyset\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
 \end{align*}`
 &lt;/span&gt;
 ]
@@ -373,7 +375,7 @@ coefficients `\(\varphi_{\*x}\left(f, d\right)\)`. Notice we can compute
 Each row in this regression is a subset `\(S\)` of features,
 
 `\begin{align*}
-v_{x}\left(S\right) \approx \varphi_{\*x}\left(f, 0\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
+v_{\*x}\left(S\right) \approx \varphi_{\*x}\left(f, \emptyset\right) + \sum_{d = 1}^{D} \indic{d \in S}\varphi_{\*x}\left(f, d\right)
 \end{align*}`
 
 If for the row corresponding to subset `\(S\)` we use weights
@@ -394,14 +396,14 @@ mask_matrix = np.zeros((nsamples, M))
 kernel_weights = np.zeros(nsamples)
 synth_data = np.tile(self.data, (nsamples, 1))
 
-# sample random subsets
+# keep values at random subsets of features
 for i in range(nsamples):
     mask = np.random.choice([0, 1], size=M)
     mask_matrix[i] = mask
     synth_data[i * self.N:(i + 1) * self.N, mask == 1] = x[0, mask == 1]
     kernel_weights[i] = (M - np.sum(mask)) * np.sum(mask)
 
-# model predictions on the synthetic data
+# model predictions on the masked data
 model_out = self.model(synth_data)
 f = np.mean(model_out.reshape(nsamples, self.N, -1), axis=1) - self.f_bar
 
@@ -429,7 +431,7 @@ Let `\(N_{k}\left(i\right)\)` be all the features within distance `\(k\)` of fea
 `\(i\)`. A fast approximation is to consider:
 
 `\begin{align*}
-\varphi_{\*x}^{L}\left(f, i\right) &amp;= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \in N_{k\left(i\right)}} 
+\varphi_{\*x}^{L}\left(f, i\right) &amp;= \frac{1}{\absarg{N_{k}\left(i\right)}} \sum_{S \subseteq N_{k\left(i\right)}} 
 \frac{1}{\absarg{N_{k}\left(i\right) - 1 \choose \absarg{S} - 1}} \left[v_{\*x}\left(S\right) - v_{\*x}\left(S - \{i\}\right)\right]
 \end{align*}`
 
