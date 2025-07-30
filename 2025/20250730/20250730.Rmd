@@ -65,12 +65,12 @@ Interactive and Interpretable Machine Learning
 
 <div id="subtitle_left">
 Slides: <a href="https://go.wisc.edu/vzhdt1">go.wisc.edu/vzhdt1</a><br/>
-Paper: <a href="https://go.wisc.edu/ebm917">go.wisc.edu/ebm917</a><br/>
+Paper: <a href="https://go.wisc.edu/7nt69k">go.wisc.edu/7nt69k</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
-<a href="">USC Marshall</a><br/>
+<a href="https://www.marshall.usc.edu/departments/data-sciences-and-operations">USC DSO</a><br/>
 30 | July | 2025 <br/>
 </div>
 
@@ -754,11 +754,11 @@ An example of unpredictable effects during deployment `r Citep(bib, "Bansal2020D
 
 ### Thank you!
 
-Review Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
+Review Paper: [go.wisc.edu/7nt69k](https://go.wisc.edu/7nt69k)
 
 Course Notes + Code: [go.wisc.edu/oid864](https://go.wisc.edu/oid864)
 
-Slides: [go.wisc.edu/u7ikn1](https://go.wisc.edu/u7ikn1)
+Slides: [go.wisc.edu/vzhdt1](https://go.wisc.edu/vzhdt1)
 
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
