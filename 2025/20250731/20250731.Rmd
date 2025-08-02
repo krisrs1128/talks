@@ -74,6 +74,7 @@ bib <- ReadBib("references.bib")
 
 <div id="subtitle_left">
 Slides: <a href="https://go.wisc.edu/qjn8us">go.wisc.edu/qjn8us</a><br/>
+Notes: <a href="https://go.wisc.edu/5fsbyh">go.wisc.edu/5fsbyh</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
@@ -171,6 +172,8 @@ It is hard to precisely measure molecular systems. Artwork from `r Citep(bib, "G
 
 ---
 
+exclude: true
+
 ### Improving Discovery
 
 .pull-left[
@@ -252,7 +255,7 @@ design, which is why there are so many available methods.
 In this overview, we'll consider,
 
 1. ComBat `r Citep(bib, "Johnson2006")` (2007). Linear Model.
-1. CellAnova `r Citep(bib, "Zhang2023")` (2024). Embeddings + Linear Model.
+1. CellAnova `r Citep(bib, "Zhang2024")` (2024). Embeddings + Linear Model.
 
 ---
 
@@ -327,6 +330,8 @@ regardless of whether there is actually any shared biology `r Citep(bib, "Ma2024
 ]
 
 ---
+
+exclude: true
 
 ### Challenges
 
@@ -444,7 +449,7 @@ each cell type.
 ### Assumed Model
 
 \begin{align*}
-\bm{Y}^m &= \bm{C}^m(\mu + \bm{B}^m \bm{V}^\top + \bm{X}^m \bm{W}^\top) + \text{noise} \\\\
+\bm{Y}^m &= \bm{C}^m(\mu + \bm{X}^m \bm{W}^\top + \bm{B}^m \bm{V}^\top) + \text{noise} \\\\
 &:= \bm{C}^m \left(\bm{R}^m\right)^\top + \text{noise}
 \end{align*}
 
