@@ -379,18 +379,6 @@ example.
 
 ---
 
-### Model Alteration
-
-The package provides syntax for altering models after they've been estimated.
-We can set specific coefficients to zero or re-estimate with new model
-specifications.
-
-.center[
-<img src="figures/visualize_long-1.png"/>
-]
-
----
-
 ### Sensitivity Analysis
 
 Sensitivity analysis can show which conclusions might be changed if any
@@ -783,5 +771,17 @@ We draw $\left(\epsilon^y, \epsilon^m\right)$ from a Gaussian with mean zero and
 \end{align*}
 where $\mathbf{1}_{G} \in \{0, 1\}^{K \times J}$ is an indicator over
 mediator-outcome pairs $G$ over which to test sensitivity.
+
+---
+
+### Model Alteration
+
+The package provides syntax for altering models after they've been estimated.
+We can set specific coefficients to zero or re-estimate with new model
+specifications.
+
+.center[
+<img src="figures/visualize_long-1.png"/>
+]
 
 ---
