@@ -25,7 +25,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/a9k4zo">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/pb531s">go.wisc.edu/pb531s</a><br/>
 Paper: <a href="https://go.wisc.edu/ebm917">go.wisc.edu/ebm917</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
