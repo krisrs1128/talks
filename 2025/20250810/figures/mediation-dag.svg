@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 507 381.5">
+  <!-- Generator: Adobe Illustrator 29.6.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 9)  -->
+  <defs>
+    <style>
+      .st0 {
+        isolation: isolate;
+      }
+
+      .st1 {
+        fill: #fff;
+      }
+
+      .st1, .st2, .st3 {
+        stroke: #000;
+        stroke-miterlimit: 10;
+      }
+
+      .st2 {
+        stroke-width: 5px;
+      }
+
+      .st2, .st3 {
+        fill: none;
+      }
+
+      .st3 {
+        stroke-width: 4px;
+      }
+    </style>
+  </defs>
+  <circle class="st3" cx="55.2" cy="333.4" r="38.8"/>
+  <circle class="st3" cx="214.9" cy="201.9" r="38.8"/>
+  <circle class="st3" cx="449.2" cy="201.9" r="38.8"/>
+  <circle class="st3" cx="351" cy="51.2" r="38.8"/>
+  <g>
+    <line class="st2" x1="252.7" y1="199.2" x2="387.2" y2="201.6"/>
+    <polygon points="383.3 214 405.1 201.9 383.8 189.1 383.3 214"/>
+  </g>
+  <g>
+    <line class="st2" x1="378.4" y1="79.4" x2="422.8" y2="146.7"/>
+    <polygon points="410.4 150.5 432.7 161.6 431.2 136.8 410.4 150.5"/>
+  </g>
+  <g>
+    <line class="st2" x1="235.9" y1="169.9" x2="310.1" y2="95"/>
+    <polygon points="316.4 106.4 322.7 82.3 298.6 88.9 316.4 106.4"/>
+  </g>
+  <path class="st1" d="M183.4,52.2"/>
+  <g>
+    <path class="st2" d="M48.5,288C30.9,158.3,145.7,52.2,268.6,40.1"/>
+    <polygon points="266.2 53 286.4 38.3 263.6 28.2 266.2 53"/>
+  </g>
+  <g>
+    <path class="st2" d="M419.2,261.7c-86.1,71.7-204.2,96.6-314.3,90"/>
+    <polygon points="408.2 254.6 432.7 249.9 424.6 273.5 408.2 254.6"/>
+  </g>
+  <g id="F7MOG1">
+    <image id="F7MOG11" data-name="F7MOG1" class="st0" width="178" height="152" transform="translate(33.2 319.5) scale(.2)" xlink:href="mediation-dag-1.png"/>
+  </g>
+  <g id="cwbcP4">
+    <image id="cwbcP41" data-name="cwbcP4" class="st0" width="150" height="146" transform="translate(196.6 185.6) scale(.2)" xlink:href="mediation-dag-2.png"/>
+  </g>
+  <g id="_x36_fiR69">
+    <image id="_x36_fiR691" data-name="_x36_fiR69" class="st0" width="214" height="150" transform="translate(327 34.4) scale(.2)" xlink:href="mediation-dag-3.png"/>
+  </g>
+  <g id="z3ElSL">
+    <image id="z3ElSL1" data-name="z3ElSL" class="st0" width="156" height="148" transform="translate(432.7 185.3) scale(.2)" xlink:href="mediation-dag-4.png"/>
+  </g>
+</svg>
