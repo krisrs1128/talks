@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Modular software for mediation analysis of microbiome data</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+# Modular Software for Mediation Analysis of Microbiome Data
+
+&lt;style&gt;
+.slide-background {
+    background: url("figures/cover.png") no-repeat center center;
+    background-size: cover;
+    opacity: 0.5;
+}
+&lt;/style&gt;
+
+&lt;div id="subtitle_left"&gt;
+Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/&lt;/a&gt;&lt;br/&gt;
+Paper: &lt;a href="https://go.wisc.edu/ebm917"&gt;go.wisc.edu/ebm917&lt;/a&gt;&lt;br/&gt;
+Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Kris Sankaran &lt;br/&gt;
+&lt;a href="https://icibm2025.iaibm.org/"&gt;useR! 2025&lt;/a&gt;&lt;br/&gt;
+10 | August | 2025 &lt;br/&gt;
+&lt;/div&gt;
+
+&lt;!-- 45 minute talk (including Q&amp;A) --&gt;
+
+
+
+`\(\def\Gsn{\mathcal{N}}\)`
+`\(\def\Dir{\text{Dir}}\)`
+`\(\def\Mult{\text{Mult}}\)`
+`\(\def\diag{\text{diag}}\)`
+`\(\def\*#1{\mathbf{#1}}\)`
+`\(\def\Scal{\mathcal{S}}\)`
+`\(\def\exp#1{\text{exp}\left(#1\right)}\)`
+`\(\def\logit#1{\text{logit}\left(#1\right)}\)`
+`\(\def\absarg#1{\left|#1\right|}\)`
+`\(\def\E{\mathbb{E}} % Expectation symbol\)`
+`\(\def\Earg#1{\E\left[{#1}\right]}\)`
+`\(\def\P{\mathbb{P}} % Expectation symbol\)`
+`\(\def\Parg#1{\P\left[{#1}\right]}\)`
+`\(\def\m#1{\boldsymbol{#1}}\)`
+`\(\def\Unif{\text{Unif}}\)`
+`\(\def\win{\tilde{w}_{\text{in}}}\)`
+`\(\def\reals{\mathbb{R}}\)`
+`\(\newcommand{\wout}{\tilde w_{\text{out}}}\)`
+
+---
+
+### Mediation Analysis in Multi-Omics
+
+We're just beginning to understand how the microbiome mediates the relationship
+between environmental exposures and human health.
+
+.center[
+&lt;div class="caption"&gt;
+&lt;img src="figures/chemotherapy.png"/&gt;
+Figure adapted from [1].
+&lt;/div&gt;
+]
+
+
+Chemotherapy-induced microbiome changes can worsen adverse events, like
+diarrhea and mucositis, limiting treatment dosage and duration 
+[2; 3].
+
+---
+
+### Causal Inference Setup
+
+Causal mediation analysis is often a good match for carrying out these studies 
+[4; 5].  Traditional methods
+from social science and epidemiology need to be adapted to reflect properties of
+microbiome data 
+[6; 7; 8].
+
+.center[
+&lt;img src="figures/mediation-dag.png" width=500/&gt;
+]
+
+---
+
+### Two-Step Linear Regression
+
+During estimation, we might add a feature selection step/penalty to ensure that
+most mediators do not play a role for the outcome.
+
+`\begin{align*}
+M&amp;=\alpha T+\zeta_M^{\top} X+E\\
+Y&amp;=\eta T+\beta^{\top} M+\zeta_Y^{\top} X+\epsilon
+\end{align*}`
+
+* `\(\eta \in \mathbb{R}\)`: Direct effect.
+* `\(\alpha^\top \beta\)`: Overall indirect effect.
+* `\(\alpha_{k}\beta_{k}\)`: The indirect effect through path `\(k\)`.
+
+What if we want to go beyond a linear model?
+
+---
+
+### Counterfactual Notation
+
+Under the counterfactual causal mediation analysis framework 
+[9; 10], we imagine
+counterfactuals for both mediators and outcomes, depending on treatments that we
+may never have seen.
+
+_Mediator under treatment `\(t\)`_: 
+`\begin{align*}
+M\left(t\right)
+\end{align*}`
+
+_Outcome under treatment combination_ `\(\left(t, t'\right)\)`:
+`\begin{align*}
+Y\left(t, M\left(t'\right)\right)
+\end{align*}`
+
+Note that this is not observable whenever `\(t \neq t'\)`, but we can reason about
+it abstractly.
+
+---
+
+### Geometric Interpretation
+
+&lt;img src="figures/geometric_1.png" width=800/&gt;
+
+---
+
+### Geometric Interpretation
+
+&lt;img src="figures/geometric_2.png" width=800/&gt;
+
+---
+
+### Multiple Mediators and Outcomes
+
+Multi-omics applications require multivariate outcomes. The effect definitions
+directly generalize to individual outcomes `\(Y_{j}\left(t\right)\)`.
+.center[
+&lt;img src="figures/multivariate-mediation-outcomes.png" width=600/&gt;
+]
+
+---
+
+.center[
+## `multimedia` &amp;nbsp; Package Design
+]
+
+---
+
+### Univariate Mediation Analysis
+
+In the case of univariate mediators and outcomes, we have simple expressions for
+the two-step regression:
+
+`\begin{align*}
+m_{i} &amp;= \alpha t_i + \epsilon_{i}^{m_{i}}\\
+y_i &amp;= \eta t_{i} + \beta m_i + \epsilon_i^y
+\end{align*}`
+
+In this case, the direct and indirect effects reduce to:
+
+- Direct effect: `\(\eta\)`
+- Indirect effect: `\(\alpha \beta\)`
+
+---
+
+### Code Interface
+
+We could imagine writing a function to implement this analysis.
+
+.large-code[
+
+``` r
+model &lt;- mediation(y, m, t)
+effects(model)
+```
+]
+
+But how can we adopt the more general counterfactual perspective, without
+restricting ourselves to linear models?
+
+---
+
+### Code Interface
+
+The `mediation` package [9; 10]
+solves this problem by instead creating an interface like:
+
+.large-code[
+
+``` r
+f1 &lt;- lm(y ~ t + m)
+f2 &lt;- lm(m ~ t)
+model &lt;- mediation(f1, f2)
+effects(model)
+```
+]
+
+We can now accommodate any mediation or outcome model, not just linear ones!
+Indeed, it's easy to use `glm` in the `mediation` package.
+
+---
+
+### Multimedia Interface
+
+`multimedia` generalizes this interface for multivariate responses and outcomes
+appropriate to microbiome data. For example, for the mindfulness study, we use a
+logistic-normal multinomial model 
+[11; 12] for the outcomes
+and lasso regression [13] for the
+mediators.
+
+.large-code[
+
+``` r
+model &lt;- multimedia(
+    exper, # dataset
+    lnm_model(), # outcome model
+    glmnet_model(lambda = 0.5, alpha = 0) # mediation model
+)
+```
+]
+
+We fit each model separately, but this can still accommodate a few commonly used
+approaches.
+
+---
+
+
+
+
+
+
+### Bootstrap
+
+We can gauge uncertainty in the estimated effects by re-estimating both mediator
+and outcome models on bootstrap resampled versions of the original data. Here
+are the metabolites with the largest indirect and direct effects in the IBD
+example. 
+.center[
+&lt;img src="figures/lasso_bootstrap_vis-1.svg" width=900/&gt;
+]
+
+---
+
+### Sensitivity Analysis
+
+Sensitivity analysis can show which conclusions might be changed if any
+identification assumptions are violated (listed in the appendix).  For example,
+once we have fit mediation and outcome models, we can simulate according to:
+
+`\begin{align*}
+Y^*(t, m)=\hat{Y}(t, m)+\epsilon^y \\
+M^*(t)=\hat{M}(t)+\epsilon^m .
+\end{align*}`
+
+A caveat is that this only makes sense for continuous outcomes and mediators.
+
+---
+
+.center[
+## Example
+]
+
+---
+
+### Study Background
+
+1. The study [14] carried out an integrative analysis
+to discover metabolite and taxonomic markers with diagnostic or therapeutic
+potential for IBD.
+
+1. They gathered untargeted metabolomics + whole genome sequencing microbiome
+data on a cohort of 220 patients with the disease.
+
+1. This resulted in 8.8K and 11.7K metabolite and genus features, respectively,
+all available on the 
+[Curated Metabolome-Microbiome repository](https://github.com/borenstein-lab/microbiome-metabolome-curated-data/tree/main)
+[15].
+
+---
+
+### Model Setup
+
+1. We applied centered log-ratio and `\(\log\left(1 + x\right)\)` transformations to
+the microbiome and metabolome data, respectively. Both were then filtered to
+between 150 - 200 of the most abundant features.
+
+1. We treat the microbiome as the mediators and the metabolome as the outcome,
+following the discussion from our quote above.
+
+1. Taxonomic composition depends only on treatment status. Each metabolite's
+abundance is treated as a sparse linear function of a few microbes.
+
+.large-code[
+
+``` r
+model &lt;- multimedia(exper, glmnet_model(lambda = 0.1))
+```
+]
+
+---
+
+
+### Indirect Effects
+
+This multidimensional scaling (MDS) is based on only microbiome data. Point size
+reflects metabolite abundances. Associations between metabolites and the MDS
+appear only for outcomes with large indirect effects.
+
+.center[
+&lt;img src="figures/indirect_effects_metabolites.png" width=820/&gt;
+]
+
+---
+
+### Pathwise Indirect Effects
+
+The top pathwise indirect effects are similar to the geometric interpretation we
+saw in the introduction!
+
+.center[
+&lt;img src="figures/indirect_effects_pathwise-metabolites.png" width=/&gt;
+]
+
+---
+
+### Sensitivity Analysis
+
+In this sensitivity analysis, we simulate unmeasured confounding between the
+abundances of the _Enterocloster_ genus (mediator) and the metabolites
+(outcomes) hydrocinnamici acid, lithocholate, and arginine.
+
+.center[
+&lt;img src="figures/indirect_effects_sensitivity.png"/&gt;
+]
+
+---
+
+exclude: true
+
+### Takeaways
+
+1. Mediation analysis is a useful framework for relating environment, host, and
+microbiome features. More generally, counterfactual language can guide
+multi-omics data integration.
+
+1. Modular software design can ensure that a few core statistical components can
+be applied to a wide range of study applications.
+
+
+---
+
+### Thank you!
+
+Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
+
+Package: [go.wisc.edu/830110](https://go.wisc.edu/830110)
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates 072185
+
+---
+
+class: reference
+
+### References
+
+[1] R. Francescone et al. "Microbiome, Inflammation, and Cancer". In: _The Cancer Journal_ 20.3 (May. 2014), p. 181–189. ISSN: 1528-9117. DOI:
+[10.1097/ppo.0000000000000048](https://doi.org/10.1097%2Fppo.0000000000000048). URL:
+[http://dx.doi.org/10.1097/PPO.0000000000000048](http://dx.doi.org/10.1097/PPO.0000000000000048).
+
+[2] J. C. Arthur et al. "Intestinal Inflammation Targets Cancer-Inducing Activity of the Microbiota". In: _Science_ 338.6103 (Oct. 2012), p.
+120–123. ISSN: 1095-9203. DOI: [10.1126/science.1224820](https://doi.org/10.1126%2Fscience.1224820). URL:
+[http://dx.doi.org/10.1126/science.1224820](http://dx.doi.org/10.1126/science.1224820).
+
+[3] Y. L. Lightfoot et al. "Tailoring gut immune responses with lipoteichoic acid-deficient Lactobacillus acidophilus". In: _Frontiers in
+Immunology_ 4 (2013). ISSN: 1664-3224. DOI: [10.3389/fimmu.2013.00025](https://doi.org/10.3389%2Ffimmu.2013.00025). URL:
+[http://dx.doi.org/10.3389/fimmu.2013.00025](http://dx.doi.org/10.3389/fimmu.2013.00025).
+
+[4] V. Celli. "Causal mediation analysis in economics: Objectives, assumptions, models". In: _Journal of Economic Surveys_ 36.1 (Jul. 2021), p.
+214–234. ISSN: 1467-6419. DOI: [10.1111/joes.12452](https://doi.org/10.1111%2Fjoes.12452). URL:
+[http://dx.doi.org/10.1111/joes.12452](http://dx.doi.org/10.1111/joes.12452).
+
+[5] L. Richiardi et al. "Mediation analysis in epidemiology: methods, interpretation and bias". In: _International journal of epidemiology_ 42.5
+(2013), pp. 1511-1519.
+
+[6] M. B. Sohn et al. "Compositional mediation analysis for microbiome studies". In: _The Annals of Applied Statistics_ 13.1 (2019), pp. 661-681.
+
+[7] C. Wang et al. "Estimating and testing the microbial causal mediation effect with high-dimensional and compositional microbiome data". In:
+_Bioinformatics_ 36.2 (Jul. 2019). Ed. by I. Birol, p. 347–355. ISSN: 1367-4811. DOI:
+[10.1093/bioinformatics/btz565](https://doi.org/10.1093%2Fbioinformatics%2Fbtz565). URL:
+[http://dx.doi.org/10.1093/bioinformatics/btz565](http://dx.doi.org/10.1093/bioinformatics/btz565).
+
+[8] K. M. Carter et al. "An Information-Based Approach for Mediation Analysis on High-Dimensional Metagenomic Data". In: _Frontiers in Genetics_ 11
+(Mar. 2020). ISSN: 1664-8021. DOI: [10.3389/fgene.2020.00148](https://doi.org/10.3389%2Ffgene.2020.00148). URL:
+[http://dx.doi.org/10.3389/fgene.2020.00148](http://dx.doi.org/10.3389/fgene.2020.00148).
+
+[9] K. Imai et al. "A general approach to causal mediation analysis." In: _Psychological methods_ 15.4 (2010), p. 309.
+
+[10] K. Imai et al. "Causal mediation analysis using R". In: _Advances in social science research using R_. Springer, 2010, pp. 129-154.
+
+[11] J. Atchison et al. "Logistic-normal distributions: Some properties and uses". In: _Biometrika_ 67.2 (1980), pp. 261-272.
+
+[12] F. Xia et al. "A logistic normal multinomial regression model for microbiome compositional data analysis". In: _Biometrics_ 69.4 (2013), pp.
+1053-1063.
+
+[13] R. Tibshirani. "Regression shrinkage and selection via the lasso". In: _Journal of the Royal Statistical Society Series B: Statistical
+Methodology_ 58.1 (1996), pp. 267-288.
+
+[14] E. A. Franzosa et al. "Gut microbiome structure and metabolic activity in inflammatory bowel disease". In: _Nature Microbiology_ 4.2 (Dec.
+2018), p. 293–305. ISSN: 2058-5276. DOI: [10.1038/s41564-018-0306-4](https://doi.org/10.1038%2Fs41564-018-0306-4). URL:
+[http://dx.doi.org/10.1038/s41564-018-0306-4](http://dx.doi.org/10.1038/s41564-018-0306-4).
+
+[15] E. Muller et al. "The gut microbiome-metabolome dataset collection: a curated resource for integrative meta-analysis". In: _npj Biofilms and
+Microbiomes_ 8.1 (Oct. 2022). ISSN: 2055-5008. DOI: [10.1038/s41522-022-00345-5](https://doi.org/10.1038%2Fs41522-022-00345-5). URL:
+[http://dx.doi.org/10.1038/s41522-022-00345-5](http://dx.doi.org/10.1038/s41522-022-00345-5).
+
+---
+
+class: reference
+
+### References
+
+
+
+---
+
+### Identification
+
+We need to generalize the ignorability to support causal identification of these
+three effects. The complete required conditions are given in the backup slides.
+
+.center[
+&lt;img src="figures/identification.png"/&gt;
+]
+
+---
+
+### Identification
+
+While it's okay for mediators to be correlated with one another (e.g., due to a
+latent confounder), identification is only possible if the mediators do not
+influence one another.
+
+.center[
+&lt;img src="figures/uncausally-correlated.png" width=800/&gt;
+]
+
+---
+
+
+### Identification of Overall Direct/Indirect Effects
+
+These sequential ignorability assumptions are sufficient for identification of
+overall direct and indirect effects [9]. For any 
+`\(t, t', x\)`, we require,
+
+1. Treatment ignorability: `\(\left\{Y\left(t^{\prime}, m\right), M(t)\right\} \perp T \mid X=x\)`
+1. Mediator ignorability: `\(Y\left(t^{\prime}, m\right) \perp M(t) \mid T=t, X=x\)`
+1. Positivity: `\(\mathbb{P}(T=t \mid X=x)&gt;0\)`
+1. Positivity for mediator: `\(p_{M(t)}(m \mid T=t, X=x)&gt;0\)`
+
+---
+
+### Identification of Pathwise Indirect Effects
+
+Pathwise indirect effects require a generalization of sequential ignorability
+assumptions [16; 17]. For any 
+`\(t, t', t'', m, x, w\)` we require,
+
+1. Treatment ignorability: `\(\left\{Y(t, m, w), M_k\left(t^{\prime}\right), M_{-k}\left(t^{\prime \prime}\right)\right\} \perp T \mid X=x\)`
+1. Mediator ignorability: `\(Y\left(t^{\prime}, m, M_{-k}\left(t^{\prime}\right)\right) \perp M_k \mid T=t, X=x\)`
+1. Mediator `\(k\)` ignorability: `\(Y\left(t^{\prime}, M_k\left(t^{\prime}\right), w\right) \perp M_{-k} \mid T=t, X=x\)`
+1. Positivity: `\(\mathbb{P}(T=t \mid X=x)&gt;0\)`
+1. Mediator positivity: `\(p_{\left(M_k t, M_{-k}(t)\right)}(m, w \mid T=t, X=x)&gt;0\)`
+
+---
+
+### Alternative: Hurdle Model
+
+The interface makes it easy to swap in new models. For example, here we replaced
+the lasso regression on log-normalized metabolite abundances with a hurdle model
+that directly models zero-inflated nonnegative data.
+
+.large-code[
+
+``` r
+model &lt;- multimedia(
+    exper2, # version without log transformation
+    brms_model(family = hurdle_lognormal()) # new outcome model
+) |&gt;
+    estimate(exper2)
+```
+]
+
+---
+
+### Alternative: Hurdle Model
+
+.center[
+&lt;img src="figures/hurdle_model_indirect.png" width=700/&gt;
+]
+
+---
+
+### Integration Challenge
+
+Our interest in this project came from a re-analysis of a gut-brain axis
+microbiome study. Participants were randomized into either a mindfulness
+intervention or a control group. In this case, the the taxonomic community
+composition is an outcome, and the survey measurements are mediators.
+
+.center[
+&lt;img src="figures/mediation-dag-mindfulness.png" width=550/&gt;
+]
+
+---
+
+### Available Models
+
+The LNM model is designed to have multivariate responses. The remaining options
+apply the same type of model in parallel across all outcomes.
+
+1. `lnm_model`: A logistic normal multinomial model [18].
+
+1. `glmnet_model`: A call to `glmnet` for lasso or elastic net regression 
+[19].
+
+1. `rf_model`: A call to `ranger` for random forest regression 
+[20].
+
+1. `brms_model`: A call to `brms`, which can be customized likelihoods for
+`lognormal()`, `hurdle_negbinomial()`, `cox()`, etc. [21].
+
+---
+
+### Example: Logistic-Normal Multinomial Mediation
+
+The LNM uses a log-ratio transformation to relate predictors to a multinomial
+probability vector [22].
+
+.pull-left[
+`\begin{align*}
+x_{i} \vert z_i &amp;\sim \Mult\left(N_{i}, \varphi^{-1}\left(z_{i}\right)\right) \\
+z_i &amp;\sim \Gsn\left(\mu, \Sigma\right)
+\end{align*}`
+where `\(\varphi^{-1}\left(z\right) \propto\left(\exp{z_{1}}, \dots, \exp{z_{K-1}}, 1\right)\)`
+]
+
+.pull-right[
+&lt;img src="figures/lnm.png" width="2482" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Example: Logistic-Normal Multinomial Mediation
+
+If we want to treat microbiome composition as a mediator, then we can apply this
+transformation in the mediation model (see also [23]).
+
+`\begin{align*}
+M \sim \Mult\left(N_{i}, \varphi^{-1}\left(Z\right)\right) \\
+Z \sim \Gsn\left(\alpha T + \zeta_{M}^\top X, \Sigma\right)
+\end{align*}`
+
+.center[
+&lt;img src="figures/lnm.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+### Direct Effects
+
+.pull-left[
+These are the metabolites with the largest direct effects from our bootstrap
+analysis. Their variation in abundance can't be attributed to microbiome
+community changes.
+]
+
+.pull-right[
+&lt;img src="figures/ibd_direct_effects.svg" width=500/&gt;
+]
+
+---
+
+### Future Work: Mediation with Dimensionality Reduction
+
+If the mediators are effectively low-dimensional, then a dimensionality
+reduction step on the mediators can improve statistical efficiency 
+[24; 25]. For example, we can transform the
+high-dimensional mediators into low-dimensional versions using (reguarlized)
+PCA.
+
+`\begin{align*}
+M&amp;=\alpha T+\zeta_M^{\top} X+E\\
+Y&amp;=\eta T+\beta^{\top} M+\zeta_Y^{\top} X+\epsilon
+\end{align*}`
+
+---
+
+### Future Work: Mediation with Dimensionality Reduction
+
+The first step is to take a PCA of the residuals from the mediator model.
+
+`\begin{align*}
+\hat{E}_i &amp;= M_i - \hat{\alpha} T_i+\hat{\zeta}_M^{\top} X_i\\
+\hat{V} &amp;:= \text{PrincipalComponents}\begin{pmatrix}\hat{E}_1 \\ \vdots \\ \hat{E}_{n}\end{pmatrix}
+\end{align*}`
+
+Then we can fit the outcome model where the mediators are replaced with their
+low-dimensional projections.
+
+`\begin{align*}
+Y &amp;= \eta T + \beta^\top \left(\hat{V}^\top P_{T}^{\perp}M\right) + \zeta_Y^\top X
+\end{align*}`
+
+---
+
+### Future Work: Mediation with Dimensionality Reduction
+
+This is a geometric representation of the procedure. The mediators lie on
+low-dimensional subspaces. The outcome model regresses onto the subspace
+coordinates.
+
+.center[
+&lt;img src="figures/pc-mediation.png" width=500/&gt;
+]
+
+---
+
+### Future Work: Mediation with Dimensionality Reduction
+
+This has previously been applied to support mediation analysis with brain
+imaging data [24].
+
+.center[
+&lt;img src="figures/zhao_mediation.png" width=550/&gt;
+]
+
+---
+
+### Synthetic Null Mediators
+
+Here is the same principle applied to the mindfulness study. The synthetic null
+survey responses have been generated from mediation models with `\(\alpha = 0\)`.
+
+.center[
+&lt;img src="figures/mindfulness-altered.png" width=780/&gt;&lt;br/&gt;
+&lt;span style="font-size: 24px;"&gt;
+The middle panel comes from a synthetic null: `\(T \nrightarrow M \to Y\)`.
+&lt;/span&gt;
+]
+
+---
+
+.pull-three-quarters-left[
+&lt;img src="figures/alteration_plot-1.png" width=720/&gt;
+]
+
+.pull-three-quarters-right[
+These are analogous comparisons for the simulated microbiomes. Sampling from the
+fitted mediation models helps with model checking.
+]
+
+---
+
+### Sensitivity Analysis
+
+We draw `\(\left(\epsilon^y, \epsilon^m\right)\)` from a Gaussian with mean zero and covariance,
+`\begin{align*}
+\Sigma(\rho, G):=\left(\begin{array}{cc}
+\operatorname{diag}\left(\hat{\sigma}_M^2\right) &amp; \rho \hat{\sigma}_M \hat{\sigma}_Y^{\top} \odot \mathbf{1}_G \\
+\rho \hat{\sigma}_Y \hat{\sigma}_M^{\top} \odot \mathbf{1}_G^{\top} &amp; \operatorname{diag}\left(\hat{\sigma}_Y^2\right)
+\end{array}\right)
+\end{align*}`
+where `\(\mathbf{1}_{G} \in \{0, 1\}^{K \times J}\)` is an indicator over
+mediator-outcome pairs `\(G\)` over which to test sensitivity.
+
+---
+
+### Model Alteration
+
+The package provides syntax for altering models after they've been estimated.
+We can set specific coefficients to zero or re-estimate with new model
+specifications.
+
+.center[
+&lt;img src="figures/visualize_long-1.png"/&gt;
+]
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
