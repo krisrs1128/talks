@@ -14,7 +14,7 @@ output:
 
 class: title
 
-# Modular Software for Mediation Analysis of Microbiome Data
+# Multimedia: An R package for multimodal mediation analysis
 
 <style>
 .slide-background {
@@ -129,37 +129,22 @@ What if we want to go beyond a linear model?
 
 ---
 
-### Counterfactual Notation
 
-Under the counterfactual causal mediation analysis framework 
-`r Citep(bib, c("imai2010general", "imai2010causal"))`, we imagine
-counterfactuals for both mediators and outcomes, depending on treatments that we
-may never have seen.
-
-_Mediator under treatment $t$_: 
-\begin{align*}
-M\left(t\right)
-\end{align*}
-
-_Outcome under treatment combination_ $\left(t, t'\right)$:
-\begin{align*}
-Y\left(t, M\left(t'\right)\right)
-\end{align*}
-
-Note that this is not observable whenever $t \neq t'$, but we can reason about
-it abstractly.
-
----
-
-### Geometric Interpretation
+### Nonlinear Mediation Analysis
 
 <img src="figures/geometric_1.png" width=800/>
 
 ---
 
-### Geometric Interpretation
+### Nonlinear Mediation Analysis
 
 <img src="figures/geometric_2.png" width=800/>
+
+---
+
+### Nonlinear Mediation Analysis
+
+<img src="figures/geometric_3.png" width=800/>
 
 ---
 
@@ -255,6 +240,23 @@ approaches.
 
 ---
 
+### Available Models
+
+The LNM model is designed to have multivariate responses. The remaining options
+apply the same type of model in parallel across all outcomes.
+
+1. `lnm_model`: A logistic normal multinomial model `r Citep(bib, "Sankaran2024")`.
+
+1. `glmnet_model`: A call to `glmnet` for lasso or elastic net regression 
+`r Citep(bib, "glmnet")`.
+
+1. `rf_model`: A call to `ranger` for random forest regression 
+`r Citep(bib, "ranger")`.
+
+1. `brms_model`: A call to `brms`, which can be customized likelihoods for
+`lognormal()`, `hurdle_negbinomial()`, `cox()`, etc. `r Citep(bib, "brms")`.
+
+---
 
 ```{r, echo = FALSE}
 filter_mean <- function(x, threshold = 3) {
@@ -556,21 +558,25 @@ composition is an outcome, and the survey measurements are mediators.
 
 ---
 
-### Available Models
+### Counterfactual Notation
 
-The LNM model is designed to have multivariate responses. The remaining options
-apply the same type of model in parallel across all outcomes.
+Under the counterfactual causal mediation analysis framework 
+`r Citep(bib, c("imai2010general", "imai2010causal"))`, we imagine
+counterfactuals for both mediators and outcomes, depending on treatments that we
+may never have seen.
 
-1. `lnm_model`: A logistic normal multinomial model `r Citep(bib, "Sankaran2024")`.
+_Mediator under treatment $t$_: 
+\begin{align*}
+M\left(t\right)
+\end{align*}
 
-1. `glmnet_model`: A call to `glmnet` for lasso or elastic net regression 
-`r Citep(bib, "glmnet")`.
+_Outcome under treatment combination_ $\left(t, t'\right)$:
+\begin{align*}
+Y\left(t, M\left(t'\right)\right)
+\end{align*}
 
-1. `rf_model`: A call to `ranger` for random forest regression 
-`r Citep(bib, "ranger")`.
-
-1. `brms_model`: A call to `brms`, which can be customized likelihoods for
-`lognormal()`, `hurdle_negbinomial()`, `cox()`, etc. `r Citep(bib, "brms")`.
+Note that this is not observable whenever $t \neq t'$, but we can reason about
+it abstractly.
 
 ---
 
