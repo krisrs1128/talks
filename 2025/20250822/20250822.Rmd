@@ -1,0 +1,594 @@
+---
+title: "Intervention Analysis with Mirrors"
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+$\def\Dir{\text{Dir}}$
+$\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\def\simplex{\Delta}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\PD{\mathrm{PD}}$
+$\def\FDP{\mathrm{FDR}}$
+$\newcommand\mbb[1]{\mathbb{#1}}$
+$\newcommand\mbf[1]{\mathbf{#1}}$
+$\def\mc#1{\mathcal{#1}}$
+$\def\mrm#1{\mathrm{#1}}$
+$\def\absarg#1{\left|#1\right|}$
+<div style = "position:fixed; visibility: hidden">
+$$\require{color}\definecolor{myred}{rgb}{0.705882352941177, 0.341176470588235, 0.36078431372549}$$
+$$\require{color}\definecolor{mygreen}{rgb}{0.352941176470588, 0.541176470588235, 0.501960784313725}$$
+</div>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{#1}}", 1],
+      mygreen: ["{\\color{mygreen}{#1}}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+<style>
+.myred {color: #B4575C;}
+.mygreen {color: #5A8A80;}
+</style>
+
+```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
+library(xaringancolor)
+setup_colors(
+  myred = "#B4575C",
+  mygreen = "#5A8A80"
+)
+
+library(flair)
+myred <- "#B4575C"
+mygreen <- "#5A8A80"
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+min_theme <- theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+    axis.text = element_text(size = 14),
+    strip.text = element_text(size = 16),
+    axis.title = element_text(size = 16),
+    legend.position = "bottom"
+  )
+theme_set(min_theme)
+
+# overwrite some default scales in ggplot2
+scale_fill_continuous <- function(...) scico::scale_fill_scico(..., palette = "lapaz", direction = -1)
+scale_colour_discrete <- function(...) ggplot2::scale_color_brewer(..., palette = "Set2")
+scale_x_continuous <- function(...) ggplot2::scale_x_continuous(..., expand = c(0, 0))
+scale_y_continuous <- function(...) ggplot2::scale_y_continuous(..., expand = c(0, 0))
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Microbiome Intervention Analysis with `mbtransfer`
+
+<div id="subtitle">
+Kris Sankaran <br/>
+(w/ Pratheepa Jeganathan)<br/>
+22 | August | 2025 <br/>
+Lab: <a href="https://go.wisc.edu/pgb8nl">https://measurement-and-microbes.org</a> <br/>
+</div>
+
+<div id="subtitle_right">
+Functional and Longitudinal Analysis<br/>
+EcoSta 2025</br>
+Slides: <a href="https://go.wisc.edu/7kgrbo">go.wisc.edu/7kgrbo</a><br/>
+Paper: <a href=" https://go.wisc.edu/5x8k89">go.wisc.edu/5x8k89</a>
+</div>
+
+<!-- 20 minute talk -->
+
+---
+
+
+### Motivation: Interaction in Dynamic Communities
+
+Microbiome communities are dynamic `r Citep(bib, c("Dethlefsen2010", "Gerber2014"))`. More precise knowledge of how it changes 
+can guide microbiome design `r Citep(bib, c("2024", "Tian2022"))`.
+
+<img src="figure/curtis-opening.png"/>
+<span style="font-size: 18px;">
+John Curtis was a UW - Madison Botany
+professor who studied how forest ecosystems change in response to environmental
+pressures (and created the Bray-Curtis distance). Figure from `r Citep(bib, "curtis_1959")`.
+</span>
+
+---
+
+### Interventions
+
+To disentangle these dynamics, longitudinal experimental designs with natural or
+induced interventions have gained popularity. The questions are:
+
+1. **Who**: Which taxa are affected by an intervention?
+1. **When**: Are the effects immediate? Lagged? Do they persist?
+1. **Why**: Are there host factors that mediate the effect?
+
+<img src="figure/motivation.png"/>
+<span style="font-size: 18px;">
+Examples of microbiomes responding to environmental shifts, discussed in our supplement S2 `r Citep(bib, "Sankaran2024")`. 
+</span>
+
+---
+
+class: middle
+
+.center[
+## Approach
+]
+
+---
+
+### Ingredients
+
+1. **Transfer Functions** `r Citep(bib, "box1975intervention")`: Model
+intervention and interaction effects across time horizons using a
+high-dimensional linear model.
+
+1. **Mirror Statistics** `r Citep(bib, "Dai2022")`: Use agreement across data
+splits to allow false discovery rate-controlled inference of intervention
+effects.
+
+.center[
+<img src="figure/approach.png" width=800/>
+]
+
+---
+
+### Transfer Functions
+
+.pull-left[
+Classical transfer function models are autoregressive models `r Citep(bib, "box1975intervention")`:
+
+$$y_{t} = \sum_{p = 1}^{P} A_{p} y_{t - p} + \sum_{q = 0}^{Q - 1} B_{q}w_{t - q} + \epsilon_{t}$$
+
+where $y_{t}$ is the series of interest and $w_{t}$ encodes the intervention.
+
+Unlike gLV models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.
+]
+
+.pull-right[
+```{r, out.width = 340}
+include_graphics("figure/pulse.png")
+```
+<span style="font-size: 18px;">
+In Box and Tiao `r Citep(bib, "box1975intervention")`, $y_{t}$ are ozone concentrations and $w_{t}$ are new regulations.
+ </span>
+
+]
+
+---
+
+
+### Transfer Functions for Microbial Communities
+
+We estimate a separate transfer function model $f_{j}$ for each taxon:
+
+$$\mathbf{y}_{t}^{(i)} = \mathbf{f}\left(\mathbf{Y}^{(i)}_{t - 1}, \mathbf{W}^{(i)}_{t}, \mathbf{z}^{(i)} \right) + \mathbf{\epsilon}_{t}^{(i)}$$
+
+For each coordinate, we use a regularized linear boosting model `r Citep(bib, "Friedman2001")` with candidate interactions found in an initial prescreen `r Citep(bib, "JMLR:v19:16-515")`.
+
+|Variable| Interpretation |
+|--|---|
+| $\mathbf{y}_{t}^{(i)} \in \reals^{J}$ | The microbiome community profiles in subject $i$ at time $t$. |
+| $\mathbf{Y}^{(i)}_{t - 1} \in \reals^{J \times P}$ | The length $P$ memory of the $i^{th}$ subject's community. |
+| $\mathbf{W}^{(i)}_{t - 1} \in \reals^{D \times Q}$ | The length $Q$ memory of the $i^{th}$ subject's interventions. |
+| $\mathbf{z}^{(i)} \in \reals^{S}$ | Subject-level covariates that can interact with $\mathbf{Y}_{t - 1}^{(i)}$ and $\mathbf{W}_{t}^{(i)}$.|
+
+---
+
+### Mirror Statistics
+
+1. Which taxa $j$ are affected by the external perturbation, and how long do the
+perturbations last?
+
+2. We can use the approach of Dai et al. `r Citep(bib, "Dai2022")` to gauge statistical significance of effects that are not available in model
+coefficients.
+.center[
+<img src="figure/trajectories_significance.png" width=700/>
+]
+
+---
+
+### General Approach: Mirror Statistics
+
+Split the data into $\mathcal{D}^{(1)} = \left(\mathbf{X}^{(1)}, \mathbf{y}^{(1)}\right)$ and $\mathcal{D}^{(2)} = \left(\mathbf{X}^{(2)}, \mathbf{y}^{(2)}\right)$ and check for agreement in the estimates $\hat{\mathbf{\beta}}^{(1)}$ and $\hat{\mathbf{\beta}}^{(2)}$ across splits.
+
+<img src="figure/mirror-explanation1.png" width=800/>
+
+---
+
+### Test Statistic for Linear Model
+
+To detect whether $\beta_{j} \neq 0$, we can use the statistic:
+
+.center[
+$M_{j} = \text{sign}\left(\hat{\beta}^{(1)}_{j}\hat{\beta}^{(2)}_{j}\right)\left[\left|\hat{\beta}_{j}^{(1)}\right| + \left|\hat{\beta}_{j}^{(2)}\right|\right]$
+]
+
+<img src="figure/mirror-explanation1.png" width=800/>
+
+---
+
+### FDR Estimation
+
+To choose a threshold $\tau$, estimate the false discovery rate:
+
+.center[
+$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} < -\tau\}\right|}{\left|\left\{j : M_{j} > \tau\right\}\right|}$$
+]
+
+<img src="figure/mirror-explanation2.png" width=800/>
+
+---
+
+### FDR Estimation
+
+To choose a threshold $\tau$, estimate the false discovery rate:
+
+.center[
+$$\widehat{\FDP}\left(\tau\right) = \frac{\left|\{j : M_{j} < -\tau\}\right|}{\left|\left\{j : M_{j} > \tau\right\}\right|}$$
+]
+
+.pull-left[
+<img src="figure/mirror-explanation2.png" width=500/>
+]
+.pull-right[
+Assumptions:
+* Symmetry of $M_{j}$ under the null
+* Independence of $M_{j}$
+]
+
+---
+
+### Partial Dependence
+
+For transfer function models, we need an alternative to $\beta_{j}$. We estimate the partial dependence `r Citep(bib, c("Friedman2001", "JMLR:v19:18-416"))` of the intervention $\mathbf{W}_{t}$ across time horizons.
+
+.center[
+$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\myred{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right)} - \mygreen{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)}\right].$$
+<img src="figure/pd-1.png" width=650/>
+]
+
+---
+
+### Partial Dependence
+
+For transfer function models, we need an alternative to $\beta_{j}$. We estimate the partial dependence `r Citep(bib, c("Friedman2001", "JMLR:v19:18-416"))` of the intervention $\mathbf{W}_{t}$ across time horizons.
+
+.center[
+$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\myred{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right)} - \mygreen{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)}\right].$$
+<img src="figure/pd-2.png" width=650/>
+]
+
+---
+
+### Partial Dependence
+
+For transfer function models, we need an alternative to $\beta_{j}$. We estimate the partial dependence `r Citep(bib, c("Friedman2001", "JMLR:v19:18-416"))` of the intervention $\mathbf{W}_{t}$ across time horizons.
+
+.center[
+$$\PD_{j}^{(s)} = \frac{1}{\absarg{\mathcal{D}^{(s)}}}\sum_{d_{t}^{(i)} \in \mathcal{D}^{(s)}}\left[\myred{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*1_{Q}, \*z^{(i)}\right)} - \mygreen{\hat{f}_{j}^{(s)}\left(\*Y^{(i)}_{t}, \*0_{Q}, \*z^{(i)}\right)}\right].$$
+<img src="figure/pd-3.png" width=650/>
+]
+
+---
+
+### Partial Dependence Mirrors
+
+Our definition uses $\mathrm{PD}_{j}^{(s)}$ in place of $\hat{\beta}_{j}^{(s)}$ from the
+usual definition.
+
+\begin{align*}
+	M_{j} = \text{sign}\left(\PD_{j}^{(1)}\PD_{j}^{(2)}\right)\left[\absarg{\PD_{j}^{(1)}} + \absarg{\PD_{j}^{(2)}}\right]
+\end{align*}
+
+---
+
+class: middle
+
+.center[
+## Experiments
+]
+
+---
+
+### Evaluation Criteria
+
+1. **Forecasting**: How do methods compare in their ability to predict microbial
+community response to interventions?
+
+1. **Selection**: How do methods compare in their FDR control and power in
+detecting affected taxa?
+
+.center[
+<img src="figure/inference-pred.png" width=850/>
+]
+
+---
+
+### Simulation Parameters
+
+<img src="figure/dimensionality.png" width=50/> Number of (nonnull) taxa: How do dimensionality and proportion of nulls influence performance?
+
+<img src="figure/normal_curve.png" width=80/> Signal strength: How are inference and forecasting are affected by intervention strength?
+
+<img src="figure/transform.png" width=40/> Normalization strategy: We can apply methods to either raw or transformed data.
+
+<img src="figure/phylo.png" width=50/> Phylogenetic correlation: We include correlated taxa that reflect shared evolutionary ancestry.<br/>
+
+<img src="figure/reads.png" width=90/> Sequencing depth: In a typical experiment, not all samples are sequenced to the same read depth.
+
+---
+
+### Generative Mechanism
+
+Negative binomial models often fit microbiome data well `r Citep(bib, c("Zhang2017", "Jiang2019", "Mishra2022"))`. We use an
+autoregressive version:
+
+$$\mathbf{y}_{t}^{(i)}\vert\theta_{t}^{(i)},\mathbf{\varphi},d^{(i)}\sim\text{NB}\left(d^{(i)}\exp{\theta_{t}^{(i)}},\mathbf{\varphi}\right)\\\theta_{t}^{(i)}=\sum_{p=1}^{P}A_{p}\theta_{t-p}^{(i)}+\sum_{q=1}^{Q}\left(B_{q}+C_{q}\odot \mathbf{z}^{(i)}\right)\mathbf{w}_{t-q}^{i}+\mathbf{\epsilon}_{t}^{(i)}\\d^{(i)}\sim\Gamma\left(10,\lambda\right)\\\epsilon_{t}^{(i)}\sim\mathcal{N}\left(0,\Sigma\left(\alpha\right)\right)$$
+
+<!-- \Sigma_{ij}\left(\alpha\right) = \exp{}$ -->
+
+---
+
+### Comparison
+
+Forecasting
+
+1. `MDSINE2` `r Citep(bib, c("Bucci2016", "pmlr-v80-gibson18a", "Gibson2021"))`: A Bayesian nonparametric negative binomial autoregressive model for discovering taxonomic interactions.
+1. `fido` `r Citep(bib, c("Silverman2018", "JMLR:v23:19-882"))`: An extended multinomial regression model that we adapted to forecasting.
+
+Selection
+
+1. `DESeq2` `r Citep(bib, "Love2014")` with main and interaction effects for $\mathbf{w}_{t}$ and $\mathbf{z}$.
+1. Two-Sample $t$-test comparing the four $\mathbf{y}_{t}$ for the first four $t$ after $\mathbf{w}_{t} = 1$ and with all other $\mathbf{y}_{t}$
+
+
+---
+
+
+### Prediction Performance: $\alpha = 0.1, \lambda = 0.1$
+
+<img src="figure/simulation_results_config1.png" width=900/>
+
+---
+
+### Prediction Performance: $\alpha = 10, \lambda = 0.1$
+
+<img src="figure/simulation_results_config3.png" width=900/>
+
+---
+
+### All Settings
+
+<img src="figure/Fig4.png" width=1100/>
+
+---
+
+### Power and FDR
+
+<img src="figure/Fig6.png" width=900/>
+
+---
+
+class: middle
+
+.center[
+## Data Analysis
+]
+
+---
+
+### Data Description
+
+David et al. `r Citep(bib, "David2013")` investigated short-term change in
+microbiome composition and function in response to diet perturbations.
+
+.pull-three-quarters-left[
+* 20 participants observed for 15 days.
+* 15 days = 4 pre + 5 intervention + 6 post.
+* Specially prepared animal- (10 subjects) and plant-based (10 subjects) diets.
+]
+
+.pull-three-quarters-right[
+<img src="figure/diet-study.png" width=300/>
+]
+
+---
+
+### In- and Out-of-Sample Prediction
+
+<img src="figure/Fig7.png" width=750/><br/>
+<span style="font-size: 18px;">
+Forecasting performance across subsets of taxa and time lags. Out-of-sample
+performance is strongest among highly abundant taxa (top row) and short-term
+time lags (left column).
+</span>
+
+---
+
+### Mirror Statistics
+
+<img src="figure/S1_Fig12.png"/>
+
+<span style="font-size: 18px;">
+Boxplots of $M_{j}$ that are larger than zero give evidence for significant intervention effects.
+</span>
+
+---
+
+### Estimates and Data
+
+For each taxon, we can compare the partial dependence profiles when the diet
+intervention is or is not applied.
+
+<img src="figure/Fig8.png" width=900/>
+<span style="font-size: 18px;"><br/>
+Estimates $\mathrm{PD}_{j}$ (top panel) and underlying data (bottom panel) for taxa significant effects.
+</span>
+
+---
+
+### Takeaways
+
+`mbtransfer` supports FDR-controlled inference across multiple time horizons for
+models of dynamic microbiome data.
+
+.pull-three-quarters-left[
+<img src="figure/Fig1.png" width=700/>
+]
+
+.pull-three-quarters-right[
+[Paper](https://go.wisc.edu/5x8k89)<br/>
+<img src="figure/qr-paper.png" width=80/>
+<br/>
+<br/>
+<br/>
+[Package](https://krisrs1128.github.io/mbtransfer)<br/>
+<img src="figure/qr-package.png" width=80/>
+]
+
+---
+
+class: background-rivers
+
+.center[
+### Thank you!
+]
+
+* Collaborators: Pratheepa Jeganathan (McMaster University)
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates 072185
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 29)
+```
+
+---
+
+### Phylogenetic Covariance
+
+.center[
+<img src="figure/phylogenetic_covariance.png" width=700/>
+]
+
+---
+
+### Example Trajectories
+
+.center[
+<img src="figure/Fig5.png" width=1000/>
+]
+
+---
+
+### Computation Time
+
+.center[
+<img src="figure/S1_Fig7.png" width=1000/>
+]
+
+---
+
+### Transfer Functions
+
+.pull-left[
+1. The pattern of autoregressive coefficients determines $y_{t}$'s response to
+ "pulse" and "step" interventions.
+
+1. Note that, unlike standard generalized Lotka-Volterra models `r Citep(bib, c("Gonze2018", "Joseph2020"))`, they can model lagged intervention effects.
+]
+
+.pull-right[
+```{r, out.width = 400}
+include_graphics("figure/intervention-analysis.png")
+```
+]
+
+---
+
+### Generative Mechanism
+
+.center[
+<img src="figure/simulated_data.png" width=800/><br/>
+]
+<span style="font-size: 18px">
+Taxonomic abundances in the simulated negative binomial data, transformed to
+taxon-specific quantiles. The intervention windows are surrounded in red. Only
+the top three rows have true intervention effects.
+</span>
+
+---
+
+### Figure Attributions
+
+math function by Ralf Schmitzer from <a href="https://thenounproject.com/browse/icons/term/math-function/" target="_blank" title="math function Icons">Noun Project</a> (CC BY 3.0)
+
+biological tree by Leslie Coonrod from <a href="https://thenounproject.com/browse/icons/term/biological-tree/" target="_blank" title="biological tree Icons">Noun Project</a> (CC BY 3.0)
+
+standard normal distribution by Nick Taras from <a href="https://thenounproject.com/browse/icons/term/standard-normal-distribution/" target="_blank" title="standard normal distribution Icons">Noun Project</a> (CC BY 3.0)
+
+microbiome by Stefanie Peschel from <a href="https://thenounproject.com/browse/icons/term/microbiome/" target="_blank" title="microbiome Icons">Noun Project</a> (CC BY 3.0)
