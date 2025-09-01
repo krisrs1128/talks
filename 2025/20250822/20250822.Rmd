@@ -125,25 +125,10 @@ Paper: <a href=" https://go.wisc.edu/5x8k89">go.wisc.edu/5x8k89</a>
 
 ---
 
-
-### Motivation: Interaction in Dynamic Communities
-
-Microbiome communities are dynamic `r Citep(bib, c("Dethlefsen2010", "Gerber2014"))`. More precise knowledge of how it changes 
-can guide microbiome design `r Citep(bib, c("2024", "Tian2022"))`.
-
-<img src="figure/curtis-opening.png"/>
-<span style="font-size: 18px;">
-John Curtis was a UW - Madison Botany
-professor who studied how forest ecosystems change in response to environmental
-pressures (and created the Bray-Curtis distance). Figure from `r Citep(bib, "curtis_1959")`.
-</span>
-
----
-
 ### Interventions
 
-To disentangle these dynamics, longitudinal experimental designs with natural or
-induced interventions have gained popularity. The questions are:
+To disentangle dynamics of the microbiome, longitudinal experimental designs
+with natural or induced interventions have gained popularity. The questions are:
 
 1. **Who**: Which taxa are affected by an intervention?
 1. **When**: Are the effects immediate? Lagged? Do they persist?
