@@ -66,15 +66,11 @@ helping us be more critical and creative.
 
 In `r Citep(bib, "Fukuyama2022")`, we studied navigation across ensembles of topic models.
 
-.center[
-```{r, out.width = 850}
-include_graphics("figures/alto_sketches_annotated alignment.png")
-```
+<img src="figures/alto_sketches_annotated_alignment.png" width=850/>
 
 <span style="font-size: 20px;">
 In the Sankey diagram, columns are models and rectangles are topics.
 </span>
-]
 
 ---
 
@@ -84,9 +80,7 @@ The patterns of flow on this diagram are useful for deciding on the number of
 topics present in a dataset.
 
 .center[
-```{r}
-include_graphics("figures/lda-combined.png")
-```
+<img src="figures/lda-combined.png" width=1000/>
 
 <span style="font-size: 20px;">
 The diagnostics in this simulation suggest that the true $K$ is 5.
@@ -97,24 +91,24 @@ The diagnostics in this simulation suggest that the true $K$ is 5.
 
 ### Themes: Visualization
 
-In `r Citep(bib, "Sankaran2025")`, we used the focus-plus-context principle to
+In `r Citep(bib, "distortions")`, we used the focus-plus-context principle to
 interactively explore how dimensionality reduction methods like UMAP distort the
 intrinsic geometry of the data.
 
 .center[
-  <img src="figures/pbmc_isometry.gif" width=800/>
+  <img src="figures/pbmc_isometry.gif" width=550/>
 ]
 
 ---
 
 ### Themes: Visualization
 
-In `r Citep(bib, "Sankaran2025")`, we used the focus-plus-context principle to
+In `r Citep(bib, "distortions")`, we used the focus-plus-context principle to
 interactively explore how dimensionality reduction methods like UMAP distort the
 intrinsic geometry of the data.
 
 .center[
-  <img src="figures/pbmc_boxplot.gif" width=800/>
+  <img src="figures/pbmc_boxplot.gif" width=550/>
 ]
 
 ---
@@ -125,7 +119,7 @@ We wrote a review paper on designing simulators for microbiome data
 `r Citep(bib, "Sankaran2024")` and are actively developing new methods and
 software on this theme. 
 
-<img src="figures/simulation_summary.png"/>
+<img src="figures/simulation_summary.png" width=900/>
 
 ---
 
@@ -173,10 +167,10 @@ better understand these gut-brain connections.
 
 ### Reaching Out
 
-* You can learn more at [https://go.wisc.edu/pgb8nl](https://go.wisc.edu/pgb8nl).
+* You can learn more at [https://measurement-and-microbes.org](https://go.wisc.edu/pgb8nl).
     - Simulation: `r Citep(bib, c("Sankaran2024", "Sankaran2023", "Sankaran2018", "krisrs1128ChapterIntroduction"))`
     - Interfaces: `r Citep(bib, c("Jiang2025", "interpretability"))`
-    - Visualization: `r Citep(bib, c("Sankaran2025", "Fukuyama2022", "Sankaran2018", "Sankaran2019"))`
+    - Visualization: `r Citep(bib, c("distortions", "Fukuyama2022", "Sankaran2018", "Sankaran2019"))`
 
 * I enjoy working with students with different educational levels and backgrounds.
 
@@ -188,14 +182,5 @@ class: reference
 ### References
 
 ```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 1, end = 11)
-```
-
----
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 12, end = 21)
+PrintBibliography(bib, start = 1, end = 12)
 ```
