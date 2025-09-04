@@ -26,7 +26,7 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="links">
-Slides: https://go.wisc.edu/05h9p7<br>
+Slides: https://go.wisc.edu/99ndjd<br>
 Lab Site: https://measurement-and-microbes.org
 </div>
 
