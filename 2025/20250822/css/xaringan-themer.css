@@ -244,7 +244,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 20px;
-  width: 300px;
+  width: 480px;
   color: #5f558e;
   text-align: right;
   right: 20px;
@@ -266,7 +266,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 20px;
-  width: 500px;
+  width: 400px;
   color: #5f558e;
   text-align: left;
   left: 20px;
