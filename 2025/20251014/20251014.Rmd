@@ -1,5 +1,5 @@
 ---
-title: "Managing Batch Effects in Biological Data"
+title: "Applying Machine Learning to Support Diabetic Retinopathy Screening"
 author: "Kris Sankaran"
 output:
   xaringan::moon_reader:
@@ -19,12 +19,12 @@ class: title
 MathJax.Hub.Config({
   TeX: {
     Macros: {
-      myred: ["{\\color{myred}{#1}}", 1],
-      mygreen: ["{\\color{mygreen}{#1}}", 1],
+      myred: ["{\\color{myred}{##1}}", 1],
+      mygreen: ["{\\color{mygreen}{##1}}", 1],
       reals: "{\\mathbb{R}}",
-      "\*": ["{\\mathbf{#1}}", 1],
-      bm: ["{\\mathbf{#1}}", 1],
-      diag: ["{\\text{diag}\\left({#1}\\right)}", 1]
+      "\*": ["{\\mathbf{##1}}", 1],
+      bm: ["{\\mathbf{##1}}", 1],
+      diag: ["{\\text{diag}\\left({##1}\\right)}", 1]
     },
     loader: {load: ['[tex]/color']},
     tex: {packages: {'[+]': ['color']}}
@@ -32,10 +32,9 @@ MathJax.Hub.Config({
 });
 </script>
 
-
 <style>
-.myred {color: #B4575C;}
-.mygreen {color: #5A8A80;}
+.myred {color: ##B4575C;}
+.mygreen {color: ##5A8A80;}
 </style>
 
 ```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
@@ -70,506 +69,186 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Managing Batch Effects in Biological Data
+## Supporting Diabetic Retinopathy Screening with Machine Learning
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/596alz">go.wisc.edu/596alz</a><br/>
-Notes: <a href="https://go.wisc.edu/5fsbyh">go.wisc.edu/5fsbyh</a><br/>
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/596alz</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
-BME 780: Methods in Quantitative Biology
-08 | October | 2025 <br/>
+DS BMED 208 Project Talks <br/>
+14 | October | 2025 <br/>
 </div>
 
 ---
 
-### Cancer Microbiome Controversy `r Citep(bib, "retraction2024")`
+### Introductions: Darren
 
-.center[
-    <img src="figures/retraction.png"/>
-]
+- Expertise: Statistics and machine learning for microbiome analysis.
+- Path to this project:
 
-In June 2024, Nature retracted a paper `r Citep(bib, "Poore2020")` the claimed
-identify microbiome signatures of cancer. This came after one year's worth of
-debate `r Citep(bib, c("Gihawi2023", "SepichPoore2023", "SepichPoore2024"))`
-about the data analysis.
+- Co-mentored by Prof. Ogunyemi (UCLA Preventive and Social Medicine) and me.
 
 ---
 
-### Cancer Microbiome Controversy `r Citep(bib, "retraction2024")`
+### Introductions: Kris
 
-.center[
-    <img src="figures/retraction.png"/>
-]
+- Expertise: Statistics and machine learning for microbiome analysis.
+    - Courses: [measurement-and-microbes.org/teaching](https://measurement-and-microbes.org/teaching/)
+    - CGSI talks: [go.wisc.edu/28rm17](https://go.wisc.edu/28rm17)
 
-The "disease signature" was an artifact resulting from the use of a batch effect
-correction method.  Before we can understand the nuances of the story, we need
-to learn about batch effects and correction methods.
+- Path to project: Met Darren at CGSI and shared resources to help with MS
+thesis. Excited to continue working together through the Alpert Network Fellows
+program.
 
 ---
 
-### Sources of Technical Variation
+### Project Status
 
-There are many points at which technical variation arises. For example, for single-cell sequencing `r Citep(bib, "jiang2022statistics")`:
+- Darren has focused on two papers `r Citep(bib, c("Ogunyemi2021", "Ding2023"))`:
+    - Both evaluate translation of ML methods from large academic datasets to
+    resource-constrained environments.
+
+- Project Plan: Start by replicating existing modeling, then evaluate
+performance in settings most relevant to Prof. Ogunyemi's lab
+
+- Focus today is the first paper and some opportunities for further analysis.
+
+---
+
+class: section_header
+
+.center[
+## Project Background
+]
+
+---
+
+### Background
+
 .pull-left[
-* Sample Collection
-* Sample Storage
-* Library Preparation
-* cDNA Synthesis
+- Diabetic Retinopathy (DR) is a complication of diabetes, which damages blood
+vessels in the retina. If left untreated, it can lead to blindness.
+
+- Screening is essential but difficult considering the shortage of ophthalmology
+expertise in many communities.
 ]
 
 .pull-right[
-* PCR Amplification
-* Sequencing
-* Read Assignment
-]
-
-Differences at any step can lead to systematic differences between data
-collected across experimental runs ("batches"). This is especially problematic
-for studies with large sample sizes or multiple study sites.
-
----
-
-### Measurement vs. Reality `r Citep(bib, "sarkar2021separating")`
-
-.pull-left[
-1. In the same way that a photo can be blurry or obscured by glare, the
-measurements we obtain from sequencing can be obscured by technical factors.
-
-1. Any data are only an imperfect snapshot of the biological scene we're seeking
-to understand.
-]
-
-.pull-right[
-    <img src="figures/kensington.jpg" width=320/>
-<p class="caption">
-The glare is a technical artifact of the measuring device.
-</p>
+    <img src="figures/Diabetic_Retinopathy_FA.png"/>
 ]
 
 ---
 
-### Measurement vs. Reality `r Citep(bib, "sarkar2021separating")`
+### Objective
 
-.pull-left[
-1. In the same way that a photo can be blurry or obscured by glare, the
-measurements we obtain from sequencing can be obscured by technical factors.
-
-1. Any data are only an imperfect snapshot of the biological scene we're seeking
-to understand.
-]
-
-.pull-right[
-    <img src="figures/goodsell_phagophore.jpg" width=300/>
-<p class="caption">
-It is hard to precisely measure molecular systems. Artwork from `r Citep(bib, "Goodsell2018")`.
-</p>
-]
-
----
-
-### Improving Discovery
-
-.pull-left[
-1. Batch effects can mask real biological effects.
-
-1. To discover more interesting patterns, we need to either remove these effects
-or account for them in the analysis.
-]
-
-.pull-right[
-<img src="figures/batch_effects_leek.png" width=700/>
-<p class="caption">
-Read coverage across samples from the HapMap project, discussed in `r Citep(bib,
-"Leek2010")`. Horizontal blocks have the same sequencing date.
-</p>
-]
-
----
-
-### Improving Discovery
-
-.pull-left[
-1. Batch effects can mask real biological effects.
-
-1. To discover more interesting patterns, we need to either remove these effects
-or account for them in the analysis.
-]
-
-.pull-right[
-<img src="figures/batch_effects_eva.png" width=700/>
-<p class="caption">
-Batch effects across collection dates from a microbiome
-study, discussed in `r Citep(bib, "Wang2019")`.
-</p>
-]
-
-
----
-
-### Improving Credibility
-
-> If all goes well, then the article... has shown mammal kidney structure; if all goes badly, it shrinks to three hamsters in one laboratory in 1984.
->
-> -- Bruno Latour in `r Citep(bib, "latour1987science")`
-
-To dispute a scientific fact, a dissenter can always argue that the
-conditions that led to its production are not generalizable. To guard against
-this, we need to understand batch-to-batch variation.
-
----
+Machine learning can be useful for resource allocation. If we can accurately
+predict high-risk individuals just using electronic health records, then we could
+alert physicians and help them contact screening services.
 
 .center[
-## Methods
+<img src="figures/retinopathy_screening.png" width=640/>
 ]
 
 ---
 
-### General Strategies
+### Dataset Overview
 
-1. Correct: Subtract the batch effects before all other analysis.
-1. Account: Directly model batch-to-batch variation in the analysis.
+Los Angeles County Department of Health Services EHR
+- Training set: 40,631 diabetic patients (2015 – 2017)
+- Test set: 9,300 diabetic patients (2018)
 
-|  | Pros | Cons |
-|--|---|---|
-| Correct | Generality. Can be reused easily. | Can introduce its own artifacts. |
-| Account | Cohesion. Only one method needed for everything.  | Time consuming. Bespoke development for each context. |
-
-We will review correction methods.
+Key properties on the next few slides.
 
 ---
 
-### Correction Methods
+### Available Covariates
 
-.pull-left[
-Any method must define,
-1. Transformations: How might batch effects impact measurement?
-1. Objective: How can we find the most plausible transformation for our data?
-]
-
-.pull-right[
-<img src="figures/batch_transformation.png"/>
-]
-
-The best choice can depend on properties of the data and the experimental
-design, which is why there are so many available methods.
-
----
-
-### Exemplar Methods
-
-In this overview, we'll consider,
-
-1. ComBat `r Citep(bib, "Johnson2006")` (2007). Linear Model.
-1. CellAnova `r Citep(bib, "Zhang2024")` (2024). Embeddings + Linear Model.
-
----
-
-### ComBat - Setting
-
-ComBat was proposed to remove batch effects in microarray data with small sample
-sizes, $n \approx 5 - 20$ per batch, and it has inspired many variants.
-
-1. $\*y_i \in \reals^{G}$: Sample $i$'s expression levels across $G$ genes.
-1. $\*x_i \in \reals^{D}$: Potentially relevant biological factors.
-1. $m\left(i\right) \in \left[1, \dots, M \right]$: Which of the $M$ batches does sample $i$ belong to?
-
----
-
-### ComBat - Model
-
-Sample $i$ is assumed to be drawn from:
-
-\begin{align*}
-\*y_{i} = \mu + \*W \*x_{i} + \*b_{m(i)} + \Lambda_{m(i)}\*\epsilon_i
-\end{align*}
-
-where $\Lambda_{m} = \diag{\delta_{mg}}$ rescales the noise $\epsilon_i \sim \mathcal{N}\left(0, \diag{\sigma_g^2}\right)$.
-
-1. The parameters $\*W$ capture shared biological effects.
-1. Batch effects cause systematic location-scale shifts.
-1. Given $\*b_m$ and $\*\Lambda_{m}$, we can remove their effect from
-the observed data.
----
-
-### ComBat - Estimation
-
-Rather than estimating each gene $g$ separately, ComBat uses a hierarchical
-model to share information across all genes. This improves stability in the
-corrections for genes with very high noise levels.
+30 clinical variables (Table 1). No imaging data. Unclear what feature
+preprocessing steps were applied?
 
 .center[
-<img src="figures/combat_fig3.gif" width=330/>
+<img src="figures/table1-dr.png" width=920/>
 ]
-<p class="caption">
-By fitting the model simultaneously across genes, the estimates are "shrunk"
-towards the mean.
-</p>
 
 ---
 
-### Challenges
+### Class Imbalance and Missingness
 
-Batch effect correction can introduce subtle problems of its own.
+- 31.1% of patients are diagnosed with DR, so this is an imbalanced problem.
+They applied SMOTE and majority class downsampling to deal with this.
 
-**Hypothesis Testing**: When the batches are highly imbalanced, correction can
-distort the null distribution of test statistics. This invalidates the usual
-$p$-values `r Citep(bib, "Nygaard2015")`.
+- Up to 35% missing values, which were imputed using KNN imputation (though
+unclear how this was applied on the validation set).
+
+---
+
+### Modeling Approach
+
+- Prioritized 14 features using backwards selection (superscript "a" on previous
+table). This fits a full linear model and then trims the variables that don't
+lead to a large drop in $R^2$.
+
+- Classifiers tested: Random Forest, Gradient Boosting Machine, Support Vector
+Machine, Deep Learning model (MLP?), ensemble of them all.
+
+- Hyperparameters were tuned using 10-fold cross validation.
+
+---
+
+### Results Summary
+
+Best model: Deep learning classifier with majority class downsampling. Achieves
+an AUC of 0.80 on the 2018 validation cohort.
 
 .center[
-<img src="figures/nygaard_pvals.png" width=880/>
+<img src="figures/table4-dr.png"/>
 ]
 
 ---
 
-### Challenges
+### Results Summary
 
-Batch effect correction can introduce subtle problems of its own.
+- There were only minor performance differences across models, but undersampling
+consistently improved over SMOTE.
 
-.pull-three-quarters-left[
-**Alignability**: Batch effect correction methods will attempt to match batches
-regardless of whether there is actually any shared biology `r Citep(bib, "Ma2024")`.
-]
-
-.pull-three-quarters-right[
-<img src="figures/alignability.jpg" width=200 align="right"/>
-]
+- Even though it had a much larger sample size, the final AUC was comparable to
+previous Diabetic Retinopathy prediction studies based on EHR. For example, in
+the KNHANES study `r Citep(bib, "Oh2013")`, a training set with 490 samples was
+enough to achieve an AUC of 0.83.
 
 ---
 
-exclude: true
+### Open Questions
 
-### Challenges
+- Which features or interactions are driving model predictions? Can we rely on
+these features to generalize?
 
-Batch effect correction can introduce subtle problems of its own.
+- Are there other potentially useful features (in or out of the EHR) that could
+be useful for screening?
 
-**Supervision**: Methods that use a biological group label can introduce spurious
-associations with that label `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")`.
+---
+
+### Open Questions
+
+- How do accuracy or important features vary by subpopulation? We can consider
+local variable importance measures, like SHAP values.
 
 .center[
-<img src="figures/retraction.png" width = 600/>
+<img src="figures/example_shap.png" width=700/>
 ]
 
 ---
 
-### Sensitivity and Simulation
+### Next Steps
 
-1. Run the analysis separately across batches. Many of the results should
-overlap if the biology is truly shared across batches.
+- Darren is coordinating data and code access to ensure we can replicate these results.
 
-1. Use a simulation to better understand the pipeline. There are many packages
-for learning a simulator based on an initial dataset `r Citep(bib, "Sankaran2024")`.
+- We will study interpretability and generalization of these models, with the
+aim of improving performance or deployability.
 
----
-
-### Simulation and Supervised Normalization
-
-Gerry Tonkin-Hill has an excellent re-analysis `r Citep(bib, "githubGitHubGtonkinhillTCGA_analysis")` of the data from `r Citep(bib, "Poore2020")` which sheds light what were likely the source of the phantom signals. The first part is a simulation.
-
-.pull-left[
-<img src="figures/gth_sim1.png"/>
-]
-.pull-right[
-<img src="figures/gth_sim2.png"/>
-]
-
----
-
-### Simulation and Supervised Normalization
-
-This setting is balanced -- each condition is equally likely across batches. In
-this case, SVN batch effect correction `r Citep(bib, "mecham2010supervised")`
-works well.
-
-.pull-left[
-<img src="figures/gth_sim3.png"/>
-]
-.pull-right[
-<img src="figures/gth_sim4.png"/>
-]
-
----
-
-### Simulation and Supervised Normalization
-
-But what happens if there is imbalance?
-
-.pull-left[
-<img src="figures/gth_sim5.png"/>
-]
-.pull-right[
-<img src="figures/gth_sim6.png"/>
-]
-
----
-
-### Simulation and Supervised Normalization
-
-In this case, the SVN correction introduces an artificial difference.
-
-.center[
-<img src="figures/gth_sim7.png" width=500/>
-]
-
-This should cause concern about the original analysis: Hospitals specialize in
-cancer types. Then again, this simulation is quite unrealistic.
-
----
-
-exclude: true
-
-### Experimental Design
-
-1. To better account for batch effects, we should think carefully about
-replication and controls `r Citep(bib, c("GagnonBartsch2011", "Jacob2015", "Gerard2021"))`.
-
-  - Replication: Generate multiple measurements of the same sample.
-  - Controls: Samples or features where the signal is known to be absent.
-
-1. Any variation that is only present after a step of data generation must be
-due to the measurement mechanism, rather than the true biology.
-
----
-
-### TCGA Data Revisited
-
-1. `r Citep(bib, "Poore2020")`'s data had been sequenced at several centers, and
-they used SVN to remove center-level batch effects.
-
-1. After `r Citep(bib, "Gihawi2023")` raised concerns about the paper, they
-decided to rerun the analysis restricted to data sequenced at Harvard Medical.
-
-.center[
-<img src="figures/gth_real1.png" width=480/>
-]
-
----
-
-### TCGA Data Revisited
-
-However, even though the data were sequenced at the same center, they were
-collected by different hospitals.
-
-.center[
-<img src="figures/gth_real2.png" width=600/>
-]
-
----
-
-### TCGA Data Revisited
-
-If you remove the hospital-level batch effect, the signal more or less vanishes.
-Either applying or omitting a batch effect correction method can lead to
-spurious effects! It is important to be skeptical and carefully consider the
-experimental design.
-
-.center[
-    <img src="figures/gth_real4.png" width=600/>
-]
-
----
-
-
-### CellAnova
-
-1. CellAnova `r Citep(bib, "Zhang2024")` takes this thinking a step further by
-formalizing an approach to defining and using control samples.
-
-1. Across all batches, control samples are assumed to have the same underlying
-biology, and this gives confidence in the resulting correction.
-
-1. This is a more formal alternative to to maximizing overlap across batches for
-each cell type.
-
----
-
-### Pool-of-Controls
-
-1. [**Notation**] Let $\*Y^1, ..., \*Y^M$ be measurements across $M$ biological samples.
-  - Let the first $M_0$ samples are controls.
-  - Each $\*Y^m \in \reals^{N_{m} \times G}$.
-2. [**Controls**] The control samples are assumed to be biologically comparable
-  - Time course: All pre-treatment samples
-  - Multi-omics: All healthy subjects regardless of sequencing technology
-
----
-
-### Assumed Model
-
-\begin{align*}
-\bm{Y}^m &= \bm{C}^m(\mu + \bm{X}^m \bm{W}^\top + \bm{B}^m \bm{V}^\top) + \text{noise} \\\\
-&:= \bm{C}^m \left(\bm{R}^m\right)^\top + \text{noise}
-\end{align*}
-
-As input, we expect:
-- $\*C^m$: Cell-level encodings (e.g., cell types) in sample $m$
-
-We want to estimate:
-- $\mu$: Global mean
-- $\*B^m \*V^\top$: Batch effects
-- $\*X^m \*W^\top$: Real biological variation
-
----
-
-### CellAnova: Detect Batch Effects
-
-**Step 1**: Estimate the batch effects subspace,
-\begin{align}
-\left[\bm{R}^1-\overline{\bm{R}}^0 \;\; \cdots \;\; \bm{R}^{M_0}-\overline{\bm{R}}^0\right]^\top \in \reals^{K_c M_0 \times G} \xrightarrow{\mathrm{SVD}} \bm{V} \in \reals^{G \times K_b}
-\end{align}
-This should reflect hospital, technician, or platform-level effects.
-
-**Step 2**: Evaluate the coordinates of each sample with respect to this subspace,
-\begin{align}
-\bm{B}^m=\left(\bm{R}^m-\overline{\bm{R}}\right) \bm{V}
-\end{align}
-
----
-
-### Decomposing Variation: Biology
-
-**Step 3**: Project out the batch effects and identify a subspace spanning the remaining variation:
-
-\begin{align}
-\begin{bmatrix} \bm{R}^1 - \overline{\bm{R}} \\\\ \vdots \\\\ \bm{R}^M - \overline{\bm{R}} \end{bmatrix}(I - \bm{V}\bm{V}^\top) \xrightarrow{\text{SVD}} \bm{W}
-\end{align}
-
-Then $\bm{X}^m = (\bm{R}^m - \overline{\bm{R}})\bm{W}$ are coordinates with respect to real
-biological variation.
-
----
-
-### CellAnova vs. ComBat
-
-The CellAnova paper uses notation that stacks the expressions like those we saw
-in ComBat.
-\begin{align}
-\bm{y}_i = \mu + \bm{W} \bm{x}_i + \bm{b}_m + \Lambda_m \epsilon_i
-\end{align}
-vs.
-\begin{align}
-\bm{Y} = \bm{C}\left(\mu + \bm{X} \bm{W}^\top + \bm{B} \bm{V}^\top\right) + \text{noise}
-\end{align}
-
-Both methods shed light on why batch effects appears.
-
----
-
-### Takeaways
-
-1. **Garbage In, Garbage Out**: If the main source of variation in the data comes
-from batch effects, then even the most sophisticated methodology will fail to
-discover interesting biology.
-
-1. **Approaches**: Correction methods estimate batch-specific transformations of
-shared biology. These transformations are then reversed to define the
-correction.
-
-1. **Checks**: It's important not to use batch effect correction methods
-thoughtlessly.  Consider applying simulation and leveraging the experimental
-design.
+- Questions for discussion?
 
 ---
 
@@ -579,14 +258,4 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 12)
-```
-
----
-
-class: reference
-
-### References
-
-```{r, results='asis', echo = FALSE}
-PrintBibliography(bib, start = 13, end = 29)
 ```
