@@ -72,7 +72,7 @@ bib <- ReadBib("references.bib")
 ## Supporting Diabetic Retinopathy Screening with Machine Learning
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/596alz</a><br/>
+Slides: <a href="https://go.wisc.edu/32rv90">go.wisc.edu/32rv90</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
