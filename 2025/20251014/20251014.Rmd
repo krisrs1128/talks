@@ -1,5 +1,5 @@
 ---
-title: "Applying Machine Learning to Support Diabetic Retinopathy Screening"
+title: "Supporting Diabetic Retinopathy Screening with Machine Learning"
 author: "Kris Sankaran"
 output:
   xaringan::moon_reader:
@@ -83,12 +83,93 @@ DS BMED 208 Project Talks <br/>
 
 ---
 
-### Introductions: Darren
+### Introductions: Derron
 
-- Expertise: Statistics and machine learning for microbiome analysis.
-- Path to this project:
+- Expertise: biomedical and translational data science, population health, and machine learning for microbiome analysis.
 
-- Co-mentored by Prof. Ogunyemi (UCLA Preventive and Social Medicine) and me.
+- Co-mentored by Bita Amani, PhD (CDU Urban Public Health/UCLA), Omolola Ogunyemi, PhD (CDU Preventive and Social Medicine, UCLA CTSI Biomedical Informatics Director), and Kris Sankaran (Statistics, UW—Madison).
+
+- Fullerton College &rarr; CSU Long Beach &rarr; Charles Drew (CDU)
+- B.S. Molecular Cell Biology and Physiology
+- M.S. Biomedical Sciences
+
+---
+
+### Path to this project
+
+- Volunteering at CRECE Urban Farms (Santa Ana, CA)
+- Urban agriculture (UA): practice of **farming within** and **around cities** and **densely populated areas**
+- Lived experience with food insecurity + insights at CRECE Urban Farms &rarr; M.S. thesis
+- Thesis: Community-Based Urban Agriculture and Its Dietary, Cardiometabolic, and Social Impacts in Low-Income Urban Communities Worldwide: A Scoping Review
+
+---
+
+### Path to this project
+
+- Food insecurity has **worsened**, **<u>not improved</u>**: ~10% U.S. households (2021) vs. ~13% (2022)
+- Burden **IS NOT** evenly shared: highest rates in Black, Hispanic, and Indigenous populations
+- Issue of access, not scarcity (**structural inequities**)
+- **Health consequences** are **immediate**
+
+---
+
+### Community-Driven Solutions
+
+- Food insecure residents are reclaiming and repurposing vacant lots into community-governed spaces
+- Restoring food access, social ties, and cultural identity
+
+---
+
+.center[
+<img src="figures/farm1_derron.jpeg" style="width:80%; height:auto;">
+]
+
+---
+
+.center[
+<img src="figures/farm2_derron.jpeg" style="width:80%; height:auto;">
+]
+
+---
+.center[
+<img src="figures/f1_derron.png" style="width:100%; height:auto;">
+]
+
+---
+
+.center[
+<img src="figures/f2_derron.png" style="width:100%; height:auto;">
+]
+
+---
+
+.center[
+<img src="figures/f3_derron.png" style="width:100%; height:auto;">
+]
+
+---
+
+.center[
+<img src="figures/f4_derron.png" style="width:100%; height:auto;">
+]
+
+---
+
+.center[
+<img src="figures/f5_derron.png" style="width:100%; height:auto;">
+]
+
+---
+
+.center[
+<img src="figures/f6_derron.png" style="width:100%; height:auto;">
+]
+
+---
+
+.center[
+<img src="figures/f7_derron.png" style="width:100%; height:auto;">
+]
 
 ---
 
@@ -98,7 +179,7 @@ DS BMED 208 Project Talks <br/>
     - Courses: [measurement-and-microbes.org/teaching](https://measurement-and-microbes.org/teaching/)
     - CGSI talks: [go.wisc.edu/28rm17](https://go.wisc.edu/28rm17)
 
-- Path to project: Met Darren at CGSI and shared resources to help with MS
+- Path to project: Met Derron at CGSI 2025 and shared resources to help with MS
 thesis. Excited to continue working together through the Alpert Network Fellows
 program.
 
@@ -106,12 +187,12 @@ program.
 
 ### Project Status
 
-- Darren has focused on two papers `r Citep(bib, c("Ogunyemi2021", "Ding2023"))`:
+- Derron has focused on two papers `r Citep(bib, c("Ogunyemi2021", "Ding2023"))`:
     - Both evaluate translation of ML methods from large academic datasets to
     resource-constrained environments.
 
 - Project Plan: Start by replicating existing modeling, then evaluate
-performance in settings most relevant to Prof. Ogunyemi's lab
+performance in settings most relevant to Dr. Ogunyemi's lab
 
 - Focus today is the first paper and some opportunities for further analysis.
 
@@ -243,12 +324,12 @@ local variable importance measures, like SHAP values.
 
 ### Next Steps
 
-- Darren is coordinating data and code access to ensure we can replicate these results.
+- Derron is coordinating data and code access to UK Biobank and UCLA ATLAS to ensure we can replicate these results.
 
 - We will study interpretability and generalization of these models, with the
 aim of improving performance or deployability.
 
-- Questions for discussion?
+- Please share your questions and comments!
 
 ---
 
