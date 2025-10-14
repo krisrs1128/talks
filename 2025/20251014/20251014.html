@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Applying Machine Learning to Support Diabetic Retinopathy Screening</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.30/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{##1}}", 1],
+      mygreen: ["{\\color{mygreen}{##1}}", 1],
+      reals: "{\\mathbb{R}}",
+      "\*": ["{\\mathbf{##1}}", 1],
+      bm: ["{\\mathbf{##1}}", 1],
+      diag: ["{\\text{diag}\\left({##1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+&lt;/script&gt;
+
+&lt;style&gt;
+.myred {color: ##B4575C;}
+.mygreen {color: ##5A8A80;}
+&lt;/style&gt;
+
+
+
+
+
+
+## Supporting Diabetic Retinopathy Screening with Machine Learning
+
+&lt;div id="subtitle_left"&gt;
+Slides: &lt;a href="https://go.wisc.edu/"&gt;go.wisc.edu/596alz&lt;/a&gt;&lt;br/&gt;
+Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Kris Sankaran &lt;br/&gt;
+DS BMED 208 Project Talks &lt;br/&gt;
+14 | October | 2025 &lt;br/&gt;
+&lt;/div&gt;
+
+---
+
+### Introductions: Darren
+
+- Expertise: Statistics and machine learning for microbiome analysis.
+- Path to this project:
+
+- Co-mentored by Prof. Ogunyemi (UCLA Preventive and Social Medicine) and me.
+
+---
+
+### Introductions: Kris
+
+- Expertise: Statistics and machine learning for microbiome analysis.
+    - Courses: [measurement-and-microbes.org/teaching](https://measurement-and-microbes.org/teaching/)
+    - CGSI talks: [go.wisc.edu/28rm17](https://go.wisc.edu/28rm17)
+
+- Path to project: Met Darren at CGSI and shared resources to help with MS
+thesis. Excited to continue working together through the Alpert Network Fellows
+program.
+
+---
+
+### Project Status
+
+- Darren has focused on two papers [1; 2]:
+    - Both evaluate translation of ML methods from large academic datasets to
+    resource-constrained environments.
+
+- Project Plan: Start by replicating existing modeling, then evaluate
+performance in settings most relevant to Prof. Ogunyemi's lab
+
+- Focus today is the first paper and some opportunities for further analysis.
+
+---
+
+class: section_header
+
+.center[
+## Project Background
+]
+
+---
+
+### Background
+
+.pull-left[
+- Diabetic Retinopathy (DR) is a complication of diabetes, which damages blood
+vessels in the retina. If left untreated, it can lead to blindness.
+
+- Screening is essential but difficult considering the shortage of ophthalmology
+expertise in many communities.
+]
+
+.pull-right[
+    &lt;img src="figures/Diabetic_Retinopathy_FA.png"/&gt;
+]
+
+---
+
+### Objective
+
+Machine learning can be useful for resource allocation. If we can accurately
+predict high-risk individuals just using electronic health records, then we could
+alert physicians and help them contact screening services.
+
+.center[
+&lt;img src="figures/retinopathy_screening.png" width=640/&gt;
+]
+
+---
+
+### Dataset Overview
+
+Los Angeles County Department of Health Services EHR
+- Training set: 40,631 diabetic patients (2015 – 2017)
+- Test set: 9,300 diabetic patients (2018)
+
+Key properties on the next few slides.
+
+---
+
+### Available Covariates
+
+30 clinical variables (Table 1). No imaging data. Unclear what feature
+preprocessing steps were applied?
+
+.center[
+&lt;img src="figures/table1-dr.png" width=920/&gt;
+]
+
+---
+
+### Class Imbalance and Missingness
+
+- 31.1% of patients are diagnosed with DR, so this is an imbalanced problem.
+They applied SMOTE and majority class downsampling to deal with this.
+
+- Up to 35% missing values, which were imputed using KNN imputation (though
+unclear how this was applied on the validation set).
+
+---
+
+### Modeling Approach
+
+- Prioritized 14 features using backwards selection (superscript "a" on previous
+table). This fits a full linear model and then trims the variables that don't
+lead to a large drop in `\(R^2\)`.
+
+- Classifiers tested: Random Forest, Gradient Boosting Machine, Support Vector
+Machine, Deep Learning model (MLP?), ensemble of them all.
+
+- Hyperparameters were tuned using 10-fold cross validation.
+
+---
+
+### Results Summary
+
+Best model: Deep learning classifier with majority class downsampling. Achieves
+an AUC of 0.80 on the 2018 validation cohort.
+
+.center[
+&lt;img src="figures/table4-dr.png"/&gt;
+]
+
+---
+
+### Results Summary
+
+- There were only minor performance differences across models, but undersampling
+consistently improved over SMOTE.
+
+- Even though it had a much larger sample size, the final AUC was comparable to
+previous Diabetic Retinopathy prediction studies based on EHR. For example, in
+the KNHANES study [3], a training set with 490 samples was
+enough to achieve an AUC of 0.83.
+
+---
+
+### Open Questions
+
+- Which features or interactions are driving model predictions? Can we rely on
+these features to generalize?
+
+- Are there other potentially useful features (in or out of the EHR) that could
+be useful for screening?
+
+---
+
+### Open Questions
+
+- How do accuracy or important features vary by subpopulation? We can consider
+local variable importance measures, like SHAP values.
+
+.center[
+&lt;img src="figures/example_shap.png" width=700/&gt;
+]
+
+---
+
+### Next Steps
+
+- Darren is coordinating data and code access to ensure we can replicate these results.
+
+- We will study interpretability and generalization of these models, with the
+aim of improving performance or deployability.
+
+- Questions for discussion?
+
+---
+
+class: reference
+
+### References
+
+[1] O. I. Ogunyemi et al. "Detecting diabetic retinopathy through machine
+learning on electronic health record data from an urban, safety net healthcare
+system". In: _JAMIA Open_ 4.3 (Jul. 2021). ISSN: 2574-2531. DOI:
+[10.1093/jamiaopen/ooab066](https://doi.org/10.1093%2Fjamiaopen%2Fooab066).
+URL:
+[http://dx.doi.org/10.1093/jamiaopen/ooab066](http://dx.doi.org/10.1093/jamiaopen/ooab066).
+
+[2] Y. Ding et al. "Polygenic scoring accuracy varies across the genetic
+ancestry continuum". In: _Nature_ 618.7966 (May. 2023), p. 774–781. ISSN:
+1476-4687. DOI:
+[10.1038/s41586-023-06079-4](https://doi.org/10.1038%2Fs41586-023-06079-4).
+URL:
+[http://dx.doi.org/10.1038/s41586-023-06079-4](http://dx.doi.org/10.1038/s41586-023-06079-4).
+
+[3] E. Oh et al. "Diabetic retinopathy risk prediction for fundus examination
+using sparse learning: a cross-sectional study". In: _BMC Medical Informatics
+and Decision Making_ 13.1 (Sep. 2013). ISSN: 1472-6947. DOI:
+[10.1186/1472-6947-13-106](https://doi.org/10.1186%2F1472-6947-13-106). URL:
+[http://dx.doi.org/10.1186/1472-6947-13-106](http://dx.doi.org/10.1186/1472-6947-13-106).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
