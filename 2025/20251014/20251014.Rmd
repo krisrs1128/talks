@@ -173,6 +173,12 @@ DS BMED 208 Project Talks <br/>
 
 ---
 
+.center[
+<img src="figures/ucla_derron.png" style="width:100%; height:auto;">
+]
+
+---
+
 ### Introductions: Kris
 
 - Expertise: Statistics and machine learning for microbiome analysis.
