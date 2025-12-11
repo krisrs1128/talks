@@ -1,0 +1,227 @@
+---
+title: ""
+author: "Kris Sankaran"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/xaringan-themer.css"]
+    lib_dir: libs
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: "16:9"
+    seal: false
+---
+
+class: title
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{##1}}", 1],
+      mygreen: ["{\\color{mygreen}{##1}}", 1],
+      reals: "{\\mathbb{R}}",
+      "\*": ["{\\mathbf{##1}}", 1],
+      bm: ["{\\mathbf{##1}}", 1],
+      diag: ["{\\text{diag}\\left({##1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+</script>
+
+<style>
+.myred {color: ##B4575C;}
+.mygreen {color: ##5A8A80;}
+</style>
+
+```{r flair_color, echo=FALSE, warning = FALSE, message = FALSE}
+library(xaringancolor)
+setup_colors(
+  myred = "#B4575C",
+  mygreen = "#5A8A80"
+)
+
+library(flair)
+myred <- "#B4575C"
+mygreen <- "#5A8A80"
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(MASS)
+library(knitr)
+library(RefManageR)
+library(tidyverse)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+## Fall 2025: Recap and Reflection
+
+<div id="subtitle_left">
+Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
+</div>
+<div id="subtitle_right">
+Kris Sankaran <br/>
+AI and Genomics Reading Group <br/>
+12 | December | 2025 <br/>
+</div>
+
+---
+
+### Outline
+
+* What were the most important advances we read about?
+
+* Which technical tricks did we see repeatedly?
+
+* What still seems to be more of an art than a science?
+
+* What are potential areas of improvement?
+
+---
+
+## Advances
+
+---
+
+### Functional Track Prediction
+
+The direct target for Sequence-to-Function (S2F) was to improve functional
+genomic tracks prediction.
+
+They often reported correlation (pearson and/or spearman) across bins (e.g., 128
+bp for enformer).
+
+<img src="figures/enformer_improvement.png" width=900/>
+<span style="font-size: 16px">
+Improvements reported by the Enformer model.
+</span>
+
+---
+
+### Functional Track Prediction
+
+.pull-left[
+The direct target for Sequence-to-Function (S2F) was to improve functional
+genomic tracks prediction.
+
+They often reported correlation (pearson and/or spearman) across bins (e.g., 128
+bp for enformer).
+]
+
+.pull-right[
+<img src="figures/alpha_genome_improvement.png" width=600/>
+<span style="font-size: 16px">
+Improvements reported by the Alpha Genome model.
+</span>
+]
+
+---
+
+### Variant Effect Prediction
+
+An indirect evaluation strategy was to contrast functional track predictions on
+variant vs. reference alleles.
+
+**eQTLs**: Several papers used GTEx to see whether their models could predict gene
+expression changes in response to single nucleotide variants observed in real
+human populations.
+- Enformer, AlphaGenome, TraitGym (variant vs. not variant prediction),
+
+**MRPA assays**: Several papers also tested whether their models could predict how gene expression changes in response to experimentally introduced variants.
+- Enformer, AlphaGenome, GET
+
+---
+
+### Many Downstream Tasks
+
+In the spirit of foundation models for language, the papers argued that the
+models could be applied to many types of downstream tasks, either zero-shot or
+after fine-tuning.
+
+- Enformer and AlphaGenome
+    - Predict enhancer-target pairs on independent CRISPRi perturbation datasets.
+- GET
+  - Predict expression levels on cell types and functional genomics assays
+  (CAGE) that were not a part of training. This used a LORA fine-tuning step.
+
+---
+
+### Many Downstream Tasks
+
+In the spirit of foundation models for language, the papers argued that the
+models could be applied to many types of downstream tasks, either zero-shot or
+after fine-tuning.
+
+- AlphaGenome
+    - Could predict polyadenalation QTLs despite not including polyadenalation signals as a response track during training.
+- TraitGym
+    - Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
+
+---
+
+## Techniques
+
+---
+
+### Attention Mechanisms
+
+---
+
+### Convolutions Competitive
+
+---
+
+### Ensembling and Distillation
+
+---
+
+### Interpretations
+
+_In Silico Mutagenesis_
+
+_Latent Space_
+
+
+---
+
+## Heuristics
+
+---
+
+### Data Curation
+
+---
+
+---
+
+## Weaknesses
+
+---
+
+###
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 12)
+```
