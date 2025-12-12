@@ -69,7 +69,7 @@ BibOptions(
 bib <- ReadBib("references.bib")
 ```
 
-## Fall 2025: Recap and Reflection
+## Fall 2025 Recap
 
 <div id="subtitle_left">
 Slides: <a href="https://go.wisc.edu/wqwwwo/">go.wisc.edu/wqwwwo</a><br/>
@@ -104,8 +104,8 @@ AI and Genomics Reading Group <br/>
 The direct target for Sequence-to-Function (S2F) was to improve functional
 genomic tracks prediction.
 
-They often reported correlation (pearson and/or spearman) across bins (e.g., 128
-bp for enformer).
+They often reported correlation (pearson and/or spearman) across bins (e.g.,
+128bp for Enformer).
 
 <img src="figures/enformer_improvement.png" width=900/>
 <span style="font-size: 16px">
@@ -153,7 +153,7 @@ human populations [Enformer, AlphaGenome, TraitGym].
 An indirect evaluation strategy was to contrast functional track predictions on
 variant vs. reference alleles.
 
-**MRPA assays**: Several papers also tested whether their models could predict
+**MPRA assays**: Several papers also tested whether their models could predict
 how gene expression changes in response to experimentally introduced variants
 [Enformer, AlphaGenome, GET].
 
@@ -182,7 +182,7 @@ In the spirit of foundation models for language, the papers argued that the
 models could be applied to many types of downstream tasks, either zero-shot or
 after fine-tuning.
 
-- AlphaGenome: Could predict polyadenalation QTLs despite not including polyadenalation signals as a response track during training.
+- AlphaGenome: Could predict polyadenylation QTLs despite not including polyadenylation signals as a response track during training.
 - TraitGym `r Citep(bib, "Benegas2025")`: Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
 
 ---
@@ -211,7 +211,7 @@ The Enformer model automatically learned to attend to TAD boundaries.
 .pull-left[
 The input length increases from 200kb for Enformer to 1mb for AlphaGenome.
 - Needed to support communication across GPUs during training.
-- Also supervised the attention maps using HI-C contact maps
+- Also supervised the attention maps using Hi-C contact maps.
 ]
 
 .pull-right[
@@ -227,7 +227,7 @@ prediction tracks.
 ### Attention Mechanisms
 
 .pull-left[
-CellCAP also uses attention, but on gene expression data, not sequence inputs.
+CellCap also uses attention, but on gene expression data, not sequence inputs.
 Different perturbation response programs "attend" to a subset of relevant genes
 `r Citep(bib, "Xu2025")`.
 ]
@@ -246,7 +246,7 @@ Different perturbation response programs "attend" to a subset of relevant genes
 convolutional layers are still used for extracting low-level sequence features.
 
 1. A single convolutional filter can be thought of like a PWM scanning the input
-sequence for a pattern.
+sequence for a pattern `r Citep(bib, "Novakovsky2022")`.
 
 .center[
 <img src="figures/convolution3.png" width=500/>
@@ -307,7 +307,7 @@ y\left(\text{alt}\right) \text{vs}. y\left({\text{ref}}\right)
 we could compare embeddings
 
 \begin{align*}
-z\left(\text{alt}\right) \text{vs.} z\left(\text{alt}\right).
+z\left(\text{alt}\right) \text{vs.} z\left(\text{ref}\right).
 \end{align*}
 
 ---
@@ -378,7 +378,7 @@ identified eQTL positions, but the sign of the predicted effect was often wrong.
 ### Population-Level Variation
 
 .pull-left[
-Note that there is a follow-up `r Citep(bib, "Tu2025")`.
+There has been follow-up work `r Citep(bib, "Tu2025")`.
 ]
 
 .pull-right[
@@ -389,7 +389,7 @@ Note that there is a follow-up `r Citep(bib, "Tu2025")`.
 
 ### Non-Sequence Data
 
-For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi `r Citep(bib, "Zhang2022")`) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+For Perturb-Seq and Hi-C, we saw models (CellCAP and FastHigashi `r Citep(bib, "Zhang2022")`) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
 
 .center[
 <img src="figures/higashi.jpg" width=700/>
@@ -400,7 +400,7 @@ For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi `r Citep(bib, "
 ### Non-Sequence Data
 
 .pull-left[
-For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi `r Citep(bib, "Zhang2022")`) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+For Perturb-Seq and Hi-C, we saw models (CellCAP and FastHigashi `r Citep(bib, "Zhang2022")`) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
 ]
 
 .pull-right[

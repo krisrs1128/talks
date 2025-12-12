@@ -41,7 +41,7 @@ MathJax.Hub.Config({
 
 
 
-## Fall 2025: Recap and Reflection
+## Fall 2025 Recap
 
 &lt;div id="subtitle_left"&gt;
 Slides: &lt;a href="https://go.wisc.edu/wqwwwo/"&gt;go.wisc.edu/wqwwwo&lt;/a&gt;&lt;br/&gt;
@@ -76,8 +76,8 @@ AI and Genomics Reading Group &lt;br/&gt;
 The direct target for Sequence-to-Function (S2F) was to improve functional
 genomic tracks prediction.
 
-They often reported correlation (pearson and/or spearman) across bins (e.g., 128
-bp for enformer).
+They often reported correlation (pearson and/or spearman) across bins (e.g.,
+128bp for Enformer).
 
 &lt;img src="figures/enformer_improvement.png" width=900/&gt;
 &lt;span style="font-size: 16px"&gt;
@@ -125,7 +125,7 @@ human populations [Enformer, AlphaGenome, TraitGym].
 An indirect evaluation strategy was to contrast functional track predictions on
 variant vs. reference alleles.
 
-**MRPA assays**: Several papers also tested whether their models could predict
+**MPRA assays**: Several papers also tested whether their models could predict
 how gene expression changes in response to experimentally introduced variants
 [Enformer, AlphaGenome, GET].
 
@@ -154,7 +154,7 @@ In the spirit of foundation models for language, the papers argued that the
 models could be applied to many types of downstream tasks, either zero-shot or
 after fine-tuning.
 
-- AlphaGenome: Could predict polyadenalation QTLs despite not including polyadenalation signals as a response track during training.
+- AlphaGenome: Could predict polyadenylation QTLs despite not including polyadenylation signals as a response track during training.
 - TraitGym [4]: Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
 
 ---
@@ -183,7 +183,7 @@ The Enformer model automatically learned to attend to TAD boundaries.
 .pull-left[
 The input length increases from 200kb for Enformer to 1mb for AlphaGenome.
 - Needed to support communication across GPUs during training.
-- Also supervised the attention maps using HI-C contact maps
+- Also supervised the attention maps using Hi-C contact maps.
 ]
 
 .pull-right[
@@ -199,7 +199,7 @@ prediction tracks.
 ### Attention Mechanisms
 
 .pull-left[
-CellCAP also uses attention, but on gene expression data, not sequence inputs.
+CellCap also uses attention, but on gene expression data, not sequence inputs.
 Different perturbation response programs "attend" to a subset of relevant genes
 [5].
 ]
@@ -218,7 +218,7 @@ Different perturbation response programs "attend" to a subset of relevant genes
 convolutional layers are still used for extracting low-level sequence features.
 
 1. A single convolutional filter can be thought of like a PWM scanning the input
-sequence for a pattern.
+sequence for a pattern [8].
 
 .center[
 &lt;img src="figures/convolution3.png" width=500/&gt;
@@ -279,7 +279,7 @@ y\left(\text{alt}\right) \text{vs}. y\left({\text{ref}}\right)
 we could compare embeddings
 
 `\begin{align*}
-z\left(\text{alt}\right) \text{vs.} z\left(\text{alt}\right).
+z\left(\text{alt}\right) \text{vs.} z\left(\text{ref}\right).
 \end{align*}`
 
 ---
@@ -350,7 +350,7 @@ identified eQTL positions, but the sign of the predicted effect was often wrong.
 ### Population-Level Variation
 
 .pull-left[
-Note that there is a follow-up [7].
+There has been follow-up work [7].
 ]
 
 .pull-right[
@@ -361,7 +361,7 @@ Note that there is a follow-up [7].
 
 ### Non-Sequence Data
 
-For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi [6]) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+For Perturb-Seq and Hi-C, we saw models (CellCAP and FastHigashi [6]) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
 
 .center[
 &lt;img src="figures/higashi.jpg" width=700/&gt;
@@ -372,7 +372,7 @@ For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi [6]) that borro
 ### Non-Sequence Data
 
 .pull-left[
-For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi [6]) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+For Perturb-Seq and Hi-C, we saw models (CellCAP and FastHigashi [6]) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
 ]
 
 .pull-right[
@@ -406,6 +406,10 @@ DOI: [10.1038/s41592-021-01252-x](https://doi.org/10.1038%2Fs41592-021-01252-x).
 
 [7] X. Tu et al. "Deep genomic models of allele-specific measurements".  (Apr. 2025). DOI: [10.1101/2025.04.09.648060](https://doi.org/10.1101%2F2025.04.09.648060). URL:
 [http://dx.doi.org/10.1101/2025.04.09.648060](http://dx.doi.org/10.1101/2025.04.09.648060).
+
+[8] G. Novakovsky et al. "Obtaining genetics insights from deep learning via explainable artificial intelligence". In: _Nature Reviews Genetics_ 24.2 (Oct. 2022), p. 125–137. ISSN:
+1471-0064. DOI: [10.1038/s41576-022-00532-2](https://doi.org/10.1038%2Fs41576-022-00532-2). URL:
+[http://dx.doi.org/10.1038/s41576-022-00532-2](http://dx.doi.org/10.1038/s41576-022-00532-2).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
