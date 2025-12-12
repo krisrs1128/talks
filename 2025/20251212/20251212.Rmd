@@ -168,10 +168,8 @@ In the spirit of foundation models for language, the papers argued that the
 models could be applied to many types of downstream tasks, either zero-shot or
 after fine-tuning.
 
-- AlphaGenome
-    - Could predict polyadenalation QTLs despite not including polyadenalation signals as a response track during training.
-- TraitGym
-    - Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
+- AlphaGenome: Could predict polyadenalation QTLs despite not including polyadenalation signals as a response track during training.
+- TraitGym: Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
 
 ---
 
@@ -181,9 +179,55 @@ after fine-tuning.
 
 ### Attention Mechanisms
 
+Enformer, AlphaGenome, and GET all used transformer-based attention to learn
+long-range sequence relationships.
+- The attention maps were evidence that long-range information helped.
+
+.center[
+<img src="figures/attention_map_enformer.png" width=500/><br/>
+<span style="font-size: 16px">
+The Enformer model automatically learned to attend to TAD boundaries.
+</span>
+]
+
 ---
 
-### Convolutions Competitive
+### Attention Mechanisms
+
+.pull-left[
+The input length increases from 200kb for Enformer to 1mb for AlphaGenome.
+- Needed to support communication across GPUs during training.
+- Also supervised the attention maps using HI-C contact maps
+]
+
+.pull-right[
+<img src="figures/alpha_genome_architecture.png" width=550/><br/>
+<span style="font-size: 16px">
+AlphaGenome processes sequences across multiple devices and includes 2D output
+prediction tracks.
+</span>
+]
+
+---
+
+### Attention Mechanisms
+
+.pull-left[
+CellCAP also uses attention, but on gene expression data, not sequence inputs.
+Different perturbation response programs "attend" to a subset of relevant genes.
+]
+
+.pull-right[
+<img src="figures/attention_maps_cellcap.jpg" width=220/>
+<span style="font-size: 16px">
+</span>
+]
+
+---
+
+### Convolution
+
+
 
 ---
 
