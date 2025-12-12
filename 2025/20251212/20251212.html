@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>20251212.knit</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kris Sankaran" />
+    <script src="libs/header-attrs-2.30/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: title
+
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      myred: ["{\\color{myred}{##1}}", 1],
+      mygreen: ["{\\color{mygreen}{##1}}", 1],
+      reals: "{\\mathbb{R}}",
+      "\*": ["{\\mathbf{##1}}", 1],
+      bm: ["{\\mathbf{##1}}", 1],
+      diag: ["{\\text{diag}\\left({##1}\\right)}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+&lt;/script&gt;
+
+&lt;style&gt;
+.myred {color: ##B4575C;}
+.mygreen {color: ##5A8A80;}
+&lt;/style&gt;
+
+
+
+
+
+
+## Fall 2025: Recap and Reflection
+
+&lt;div id="subtitle_left"&gt;
+Slides: &lt;a href="https://go.wisc.edu/wqwwwo/"&gt;go.wisc.edu/wqwwwo&lt;/a&gt;&lt;br/&gt;
+Lab: &lt;a href="https://measurement-and-microbes.org"&gt;measurement-and-microbes.org&lt;/a&gt; &lt;br/&gt;
+&lt;/div&gt;
+&lt;div id="subtitle_right"&gt;
+Kris Sankaran &lt;br/&gt;
+AI and Genomics Reading Group &lt;br/&gt;
+12 | December | 2025 &lt;br/&gt;
+&lt;/div&gt;
+
+---
+
+### Outline
+
+* What were the most important advances we read about?
+
+* Which technical tricks did we see repeatedly?
+
+* What still seems to be more of an art than a science?
+
+* What are potential areas of improvement?
+
+---
+
+## Advances
+
+---
+
+### Functional Track Prediction
+
+The direct target for Sequence-to-Function (S2F) was to improve functional
+genomic tracks prediction.
+
+They often reported correlation (pearson and/or spearman) across bins (e.g., 128
+bp for enformer).
+
+&lt;img src="figures/enformer_improvement.png" width=900/&gt;
+&lt;span style="font-size: 16px"&gt;
+Improvements reported by the Enformer model [1].
+&lt;/span&gt;
+
+---
+
+### Functional Track Prediction
+
+.pull-left[
+The direct target for Sequence-to-Function (S2F) was to improve functional
+genomic tracks prediction.
+
+They often reported correlation (pearson and/or spearman) across bins (e.g., 128
+bp for enformer).
+]
+
+.pull-right[
+&lt;img src="figures/alpha_genome_improvement.png" width=600/&gt;
+&lt;span style="font-size: 16px"&gt;
+Improvements reported by the AlphaGenome model [2].
+&lt;/span&gt;
+]
+
+---
+
+### Variant Effect Prediction
+
+An indirect evaluation strategy was to contrast functional track predictions on
+variant vs. reference alleles.
+
+**eQTLs**: Several papers used GTEx to see whether their models could predict gene
+expression changes in response to single nucleotide variants observed in real
+human populations [Enformer, AlphaGenome, TraitGym].
+
+.center[
+&lt;img src="figures/prediction_types_2.png" width=600/&gt;
+]
+
+---
+
+### Variant Effect Prediction
+
+An indirect evaluation strategy was to contrast functional track predictions on
+variant vs. reference alleles.
+
+**MRPA assays**: Several papers also tested whether their models could predict
+how gene expression changes in response to experimentally introduced variants
+[Enformer, AlphaGenome, GET].
+
+.center[
+&lt;img src="figures/prediction_types_3.png" width=900/&gt;
+]
+---
+
+### Many Downstream Tasks
+
+In the spirit of foundation models for language, the papers argued that the
+models could be applied to many types of downstream tasks, either zero-shot or
+after fine-tuning.
+
+- Enformer and AlphaGenome
+    - Predict enhancer-target pairs on independent CRISPRi perturbation datasets.
+- GET [3]
+  - Predict expression levels on cell types and functional genomics assays
+  (CAGE) that were not a part of training. This used LORA fine-tuning.
+
+---
+
+### Many Downstream Tasks
+
+In the spirit of foundation models for language, the papers argued that the
+models could be applied to many types of downstream tasks, either zero-shot or
+after fine-tuning.
+
+- AlphaGenome: Could predict polyadenalation QTLs despite not including polyadenalation signals as a response track during training.
+- TraitGym [4]: Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
+
+---
+
+## Techniques
+
+---
+
+### Attention Mechanisms
+
+Enformer, AlphaGenome, and GET all used transformer-based attention to learn
+long-range sequence relationships.
+- The attention maps were evidence that long-range information helped.
+
+.center[
+&lt;img src="figures/attention_map_enformer.png" width=500/&gt;&lt;br/&gt;
+&lt;span style="font-size: 16px"&gt;
+The Enformer model automatically learned to attend to TAD boundaries.
+&lt;/span&gt;
+]
+
+---
+
+### Attention Mechanisms
+
+.pull-left[
+The input length increases from 200kb for Enformer to 1mb for AlphaGenome.
+- Needed to support communication across GPUs during training.
+- Also supervised the attention maps using HI-C contact maps
+]
+
+.pull-right[
+&lt;img src="figures/alpha_genome_architecture.png" width=550/&gt;&lt;br/&gt;
+&lt;span style="font-size: 16px"&gt;
+AlphaGenome processes sequences across multiple devices and includes 2D output
+prediction tracks.
+&lt;/span&gt;
+]
+
+---
+
+### Attention Mechanisms
+
+.pull-left[
+CellCAP also uses attention, but on gene expression data, not sequence inputs.
+Different perturbation response programs "attend" to a subset of relevant genes
+[5].
+]
+
+.pull-right[
+&lt;img src="figures/attention_maps_cellcap.jpg" width=220/&gt;
+&lt;span style="font-size: 16px"&gt;
+&lt;/span&gt;
+]
+
+---
+
+### Convolution
+
+1. Though attention is important for combining long-range information,
+convolutional layers are still used for extracting low-level sequence features.
+
+1. A single convolutional filter can be thought of like a PWM scanning the input
+sequence for a pattern.
+
+.center[
+&lt;img src="figures/convolution3.png" width=500/&gt;
+]
+
+---
+
+### Convolution
+
+.pull-left[
+1. The U-net structure allowed both deep and shallow convolutional features,
+through encoder/decoder and skip connections, respectively.
+]
+
+.pull-right[
+&lt;img src="figures/convolution2.png" width=200/&gt;
+]
+
+---
+
+### Ensembling and Distillation
+
+.pull-left[
+1. The TraitGym study found that ensembling multiple sequence models yielded
+better performance than using any one model in isolation.
+
+1. Distillation: To speed up inference for their public API, AlphaGenome trained
+a "student" model to emulate the original model's predictions.
+]
+
+.pull-right[
+&lt;img src="figures/distillation-summary.png" width=500/&gt;
+]
+
+---
+
+### Interpretation: In-Silico Mutagenesis (ISM)
+
+How does swapping the reference with a variant changes track predictions? Large
+changes could be important transcription factors. TraitGym, Enformer, GET, and
+AlphaGenome all used this idea.
+
+.center[
+&lt;img src="figures/alpha_genome_ism.png" width=700/&gt;
+]
+
+---
+
+### Interpretation: In-Silico Mutagenesis (ISM)
+
+In TraitGym, we had a self-supervised version of in-silico mutagenesis. Instead
+of comparing
+
+`\begin{align*}
+y\left(\text{alt}\right) \text{vs}. y\left({\text{ref}}\right)
+\end{align*}`
+
+we could compare embeddings
+
+`\begin{align*}
+z\left(\text{alt}\right) \text{vs.} z\left(\text{alt}\right).
+\end{align*}`
+
+---
+
+### Interpretation: Gradients
+
+A related idea was to visualize the gradient of a target track with respect to
+an input sequence. In Enformer and GET, this showed that the models had learned
+long-range enhancer interactions.
+
+.center[
+&lt;img src="figures/enformer_gradient.png" width = 1000/&gt;
+]
+
+---
+
+### Interpretation: Activations
+
+We could try to understand individual neurons by seeing which sequence inputs
+they activated on. Some neurons activate on motifs, but we never (?) saw more
+complex regulatory "grammar" directly through network activations.
+
+.center[
+&lt;img src="figures/convolution4.png" width = 900/&gt;
+]
+
+---
+
+## Weaknesses and Opportunities
+
+---
+
+### Data Curation
+
+There was very little agreement in the choice of datasets across models. It is
+hard to tell which advances were due to architectural advances vs. better
+training data.
+
+- ATAC-seq was treated as input for GET, but output in AlphaGenome
+- AlphaGenome used mice and humans, GPN-Promoter used 434 species
+
+---
+
+### Data Curation
+
+Can we borrow ideas from efficient training of LLMs?
+
+&lt;img src="figures/pretraining_efficiency.png" width=800/&gt;
+
+---
+
+### Population-Level Variation
+
+The ROSMAP dataset included whole genome sequencing and RNA expression
+measurements for 839 people. Applying ISM to Enformer on these data correctly
+identified eQTL positions, but the sign of the predicted effect was often wrong.
+
+.pull-left[
+&lt;img src="figures/rosmap_1.png" width=350/&gt;
+]
+
+.pull-right[
+&lt;img src="figures/rosmap_2.png" width=350/&gt;
+]
+
+---
+
+### Population-Level Variation
+
+.pull-left[
+Note that there is a follow-up [7].
+]
+
+.pull-right[
+&lt;img src="figures/allele_variants.png" width=340/&gt;
+]
+
+---
+
+### Non-Sequence Data
+
+For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi [6]) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+
+.center[
+&lt;img src="figures/higashi.jpg" width=700/&gt;
+]
+
+---
+
+### Non-Sequence Data
+
+.pull-left[
+For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi [6]) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+]
+
+.pull-right[
+&lt;img src="figures/alpha_genome_architecture-2.png"/&gt;
+]
+
+---
+
+class: reference
+
+### References
+
+[1] Ž. Avsec et al. "Effective gene expression prediction from sequence by integrating long-range interactions". In: _Nature Methods_ 18.10 (Oct. 2021), p. 1196–1203. ISSN: 1548-7105.
+DOI: [10.1038/s41592-021-01252-x](https://doi.org/10.1038%2Fs41592-021-01252-x). URL: [http://dx.doi.org/10.1038/s41592-021-01252-x](http://dx.doi.org/10.1038/s41592-021-01252-x).
+
+[2] Ž. Avsec et al. "AlphaGenome: advancing regulatory variant effect prediction with a unified DNA sequence model".  (Jun. 2025). DOI:
+[10.1101/2025.06.25.661532](https://doi.org/10.1101%2F2025.06.25.661532). URL: [http://dx.doi.org/10.1101/2025.06.25.661532](http://dx.doi.org/10.1101/2025.06.25.661532).
+
+[3] X. Fu et al. "A foundation model of transcription across human cell types". In: _Nature_ 637.8047 (Jan. 2025), p. 965–973. ISSN: 1476-4687. DOI:
+[10.1038/s41586-024-08391-z](https://doi.org/10.1038%2Fs41586-024-08391-z). URL: [http://dx.doi.org/10.1038/s41586-024-08391-z](http://dx.doi.org/10.1038/s41586-024-08391-z).
+
+[4] G. Benegas et al. "Benchmarking DNA Sequence Models for Causal Regulatory Variant Prediction in Human Genetics".  (Feb. 2025). DOI:
+[10.1101/2025.02.11.637758](https://doi.org/10.1101%2F2025.02.11.637758). URL: [http://dx.doi.org/10.1101/2025.02.11.637758](http://dx.doi.org/10.1101/2025.02.11.637758).
+
+[5] Y. Xu et al. "Explainable modeling of single-cell perturbation data using attention and sparse dictionary learning". In: _Cell Systems_ 16.4 (Apr. 2025), p. 101245. ISSN:
+2405-4712. DOI: [10.1016/j.cels.2025.101245](https://doi.org/10.1016%2Fj.cels.2025.101245). URL:
+[http://dx.doi.org/10.1016/j.cels.2025.101245](http://dx.doi.org/10.1016/j.cels.2025.101245).
+
+[6] R. Zhang et al. "Ultrafast and interpretable single-cell 3D genome analysis with Fast-Higashi". In: _Cell Systems_ 13.10 (Oct. 2022), pp. 798-807.e6. ISSN: 2405-4712. DOI:
+[10.1016/j.cels.2022.09.004](https://doi.org/10.1016%2Fj.cels.2022.09.004). URL: [http://dx.doi.org/10.1016/j.cels.2022.09.004](http://dx.doi.org/10.1016/j.cels.2022.09.004).
+
+[7] X. Tu et al. "Deep genomic models of allele-specific measurements".  (Apr. 2025). DOI: [10.1101/2025.04.09.648060](https://doi.org/10.1101%2F2025.04.09.648060). URL:
+[http://dx.doi.org/10.1101/2025.04.09.648060](http://dx.doi.org/10.1101/2025.04.09.648060).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

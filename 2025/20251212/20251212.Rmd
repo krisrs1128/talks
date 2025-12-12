@@ -72,7 +72,7 @@ bib <- ReadBib("references.bib")
 ## Fall 2025: Recap and Reflection
 
 <div id="subtitle_left">
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/wqwwwo/">go.wisc.edu/wqwwwo</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 </div>
 <div id="subtitle_right">
@@ -109,7 +109,7 @@ bp for enformer).
 
 <img src="figures/enformer_improvement.png" width=900/>
 <span style="font-size: 16px">
-Improvements reported by the Enformer model.
+Improvements reported by the Enformer model `r Citep(bib, "Avsec2021")`.
 </span>
 
 ---
@@ -127,7 +127,7 @@ bp for enformer).
 .pull-right[
 <img src="figures/alpha_genome_improvement.png" width=600/>
 <span style="font-size: 16px">
-Improvements reported by the Alpha Genome model.
+Improvements reported by the AlphaGenome model `r Citep(bib, "Avsec2025")`.
 </span>
 ]
 
@@ -140,12 +140,26 @@ variant vs. reference alleles.
 
 **eQTLs**: Several papers used GTEx to see whether their models could predict gene
 expression changes in response to single nucleotide variants observed in real
-human populations.
-- Enformer, AlphaGenome, TraitGym (variant vs. not variant prediction),
+human populations [Enformer, AlphaGenome, TraitGym].
 
-**MRPA assays**: Several papers also tested whether their models could predict how gene expression changes in response to experimentally introduced variants.
-- Enformer, AlphaGenome, GET
+.center[
+<img src="figures/prediction_types_2.png" width=600/>
+]
 
+---
+
+### Variant Effect Prediction
+
+An indirect evaluation strategy was to contrast functional track predictions on
+variant vs. reference alleles.
+
+**MRPA assays**: Several papers also tested whether their models could predict
+how gene expression changes in response to experimentally introduced variants
+[Enformer, AlphaGenome, GET].
+
+.center[
+<img src="figures/prediction_types_3.png" width=900/>
+]
 ---
 
 ### Many Downstream Tasks
@@ -156,9 +170,9 @@ after fine-tuning.
 
 - Enformer and AlphaGenome
     - Predict enhancer-target pairs on independent CRISPRi perturbation datasets.
-- GET
+- GET `r Citep(bib, "Fu2025")`
   - Predict expression levels on cell types and functional genomics assays
-  (CAGE) that were not a part of training. This used a LORA fine-tuning step.
+  (CAGE) that were not a part of training. This used LORA fine-tuning.
 
 ---
 
@@ -169,7 +183,7 @@ models could be applied to many types of downstream tasks, either zero-shot or
 after fine-tuning.
 
 - AlphaGenome: Could predict polyadenalation QTLs despite not including polyadenalation signals as a response track during training.
-- TraitGym: Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
+- TraitGym `r Citep(bib, "Benegas2025")`: Defined zero-shot scores for causal variant prediction across mendelian and complex traits.
 
 ---
 
@@ -214,7 +228,8 @@ prediction tracks.
 
 .pull-left[
 CellCAP also uses attention, but on gene expression data, not sequence inputs.
-Different perturbation response programs "attend" to a subset of relevant genes.
+Different perturbation response programs "attend" to a subset of relevant genes
+`r Citep(bib, "Xu2025")`.
 ]
 
 .pull-right[
@@ -227,38 +242,170 @@ Different perturbation response programs "attend" to a subset of relevant genes.
 
 ### Convolution
 
+1. Though attention is important for combining long-range information,
+convolutional layers are still used for extracting low-level sequence features.
 
+1. A single convolutional filter can be thought of like a PWM scanning the input
+sequence for a pattern.
+
+.center[
+<img src="figures/convolution3.png" width=500/>
+]
+
+---
+
+### Convolution
+
+.pull-left[
+1. The U-net structure allowed both deep and shallow convolutional features,
+through encoder/decoder and skip connections, respectively.
+]
+
+.pull-right[
+<img src="figures/convolution2.png" width=200/>
+]
 
 ---
 
 ### Ensembling and Distillation
 
+.pull-left[
+1. The TraitGym study found that ensembling multiple sequence models yielded
+better performance than using any one model in isolation.
+
+1. Distillation: To speed up inference for their public API, AlphaGenome trained
+a "student" model to emulate the original model's predictions.
+]
+
+.pull-right[
+<img src="figures/distillation-summary.png" width=500/>
+]
+
 ---
 
-### Interpretations
+### Interpretation: In-Silico Mutagenesis (ISM)
 
-_In Silico Mutagenesis_
+How does swapping the reference with a variant changes track predictions? Large
+changes could be important transcription factors. TraitGym, Enformer, GET, and
+AlphaGenome all used this idea.
 
-_Latent Space_
-
+.center[
+<img src="figures/alpha_genome_ism.png" width=700/>
+]
 
 ---
 
-## Heuristics
+### Interpretation: In-Silico Mutagenesis (ISM)
+
+In TraitGym, we had a self-supervised version of in-silico mutagenesis. Instead
+of comparing
+
+\begin{align*}
+y\left(\text{alt}\right) \text{vs}. y\left({\text{ref}}\right)
+\end{align*}
+
+we could compare embeddings
+
+\begin{align*}
+z\left(\text{alt}\right) \text{vs.} z\left(\text{alt}\right).
+\end{align*}
+
+---
+
+### Interpretation: Gradients
+
+A related idea was to visualize the gradient of a target track with respect to
+an input sequence. In Enformer and GET, this showed that the models had learned
+long-range enhancer interactions.
+
+.center[
+<img src="figures/enformer_gradient.png" width = 1000/>
+]
+
+---
+
+### Interpretation: Activations
+
+We could try to understand individual neurons by seeing which sequence inputs
+they activated on. Some neurons activate on motifs, but we never (?) saw more
+complex regulatory "grammar" directly through network activations.
+
+.center[
+<img src="figures/convolution4.png" width = 900/>
+]
+
+---
+
+## Weaknesses and Opportunities
 
 ---
 
 ### Data Curation
 
----
+There was very little agreement in the choice of datasets across models. It is
+hard to tell which advances were due to architectural advances vs. better
+training data.
+
+- ATAC-seq was treated as input for GET, but output in AlphaGenome
+- AlphaGenome used mice and humans, GPN-Promoter used 434 species
 
 ---
 
-## Weaknesses
+### Data Curation
+
+Can we borrow ideas from efficient training of LLMs?
+
+<img src="figures/pretraining_efficiency.png" width=800/>
 
 ---
 
-###
+### Population-Level Variation
+
+The ROSMAP dataset included whole genome sequencing and RNA expression
+measurements for 839 people. Applying ISM to Enformer on these data correctly
+identified eQTL positions, but the sign of the predicted effect was often wrong.
+
+.pull-left[
+<img src="figures/rosmap_1.png" width=350/>
+]
+
+.pull-right[
+<img src="figures/rosmap_2.png" width=350/>
+]
+
+---
+
+### Population-Level Variation
+
+.pull-left[
+Note that there is a follow-up `r Citep(bib, "Tu2025")`.
+]
+
+.pull-right[
+<img src="figures/allele_variants.png" width=340/>
+]
+
+---
+
+### Non-Sequence Data
+
+For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi `r Citep(bib, "Zhang2022")`) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+
+.center[
+<img src="figures/higashi.jpg" width=700/>
+]
+
+---
+
+### Non-Sequence Data
+
+.pull-left[
+For Perturb-Seq and HI-C, we saw models (CellCAP and FastHigashi `r Citep(bib, "Zhang2022")`) that borrowed ideas from deep learning but which were simpler and more scalable than the analogous deep learning approaches.
+]
+
+.pull-right[
+<img src="figures/alpha_genome_architecture-2.png"/>
+]
 
 ---
 
