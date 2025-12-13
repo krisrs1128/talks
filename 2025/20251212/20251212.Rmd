@@ -101,23 +101,8 @@ AI and Genomics Reading Group <br/>
 
 ### Functional Track Prediction
 
-The direct target for Sequence-to-Function (S2F) was to improve functional
-genomic tracks prediction.
-
-They often reported correlation (pearson and/or spearman) across bins (e.g.,
-128bp for Enformer).
-
-<img src="figures/enformer_improvement.png" width=900/>
-<span style="font-size: 16px">
-Improvements reported by the Enformer model `r Citep(bib, "Avsec2021")`.
-</span>
-
----
-
-### Functional Track Prediction
-
 .pull-left[
-The direct target for Sequence-to-Function (S2F) was to improve functional
+The direct goal for Sequence-to-Function (S2F) was to improve functional
 genomic tracks prediction.
 
 They often reported correlation (pearson and/or spearman) across bins (e.g., 128
@@ -130,6 +115,21 @@ bp for enformer).
 Improvements reported by the AlphaGenome model `r Citep(bib, "Avsec2025")`.
 </span>
 ]
+
+---
+
+### Functional Track Prediction
+
+The direct goal for Sequence-to-Function (S2F) was to improve functional
+genomic tracks prediction.
+
+They often reported correlation (pearson and/or spearman) across bins (e.g.,
+128bp for Enformer).
+
+<img src="figures/enformer_improvement.png" width=900/>
+<span style="font-size: 16px">
+Improvements reported by the Enformer model `r Citep(bib, "Avsec2021")`.
+</span>
 
 ---
 

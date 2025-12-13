@@ -27,7 +27,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Paper: <a href="https://go.wisc.edu/oe3g62">go.wisc.edu/oe3g62</a><br/>
+Preprint: <a href="https://go.wisc.edu/oe3g62">go.wisc.edu/oe3g62</a><br/>
 Slides: <a href="https://go.wisc.edu/ozm0il">go.wisc.edu/ozm0il</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 Joint w/
@@ -240,6 +240,12 @@ H_{\cdot, kl} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ 
 <img src="figures/g_kl.png" width=350/>
 ]
 
+
+---
+
+.center[
+<img src="figures/rmetric_explanation-v2.png" width=800/>
+]
 
 ---
 
@@ -563,7 +569,7 @@ are ways to systematically characterize it.
 1. Interactivity makes it possible to progressively reveal extra information
 related to distortion depending on the analysts' priorities.
 
-**Paper**: https://go.wisc.edu/oe3g62<br/>
+**Preprint**: https://go.wisc.edu/oe3g62<br/>
 
 **Package**:
 - https://github.com/krisrs1128/distortions
