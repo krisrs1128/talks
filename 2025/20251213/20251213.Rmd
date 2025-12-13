@@ -27,7 +27,7 @@ class: title
 </style>
 
 <div id="subtitle_left">
-Paper: <a href="https://go.wisc.edu/oe3g62"/>go.wisc.edu/oe3g62</a><br/>
+Paper: <a href="https://go.wisc.edu/oe3g62">go.wisc.edu/oe3g62</a><br/>
 Slides: <a href="https://go.wisc.edu/ozm0il">go.wisc.edu/ozm0il</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 Joint w/
@@ -63,7 +63,7 @@ bib <- ReadBib("references.bib")
 ### Map Distortions
 
  When making maps, we know that any projection introduces some degree of
- distortion. It's impossible to map the 3D earth into a 2D map while preserving
+ distortion. It's impossible to map the 3D Earth into a 2D map while preserving
  all metric properties.
 
 .center[
@@ -89,7 +89,7 @@ navigation.
 ### High-Dimensional Distortions
 
 The same is true for high-dimensional data. Despite the popularity of nonlinear
-dimensionality reductions like UMAP and t-SNE, we know that they introduce
+dimensionality reductions like UMAP and $t$-SNE, we know that they introduce
 distortions. For example, they may not preserve density within different
 regions of the plot.
 
@@ -148,7 +148,7 @@ See also `r Citep(bib, c("simplystatisticsSimplyStatistics", "Kozlov2024"))`.
 ### Specious Art
 
 More generally, nonlinear dimensionality reduction has become the source of
-widespread concern in the single cell literature `r Citep(bib, "Chari2023")`.
+widespread concern in the single-cell literature `r Citep(bib, "Chari2023")`.
 
 .center[
 <img src="figures/specious_art.png" width=700/>
@@ -180,28 +180,48 @@ This is similar in spirit to Tissot's indicatrix in the cartography literature
 
 ### Graph-based Metrics
 
-The graph Laplacian induces a metric in the original manifold. Intuitively, two
-points are close to one another if a random walk started at one point has a high
-probability ending up at the other after $t$ steps.
+Consider the KNN graph of a dataset. Two points are considered close if a random
+walk started at one point has a high probability of reaching the other within
+$t$ time steps.
 
 .center[
-<img src="figures/random-walk-laplacian.svg" width=800/>
+<img src="figures/laplacian_metric-0.png" width=800/>
 ]
 
 ---
 
-### Metric Distortion
+### Graph-based Metrics
 
-The RMetric algorithm measures how these intrinsic, graph-based distances become
-distorted during the embedding process `r Citep(bib, c("perrault2006metric", "mcqueen2016nearly"))`.
-This geometric view has connections to `r Citep(bib, c("Venna2006", "xia2024statistical", "Ovchinnikova2020"))`.
+Consider the KNN graph of a dataset. Two points are considered close if a random
+walk started at one point has a high probability of reaching the other within
+$t$ time steps.
+
+.center[
+<img src="figures/laplacian_metric.png" width=800/>
+]
 
 ---
 
 ### Local Metric Distortion
 
+The RMetric algorithm measures how these intrinsic, graph-based distances become
+distorted during the embedding process `r Citep(bib, c("perrault2006metric", "mcqueen2016nearly"))`.
+This geometric view has connections to `r Citep(bib, c("Venna2006", "xia2024statistical", "Ovchinnikova2020"))`.
+
 .center[
-<img src="figures/rmetric_explanation-v2.png" width=710/>
+<img src="figures/distortion_example_1.png" width=1000/>
+]
+
+---
+
+### Local Metric Distortion
+
+The RMetric algorithm measures how these intrinsic, graph-based distances become
+distorted during the embedding process `r Citep(bib, c("perrault2006metric", "mcqueen2016nearly"))`.
+This geometric view has connections to `r Citep(bib, c("Venna2006", "xia2024statistical", "Ovchinnikova2020"))`.
+
+.center[
+<img src="figures/distortion_example_1-2.png" width=750/>
 ]
 
 ---
@@ -262,12 +282,37 @@ embeddings in the gaussian mixtures example.
 
 ### Embedding Discontinuities
 
-.pull-left[
 - RMetric works well when distortions are "smooth" and the graph Laplacian
 reflects derivative information of the embedding map.
 
-- It fails when their are discontinuities -- two points that are close to one
+- It fails when there are discontinuities -- two points that are close to one
 another in the original space but which are fragmented in the embedding.
+
+.center[
+<img src="figures/distortion_example_2.png" width=800/>
+]
+
+---
+
+### Embedding Discontinuities
+
+- RMetric works well when distortions are "smooth" and the graph Laplacian
+reflects derivative information of the embedding map.
+
+- It fails when there are discontinuities -- two points that are close to one
+another in the original space but which are fragmented in the embedding.
+
+.center[
+<img src="figures/distortion_example_2-2.png" width=400/>
+]
+
+---
+
+### Embedding Discontinuities
+
+.pull-left[
+In this case, we look directly for outliers in the scatterplot of true vs.
+embedding neighborhood distances.
 ]
 
 .pull-right[
@@ -389,7 +434,7 @@ skeleton into 2D.
 
 ### Mammoth
 
-This is the embedding when applying UMAP with a 50 nearest neighbor graph and
+This is the embedding when applying UMAP with a 50 nearest-neighbor graph and
 `min_dist = 0.5`.
 
 .center[
@@ -401,7 +446,7 @@ This is the embedding when applying UMAP with a 50 nearest neighbor graph and
 ### Mammoth
 
 Parts of the shoulders, head, and tail are further apart in the embedding
-compared to the original data. Most of other distortions are points that are
+compared to the original data. Most other distortions are points that are
 placed too close to one another.
 
 .center[
@@ -413,7 +458,7 @@ placed too close to one another.
 ### Mammoth
 
 Parts of the shoulders, head, and tail are further apart in the embedding
-compared to the original data. Most of other distortions are points that are
+compared to the original data. Most other distortions are points that are
 placed too close to one another.
 
 .center[
@@ -424,7 +469,7 @@ placed too close to one another.
 
 ### PBMC Dataset
 
-This single cell gene expression data set used in the introductory data
+This single-cell gene expression data set used in the introductory data
 visualization tutorial from the scanpy package `r Citep(bib, "scanpytutorialsAnalysisVisualization")`. Each point is the UMAP embedding of a
 cell's high-dimensional gene expression data.
 
@@ -448,7 +493,7 @@ cell's high-dimensional gene expression data.
 ### Hydra Cell Atlas
 
 .pull-left[
-Here is an application to a hydra cell differentiation dataset `r Citep(bib, c("Siebert2019", "xia2024statistical"))`. We fit t-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
+Here is an application to a hydra cell differentiation dataset `r Citep(bib, c("Siebert2019", "xia2024statistical"))`. We fit $t$-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
 exaggerated.
 ]
 
@@ -561,7 +606,7 @@ PrintBibliography(bib, start = 14, end = 28)
 
 ### Graph Laplacian
 
-This random walk information is encoded in the normalized graph laplacian.
+This random walk information is encoded in the normalized graph Laplacian.
 
 .pull-left[
 \begin{align}
