@@ -28,10 +28,10 @@ class: title
 
 <div id="subtitle_left">
 Paper: <a href="https://go.wisc.edu/oe3g62"/>go.wisc.edu/oe3g62</a><br/>
-Slides: <a href="https://go.wisc.edu/">go.wisc.edu/</a><br/>
+Slides: <a href="https://go.wisc.edu/ozm0il">go.wisc.edu/ozm0il</a><br/>
 Lab: <a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a> <br/>
 Joint w/
-Shuzhen Zhang, Chenab, Marina Meila <br/>
+Shuzhen Zhang, Chenab, and Marina Meila <br/>
 </div>
 <div id="subtitle_right">
 Kris Sankaran <br/>
@@ -133,18 +133,6 @@ Example from `r Citep(bib, "xia2024statistical")`.
 
 ---
 
-### Consequences
-
-They are
-impact scientific interpretation `r Citep(bib, c("Liu2025", "Kobak2021"))`. For example, they have been known to create
-misleading differences between cell types that are actually quite similar.
-
-.center[
-<img src="figures/scdeed-example.png" width=700/>
-]
-
----
-
 ### Controversy
 
 .pull-three-quarters-left[
@@ -152,8 +140,7 @@ misleading differences between cell types that are actually quite similar.
 ]
 
 .pull-three-quarters-right[
-These problems have even entered the wider discourse about misinterpretation of
-scientific findings.
+See also `r Citep(bib, c("simplystatisticsSimplyStatistics", "Kozlov2024"))`.
 ]
 
 ---
@@ -207,7 +194,7 @@ probability ending up at the other after $t$ steps.
 
 The RMetric algorithm measures how these intrinsic, graph-based distances become
 distorted during the embedding process `r Citep(bib, c("perrault2006metric", "mcqueen2016nearly"))`.
-This geometric view captures many related diagnostics.
+This geometric view has connections to `r Citep(bib, c("Venna2006", "xia2024statistical", "Ovchinnikova2020"))`.
 
 ---
 
@@ -264,12 +251,11 @@ difference is captured in the local metrics.
 ### Local Isometrization
 
 Since we know the metrics locally, we can invert the distortion within a
-neighborhood of the user interaction. For example, here we adapt the embeddings
-in the uniform data example to reflect the metric close to where the user's
-mouse is hovering.
+neighborhood of the cursor. For example, here we interactively adapt the
+embeddings in the gaussian mixtures example.
 
 .center[
-<img src="figures/two_cluster_interaction.gif" width=700/>
+<img src="figures/two_cluster_interaction.gif" width=600/>
 ]
 
 ---
@@ -315,34 +301,77 @@ is:
 
 ---
 
-### Variable Density Swiss Roll
+This is the classic Swiss Roll data, but with higher density near the
+endpoints.
 
-```{r, echo = FALSE}
+<center>
+```{r, echo = FALSE, out.width = 500, fig.align="center"}
 library(tidyverse)
 library(plotly)
 library(scico)
+library(grDevices)
 library(scales)
 sr <- read_csv("/Users/krissankaran/Desktop/collaborations/distortions-project/distortions/docs/tutorials/baselines/data/swiss_noise_0.5.csv") |>
   rename(x = `0`, y = `1`, z = `2`, t = `3`)
 
-# map continuous `t` to a scico palette
-pal <- scico(256, palette = "vik")
-sr$col <- col_numeric(pal, domain = range(sr$t, na.rm = TRUE))(sr$t)
+# map continuous `t` to the ggplot2-style gradient
+rng <- range(sr$t, na.rm = TRUE)
+t_scaled <- (sr$t - rng[1]) / diff(rng)
+pal_fun <- colorRamp(c("#B776A6", "#BAC4A2"))
+cols_mat <- matrix(NA_real_, nrow = length(t_scaled), ncol = 3)
+cols_mat <- pal_fun(t_scaled)
+sr$col <- rgb(cols_mat[,1], cols_mat[,2], cols_mat[,3], maxColorValue = 255)
+
+
 p <- plot_ly(sr, x = ~x, y = ~y, z = ~z, type = 'scatter3d', mode = 'markers', marker = list(color = ~col, size = 4), hoverinfo = 'none', showlegend = FALSE) %>%
   layout(scene = list(
     xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
     yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
     zaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)
   )) %>%
-  config(displayModeBar = FALSE, scrollZoom = FALSE)
+  config(displayModeBar = FALSE)
 p
 ```
+</center>
 
 ---
 
+### Variable Density Swiss Roll
+
+$t$-SNE (perplexity = 100) breaks the roll in the low-density region. It also
+artificially spreads out the high density area.
+
+.center[
+<img src="figures/noisy_embedding_0.5.png" width=640/>
+]
+
 ---
 
-### Comparison with LOO-Map
+### Fragmented Neighborhoods
+
+.center[
+<img src="figures/swiss_roll_neighborhoods.gif" width=640/>
+]
+
+---
+
+### Poorly Preserved Distances
+
+.center[
+<img src="figures/swiss_roll_boxplot.gif" width=710/>
+]
+
+---
+
+### Comparison with LOO-map
+
+The stability-based algorithm `r Citep(bib, "Liu2025")` gives a similar
+interpretation. But the visual encoding is more subtle, and the leave-one-out
+approach is time consuming even with approximations.
+
+.center[
+<img src="figures/p_scores_0.5.png" width=600/>
+]
 
 ---
 
@@ -360,11 +389,11 @@ skeleton into 2D.
 
 ### Mammoth
 
-This is the embedding when applying UMAP with a 10 nearest neighbor graph and
+This is the embedding when applying UMAP with a 50 nearest neighbor graph and
 `min_dist = 0.5`.
 
 .center[
-<img src="figures/mammoth_embedding.png" width=400/>
+<img src="figures/mammoth_plain_umap.png" width=500/>
 ]
 
 ---
@@ -376,7 +405,19 @@ compared to the original data. Most of other distortions are points that are
 placed too close to one another.
 
 .center[
-<img src="figures/mammoth_embedding.gif" width=390/>
+<img src="figures/mammoth_neighborhoods.gif" width=450/>
+]
+
+---
+
+### Mammoth
+
+Parts of the shoulders, head, and tail are further apart in the embedding
+compared to the original data. Most of other distortions are points that are
+placed too close to one another.
+
+.center[
+<img src="figures/mammoth_boxplot_inter.gif" width=550/>
 ]
 
 ---
@@ -388,40 +429,18 @@ visualization tutorial from the scanpy package `r Citep(bib, "scanpytutorialsAna
 cell's high-dimensional gene expression data.
 
 .center[
-<img src="figures/pbmc_original.png" width=470/>
+<img src="figures/pbmc-a.png" width=490/>
 ]
 
 ---
 
 ### PBMC Dataset
 
-* Distance scales vary across clusters.
-* Some boundary cells are neighbors with non-adjacent clusters in embedding space.
+* Distance scales vary both across and within clusters.
+* There are two sets of T-cells that are closer to Monocytes than the embedding alone suggests.
 
 .center[
-<img src="figures/pbmc_links.gif" width=470/>
-]
-
----
-
-### PBMC Dataset
-
-Here are the analogous embeddings when increasing the number of neighbors used
-in the UMAP construction from 15 to 50.
-
-.center[
-<img src="figures/pbmc_original_n50.png" width=470/>
-]
-
----
-
-### PBMC Dataset
-
-In this case, the plasma and dendritic cells are less distorted than before, but
-some issues remain with the monocytes.
-
-.center[
-<img src="figures/pbmc_links_n50.gif" width=470/>
+<img src="figures/pbmc_boxplot_inter.gif" width=570/>
 ]
 
 ---
@@ -429,7 +448,7 @@ some issues remain with the monocytes.
 ### Hydra Cell Atlas
 
 .pull-left[
-Here is an application to a more realistic hydra cell atlas dataset `r Citep(bib, c("Siebert2019", "xia2024statistical"))`. We fit t-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
+Here is an application to a hydra cell differentiation dataset `r Citep(bib, c("Siebert2019", "xia2024statistical"))`. We fit t-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
 exaggerated.
 ]
 
@@ -465,19 +484,29 @@ are actually more spread out in the original data.
 
 ---
 
-### Counterexample
+### DensMap vs. UMAP
 
-Our visualization approach fails when local neighborhood information isn't
-enough. These two rings are overlapping in the original data.
+Both variation in ellipses and fragmented neighborhood statistics can be used to
+compare competing algorithms, similarly to `r Citep(bib, c("xia2024statistical", "Venna2006"))`.
 
 .center[
-<img src="figures/links-d1.png" width=300/>
-<img src="figures/links-d2.png" width=300/>
-<img src="figures/links-d3.png" width=300/>
+<img src="figures/densmap_v_umap.png" width=900/>
 ]
 
-The original data are interlocking links. The color is the $x$-axis value and
-would be unknown in practice.
+This example uses data from a _C. elegans_ cell differentiation study `r Citep(bib, "Packer2019")`.
+
+---
+
+### DensMap vs. UMAP
+
+Both variation in ellipses and fragmented neighborhood statistics can be used to
+compare competing algorithms, similarly to `r Citep(bib, c("xia2024statistical", "Venna2006"))`.
+
+.center[
+<img src="figures/densmap_v_umap_hist.png" width=950/>
+]
+
+This example uses data from a _C. elegans_ cell differentiation study `r Citep(bib, "Packer2019")`.
 
 ---
 
@@ -489,12 +518,23 @@ are ways to systematically characterize it.
 1. Interactivity makes it possible to progressively reveal extra information
 related to distortion depending on the analysts' priorities.
 
+**Paper**: https://go.wisc.edu/oe3g62<br/>
+
+**Package**:
+- https://github.com/krisrs1128/distortions
+- https://pypi.org/project/distortions
+
+.center[
+```{python, eval = FALSE, echo = TRUE}
+pip install distortions
+```
+]
 ---
 
 ### Thank you!
 
 * Contact: ksankaran@wisc.edu
-* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Helena Huang
+* Lab Members: Margaret Thairu, Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Megan Kuo, Helena Huang
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
 
 ---
@@ -505,6 +545,16 @@ class: reference
 
 ```{r, results='asis', echo = FALSE}
 PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+class: reference
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 14, end = 28)
 ```
 
 ---
@@ -526,4 +576,15 @@ D &= \text{diag}\left(K \mathbf{1}_{N}\right)\\
 \tilde{D} &= \text{diag}\left(K \mathbf{1}_{N}\right) \\
 L &= \frac{1}{\epsilon}\left[I - \tilde{D}^{-1}\tilde{K}\right] \\
 \end{align}
+]
+
+---
+
+### PBMC Dataset
+
+* Distance scales vary both across and within clusters.
+* There are two sets of T-cells that are closer to Monocytes than the embedding alone suggests.
+
+.center[
+<img src="figures/pbmc_neighborhoods.gif" width=500/>
 ]

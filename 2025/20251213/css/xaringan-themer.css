@@ -37,9 +37,9 @@
   width: 800px;
 }
 
-.title::before {    
+.title::before {
       content: "";
-      background-image: url("../figures/title_background.png");
+      background-image: url("../figures/cover.png");
       background-size: cover;
       position: absolute;
       top: 0px;
@@ -117,7 +117,7 @@ a, a > code {
   text-decoration: none;
 }
 .footnote {
-  
+
   position: absolute;
   bottom: 3em;
   padding-right: 4em;
@@ -129,7 +129,7 @@ a, a > code {
 .inverse {
   background-color: #09017F;
   color: #FFFFFF;
-  
+
 }
 .inverse h1, .inverse h2, .inverse h3 {
   color: #FFFFFF;
@@ -226,7 +226,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 #credit {
   position: absolute;
   top: 10px;
-  left: 950px; 
+  left: 950px;
   font-size: 20px;
   text-align: center;
 }
@@ -242,7 +242,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
   background-color: #f7f7f7;
   padding-left: 10px;
   font-size: 25px;
-  width: 200px;
+  width: 280px;
   color: #5f558e;
   text-align: right;
   right: 20px;
@@ -319,7 +319,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
-  
+
 .outline-container {
   /* font-family: 'Playfair Display', serif; */
   max-width: 800px;
