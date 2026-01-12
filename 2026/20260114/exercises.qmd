@@ -1,0 +1,46 @@
+---
+title: "Exercises"
+format: html
+---
+
+## City Temperatures
+
+Let's create versions of Figure 2.3 and 2.4 from the [reading](https://clauswilke.com/dataviz/aesthetic-mapping.html) this week. The command below reads in the data. We've filtered to a slightly different set of cities (Barrow is in Alaska, Honolulu is in Hawaii), but we should still be able to study changes in temperature over time.
+
+```{r}
+library(tidyverse)
+temperature <- read_csv("https://go.wisc.edu/bo9m94")
+head(temperature)
+```
+
+1.   Make a version of Figure 2.3 using a line mark (`geom_line`). Make at least one customization of the theme to make the plot more similar to the version in Figure 2.3. _Hint: To group the lines by city, use the `group = ` aesthetic mapping._
+
+```{r}
+
+```
+
+2.   Using the `group_by` + `summarise` pattern, compute the mean temperature
+  for each month in each city.
+
+```{r}
+
+```
+
+Using the data generated in (b), Make a version of Figure 2.4 using a tile mark (`geom_tile`). Try either (i) adding the `scale_fill_viridis_c(option = "magma")` scale to match the color scheme from the reading or (ii) adding`coord_fixed()` to make sure the marks are squares, not rectangles.
+
+```{r}
+
+```
+
+Compare and contrast the two displays. What types of comparisons are  easier to make / what patterns are most readily visible using Figure 2.3 vs. Figure 2.4, and vice versa?
+
+## Kia Thefts
+
+A complex visualization can easily overwhelm an unprepared audience. If there is no way to simplify the visualization, then one useful technique is to orient readers with a related but simpler visualization. We will illustrate this technique by visualizing trends in car thefts, emphasizing the recent rise in Kia/Hyundai thefts. We will work with the dataset below, which shows monthly totals for car thefts broken down by whether or not the stolen cars were Kias/Hyundais (`kia_hyundai`) or not (`others`)
+
+```{r}
+kia <- read_csv("https://go.wisc.edu/a0y51y")
+head(kia, 4)
+```
+
+1. Before plotting all cities, we will orient the reader using a plot focused on Chicago. Create the area plot below. _Hint: You can reshape the data with `kia |> pivot_longer(kia_hyundai:others, names_to = "type")`._

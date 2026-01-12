@@ -1,0 +1,387 @@
+
+# Visualization Crash Course
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+::: columns
+::: {.column width="50%"}
+Kris Sankaran<br/>
+Data Narratives<br/>
+14 | January | 2026
+:::
+
+::: {.column width="50%"}
+Notes: [https://go.wisc.edu/2ryi6q](https://go.wisc.edu/2ryi6q)<br/>
+Code: [https://go.wisc.edu/](https://go.wisc.edu/)
+:::
+:::
+
+<!-- 40 minute talk -->
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+library(RefManageR)
+
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, cache = FALSE, dpi = 200, fig.align = "center", fig.width = 6, fig.height = 3)
+BibOptions(
+  check.entries = FALSE,
+  bib.style = "numeric",
+  cite.style = "numeric",
+  style = "markdown",
+  hyperlink = FALSE,
+  dashed = FALSE,
+  max.names = 1
+)
+bib <- ReadBib("references.bib")
+```
+
+---
+
+## Plan
+
+Part 1: Graphical Encoding
+
+- Discussion: Previous data visualization
+- Lecture: [Introduction to ggplot2](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week01-01/), [Vocabulary of Marks](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week01-02/)
+- Exercise: City Temperatures
+
+Part 2: Multipanel Plots + Refinement
+
+- Lecture: [Faceting](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week03-01/), [Compound Plots](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week03-03/)
+- Exercise: Kia Thefts
+- Discussion: Data-to-Ink, Visualization Critique
+
+---
+
+## Part 1: Graphical Encoding
+
+---
+
+### Discussion
+
+Find an example of a visualization you created in a previous class. With your
+neighbors, discuss:
+
+- Why did you make it?
+- Who was your audience?
+- If you had a chance to revise it, what would you change?
+
+More generally,
+
+- When are visualizations worth making?
+- What makes a visualization good?
+
+---
+
+### Exercise
+
+Work through [City Temperatures] in the exercise sheet.
+
+[https://go.wisc.edu/ylp52p](https://go.wisc.edu/ylp52p)
+
+---
+
+### How many times larger is the circle on the right?
+
+<div style="text-align: center;">
+<iframe src="figures/circles.html" style="height: 620px; width: 600px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
+How many times taller is the bar on the right?
+
+<div style="text-align: center;">
+<iframe src="figures/bars.html" style="height: 620px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
+
+### Encoding and Efficiency
+
+Different ways of encoding information are perceived with different accuracies.
+This means that any visualization implicitly prioritizes some comparisons over
+others.
+
+<div style="text-align: center;">
+<img src="figures/ranking_encodings.png" width=600/><br/>
+Figure from `r Citep(bib, "heer2010crowdsourcing")`.
+</div>
+
+---
+
+### Popout
+
+No graphical encoding is neutral.
+
+  * Which comparisons are automatic?
+  * Which are laborious?
+
+<img src="figures/popout.png"/>
+
+---
+
+
+### Exercise
+
+Work through [Kia Thefts] in the exercise sheet.
+
+[https://go.wisc.edu/ylp52p](https://go.wisc.edu/ylp52p)
+
+If you want more exercises: https://go.wisc.edu/k1ng8o
+
+---
+
+### Data-to-Ink Ratio
+
+> Premature summarization is the root of all evil in statistics.
+>
+> -- Susan Holmes
+
+::: columns
+::: {.column width="50%"}
+Good visualizations show more of the data, faithfully represent it, and are
+memorable.
+:::
+
+
+::: {.column width="50%"}
+<img src="figures/data_ink2.png" width=450/><br/>
+Figure from `r Citep(bib, "tufte1983visual")`.
+:::
+::::
+
+---
+
+### Data-to-Ink Ratio
+
+> Premature summarization is the root of all evil in statistics.
+>
+> -- Susan Holmes
+
+::: columns
+::: {.column width="50%"}
+Good visualizations show more of the data, faithfully represent it, and are
+memorable.
+:::
+
+::: {.column width="50%"}
+<img src="figures/data_ink1.png" width=500/><br/>
+Figure from `r Citep(bib, "tufte1983visual")`.
+:::
+::::
+
+---
+
+### Data-to-Ink Ratio
+
+> Premature summarization is the root of all evil in statistics.
+>
+> -- Susan Holmes
+
+::: columns
+::: {.column width="50%"}
+Good visualizations show more of the data, faithfully represent it, and are
+memorable.
+:::
+
+::: {.column width="50%"}
+
+<img src="figures/wittke_thompson_fig1CD.jpg" width=500/><br/>
+#2 from `r Citep(bib, "broman_worst")`.
+:::
+::::
+
+---
+
+### Attention-to-Detail
+
+Creating a visualization is like writing an essay. It should go through many
+revisions.
+
+- Make sure the figure has correctly annotated axes and legends. The font size should be comparable to other text in the report / application.
+- Don't use more than 8 - 10 qualitative colors at a time. Consider customizing the palette.
+- Experiment with several encodings to see what they prioritize.
+- Save the figure with high resolution.
+
+---
+
+### Discussion
+
+Revisit the visualizations you discussed with your neighbors at the start of the
+class.
+
+- What are its graphical encodings? How does this choice make some questions
+easier or harder to answer?
+
+- Discuss potential improvements and their rationale. How would you implement them?
+
+---
+
+### References
+
+```{r, results='asis', echo = FALSE}
+PrintBibliography(bib, start = 1, end = 13)
+```
+
+---
+
+## Solutions
+
+---
+
+### Temperature
+
+```{r, echo = TRUE}
+library(tidyverse)
+theme_set(theme_classic())
+
+temperature <- read_csv("https://go.wisc.edu/bo9m94")
+```
+
+---
+
+### Temperature
+
+```{r, echo = TRUE, eval = FALSE, fig.width = 5, fig.height = 3.5}
+ggplot(temperature) +
+    geom_line(
+        aes(date, temperature, col = city),
+        linewidth = 1.5
+    ) +
+    scale_color_brewer(palette = "Set2") +
+    scale_x_date(date_labels = "%m", expand = c(0, 0))
+```
+
+---
+
+### Temperature
+
+```{r, echo = FALSE, eval = TRUE, fig.width = 5, fig.height = 3.5}
+ggplot(temperature) +
+    geom_line(
+        aes(date, temperature, col = city),
+        linewidth = 1.5
+    ) +
+    scale_color_brewer(palette = "Set2") +
+    scale_x_date(date_labels = "%m", expand = c(0, 0)) +
+    labs(x = "Date", y = "Temperature (F)")
+```
+
+---
+
+### Temperature
+
+```{r, echo = TRUE}
+monthly_temp <- temperature |>
+    group_by(city, month) |>
+    summarise(mean_temp = mean(temperature))
+monthly_temp
+```
+
+---
+
+```{r, echo = TRUE, eval = FALSE}
+ggplot(monthly_temp) +
+    geom_tile(aes(month, reorder(city, mean_temp), fill = mean_temp)) +
+    scale_fill_viridis_c(option = "magma") +
+    scale_x_discrete(expand = c(0, 0)) +
+    scale_y_discrete(expand = c(0, 0)) +
+    labs(
+        x = "Month",
+        y = "City",
+        fill = "Temperature (F)"
+    )
+```
+
+---
+
+### Temperature
+
+```{r, echo = FALSE, eval = TRUE}
+ggplot(monthly_temp) +
+    geom_tile(aes(month, reorder(city, mean_temp), fill = mean_temp)) +
+    scale_fill_viridis_c(option = "magma") +
+    scale_x_discrete(expand = c(0, 0)) +
+    scale_y_discrete(expand = c(0, 0)) +
+    labs(
+        x = "Month",
+        y = "City",
+        fill = "Temperature (F)"
+    )
+```
+
+---
+
+### Thefts
+
+```{r kia_read, echo = TRUE}
+kia <- read_csv("https://go.wisc.edu/a0y51y")
+head(kia, 4)
+```
+
+---
+
+### Thefts
+
+```{r kia_a_echo, echo = TRUE, eval = FALSE, fig.width = 5, fig.height = 3.5}
+kia <- kia |>
+    pivot_longer(kia_hyundai:others, names_to = "type")
+
+kia |>
+    filter(City == "Chicago") |>
+    ggplot() +
+    geom_area(aes(Date, value, fill = type)) +
+    scale_fill_manual(values = c("#e17878", "#c0c0c0")) +
+    scale_x_date(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    labs(fill = "Theft Type", y = "Number of Thefts", title = "The Rise in Kia/Hyundai Thefts in Chicago")
+```
+
+---
+
+### Thefts
+
+```{r kia_a, echo = FALSE, eval = TRUE, fig.width = 5, fig.height = 3.5}
+kia <- kia |>
+    pivot_longer(kia_hyundai:others, names_to = "type")
+
+kia |>
+    filter(City == "Chicago") |>
+    ggplot() +
+    geom_area(aes(Date, value, fill = type)) +
+    scale_fill_manual(values = c("#e17878", "#c0c0c0")) +
+    scale_x_date(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    labs(fill = "Theft Type", y = "Number of Thefts", title = "The Rise in Kia/Hyundai Thefts in Chicago")
+```
+---
+
+### Thefts
+
+```{r kia_b, echo = TRUE, eval = FALSE, fig.width = 7, fig.height = 3.5}
+ggplot(kia) +
+    geom_area(aes(Date, value, fill = type)) +
+    facet_wrap(~ reorder(City, -total)) +
+    scale_fill_manual(values = c("#e17878", "#c0c0c0")) +
+    scale_x_date(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    labs(fill = "Theft Type", y = "Number of Thefts")
+```
+
+---
+
+### Thefts
+
+```{r kia_b_echo, echo = FALSE, eval = TRUE, fig.width = 7, fig.height = 3.5}
+ggplot(kia) +
+    geom_area(aes(Date, value, fill = type)) +
+    facet_wrap(~ reorder(City, -total)) +
+    scale_fill_manual(values = c("#e17878", "#c0c0c0")) +
+    scale_x_date(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    labs(fill = "Theft Type", y = "Number of Thefts")
+```
