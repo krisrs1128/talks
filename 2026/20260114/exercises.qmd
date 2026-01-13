@@ -16,7 +16,8 @@ head(temperature)
 1.   Make a version of Figure 2.3 using a line mark (`geom_line`). Make at least one customization of the theme to make the plot more similar to the version in Figure 2.3. _Hint: To group the lines by city, use the `group = ` aesthetic mapping._
 
 ```{r}
-
+ggplot(temperature) +
+    geom_line(aes(date, temperature, col = city))
 ```
 
 2.   Using the `group_by` + `summarise` pattern, compute the mean temperature
