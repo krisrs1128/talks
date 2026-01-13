@@ -14,7 +14,8 @@ Data Narratives<br/>
 :::
 
 ::: {.column width="55%"}
-Notes: [https://go.wisc.edu/5fia0y](https://go.wisc.edu/5fia0y)<br/>
+Notes: [https://go.wisc.edu/7cwasq](https://go.wisc.edu/7cwasq) <br/>
+Slides: [https://go.wisc.edu/5fia0y](https://go.wisc.edu/5fia0y)<br/>
 Code: [https://go.wisc.edu/s30oi9](https://go.wisc.edu/s30oi9)
 :::
 :::
