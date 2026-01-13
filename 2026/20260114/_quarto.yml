@@ -1,0 +1,10 @@
+project:
+  type: default
+
+format:
+  revealjs:
+    embed-resources: false
+    theme: simple
+    slide-number: true
+    transition: fade
+    css: slides.css
