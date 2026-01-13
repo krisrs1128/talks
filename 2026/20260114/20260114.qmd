@@ -1,5 +1,8 @@
+---
+title: Introduction to Data Visualization
+---
 
-# Visualization Crash Course
+# Introduction to </br> Data Visualization
 
 <br/>
 <br/>
