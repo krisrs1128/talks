@@ -1,0 +1,77 @@
+
+
+## Graphical Encodings
+
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(scales)
+theme_set(theme_classic()) # create a simpler default theme
+```
+
+```{r}
+gapminder <- read_csv("https://uwmadison.box.com/shared/static/dyz0qohqvgake2ghm4ngupbltkzpqb7t.csv", col_types = cols()) |>
+  mutate(cluster = as.factor(cluster))  # specify that cluster is nominal
+gap2000 <- filter(gapminder, year == 2000) # keep only year 2000
+```
+
+```{r}
+p <- ggplot(gap2000) +
+    geom_col(aes(pop, reorder(country, pop), fill = cluster), width = 1) +
+    scale_x_continuous(expand = c(0, 0), labels = label_number(scale_cut = cut_short_scale())) +
+    scale_fill_brewer(palette = "Set2") +
+    theme(
+        axis.text.y = element_text(size = 6),
+        axis.ticks.y = element_blank()
+        ) +
+    labs(
+        title = "World Population 2000",
+        x = "Population",
+        y = "Country"
+    )
+
+library(plotly)
+ggplotly(p)
+```
+
+```{r}
+ggplot(gapminder) +
+  geom_line(
+    aes(year, fertility, col = cluster),
+      alpha = 0.7, size = 0.9
+  )
+```
+
+```{r}
+library(tidyverse)
+temperature <- read_csv("https://go.wisc.edu/bo9m94")
+head(temperature)
+
+
+geom_line(aes(x = date, y = temperature))
+
+```
+
+## Faceting and Compound Plots
+
+### Gapminder
+
+```{r}
+years <- c(1962, 1980, 1990, 2000, 2012)
+continents <- c("Europe", "Asia")
+gapminder_subset <- gapminder %>%
+  filter(year %in% years, continent %in% continents)
+```
+
+```{r}
+antibiotic <- read_csv("https://uwmadison.box.com/shared/static/5jmd9pku62291ek20lioevsw1c588ahx.csv")
+
+ggplot(antibiotic, aes(x = time)) +
+  geom_line(aes(y = svalue), size = 1.2) +
+  geom_point(aes(y = value, col = antibiotic), size = 0.5, alpha = 0.8) +
+  facet_grid(reorder(species, -value) ~ ind, scale = "free_y") +
+  scale_color_brewer(palette = "Set2") +
+  theme(strip.text.y = element_text(angle = 0))
+
+```
