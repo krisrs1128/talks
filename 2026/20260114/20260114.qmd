@@ -23,7 +23,7 @@ Code: [https://go.wisc.edu/s30oi9](https://go.wisc.edu/s30oi9)
 :::
 :::
 
-<!-- 40 minute talk -->
+<!-- 75 minute lecture -->
 ```{r, echo = FALSE, warning = FALSE}
 library(knitr)
 library(RefManageR)
@@ -51,7 +51,7 @@ Part 1: Graphical Encoding
 - Lecture: [Introduction to ggplot2](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week01-01/), [Vocabulary of Marks](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week01-02/)
 - Exercise: City Temperatures
 
-Part 2: Multipanel Plots + Refinement
+Part 2: Multipanel Plots
 
 - Lecture: [Faceting](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week03-01/), [Compound Plots](https://krisrs1128.github.io/stat436_notes/posts/2024-12-27-week03-03/)
 - Exercise: Kia Thefts
