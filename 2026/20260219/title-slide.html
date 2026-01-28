@@ -1,0 +1,15 @@
+<section id="$idprefix$title-slide"$for(title-slide-attributes/pairs)$ $it.key$="$it.value$"$endfor$ class="quarto-title-block custom-title-slide">
+  <h1 class="title">$title$</h1>
+  <div class="title-slide-bottom-row">
+    <div class="title-slide-bottom-left">
+      $for(by-author)$
+        <div class="author-name">$if(by-author.name.literal)$$by-author.name.literal$$endif$</div>
+      $endfor$
+      <div class="lab-link"><a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a></div>
+    </div>
+    <div class="title-slide-bottom-right">
+      <div class="seminar-name">University of Michigan<br/> Biostatistics Seminar</div>
+      <div class="seminar-date">$date$</div>
+    </div>
+  </div>
+</section>

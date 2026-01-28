@@ -1,6 +1,9 @@
 ---
 title: New Diagnostics for Dimensionality Reduction of Genomic Data
+author: kris sankaran
+institute: University of Wisconsin - Madison
 bibliography: references.bib
+date: February 19, 2026
 citeproc: true
 execute:
     message: false
@@ -10,6 +13,8 @@ format:
   revealjs:
     css: styles.css
     embed-resources: true
+    template-partials:
+      - title-slide.html
 ---
 
 $\def\Dir{\text{Dir}}$
@@ -21,7 +26,7 @@ $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
 $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
-# New Diagnostics for Dimensionality Reduction of Genomic Data
+## New Diagnostics for Dimensionality Reduction of Genomic Data
 
 :::: {.columns}
 ::: {.column width="50%"}

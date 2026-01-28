@@ -1,6 +1,83 @@
-/* Slide Titles (Level 2) */
-.reveal[data-navigation-mode="linear"] .title-slide h1 {
-  font-size: 1.6em;
+/* Title slide custom layout */
+
+.custom-title-slide {
+  position: relative;
+  min-height: 60vh;
+  padding-bottom: 5em; /* Reserve space for the bottom row */
+}
+
+.custom-title-slide .title {
+  font-size: 1.6em !important;
+  text-align: left !important;
+  margin-bottom: 0.5em;
+  width: 100%;
+  margin-left: 0;
+  margin-top: .5em;
+}
+
+.custom-title-slide .title-slide-bottom-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 2em;
+  padding: 0;
+  box-sizing: border-box;
+}
+.custom-title-slide .title-slide-bottom-left,
+.custom-title-slide .title-slide-bottom-right {
+  min-width: 0;
+}
+.custom-title-slide .title-slide-bottom-left {
+  text-align: left;
+}
+.custom-title-slide .title-slide-bottom-right {
+  text-align: right;
+}
+.custom-title-slide .author-name {
+  font-weight: bold;
+  margin-bottom: 0.2em;
+}
+.custom-title-slide .lab-link a {
+  color: #14548C;
+  text-decoration: none;
+  font-size: 1em;
+}
+.custom-title-slide .seminar-name {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.custom-title-slide .seminar-date {
+  font-size: 1em;
+}
+
+.custom-title-slide .title {
+  font-size: 1.6em !important;
+  text-align: left !important;
+  margin-bottom: 0.5em;
+}
+
+.custom-title-slide .author-name,
+.custom-title-slide .seminar-name {
+  font-weight: bold;
+}
+
+.custom-title-slide .lab-link a {
+  color: #14548C;
+  text-decoration: none;
+}
+
+.custom-title-slide .author-lab {
+  margin-top: 0.5em;
+  font-size: 1em;
+}
+
+.custom-title-slide .seminar-date {
+  font-size: 1em;
 }
 
 .reveal h2 {
