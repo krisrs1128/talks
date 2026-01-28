@@ -1,0 +1,22 @@
+/* Slide Titles (Level 2) */
+.reveal[data-navigation-mode="linear"] .title-slide h1 {
+  font-size: 1.6em;
+}
+
+.reveal h2 {
+  color: #14548C;
+  font-size: 1.2em;
+  border-bottom: 2px solid #9BBFB2; /* Adds a nice underline */
+  text-transform: uppercase;
+}
+
+/* Sub-headings (Level 3) */
+.reveal h3 {
+  color: #11468C;
+  font-size: 1m;
+  margin-top: 20px;
+}
+
+.reveal p {
+    font-size: 1em;
+}
