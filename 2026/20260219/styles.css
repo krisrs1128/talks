@@ -97,3 +97,5 @@
 .reveal p {
     font-size: 1em;
 }
+
+.smaller { font-size: 80%; }

@@ -1,6 +1,6 @@
 ---
 title: New Diagnostics for Dimensionality Reduction of Genomic Data
-author: kris sankaran
+author: Kris Sankaran
 institute: University of Wisconsin - Madison
 bibliography: references.bib
 date: February 19, 2026
@@ -9,6 +9,7 @@ execute:
     message: false
     warning: false
     cache: true
+    fig-align: center
 format:
   revealjs:
     css: styles.css
@@ -16,6 +17,14 @@ format:
     template-partials:
       - title-slide.html
 ---
+
+### Dimensionality Reduction
+
+Modern omics data have many features, and dimensionality reduction methods are often used to create overview visualizations.
+
+![](figures/samples_by_microbes.png){fig-width=100%}
+
+They are often used to summarize microbiome community structures.
 
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
@@ -26,42 +35,115 @@ $\def\win{\tilde{w}_{\text{in}}}$
 $\def\reals{\mathbb{R}}$
 $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
-## New Diagnostics for Dimensionality Reduction of Genomic Data
+---
+
+### Dimensionality Reduction
+
+Modern omics data have many features, and dimensionality reduction methods are often used to create overview visualizations.
+
+![](figures/cell_by_genes.png){width=100%}
+
+They are also used in cell atlas construction and trajectory inference.
+
+---
+
+### Challenges
+
+Methods experts realize that these need to be used with caution
+
+- The assumed number of latent communities can influence topic model interpretation
+- UMAP can introduce visual artifacts, like spurious cell types
+
+But diagnostics are limited.
+
+---
+
+### Outline
+
+We describe two new diagnostic visualizations.
 
 :::: {.columns}
-::: {.column width="50%"}
-Slides: [go.wisc.edu/ozm0il](https://go.wisc.edu/ozm0il)
-
-Lab: [measurement-and-microbes.org](https://measurement-and-microbes.org)
+::: {.column width="60%"}
+::: {.smaller}
+alto plots for choice of $K$ in topic models.
+![](figures/alto_sketches_annotated%20alignment.png)
 :::
-::: {.column width="50%"}
-Kris Sankaran <br/>
-UMich Biostatistics Seminar<br/>
-19 | February | 2026 <br/>
+:::
+::: {.column width="40%"}
+::: {.smaller}
+RMetric plots for t-SNE and UMAP embeddings.
+![](figures/swiss_roll_boxplot.gif){width=710}
+:::
 :::
 ::::
 
----
-
-## Outline
-
-- introduction
-
-- topic alignment
-
-- `distortions` package
-
----
-
-### Complexity
+Both are driven by the same underlying interactive visualization perspectives, reviewed next.
 
 ---
 
 ### Focus-plus-Context
 
+The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
+
+![](figures/doitree_dmoz.gif){width=800}
+
 ---
 
 ### Interaction Gulfs
+
+There are two classic challenges in interactive interfaces [@Hutchins1985],
+
+- Gulf of Execution: The gap between what you want to do and how you specify it in the system.
+
+![](figures/interaction_gulfs.png){width=600}
+
+These challenges also apply to interactive data analysis.
+
+---
+
+### Interaction Gulfs
+
+There are two classic challenges in interactive interfaces [@Hutchins1985],
+
+- Gulf of Evaluation: The gap between what the system shows you and an understanding of what it represents.
+
+![](figures/interaction_gulfs.png){width=600}
+
+These challenges also apply to interactive data analysis.
+
+---
+
+### Microbiome Visualization
+
+Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They don't give a good way of focusing on finer taxonomic resolutions.
+
+![](figures/composition_barplot_microbiomeviz.png){width=900}
+
+::: {.smaller}
+Figure from the microbiomeViz documentation [@microbiomeviz].
+:::
+
+---
+
+### Microbiome Visualization
+
+Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They don't give a good way of focusing on finer taxonomic resolutions.
+
+![](figures/qiime_barplot.png){width=900}
+
+::: {.smaller}
+Figure from the Qiime Viewer documentation [@qiimeviewer].
+:::
+
+---
+
+### Phylobar
+
+We can apply the focus-plus-context principle to visualize abundances of rare taxa without losing context [@Kuo2025].
+
+![](figures/phylobar_overview.png){width=900}
+
+[Link](https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3)
 
 ---
 
@@ -101,11 +183,7 @@ This model considers two sets of mixtures simultaneously.
 If we use topic models, <span style="color: #476b57;">Topic 2</span> increases
 during the antibiotic interventions, especially the first [@Sankaran2018].
 
-:::: {.columns}
-::: {.column width="100%"}
 ![](figures/antibiotic_memberships.png){width=1000}
-:::
-::::
 
 ---
 
@@ -114,11 +192,7 @@ during the antibiotic interventions, especially the first [@Sankaran2018].
 To interpret topics, look for representative taxa. These species have higher
 probabilities in one topic compared to the others.
 
-:::: {.columns}
-::: {.column width="100%"}
 ![](figures/antibiotic_prototypes.png){width=900}
-:::
-::::
 
 ---
 
@@ -160,7 +234,7 @@ An alignment is a weighted graph. Nodes $V$ represent topics $\{\beta^m_{k},
 * Edges $E$ connect topics across complexities $K \to K + 1$.
 * Weights $W$ measure topic similarity.
 
-![](figures/alto_sketches_annotated alignment.png){width=1500 fig-align="center"}
+![](figures/alto_sketches_annotated alignment.png){width=1500}
 
 ---
 
@@ -420,7 +494,8 @@ Despite the popularity, both $t$-SNE and UMAP are known to result in
 distortions. For example, they may not preserve density within different
 regions of the plot.
 
-![](figures/densmap_example.png){width=1000, fig-align="center"}
+![](figures/densmap_example.png){width=1000}
+
 Example from [@narayan2021assessing].
 
 ---
@@ -438,7 +513,8 @@ Example from [@wattenberg2016how].
 
 They can also fail to preserve the topology of the underlying data...
 
-![](figures/tsne-initialization.png){width=600, fig-align="center"}
+![](figures/tsne-initialization.png){width=600}
+
 Example from [@Kobak2021].
 
 ---
@@ -450,7 +526,7 @@ impact scientific interpretation [@Liu2025; @Kobak2021]. For
 example, they create misleading differences between cell types that are actually
 similar.
 
-![](figures/scdeed-example.png){width=700, fig-align="center"}
+![](figures/scdeed-example.png){width=700}
 Example from [@xia2024statistical].
 
 ---
@@ -496,9 +572,7 @@ This is the high-dimensional version of Tissot's indicatrix from cartography [@l
 
 ---
 
-.center[
 ## Implementation
-]
 
 ---
 
@@ -507,9 +581,7 @@ This is the high-dimensional version of Tissot's indicatrix from cartography [@l
 Define distance via diffusion: $d_t(i,j) = $ probability a $t$-step random walk
 from $i$ reaches $j$. This induces a Riemannian metric on the data manifold.
 
-.center[
 ![](figures/laplacian_metric-0.png){width=800}
-]
 
 ---
 
@@ -518,9 +590,7 @@ from $i$ reaches $j$. This induces a Riemannian metric on the data manifold.
 Define distance via diffusion: $d_t(i,j) = $ probability a $t$-step random walk
 from $i$ reaches $j$. This induces a Riemannian metric on the data manifold.
 
-.center[
 ![](figures/laplacian_metric.png){width=800}
-]
 
 ---
 
@@ -530,9 +600,7 @@ The RMetric algorithm measures how these intrinsic, graph-based distances become
 distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
 distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
 
-.center[
 ![](figures/distortion_example_1.png){width=1000}
-]
 
 ---
 
@@ -541,9 +609,7 @@ distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly]
 The RMetric algorithm measures how these intrinsic, graph-based distances become
 distorted during the embedding process [@perrault2006metric, @mcqueen2016nearly].
 
-.center[
 ![](figures/distortion_example_1-2.png){width=750}
-]
 
 ---
 
@@ -557,15 +623,11 @@ local metrics $H_{kl}$ are the components of this pullback in coordinate charts.
 H_{\cdot, kl} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
 \end{align*}
 
-.center[
 ![](figures/g_kl.png){width=350}
-]
 
 ---
 
-.center[
 ![](figures/rmetric_explanation-v2.png){width=800}
-]
 
 ---
 
@@ -577,9 +639,7 @@ These two clusters are generated as:
 x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\left(100, 1\right)
 \end{align*}
 
-.center[
 ![](figures/unequal_variances.png){width=700}
-]
 
 ---
 
@@ -656,9 +716,7 @@ Some neighborhoods have poorly preserved distances. To detect this, we:
 
 ---
 
-.center[
 ## Examples
-]
 
 ---
 
@@ -667,7 +725,6 @@ This is the classic Swiss Roll data, but with higher density near the endpoints.
 ```{r}
 #| echo: false
 #| out-width: 60%
-#| fig-align: center
 library(tidyverse)
 library(plotly)
 library(scico)
