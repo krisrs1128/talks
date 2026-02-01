@@ -49,7 +49,7 @@ They are also used in cell atlas construction and trajectory inference.
 
 ### Challenges
 
-Methods experts realize that these need to be used with caution
+These methods need to be used with caution:
 
 - The assumed number of latent communities can influence topic model interpretation
 - UMAP can introduce visual artifacts, like spurious cell types
@@ -81,11 +81,7 @@ Both are driven by the same underlying interactive visualization perspectives, r
 
 ---
 
-### Focus-plus-Context
-
-The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
-
-![](figures/doitree_dmoz.gif){width=800}
+## Data Visualization Background
 
 ---
 
@@ -113,7 +109,15 @@ These challenges also apply to interactive data analysis.
 
 ---
 
-### Microbiome Visualization
+### Focus-plus-Context
+
+The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
+
+![](figures/doitree_dmoz.gif){width=800}
+
+---
+
+### Focus-plus-Context: Barplots
 
 Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They don't give a good way of focusing on finer taxonomic resolutions.
 
@@ -125,7 +129,7 @@ Figure from the microbiomeViz documentation [@microbiomeviz].
 
 ---
 
-### Microbiome Visualization
+### Focus-plus-Context: Barplots
 
 Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They don't give a good way of focusing on finer taxonomic resolutions.
 
@@ -149,6 +153,8 @@ We can apply the focus-plus-context principle to visualize abundances of rare ta
 
 ## Topic Alignment
 
+paper: [go.wisc.edu/tify36](https://go.wisc.edu/tify36/)
+
 ---
 
 ### Model
@@ -163,7 +169,7 @@ where the columns $\beta_{k}$ of $\*B \in \Delta^{K}_{D}$ lie in the $D$-dimensi
 \beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
 \end{align*}
 
-We vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
+Vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ---
 
@@ -193,10 +199,6 @@ To interpret topics, look for representative taxa. These species have higher
 probabilities in one topic compared to the others.
 
 ![](figures/antibiotic_prototypes.png){width=900}
-
----
-
-## Topic Alignment: Method
 
 ---
 
@@ -265,7 +267,6 @@ Let $V_p$ and $V_q$ be two subsets of topics within the graph.
 
 ### Estimating Weights
 
-
 The weights $W$ can be estimated by solving the optimal transport problem,
 \begin{align*}
 &\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right>
@@ -280,7 +281,7 @@ The weights $W$ can be estimated by solving the optimal transport problem,
 
 ---
 
-### Diagnostics
+### Path-based Diagnostics
 
 * Paths: Partitions the Sankey diagram into connected sets of topics.
 * Coherence: variation of $\beta\left(v\right)$ along a path. Low coherence $\to$ persistent structure.
@@ -290,11 +291,7 @@ The weights $W$ can be estimated by solving the optimal transport problem,
 
 ---
 
-## Topic Alignment: Examples
-
----
-
-### True Model
+### Examples: True Model
 
 Sanity check - Below is the alignment for data from a topic model. Can you guess
 $K$?
@@ -305,7 +302,7 @@ $K$?
 
 ---
 
-### Diagnostics
+### Examples: True Model
 
 The diagnostics suggest that the true $K$ is 5.
 
@@ -479,6 +476,12 @@ toolbox for count data.
 
 ---
 
+## Distortion Visualization
+
+preprint: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62)
+
+---
+
 ### Challenge
 
 Embedding $\mathbf{R}^{D} \to \mathbf{R}^{2}$ cannot preserve metric structure
@@ -572,10 +575,6 @@ This is the high-dimensional version of Tissot's indicatrix from cartography [@l
 
 ---
 
-## Implementation
-
----
-
 ### Graph-based Metrics
 
 Define distance via diffusion: $d_t(i,j) = $ probability a $t$-step random walk
@@ -597,8 +596,7 @@ from $i$ reaches $j$. This induces a Riemannian metric on the data manifold.
 ### Local Metric Distortion
 
 The RMetric algorithm measures how these intrinsic, graph-based distances become
-distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
-distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
+distorted during the embedding process [@perrault2006metric, @mcqueen2016nearly].
 
 ![](figures/distortion_example_1.png){width=1000}
 
@@ -716,9 +714,7 @@ Some neighborhoods have poorly preserved distances. To detect this, we:
 
 ---
 
-## Examples
-
----
+### Examples
 
 This is the classic Swiss Roll data, but with higher density near the endpoints.
 

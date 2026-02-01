@@ -9,7 +9,7 @@ kl_div <- function(p1, p2) {
 
 kl_mat <- function(p) {
   K <- matrix(0, nrow = length(p), ncol = length(p))
-  
+
   for (i in seq_along(p)) {
     for (j in seq_len(i - 1)) {
       K[i, j] <- kl_div(p[i], p[j])
@@ -44,7 +44,7 @@ library(tidyverse)
 set.seed(11242016)
 th <- theme_classic() +
     theme(
-        panel.background = element_rect(fill = "transparent"), 
+        panel.background = element_rect(fill = "transparent"),
         plot.background = element_rect(fill = "transparent", color = NA),
         strip.background = element_rect(fill = "transparent", color = NA),
         legend.background = element_rect(fill = "transparent", color = NA)
@@ -111,7 +111,7 @@ rm(stan_fit)
 
 ```{r}
 ## ---- extract_beta ----
-beta <- apply(samples$beta, c(2, 3), mean) |> 
+beta <- apply(samples$beta, c(2, 3), mean) |>
   t() |>
   as.data.frame() |>
   mutate(taxon = taxa_names(abt)) |>
