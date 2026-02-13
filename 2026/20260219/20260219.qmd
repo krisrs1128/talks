@@ -4,14 +4,17 @@ author: Kris Sankaran
 institute: University of Wisconsin - Madison
 bibliography: references.bib
 date: February 19, 2026
-citeproc: true
 execute:
     message: false
     warning: false
     cache: true
-    fig-align: center
+citeproc: false
+filters:
+  - split-refs.lua
 format:
   revealjs:
+    width: 1200
+    margin: 0.04
     css: styles.css
     embed-resources: true
     template-partials:
@@ -20,11 +23,12 @@ format:
 
 ### Dimensionality Reduction
 
-Modern omics data have many features, and dimensionality reduction methods are often used to create overview visualizations.
+Modern omics data have many features, and dimensionality reduction methods help
+create overview visualizations.
 
-![](figures/samples_by_microbes.png){fig-width=100%}
+![](figures/samples_by_microbes.png){width=1200}
 
-They are often used to summarize microbiome community structures.
+They are often used to summarize microbiome community structure.
 
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
@@ -39,9 +43,10 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
 ### Dimensionality Reduction
 
-Modern omics data have many features, and dimensionality reduction methods are often used to create overview visualizations.
+Modern omics data have many features, and dimensionality reduction methods help
+create overview visualizations.
 
-![](figures/cell_by_genes.png){width=100%}
+![](figures/cell_by_genes.png){width=1200}
 
 They are also used in cell atlas construction and trajectory inference.
 
@@ -51,33 +56,34 @@ They are also used in cell atlas construction and trajectory inference.
 
 These methods need to be used with caution:
 
-- The assumed number of latent communities can influence topic model interpretation
-- UMAP can introduce visual artifacts, like spurious cell types
+- The assumed number of latent communities can influence topic model interpretation.
+- UMAP can introduce visual artifacts, like spurious cell types.
 
-But diagnostics are limited.
+Despite the ubiquity of these dimensionality reduction methods, diagnostics are
+limited.
 
 ---
 
 ### Outline
 
-We describe two new diagnostic visualizations.
+We introduce two new diagnostic visualizations.
 
 :::: {.columns}
 ::: {.column width="60%"}
 ::: {.smaller}
-alto plots for choice of $K$ in topic models.
+alto plots for choice of $K$ in topic models .
 ![](figures/alto_sketches_annotated%20alignment.png)
 :::
 :::
 ::: {.column width="40%"}
 ::: {.smaller}
-RMetric plots for t-SNE and UMAP embeddings.
+RMetric plots for nonlinear embeddings.
 ![](figures/swiss_roll_boxplot.gif){width=710}
 :::
 :::
 ::::
 
-Both are driven by the same underlying interactive visualization perspectives, reviewed next.
+Both are driven by the same underlying data visualization perspectives, reviewed next.
 
 ---
 
@@ -113,47 +119,60 @@ These challenges also apply to interactive data analysis.
 
 The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
 
-![](figures/doitree_dmoz.gif){width=800}
+<video controls style="max-width: 700px; display: block; margin: 0 auto;">
+  <source src="figures/doi_trees.mp4" type="video/mp4">
+</video>
 
 ---
 
 ### Focus-plus-Context: Barplots
 
-Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They don't give a good way of focusing on finer taxonomic resolutions.
+Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
 
 ![](figures/composition_barplot_microbiomeviz.png){width=900}
 
 ::: {.smaller}
-Figure from the microbiomeViz documentation [@microbiomeviz].
+Figure from the [microbiomeViz documentation](https://david-barnett.github.io/microViz/reference/comp_barplot.html) [@microbiomeviz].
 :::
 
 ---
 
 ### Focus-plus-Context: Barplots
 
-Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They don't give a good way of focusing on finer taxonomic resolutions.
+Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
 
 ![](figures/qiime_barplot.png){width=900}
 
 ::: {.smaller}
-Figure from the Qiime Viewer documentation [@qiimeviewer].
+Figure from the [Qiime2 View documentation](https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv) [@Bolyen2019].
 :::
+
+---
+
+### microbiomeExplorer
+
+Existing interactive approaches have large gulfs of evaluation, because we have
+to reorient ourselves to new color palettes (and memorize how categories relate
+across levels).
+
+![]()
 
 ---
 
 ### Phylobar
 
-We can apply the focus-plus-context principle to visualize abundances of rare taxa without losing context [@Kuo2025].
+We can apply the focus-plus-context principle to visualize abundances of rare taxa without losing context.
 
 ![](figures/phylobar_overview.png){width=900}
 
-[Link](https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3)
+::: {.smaller}
+Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3)  [@Kuo2025].
+:::
 
 ---
 
 ## Topic Alignment
 
-paper: [go.wisc.edu/tify36](https://go.wisc.edu/tify36/)
 
 ---
 
@@ -173,18 +192,43 @@ Vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ---
 
-### Simplex View
+### Microbiome Analogy
 
-This model considers two sets of mixtures simultaneously.
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
 
-* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of topics.
-* Topics: $\beta_{k}$ describes the composition of topic $k$.
-
-![](figures/topic_double_triangle.png)
+![](figures/lda-breakdown-1.png)
 
 ---
 
-### Example: Gut Microbiome
+### Microbiome Analogy
+
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+
+![](figures/lda-breakdown-2.png)
+
+---
+
+### Microbiome Analogy
+
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+
+![](figures/lda-breakdown-3.png)
+
+---
+
+### Microbiome Analogy
+
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+
+![](figures/lda-breakdown.png)
+
+---
+
+### Example: Antibiotics Time Course
 
 If we use topic models, <span style="color: #476b57;">Topic 2</span> increases
 during the antibiotic interventions, especially the first [@Sankaran2018].
@@ -193,7 +237,7 @@ during the antibiotic interventions, especially the first [@Sankaran2018].
 
 ---
 
-### Example: Gut Microbiome
+### Example: Antibiotics Time Course
 
 To interpret topics, look for representative taxa. These species have higher
 probabilities in one topic compared to the others.
@@ -242,13 +286,11 @@ An alignment is a weighted graph. Nodes $V$ represent topics $\{\beta^m_{k},
 
 ### Notation
 
-* $m\left(v\right)$ is the model for node $v$
-* $k\left(v\right)$ is the topic for node $v$
-* $\Gamma\left(v\right) := \left(\gamma_{ v\left(k\right)}^m\left(k\right)\right) \in \reals^n_{+}$ is the vector of
-mixed memberships for topic $v$
+* $m\left(v\right)$ and $k\left(v\right)$ are the model and topic index for node $v$
+* $\Gamma\left(v\right) := \left(\gamma_{ik}^{m}\right)_{i = 1}^{n} \in \reals^{n}_{+}$
+mixed memberships for node $v$
 * $\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}$ is the
 corresponding topic distribution
-* $e = \left(v, v'\right)$ is an edge linking topics $v$ and $v'$.
 
 ![](figures/alto_sketches_annotated alignment.png){width=560}
 
@@ -258,8 +300,8 @@ corresponding topic distribution
 
 Let $V_p$ and $V_q$ be two subsets of topics within the graph.
 
-* Let the total "mass" of $V_p$ be $p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$. Define $q$ similarly.
-* Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between the pair of topic distributions [@https://doi.org/10.48550/arxiv.1803.00567].
+* Let the total "mass" of $V_p$ be $p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$.
+* Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between topics [@https://doi.org/10.48550/arxiv.1803.00567].
 
 ![](figures/transport_alignment_conceptual.png){width=420}
 
@@ -267,7 +309,7 @@ Let $V_p$ and $V_q$ be two subsets of topics within the graph.
 
 ### Estimating Weights
 
-The weights $W$ can be estimated by solving the optimal transport problem,
+The weights $W$ can be learned using optimal transport,
 \begin{align*}
 &\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right>
 \end{align*}
@@ -409,17 +451,6 @@ Coherence is not a function of $K$ alone.
 
 ---
 
-### Time Series
-
-Like in the antibiotics study, we visualize change in topics over time. This
-highlights smooth transitions in topic memberships.
-
-![](figures/topic_trajectories_pregnancy.jpeg){width=700}
-
----
-
-class: small-code
-
 ### Software
 
 Topic alignment is implemented in the R package [alto](https://lasy.github.io/alto).
@@ -445,7 +476,10 @@ models <- run_lda_models(
 ::: {.column width="50%"}
 ```{r, eval = TRUE, echo = TRUE}
 # Run alignment
-result <- align_topics(models, method = "transport")
+result <- align_topics(
+    models,
+    method = "transport"
+)
 plot(result)
 ```
 :::
@@ -455,39 +489,18 @@ All the simulations discussed today are vignettes in the package.
 
 ---
 
-### Summary
-
-Topic alignment is a simple but useful addition to the exploratory data analysis
-toolbox for count data.
-
-![](figures/alto_sketches_annotated alignment.png){width=700}
-
-:::: {.columns}
-::: {.column width="50%"}
-[Paper](https://go.wisc.edu/tify36)<br/>
-![](figures/qr-paper.png){width=80}
-:::
-::: {.column width="50%"}
-[Package](https://lasy.github.io/alto)
-
-![](figures/qr-package.png){width=80}
-:::
-::::
-
----
-
 ## Distortion Visualization
-
-preprint: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62)
 
 ---
 
 ### Challenge
 
-Embedding $\mathbf{R}^{D} \to \mathbf{R}^{2}$ cannot preserve metric structure
-in general. The question is:
-
-**Which distortions occur, and where?**
+Embedding $\mathbb{R}^{D} \to \mathbb{R}^{2}$ cannot preserve metric structure
+in general.
+<br/>
+<br/>
+<br/>
+The question is: **Which distortions occur, and where?**
 
 ---
 
@@ -541,7 +554,7 @@ Example from [@xia2024statistical].
 ![](figures/pritchard_all_of_us.png){width=600}
 :::
 :::{.column width="20%"}
-See also [@simplystatisticsSimplyStatistics; @Kozlov2024].
+See also [@Kozlov2024; @simplystatisticsSimplyStatistics].
 :::
 ::::
 
@@ -560,7 +573,6 @@ in the single-cell literature [@Chari2023].
 
 Instead of abandoning nonlinear dimensionality reduction, we characterize the
 distortion by  augmenting the embedding visualization.
-
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -596,7 +608,7 @@ from $i$ reaches $j$. This induces a Riemannian metric on the data manifold.
 ### Local Metric Distortion
 
 The RMetric algorithm measures how these intrinsic, graph-based distances become
-distorted during the embedding process [@perrault2006metric, @mcqueen2016nearly].
+distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
 
 ![](figures/distortion_example_1.png){width=1000}
 
@@ -605,7 +617,7 @@ distorted during the embedding process [@perrault2006metric, @mcqueen2016nearly]
 ### Local Metric Distortion
 
 The RMetric algorithm measures how these intrinsic, graph-based distances become
-distorted during the embedding process [@perrault2006metric, @mcqueen2016nearly].
+distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
 
 ![](figures/distortion_example_1-2.png){width=750}
 
@@ -613,8 +625,8 @@ distorted during the embedding process [@perrault2006metric, @mcqueen2016nearly]
 
 ### Implementation Details
 
-Let $z_{k} \in \mathbf{R}^{N}$ be the $k^{th}$ embedding dimension. The
-embedding map $\varphi : M\to \mathbf{R}^{D}$ induces a pullback metric. The
+Let $z_{k} \in \mathbb{R}^{N}$ be the $k^{th}$ embedding dimension. The
+embedding map $\varphi : M\to \mathbb{R}^{D}$ induces a pullback metric. The
 local metrics $H_{kl}$ are the components of this pullback in coordinate charts.
 
 \begin{align*}
@@ -678,7 +690,7 @@ another in the original space but fragmented in the embedding.
 reflects derivative information of the embedding map.
 
 - It fails when there are discontinuities -- two points that are close to one
-another in the original space but which are fragmented in the embedding.
+another in the original space but fragmented in the embedding.
 
 ![](figures/distortion_example_2-2.png){width=400}
 
@@ -822,9 +834,9 @@ placed too close to one another.
 
 ### PBMC Dataset
 
-This single-cell gene expression data set used in the introductory data
-visualization tutorial from the scanpy package [@scanpytutorialsAnalysisVisualization]. Each point is the UMAP embedding of a
-cell's high-dimensional gene expression data.
+This single-cell gene expression data set was used in the data visualization
+tutorial from the scanpy package [@Wolf2018]. Each point is the UMAP embedding
+of a cell's high-dimensional gene expression data.
 
 ![](figures/pbmc-a.png){width=490}
 
@@ -884,7 +896,6 @@ are actually more spread out in the original data.
 ### DensMap vs. UMAP
 
 Both variation in ellipses and fragmented neighborhood statistics can be used to
-Both variation in ellipses and fragmented neighborhood statistics can be used to
 compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
 
 ![](figures/densmap_v_umap.png){width=900}
@@ -906,18 +917,16 @@ This example uses data from a _C. elegans_ cell differentiation study [@Packer20
 
 ### Summary
 
-1. Distortion in nonlinear dimensionality reduction is inevitable, but can be
-characterized.
+1. Topic alignment is a simple but useful addition to the exploratory data
+analysis toolbox for count data.
+
 
 1. Interactivity can reveal distortion information based on on the analysts'
 priorities.
 
-**Preprint**: [go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62)
+**Papers**: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62), [https://go.wisc.edu/tify36](https://go.wisc.edu/tify36)
 
-**Package**:
-
-- [https://github.com/krisrs1128/distortions](https://github.com/krisrs1128/distortions)
-- [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
+**Packages**: [https://lasy.github.io/alto](https://lasy.github.io/alto), [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
 
 ---
 
@@ -928,3 +937,5 @@ priorities.
 * Funding: NIGMS R01GM152744, NIAID R01AI184095
 
 ---
+
+### References {.smaller}
