@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="20260219_files/libs/clipboard/clipboard.min.js"></script>
+<script src="20260219_files/libs/quarto-html/tabby.min.js"></script>
+<script src="20260219_files/libs/quarto-html/popper.min.js"></script>
+<script src="20260219_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="20260219_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="20260219_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="20260219_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="20260219_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.4.550">
+
+  <meta name="author" content="Kris Sankaran">
+  <meta name="dcterms.date" content="2026-02-19">
+  <title>New Diagnostics for Dimensionality Reduction of Genomic Data</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="20260219_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="20260219_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="20260219_files/libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="styles.css">
+  <link href="20260219_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="20260219_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="20260219_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="20260219_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <link href="20260219_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+  <script src="20260219_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+  <script src="20260219_files/libs/plotly-binding-4.11.0/plotly.js"></script>
+  <script src="20260219_files/libs/typedarray-0.1/typedarray.min.js"></script>
+  <script src="20260219_files/libs/jquery-3.5.1/jquery.min.js"></script>
+  <link href="20260219_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+  <script src="20260219_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+  <link href="20260219_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+  <script src="20260219_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block custom-title-slide center">
+  <h1 class="title">New Diagnostics for Dimensionality Reduction of Genomic Data</h1>
+  <div class="title-slide-bottom-row">
+    <div class="title-slide-bottom-left">
+              <div class="author-name">Kris Sankaran</div>
+            <div class="institute">University of Wisconsin-Madison</div>
+      <div class="lab-link"><a href="https://measurement-and-microbes.org">measurement-and-microbes.org</a></div>
+    </div>
+    <div class="title-slide-bottom-right">
+      <div class="seminar-name">University of Michigan<br> Biostatistics Seminar</div>
+      <div class="seminar-date">2026-02-19</div>
+    </div>
+  </div>
+</section>
+<section class="slide level2">
+
+<h3 id="dimensionality-reduction">Dimensionality Reduction</h3>
+<p>Modern omics data have many features, and dimensionality reduction methods help create overview visualizations.</p>
+
+<img data-src="figures/samples_by_microbes.png" width="1200" class="r-stretch"><p>They can summarize microbiome community structure</p>
+<p><span class="math inline">\(\def\Dir{\text{Dir}}\)</span> <span class="math inline">\(\def\Mult{\text{Mult}}\)</span> <span class="math inline">\(\def\*#1{\mathbf{#1}}\)</span> <span class="math inline">\(\def\m#1{\boldsymbol{#1}}\)</span> <span class="math inline">\(\def\Unif{\text{Unif}}\)</span> <span class="math inline">\(\def\win{\tilde{w}_{\text{in}}}\)</span> <span class="math inline">\(\def\reals{\mathbb{R}}\)</span> <span class="math inline">\(\newcommand{\wout}{\tilde w_{\text{out}}}\)</span></p>
+</section>
+<section class="slide level2">
+
+<h3 id="dimensionality-reduction-1">Dimensionality Reduction</h3>
+<p>Modern omics data have many features, and dimensionality reduction methods help create overview visualizations.</p>
+
+<img data-src="figures/cell_by_genes.png" width="1200" class="r-stretch"><p>They are also used in cell atlas construction and trajectory inference.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="challenges">Challenges</h3>
+<p>These methods need to be used with caution:</p>
+<ul>
+<li>The assumed number of latent communities can influence topic model interpretation.</li>
+<li>UMAP can introduce visual artifacts, like spurious cell types.</li>
+</ul>
+<p>Despite being widely used, there are few diagnostics for these dimensionality reduction methods.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="outline">Outline</h3>
+<p>We introduce two new diagnostic visualizations.</p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="smaller">
+<p>alto plots for choice of <span class="math inline">\(K\)</span> in topic models . <img data-src="figures/alto_sketches_annotated%20alignment.png"></p>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="smaller">
+<p>RMetric plots for nonlinear embeddings. <img data-src="figures/swiss_roll_boxplot.gif" width="710"></p>
+</div>
+</div>
+</div>
+<p>Both are grounded in the data visualization principles that we review next</p>
+</section>
+<section id="data-visualization-background" class="slide level2">
+<h2>Data Visualization Background</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="interaction-gulfs">Interaction Gulfs</h3>
+<p>There are two classic challenges in interactive interfaces <span class="citation" data-cites="Hutchins1985">(<a href="" role="doc-biblioref" onclick="return false;">Hutchins, Hollan, and Norman 1985</a>)</span>,</p>
+<ul>
+<li>Gulf of Execution: The gap between what you want to do and how you specify it in the system.</li>
+</ul>
+
+<img data-src="figures/interaction_gulfs.png" width="600" class="r-stretch"><p>These challenges also apply to interactive data analysis.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="interaction-gulfs-1">Interaction Gulfs</h3>
+<p>There are two classic challenges in interactive interfaces <span class="citation" data-cites="Hutchins1985">(<a href="" role="doc-biblioref" onclick="return false;">Hutchins, Hollan, and Norman 1985</a>)</span>,</p>
+<ul>
+<li>Gulf of Evaluation: The gap between what the system shows you and an understanding of what it represents.</li>
+</ul>
+
+<img data-src="figures/interaction_gulfs.png" width="600" class="r-stretch"><p>These challenges also apply to interactive data analysis.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="focus-plus-context">Focus-plus-Context</h3>
+<p>The focus-plus-context principle <span class="citation" data-cites="heer2004">(<a href="" role="doc-biblioref" onclick="return false;">Heer and Card 2004</a>)</span> states that readers should be able to zoom into patterns of interest without losing relevant context.</p>
+<video controls="" style="max-width: 700px; display: block; margin: 0 auto;">
+<source src="figures/doi_trees.mp4" type="video/mp4">
+</video>
+</section>
+<section class="slide level2">
+
+<h3 id="focus-plus-context-barplots">Focus-plus-Context: Barplots</h3>
+<p>Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.</p>
+
+<img data-src="figures/composition_barplot_microbiomeviz.png" width="900" class="r-stretch"><div class="smaller">
+<p>Figure from the <a href="https://david-barnett.github.io/microViz/reference/comp_barplot.html">microbiomeViz documentation</a> <span class="citation" data-cites="microbiomeviz">(<a href="" role="doc-biblioref" onclick="return false;">Barnett, Arts, and Penders 2021</a>)</span>.</p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="focus-plus-context-barplots-1">Focus-plus-Context: Barplots</h3>
+<p>Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.</p>
+
+<img data-src="figures/qiime_barplot.png" width="900" class="r-stretch"><div class="smaller">
+<p>Figure from the <a href="https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv">Qiime2 View documentation</a> <span class="citation" data-cites="Bolyen2019">(<a href="" role="doc-biblioref" onclick="return false;">Bolyen et al. 2019</a>)</span>.</p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="phylobar">Phylobar</h3>
+<p>Applying focus-plus-context reveals rare taxa abundances while preserving overall structure</p>
+
+<img data-src="figures/phylobar_overview.png" width="900" class="r-stretch"><div class="smaller">
+<p>Figure from the <a href="https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3">phylobar documentation</a> <span class="citation" data-cites="Kuo2025">(<a href="" role="doc-biblioref" onclick="return false;">Kuo et al. 2025</a>)</span>.</p>
+</div>
+</section>
+<section id="topic-alignment" class="slide level2">
+<h2>Topic Alignment</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="model">Model</h3>
+<p>Topic models suppose that samples <span class="math inline">\(x_i \in \mathbb{R}^{D}\)</span> are drawn independently: <span class="math display">\[\begin{align*}
+x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
+\gamma_{i} &amp;\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
+\end{align*}\]</span> where the columns <span class="math inline">\(\beta_{k}\)</span> of <span class="math inline">\(\*B \in \Delta^{K}_{D}\)</span> lie in the <span class="math inline">\(D\)</span>-dimensional simplex and are drawn independently from, <span class="math display">\[\begin{align*}
+\beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
+\end{align*}\]</span></p>
+<p>Vertically stack the <span class="math inline">\(N\)</span> <span class="math inline">\(\gamma_i\)</span>’s into <span class="math inline">\(\Gamma \in \Delta^{N}_{K}\)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="microbiome-analogy">Microbiome Analogy</h3>
+<ul>
+<li>Topics: <span class="math inline">\(\beta_{k}\)</span> describes <span class="math inline">\(K\)</span> underlying community types.</li>
+<li>Memberships: <span class="math inline">\(\gamma_{i}\)</span> describes sample <span class="math inline">\(x_i\)</span> as a mixture of community types.</li>
+</ul>
+
+<img data-src="figures/lda-breakdown-1.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="microbiome-analogy-1">Microbiome Analogy</h3>
+<ul>
+<li>Topics: <span class="math inline">\(\beta_{k}\)</span> describes <span class="math inline">\(K\)</span> underlying community types.</li>
+<li>Memberships: <span class="math inline">\(\gamma_{i}\)</span> describes sample <span class="math inline">\(x_i\)</span> as a mixture of community types.</li>
+</ul>
+
+<img data-src="figures/lda-breakdown-2.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="microbiome-analogy-2">Microbiome Analogy</h3>
+<ul>
+<li>Topics: <span class="math inline">\(\beta_{k}\)</span> describes <span class="math inline">\(K\)</span> underlying community types.</li>
+<li>Memberships: <span class="math inline">\(\gamma_{i}\)</span> describes sample <span class="math inline">\(x_i\)</span> as a mixture of community types.</li>
+</ul>
+
+<img data-src="figures/lda-breakdown-3.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="microbiome-analogy-3">Microbiome Analogy</h3>
+<ul>
+<li>Topics: <span class="math inline">\(\beta_{k}\)</span> describes <span class="math inline">\(K\)</span> underlying community types.</li>
+<li>Memberships: <span class="math inline">\(\gamma_{i}\)</span> describes sample <span class="math inline">\(x_i\)</span> as a mixture of community types.</li>
+</ul>
+
+<img data-src="figures/lda-breakdown.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="example-antibiotics-time-course">Example: Antibiotics Time Course</h3>
+<p>If we use topic models, <span style="color: #476b57;">Topic 2</span> increases during the antibiotic interventions, especially the first <span class="citation" data-cites="Sankaran2018">(<a href="" role="doc-biblioref" onclick="return false;">Sankaran and Holmes 2018</a>)</span>.</p>
+
+<img data-src="figures/antibiotic_memberships.png" width="1000" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="example-antibiotics-time-course-1">Example: Antibiotics Time Course</h3>
+<p>To interpret topics, look for representative taxa. These species have higher probabilities in one topic compared to the others.</p>
+
+<img data-src="figures/antibiotic_prototypes.png" width="900" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="choice-of-k">Choice of <span class="math inline">\(K\)</span></h3>
+<blockquote>
+<p>However, we stress that care should be taken in the interpretation of the inferred value of <span class="math inline">\(K\)</span>. To begin with, due to the very high dimensionality of the parameter space, we found it difficult to obtain reliable estimates of <span class="math inline">\(P\left(X \vert K\right)\)</span>… There are also biological reasons to be careful interpreting <span class="math inline">\(K\)</span>.</p>
+</blockquote>
+<p>– From <span class="citation" data-cites="Pritchard2000">(<a href="" role="doc-biblioref" onclick="return false;">Pritchard, Stephens, and Donnelly 2000</a>)</span>.</p>
+<p>In practice, models are fit across many <span class="math inline">\(K\)</span> and their goodness-of-fits are compared <span class="citation" data-cites="Novembre2016 Wallach2009EvaluationMF Lawson2018">(<a href="" role="doc-biblioref" onclick="return false;">Novembre 2016</a>; <a href="" role="doc-biblioref" onclick="return false;">Wallach et al. 2009</a>; <a href="" role="doc-biblioref" onclick="return false;">Lawson, Dorp, and Falush 2018</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="alto-main-idea"><code>alto</code>: Main Idea</h3>
+<p>We fit models of varying complexity <span class="math inline">\(K\)</span> and build a compact representation of the ensemble</p>
+
+<img data-src="figures/alto_sketches_annotated%20alignment.png" class="r-stretch"><p>Columns are models and rectangles are topics.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="alignment-as-a-graph">Alignment as a Graph</h3>
+<p>An alignment is a weighted graph. Nodes <span class="math inline">\(V\)</span> represent topics <span class="math inline">\(\{\beta^m_{k},
+\gamma^m_{k}\}\)</span> across models <span class="math inline">\(m\)</span>.</p>
+<ul>
+<li>Edges <span class="math inline">\(E\)</span> connect topics across complexities <span class="math inline">\(K \to K + 1\)</span>.</li>
+<li>Weights <span class="math inline">\(W\)</span> measure topic similarity.</li>
+</ul>
+
+<img data-src="figures/alto_sketches_annotated%20alignment.png" width="1500" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="notation">Notation</h3>
+<ul>
+<li><span class="math inline">\(m\left(v\right)\)</span> and <span class="math inline">\(k\left(v\right)\)</span> are the model and topic index for node <span class="math inline">\(v\)</span></li>
+<li><span class="math inline">\(\Gamma\left(v\right) := \left(\gamma_{ik}^{m}\right)_{i = 1}^{n} \in \reals^{n}_{+}\)</span> mixed memberships for node <span class="math inline">\(v\)</span></li>
+<li><span class="math inline">\(\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}\)</span> is the corresponding topic distribution</li>
+</ul>
+
+<img data-src="figures/alto_sketches_annotated%20alignment.png" width="560" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="estimating-weights">Estimating Weights</h3>
+<p>Let <span class="math inline">\(V_p\)</span> and <span class="math inline">\(V_q\)</span> be two subsets of topics within the graph.</p>
+<ul>
+<li>Let the total “mass” of <span class="math inline">\(V_p\)</span> be <span class="math inline">\(p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}\)</span>.</li>
+<li>Define the transport cost <span class="math inline">\(C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)\)</span>, the Jensen-Shannon divergence between topics <span class="citation" data-cites="https://doi.org/10.48550/arxiv.1803.00567">(<a href="" role="doc-biblioref" onclick="return false;">Peyré and Cuturi 2018</a>)</span>.</li>
+</ul>
+
+<img data-src="figures/transport_alignment_conceptual.png" width="420" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="estimating-weights-1">Estimating Weights</h3>
+<p>The weights <span class="math inline">\(W\)</span> can be learned using optimal transport, <span class="math display">\[\begin{align*}
+&amp;\min_{W \in \mathcal{U}\left(p, q\right)} \left&lt;C,W\right&gt;
+\end{align*}\]</span> <span style="font-size: 20px;"> <span class="math display">\[\begin{align*}
+\mathcal{U}\left(p, q\right) := &amp;\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
+\end{align*}\]</span> </span></p>
+
+<img data-src="figures/transport_alignment_conceptual.png" width="420" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="path-based-diagnostics">Path-based Diagnostics</h3>
+<ul>
+<li>Paths: Partitions the Sankey diagram into connected sets of topics.</li>
+<li>Coherence: variation of <span class="math inline">\(\beta\left(v\right)\)</span> along a path. Low coherence <span class="math inline">\(\to\)</span> persistent structure.</li>
+<li>Refinement: Entropy of descendant distribution. High refinement <span class="math inline">\(\to\)</span> genuine increase in complexity.</li>
+</ul>
+
+<img data-src="figures/alto_sketches_diagnotics.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="examples-true-model">Examples: True Model</h3>
+<p>Below is the alignment for data from a topic model. Can you guess <span class="math inline">\(K\)</span>?</p>
+<ul>
+<li><span class="math inline">\(N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1\)</span></li>
+</ul>
+
+<img data-src="figures/transport-true-lda.png" width="480" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="examples-true-model-1">Examples: True Model</h3>
+<p>The diagnostics suggest that the true <span class="math inline">\(K\)</span> is 5.</p>
+
+<img data-src="figures/lda-combined.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="model-with-background-variation">Model with background variation</h3>
+<p>Topic alignment identifies departures from the assumed model. Consider the generative mechanism,</p>
+<p><span class="math display">\[\begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &amp;\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &amp;\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &amp;\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\*B\)</span> stacks the <span class="math inline">\(\beta_k\)</span> rowwise.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="result">Result</h3>
+<p>The alignment structure is sensitive to changes in <span class="math inline">\(\alpha\)</span> and fragments when structure is not present.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="figures/gradient_flow-1.png" width="300"> <img data-src="figures/gradient_flow-2.png" width="300"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/gradient_flow-3.png" width="300"> <img data-src="figures/gradient_flow-4.png" width="300"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="diagnostics">Diagnostics</h3>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>This structure is consistent across simulation runs, and the diagnostics quantify topic deterioration.</p>
+</div><div class="column" style="width:60%;">
+<p><img data-src="figures/gradient-combined.png" width="635"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="data-analysis-background">Data Analysis Background</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="citation" data-cites="Ravel2010">(<a href="" role="doc-biblioref" onclick="return false;">Ravel et al. 2010</a>)</span> used clustering to identify 5 Community State Types (CSTs) in the vaginal microbiome. - Four healthy CSTs are dominated by Lactobacillus variants. - A fifth dysbiotic CST is more compositionally diverse and is associated with preterm birth <span class="citation" data-cites="Fettweis2019 Gudnadottir2022">(<a href="" role="doc-biblioref" onclick="return false;">Fettweis et al. 2019</a>; <a href="" role="doc-biblioref" onclick="return false;">Gudnadottir et al. 2022</a>)</span> and HIV transmission <span class="citation" data-cites="Gosmann2017">(<a href="" role="doc-biblioref" onclick="return false;">Gosmann et al. 2017</a>)</span>.</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/community_state_types.jpg" width="380"></p>
+<p><span style="font-size: 18px;"> <span class="citation" data-cites="Ravel2010">(<a href="" role="doc-biblioref" onclick="return false;">Ravel et al. 2010</a>)</span> grouped samples (columns) into CSTs. </span></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="deconstructing-csts">Deconstructing CSTs</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>The follow-up study <span class="citation" data-cites="Symul2023">(<a href="" role="doc-biblioref" onclick="return false;">Symul et al. 2023</a>)</span> had more samples than <span class="citation" data-cites="Ravel2010">(<a href="" role="doc-biblioref" onclick="return false;">Ravel et al. 2010</a>)</span> and so could identify additional structure lying behind CSTs.</p>
+<ul>
+<li>They had 2179 samples from 135 women, sampled longitudinally.</li>
+<li>The green and blue paths to the right reflect the known Lactobacillus CSTs.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/pregnancy_sankey.jpg" width="500"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="coherence-scores">Coherence Scores</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Coherence is not a function of <span class="math inline">\(K\)</span> alone.</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/coherence_on_tree.png" width="340"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="software">Software</h3>
+<p>Topic alignment is implemented in the R package <a href="https://lasy.github.io/alto">alto</a>.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-2"><a href=""></a><span class="fu">library</span>(alto)</span>
+<span id="cb1-3"><a href=""></a></span>
+<span id="cb1-4"><a href=""></a><span class="co"># Define LDA parameters</span></span>
+<span id="cb1-5"><a href=""></a>params <span class="ot">&lt;-</span> <span class="fu">map</span>(</span>
+<span id="cb1-6"><a href=""></a>  <span class="fu">set_names</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>),</span>
+<span id="cb1-7"><a href=""></a>  <span class="sc">~</span> <span class="fu">list</span>(<span class="at">k =</span> .)</span>
+<span id="cb1-8"><a href=""></a>)</span>
+<span id="cb1-9"><a href=""></a>models <span class="ot">&lt;-</span> <span class="fu">run_lda_models</span>(</span>
+<span id="cb1-10"><a href=""></a>  vm_data<span class="sc">$</span>counts,</span>
+<span id="cb1-11"><a href=""></a>  params</span>
+<span id="cb1-12"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Run alignment</span></span>
+<span id="cb2-2"><a href=""></a>result <span class="ot">&lt;-</span> <span class="fu">align_topics</span>(</span>
+<span id="cb2-3"><a href=""></a>    models,</span>
+<span id="cb2-4"><a href=""></a>    <span class="at">method =</span> <span class="st">"transport"</span></span>
+<span id="cb2-5"><a href=""></a>)</span>
+<span id="cb2-6"><a href=""></a><span class="fu">plot</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="20260219_files/figure-revealjs/unnamed-chunk-2-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>All the simulations discussed today are vignettes in the package.</p>
+</section>
+<section id="distortion-visualization" class="slide level2">
+<h2>Distortion Visualization</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="challenge">Challenge</h3>
+<p>Embedding <span class="math inline">\(\mathbb{R}^{D} \to \mathbb{R}^{2}\)</span> cannot preserve metric structure in general. <br> <br> <br> The question is: <strong>Which distortions occur, and where?</strong></p>
+</section>
+<section class="slide level2">
+
+<h3 id="distortions-in-t-sne-and-umap">Distortions in <span class="math inline">\(t\)</span>-SNE and UMAP</h3>
+<p>Both <span class="math inline">\(t\)</span>-SNE and UMAP are introduce distortions. For example, they may not preserve density within different regions of the plot.</p>
+
+<img data-src="figures/densmap_example.png" width="1000" class="r-stretch"><p>Example from <span class="citation" data-cites="narayan2021assessing">(<a href="" role="doc-biblioref" onclick="return false;">Narayan, Berger, and Cho 2021</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="distortions-in-t-sne-and-umap-1">Distortions in <span class="math inline">\(t\)</span>-SNE and UMAP</h3>
+<p>They can make high-dimensional random walks look artificially smooth…</p>
+<p><img data-src="figures/gaussian_rw.png" width="600"> Example from <span class="citation" data-cites="wattenberg2016how">(<a href="" role="doc-biblioref" onclick="return false;">Wattenberg, Viégas, and Johnson 2016</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="distortions-in-t-sne-and-umap-2">Distortions in <span class="math inline">\(t\)</span>-SNE and UMAP</h3>
+<p>They can also fail to preserve the topology of the underlying data…</p>
+
+<img data-src="figures/tsne-initialization.png" width="600" class="r-stretch"><p>Example from <span class="citation" data-cites="Kobak2021">(<a href="" role="doc-biblioref" onclick="return false;">Kobak and Linderman 2021</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="consequences">Consequences</h3>
+<p>These distortions are not mere technical curiosities – they significantly impact scientific interpretation <span class="citation" data-cites="Liu2025 Kobak2021">(<a href="" role="doc-biblioref" onclick="return false;">Liu, Ma, and Zhong 2025</a>; <a href="" role="doc-biblioref" onclick="return false;">Kobak and Linderman 2021</a>)</span>. For example, they create misleading differences between cell types that are actually similar.</p>
+<p><img data-src="figures/scdeed-example.png" width="700"> Example from <span class="citation" data-cites="xia2024statistical">(<a href="" role="doc-biblioref" onclick="return false;">Xia, Lee, and Li 2024</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="controversy">Controversy</h3>
+<div class="columns">
+<div class="column" style="width:75%;">
+<p><img data-src="figures/pritchard_all_of_us.png" width="600"></p>
+</div><div class="column" style="width:25%;">
+<p>See also <span class="citation" data-cites="Kozlov2024 simplystatisticsSimplyStatistics">(<a href="" role="doc-biblioref" onclick="return false;">Kozlov 2024</a>; <a href="" role="doc-biblioref" onclick="return false;">Irizarry 2024</a>)</span>.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="specious-art">Specious Art</h3>
+<p>Nonlinear dimensionality reduction has become the source of widespread concern in the single-cell literature <span class="citation" data-cites="Chari2023">(<a href="" role="doc-biblioref" onclick="return false;">Chari and Pachter 2023</a>)</span>.</p>
+
+<img data-src="figures/specious_art.png" width="700" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="approach">Approach</h3>
+<p>Rather than abandoning nonlinear dimensionality reduction, we augment the embeddings to characterize distortion.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="figures/tissot-1.png" width="400"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/tissot-2.png" width="400"></p>
+</div>
+</div>
+<p>This is a high-dimensional version of Tissot’s indicatrix from cartography <span class="citation" data-cites="laskowski1989traditional">(<a href="" role="doc-biblioref" onclick="return false;">Laskowski 1989</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="rmetric-motivation">RMetric Motivation</h3>
+<p>The RMetric algorithm <span class="citation" data-cites="perrault2006metric mcqueen2016megaman">(<a href="" role="doc-biblioref" onclick="return false;">Perrault-Joncas and Meila 2006</a>; <a href="" role="doc-biblioref" onclick="return false;">McQueen et al. 2016</a>)</span> quantifies distortion geometrically. To motivate the algorithm, consider the distortion induced by mapping the sphere into latitude/longitude coordinates.</p>
+
+<img data-src="figures/sphere_embedding_setup.png" width="800" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="half-sphere-parameterization">Half-Sphere Parameterization</h3>
+<p>Parameterize points on <span class="math inline">\(\mathcal{M}\)</span> using spherical coordinates:</p>
+<p><span class="math display">\[\begin{align*}
+\mathbf{x}\left(p\right) = \left(\cos\varphi\cos\theta, \cos\varphi \sin\theta, \sin\varphi\right)
+\end{align*}\]</span></p>
+<p>The associated (latitude, longitude) embedding is</p>
+<p><span class="math display">\[\begin{align*}
+\mathbf{z}\left(p\right) =
+\left(\theta\left(p\right), \varphi\left(p\right)\right).
+\end{align*}\]</span></p>
+
+<img data-src="figures/sphere_embedding_setup.png" width="800" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="pushforward-metric">Pushforward Metric</h3>
+<p>What does a small step in the embedding space correspond to in <span class="math inline">\(\mathcal{M}\)</span>? The pushforward metric answers this,</p>
+<p><span class="math display">\[\begin{align*}
+g_{ij} = \left\langle \frac{\partial\mathbf{x}}{\partial z^i}, \frac{\partial\mathbf{x}}{\partial z^j}\right\rangle_{\mathbb{R}^3}
+\end{align*}\]</span></p>
+<p>This varies across <span class="math inline">\(p \in \mathcal{M}\)</span> but we suppress it from the notation.</p>
+
+<img data-src="figures/dx_dphi.png" width="800" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="pushforward-metric-1">Pushforward Metric</h3>
+<p>In the sphere example, these derivatives can be directly computed and to obtain,</p>
+<p><span class="math display">\[\begin{align*}
+G = \begin{pmatrix} \cos^2\varphi &amp; 0 \\ 0 &amp; 1 \end{pmatrix}
+\end{align*}\]</span> Near the equator (<span class="math inline">\(\varphi \approx 0\)</span>), a small step in <span class="math inline">\(\theta\)</span> covers more distance than near the north pole (<span class="math inline">\(\varphi \approx \frac{\pi}{2}\)</span>).</p>
+
+<img data-src="figures/dx_dphi.png" width="800" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="dual-pushforward-metric">Dual Pushforward Metric</h3>
+<p>Alternatively, the gradients <span class="math inline">\(\nabla z^i\)</span> of the embedding dimensions also reflect distortion.</p>
+
+<img data-src="figures/gradients_z_theta.png" width="1000" class="r-stretch"><p>Since the level sets of <span class="math inline">\(z^\theta\)</span> become more compressed near the poles, the gradients <span class="math inline">\(\nabla z^\theta\)</span> become larger there.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="dual-pushforward-metric-1">Dual Pushforward Metric</h3>
+<p>Alternatively, the gradients <span class="math inline">\(\nabla z^i\)</span> of the embedding dimensions also reflect distortion.</p>
+
+<img data-src="figures/level_sets_phi.png" width="1000" class="r-stretch"><p>In contrast, the gradients <span class="math inline">\(\nabla z^{\varphi}\)</span> don’t depend on <span class="math inline">\(\varphi\)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="dual-pushforward-metric-2">Dual Pushforward Metric</h3>
+<p>This gradient information can be stored in the matrix <span class="math inline">\(H\)</span> with elements,</p>
+<p><span class="math display">\[\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
+\end{align*}\]</span> where <span class="math inline">\(g_{0}\)</span> is the metric on <span class="math inline">\(\mathcal{M}\)</span> inherited from the ambient space.</p>
+<p><br> <br></p>
+<p><em><span class="math inline">\(H\)</span> is computable from data while <span class="math inline">\(G\)</span> requires an explicit manifold parameterization.</em></p>
+</section>
+<section class="slide level2">
+
+<h3 id="dual-pushforward-metric-3">Dual Pushforward Metric</h3>
+<p>In our running example,</p>
+<p><span class="math display">\[\begin{align*}
+H = \begin{pmatrix} 1/\cos^2\varphi &amp; 0 \\ 0 &amp; 1 \end{pmatrix}
+\end{align*}\]</span></p>
+<p>We can see that <span class="math inline">\(H = G^{-1}\)</span> and that is actually true more generally.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="product-rule-for-laplacians">Product Rule for Laplacians</h3>
+<p>For any <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>, the Laplacian <span class="math inline">\(\Delta\)</span> satisfies, <span class="math display">\[\begin{align*}
+\Delta(fg) = f\,\Delta g + g\,\Delta f + 2\langle \nabla f, \nabla g \rangle_{g_{0}}
+\end{align*}\]</span></p>
+<p>Setting <span class="math inline">\(f = z^i\)</span>, <span class="math inline">\(g = z^j\)</span> and rearranging, <span class="math display">\[\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(z^i z^j) - z^i\Delta z^j - z^j\Delta z^i\right]
+\end{align*}\]</span></p>
+<p>Since there are methods for estimating <span class="math inline">\(\Delta\)</span> from data <span class="citation" data-cites="Hein2005 Coifman2006">(<a href="" role="doc-biblioref" onclick="return false;">Hein, Audibert, and Luxburg 2005</a>; <a href="" role="doc-biblioref" onclick="return false;">Coifman and Lafon 2006</a>)</span>, we also have a practical method for approximating local distortions <span class="math inline">\(H\)</span>!</p>
+</section>
+<section class="slide level2">
+
+<h3 id="implementation">Implementation</h3>
+<p>Let <span class="math inline">\(z_{k} \in \mathbb{R}^{N}\)</span> be the <span class="math inline">\(k^{th}\)</span> embedding dimension. Let <span class="math inline">\(L\)</span> be the doubly-normalized graph Laplacian <span class="citation" data-cites="Coifman2006">(<a href="" role="doc-biblioref" onclick="return false;">Coifman and Lafon 2006</a>)</span>. Compute</p>
+<p><span class="math display">\[\begin{align*}
+H_{kk'}^{(\cdot)} := \frac{1}{2}\left[L\left(z_{k} \circ z_{k'}\right) - z_{k} \circ \left(L z_{k'}\right) - z_{k'} \circ \left(L z_{k}\right)  \right] \in \mathbb{R}^{N}
+\end{align*}\]</span></p>
+<p>The embedding distortion for sample <span class="math inline">\(n\)</span> is given by <span class="math inline">\(H^{(n)} \in \mathbb{R}^{K
+\times K}\)</span></p>
+
+<img data-src="figures/g_kl.png" width="350" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="figures/rmetric_explanation-v2.png" width="800" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="example">Example</h3>
+<p>These two clusters are generated as:</p>
+<p><span class="math display">\[\begin{align*}
+x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\left(100, 1\right)
+\end{align*}\]</span></p>
+
+<img data-src="figures/unequal_variances.png" width="700" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="example-1">Example</h3>
+<p>The UMAP embeddings lose information about the cluster density, but the difference is captured in the local metrics.</p>
+
+<img data-src="figures/unequal_variances_ellipse.png" width="700" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="local-isometrization">Local Isometrization</h3>
+<p>Since the metrics are known locally, the distortion can be inverted within a neighborhood of the cursor. For example, here we interactively adapt the embeddings in the Gaussian mixtures example.</p>
+
+<img data-src="figures/two_cluster_interaction.gif" width="600" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="fragmented-neighborhoods">Fragmented Neighborhoods</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Besides RMetric, we also visualize distortions uses the scatterplot of true vs. embedding neighborhood distances.</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/distance_preservation.png" width="400"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="fragmented-neighborhoods-1">Fragmented Neighborhoods</h3>
+<p>To detect poorly preserved neighborhoods, we fit a running median to true vs. embedding distances, flag outliers above <span class="math inline">\(3\times \text{IQR}\)</span>, and mark points with many outlier links as “broken.”</p>
+
+<img data-src="figures/bin-outlier-defin.png" width="1100" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="examples">Examples</h3>
+<p>This is the classic Swiss Roll data, but with higher density near the endpoints.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-4d8f6a3986e02febc8e3" style="width:60%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-4d8f6a3986e02febc8e3">{"x":{"visdat":{"9aff7f6e4e52":["function () ","plotlyVisDat"]},"cur_data":"9aff7f6e4e52","attrs":{"9aff7f6e4e52":{"x":{},"y":{},"z":{},"mode":"markers","marker":{"color":{},"size":4},"hoverinfo":"none","showlegend":false,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"showgrid":false,"zeroline":false,"showticklabels":false,"title":"x"},"yaxis":{"showgrid":false,"zeroline":false,"showticklabels":false,"title":"y"},"zaxis":{"showgrid":false,"zeroline":false,"showticklabels":false,"title":"z"}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displayModeBar":false},"data":[{"x":[5.0678458709338638,6.6465876922883211,-2.4895738824847795,2.11623339914639,-2.9459740291542458,11.136198591866233,5.5334540238592744,-0.40974812965805135,-9.5820394546518681,-3.9194435018503522,6.3999993978066056,-0.33586504135064854,-9.6981546682013846,10.9612096269153,0.35320843305910393,12.322799967899185,4.7388145657458418,-2.8131828311777261,9.1704697903271875,10.045593471858298,5.5470334164183361,3.9390030987807823,9.9418413064143767,2.7067975074169413,-6.8897142707037933,0.43566903408024016,2.9662914871956167,6.3306522884208016,6.4671494123674345,4.6790439128900561,5.1245017270399238,-6.4664708145104894,0.75525621296670764,-8.1585746674422861,-2.4140621958209874,4.2448024335455834,9.1047821008150596,-8.7919540842057611,6.0853757747599495,3.4733450832943591,0.66453755017918748,-1.7740547951487493,12.013679823828769,10.005101194960574,6.2505357297652617,4.720847477485818,-2.5114014982285622,0.53528742446795397,6.3750156889112368,5.6905881828869331,6.4628614639571351,5.7965047698623797,-7.7047293033307938,4.3331158904326781,5.1792631180490121,6.1248426718282776,1.1356115617858993,10.588027253146029,0.47229420988020671,2.6757271127223903,0.4273872155645253,13.277647158166278,5.106322377376296,-7.5023426787582057,6.3005763725713022,5.5361666954435442,-1.1344437659370683,6.6668580250765208,-6.0535312798053216,2.7405528870031777,-8.6512176303898816,8.8495868847533306,8.8777390122294566,4.6045373979713871,-8.0021492851808524,-2.8147913331009295,6.900269854937064,1.5791425870472138,3.9344382592366305,3.9869444211618639,12.107594834959601,11.857768539702631,6.7840368564472193,0.20800140661837196,5.9979084393420266,-2.0759374960032884,-6.0047088791000105,6.3021668377114368,6.2576462791351011,-2.8379120054193425,2.3640275504191841,10.497386446859943,5.2985560467209032,3.2169979035289913,12.012623532767346,10.066999677300286,-1.6294062108606624,4.4364036303622747,2.7238504329992574,-3.9460857296378049,11.406079480208399,-1.0400108521519411,4.6517443568187087,6.7595870857286702,-6.4882709624866326,0.0041008355473568497,-3.5052505996532584,-2.7382263516033589,4.4163155195998298,2.1007249561551005,6.1276616837222013,-6.084769577000432,-7.6018590656996556,4.4453767731448197,5.8928413615089443,5.906044438013148,7.0332995307926716,-5.0156300310770705,-8.0379333991854605,5.1169515695157122,12.108744341832942,12.060523507510933,-8.5748858258562173,10.235064245622294,3.7595135145218719,7.5897362824848313,8.3421468656405473,5.2572700412936477,-4.7584599992533301,5.0381585020198445,0.66993782425808879,3.7599141331213102,0.02942053580387442,0.48160777656894577,10.353613951595472,3.5732457948072023,10.218620393842397,-0.59082872536523268,3.8624306208444059,0.20131597264118628,-7.3424228917883374,-8.2952983703755638,5.9805927042721452,-10.403753925244544,4.11207616682701,12.344161242963162,11.439431681346631,5.7940779742819011,11.06462428090706,-5.76049317559694,-7.8860052210860898,12.195593120269368,-5.7081744262998351,-0.95835925190292004,6.5847153464958605,11.935416104377136,4.1175953656956725,12.165360350024407,5.2401379707641631,-1.4803951790061634,5.9762042146598695,2.426134034985036,1.3107063270525292,1.5534785870055765,5.7376969309100518,-4.1102006829855098,12.126733162857391,-7.2019200308939499,-1.337512110116539,3.1960138548179442,-7.9204874299879844,2.3209446367729298,-4.6615147123362632,12.588088332156486,-4.5828623155994528,-8.5294803257532692,2.7991888481762199,3.4651931241153684,6.0183182372102424,-8.9520946537399979,-8.5870931155468444,6.4325958689753016,10.298033951532975,-9.8714040974594397,12.338689408348024,-7.238889203299693,9.2319437835068179,2.0741061656354498,-8.0255077159615542,6.8832061343695568,11.315914530180285,2.6570641219480562,11.754814930213096,9.7555312897905715,11.137000243200776,-0.29235565768870414,0.32576253560660018,-9.3254276273671479,2.0131568972332388,12.889850715900412,7.662324681536127,6.2038583567333516,-0.23246400127671132,1.4098100852787192,-0.60075723086622346,1.186791978882664,-2.3881124967629148,-7.8239112367672146,-7.2891325486783591,-0.32906392989585387,4.1579468346994313,-8.412803001799297,-1.8182612941504472,2.1802947330223952,12.956055979222398,-7.4862262141108973,-0.29742793305433901,0.83809321374063372,13.813212394602427,-8.9685922839145995,7.4539064181894386,1.0742778193723379,4.6166167573605863,11.900021290246841,11.832798504873374,7.0611411434769966,6.7281792670194047,-9.9027498211495963,2.8679488103966069,-5.5476796229190439,4.6344557370271771,5.6009400421207616,5.2410609644125152,12.604585363500354,4.5656298412964418,2.5912346138474884,-2.4014405657226288,12.640995444597296,-6.6205187153802765,11.314327300351716,0.80971265781957524,5.5605187051315834,-0.96588476398307244,8.8358929216655007,11.900544284744246,-2.1600934234898932,-4.317200342595588,11.902005012920656,6.8446430439117014,5.8599379557316675,2.8620126938537309,-8.948478543690916,-0.64384935620599937,1.7527455938335377,6.4171963585835012,-6.1609708426694576,-2.501075326914564,-6.8591195825720312,1.4664726695942507,-5.0805125830799351,6.4087733520916492,10.279149230818884,2.9093690591466719,-6.884392791252063,5.8741771433754977,0.78472213355628251,11.5623516801531,3.9951960744567221,6.6481070401133726,13.265474675444134,-8.3038217968273784,4.617913470603523,-9.1097087581365095,2.5990034099294452,-1.7410185502493052,4.9079184352594991,9.6593508745118317,0.092250196820436961,2.5140593410408369,2.1823799973438347,2.1290962298358491,-8.108001137930744,-9.9571981950952928,-8.8665293627162658,-7.4043258697509486,-9.8693116046516636,-3.6735384315844337,7.3276562085570838,-8.431239897536102,2.9818208364759955,6.4272378233925753,3.5322658539289917,-9.4131449084551164,7.1342557891092246,0.95993098586192838,1.0626239738665353,3.6305526282332412,-5.5323758608149332,6.101973777058344,5.1159622084752288,-8.3673864308132195,10.117965319095282,-5.2473872817045883,7.4319815850239381,6.0378650093330455,0.22788479421938024,0.51723151071669871,10.394696777065681,11.607449204313911,-9.5253164796462695,9.6443832825107094,-5.2532204122753843,2.1895311009789964,4.8668286069204836,-8.0462552889898209,2.76433684321109,3.8121487945430248,-1.6475625547961059,0.68310855678283733,11.68691172896642,-6.9942327561877171,2.5747245555396243,5.2941690473495964,-2.8064068909503654,-8.058103669261266,11.66539958406309,3.0870532631465566,1.6445019358870512,11.253502125397423,6.6034546826991365,-8.8253338639741354,5.2865718144992311,1.3746026836263086,4.7143034516212623,-6.6892351147356788,1.4411137132289893,7.4560551686458894,2.2720670441711146,10.253086493786276,7.0246784531401598,9.3844637636349937,-8.9796215861841713,6.7053332099209788,-8.5658665172364064,0.083119746980437059,10.656688688666195,4.8090161866891838,11.674010808160943,3.2406436800597298,-9.2340631672263473,11.361464140434071,6.1805538374284668,4.8537405269373588,2.8967286223094786,9.5686393610447755,-0.82968870690707996,6.0716849391581942,-2.8020039646381552,-8.1934969734976519,10.818895648204728,4.327974873985645,-1.344451616199186,5.7032520277722734,-7.2539739892264379,12.22484437010645,6.4491379516204033,8.3520626220569376,8.2977233879443162,-2.3161517370758196,9.5283416485858137,0.21590671210356585,0.91013541119884322,-8.3667436296597053,-9.3811113461162243,5.2277978570342061,4.2329502818035722,4.3665427826154488,6.1491394084486224,4.6111558697401938,6.3966976368404991,4.2205034819416651,5.1531332101855778,0.42222276601896203,4.9995647774586027,6.1615955303299872,1.1088141844728845,5.6980187116066059,4.3683416831962489,6.5294201158984757,1.9381029115854771,1.8068290679461401,2.2536155587829483,1.9177408901220061,2.1912133856731191,2.6613711305411059,2.7075490886152189,1.2757424294842279,2.3029298821035766,5.7934194735364182,5.6341090157162128,0.4089413898940843,0.026453371021590531,6.2499183139219872,5.3635990466480523,4.2669605997593756,1.5274300595610746,4.4589990999347151,6.6791750545035677,3.7622453778892182,5.4041816521271313,0.49765784148719217,1.2674134103342902,3.8883854931126098,2.6345810803026808,4.1774224832418945,1.3239216577177866,2.0823994397721464,0.73206502365598314,1.087110638563149,2.1608102777987424,0.73751813012890099,7.0283119824460725,2.1915316659363508,6.5825830206968607,0.073549099651794014,4.5782292780587932,3.1943314956391573,0.99276260036860264,3.5739750751914721,6.5781738576310449,3.3956312643794995,6.3986709887951738,1.086430929038388,2.4670358834147539,3.4362291074309397,1.6611073888425167,3.2913618245163208,1.8125740820452232,5.8708647978212074,5.3463357201400967,3.0778698846904406,5.3978732284737019,1.148929919960366,5.7918629374673953,0.58236964346145825,4.0726291199372646,1.8455933811332497,4.0311668070417381,5.4594721806150837,0.25566515318131322,2.8260213408608941,4.7034202624661372,-0.76377360310377718,5.360666059601134,3.7459030850611663,4.4508547837359593,1.8478252003963351,3.5458721177245569,3.3508313236112537,1.1219177684291253,2.4481027537359705,4.6604572732279772,5.2195165202667351,-0.45161828320113567,2.1419528050605963,3.5604629936874179,1.5249856509751216,4.7632534045392356,6.0213897576893505,2.3314388844160829,3.654575185036955,5.2681096025750254,0.36356617188229334,4.2336970065664907,3.0523775061394725,5.4788342175458489,4.3413377883408089,2.9678003034699914,0.27624865003808352,0.42958598555992322,2.9042738706836908,3.932712197299788,1.2490443409462912,4.7524098423000289,2.734671696753638,4.1807763724227431,2.9972860955006499,4.7261890277501344,6.7135194847870281,5.6090749501361863,0.69865970252419041,1.3436910423356607,6.80230656187112,3.7935666697114381,5.7049318946929901,2.0210138567754901,3.0746683706359654,4.3702550534190419,5.0933554142606958,4.4439183773084308,3.0613092630666121,4.9335643701166285,6.0112244317882366,0.403053886662748,5.8445534520086966,5.7984710113635973,5.3401874810670824,4.7548572649192087,5.4100412528996529,3.6480891344904629,1.453137725034241,4.1229840744919564,6.4800357718212522,5.6272099731392515,1.0377860148315463,5.6935997027333167,5.6808556779773536,-0.29668149550932893,1.7758483604892716,4.5892799001950415,0.76489452290619608,0.4017384287858437,4.9320122155572905,-0.088551549667346019,2.1242545659291339,5.0896246749709828,2.4246065991677948,0.16538876281724202,2.1901325645253782,5.7403793694026284,-0.50244908925316656,3.6235741958364343,3.2092481607462782,2.5563062290501373,0.026596977268948659,2.6018252139852391,3.8692276324998423,4.0913402656798254,6.1593358664362912,3.607413306467405,2.9775811353069237,5.3804054685356046,0.4201678385004658,6.4262556287429335,3.78528725516703,0.63969325882530648,0.3796122418379928,6.0046178459012598,3.7611039694559141,0.24540453246731417,4.3538871731971707,2.9734447369480859,4.9597394977933043,4.7943145467622355,2.271601832561752,2.3235890398933425,1.8544697608208811,0.73211933351830483,4.7449467140947776,1.908033589577274,0.58419083651307546,2.0677472175168594,6.5207772458181656,7.0675161966924041,3.651370772860874,0.89204288778053054,3.7419998595397641,5.0241146560076757,6.1025774657633978,2.7552948473407572,1.9645856653873603,5.825814160313775,4.4506749116112863,6.9361457761738903,3.8974774516277728,3.0077513422444837,5.3657119616107076,4.5697165034483929,-0.17055697069051221,2.8000818255334843,3.1238704694088293,0.66145509221383625,3.7781085333938673,0.70045801649730777,1.2906749944770164,3.1774910225015085,1.1196869683004214,3.0540348535061939,5.1523116443092736,6.6426676460652399,0.18230113815738647,4.8221783080696241,6.481908431899857,3.3195983573037755,4.2297286324051697,2.2244535659311246,1.824909113465832,4.1311497255858738,1.5536419723393466,0.23319678109160841,1.8770531680375264,6.2275545754249837,2.4151072365984234,3.8949910279185302,5.9712816019198174,2.6932178346725726,0.49138416624707848,1.6441026804169994,2.6162392045265475,0.69965603867569193,6.6687930122448886,4.1901776273714519,3.4095743492541586,0.19099205897236804,0.26526042486046741,5.6583796424116146,4.981551714051939,3.3312130876428023,0.76293376769438637,0.67507408977819816,1.9909229402941315,1.5241155151237689,3.1245280015829633,1.4937476522735147,2.8315601066533529,2.2919335428767642,5.5998607230343254,1.3510293876999169,6.8147892950698106,0.4081273329006479,4.7509532424928498,2.5488883202918884,1.5961622131672717,1.6936829635743538,5.7517424600040528,5.5283224277761702,2.4772046046141214,3.3240165335934657,4.8209602640433316,5.7813236216909027,5.2628177025722787,3.3116626162288259,1.98257802649466,4.5348147268356396,3.3000971991096675,0.67149123308364644,3.7981551195938055,4.9493179121061059,2.6328638464684362,4.3077344966605464,4.7380990952355528,6.0164256345320872,4.0899636008325411,3.2185301304920992,2.8809710115438332,2.057902294153402,0.98638968255268444,8.4238190922635408,2.9135927022436547,0.79690144542372388,10.502506573570066,9.7951856885674857,11.514332778406292,6.719616924764547,11.861801011025726,10.291677108557243,1.8571334142870843,7.0989562255150958,11.130414137561797,2.5969655125716029,2.052101656772507,10.093306090238974,4.9829742985200571,11.21259289406594,8.3764224013632411,3.9532223862610554,13.183371833426126,4.4966612573311835,7.661048318126606,7.4027575777088561,6.9017355684426631,6.0537632221185982,3.635070393936064,4.6294972489177519,7.9372643312720257,4.6724012968778172,11.631807592325371,12.170884610550385,7.2405306408719898,2.9756571335514517,11.996000287912761,7.3169503773591984,5.4967187535731261,11.863340634771545,10.930984462933296,0.6734536939366389,7.2061221080855509,8.4044526200217291,2.0180180938059493,12.3049925050178,7.7976569875966755,4.5911988002968078,4.0666984284705761,10.962752958643392,12.042225695932403,12.932802777242058,8.6100683397173832,2.623324729051133,10.464341077525129,4.5418455336309345,3.0623806154085824,12.587313199504466,4.0874099816052478,2.8718406184473255,10.018382366928256,3.6188563677526382,7.0006011094838883,4.6385022440646306,2.553351638419008,10.910356277997357,12.887423306589875,3.4956302552681811,8.7847331690799955,0.092927617203727803,5.9403878173613851,8.4522422315581807,1.6561915204173341,4.1034083037616815,2.3461119404666584,12.344624543022258,-0.16628391154165323,6.8003499390798297,4.6067072612981912,11.770314086686472,5.0129585911103707,5.121761922076729,12.287495695084193,6.092821361764547,1.7945501148392642,0.11906735401422418,12.392258977212064,4.2658260090733764,7.1245160746613889,11.628827773404076,0.91828607527296879,11.21843968005062,11.426129494220255,11.525454693778766,11.90266707426367,2.8967600578434887,10.577439525234494,8.8598274311631133,8.377030022577479,3.4268066672716611,6.6190534932096003,6.2854329768676624,7.4781704756586009,12.431984827366804,8.6643620515444884,7.0587713466340842,4.121325921346803,12.376944950435842,9.1769317816458997,2.4134380863294349,11.651288361875858,5.0874278373370556,10.612578516913503,0.38832150720062508,12.803916500643849,6.0814080643530462,12.814827704810719,5.4325923361227453,5.6087576356680211,4.1274995286229625,9.231909167078884,2.4204796717942356,1.117122168852571,6.1193785276591584,6.7184159682288556,8.3748193596869651,4.7773428062595267,1.7097474836974988,9.1117800687475672,8.7413721926755166,9.6784406199172217,5.534366604246876,6.6224114637008116,5.2325848542046467,8.5279350430661083,9.0758812748940727,12.695927292947452,12.080025227787427,6.0926553957166973,7.5613964414502579,9.1315678675324392,11.869085441595512,10.017879263296736,4.8516759386549193,1.4618187624582499,9.1259236847541114,6.2256301855291518,1.4987418372228405,10.107609344824317,2.3662340265570445,1.5425664632158005,10.712363420012045,4.070819875015574,6.1057265751868233,4.4088231566508362,7.3560604844108406,1.9404643697840751,0.70568581038579392,7.6541869630931361,9.4905189474355272,5.2071195130330894,3.2468566263127689,8.4468579694248529,1.9266854915416207,12.046663269952091,11.954042996548438,10.11903516049785,10.807112648807395,11.337728991298636,7.5483668795892553,1.891085086217235,12.182109104921381,11.730313113942367,8.6487463556408191,12.94061649179868,7.6724866768082478,2.8679217170627069,12.090910143593442,2.9465679785461965,2.3217756711953141,11.614055127428204,7.5869037086914366,1.8735183476343948,2.4575108984972678,1.2543382190607546,8.6234811492352126,9.7624471987365382,6.2970861867104393,12.200221124936959,7.0262008746211571,11.922186206952286,5.0586191496705259,5.596286038879656,2.404772206639664,3.9228530748944301,13.430350227909637,3.7645546451081713,8.4880550334834624,2.4479294102558571,9.7183523362845694,0.85383230541236887,3.3856403392582899,3.8912133758417209,3.2764876290699161,1.7255895540957609,4.198429449364915,0.68072224441494478,12.469272504958612,10.919758594583444,10.586677662040554,6.0543045857292288,10.831388216333425,9.0392036710065913,3.1766524249277359,2.4333757078905567,5.688623546905994,7.7521778935265928,4.5617750498791132,7.3516257571994705,0.54718283840100101,2.8924469917993956,7.2536294447737646,3.5014425257140731,3.8159974361440558,5.4294766836892761,7.1086257013363676,4.0319308825910634,6.8387665324773428,11.57979690550372,6.1635432785506037,10.77602944895904,9.0559876796906487,11.26690925639909,2.7265810630228406,4.102071451898003,7.9653557870408642,5.6334720620911458,11.492959492132272,11.347787758829648,8.71920977444565,4.1637577292635237,5.2957096616649206,11.153525253591887,2.9054075287063799,1.9894204675857865,4.6708354577587343,7.537815042762106,6.3071501839836266,3.0503566884473101,0.55849751138799908,0.88927053512032073,6.6894827871846534,13.102237917207445,4.7078927609919301,4.314311953321468,8.3888035927232423,8.4820006395405478,2.6663731238915029,9.8817375378874441,13.394022269954707,3.2199208170438274,9.9198595374748706,0.25963963706696469,2.2188934886148952,9.9082880406843792,0.64999493008227693,12.22772542505624,13.099698621709086,12.67093436096436,7.9981457571590209,0.69824630096043749,3.8513041146224367,10.20366546613959,12.544909127840356,4.7034551197854668,0.66619225990326769,12.566548227342468,11.889833129968787,9.8593376488705609,5.2110682032010995,7.0688141455171571,4.4019146568944914,8.9711876477980255,11.06441551067452,12.710849858129825,6.9515052339335321],"y":[9.2597056741747235,10.382839453908881,3.559942102047291,10.401449427287428,1.6809381764254836,7.915119215026408,3.3957263219551739,5.1495568966388374,2.4390926434812945,0.11902464738965424,8.0780158584035835,2.610786494685176,2.2649862095131805,4.5592907006223324,7.4294142942855608,5.072070337882379,3.6302879379916657,5.0404646773531248,8.2648563623635667,6.5674798001821442,9.7957334008777366,1.2544615729562656,4.4885348492527433,8.265000607468421,1.3916333699521086,7.5667985055506106,7.1071690415819431,6.2220346033254641,6.500734790145966,6.1142535266341174,3.6522713869583079,5.0582944160116385,9.4515904745200956,1.6697210593070753,9.8852229456546716,9.0695700443592724,7.2661300659278503,2.7666413749662122,7.1714186095978913,0.63926691856691276,8.8242753162475065,5.3955939812049953,4.3238522860867246,2.6778235971171407,1.319368898931166,9.3734374346026783,5.1057158484954472,7.7610092963543043,5.2872796092171974,5.300060876500174,1.9524973604746163,2.7289650951858815,5.4717258420863253,4.0446670693751772,9.5230803952416512,8.6802714907316094,8.3067323890041891,3.6549992294494498,5.9193274997424989,9.2628965323559438,0.87367784203467225,7.8043012801526865,1.5830691780824608,7.1500819125241994,7.5967006642328796,4.8668096456334036,9.5642109300268743,7.2832384616062678,4.2799484985763954,7.706667337875615,2.5527867157145896,2.3829326707106522,5.9725152428674759,0.62570014326467271,0.56581510405123803,6.2282839569830104,5.7228822457989557,3.3163640329989525,0.22519686691273461,8.7356300240555385,3.1476118117335163,3.2756820807180183,7.1212952030619352,8.8520301185652848,2.173431764729763,3.908487718089249,9.9754796927641678,4.3884494245188623,4.3477993647157636,-0.17034153464916568,5.3657782355775581,9.7727511157593057,0.89464500618247622,3.783330334783702,1.6273118390661785,0.2906292630295203,4.3467557560855079,5.7895760467447399,0.35526354341048283,6.5887217776570175,7.9643380441575076,7.3200969048478628,9.8133782122219078,2.0302029550926997,1.6780049506607331,9.477408916107894,8.6332958500667463,8.7051767235302986,7.5110456109612915,8.0677352438859415,7.4938260599644977,8.0023277496577716,3.1925047270119977,2.1239891246539147,1.8315171750129635,0.42654427199295808,5.9748212141665835,1.4440036540819292,2.8443040666146477,8.4234893235231443,8.8559505864226828,9.3283629947459801,4.7692024846408989,1.2835530180511068,5.4498572382904493,0.49994180810377187,4.2576143744901787,5.6884971420298731,5.15033910533149,0.99352665517077643,3.0108490747880339,5.1306708238810579,4.3142138476135754,5.9208081791532852,2.360909210193106,5.4326230900265662,1.9568055230920975,0.72184257721021494,4.6235191515861942,1.4095927776482768,9.1261862215843923,6.7701080797456701,9.6153092068943415,3.2707270188326998,5.5003565319366254,6.6732107506681304,8.9840950109274509,8.2668220436149262,6.1806930283496166,0.51756803405733942,7.9947140847869758,4.4710545194979421,8.0061770407489306,5.270247667750775,4.13278604427438,7.7956758598796059,3.2341475231764427,1.3402667420674084,7.1240322096486182,7.1007472042225119,9.7620058472403475,3.008323852344144,1.1818773943428635,8.0747645761709936,7.6948565743014878,1.1900092931450881,8.7673117471343183,0.4012541498624666,0.93690774768350105,4.6802350881738546,6.6978127890914818,6.3740841647239259,1.4697230764154123,3.2856356585966751,5.4355803322318854,8.2490411385278879,0.31192040519487685,2.7976389166925859,9.9313495630621063,6.0289474314973539,7.6989761782296942,3.7640883313755418,2.5815963524743593,2.4193048952815217,2.4627858358832193,2.2520742906412439,6.0149510723382873,0.46037173195085912,7.8614026982008873,1.8828517166262864,5.9975631257079698,8.5796269784438177,1.7725871689453898,5.6410586799346056,3.9199843926338662,4.3380523019811115,6.5726775003790108,1.0174823498353014,6.0140046652816856,5.3920708079611286,5.2369715226048541,6.7352586278361066,7.0340969034059286,1.4866634067850493,10.739457206560806,3.7359044830669146,-0.10505151106298739,8.0221046084996086,7.2330965513654659,2.0215244387083864,6.2942030741628097,1.987664360155144,1.3298921937159265,7.8601976537545557,0.90931639816426924,7.5153081626276501,9.0159148281748305,5.086438734757972,4.4636467054513158,0.68414602002674996,2.317251297436433,7.959350339480884,4.7742040426377423,8.9600700828760864,3.7276379719074719,0.84736562351666567,2.5230648580886066,8.9324173202819726,6.1243668286894204,3.8035849037643201,7.9433714375259852,7.5610421042639278,2.3383256365474354,1.3975550298547641,1.0575463586645917,7.7153002629379124,0.91355524899738683,8.3357861323876641,3.429841886999907,7.7757908132640763,3.8824981348388472,2.8837187416746062,8.2256248540941357,8.5482183787670287,0.87344266008273341,8.6719349879486156,9.2359924689122703,4.8895905625339484,4.7942267499492193,6.5423748980426462,0.92717345937597517,10.489004802036597,6.4472052522228518,3.1965404158133301,2.5418284732952392,5.7878313781893604,9.2499613179695643,7.903859677955154,6.0421426275328365,6.1779215892911257,1.0053217550276194,6.2239114296987497,8.5215958951672199,6.9251581784669147,9.1654017778485724,2.4223510408830218,6.7309981673983303,3.0304726139194433,5.1600573868676625,1.0937126646120467,8.8174909873835432,1.2256226397651784,3.6798000349406808,6.4983229550588817,0.80201960318407584,4.2787799849589048,0.94856574371313596,7.1653861460059147,2.8324269919384064,4.7385405828152329,1.0810726119624039,2.1104029086633349,4.2972701275396696,0.37873015187358433,3.0345037132400448,9.9974824163800928,7.4510495109323394,4.1335586996988543,1.0647541015381423,3.7824659781954502,8.0597680203006696,8.1408394562749322,9.5518845949916305,6.2424156692642727,0.26570282610139495,7.4261896171071085,5.5082713921654074,7.6719789238967664,4.625788951185192,2.6141266720210332,5.622339778914931,1.5986548542369967,0.618991580721727,3.9252093696393406,2.4900321962240768,1.1814476903160549,2.406982865349077,9.1581393434846881,7.5492726869428033,6.9440923115602899,5.0929649405884962,4.672862165091634,5.5111351175882115,4.3571356280757909,5.053517268281924,9.0698730875856803,0.28087202925131904,3.0199756569578753,2.3553521441162477,7.9486219272656244,7.5717847290299787,8.2062089397741413,2.7590387089414179,5.9250138552371592,4.1486704272862793,2.5364980820195155,10.009141037494032,6.6712591271346477,8.6508917543682795,5.2194378021213437,2.281392500713078,2.1260271021556982,5.7501358578994965,8.5772627166336495,4.1812382983271501,1.3464948964524617,5.6787408466875142,5.9833845960008212,8.1433226801841396,6.7918949920987552,2.1204889724986282,1.5511738587561461,3.659463156919343,4.5579244566935824,8.1492749777933167,10.684956945701902,7.7227252360220877,8.9093284623828186,6.1066806323163929,7.8529884718140313,0.74281677413836256,5.0505493489570936,1.3743798320243434,9.7484011735631153,6.1399724265582289,6.6115799576717826,1.6596058268647664,8.587487039410755,1.6340510499654934,5.854496141604602,8.8363987020892214,7.7121483428600976,7.9058812979850961,7.5274177732848297,6.4327632756236355,7.15172410601562,7.4771449630099092,2.4993306115877525,-0.46029352407411478,1.6301700752731254,1.4782318282997069,7.1495313897105053,8.5336937161010873,1.7501338829624125,1.3842062016214456,5.0491680145870115,6.4967973016990639,3.6974161154355754,1.8170010029181256,2.012653090709025,10.52027166347855,2.6564380314331406,6.2031305178522009,6.4545636055400886,1.8755934836655781,5.2979969647930556,3.1528435875915775,3.7762363295753234,6.044942687183914,3.9232945500998682,5.846716786520469,3.3199877768988797,3.3578149228350096,6.5436572719099821,7.7270748464018588,2.2997970453703607,6.076809904089898,3.7618292327061331,0.047867231537794652,6.5816916398222194,5.3254783560597492,4.2651150473007302,7.2983750639598624,6.0620195414364932,6.6947371999108514,-0.034868023343774771,6.5346061092305101,6.4741590683357195,5.9220423664519082,7.3663206626440987,1.7564779165408986,4.6931729935501014,7.8229524840790807,7.8113964363718633,4.3358402495098227,7.362819913347793,5.6116661212189802,7.6134675580307718,3.1516495859270859,2.8420927539767957,9.6372247650348246,8.5772690055055634,6.4598854409248405,4.6650152869605614,5.6907538592103828,3.2567003612083885,5.514187154554965,8.7810299992517677,6.5703761150781128,1.4877208769253418,7.6567332510953134,5.5902831435976115,3.319210396501008,4.4150012153483971,3.9279628633800265,1.5374836103472991,2.5923115630420912,2.9836910338224274,7.4841498481122022,7.8269179442520809,6.1865816809532586,3.0679756619690326,6.881339335264264,5.0433650269082095,2.3056083090471362,4.6054353901825094,6.4071694724932726,3.3565736591100608,6.1888895203658842,4.0027817084345259,8.6882258130682075,1.7289397861084472,7.7189532672421146,5.5157372800341724,2.5947705659069031,2.8732667461215078,8.4466963063206624,4.7594994148180527,2.4480683610695109,4.2317904287470576,7.4524425031708663,4.4408280961295157,7.5380288303652003,5.0440721862459119,2.7213792962985273,4.0973073156170114,4.264936402273233,7.5368379257000724,8.3477509872383582,4.9333434506375635,5.1997693227306661,0.78306605048923816,5.0504790250481362,9.2430851176738447,5.1017411429649906,3.7744944835845411,4.4519636268650444,6.6563274329950604,7.8011720484115461,5.9980362968566379,5.7794758419483783,4.2882833588907481,3.0595461458825928,6.1260716411544518,4.4396425846665117,6.5348298196943118,7.9727601638644598,7.6889325544027329,3.3588255600212156,3.4271701638357719,4.3000936925200151,5.4593523521448875,1.9487438489535107,5.390020919575786,5.9653939131952587,7.0149984795225038,4.0851468970942681,3.2845621237812295,5.9139413052109431,6.9851451349322335,2.7920866008628198,3.5461855036464076,1.8697091486309432,4.0360961368689452,3.0434818411593545,3.4038528710616296,4.0768696227465817,2.1269381973267407,6.1525260804003894,6.7714454080764632,4.6510826330765314,5.568435315156508,7.9958904416866199,3.0549687653568092,4.8879600214359007,6.9181418084172837,7.2749009543369461,5.6570304631812434,5.2997491974697555,2.6766609463489655,4.8022781217589783,7.1369743867796558,6.912041033316668,6.3013804588549993,7.478062246677041,1.6971431820391256,4.7754644043834622,6.1037252286096884,5.6409602018480731,4.7992982340427899,5.7950875863234312,4.3301277598410453,8.8498852766175666,5.8251308258974372,6.3958721922989632,3.2848295425177838,2.44721306100337,1.2800106017542463,7.894564530027905,5.8124513129292392,5.8011907536634091,7.0578523167778959,3.0045045216603077,7.4842012785827379,5.0163356525931535,7.4146147006466654,4.8439202192985338,1.5211161528273405,8.4087668935444153,7.041827041483911,1.954617080719532,5.8601704662143979,6.5895903131589737,6.433483890014176,4.4324936379551536,4.4819857020612934,1.812376112196852,5.9486858338228306,0.23466014326929507,4.0706936644571048,4.0820286658379441,2.5368438878670641,4.2883335783330558,7.4681858990562047,5.1697272057910242,3.1633398648113853,7.1488520588891751,3.0687209044014976,2.252481212846817,2.3491517066980721,5.9063396836458928,8.1053615682984486,3.3058519554250543,2.9179000326620383,2.6011063286048581,4.8621837301888231,9.4370777955641856,4.3293136554883089,2.7320233519329959,3.0270650722938868,10.346712656952883,4.754807407888368,3.1681840107759141,7.2632081620894811,2.2746994594446819,6.6802250684769202,5.72285960004334,5.7844822941314353,3.5719205731767474,3.0569958558845478,5.7986707164623938,4.3475715745535526,4.2825587160632574,7.3836592459831891,4.4603909604582554,3.9277966848057471,6.3653049988243779,6.1795243716184141,8.2716570109358294,4.0943071038731755,5.0248284461264312,3.848651013531188,2.5356765279636848,7.8009197468150298,5.5996165566161658,5.9464458691405087,4.0985727955847544,7.2571765255345264,3.8734146860782266,2.2329319290965164,2.7058505251484894,7.7027152312190355,5.5134754395215406,2.7609094309304676,2.7837308085194135,3.4327035345593666,4.4800369808101221,4.699607782016872,6.0822903810195257,5.7005424161512925,4.6121054432602175,5.215408129832535,5.9799053268245714,5.806236336399186,7.4459504108891634,3.691071837348491,4.6035489001769543,8.1743589454890557,7.0789125401800606,5.554455418667871,5.4055208699652617,7.2453441141967554,3.8688250048414798,2.4206106315299598,4.7980938454615716,3.7874674237528545,7.3693740252259792,4.4316596132150368,3.0040640900362163,3.7608911918588741,4.4370982737918485,5.5557883591383685,4.4633126658606184,5.3600065201315159,8.3438439228597261,6.5109293164069477,4.1448111006862538,6.8127204049478483,2.3701096492352778,7.4878372253981382,9.4319574200756318,5.1131416654390343,7.0337918281517915,4.1702468043751812,3.7034388158489593,7.1048068128007307,2.0903508847676955,6.7515571010418798,8.076684185898154,8.5026196103366409,6.1812755015135661,4.3058207174799712,5.7530891553749512,6.0334461627255642,6.6890003595996133,5.2357067058385356,0.81267082490366771,6.4855557438626548,5.4717899465080055,0.17662772966298695,8.6154369724798077,3.2999542559755297,2.798867133546731,1.0073089370354478,1.1088497806873383,8.4754991734750931,5.9184661094886106,5.0907612778890057,6.7938195973971895,8.2434048193127456,1.6843827982024879,7.93478101683408,5.2616863487577019,5.5510375385886759,1.5395187544156956,4.5503524171826584,5.7466144442715921,2.7319477201616271,3.9422724339168305,5.1016237112844234,3.5420232249748493,7.1721625079490465,7.6778957402702668,5.2404293565076383,2.278902534447961,2.695238142318968,3.656058912962445,4.4013430632950321,8.3711323878811292,3.4153152875300337,8.3023968114547824,5.5737706501550583,1.9784733383456552,7.3409509228975702,3.8241125428908962,8.4739229242691181,7.2694152821300166,4.588359143777252,8.0975159707417621,2.015265965064911,7.9209622611227157,5.896503017426534,4.5526135291605145,3.5044924024548809,3.1097889461917938,6.2518141561150005,7.4098109877559271,3.0592078502630953,5.3639921950522842,3.1308230562130213,5.8144441610318847,2.0451325022386149,6.3214061024604096,5.7948781245024072,5.631715438493285,2.047758437997802,4.9263256807960722,4.0133211405655942,4.6975001655569955,2.4316282919256569,4.7696769919654356,8.0217649187504918,3.3785112859100197,1.7749175071674079,8.9243114891994093,2.2804883281086328,2.9811745056090757,7.0560742610098321,3.740994275262679,6.766448830871445,2.529949625974671,0.57615738060773136,5.3155512903660567,6.4662132554029093,3.1892472314339222,4.5565932258605013,4.3563621237274663,2.9727727276669365,3.9126216367115023,5.806631958471951,2.7670578439039173,2.5868742137435987,1.9822783510519739,5.7406006347007592,6.4426561250265229,4.7602178096980916,4.4525721697520346,3.8579514449580001,3.2189616311060063,5.186575495512769,5.2037279911211884,6.8377790050164817,5.8300190355890953,3.605069936941236,5.0540231043346022,6.0850784514190952,2.1904430504406434,5.9864282314379436,3.5854148855196151,3.2719324601453215,8.7264750196773218,5.6708916408815488,6.4422168547629903,7.1208227643245117,3.1257053732773574,3.2167393231437571,7.428727186832111,3.011651888331762,4.4105082000676807,4.0916392658860889,2.4744066421062003,6.7544611729537376,3.9712510049238121,2.275383884500398,5.6792919117004308,4.2114101297494422,2.3863972400674114,1.3824443751814941,2.7370603130257045,0.43060817342389024,5.546012753230996,7.3203362251145023,3.3031638524842237,4.66102162555568,2.5492220304731541,4.9081275264361981,3.1397521928480963,3.2001404209029483,0.42085605862697795,6.0278893737805621,5.7730987508942162,4.7243100131701254,4.8007330172256157,7.1815455477183008,3.5391312909420267,4.986522122662711,6.0640034356708084,4.5165132406263426,4.7981162493333533,4.4879551239761639,5.2268703806498538,1.7633318152023696,8.4019879550095524,8.019239729066447,3.8564195577041489,4.109089330687655,3.3248923201071543,5.3431359433955521,4.2245382039349995,3.3949572222311706,8.5972739492413108,2.9853141724703738,3.6906457669031414,3.3804047305009952,5.1282283901943932,6.9583174098597249,6.9600951277133616,7.1958728085441956,6.6496596416631419,2.7263837768696981,3.6522225556000376,5.7517341571825105,4.2915165543767948,4.7015567843688162,3.2091509786456478,2.7736074765941647,4.2892258768639575,5.3471978465659147,2.566635957925965,5.0030408891814329,5.3755880154429079,6.4311555310850022,7.3179145083170321,6.8663589217955545,5.6540371615460483,3.0107807937311688,4.9995894976521029,3.6590672612697972,5.1162830037112164,6.7480043811331845,3.6901469894313199,6.0560774821354508,9.4600866625446152,1.0763474285808561,6.3760678821580434,5.4562413172553228,5.5986106423869142,4.5405584042359957,5.98862545058976,4.5277720961654433,6.9381456666945187,6.4598105059660034,3.6320336910852418,3.2612011580535465,8.7102473032744179,6.9974288109490717,0.40333152105420134,3.9342237228838823,1.3207572202142792,5.9091671033711792,4.2457567572313328,4.0319222456969719,5.7605050662273758,4.4878761650149936,8.6935229764765722,5.4895533333563549,5.482556584818286,4.5779605430537176,1.4179299423736968,4.4349625854436523,5.893512009529335,5.1359813207617595,8.2519656444064076,4.3895593603003542,7.0348196626916906,3.957010374626257,9.8856631030457045,3.960365938339713,4.2795860729027364,8.3770486938197841,7.8164640799924845,3.2572371540758271,6.9468341574067098,6.3934743887863315,5.0565439460795574,7.9760373969933438,5.2918640150123615,4.8248502954637473,6.1087177369089316,6.1096767804126326,2.3875511396185147,6.1964196781848635,6.4700423576307511,4.6849563417820015,4.7175184670008301,3.2569620180142267,5.0538872855945725,6.1294979782784855,5.7487251822190597,7.1560994569349345,5.9558855726888558,4.2243953101742955,7.7045686077884783,9.8023499666587863,6.3203972693369339,4.3859115626855694,5.4415663563816921,5.3208650368826245,4.4215009665329781,7.4162347886473201,6.354421389761419,3.8356797871813049,4.9670507971193611,5.9302298523257635,2.3980149064042275,4.1515216091660738,3.4537684412187408,4.7546066085990679,2.5915208770025542,3.1231297019517523,4.8676974889183056,5.4873181099419535,4.8414516961528022,6.6218677847067235,4.4430667629994263,6.7053121096048809,2.3481139959864605,7.1251354386752608,4.3548656689599516,2.8968549801957657],"z":[-10.814202940980804,-0.73157178619987606,-9.2013151303424898,7.8475219537354484,7.6809966295967671,5.7290175217388173,2.4226340361952241,-11.300493987580628,1.1636983079565224,-9.6510537593068673,-9.3903992597487367,-11.480848476307346,-2.4394183900555824,7.0516489831699589,-5.212262178262284,4.7752342766580158,-2.4842222452978922,-9.9223895259832222,8.0107305078302975,9.2058794286032288,-2.1301912428449041,-10.904260749866989,-6.707707588128196,6.5630851589434993,4.8939044883089098,7.0238724533149179,6.7071620239437006,0.95095410428638583,1.8712318625820257,5.3563717711506449,-3.5589875257801968,-8.0688687130669763,-5.0994227125781926,2.9083166067145898,-9.9778388891040279,6.8621953783893046,-6.7521255793888626,-1.0064898775691908,-0.6055581919187476,13.577452335193168,-4.1093131584966045,-11.168680977287959,-3.0474835090912267,-6.6613725300328781,3.5098152730496732,-3.256208615826131,8.3298930882315236,6.8644319467443973,0.58222245667982109,4.8785407570528196,1.9165646434812449,12.889152215150595,4.0485348726573722,5.5423545103971055,-10.601845921888671,-3.151042515093037,-4.1518868141555432,7.6646989248804278,-4.6787941947634524,-4.4372007963740732,-4.647458038432899,-1.5618061735061279,-1.7037562814631899,-6.2579196114021824,-9.3341916347070804,3.921096786418099,7.444457873977254,0.90708839413752995,-8.9805017128938651,-4.3619228253030782,2.4091292479279383,9.8764381244844337,-8.8235384555396266,5.7023549453667197,-4.93586778190702,7.4912159260072952,-8.1028147878582608,9.1897869332838376,-3.0936136223092481,-10.477632891454242,5.3478999762012691,4.4636364622717997,11.936364960063679,-10.521387624915944,12.897078895228086,-11.195757134572307,6.119366268259383,2.8969191633133309,1.8579977019354139,-10.224068660372296,8.2521751199963767,9.1926172311902352,-2.4261592296001715,-10.774933344800186,6.0316376437339061,-5.618769732310092,8.3596203400548053,-3.2406707623739717,6.8821693931923873,-9.3481860068952063,8.2605523240279286,9.3310984796274816,-3.8600974266915551,0.18555007793215653,-8.5184716523046227,-4.8148377639633742,8.5121424476296781,7.7554110540104997,-3.6024653241806059,-4.108117004212871,3.3559123193478011,-7.8495343344229935,-5.9172571899370245,-2.0852447085769192,1.8569058388674513,-1.2314675995665776,11.851068691087544,-9.6933745453856872,3.9765514472383177,3.4903334846320071,6.3607853371346792,-1.6767116190694291,4.093537212248247,-4.1848037653121857,-3.5073113382693677,10.872200393604112,-8.8559054882801522,1.6382786802001774,7.192024581752106,4.7960867578178918,-11.433547337263771,-3.6849095739367654,-10.582351051345576,-10.529983890246276,-5.7166284768273403,-10.31121023834379,-6.390455739778039,9.1158806601260167,-11.931186687352644,-10.611590618488336,-7.9424972843936175,3.6564245295402311,3.5501348585160701,-1.2027611929382851,6.8836335937936148,1.276892243730666,-3.7370381568941782,0.094393815853893434,6.9302700683175793,-8.4171255913000866,2.0841464053739651,-3.531267888039046,5.370919140307727,7.456935202091401,2.3065545040694184,2.4080794506872718,6.4748240310860661,-0.20711810225581595,-3.1092653465842899,7.3624363460833822,-0.079173644332122373,-10.91002295354351,-5.0086327469949365,-11.249772884460397,-9.4066913844191244,-9.3096502858918857,3.3730912178774437,5.4351172800827383,-9.3198273767643922,13.874945072253915,5.388835041325871,-4.0598627319667582,-9.2462201286160486,2.7636787902974556,6.7275106953595065,-7.0417129821740767,-4.8018020058528199,-3.4123586205187189,1.6283763177191055,-6.0810956264356824,-3.4334254671677442,-8.8255015009860145,-5.6484279882530082,-2.1370994778541288,-0.38290295368094435,-7.2435290523936748,-7.9954939959368794,-10.526567657753658,-7.442643591404849,3.0301136348709647,6.6713627527933834,12.97982008317387,5.1362032242686819,8.4263602076827731,5.535078777673327,-4.6979020092481925,7.0986270713907524,0.55656439816105752,-4.7441578116572138,1.6336118356575611,-8.5524206584457065,4.350425380196044,8.120714834415736,-11.063338658183795,7.4158639129545243,-5.6997703412735357,-10.49115583628555,3.920566848131517,5.2328436995550947,-10.671596090066307,13.238634526323811,3.3917927021906165,8.333015812967675,-11.646087665135491,-2.1222570980546709,-5.217580777752123,7.0895338042704115,-4.4198084253675871,2.7320482156053973,-6.1905750073955987,10.126265601002483,-11.482279400172905,5.9443484637926112,-0.50641492149438838,5.9290183674528354,-0.11041564430700546,-9.3589300571508556,-1.2975455327322989,-4.2487048041752917,-8.7764739419341637,4.6271130430071787,4.8865046292256569,-10.186197651034544,-1.6265588010202965,14.096464661242191,13.343534624355062,-10.424089447637998,0.90910626590837362,-7.2816651943162132,5.7119615511213704,-4.8304300233373576,5.3916882331936495,8.8206108881275505,-7.8543431356962783,-2.3669511512620365,-11.701331563447569,7.8979067183180511,-4.6438936320162192,-8.3678519342189457,3.4831233148978487,-10.500642854745708,-2.7389589685803464,-5.1483972785482921,7.2154118528486766,1.0815883298192539,6.6717437655503034,-10.201650029989942,4.4023844684541693,14.184993207632427,6.5593384544481754,-9.9457955681389798,-7.67049462287219,-10.883528925041247,-5.2602837764758945,4.9009786040623302,-10.63457329753972,-1.1099329335506938,5.6045643099451006,1.8611529981348991,-0.3214340961803947,-4.92016653053685,5.1150019080642624,-3.3318009202207191,-4.8276035712323289,7.7542986764685384,-10.177729872345834,9.1202730361987143,7.815517829782765,-4.2380080863421314,-11.218230986802514,13.449201427035524,4.8673826040292294,-0.96337424371201197,-1.4016529893509773,-6.2476753938904031,1.2637477745816896,-10.942810877658683,11.188743032646419,1.7950978530302666,-10.953416832980771,12.203888942373329,6.6684126647096891,-3.848766983732927,2.8673562665977963,-4.0521930816528338,-10.969004487354493,5.6784501205852287,-9.0982895376153845,-1.0177135731349929,4.4239600046105512,1.3310745769901651,-7.2611541250997718,-9.1579664457329883,12.087624182688712,2.2416451618318112,-5.3302650328405585,-5.6840797329235118,-7.8094294898327732,-4.989200324785501,1.4094901575057408,7.3905992282916619,-9.7956750950629363,-10.746309124025036,5.4217879212387645,-4.6192556541943421,-11.069213915151382,5.7970011226844589,7.6445188685368244,13.614756133182553,6.1862954205406391,-6.9984128933102943,14.571365993039212,12.514332312128994,-9.9511098950155592,-4.7422964440283213,0.6331580556880847,-4.4634201886927203,7.1140662958757028,-3.2882211548654863,-1.8453776276542984,-2.1597127499796431,5.9531510654885587,7.3123021305066978,-9.6913534525319296,-8.0304307577646963,-10.836347924050504,-8.6725067806641114,-10.975175349709229,8.8472423967139164,11.006653451858218,10.336714434389908,-2.3927264506342758,2.8861190883017365,-3.0203380142588663,8.4110992835936145,8.3463792317716585,-9.6268485305871767,-3.5289437089286126,-5.3733396047561932,0.75837510300189737,4.1528148598739421,13.135841462949069,12.780161266276441,13.570148673406887,7.4086603363781274,-10.497581627420072,0.05277524663940214,-10.316803518335554,4.4965264722636338,7.1661269912553642,13.653800708322535,8.2551195689546599,4.9743356097953768,-8.2641576063396247,-3.0093092030474584,-0.56447514510048102,-7.4264291672315252,-7.8182057960693454,-11.371072380971681,-8.1074145334408065,8.2095088260778244,-11.02546758234797,-5.8764786924152093,0.27749021123657158,-10.437917101622157,-3.5049578278118925,-4.2549990021912434,-0.44535506845877926,-3.805201494460702,-0.17822040672077746,-4.8018617971222488,-1.461047028689314,-5.0375950402210723,4.6759669672656221,-0.45336008108403447,-4.85151348709564,-1.1739527248831141,-2.4345880091174492,-0.57643687029614865,-4.6229646449028126,-5.1213295904155967,-4.7833384073511986,-4.6928117425184714,-4.1056464341941803,-4.8474373745670061,-4.3394405491899484,-4.8672510410564476,-3.899267470971465,1.9554221126597704,-2.3408788047464668,-5.3543689173619962,-4.6404659922704132,-0.21265767613320419,0.83472811480507392,-3.3159493651596188,-4.5000063828771637,-2.7889729651645512,-0.00012210522617892,-5.0110994821448562,-2.4554925842750337,-4.3577912238398806,-4.9475021743171199,-3.7937874162904848,-3.3708817891134073,-3.4728589225568669,-4.6301456447047986,-4.4405316963242649,-5.4283679832014231,-4.3102990433895503,-3.7342321964001872,-5.3447016970977437,1.3483918468437186,-4.7594547881914018,-1.2442655838182304,-5.3217485919444636,-3.3618752838612815,-4.476000582340748,-4.3597863902721219,-4.2624816464254707,-1.2089944165551312,-4.0703063429725219,-2.3425693115539814,-4.9555750049314042,-4.8618885174324005,-4.5109797605551556,-4.2873055107615414,-4.1829519777177735,-5.1178744402333782,0.62446320088236362,-2.3815654947629556,-4.3261741551556074,-2.2624577359628422,-4.4774923899676073,-1.68274308364101,-5.2202255776757136,-4.1260214750347153,-4.6460115917834282,-4.8513652062357426,-0.57767697306460297,-5.8802841113119859,-4.424860651817812,-2.9251902362634623,8.6350713154028167,-1.6244194000126473,-5.0041925761309685,-2.7252074748102304,-4.7532981672188948,-4.4044458533829358,-3.3290894313086588,-4.6926944332631404,-4.7182416533709546,-3.281116785118896,-2.6345210951333691,-5.5490791638519434,-3.5609270059758211,-4.2220877490388862,-4.0461043868780786,-3.0976845291257673,-1.8605643496303039,-4.0171989023757551,-4.5453472340354502,-2.6752920955275492,-5.7073670171349118,6.3335407829697292,-4.5102094412448857,-1.2673688496749584,-2.0469160006463984,-4.6783485293574563,-4.8498318820770132,-5.4035628880998816,-3.9491137764614801,-4.009062708186133,-4.7524817275259865,-2.5883864020938412,-4.3418856477767962,-2.6804161503292994,-5.106945430841801,-3.0102067387623284,3.9604226287168882,-0.53282426178912745,-5.8623591920264078,-4.6331197696856705,1.6391306872799372,-3.3845693029849273,-0.00052649669361365002,-5.2962388728797976,-4.8739377565153879,-2.6988153157852257,-2.2791283413320635,-3.1769043859144763,-3.9878481444507758,-3.4946073111296911,-1.5556793841915133,-4.9075817139959348,3.1768795529297589,-1.893796332345568,-3.3956134225728181,-5.4275608077853841,-0.43368066649871878,-4.4881924605909189,-4.7696399354391259,-3.3413122916787668,-0.66872047400016887,-0.91296308524691683,-4.8470235828264361,-2.0722931024786555,2.3365245095801779,-5.4386097414226864,-4.8813243784903051,-2.6016393615115123,-4.7476582380770749,-5.320435133232845,-3.6003936910759879,7.8888621004483825,-4.6418392042648193,0.34844784775067439,-4.7988086542730679,-4.2492299350248084,-4.944345911970804,-2.2812456227218108,-5.3853939341748625,-3.8390241824759652,-4.9692654948465833,-4.3434721012759043,-4.7006248528842871,-4.5637914585348067,-4.4366143802358176,-4.0473645055345457,-1.4597279544684556,-3.5888605317491877,-3.9544709077763431,-2.0426853577121573,-4.6795385017764364,-1.3913470207696881,-3.9362252317015689,-4.6495812441894735,-4.3325948304485635,-0.88604285062099797,-3.5855525185488464,-4.6429372895728882,-2.7071926130633552,-4.0126289769414782,-3.3813029065167286,-4.0886652501909646,-4.9874995225233816,-4.9205213710024553,-5.2666945348611982,-5.4989209437077156,-4.0379624950776734,-4.8247151616397064,-4.5355516601929056,-4.9744227028317596,-1.5234727495385123,3.0085601157429571,-4.7271702656154861,-4.3128232633016967,-3.1024931389971622,-2.8540600515504644,-1.6184504565227471,-3.4747209336374545,-4.9642105799872907,3.754832269536085,-4.5861677390972932,-0.34621135111351636,-4.2810188724368698,-4.7112198542394674,-1.7688090885160024,-4.7725092603226429,-5.0912130536819173,-3.8837552359523206,-3.8339610051388329,-4.6751864492690958,-4.2064302295715077,-5.2259355700264702,-3.9554895606030169,-4.4109858749094331,-5.1508512855068398,-5.4344980915042527,-1.8874490778713224,3.3738598194071092,-4.0865009970344071,-4.8598319740980989,-0.29582334045618885,-3.9214686405082761,-3.928718479710283,-5.0112877430994214,-5.1728009458910886,-3.4636869220746478,-3.8365274381474439,-4.4087763078437945,-4.6869626633701147,2.135472722221881,-4.2461580555802252,-3.3919885847137987,1.6462084407317179,-3.7381669947387817,-4.4240278041406533,-4.5079841291979967,-4.6708256781494235,-4.8568038852613986,3.0263008425052345,-2.7605352028312153,-4.6367393323917732,-5.5772842081671214,-4.0468439437728865,-1.4720587653972903,-3.7918060083900778,-4.7065203203889894,-5.0716095727963193,-4.0285075947191729,-4.7309311414143584,-3.9888355322368891,-4.5437857966550306,-5.2855518163375415,-5.8983446442747187,-4.7579152052739095,-3.2941558611911348,-4.2054872403294787,1.5285851006569589,-4.2741030491178531,-3.6065560121491602,-5.0017161442947584,-4.8975207041730755,-5.5612704899291243,2.2259175525207526,-1.5457192898160741,-5.4913663541016211,-3.9712999835066025,-2.5700639197969437,0.17319994913956638,-2.3551415125228736,-3.9861173865176811,-4.234913029230615,-2.720013747985079,-4.3910715385793582,-5.4270998877887671,-4.1549100764940556,-3.1198573789952055,-4.5651178867072675,-3.9874841410278306,-1.5823730733516146,-0.62102164757478306,-4.2640028939709635,-3.359235229576635,-4.377674352973469,-4.3276451165003111,-4.7629535374648801,11.004631545264424,13.17894119829524,14.049471245829949,8.135827154263751,8.1821786430646704,6.6226690814306588,11.764793783567001,1.4943298276663739,8.8027744603698945,14.503414630514156,11.339389770063963,7.9591170009855583,14.327365182361085,13.836937264213573,8.2178184850817928,12.667528563837449,8.9224698160477605,9.6895397325199522,13.665942485647459,1.6118338730373425,13.217613474091529,11.858490769031889,11.668849604895517,10.931029519682514,10.787868626035085,14.675351696798518,13.334022252961748,11.15842119470167,13.078202606328324,6.0326957529099152,0.084989188826974205,11.198996082831178,13.025006921918338,1.4761711178849235,11.299094813289988,12.917552195141592,5.9160000147916527,5.9843347569275922,13.890448267308766,-9.0931574241323485,10.528255329775218,14.3887606138458,6.0457029497095114,11.429488171259949,13.318236121523521,14.38140238221569,5.5903400085212525,4.2272930409817482,-0.57596556403413401,9.2465730124789154,13.295858098021752,9.231780682344656,13.032287713434544,12.851803427451614,4.6938625351412746,13.190865037357716,12.9783173682409,8.8863560638048469,13.532711810910872,11.529815603757385,12.309506066923149,12.901415329204976,6.5038112069033529,-2.6339805134160539,14.26395629155467,10.232139523868488,14.66334837662413,12.590649031187723,10.883032652939123,13.756623574011051,12.742764913040254,14.597016206551542,1.908943947492004,13.784327165651614,11.992047119803038,12.654524398905854,-1.0046894618091291,12.431622899525909,12.998658552591587,4.5862660748151738,11.769386629052825,14.020404233251272,13.337683543537793,-1.0568179621206168,13.744373036153624,11.760750518552166,5.0898450436950311,14.331618960024546,5.9904905126044037,5.4924149792547992,2.5950063882030188,6.0733708476944077,12.46157020524481,7.9407593787036301,11.268608377396308,10.958441157754136,13.972693275421657,11.46303928293228,11.964589465050686,10.126850957225727,0.89396924525056387,9.5406000757067648,11.587870734760829,13.420306591904785,2.8482838077820336,-7.1291332943079144,13.324739792572585,-2.1436060014146898,13.292703297075969,9.9332416492653142,13.922954929291956,0.63541912288487301,11.428416263208236,2.5605940422567133,13.084317397836896,13.04740982701156,12.953027838669655,9.6142106517639743,14.056993262580461,14.297587386298405,-9.7409775962974159,12.8513219944201,10.582187709229489,12.925699326298639,14.122676706419693,9.4859762637842557,11.811279446992712,10.75075195308783,12.586316023954618,11.4528008766539,12.325231016211502,10.352276214642462,9.8060157683584315,1.8514522838648424,4.741726545266844,12.493863210769881,-8.2829613541701193,10.581244317234864,2.2942817629362109,8.2860380188830955,13.876605363710761,15.227133648861686,9.6048550216289872,11.910073703518302,14.57807252124551,8.1488211243970241,13.226826587806684,13.452344541716316,8.8315051977560532,13.260502537288158,12.479761339964831,13.238241657527167,11.035087644038516,13.579221639758666,12.16829140999562,11.591998416799663,9.1359571089765144,12.419586542929755,13.615652925867147,11.177625109123516,12.891471383890254,4.46823406802066,4.6947882173477238,8.2690120954898987,8.3097234245004312,4.9577001029895182,11.621329953120744,14.154518650558179,2.109352187548394,5.6730000602300246,11.73106749794124,2.7457100526279099,10.371727754327718,13.499343619463469,0.35604694944372967,13.715624765256551,14.381074796870683,5.8073080452209656,11.367247203937684,13.044200078745437,13.328937622179749,13.83997765777594,11.7082696507584,8.2305574795546868,11.531333420286357,-1.69109477832814,11.720285751133003,4.8263854494991474,11.80752388397417,12.912093081794078,14.143252210471688,13.348779112686728,-1.4937174322421995,12.881429893314255,10.153992106275499,12.684567791863168,-7.275941328113845,14.142897967588608,13.623735145394862,13.035531496746527,14.071539746036189,14.340745833517191,12.283459266123462,13.738106580103906,2.9969717539169873,7.488455590628889,-6.25690249608218,12.406939152411857,-6.3334535977041764,10.299791982126822,13.68978784812964,13.648437041179694,11.22885238869496,11.940052191258816,12.357033651009406,12.411994289491169,13.610918710995042,13.533698659161123,10.731613535830954,13.627059098059981,13.148102807531499,12.065944204246788,11.792095263825678,12.958015295743284,12.789109609500001,4.4947356991295617,12.464987608934226,9.6528152211152101,10.505554816117504,5.7407123348271032,13.669727788562362,13.098871649529247,10.958630245994064,12.679007066257828,5.8766007726619538,7.32358164868341,10.222739005429164,13.409319837410139,12.939619356252008,7.3448817493739247,13.695250398537327,13.833687344875351,13.687018110220109,11.099096112098833,12.341016356249227,14.191065829142261,14.189707127973383,13.70958190655954,11.754771318857498,0.30535958405271391,12.95562379105794,13.233454676359251,10.405067684989394,10.580812529874429,12.040985106483401,9.6016260067541523,1.1490952473550915,13.019922126549536,9.171825808643856,14.817596341787024,14.520386973497518,8.7392880054660047,14.076271940460456,4.1471810000836129,0.48637657983196381,0.034461929217967729,10.721565381727698,14.231915426810859,13.045783018017024,9.0284777919214605,2.6922221411333669,14.2541597808681,13.927926631184109,0.4389696930521394,3.283692186290621,8.8346300090602146,12.220300110046599,10.103282886351966,12.688333101619811,9.5770142462671846,5.37182585146856,-0.39088865211358442,11.510904375259299],"mode":"markers","marker":{"color":["#B9AEA3","#B782A5","#B8A7A3","#B78DA4","#B893A4","#B9BBA2","#B787A5","#B9AAA3","#B89CA4","#B8A7A3","#B9AEA3","#B8A9A3","#B89EA3","#B9BBA2","#B776A5","#B9BAA2","#B77EA5","#B8A7A3","#B9BCA2","#B9BDA2","#B77FA5","#B9ACA3","#B9B1A2","#B78CA4","#B897A4","#B78FA4","#B78CA4","#B785A5","#B785A5","#B78AA4","#B77EA5","#B8A4A3","#B776A6","#B89AA4","#B8A8A3","#B78BA4","#B9B1A2","#B89EA3","#B781A5","#B9C1A2","#B776A5","#B8A8A3","#B9B4A2","#B9B2A2","#B786A5","#B77CA5","#B892A4","#B78FA4","#B782A5","#B788A5","#B784A5","#B9C0A2","#B898A4","#B78BA4","#B9ADA3","#B77EA5","#B777A5","#B9BBA2","#B776A5","#B779A5","#B776A5","#B9B6A2","#B77FA5","#B8A2A3","#B9AEA3","#B787A5","#B891A4","#B782A5","#B8A5A3","#B778A5","#B89BA4","#B9BDA2","#B9B0A2","#B78AA4","#B8A1A3","#B893A4","#B9AFA3","#B78FA4","#B77CA5","#B9ADA3","#B9BAA2","#B9BAA2","#B9C0A2","#B8A9A3","#B9BFA2","#B8A8A3","#B896A4","#B786A5","#B785A5","#B8A7A3","#B78EA4","#B9BCA2","#B77FA5","#B9ADA3","#B9BBA2","#B9B2A2","#B891A4","#B77DA5","#B78DA4","#B8A6A3","#B9BCA2","#B890A4","#B77DA5","#B782A5","#B8A4A3","#B776A5","#B892A4","#B892A4","#B77DA5","#B779A5","#B788A5","#B8A4A3","#B8A2A3","#B77EA5","#B785A5","#B780A5","#B9BFA2","#B8A6A3","#B899A4","#B787A5","#B9BBA2","#B9B5A2","#B899A4","#B9B3A2","#B77CA5","#B9BEA2","#B9B0A2","#B785A5","#B894A4","#B789A5","#B9AAA3","#B77CA5","#B8A9A3","#B9AAA3","#B9B3A2","#B9ACA3","#B9B2A2","#B890A4","#B9ADA3","#B9AAA3","#B8A4A3","#B899A4","#B787A5","#B89EA3","#B78BA4","#B9B7A2","#B9B4A2","#B783A5","#B9BBA2","#B8A4A3","#B89AA4","#B9B5A2","#B896A4","#B890A4","#B785A5","#B9B8A2","#B78BA4","#B9B8A2","#B77DA5","#B892A4","#B782A5","#B9ABA3","#B777A5","#B9AAA3","#B9AEA3","#B8A6A3","#B9B9A2","#B898A4","#B8A8A3","#B9C2A2","#B898A4","#B779A5","#B8A6A3","#B9B8A2","#B895A4","#B8A2A3","#B77BA5","#B77BA5","#B785A5","#B8A2A3","#B89FA3","#B9AEA3","#B9B3A2","#B89EA3","#B9B6A2","#B8A2A3","#B9B1A2","#B9ABA3","#B8A3A3","#B786A5","#B9BCA2","#B9C2A2","#B9BAA2","#B9BCA2","#B9BAA2","#B776A5","#B78FA4","#B89CA4","#B77AA5","#B9B8A2","#B9AFA3","#B788A5","#B78FA4","#B9ABA3","#B890A4","#B778A5","#B8A7A3","#B898A4","#B897A4","#B8A9A3","#B9C2A2","#B89AA4","#B891A4","#B9ACA3","#B9B5A2","#B8A1A3","#B890A4","#B778A5","#B9B8A2","#B8A2A3","#B9BEA2","#B9AAA3","#B78BA4","#B9B6A2","#B9BBA2","#B781A5","#B9AFA3","#B89EA3","#B77AA5","#B8A5A3","#B789A4","#B788A5","#B9ADA3","#B9B6A2","#B9C1A2","#B9C1A2","#B8A8A3","#B9B7A2","#B8A3A3","#B9BBA2","#B778A5","#B789A5","#B890A4","#B9B0A2","#B9B5A2","#B8A8A3","#B894A4","#B9B4A2","#B9AFA3","#B788A5","#B9ACA3","#B89FA3","#B777A5","#B78EA4","#B784A5","#B896A4","#B8A8A3","#B898A4","#B9C3A2","#B895A4","#B9AEA3","#B9B1A2","#B9ABA3","#B8A2A3","#B788A5","#B9AAA3","#B9B6A2","#B78BA4","#B785A5","#B9B6A2","#B8A2A3","#B788A5","#B8A0A3","#B779A5","#B891A4","#B9ADA3","#B9BDA2","#B890A4","#B779A5","#B9ACA3","#B9C3A2","#B898A4","#B89EA3","#B89EA3","#B8A2A3","#B89CA4","#B8A7A3","#B9BFA2","#B89AA4","#B9ABA3","#B9C0A2","#B78BA4","#B8A0A3","#B786A5","#B776A5","#B9AAA3","#B78AA4","#B8A5A3","#B780A5","#B787A5","#B89BA4","#B9B2A2","#B8A5A3","#B9BFA2","#B786A5","#B777A5","#B777A5","#B9B1A2","#B9B3A2","#B89AA4","#B9BCA2","#B8A5A3","#B9ACA3","#B789A5","#B8A1A3","#B9ABA3","#B78BA4","#B892A4","#B9C3A2","#B9BBA2","#B8A3A3","#B9C2A2","#B9C0A2","#B8A7A3","#B8A1A3","#B9B7A2","#B778A5","#B78EA4","#B9B5A2","#B780A5","#B89EA3","#B78AA4","#B78EA4","#B9ADA3","#B8A4A3","#B9ABA3","#B9AFA3","#B9ABA3","#B9BDA2","#B9BFA2","#B9BDA2","#B89EA3","#B786A5","#B89FA3","#B890A4","#B9BCA2","#B9ADA3","#B9B4A2","#B77BA5","#B89CA4","#B9BAA2","#B9C0A2","#B9C1A2","#B9C2A2","#B9BCA2","#B8A9A3","#B782A5","#B8A7A3","#B899A4","#B9BBA2","#B9C1A2","#B891A4","#B788A5","#B8A3A3","#B9B5A2","#B782A5","#B9B0A2","#B9B1A2","#B8A7A3","#B9B0A2","#B890A4","#B9AAA3","#B8A2A3","#B89CA4","#B9AEA3","#B77CA5","#B77BA5","#B782A5","#B77CA5","#B783A5","#B77CA5","#B77FA5","#B776A5","#B789A5","#B782A5","#B778A5","#B781A5","#B77EA5","#B783A5","#B77AA5","#B779A5","#B779A5","#B778A5","#B779A5","#B77AA5","#B77BA5","#B778A5","#B77AA5","#B784A5","#B77EA5","#B778A5","#B776A5","#B781A5","#B784A5","#B77DA5","#B778A5","#B77EA5","#B782A5","#B77BA5","#B77FA5","#B776A5","#B778A5","#B77DA5","#B77AA5","#B77DA5","#B778A5","#B779A5","#B777A5","#B779A5","#B77AA5","#B776A5","#B783A5","#B77BA5","#B781A5","#B777A5","#B77CA5","#B77BA5","#B778A5","#B77BA5","#B781A5","#B77AA5","#B77FA5","#B777A5","#B77BA5","#B77CA5","#B778A5","#B77BA5","#B778A5","#B783A5","#B77EA5","#B77AA5","#B77FA5","#B778A5","#B781A5","#B777A5","#B77BA5","#B779A5","#B77CA5","#B781A5","#B778A5","#B77AA5","#B77EA5","#B891A4","#B780A5","#B77AA5","#B77EA5","#B779A5","#B77BA5","#B77DA5","#B778A5","#B779A5","#B77DA5","#B77DA5","#B776A5","#B779A5","#B77AA5","#B777A5","#B77FA5","#B780A5","#B779A5","#B77CA5","#B77EA5","#B776A5","#B789A4","#B77AA5","#B781A5","#B77FA5","#B779A5","#B776A5","#B777A5","#B77AA5","#B77DA5","#B779A5","#B77FA5","#B77AA5","#B77EA5","#B77AA5","#B77DA5","#B786A5","#B781A5","#B777A5","#B778A5","#B784A5","#B77CA5","#B782A5","#B779A5","#B77AA5","#B77EA5","#B780A5","#B77DA5","#B77BA5","#B77DA5","#B781A5","#B778A5","#B786A5","#B780A5","#B77EA5","#B77DA5","#B781A5","#B77AA5","#B779A5","#B77DA5","#B782A5","#B781A5","#B777A5","#B77EA5","#B785A5","#B776A5","#B778A5","#B77FA5","#B777A5","#B777A5","#B77EA5","#B78FA4","#B779A5","#B783A5","#B779A5","#B777A5","#B779A5","#B77FA5","#B776A5","#B77CA5","#B77BA5","#B779A5","#B776A5","#B779A5","#B77CA5","#B77CA5","#B780A5","#B77BA5","#B77BA5","#B780A5","#B778A5","#B780A5","#B77DA5","#B777A5","#B776A5","#B780A5","#B77CA5","#B777A5","#B77CA5","#B77BA5","#B77DA5","#B77DA5","#B779A5","#B77AA5","#B777A5","#B777A5","#B77CA5","#B778A5","#B777A5","#B779A5","#B781A5","#B786A5","#B77BA5","#B777A5","#B77DA5","#B77FA5","#B780A5","#B77BA5","#B778A5","#B787A5","#B77CA5","#B781A5","#B77BA5","#B77AA5","#B780A5","#B77CA5","#B776A5","#B779A5","#B77BA5","#B776A5","#B77DA5","#B776A5","#B778A5","#B77CA5","#B779A5","#B77BA5","#B77FA5","#B787A5","#B776A5","#B77CA5","#B782A5","#B77BA5","#B77CA5","#B778A5","#B779A5","#B77FA5","#B778A5","#B776A5","#B77AA5","#B785A5","#B779A5","#B77CA5","#B785A5","#B77BA5","#B776A5","#B778A5","#B77AA5","#B776A5","#B787A5","#B77EA5","#B77CA5","#B776A5","#B776A5","#B780A5","#B77CA5","#B77BA5","#B778A5","#B776A5","#B778A5","#B778A5","#B77CA5","#B779A5","#B779A5","#B77AA5","#B77DA5","#B777A5","#B784A5","#B777A5","#B77CA5","#B77AA5","#B779A5","#B778A5","#B785A5","#B781A5","#B779A5","#B77AA5","#B77EA5","#B782A5","#B77FA5","#B77AA5","#B77AA5","#B77FA5","#B77BA5","#B777A5","#B77CA5","#B77DA5","#B77AA5","#B77DA5","#B780A5","#B782A5","#B77BA5","#B77CA5","#B779A5","#B779A5","#B776A5","#B9BEA2","#B9C2A2","#B9C3A2","#B9BCA2","#B9BCA2","#B9BBA2","#B9BFA2","#B9B8A2","#B9BDA2","#B9C3A2","#B9BFA2","#B9BCA2","#B9C2A2","#B9C2A2","#B9BDA2","#B9C1A2","#B9BCA2","#B9BEA2","#B9C1A2","#B9B7A2","#B9C1A2","#B9BFA2","#B9BFA2","#B9BFA2","#B9BFA2","#B9C2A2","#B9C1A2","#B9BEA2","#B9C0A2","#B9BBA2","#B9B7A2","#B9BFA2","#B9C2A2","#B9B8A2","#B9BFA2","#B9C1A2","#B9BAA2","#B9BBA2","#B9C3A2","#B9AFA3","#B9BEA2","#B9C3A2","#B9BAA2","#B9BFA2","#B9C1A2","#B9C1A2","#B9BBA2","#B9B9A2","#B9B6A2","#B9BEA2","#B9C2A2","#B9BDA2","#B9C1A2","#B9C2A2","#B9BAA2","#B9C1A2","#B9C2A2","#B9BDA2","#B9C2A2","#B9BFA2","#B9C1A2","#B9C2A2","#B9BBA2","#B9B5A2","#B9C1A2","#B9BEA2","#B9C3A2","#B9C0A2","#B9BEA2","#B9C2A2","#B9C1A2","#B9C2A2","#B9B8A2","#B9C3A2","#B9BFA2","#B9C1A2","#B9B6A2","#B9C1A2","#B9C0A2","#B9B9A2","#B9C0A2","#B9C3A2","#BAC4A2","#B9B6A2","#B9C2A2","#B9BFA2","#B9BAA2","#B9C3A2","#B9BAA2","#B9BAA2","#B9B9A2","#B9BAA2","#B9C1A2","#B9BBA2","#B9BFA2","#B9BEA2","#B9C1A2","#B9C0A2","#B9C0A2","#B9BFA2","#B9B8A2","#B9BDA2","#B9BFA2","#B9C1A2","#B9B9A2","#B9B1A2","#B9C3A2","#B9B5A2","#B9C1A2","#B9BDA2","#B9C3A2","#B9B7A2","#B9BFA2","#B9B9A2","#B9C0A2","#B9C0A2","#B9C1A2","#B9BEA2","#B9C2A2","#B9C3A2","#B9AEA3","#B9C0A2","#B9BEA2","#B9C1A2","#B9C3A2","#B9BDA2","#B9BFA2","#B9BEA2","#B9C0A2","#B9BFA2","#B9C0A2","#B9BEA2","#B9BEA2","#B9B8A2","#B9BAA2","#B9C0A2","#B9B0A3","#B9BEA2","#B9B8A2","#B9BCA2","#B9C1A2","#B9C2A2","#B9BEA2","#B9BFA2","#B9C3A2","#B9BDA2","#B9C2A2","#B9C2A2","#B9BCA2","#B9C1A2","#B9C1A2","#B9C1A2","#B9BFA2","#B9C2A2","#B9C3A2","#B9BFA2","#B9BDA2","#B9C0A2","#B9C2A2","#B9BEA2","#B9C2A2","#B9BAA2","#B9BAA2","#B9BCA2","#B9BCA2","#B9BAA2","#B9BFA2","#B9C2A2","#B9B8A2","#B9BAA2","#B9BEA2","#B9B8A2","#B9BEA2","#B9C2A2","#B9B7A2","#B9C2A2","#B9C2A2","#B9BBA2","#B9BFA2","#B9C3A2","#B9C2A2","#B9C3A2","#B9BFA2","#B9BDA2","#B9BFA2","#B9B6A2","#B9BFA2","#B9BAA2","#B9C0A2","#B9C0A2","#B9C2A2","#B9C1A2","#B9B5A2","#B9C1A2","#B9BEA2","#B9C2A2","#B9B2A2","#B9C3A2","#B9C1A2","#B9C1A2","#B9C1A2","#B9C3A2","#B9C1A2","#B9C3A2","#B9B9A2","#B9BCA2","#B9B2A2","#B9C0A2","#B9B2A2","#B9BEA2","#B9C2A2","#B9C2A2","#B9C0A2","#B9BFA2","#B9C0A2","#B9C0A2","#B9C3A2","#B9C2A2","#B9BFA2","#B9C1A2","#B9C2A2","#B9C0A2","#B9BFA2","#B9C1A2","#B9C0A2","#B9BAA2","#B9C0A2","#B9BDA2","#B9BEA2","#B9BBA2","#B9C2A2","#B9C1A2","#B9BFA2","#B9C0A2","#B9BAA2","#B9BBA2","#B9BEA2","#B9C1A2","#B9C1A2","#B9BBA2","#B9C1A2","#B9C3A2","#B9C1A2","#B9BEA2","#B9C0A2","#B9C2A2","#B9C3A2","#B9C3A2","#B9BFA2","#B9B7A2","#B9C0A2","#B9C1A2","#B9BEA2","#B9BEA2","#B9C2A2","#B9BDA2","#B9B7A2","#B9C1A2","#B9BDA2","#B9C3A2","#B9C3A2","#B9BDA2","#B9C3A2","#B9BAA2","#B9B6A2","#B9B7A2","#B9BFA2","#B9C3A2","#B9C1A2","#B9BDA2","#B9B8A2","#B9C1A2","#B9C3A2","#B9B7A2","#B9B9A2","#B9BCA2","#B9C0A2","#B9BEA2","#B9C1A2","#B9BDA2","#B9BAA2","#B9B6A2","#B9BFA2"],"size":4,"line":{"color":"rgba(31,119,180,1)"}},"hoverinfo":["none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"],"showlegend":false,"type":"scatter3d","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="variable-density-swiss-roll">Variable Density Swiss Roll</h3>
+<p><span class="math inline">\(t\)</span>-SNE (perplexity = 100) breaks the roll in the low-density region and artificially spreads the high density area.</p>
+
+<img data-src="figures/noisy_embedding_0.5.png" width="640" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="fragmented-neighborhoods-2">Fragmented Neighborhoods</h3>
+
+<img data-src="figures/swiss_roll_neighborhoods.gif" width="640" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="poorly-preserved-distances">Poorly Preserved Distances</h3>
+
+<img data-src="figures/swiss_roll_boxplot.gif" width="710" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="comparison-with-loo-map">Comparison with LOO-map</h3>
+<p>The stability-based algorithm <span class="citation" data-cites="Liu2025">(<a href="" role="doc-biblioref" onclick="return false;">Liu, Ma, and Zhong 2025</a>)</span> gives a similar interpretation. But the visual encoding is more subtle, and the leave-one-out approach is time consuming even with approximations.</p>
+
+<img data-src="figures/p_scores_0.5.png" width="600" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="pbmc-dataset">PBMC Dataset</h3>
+<p>This single-cell gene expression data set was used in the data visualization tutorial from the scanpy package <span class="citation" data-cites="Wolf2018">(<a href="" role="doc-biblioref" onclick="return false;">Wolf, Angerer, and Theis 2018</a>)</span>. Each point is the UMAP embedding of a cell’s high-dimensional gene expression data.</p>
+
+<img data-src="figures/pbmc-a.png" width="490" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="pbmc-dataset-1">PBMC Dataset</h3>
+<ul>
+<li>Distance scales vary both across and within clusters.</li>
+<li>Two T-cell sets appear farther from Monocytes than they actually are.</li>
+</ul>
+
+<img data-src="figures/pbmc_boxplot_inter.gif" width="570" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="hydra-cell-atlas">Hydra Cell Atlas</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>In this hydra cell differentiation dataset <span class="citation" data-cites="Siebert2019 xia2024statistical">(<a href="" role="doc-biblioref" onclick="return false;">Siebert et al. 2019</a>; <a href="" role="doc-biblioref" onclick="return false;">Xia, Lee, and Li 2024</a>)</span>, <span class="math inline">\(t\)</span>-SNE (perplexity = 80) collapses points along the dataset periphery and exaggerates between-cluster distances</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/hydra_perplexity_80.gif" width="470"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="hydra-cell-atlas-1">Hydra Cell Atlas</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>At perplexity = 500, the clusters are more reliable, but peripheral samples are in fact closer than they appear</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/hydra_perplexity_500.gif" width="470"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="hydra-cell-atlas-2">Hydra Cell Atlas</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>The local isometry visualization highlights some “threads” are more spread in the original data.</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/hydra_isometry.gif" width="470"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="densmap-vs.-umap">DensMap vs.&nbsp;UMAP</h3>
+<p>Both variation in ellipses and fragmented neighborhood statistics can be used to compare competing algorithms, similarly to <span class="citation" data-cites="xia2024statistical Venna2006">(<a href="" role="doc-biblioref" onclick="return false;">Xia, Lee, and Li 2024</a>; <a href="" role="doc-biblioref" onclick="return false;">Venna and Kaski 2006</a>)</span>.</p>
+
+<img data-src="figures/densmap_v_umap.png" width="900" class="r-stretch"><p>This example uses data from a <em>C. elegans</em> cell differentiation study <span class="citation" data-cites="Packer2019">(<a href="" role="doc-biblioref" onclick="return false;">Packer et al. 2019</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="densmap-vs.-umap-1">DensMap vs.&nbsp;UMAP</h3>
+<p>Both variation in ellipses and fragmented neighborhood statistics can be used to compare competing algorithms, similarly to <span class="citation" data-cites="xia2024statistical Venna2006">(<a href="" role="doc-biblioref" onclick="return false;">Xia, Lee, and Li 2024</a>; <a href="" role="doc-biblioref" onclick="return false;">Venna and Kaski 2006</a>)</span>.</p>
+
+<img data-src="figures/densmap_v_umap_hist.png" width="950" class="r-stretch"><p>This example uses data from a <em>C. elegans</em> cell differentiation study <span class="citation" data-cites="Packer2019">(<a href="" role="doc-biblioref" onclick="return false;">Packer et al. 2019</a>)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="summary">Summary</h3>
+<ol type="1">
+<li><p>Topic alignment helps better understand the influence of <span class="math inline">\(K\)</span> in exploratory analysis of count data.</p></li>
+<li><p>Interactivity can reveal distortion information based on on the analysts’ priorities.</p></li>
+</ol>
+<p><strong>Papers</strong>: <a href="https://go.wisc.edu/oe3g62">https://go.wisc.edu/oe3g62</a>, <a href="https://go.wisc.edu/tify36">https://go.wisc.edu/tify36</a></p>
+<p><strong>Packages</strong>: <a href="https://lasy.github.io/alto">https://lasy.github.io/alto</a>, <a href="https://pypi.org/project/distortions">https://pypi.org/project/distortions</a></p>
+</section>
+<section class="slide level2">
+
+<h3 id="acknowledgments">Acknowledgments</h3>
+<ul>
+<li>Contact: ksankaran@wisc.edu</li>
+<li>Lab Members: Margaret Thairu, Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Megan Kuo, Helena Huang</li>
+<li>Funding: NIGMS R01GM152744, NIAID R01AI184095</li>
+</ul>
+</section>
+<section id="appendix" class="slide level2">
+<h2>Appendix</h2>
+</section>
+<section class="slide level2">
+
+<h3 id="mammoth">Mammoth</h3>
+<p>This example comes from <span class="citation" data-cites="paircodeUnderstandingUMAP maxnoichlNoichlFlattening">(<a href="" role="doc-biblioref" onclick="return false;"><span>“<span>U</span>nderstanding <span>U</span><span>M</span><span>A</span><span>P</span> — Pair-Code.github.io”</span></a>; <a href="" role="doc-biblioref" onclick="return false;">Noichl</a>)</span>. The 3D skeleton scans were produced by the Smithsonian, and we can use nonlinear dimensionality reduction to “flatten” the skeleton into 2D.</p>
+
+<img data-src="figures/mammoth_truth.gif" width="600" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="mammoth-1">Mammoth</h3>
+<p>This is the embedding when applying UMAP with a 50 nearest-neighbor graph and <code>min_dist = 0.5</code>.</p>
+
+<img data-src="figures/mammoth_plain_umap.png" width="500" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="mammoth-2">Mammoth</h3>
+<p>Parts of the shoulders, head, and tail are further apart in the embedding compared to the original data. Most other distortions are points that are placed too close to one another.</p>
+
+<img data-src="figures/mammoth_neighborhoods.gif" width="450" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="mammoth-3">Mammoth</h3>
+<p>Parts of the shoulders, head, and tail are further apart in the embedding compared to the original data. Most other distortions are points that are placed too close to one another.</p>
+
+<img data-src="figures/mammoth_boxplot_inter.gif" width="550" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="graph-laplacian">Graph Laplacian</h3>
+<p>To compute <span class="math inline">\(L\)</span>, we use the estimator from <span class="citation" data-cites="Coifman2006">(<a href="" role="doc-biblioref" onclick="return false;">Coifman and Lafon 2006</a>)</span>.</p>
+<ol type="1">
+<li><p>Build the kernel matrix <span class="math inline">\(W_{kl} = \exp(-\|X_k - X_l\|^2 / h)\)</span>, where <span class="math inline">\(h\)</span> is a bandwidth hyperparameter.</p></li>
+<li><p>Normalize both columns and rows. <span class="math display">\[\begin{align*}
+D &amp;= \text{diag}(W\mathbf{1}) \qquad \tilde{W} = D^{-1}WD^{-1}  \\
+\tilde{D} &amp;= \text{diag}(\tilde{W}\mathbf{1}) \qquad L = \tilde{D}^{-1}\tilde{W}
+\end{align*}\]</span> Column normalization accounts for differences in sampling density.</p></li>
+</ol>
+</section>
+<section class="slide level2">
+
+<h3 id="derivation-of-g">Derivation of <span class="math inline">\(G\)</span></h3>
+<p>First note that, <span class="math display">\[\begin{align*}
+\frac{\partial\mathbf{x}}{\partial \theta} = \left(-\cos\varphi\sin\theta, \cos\varphi\cos\theta, 0\right).
+\end{align*}\]</span> Therefore, <span class="math display">\[\begin{align*}
+g_{11} &amp;= \left\langle \frac{\partial\mathbf{x}}{\partial \theta}, \frac{\partial\mathbf{x}}{\partial \theta}\right\rangle_{\mathbb{R}^3} \\
+&amp;= \cos^2\varphi\sin^2\theta + \cos^2\varphi\cos^2\theta \\
+&amp;= \cos^2\varphi
+\end{align*}\]</span></p>
+</section>
+<section class="slide level2">
+
+<h3 id="derivation-of-h-from-deltaleftfgright">Derivation of <span class="math inline">\(H\)</span> from <span class="math inline">\(\Delta\left(fg\right)\)</span></h3>
+<p>By the product formula with <span class="math inline">\(z^1 = \theta\)</span>: <span class="math display">\[\begin{align*}
+h^{11} = \langle \nabla \theta, \nabla \theta \rangle_{g_0} = \frac{1}{2}\left[\Delta(\theta^2) - 2\theta\Delta\theta\right]
+\end{align*}\]</span></p>
+</section>
+<section class="slide level2">
+
+<h3 id="derivation-of-h-from-deltaleftfgright-1">Derivation of <span class="math inline">\(H\)</span> from <span class="math inline">\(\Delta\left(fg\right)\)</span></h3>
+<p>The general formula for the Laplace-Beltrami operator is <span class="math display">\[\Delta f = \frac{1}{\sqrt{\det G}}\sum_{i,j}\frac{\partial}{\partial z^i}\left(\sqrt{\det G}\, g^{ij}\frac{\partial f}{\partial z^j}\right).\]</span></p>
+<p>Since <span class="math inline">\(\det(G) = \cos^2\varphi\)</span> and the off-diagonal <span class="math inline">\(g^{ij}\)</span> are zero, <span class="math display">\[\begin{align*}
+\Delta f = \frac{1}{\cos^2\varphi}\frac{\partial^2 f}{\partial\theta^2} + \frac{1}{\cos\varphi}\frac{\partial}{\partial\varphi}\left(\cos\varphi\frac{\partial f}{\partial\varphi}\right)
+\end{align*}\]</span></p>
+</section>
+<section class="slide level2">
+
+<h3 id="derivation-of-h-from-deltaleftfgright-2">Derivation of <span class="math inline">\(H\)</span> from <span class="math inline">\(\Delta\left(fg\right)\)</span></h3>
+<p>We can plug in the choices of <span class="math inline">\(f\)</span> that we care about, <span class="math display">\[\begin{align*}
+\Delta\theta &amp;= 0\\
+\Delta(\theta^2) &amp;= \frac{1}{\cos^2\varphi}\frac{\partial^2(\theta^2)}{\partial\theta^2} = \frac{2}{\cos^2\varphi}
+\end{align*}\]</span></p>
+<p>and then substitute into the formula from 2 slides ago, <span class="math display">\[\begin{align*}
+h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \frac{1}{\cos^2\varphi}.
+\end{align*}\]</span></p>
+</section>
+<section class="slide level2">
+
+<h3 class="smaller" id="references">References</h3>
+<div class="quarto-auto-generated-content">
+<div class="footer footer-default">
+
+</div>
+</div>
+<div id="refs-1" class="references csl-bib-body" role="list">
+<div id="ref-microbiomeviz" class="csl-entry" role="listitem">
+Barnett, David J. M., Ilja C. W. Arts, and John Penders. 2021. <span>“microViz: An r Package for Microbiome Data Visualization and Statistics.”</span> <em>Journal of Open Source Software</em> 6 (63): 3201. <a href="https://doi.org/10.21105/joss.03201">https://doi.org/10.21105/joss.03201</a>.
+</div>
+<div id="ref-Bolyen2019" class="csl-entry" role="listitem">
+Bolyen, Evan, Jai Ram Rideout, Matthew R. Dillon, Nicholas A. Bokulich, Christian C. Abnet, Gabriel A. Al-Ghalith, Harriet Alexander, et al. 2019. <span>“Reproducible, Interactive, Scalable and Extensible Microbiome Data Science Using QIIME 2.”</span> <em>Nature Biotechnology</em> 37 (8): 852–57. <a href="https://doi.org/10.1038/s41587-019-0209-9">https://doi.org/10.1038/s41587-019-0209-9</a>.
+</div>
+<div id="ref-Chari2023" class="csl-entry" role="listitem">
+Chari, Tara, and Lior Pachter. 2023. <span>“The Specious Art of Single-Cell Genomics.”</span> Edited by Jason A. Papin. <em>PLOS Computational Biology</em> 19 (8): e1011288. <a href="https://doi.org/10.1371/journal.pcbi.1011288">https://doi.org/10.1371/journal.pcbi.1011288</a>.
+</div>
+<div id="ref-Coifman2006" class="csl-entry" role="listitem">
+Coifman, Ronald R., and Stéphane Lafon. 2006. <span>“Diffusion Maps.”</span> <em>Applied and Computational Harmonic Analysis</em> 21 (1): 5–30. <a href="https://doi.org/10.1016/j.acha.2006.04.006">https://doi.org/10.1016/j.acha.2006.04.006</a>.
+</div>
+<div id="ref-Fettweis2019" class="csl-entry" role="listitem">
+Fettweis, Jennifer M., Myrna G. Serrano, J. Paul Brooks, David J. Edwards, Philippe H. Girerd, Hardik I. Parikh, Bernice Huang, et al. 2019. <span>“The Vaginal Microbiome and Preterm Birth.”</span> <em>Nature Medicine</em> 25 (6): 1012–21. <a href="https://doi.org/10.1038/s41591-019-0450-2">https://doi.org/10.1038/s41591-019-0450-2</a>.
+</div>
+<div id="ref-Gosmann2017" class="csl-entry" role="listitem">
+Gosmann, Christina, Melis N. Anahtar, Scott A. Handley, Mara Farcasanu, Galeb Abu-Ali, Brittany A. Bowman, Nikita Padavattan, et al. 2017. <span>“Lactobacillus-Deficient Cervicovaginal Bacterial Communities Are Associated with Increased HIV Acquisition in Young South African Women.”</span> <em>Immunity</em> 46 (1): 29–37. <a href="https://doi.org/10.1016/j.immuni.2016.12.013">https://doi.org/10.1016/j.immuni.2016.12.013</a>.
+</div>
+<div id="ref-Gudnadottir2022" class="csl-entry" role="listitem">
+Gudnadottir, Unnur, Justine W. Debelius, Juan Du, Luisa W. Hugerth, Hanna Danielsson, Ina Schuppe-Koistinen, Emma Fransson, and Nele Brusselaers. 2022. <span>“The Vaginal Microbiome and the Risk of Preterm Birth: A Systematic Review and Network Meta-Analysis.”</span> <em>Scientific Reports</em> 12 (1). <a href="https://doi.org/10.1038/s41598-022-12007-9">https://doi.org/10.1038/s41598-022-12007-9</a>.
+</div>
+<div id="ref-heer2004" class="csl-entry" role="listitem">
+Heer, Jeffrey, and Stuart K. Card. 2004. <span>“DOITrees Revisited: Scalable, Space-Constrained Visualization of Hierarchical Data.”</span> In <em>Proceedings of the Working Conference on Advanced Visual Interfaces</em>, 421–24. AVI ’04. New York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/989863.989941">https://doi.org/10.1145/989863.989941</a>.
+</div>
+<div id="ref-Hein2005" class="csl-entry" role="listitem">
+Hein, Matthias, Jean-Yves Audibert, and Ulrike von Luxburg. 2005. <span>“From Graphs to Manifolds – Weak and Strong Pointwise Consistency of Graph Laplacians.”</span> In <em>Learning Theory</em>, 470–85. Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/11503415_32">https://doi.org/10.1007/11503415_32</a>.
+</div>
+<div id="ref-Hutchins1985" class="csl-entry" role="listitem">
+Hutchins, Edwin L., James D. Hollan, and Donald A. Norman. 1985. <span>“Direct Manipulation Interfaces.”</span> <em>Human–Computer Interaction</em> 1 (4): 311–38. <a href="https://doi.org/10.1207/s15327051hci0104_2">https://doi.org/10.1207/s15327051hci0104_2</a>.
+</div>
+<div id="ref-simplystatisticsSimplyStatistics" class="csl-entry" role="listitem">
+Irizarry, Rafael. 2024. <span>“<span>S</span>imply <span>S</span>tatistics: <span>B</span>iologists, Stop Putting <span>U</span><span>M</span><span>A</span><span>P</span> Plots in Your Papers — Simplystatistics.org.”</span> <a href="https://simplystatistics.org/posts/2024-12-23-biologists-stop-including-umap-plots-in-your-papers/" class="uri">https://simplystatistics.org/posts/2024-12-23-biologists-stop-including-umap-plots-in-your-papers/</a>.
+</div>
+<div id="ref-Kobak2021" class="csl-entry" role="listitem">
+Kobak, Dmitry, and George C. Linderman. 2021. <span>“Initialization Is Critical for Preserving Global Data Structure in Both t-SNE and UMAP.”</span> <em>Nature Biotechnology</em> 39 (2): 156–57. <a href="https://doi.org/10.1038/s41587-020-00809-z">https://doi.org/10.1038/s41587-020-00809-z</a>.
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3>References (cont.)</h3>
+<div id="refs-2" class="references csl-bib-body" role="list">
+<div id="ref-Kozlov2024" class="csl-entry" role="listitem">
+Kozlov, Max. 2024. <span>“<span>‘All of Us’</span> Genetics Chart Stirs Unease over Controversial Depiction of Race.”</span> <em>Nature</em>, February. <a href="https://doi.org/10.1038/d41586-024-00568-w">https://doi.org/10.1038/d41586-024-00568-w</a>.
+</div>
+<div id="ref-Kuo2025" class="csl-entry" role="listitem">
+Kuo, Megan, Kim-Anh Lê Cao, Saritha Kodikara, Jiadong Mao, and Kris Sankaran. 2025. <span>“Phylobar: An r Package for Multiresolution Compositional Barplots in Omics Studies,”</span> November. <a href="https://doi.org/10.1101/2025.11.05.686662">https://doi.org/10.1101/2025.11.05.686662</a>.
+</div>
+<div id="ref-laskowski1989traditional" class="csl-entry" role="listitem">
+Laskowski, Piotr H. 1989. <span>“The Traditional and Modern Look at Tissot’s Indicatrix.”</span> <em>The American Cartographer</em> 16 (2): 123–33.
+</div>
+<div id="ref-Lawson2018" class="csl-entry" role="listitem">
+Lawson, Daniel J., Lucy van Dorp, and Daniel Falush. 2018. <span>“A Tutorial on How Not to over-Interpret STRUCTURE and ADMIXTURE Bar Plots.”</span> <em>Nature Communications</em> 9 (1). <a href="https://doi.org/10.1038/s41467-018-05257-7">https://doi.org/10.1038/s41467-018-05257-7</a>.
+</div>
+<div id="ref-Liu2025" class="csl-entry" role="listitem">
+Liu, Zhexuan, Rong Ma, and Yiqiao Zhong. 2025. <span>“Assessing and Improving Reliability of Neighbor Embedding Methods: A Map-Continuity Perspective.”</span> <em>Nature Communications</em> 16 (1). <a href="https://doi.org/10.1038/s41467-025-60434-9">https://doi.org/10.1038/s41467-025-60434-9</a>.
+</div>
+<div id="ref-mcqueen2016megaman" class="csl-entry" role="listitem">
+McQueen, James, Marina Meilă, Jacob VanderPlas, and Zhongyue Zhang. 2016. <span>“Megaman: Scalable Manifold Learning in Python.”</span> <em>Journal of Machine Learning Research</em> 17 (148): 1–5.
+</div>
+<div id="ref-narayan2021assessing" class="csl-entry" role="listitem">
+Narayan, Ashwin, Bonnie Berger, and Hyunghoon Cho. 2021. <span>“Assessing Single-Cell Transcriptomic Variability Through Density-Preserving Data Visualization.”</span> <em>Nature Biotechnology</em> 39 (6): 765–74.
+</div>
+<div id="ref-maxnoichlNoichlFlattening" class="csl-entry" role="listitem">
+Noichl, Max. <span>“<span>M</span>ax <span>N</span>oichl | <span>F</span>lattening <span>M</span>ammoths — Maxnoichl.eu.”</span> <a href="https://www.maxnoichl.eu/projects/mammoth/" class="uri">https://www.maxnoichl.eu/projects/mammoth/</a>.
+</div>
+<div id="ref-Novembre2016" class="csl-entry" role="listitem">
+Novembre, John. 2016. <span>“Pritchard, Stephens, and Donnelly on Population Structure.”</span> <em>Genetics</em> 204 (2): 391–93. <a href="https://doi.org/10.1534/genetics.116.195164">https://doi.org/10.1534/genetics.116.195164</a>.
+</div>
+<div id="ref-Packer2019" class="csl-entry" role="listitem">
+Packer, Jonathan S., Qin Zhu, Chau Huynh, Priya Sivaramakrishnan, Elicia Preston, Hannah Dueck, Derek Stefanik, et al. 2019. <span>“A Lineage-Resolved Molecular Atlas of c. Elegans Embryogenesis at Single-Cell Resolution.”</span> <em>Science</em> 365 (6459). <a href="https://doi.org/10.1126/science.aax1971">https://doi.org/10.1126/science.aax1971</a>.
+</div>
+<div id="ref-perrault2006metric" class="csl-entry" role="listitem">
+Perrault-Joncas, Dominique, and Marina Meila. 2006. <span>“Metric Learning of Manifolds.”</span> <em>Semisupervised Learn</em> 1: 293–306.
+</div>
+<div id="ref-https://doi.org/10.48550/arxiv.1803.00567" class="csl-entry" role="listitem">
+Peyré, Gabriel, and Marco Cuturi. 2018. <span>“Computational Optimal Transport.”</span> <a href="https://doi.org/10.48550/ARXIV.1803.00567">https://doi.org/10.48550/ARXIV.1803.00567</a>.
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3>References (cont.)</h3>
+<div id="refs-3" class="references csl-bib-body" role="list">
+<div id="ref-Pritchard2000" class="csl-entry" role="listitem">
+Pritchard, Jonathan K, Matthew Stephens, and Peter Donnelly. 2000. <span>“Inference of Population Structure Using Multilocus Genotype Data.”</span> <em>Genetics</em> 155 (2): 945–59. <a href="https://doi.org/10.1093/genetics/155.2.945">https://doi.org/10.1093/genetics/155.2.945</a>.
+</div>
+<div id="ref-Ravel2010" class="csl-entry" role="listitem">
+Ravel, Jacques, Pawel Gajer, Zaid Abdo, G. Maria Schneider, Sara S. K. Koenig, Stacey L. McCulle, Shara Karlebach, et al. 2010. <span>“Vaginal Microbiome of Reproductive-Age Women.”</span> <em>Proceedings of the National Academy of Sciences</em> 108 (supplement_1): 4680–87. <a href="https://doi.org/10.1073/pnas.1002611107">https://doi.org/10.1073/pnas.1002611107</a>.
+</div>
+<div id="ref-Sankaran2018" class="csl-entry" role="listitem">
+Sankaran, Kris, and Susan P Holmes. 2018. <span>“Latent Variable Modeling for the Microbiome.”</span> <em>Biostatistics</em> 20 (4): 599–614. <a href="https://doi.org/10.1093/biostatistics/kxy018">https://doi.org/10.1093/biostatistics/kxy018</a>.
+</div>
+<div id="ref-Siebert2019" class="csl-entry" role="listitem">
+Siebert, Stefan, Jeffrey A. Farrell, Jack F. Cazet, Yashodara Abeykoon, Abby S. Primack, Christine E. Schnitzler, and Celina E. Juliano. 2019. <span>“Stem Cell Differentiation Trajectories in Hydra Resolved at Single-Cell Resolution.”</span> <em>Science</em> 365 (6451). <a href="https://doi.org/10.1126/science.aav9314">https://doi.org/10.1126/science.aav9314</a>.
+</div>
+<div id="ref-Symul2023" class="csl-entry" role="listitem">
+Symul, Laura, Pratheepa Jeganathan, Elizabeth K. Costello, Michael France, Seth M. Bloom, Douglas S. Kwon, Jacques Ravel, David A. Relman, and Susan Holmes. 2023. <span>“Sub-Communities of the Vaginal Microbiota in Pregnant and Non-Pregnant Women.”</span> <em>Proceedings of the Royal Society B: Biological Sciences</em> 290 (2011). <a href="https://doi.org/10.1098/rspb.2023.1461">https://doi.org/10.1098/rspb.2023.1461</a>.
+</div>
+<div id="ref-paircodeUnderstandingUMAP" class="csl-entry" role="listitem">
+<span>“<span>U</span>nderstanding <span>U</span><span>M</span><span>A</span><span>P</span> — Pair-Code.github.io.”</span> <a href="https://pair-code.github.io/understanding-umap/" class="uri">https://pair-code.github.io/understanding-umap/</a>.
+</div>
+<div id="ref-Venna2006" class="csl-entry" role="listitem">
+Venna, Jarkko, and Samuel Kaski. 2006. <span>“Local Multidimensional Scaling.”</span> <em>Neural Networks</em> 19 (6–7): 889–99. <a href="https://doi.org/10.1016/j.neunet.2006.05.014">https://doi.org/10.1016/j.neunet.2006.05.014</a>.
+</div>
+<div id="ref-Wallach2009EvaluationMF" class="csl-entry" role="listitem">
+Wallach, Hanna M., Iain Murray, Ruslan Salakhutdinov, and David Mimno. 2009. <span>“Evaluation Methods for Topic Models.”</span> <em>International Conference on Machine Learning</em>. <a href="https://api.semanticscholar.org/CorpusID:10910725">https://api.semanticscholar.org/CorpusID:10910725</a>.
+</div>
+<div id="ref-wattenberg2016how" class="csl-entry" role="listitem">
+Wattenberg, Martin, Fernanda Viégas, and Ian Johnson. 2016. <span>“How to Use t-SNE Effectively.”</span> <em>Distill</em>. <a href="https://doi.org/10.23915/distill.00002">https://doi.org/10.23915/distill.00002</a>.
+</div>
+<div id="ref-Wolf2018" class="csl-entry" role="listitem">
+Wolf, F. Alexander, Philipp Angerer, and Fabian J. Theis. 2018. <span>“SCANPY: Large-Scale Single-Cell Gene Expression Data Analysis.”</span> <em>Genome Biology</em> 19 (1). <a href="https://doi.org/10.1186/s13059-017-1382-0">https://doi.org/10.1186/s13059-017-1382-0</a>.
+</div>
+<div id="ref-xia2024statistical" class="csl-entry" role="listitem">
+Xia, Lucy, Christy Lee, and Jingyi Jessica Li. 2024. <span>“Statistical Method scDEED for Detecting Dubious 2D Single-Cell Embeddings and Optimizing t-SNE and UMAP Hyperparameters.”</span> <em>Nature Communications</em> 15 (1): 1753.
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="20260219_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="20260219_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="20260219_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="20260219_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="20260219_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="20260219_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="20260219_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="20260219_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="20260219_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="20260219_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1200,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 4.0e-2,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        text: function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+      });
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          return note.innerHTML;
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
