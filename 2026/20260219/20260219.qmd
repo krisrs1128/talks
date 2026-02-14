@@ -28,7 +28,7 @@ create overview visualizations.
 
 ![](figures/samples_by_microbes.png){width=1200}
 
-They are often used to summarize microbiome community structure.
+They can summarize microbiome community structure
 
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
@@ -59,8 +59,8 @@ These methods need to be used with caution:
 - The assumed number of latent communities can influence topic model interpretation.
 - UMAP can introduce visual artifacts, like spurious cell types.
 
-Despite the ubiquity of these dimensionality reduction methods, diagnostics are
-limited.
+Despite being widely used, there are few diagnostics for these dimensionality
+reduction methods.
 
 ---
 
@@ -83,7 +83,7 @@ RMetric plots for nonlinear embeddings.
 :::
 ::::
 
-Both are driven by the same underlying data visualization perspectives, reviewed next.
+Both are grounded in the data visualization principles that we review next
 
 ---
 
@@ -127,7 +127,8 @@ The focus-plus-context principle [@heer2004] states that readers should be able 
 
 ### Focus-plus-Context: Barplots
 
-Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
+Stacked barplots visualize sample-to-sample variation in microbiome community
+structure. They struggle to show finer taxonomic resolutions.
 
 ![](figures/composition_barplot_microbiomeviz.png){width=900}
 
@@ -139,7 +140,7 @@ Figure from the [microbiomeViz documentation](https://david-barnett.github.io/mi
 
 ### Focus-plus-Context: Barplots
 
-Stacked barplots help visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
+Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
 
 ![](figures/qiime_barplot.png){width=900}
 
@@ -149,19 +150,10 @@ Figure from the [Qiime2 View documentation](https://view.qiime2.org/visualizatio
 
 ---
 
-### microbiomeExplorer
-
-Existing interactive approaches have large gulfs of evaluation, because we have
-to reorient ourselves to new color palettes (and memorize how categories relate
-across levels).
-
-![]()
-
----
-
 ### Phylobar
 
-We can apply the focus-plus-context principle to visualize abundances of rare taxa without losing context.
+Applying focus-plus-context reveals rare taxa abundances while preserving
+overall structure
 
 ![](figures/phylobar_overview.png){width=900}
 
@@ -263,8 +255,8 @@ compared [@Novembre2016; @Wallach2009EvaluationMF; @Lawson2018].
 
 ### `alto`: Main Idea
 
-We fit an ensemble of models of varying complexities. Then, post-estimation, we
-build a compact representation of the result.
+We fit models of varying complexity $K$ and build a compact representation of
+the ensemble
 
 ![](figures/alto_sketches_annotated alignment.png)
 
@@ -335,7 +327,7 @@ The weights $W$ can be learned using optimal transport,
 
 ### Examples: True Model
 
-Sanity check - Below is the alignment for data from a topic model. Can you guess
+Below is the alignment for data from a topic model. Can you guess
 $K$?
 
 * $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
@@ -425,8 +417,8 @@ the vaginal microbiome.
 
 :::: {.columns}
 ::: {.column width="50%"}
-The follow-up study [@Symul2023] had many more samples than [@Ravel2010] and so could begin to tease additional structure lying
-behind CSTs.
+The follow-up study [@Symul2023] had more samples than [@Ravel2010] and so could
+identify additional structure lying behind CSTs.
 
 * They had 2179 samples from 135 women, sampled longitudinally.
 * The green and blue paths to the right reflect the known Lactobacillus CSTs.
@@ -506,9 +498,8 @@ The question is: **Which distortions occur, and where?**
 
 ### Distortions in $t$-SNE and UMAP
 
-Despite the popularity, both $t$-SNE and UMAP are known to result in
-distortions. For example, they may not preserve density within different
-regions of the plot.
+Both $t$-SNE and UMAP are introduce distortions. For example, they may not
+preserve density within different regions of the plot.
 
 ![](figures/densmap_example.png){width=1000}
 
@@ -550,10 +541,10 @@ Example from [@xia2024statistical].
 ### Controversy
 
 ::::{.columns}
-:::{.column width="80%"}
+:::{.column width="75%"}
 ![](figures/pritchard_all_of_us.png){width=600}
 :::
-:::{.column width="20%"}
+:::{.column width="25%"}
 See also [@Kozlov2024; @simplystatisticsSimplyStatistics].
 :::
 ::::
@@ -571,8 +562,8 @@ in the single-cell literature [@Chari2023].
 
 ### Approach
 
-Instead of abandoning nonlinear dimensionality reduction, we characterize the
-distortion by  augmenting the embedding visualization.
+Rather than abandoning nonlinear dimensionality reduction, we augment the
+embeddings to characterize distortion.
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -583,55 +574,149 @@ distortion by  augmenting the embedding visualization.
 :::
 ::::
 
-This is the high-dimensional version of Tissot's indicatrix from cartography [@laskowski1989traditional].
+This is a high-dimensional version of Tissot's indicatrix from cartography
+[@laskowski1989traditional].
 
 ---
 
-### Graph-based Metrics
+### RMetric Motivation
 
-Define distance via diffusion: $d_t(i,j) = $ probability a $t$-step random walk
-from $i$ reaches $j$. This induces a Riemannian metric on the data manifold.
+The RMetric algorithm [@perrault2006metric; @mcqueen2016megaman] quantifies
+distortion geometrically. To motivate the algorithm, consider the distortion
+induced by mapping the sphere into latitude/longitude coordinates.
 
-![](figures/laplacian_metric-0.png){width=800}
-
----
-
-### Graph-based Metrics
-
-Define distance via diffusion: $d_t(i,j) = $ probability a $t$-step random walk
-from $i$ reaches $j$. This induces a Riemannian metric on the data manifold.
-
-![](figures/laplacian_metric.png){width=800}
+![](figures/sphere_embedding_setup.png){width=800}
 
 ---
 
-### Local Metric Distortion
+### Half-Sphere Parameterization
 
-The RMetric algorithm measures how these intrinsic, graph-based distances become
-distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
-
-![](figures/distortion_example_1.png){width=1000}
-
----
-
-### Local Metric Distortion
-
-The RMetric algorithm measures how these intrinsic, graph-based distances become
-distorted during the embedding process [@perrault2006metric; @mcqueen2016nearly].
-
-![](figures/distortion_example_1-2.png){width=750}
-
----
-
-### Implementation Details
-
-Let $z_{k} \in \mathbb{R}^{N}$ be the $k^{th}$ embedding dimension. The
-embedding map $\varphi : M\to \mathbb{R}^{D}$ induces a pullback metric. The
-local metrics $H_{kl}$ are the components of this pullback in coordinate charts.
+Parameterize points on $\mathcal{M}$ using spherical coordinates:
 
 \begin{align*}
-H_{\cdot, kl} := \frac{1}{2}\left[L\left(z_{k} \circ z_{l}\right) - z_{k} \circ \left(L z_{l}\right) - z_{l} \circ \left(L z_{k}\right)  \right]
+\mathbf{x}\left(p\right) = \left(\cos\varphi\cos\theta, \cos\varphi \sin\theta, \sin\varphi\right)
 \end{align*}
+
+The associated (latitude, longitude) embedding is
+
+\begin{align*}
+\mathbf{z}\left(p\right) =
+\left(\theta\left(p\right), \varphi\left(p\right)\right).
+\end{align*}
+
+![](figures/sphere_embedding_setup.png){width=800}
+
+---
+
+### Pushforward Metric
+
+What does a small step in the embedding space correspond to in $\mathcal{M}$? The pushforward metric answers this,
+
+\begin{align*}
+g_{ij} = \left\langle \frac{\partial\mathbf{x}}{\partial z^i}, \frac{\partial\mathbf{x}}{\partial z^j}\right\rangle_{\mathbb{R}^3}
+\end{align*}
+
+This varies across $p \in \mathcal{M}$ but we suppress it from the notation.
+
+![](figures/dx_dphi.png){width=800}
+
+---
+
+### Pushforward Metric
+
+In the sphere example, these derivatives can be directly computed and to obtain,
+
+\begin{align*}
+G = \begin{pmatrix} \cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
+\end{align*}
+Near the equator ($\varphi \approx 0$), a small step in $\theta$ covers more
+distance than near the north pole ($\varphi \approx \frac{\pi}{2}$).
+
+![](figures/dx_dphi.png){width=800}
+
+---
+
+### Dual Pushforward Metric
+
+Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
+reflect distortion.
+
+![](figures/gradients_z_theta.png){width=1000}
+
+Since the level sets of $z^\theta$ become more compressed near the poles, the
+gradients $\nabla z^\theta$ become larger there.
+
+---
+
+### Dual Pushforward Metric
+
+Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
+reflect distortion.
+
+![](figures/level_sets_phi.png){width=1000}
+
+In contrast, the gradients $\nabla z^{\varphi}$ don't depend on $\varphi$.
+
+---
+
+### Dual Pushforward Metric
+
+This gradient information can be stored in the matrix $H$ with elements,
+
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
+\end{align*}
+where $g_{0}$ is the metric on $\mathcal{M}$ inherited from the ambient space.
+
+<br/>
+<br/>
+
+_$H$ is computable from data while $G$ requires an explicit manifold
+parameterization._
+
+---
+
+### Dual Pushforward Metric
+
+In our running example,
+
+\begin{align*}
+H = \begin{pmatrix} 1/\cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
+\end{align*}
+
+We can see that $H = G^{-1}$ and that is actually true more generally.
+
+---
+
+### Product Rule for Laplacians
+
+For any $f$ and $g$, the Laplacian $\Delta$ satisfies,
+\begin{align*}
+\Delta(fg) = f\,\Delta g + g\,\Delta f + 2\langle \nabla f, \nabla g \rangle_{g_{0}}
+\end{align*}
+
+Setting $f = z^i$, $g = z^j$ and rearranging,
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(z^i z^j) - z^i\Delta z^j - z^j\Delta z^i\right]
+\end{align*}
+
+Since there are methods for estimating $\Delta$ from data [@Hein2005;
+@Coifman2006], we also have a practical method for approximating local
+distortions $H$!
+
+---
+
+### Implementation
+
+Let $z_{k} \in \mathbb{R}^{N}$ be the $k^{th}$ embedding dimension. Let $L$ be
+the doubly-normalized graph Laplacian [@Coifman2006]. Compute
+
+\begin{align*}
+H_{kk'}^{(\cdot)} := \frac{1}{2}\left[L\left(z_{k} \circ z_{k'}\right) - z_{k} \circ \left(L z_{k'}\right) - z_{k'} \circ \left(L z_{k}\right)  \right] \in \mathbb{R}^{N}
+\end{align*}
+
+The embedding distortion for sample $n$ is given by $H^{(n)} \in \mathbb{R}^{K
+\times K}$
 
 ![](figures/g_kl.png){width=350}
 
@@ -672,36 +757,12 @@ embeddings in the Gaussian mixtures example.
 
 ---
 
-### Embedding Discontinuities
-
-- RMetric works well when distortions are "smooth" and the graph Laplacian
-reflects derivative information of the embedding map.
-
-- It fails when there are discontinuities -- two points that are close to one
-another in the original space but fragmented in the embedding.
-
-![](figures/distortion_example_2.png){width=800}
-
----
-
-### Embedding Discontinuities
-
-- RMetric works well when distortions are "smooth" and the graph Laplacian
-reflects derivative information of the embedding map.
-
-- It fails when there are discontinuities -- two points that are close to one
-another in the original space but fragmented in the embedding.
-
-![](figures/distortion_example_2-2.png){width=400}
-
----
-
-### Embedding Discontinuities
+### Fragmented Neighborhoods
 
 :::: {.columns}
 ::: {.column width="50%"}
-We look directly for outliers in the scatterplot of true vs. embedding
-neighborhood distances.
+Besides RMetric, we also visualize distortions uses the scatterplot of true vs.
+embedding neighborhood distances.
 :::
 ::: {.column width="50%"}
 ![](figures/distance_preservation.png){width=400}
@@ -712,15 +773,9 @@ neighborhood distances.
 
 ### Fragmented Neighborhoods
 
-Some neighborhoods have poorly preserved distances. To detect this, we:
-
-* Fit the running median in a scatterplot of true vs. embedding distances.
-* Compute the IQR within each bin. Points above $3\times$ IQR are considered poorly preserved outliers.
-* If a large fraction of a point's neighbor links are poorly preserved, then that point is flagged as "broken."
-
----
-
-### Fragmented Neighborhoods
+To detect poorly preserved neighborhoods, we fit a running median to true vs.
+embedding distances, flag outliers above $3\times \text{IQR}$, and mark points
+with many outlier links as "broken."
 
 ![](figures/bin-outlier-defin.png){width=1100}
 
@@ -764,8 +819,8 @@ p
 
 ### Variable Density Swiss Roll
 
-$t$-SNE (perplexity = 100) breaks the roll in the low-density region. It also
-artificially spreads out the high density area.
+$t$-SNE (perplexity = 100) breaks the roll in the low-density region and
+artificially spreads the high density area.
 
 ![](figures/noisy_embedding_0.5.png){width=640}
 
@@ -790,6 +845,116 @@ interpretation. But the visual encoding is more subtle, and the leave-one-out
 approach is time consuming even with approximations.
 
 ![](figures/p_scores_0.5.png){width=600}
+
+---
+
+### PBMC Dataset
+
+This single-cell gene expression data set was used in the data visualization
+tutorial from the scanpy package [@Wolf2018]. Each point is the UMAP embedding
+of a cell's high-dimensional gene expression data.
+
+![](figures/pbmc-a.png){width=490}
+
+---
+
+### PBMC Dataset
+
+* Distance scales vary both across and within clusters.
+* Two T-cell sets appear farther from Monocytes than they actually are.
+
+![](figures/pbmc_boxplot_inter.gif){width=570}
+
+---
+
+### Hydra Cell Atlas
+
+:::: {.columns}
+::: {.column width="50%"}
+In this hydra cell differentiation dataset [@Siebert2019; @xia2024statistical],
+$t$-SNE (perplexity = 80) collapses points along the dataset periphery and
+exaggerates between-cluster distances
+:::
+::: {.column width="50%"}
+![](figures/hydra_perplexity_80.gif){width=470}
+:::
+::::
+
+---
+
+### Hydra Cell Atlas
+
+:::: {.columns}
+::: {.column width="50%"}
+At perplexity = 500, the clusters are more reliable, but peripheral samples are
+in fact closer than they appear
+:::
+::: {.column width="50%"}
+![](figures/hydra_perplexity_500.gif){width=470}
+:::
+::::
+
+---
+
+### Hydra Cell Atlas
+
+:::: {.columns}
+::: {.column width="50%"}
+The local isometry visualization highlights some "threads" are more spread in
+the original data.
+:::
+::: {.column width="50%"}
+![](figures/hydra_isometry.gif){width=470}
+:::
+::::
+
+---
+
+### DensMap vs. UMAP
+
+Both variation in ellipses and fragmented neighborhood statistics can be used to
+compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
+
+![](figures/densmap_v_umap.png){width=900}
+
+This example uses data from a _C. elegans_ cell differentiation study [@Packer2019].
+
+---
+
+### DensMap vs. UMAP
+
+Both variation in ellipses and fragmented neighborhood statistics can be used to
+compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
+
+![](figures/densmap_v_umap_hist.png){width=950}
+
+This example uses data from a _C. elegans_ cell differentiation study [@Packer2019].
+
+---
+
+### Summary
+
+1. Topic alignment helps better understand the influence of $K$ in exploratory
+analysis of count data.
+
+1. Interactivity can reveal distortion information based on on the analysts'
+priorities.
+
+**Papers**: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62), [https://go.wisc.edu/tify36](https://go.wisc.edu/tify36)
+
+**Packages**: [https://lasy.github.io/alto](https://lasy.github.io/alto), [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
+
+---
+
+### Acknowledgments
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Margaret Thairu, Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Megan Kuo, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095
+
+---
+
+## Appendix
 
 ---
 
@@ -832,109 +997,69 @@ placed too close to one another.
 
 ---
 
-### PBMC Dataset
+### Graph Laplacian
 
-This single-cell gene expression data set was used in the data visualization
-tutorial from the scanpy package [@Wolf2018]. Each point is the UMAP embedding
-of a cell's high-dimensional gene expression data.
+To compute $L$, we use the estimator from [@Coifman2006].
 
-![](figures/pbmc-a.png){width=490}
+1. Build the kernel matrix $W_{kl} = \exp(-\|X_k - X_l\|^2 / h)$, where $h$ is a bandwidth hyperparameter.
 
----
-
-### PBMC Dataset
-
-* Distance scales vary both across and within clusters.
-* There are two sets of T-cells that are closer to Monocytes than the embedding alone suggests.
-
-![](figures/pbmc_boxplot_inter.gif){width=570}
+2. Normalize both columns and rows.
+\begin{align*}
+D &= \text{diag}(W\mathbf{1}) \qquad \tilde{W} = D^{-1}WD^{-1}  \\
+\tilde{D} &= \text{diag}(\tilde{W}\mathbf{1}) \qquad L = \tilde{D}^{-1}\tilde{W}
+\end{align*}
+Column normalization accounts for differences in sampling density.
 
 ---
 
-### Hydra Cell Atlas
+### Derivation of $G$
 
-:::: {.columns}
-::: {.column width="50%"}
-Here is an application to a hydra cell differentiation dataset [@Siebert2019; @xia2024statistical]. We fit $t$-SNE with the perplexity hyperparameter set to 80. Points around the boundary are collapsed, and between-cluster distances are
-exaggerated.
-:::
-::: {.column width="50%"}
-![](figures/hydra_perplexity_80.gif){width=470}
-:::
-::::
-
----
-
-### Hydra Cell Atlas
-
-:::: {.columns}
-::: {.column width="50%"}
-Increasing perplexity to 500, the clusters are more reliable, but samples along
-the boundary of the visualization are in fact closer than they appear.
-:::
-::: {.column width="50%"}
-![](figures/hydra_perplexity_500.gif){width=470}
-:::
-::::
+First note that,
+\begin{align*}
+\frac{\partial\mathbf{x}}{\partial \theta} = \left(-\cos\varphi\sin\theta, \cos\varphi\cos\theta, 0\right).
+\end{align*}
+Therefore,
+\begin{align*}
+g_{11} &= \left\langle \frac{\partial\mathbf{x}}{\partial \theta}, \frac{\partial\mathbf{x}}{\partial \theta}\right\rangle_{\mathbb{R}^3} \\
+&= \cos^2\varphi\sin^2\theta + \cos^2\varphi\cos^2\theta \\
+&= \cos^2\varphi
+\end{align*}
 
 ---
 
-### Hydra Cell Atlas
+### Derivation of $H$ from $\Delta\left(fg\right)$
 
-:::: {.columns}
-::: {.column width="50%"}
-Applying the local isometry visualization, we can see that some of the "threads"
-are actually more spread out in the original data.
-:::
-::: {.column width="50%"}
-![](figures/hydra_isometry.gif){width=470}
-:::
-::::
+By the product formula with $z^1 = \theta$:
+\begin{align*}
+h^{11} = \langle \nabla \theta, \nabla \theta \rangle_{g_0} = \frac{1}{2}\left[\Delta(\theta^2) - 2\theta\Delta\theta\right]
+\end{align*}
 
 ---
 
-### DensMap vs. UMAP
+### Derivation of $H$ from $\Delta\left(fg\right)$
 
-Both variation in ellipses and fragmented neighborhood statistics can be used to
-compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
+The general formula for the Laplace-Beltrami operator is
+$$\Delta f = \frac{1}{\sqrt{\det G}}\sum_{i,j}\frac{\partial}{\partial z^i}\left(\sqrt{\det G}\, g^{ij}\frac{\partial f}{\partial z^j}\right).$$
 
-![](figures/densmap_v_umap.png){width=900}
-
-This example uses data from a _C. elegans_ cell differentiation study [@Packer2019].
-
----
-
-### DensMap vs. UMAP
-
-Both variation in ellipses and fragmented neighborhood statistics can be used to
-compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
-
-![](figures/densmap_v_umap_hist.png){width=950}
-
-This example uses data from a _C. elegans_ cell differentiation study [@Packer2019].
+Since $\det(G) = \cos^2\varphi$ and the off-diagonal $g^{ij}$ are zero,
+\begin{align*}
+\Delta f = \frac{1}{\cos^2\varphi}\frac{\partial^2 f}{\partial\theta^2} + \frac{1}{\cos\varphi}\frac{\partial}{\partial\varphi}\left(\cos\varphi\frac{\partial f}{\partial\varphi}\right)
+\end{align*}
 
 ---
 
-### Summary
+### Derivation of $H$ from $\Delta\left(fg\right)$
 
-1. Topic alignment is a simple but useful addition to the exploratory data
-analysis toolbox for count data.
+We can plug in the choices of $f$ that we care about,
+\begin{align*}
+\Delta\theta &= 0\\
+\Delta(\theta^2) &= \frac{1}{\cos^2\varphi}\frac{\partial^2(\theta^2)}{\partial\theta^2} = \frac{2}{\cos^2\varphi}
+\end{align*}
 
-
-1. Interactivity can reveal distortion information based on on the analysts'
-priorities.
-
-**Papers**: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62), [https://go.wisc.edu/tify36](https://go.wisc.edu/tify36)
-
-**Packages**: [https://lasy.github.io/alto](https://lasy.github.io/alto), [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
-
----
-
-### Acknowledgments
-
-* Contact: ksankaran@wisc.edu
-* Lab Members: Margaret Thairu, Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Megan Kuo, Helena Huang
-* Funding: NIGMS R01GM152744, NIAID R01AI184095
+and then substitute into the formula from 2 slides ago,
+\begin{align*}
+h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \frac{1}{\cos^2\varphi}.
+\end{align*}
 
 ---
 
