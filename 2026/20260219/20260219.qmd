@@ -16,7 +16,7 @@ format:
     width: 1200
     margin: 0.04
     css: styles.css
-    embed-resources: true
+    embed-resources: false
     template-partials:
       - title-slide.html
 ---
@@ -83,7 +83,7 @@ RMetric plots for nonlinear embeddings.
 :::
 ::::
 
-Both are grounded in the data visualization principles that we review next
+Both are grounded in the data visualization principles that we review next.
 
 ---
 
@@ -498,8 +498,8 @@ The question is: **Which distortions occur, and where?**
 
 ### Distortions in $t$-SNE and UMAP
 
-Both $t$-SNE and UMAP are introduce distortions. For example, they may not
-preserve density within different regions of the plot.
+Both $t$-SNE and UMAP introduce distortions. For example, they may not preserve
+density within different regions of the plot.
 
 ![](figures/densmap_example.png){width=1000}
 
@@ -529,9 +529,8 @@ Example from [@Kobak2021].
 ### Consequences
 
 These distortions are not mere technical curiosities -- they significantly
-impact scientific interpretation [@Liu2025; @Kobak2021]. For
-example, they create misleading differences between cell types that are actually
-similar.
+impact scientific interpretation [@Liu2025; @Kobak2021]. For example, they
+create misleading differences between cell types that are actually similar.
 
 ![](figures/scdeed-example.png){width=700}
 Example from [@xia2024statistical].
@@ -761,7 +760,7 @@ embeddings in the Gaussian mixtures example.
 
 :::: {.columns}
 ::: {.column width="50%"}
-Besides RMetric, we also visualize distortions uses the scatterplot of true vs.
+Besides RMetric, we also visualize distortions using the scatterplot of true vs.
 embedding neighborhood distances.
 :::
 ::: {.column width="50%"}
@@ -937,7 +936,7 @@ This example uses data from a _C. elegans_ cell differentiation study [@Packer20
 1. Topic alignment helps better understand the influence of $K$ in exploratory
 analysis of count data.
 
-1. Interactivity can reveal distortion information based on on the analysts'
+1. Interactivity can reveal distortion information based on the analyst's
 priorities.
 
 **Papers**: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62), [https://go.wisc.edu/tify36](https://go.wisc.edu/tify36)
