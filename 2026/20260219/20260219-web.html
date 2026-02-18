@@ -578,7 +578,7 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 <h3 id="path-based-diagnostics">Path-based Diagnostics</h3>
 <ul>
 <li>Paths: Partitions the Sankey diagram into connected sets of topics.</li>
-<li>Coherence: variation of <span class="math inline">\(\beta\left(v\right)\)</span> along a path. Low coherence <span class="math inline">\(\to\)</span> persistent structure.</li>
+<li>Coherence: Average similarity of <span class="math inline">\(\beta\left(v\right)\)</span> to other topics along the same a path. High coherence <span class="math inline">\(\to\)</span> persistent structure.</li>
 <li>Refinement: Mixing between descendants. High refinement <span class="math inline">\(\to\)</span> genuine increase in complexity.</li>
 </ul>
 
@@ -728,12 +728,6 @@ x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_
 <section class="slide level2">
 
 <h3 id="distortions-in-t-sne-and-umap-1">Distortions in <span class="math inline">\(t\)</span>-SNE and UMAP</h3>
-<p>They can make high-dimensional random walks look artificially smooth…</p>
-<p><img data-src="figures/gaussian_rw.png" width="600"> Example from <span class="citation" data-cites="wattenberg2016how">(<a href="" role="doc-biblioref" onclick="return false;">Wattenberg, Viégas, and Johnson 2016</a>)</span>.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="distortions-in-t-sne-and-umap-2">Distortions in <span class="math inline">\(t\)</span>-SNE and UMAP</h3>
 <p>They can also fail to preserve the topology of the underlying data…</p>
 
 <img data-src="figures/tsne-initialization.png" width="600" class="r-stretch"><p>Example from <span class="citation" data-cites="Kobak2021">(<a href="" role="doc-biblioref" onclick="return false;">Kobak and Linderman 2021</a>)</span>.</p>
@@ -1045,6 +1039,72 @@ x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\lef
 </section>
 <section class="slide level2">
 
+<h3 id="paths">Paths</h3>
+<p>For each vertex <span class="math inline">\(v\)</span>, select the highest-weight incoming edge: <span class="math display">\[e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].\]</span></p>
+<p>Iterating from largest to smallest <span class="math inline">\(l\)</span> yields a set of vertex-disjoint paths, the number of such paths characterizes the alignment.</p>
+
+<img data-src="figures/refinement-branches-1.png" style="width:90.0%" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="paths-1">Paths</h3>
+<p>For each vertex <span class="math inline">\(v\)</span>, select the highest-weight incoming edge: <span class="math display">\[e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].\]</span></p>
+<p>Iterating from largest to smallest <span class="math inline">\(l\)</span> yields a set of vertex-disjoint paths, the number of such paths characterizes the alignment.</p>
+
+<img data-src="figures/refinement-branches-2.png" style="width:90.0%" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="paths-2">Paths</h3>
+<p>For each vertex <span class="math inline">\(v\)</span>, select the highest-weight incoming edge: <span class="math display">\[e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].\]</span></p>
+<p>Iterating from largest to smallest <span class="math inline">\(l\)</span> yields a set of vertex-disjoint paths, the number of such paths characterizes the alignment.</p>
+
+<img data-src="figures/refinement-branches-3.png" style="width:90.0%" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="paths-3">Paths</h3>
+<p>For each vertex <span class="math inline">\(v\)</span>, select the highest-weight incoming edge: <span class="math display">\[e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].\]</span></p>
+<p>Iterating from largest to smallest <span class="math inline">\(l\)</span> yields a set of vertex-disjoint paths, the number of such paths characterizes the alignment.</p>
+
+<img data-src="figures/refinement-branches-4.png" style="width:90.0%" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="paths-4">Paths</h3>
+<p>For each vertex <span class="math inline">\(v\)</span>, select the highest-weight incoming edge: <span class="math display">\[e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].\]</span></p>
+<p>Iterating from largest to smallest <span class="math inline">\(l\)</span> yields a set of vertex-disjoint paths, the number of such paths characterizes the alignment.</p>
+
+<img data-src="figures/refinement-branches-5.png" style="width:90.0%" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="coherence">Coherence</h3>
+<p>A topic’s coherence measures its average similarity to other topics along the same path,</p>
+<p><span class="math display">\[\begin{align*}
+c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+\end{align*}\]</span></p>
+<p>Transient topics (appearing or vanishing across <span class="math inline">\(K\)</span>) score low, while consistently recovered topics score high.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="refinement">Refinement</h3>
+<p>Parent specificity identifies two distinct regimes,</p>
+<ul>
+<li>High Refinement: Each topic receives the most mass from a unique parent, corresponding to a true or “compromise” topic</li>
+<li>Low Refinement: Each topic receives substantial mass from several parents, each corresponding to an arbitrary split of a true topic</li>
+</ul>
+
+<img data-src="figures/refinement_diagnostic_example.png" width="390" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="refinement-1">Refinement</h3>
+<p>Parent specificity identifies two distinct regimes,</p>
+<ul>
+<li>High Refinement: Each topic receives the most mass from a unique parent, corresponding to a true or “compromise” topic</li>
+<li>Low Refinement: Each topic receives substantial mass from several parents, each corresponding to an arbitrary split of a true topic</li>
+</ul>
+<p><span class="math display">\[\begin{align*}
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} \wout \left(v, v_{m^{\prime}}^{\prime}\right) \win\left(v, v_{m^{\prime}}^{\prime}\right)
+\end{align*}\]</span></p>
+</section>
+<section class="slide level2">
+
 <h3 id="mammoth">Mammoth</h3>
 <p>This example comes from <span class="citation" data-cites="paircodeUnderstandingUMAP maxnoichlNoichlFlattening">(<a href="" role="doc-biblioref" onclick="return false;"><span>“<span>U</span>nderstanding <span>U</span><span>M</span><span>A</span><span>P</span> — Pair-Code.github.io”</span></a>; <a href="" role="doc-biblioref" onclick="return false;">Noichl</a>)</span>. The 3D skeleton scans were produced by the Smithsonian, and we can use nonlinear dimensionality reduction to “flatten” the skeleton into 2D.</p>
 
@@ -1177,6 +1237,12 @@ h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \fr
 <p>The stability-based algorithm <span class="citation" data-cites="Liu2025">(<a href="" role="doc-biblioref" onclick="return false;">Liu, Ma, and Zhong 2025</a>)</span> gives a similar interpretation. But the visual encoding is more subtle, and the leave-one-out approach is time consuming even with approximations.</p>
 
 <img data-src="figures/p_scores_0.5.png" width="600" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="distortions-in-t-sne-and-umap-2">Distortions in <span class="math inline">\(t\)</span>-SNE and UMAP</h3>
+<p>They can make high-dimensional random walks look artificially smooth…</p>
+<p><img data-src="figures/gaussian_rw.png" width="600"> Example from <span class="citation" data-cites="wattenberg2016how">(<a href="" role="doc-biblioref" onclick="return false;">Wattenberg, Viégas, and Johnson 2016</a>)</span>.</p>
+</section>
 <section class="slide level2">
 
 <h3 class="smaller" id="references">References</h3>

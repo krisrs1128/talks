@@ -210,7 +210,7 @@ The weights $W$ can be learned using optimal transport,
 ### Path-based Diagnostics
 
 * Paths: Partitions the Sankey diagram into connected sets of topics.
-* Coherence: variation of $\beta\left(v\right)$ along a path. Low coherence $\to$ persistent structure.
+* Coherence: Average similarity of $\beta\left(v\right)$ to other topics along the same a path. High coherence $\to$ persistent structure.
 * Refinement: Mixing between descendants. High refinement $\to$ genuine increase in complexity.
 
 ![](figures/alto_sketches_diagnotics.png)
@@ -391,14 +391,6 @@ Example from [@narayan2021assessing].
 
 ---
 
-### Distortions in $t$-SNE and UMAP
-
-They can make high-dimensional random walks look artificially smooth...
-
-![](figures/gaussian_rw.png){width=600}
-Example from [@wattenberg2016how].
-
----
 
 ### Distortions in $t$-SNE and UMAP
 
@@ -861,6 +853,107 @@ Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/art
 
 ---
 
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-1.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-2.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-3.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-4.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-5.png){width=90%}
+
+---
+
+### Coherence
+
+A topic's coherence measures its average similarity to other topics along the same path,
+
+\begin{align*}
+ c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+\end{align*}
+
+Transient topics (appearing or vanishing across $K$) score low, while consistently recovered topics score high.
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+![](figures/refinement_diagnostic_example.png){width=390}
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+
+\begin{align*}
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} \wout \left(v, v_{m^{\prime}}^{\prime}\right) \win\left(v, v_{m^{\prime}}^{\prime}\right)
+\end{align*}
+
+---
+
 ### Mammoth
 
 This example comes from [@paircodeUnderstandingUMAP; @maxnoichlNoichlFlattening]. The 3D skeleton scans were produced by the
@@ -1047,6 +1140,15 @@ interpretation. But the visual encoding is more subtle, and the leave-one-out
 approach is time consuming even with approximations.
 
 ![](figures/p_scores_0.5.png){width=600}
+
+---
+
+### Distortions in $t$-SNE and UMAP
+
+They can make high-dimensional random walks look artificially smooth...
+
+![](figures/gaussian_rw.png){width=600}
+Example from [@wattenberg2016how].
 
 ---
 
