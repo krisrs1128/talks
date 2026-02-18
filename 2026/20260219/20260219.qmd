@@ -578,10 +578,6 @@ The embedding distortion for sample $n$ is given by $H^{(n)} \in \mathbb{R}^{K
 
 ---
 
-![](figures/rmetric_explanation-v2.png){width=800}
-
----
-
 ### Example
 
 These two clusters are generated as:
