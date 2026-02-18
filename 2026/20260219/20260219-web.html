@@ -430,7 +430,7 @@
     </div>
     <div class="title-slide-bottom-right">
       <div class="seminar-name">University of Michigan<br> Biostatistics Seminar</div>
-      <div class="" link"=""><a href="https://go.wisc.edu/mzhs15">go.wisc.edu/mzhs15</a></div>
+      <div class="lab-link"><a href="https://go.wisc.edu/mzhs15">go.wisc.edu/mzhs15</a></div>
       <div class="seminar-date">2026-02-19</div>
     </div>
   </div>
@@ -459,81 +459,6 @@
 <li>UMAP can introduce visual artifacts, like spurious cell types.</li>
 </ul>
 <p>Despite being widely used, there are few diagnostics for these dimensionality reduction methods.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="outline">Outline</h3>
-<p>We introduce two new diagnostic visualizations.</p>
-<div class="columns">
-<div class="column" style="width:60%;">
-<div class="smaller">
-<p>alto plots for choice of <span class="math inline">\(K\)</span> in topic models . <img data-src="figures/alto_sketches_annotated%20alignment.png"></p>
-</div>
-</div><div class="column" style="width:40%;">
-<div class="smaller">
-<p>RMetric plots for nonlinear embeddings. <img data-src="figures/swiss_roll_boxplot.gif" width="710"></p>
-</div>
-</div>
-</div>
-<p>Both are grounded in the data visualization principles that we review next.</p>
-</section>
-<section id="data-visualization-background" class="slide level2">
-<h2>Data Visualization Background</h2>
-</section>
-<section class="slide level2">
-
-<h3 id="interaction-gulfs">Interaction Gulfs</h3>
-<p>There are two classic challenges in interactive interfaces <span class="citation" data-cites="Hutchins1985">(<a href="" role="doc-biblioref" onclick="return false;">Hutchins, Hollan, and Norman 1985</a>)</span>,</p>
-<ul>
-<li>Gulf of Execution: The gap between what you want to do and how you specify it in the system.</li>
-</ul>
-
-<img data-src="figures/interaction_gulfs.png" width="600" class="r-stretch"><p>These challenges also apply to interactive data analysis.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="interaction-gulfs-1">Interaction Gulfs</h3>
-<p>There are two classic challenges in interactive interfaces <span class="citation" data-cites="Hutchins1985">(<a href="" role="doc-biblioref" onclick="return false;">Hutchins, Hollan, and Norman 1985</a>)</span>,</p>
-<ul>
-<li>Gulf of Evaluation: The gap between what the system shows you and an understanding of what it represents.</li>
-</ul>
-
-<img data-src="figures/interaction_gulfs.png" width="600" class="r-stretch"><p>These challenges also apply to interactive data analysis.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="focus-plus-context">Focus-plus-Context</h3>
-<p>The focus-plus-context principle <span class="citation" data-cites="heer2004">(<a href="" role="doc-biblioref" onclick="return false;">Heer and Card 2004</a>)</span> states that readers should be able to zoom into patterns of interest without losing relevant context.</p>
-<video controls="" style="max-width: 700px; display: block; margin: 0 auto;">
-<source src="figures/doi_trees.mp4" type="video/mp4">
-</video>
-</section>
-<section class="slide level2">
-
-<h3 id="focus-plus-context-barplots">Focus-plus-Context: Barplots</h3>
-<p>Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.</p>
-
-<img data-src="figures/composition_barplot_microbiomeviz.png" width="900" class="r-stretch"><div class="smaller">
-<p>Figure from the <a href="https://david-barnett.github.io/microViz/reference/comp_barplot.html">microbiomeViz documentation</a> <span class="citation" data-cites="microbiomeviz">(<a href="" role="doc-biblioref" onclick="return false;">Barnett, Arts, and Penders 2021</a>)</span>.</p>
-</div>
-</section>
-<section class="slide level2">
-
-<h3 id="focus-plus-context-barplots-1">Focus-plus-Context: Barplots</h3>
-<p>Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.</p>
-
-<img data-src="figures/qiime_barplot.png" width="900" class="r-stretch"><div class="smaller">
-<p>Figure from the <a href="https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv">Qiime2 View documentation</a> <span class="citation" data-cites="Bolyen2019">(<a href="" role="doc-biblioref" onclick="return false;">Bolyen et al. 2019</a>)</span>.</p>
-</div>
-</section>
-<section class="slide level2">
-
-<h3 id="phylobar">Phylobar</h3>
-<p>Applying focus-plus-context reveals rare taxa abundances while preserving overall structure</p>
-
-<img data-src="figures/phylobar_overview.png" width="900" class="r-stretch"><div class="smaller">
-<p>Figure from the <a href="https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3">phylobar documentation</a> <span class="citation" data-cites="Kuo2025">(<a href="" role="doc-biblioref" onclick="return false;">Kuo et al. 2025</a>)</span>.</p>
-</div>
 </section>
 <section id="topic-alignment" class="slide level2">
 <h2>Topic Alignment</h2>
@@ -591,12 +516,6 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 <p>If we use topic models, <span style="color: #476b57;">Topic 2</span> increases during the antibiotic interventions, especially the first <span class="citation" data-cites="Sankaran2018">(<a href="" role="doc-biblioref" onclick="return false;">Sankaran and Holmes 2018</a>)</span>.</p>
 
 <img data-src="figures/antibiotic_memberships.png" width="1000" class="r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="example-antibiotics-time-course-1">Example: Antibiotics Time Course</h3>
-<p>To interpret topics, look for representative taxa. These species have higher probabilities in one topic compared to the others.</p>
-
-<img data-src="figures/antibiotic_prototypes.png" width="900" class="r-stretch"></section>
 <section class="slide level2">
 
 <h3 id="choice-of-k">Choice of <span class="math inline">\(K\)</span></h3>
@@ -660,7 +579,7 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 <ul>
 <li>Paths: Partitions the Sankey diagram into connected sets of topics.</li>
 <li>Coherence: variation of <span class="math inline">\(\beta\left(v\right)\)</span> along a path. Low coherence <span class="math inline">\(\to\)</span> persistent structure.</li>
-<li>Refinement: Entropy of descendant distribution. High refinement <span class="math inline">\(\to\)</span> genuine increase in complexity.</li>
+<li>Refinement: Mixing between descendants. High refinement <span class="math inline">\(\to\)</span> genuine increase in complexity.</li>
 </ul>
 
 <img data-src="figures/alto_sketches_diagnotics.png" class="r-stretch"></section>
@@ -719,7 +638,11 @@ x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_
 <h3 id="data-analysis-background">Data Analysis Background</h3>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><span class="citation" data-cites="Ravel2010">(<a href="" role="doc-biblioref" onclick="return false;">Ravel et al. 2010</a>)</span> used clustering to identify 5 Community State Types (CSTs) in the vaginal microbiome. - Four healthy CSTs are dominated by Lactobacillus variants. - A fifth dysbiotic CST is more compositionally diverse and is associated with preterm birth <span class="citation" data-cites="Fettweis2019 Gudnadottir2022">(<a href="" role="doc-biblioref" onclick="return false;">Fettweis et al. 2019</a>; <a href="" role="doc-biblioref" onclick="return false;">Gudnadottir et al. 2022</a>)</span> and HIV transmission <span class="citation" data-cites="Gosmann2017">(<a href="" role="doc-biblioref" onclick="return false;">Gosmann et al. 2017</a>)</span>.</p>
+<p><span class="citation" data-cites="Ravel2010">(<a href="" role="doc-biblioref" onclick="return false;">Ravel et al. 2010</a>)</span> used clustering to identify 5 Community State Types in the vaginal microbiome.</p>
+<ul>
+<li><p>Four healthy CSTs are dominated by Lactobacillus variants.</p></li>
+<li><p>A fifth CST is more diverse and is associated with preterm birth <span class="citation" data-cites="Fettweis2019 Gudnadottir2022">(<a href="" role="doc-biblioref" onclick="return false;">Fettweis et al. 2019</a>; <a href="" role="doc-biblioref" onclick="return false;">Gudnadottir et al. 2022</a>)</span> and HIV transmission <span class="citation" data-cites="Gosmann2017">(<a href="" role="doc-biblioref" onclick="return false;">Gosmann et al. 2017</a>)</span>.</p></li>
+</ul>
 </div><div class="column" style="width:50%;">
 <p><img data-src="figures/community_state_types.jpg" width="380"></p>
 <p><span style="font-size: 18px;"> <span class="citation" data-cites="Ravel2010">(<a href="" role="doc-biblioref" onclick="return false;">Ravel et al. 2010</a>)</span> grouped samples (columns) into CSTs. </span></p>
@@ -797,11 +720,6 @@ x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_
 </section>
 <section class="slide level2">
 
-<h3 id="challenge">Challenge</h3>
-<p>Embedding <span class="math inline">\(\mathbb{R}^{D} \to \mathbb{R}^{2}\)</span> cannot preserve metric structure in general. <br> <br> <br> The question is: <strong>Which distortions occur, and where?</strong></p>
-</section>
-<section class="slide level2">
-
 <h3 id="distortions-in-t-sne-and-umap">Distortions in <span class="math inline">\(t\)</span>-SNE and UMAP</h3>
 <p>Both <span class="math inline">\(t\)</span>-SNE and UMAP introduce distortions. For example, they may not preserve density within different regions of the plot.</p>
 
@@ -837,12 +755,6 @@ x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_
 </div>
 </div>
 </section>
-<section class="slide level2">
-
-<h3 id="specious-art">Specious Art</h3>
-<p>Nonlinear dimensionality reduction has become the source of widespread concern in the single-cell literature <span class="citation" data-cites="Chari2023">(<a href="" role="doc-biblioref" onclick="return false;">Chari and Pachter 2023</a>)</span>.</p>
-
-<img data-src="figures/specious_art.png" width="700" class="r-stretch"></section>
 <section class="slide level2">
 
 <h3 id="approach">Approach</h3>
@@ -905,13 +817,6 @@ G = \begin{pmatrix} \cos^2\varphi &amp; 0 \\ 0 &amp; 1 \end{pmatrix}
 <section class="slide level2">
 
 <h3 id="dual-pushforward-metric-1">Dual Pushforward Metric</h3>
-<p>Alternatively, the gradients <span class="math inline">\(\nabla z^i\)</span> of the embedding dimensions also reflect distortion.</p>
-
-<img data-src="figures/level_sets_phi.png" width="1000" class="r-stretch"><p>In contrast, the gradients <span class="math inline">\(\nabla z^{\varphi}\)</span> don’t depend on <span class="math inline">\(\varphi\)</span>.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="dual-pushforward-metric-2">Dual Pushforward Metric</h3>
 <p>This gradient information can be stored in the matrix <span class="math inline">\(H\)</span> with elements,</p>
 <p><span class="math display">\[\begin{align*}
 h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
@@ -921,7 +826,7 @@ h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
 </section>
 <section class="slide level2">
 
-<h3 id="dual-pushforward-metric-3">Dual Pushforward Metric</h3>
+<h3 id="dual-pushforward-metric-2">Dual Pushforward Metric</h3>
 <p>In our running example,</p>
 <p><span class="math display">\[\begin{align*}
 H = \begin{pmatrix} 1/\cos^2\varphi &amp; 0 \\ 0 &amp; 1 \end{pmatrix}
@@ -1021,12 +926,6 @@ x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\lef
 <img data-src="figures/swiss_roll_boxplot.gif" width="710" class="r-stretch"></section>
 <section class="slide level2">
 
-<h3 id="comparison-with-loo-map">Comparison with LOO-map</h3>
-<p>The stability-based algorithm <span class="citation" data-cites="Liu2025">(<a href="" role="doc-biblioref" onclick="return false;">Liu, Ma, and Zhong 2025</a>)</span> gives a similar interpretation. But the visual encoding is more subtle, and the leave-one-out approach is time consuming even with approximations.</p>
-
-<img data-src="figures/p_scores_0.5.png" width="600" class="r-stretch"></section>
-<section class="slide level2">
-
 <h3 id="pbmc-dataset">PBMC Dataset</h3>
 <p>This single-cell gene expression data set was used in the data visualization tutorial from the scanpy package <span class="citation" data-cites="Wolf2018">(<a href="" role="doc-biblioref" onclick="return false;">Wolf, Angerer, and Theis 2018</a>)</span>. Each point is the UMAP embedding of a cell’s high-dimensional gene expression data.</p>
 
@@ -1111,6 +1010,41 @@ x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\lef
 </section>
 <section class="slide level2">
 
+<h3 id="focus-plus-context">Focus-plus-Context</h3>
+<p>The focus-plus-context principle <span class="citation" data-cites="heer2004">(<a href="" role="doc-biblioref" onclick="return false;">Heer and Card 2004</a>)</span> states that readers should be able to zoom into patterns of interest without losing relevant context.</p>
+<video controls="" style="max-width: 700px; display: block; margin: 0 auto;">
+<source src="figures/doi_trees.mp4" type="video/mp4">
+</video>
+</section>
+<section class="slide level2">
+
+<h3 id="focus-plus-context-barplots">Focus-plus-Context: Barplots</h3>
+<p>Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.</p>
+
+<img data-src="figures/composition_barplot_microbiomeviz.png" width="900" class="r-stretch"><div class="smaller">
+<p>Figure from the <a href="https://david-barnett.github.io/microViz/reference/comp_barplot.html">microbiomeViz documentation</a> <span class="citation" data-cites="microbiomeviz">(<a href="" role="doc-biblioref" onclick="return false;">Barnett, Arts, and Penders 2021</a>)</span>.</p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="focus-plus-context-barplots-1">Focus-plus-Context: Barplots</h3>
+<p>Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.</p>
+
+<img data-src="figures/qiime_barplot.png" width="900" class="r-stretch"><div class="smaller">
+<p>Figure from the <a href="https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv">Qiime2 View documentation</a> <span class="citation" data-cites="Bolyen2019">(<a href="" role="doc-biblioref" onclick="return false;">Bolyen et al. 2019</a>)</span>.</p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="phylobar">Phylobar</h3>
+<p>Applying focus-plus-context reveals rare taxa abundances while preserving overall structure</p>
+
+<img data-src="figures/phylobar_overview.png" width="900" class="r-stretch"><div class="smaller">
+<p>Figure from the <a href="https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3">phylobar documentation</a> <span class="citation" data-cites="Kuo2025">(<a href="" role="doc-biblioref" onclick="return false;">Kuo et al. 2025</a>)</span>.</p>
+</div>
+</section>
+<section class="slide level2">
+
 <h3 id="mammoth">Mammoth</h3>
 <p>This example comes from <span class="citation" data-cites="paircodeUnderstandingUMAP maxnoichlNoichlFlattening">(<a href="" role="doc-biblioref" onclick="return false;"><span>“<span>U</span>nderstanding <span>U</span><span>M</span><span>A</span><span>P</span> — Pair-Code.github.io”</span></a>; <a href="" role="doc-biblioref" onclick="return false;">Noichl</a>)</span>. The 3D skeleton scans were produced by the Smithsonian, and we can use nonlinear dimensionality reduction to “flatten” the skeleton into 2D.</p>
 
@@ -1182,6 +1116,67 @@ h^{11} = \langle \nabla \theta, \nabla \theta \rangle_{g_0} = \frac{1}{2}\left[\
 h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \frac{1}{\cos^2\varphi}.
 \end{align*}\]</span></p>
 </section>
+<section class="slide level2">
+
+<h3 id="interaction-gulfs">Interaction Gulfs</h3>
+<p>There are two classic challenges in interactive interfaces <span class="citation" data-cites="Hutchins1985">(<a href="" role="doc-biblioref" onclick="return false;">Hutchins, Hollan, and Norman 1985</a>)</span>,</p>
+<ul>
+<li>Gulf of Execution: The gap between what you want to do and how you specify it in the system.</li>
+</ul>
+
+<img data-src="figures/interaction_gulfs.png" width="600" class="r-stretch"><p>These challenges also apply to interactive data analysis.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="interaction-gulfs-1">Interaction Gulfs</h3>
+<p>There are two classic challenges in interactive interfaces <span class="citation" data-cites="Hutchins1985">(<a href="" role="doc-biblioref" onclick="return false;">Hutchins, Hollan, and Norman 1985</a>)</span>,</p>
+<ul>
+<li>Gulf of Evaluation: The gap between what the system shows you and an understanding of what it represents.</li>
+</ul>
+
+<img data-src="figures/interaction_gulfs.png" width="600" class="r-stretch"><p>These challenges also apply to interactive data analysis.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="specious-art">Specious Art</h3>
+<p>Nonlinear dimensionality reduction has become the source of widespread concern in the single-cell literature <span class="citation" data-cites="Chari2023">(<a href="" role="doc-biblioref" onclick="return false;">Chari and Pachter 2023</a>)</span>.</p>
+
+<img data-src="figures/specious_art.png" width="700" class="r-stretch"></section>
+<section class="slide level2">
+
+<p>We introduce two new diagnostic visualizations.</p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="smaller">
+<p>alto plots for choice of <span class="math inline">\(K\)</span> in topic models . <img data-src="figures/alto_sketches_annotated%20alignment.png"></p>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="smaller">
+<p>RMetric plots for nonlinear embeddings. <img data-src="figures/swiss_roll_boxplot.gif" width="710"></p>
+</div>
+</div>
+</div>
+<p>Both are grounded in the data visualization principles that we review next.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="example-antibiotics-time-course-1">Example: Antibiotics Time Course</h3>
+<p>To interpret topics, look for representative taxa. These species have higher probabilities in one topic compared to the others.</p>
+
+<img data-src="figures/antibiotic_prototypes.png" width="900" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="dual-pushforward-metric-3">Dual Pushforward Metric</h3>
+<p>Alternatively, the gradients <span class="math inline">\(\nabla z^i\)</span> of the embedding dimensions also reflect distortion.</p>
+
+<img data-src="figures/level_sets_phi.png" width="1000" class="r-stretch"><p>In contrast, the gradients <span class="math inline">\(\nabla z^{\varphi}\)</span> don’t depend on <span class="math inline">\(\varphi\)</span>.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="comparison-with-loo-map">Comparison with LOO-map</h3>
+<p>The stability-based algorithm <span class="citation" data-cites="Liu2025">(<a href="" role="doc-biblioref" onclick="return false;">Liu, Ma, and Zhong 2025</a>)</span> gives a similar interpretation. But the visual encoding is more subtle, and the leave-one-out approach is time consuming even with approximations.</p>
+
+<img data-src="figures/p_scores_0.5.png" width="600" class="r-stretch"></section>
 <section class="slide level2">
 
 <h3 class="smaller" id="references">References</h3>

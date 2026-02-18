@@ -64,107 +64,8 @@ reduction methods.
 
 ---
 
-### Outline
-
-We introduce two new diagnostic visualizations.
-
-:::: {.columns}
-::: {.column width="60%"}
-::: {.smaller}
-alto plots for choice of $K$ in topic models .
-![](figures/alto_sketches_annotated%20alignment.png)
-:::
-:::
-::: {.column width="40%"}
-::: {.smaller}
-RMetric plots for nonlinear embeddings.
-![](figures/swiss_roll_boxplot.gif){width=710}
-:::
-:::
-::::
-
-Both are grounded in the data visualization principles that we review next.
-
----
-
-## Data Visualization Background
-
----
-
-### Interaction Gulfs
-
-There are two classic challenges in interactive interfaces [@Hutchins1985],
-
-- Gulf of Execution: The gap between what you want to do and how you specify it in the system.
-
-![](figures/interaction_gulfs.png){width=600}
-
-These challenges also apply to interactive data analysis.
-
----
-
-### Interaction Gulfs
-
-There are two classic challenges in interactive interfaces [@Hutchins1985],
-
-- Gulf of Evaluation: The gap between what the system shows you and an understanding of what it represents.
-
-![](figures/interaction_gulfs.png){width=600}
-
-These challenges also apply to interactive data analysis.
-
----
-
-### Focus-plus-Context
-
-The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
-
-<video controls style="max-width: 700px; display: block; margin: 0 auto;">
-  <source src="figures/doi_trees.mp4" type="video/mp4">
-</video>
-
----
-
-### Focus-plus-Context: Barplots
-
-Stacked barplots visualize sample-to-sample variation in microbiome community
-structure. They struggle to show finer taxonomic resolutions.
-
-![](figures/composition_barplot_microbiomeviz.png){width=900}
-
-::: {.smaller}
-Figure from the [microbiomeViz documentation](https://david-barnett.github.io/microViz/reference/comp_barplot.html) [@microbiomeviz].
-:::
-
----
-
-### Focus-plus-Context: Barplots
-
-Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
-
-![](figures/qiime_barplot.png){width=900}
-
-::: {.smaller}
-Figure from the [Qiime2 View documentation](https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv) [@Bolyen2019].
-:::
-
----
-
-### Phylobar
-
-Applying focus-plus-context reveals rare taxa abundances while preserving
-overall structure
-
-![](figures/phylobar_overview.png){width=900}
-
-::: {.smaller}
-Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3)  [@Kuo2025].
-:::
-
----
 
 ## Topic Alignment
-
 
 ---
 
@@ -226,15 +127,6 @@ If we use topic models, <span style="color: #476b57;">Topic 2</span> increases
 during the antibiotic interventions, especially the first [@Sankaran2018].
 
 ![](figures/antibiotic_memberships.png){width=1000}
-
----
-
-### Example: Antibiotics Time Course
-
-To interpret topics, look for representative taxa. These species have higher
-probabilities in one topic compared to the others.
-
-![](figures/antibiotic_prototypes.png){width=900}
 
 ---
 
@@ -319,7 +211,7 @@ The weights $W$ can be learned using optimal transport,
 
 * Paths: Partitions the Sankey diagram into connected sets of topics.
 * Coherence: variation of $\beta\left(v\right)$ along a path. Low coherence $\to$ persistent structure.
-* Refinement: Entropy of descendant distribution. High refinement $\to$ genuine increase in complexity.
+* Refinement: Mixing between descendants. High refinement $\to$ genuine increase in complexity.
 
 ![](figures/alto_sketches_diagnotics.png)
 
@@ -396,11 +288,14 @@ quantify topic deterioration.
 
 :::: {.columns}
 ::: {.column width="50%"}
-[@Ravel2010] used clustering to identify 5 Community State Types (CSTs) in
+[@Ravel2010] used clustering to identify 5 Community State Types in
 the vaginal microbiome.
+
   - Four healthy CSTs are dominated by Lactobacillus variants.
-  - A fifth dysbiotic CST is more compositionally diverse and
+
+  - A fifth CST is more diverse and
   is associated with preterm birth [@Fettweis2019; @Gudnadottir2022] and HIV transmission [@Gosmann2017].
+
 :::
 ::: {.column width="50%"}
 ![](figures/community_state_types.jpg){width=380}
@@ -485,17 +380,6 @@ All the simulations discussed today are vignettes in the package.
 
 ---
 
-### Challenge
-
-Embedding $\mathbb{R}^{D} \to \mathbb{R}^{2}$ cannot preserve metric structure
-in general.
-<br/>
-<br/>
-<br/>
-The question is: **Which distortions occur, and where?**
-
----
-
 ### Distortions in $t$-SNE and UMAP
 
 Both $t$-SNE and UMAP introduce distortions. For example, they may not preserve
@@ -547,15 +431,6 @@ Example from [@xia2024statistical].
 See also [@Kozlov2024; @simplystatisticsSimplyStatistics].
 :::
 ::::
-
----
-
-### Specious Art
-
-Nonlinear dimensionality reduction has become the source of widespread concern
-in the single-cell literature [@Chari2023].
-
-![](figures/specious_art.png){width=700}
 
 ---
 
@@ -647,16 +522,6 @@ gradients $\nabla z^\theta$ become larger there.
 
 ---
 
-### Dual Pushforward Metric
-
-Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
-reflect distortion.
-
-![](figures/level_sets_phi.png){width=1000}
-
-In contrast, the gradients $\nabla z^{\varphi}$ don't depend on $\varphi$.
-
----
 
 ### Dual Pushforward Metric
 
@@ -837,15 +702,6 @@ artificially spreads the high density area.
 
 ---
 
-### Comparison with LOO-map
-
-The stability-based algorithm [@Liu2025] gives a similar
-interpretation. But the visual encoding is more subtle, and the leave-one-out
-approach is time consuming even with approximations.
-
-![](figures/p_scores_0.5.png){width=600}
-
----
 
 ### PBMC Dataset
 
@@ -957,6 +813,54 @@ priorities.
 
 ---
 
+### Focus-plus-Context
+
+The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
+
+<video controls style="max-width: 700px; display: block; margin: 0 auto;">
+  <source src="figures/doi_trees.mp4" type="video/mp4">
+</video>
+
+---
+
+### Focus-plus-Context: Barplots
+
+Stacked barplots visualize sample-to-sample variation in microbiome community
+structure. They struggle to show finer taxonomic resolutions.
+
+![](figures/composition_barplot_microbiomeviz.png){width=900}
+
+::: {.smaller}
+Figure from the [microbiomeViz documentation](https://david-barnett.github.io/microViz/reference/comp_barplot.html) [@microbiomeviz].
+:::
+
+---
+
+### Focus-plus-Context: Barplots
+
+Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
+
+![](figures/qiime_barplot.png){width=900}
+
+::: {.smaller}
+Figure from the [Qiime2 View documentation](https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv) [@Bolyen2019].
+:::
+
+---
+
+### Phylobar
+
+Applying focus-plus-context reveals rare taxa abundances while preserving
+overall structure
+
+![](figures/phylobar_overview.png){width=900}
+
+::: {.smaller}
+Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3)  [@Kuo2025].
+:::
+
+---
+
 ### Mammoth
 
 This example comes from [@paircodeUnderstandingUMAP; @maxnoichlNoichlFlattening]. The 3D skeleton scans were produced by the
@@ -1059,6 +963,90 @@ and then substitute into the formula from 2 slides ago,
 \begin{align*}
 h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \frac{1}{\cos^2\varphi}.
 \end{align*}
+
+---
+
+### Interaction Gulfs
+
+There are two classic challenges in interactive interfaces [@Hutchins1985],
+
+- Gulf of Execution: The gap between what you want to do and how you specify it in the system.
+
+![](figures/interaction_gulfs.png){width=600}
+
+These challenges also apply to interactive data analysis.
+
+---
+
+### Interaction Gulfs
+
+There are two classic challenges in interactive interfaces [@Hutchins1985],
+
+- Gulf of Evaluation: The gap between what the system shows you and an understanding of what it represents.
+
+![](figures/interaction_gulfs.png){width=600}
+
+These challenges also apply to interactive data analysis.
+
+---
+
+### Specious Art
+
+Nonlinear dimensionality reduction has become the source of widespread concern
+in the single-cell literature [@Chari2023].
+
+![](figures/specious_art.png){width=700}
+
+---
+
+We introduce two new diagnostic visualizations.
+
+:::: {.columns}
+::: {.column width="60%"}
+::: {.smaller}
+alto plots for choice of $K$ in topic models .
+![](figures/alto_sketches_annotated%20alignment.png)
+:::
+:::
+::: {.column width="40%"}
+::: {.smaller}
+RMetric plots for nonlinear embeddings.
+![](figures/swiss_roll_boxplot.gif){width=710}
+:::
+:::
+::::
+
+Both are grounded in the data visualization principles that we review next.
+
+---
+
+### Example: Antibiotics Time Course
+
+To interpret topics, look for representative taxa. These species have higher
+probabilities in one topic compared to the others.
+
+![](figures/antibiotic_prototypes.png){width=900}
+
+---
+
+### Dual Pushforward Metric
+
+Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
+reflect distortion.
+
+![](figures/level_sets_phi.png){width=1000}
+
+In contrast, the gradients $\nabla z^{\varphi}$ don't depend on $\varphi$.
+
+---
+
+### Comparison with LOO-map
+
+The stability-based algorithm [@Liu2025] gives a similar
+interpretation. But the visual encoding is more subtle, and the leave-one-out
+approach is time consuming even with approximations.
+
+![](figures/p_scores_0.5.png){width=600}
 
 ---
 
