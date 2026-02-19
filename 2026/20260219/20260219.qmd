@@ -70,8 +70,12 @@ reduction methods.
 <br/>
 <br/>
 <br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
-<span; style="font-size: 10px">
+<span style="font-size: 36px">
 Fukuyama, J., Sankaran, K., & Symul, L. (2023). Multiscale analysis of count data through topic alignment. Biostatistics (Oxford, England), 24(4), 1045–1065. doi:10.1093/biostatistics/kxac018
 </span>
 
@@ -166,25 +170,14 @@ Columns are models and rectangles are topics.
 
 ### Alignment as a Graph
 
-An alignment is a weighted graph. Nodes $V$ represent topics $\{\beta^m_{k},
-\gamma^m_{k}\}$ across models $m$.
+An alignment is a graph where nodes $V$ represent topics $\beta\left(v\right)
+\in \Delta^D$ and memberships $\Gamma\left(v\right)  =
+\left(\gamma_{ik}^{m}\right)_{i=1}^{n} \in \reals^{N}$ across models.
 
-* Edges $E$ connect topics across complexities $K \to K + 1$.
-* Weights $W$ measure topic similarity.
+* Edges $E$ connect topics across complexities $K \to K + 1$
+* Weights $W$ measure topic similarity
 
 ![](figures/alto_sketches_annotated alignment.png){width=1500}
-
----
-
-### Notation
-
-* $m\left(v\right)$ and $k\left(v\right)$ are the model and topic index for node $v$
-* $\Gamma\left(v\right) := \left(\gamma_{ik}^{m}\right)_{i = 1}^{n} \in \reals^{n}_{+}$
-mixed memberships for node $v$
-* $\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}$ is the
-corresponding topic distribution
-
-![](figures/alto_sketches_annotated alignment.png){width=560}
 
 ---
 
@@ -244,53 +237,6 @@ The diagnostics suggest that the true $K$ is 5.
 
 ---
 
-### Model with background variation
-
-Topic alignment identifies departures from the assumed model. Consider the
-generative mechanism,
-
-\begin{align*}
-x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
-\nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
-\gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
-\beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
-\end{align*}
-
-where $\*B$ stacks the $\beta_k$ rowwise.
-
----
-
-### Result
-
-The alignment structure is sensitive to changes in $\alpha$ and fragments when
-structure is not present.
-
-:::: {.columns}
-::: {.column width="50%"}
-![](figures/gradient_flow-1.png){width=300}
-![](figures/gradient_flow-2.png){width=300}
-:::
-::: {.column width="50%"}
-![](figures/gradient_flow-3.png){width=300}
-![](figures/gradient_flow-4.png){width=300}
-:::
-::::
-
----
-
-### Diagnostics
-
-:::: {.columns}
-::: {.column width="40%"}
-This structure is consistent across simulation runs, and the diagnostics
-quantify topic deterioration.
-:::
-::: {.column width="60%"}
-![](figures/gradient-combined.png){width=635}
-:::
-::::
-
----
 
 ### Data Analysis Background
 
@@ -389,8 +335,12 @@ All the simulations discussed today are vignettes in the package.
 <br/>
 <br/>
 <br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
-<span; style="font-size: 10px">
+<span style="font-size: 36px">
 Sankaran, K., Zhang, S., Chenab, & Meilă, M. (2025). Interactive Visualization of Metric Distortion in Nonlinear Data Embeddings using the distortions Package. doi:10.1101/2025.08.21.671523
 </span>
 
@@ -809,7 +759,7 @@ priorities.
 
 * Contact: ksankaran@wisc.edu
 * Lab Members: Margaret Thairu, Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Megan Kuo, Helena Huang
-* Funding: NIGMS R01GM152744, NIAID R01AI184095
+* Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates INV-072185, NIH R01HG014687
 
 ---
 
@@ -1131,6 +1081,54 @@ To interpret topics, look for representative taxa. These species have higher
 probabilities in one topic compared to the others.
 
 ![](figures/antibiotic_prototypes.png){width=900}
+
+---
+
+### Model with background variation
+
+Topic alignment identifies departures from the assumed model. Consider the
+generative mechanism,
+
+\begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}
+
+where $\*B$ stacks the $\beta_k$ rowwise.
+
+---
+
+### Result
+
+The alignment structure is sensitive to changes in $\alpha$ and fragments when
+structure is not present.
+
+:::: {.columns}
+::: {.column width="50%"}
+![](figures/gradient_flow-1.png){width=300}
+![](figures/gradient_flow-2.png){width=300}
+:::
+::: {.column width="50%"}
+![](figures/gradient_flow-3.png){width=300}
+![](figures/gradient_flow-4.png){width=300}
+:::
+::::
+
+---
+
+### Diagnostics
+
+:::: {.columns}
+::: {.column width="40%"}
+This structure is consistent across simulation runs, and the diagnostics
+quantify topic deterioration.
+:::
+::: {.column width="60%"}
+![](figures/gradient-combined.png){width=635}
+:::
+::::
 
 ---
 

@@ -462,8 +462,8 @@
 </section>
 <section id="topic-alignment" class="slide level2">
 <h2>Topic Alignment</h2>
-<p><br> <br> <br></p>
-<p>&lt;span; style=“font-size: 10px”&gt; Fukuyama, J., Sankaran, K., &amp; Symul, L. (2023). Multiscale analysis of count data through topic alignment. Biostatistics (Oxford, England), 24(4), 1045–1065. doi:10.1093/biostatistics/kxac018 </p>
+<p><br> <br> <br> <br> <br> <br> <br></p>
+<p><span style="font-size: 36px"> Fukuyama, J., Sankaran, K., &amp; Symul, L. (2023). Multiscale analysis of count data through topic alignment. Biostatistics (Oxford, England), 24(4), 1045–1065. doi:10.1093/biostatistics/kxac018 </span></p>
 </section>
 <section class="slide level2">
 
@@ -537,24 +537,15 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 <section class="slide level2">
 
 <h3 id="alignment-as-a-graph">Alignment as a Graph</h3>
-<p>An alignment is a weighted graph. Nodes <span class="math inline">\(V\)</span> represent topics <span class="math inline">\(\{\beta^m_{k},
-\gamma^m_{k}\}\)</span> across models <span class="math inline">\(m\)</span>.</p>
+<p>An alignment is a graph where nodes <span class="math inline">\(V\)</span> represent topics <span class="math inline">\(\beta\left(v\right)
+\in \Delta^D\)</span> and memberships <span class="math inline">\(\Gamma\left(v\right)  =
+\left(\gamma_{ik}^{m}\right)_{i=1}^{n} \in \reals^{N}\)</span> across models.</p>
 <ul>
-<li>Edges <span class="math inline">\(E\)</span> connect topics across complexities <span class="math inline">\(K \to K + 1\)</span>.</li>
-<li>Weights <span class="math inline">\(W\)</span> measure topic similarity.</li>
+<li>Edges <span class="math inline">\(E\)</span> connect topics across complexities <span class="math inline">\(K \to K + 1\)</span></li>
+<li>Weights <span class="math inline">\(W\)</span> measure topic similarity</li>
 </ul>
 
 <img data-src="figures/alto_sketches_annotated%20alignment.png" width="1500" class="r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="notation">Notation</h3>
-<ul>
-<li><span class="math inline">\(m\left(v\right)\)</span> and <span class="math inline">\(k\left(v\right)\)</span> are the model and topic index for node <span class="math inline">\(v\)</span></li>
-<li><span class="math inline">\(\Gamma\left(v\right) := \left(\gamma_{ik}^{m}\right)_{i = 1}^{n} \in \reals^{n}_{+}\)</span> mixed memberships for node <span class="math inline">\(v\)</span></li>
-<li><span class="math inline">\(\beta\left(v\right) := \beta_{k}^m \in \Delta^{D}\)</span> is the corresponding topic distribution</li>
-</ul>
-
-<img data-src="figures/alto_sketches_annotated%20alignment.png" width="560" class="r-stretch"></section>
 <section class="slide level2">
 
 <h3 id="estimating-weights">Estimating Weights</h3>
@@ -600,41 +591,6 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 <p>The diagnostics suggest that the true <span class="math inline">\(K\)</span> is 5.</p>
 
 <img data-src="figures/lda-combined.png" class="r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="model-with-background-variation">Model with background variation</h3>
-<p>Topic alignment identifies departures from the assumed model. Consider the generative mechanism,</p>
-<p><span class="math display">\[\begin{align*}
-x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
-\nu_{i} &amp;\sim \Dir\left(\lambda_{\nu}\right) \\
-\gamma_i &amp;\sim \Dir\left(\lambda_{\gamma}\right) \\
-\beta_{k} &amp;\sim \Dir\left(\lambda_{\beta}\right),
-\end{align*}\]</span></p>
-<p>where <span class="math inline">\(\*B\)</span> stacks the <span class="math inline">\(\beta_k\)</span> rowwise.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="result">Result</h3>
-<p>The alignment structure is sensitive to changes in <span class="math inline">\(\alpha\)</span> and fragments when structure is not present.</p>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><img data-src="figures/gradient_flow-1.png" width="300"> <img data-src="figures/gradient_flow-2.png" width="300"></p>
-</div><div class="column" style="width:50%;">
-<p><img data-src="figures/gradient_flow-3.png" width="300"> <img data-src="figures/gradient_flow-4.png" width="300"></p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-
-<h3 id="diagnostics">Diagnostics</h3>
-<div class="columns">
-<div class="column" style="width:40%;">
-<p>This structure is consistent across simulation runs, and the diagnostics quantify topic deterioration.</p>
-</div><div class="column" style="width:60%;">
-<p><img data-src="figures/gradient-combined.png" width="635"></p>
-</div>
-</div>
-</section>
 <section class="slide level2">
 
 <h3 id="data-analysis-background">Data Analysis Background</h3>
@@ -719,8 +675,8 @@ x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_
 </section>
 <section id="distortion-visualization" class="slide level2">
 <h2>Distortion Visualization</h2>
-<p><br> <br> <br></p>
-<p>&lt;span; style=“font-size: 10px”&gt; Sankaran, K., Zhang, S., Chenab, &amp; Meilă, M. (2025). Interactive Visualization of Metric Distortion in Nonlinear Data Embeddings using the distortions Package. doi:10.1101/2025.08.21.671523 </p>
+<p><br> <br> <br> <br> <br> <br> <br></p>
+<p><span style="font-size: 36px"> Sankaran, K., Zhang, S., Chenab, &amp; Meilă, M. (2025). Interactive Visualization of Metric Distortion in Nonlinear Data Embeddings using the distortions Package. doi:10.1101/2025.08.21.671523 </span></p>
 </section>
 <section class="slide level2">
 
@@ -996,7 +952,7 @@ x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\lef
 <ul>
 <li>Contact: ksankaran@wisc.edu</li>
 <li>Lab Members: Margaret Thairu, Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Megan Kuo, Helena Huang</li>
-<li>Funding: NIGMS R01GM152744, NIAID R01AI184095</li>
+<li>Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates INV-072185, NIH R01HG014687</li>
 </ul>
 </section>
 <section id="appendix" class="slide level2">
@@ -1224,6 +1180,41 @@ h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \fr
 <p>To interpret topics, look for representative taxa. These species have higher probabilities in one topic compared to the others.</p>
 
 <img data-src="figures/antibiotic_prototypes.png" width="900" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="model-with-background-variation">Model with background variation</h3>
+<p>Topic alignment identifies departures from the assumed model. Consider the generative mechanism,</p>
+<p><span class="math display">\[\begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &amp;\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &amp;\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &amp;\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\*B\)</span> stacks the <span class="math inline">\(\beta_k\)</span> rowwise.</p>
+</section>
+<section class="slide level2">
+
+<h3 id="result">Result</h3>
+<p>The alignment structure is sensitive to changes in <span class="math inline">\(\alpha\)</span> and fragments when structure is not present.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="figures/gradient_flow-1.png" width="300"> <img data-src="figures/gradient_flow-2.png" width="300"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figures/gradient_flow-3.png" width="300"> <img data-src="figures/gradient_flow-4.png" width="300"></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="diagnostics">Diagnostics</h3>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>This structure is consistent across simulation runs, and the diagnostics quantify topic deterioration.</p>
+</div><div class="column" style="width:60%;">
+<p><img data-src="figures/gradient-combined.png" width="635"></p>
+</div>
+</div>
+</section>
 <section class="slide level2">
 
 <h3 id="dual-pushforward-metric-3">Dual Pushforward Metric</h3>
