@@ -363,12 +363,12 @@ priorities.
 **Paper**: [https://go.wisc.edu/ptz5j5](https://go.wisc.edu/ptz5j5)
 
 **Package**: [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
+<br/>
+<br/>
 
-```
-Sankaran, K., Zhang, S., Chenab, & Meilă, M. (2026). Interactive visualization
-of metric distortion in nonlinear data embeddings using the distortions package.
-Briefings in Bioinformatics, 27(2). doi:10.1093/bib/bbag136
-```
+::: {.paper-reference}
+Sankaran, K., Zhang, S., Chenab, & Meilă, M. (2026). Interactive visualization of metric distortion in nonlinear data embeddings using the distortions package. *Briefings in Bioinformatics*, 27(2). doi:10.1093/bib/bbag136
+:::
 
 ---
 
