@@ -74,19 +74,6 @@ Example from [@xia2024statistical].
 
 ---
 
-### Controversy
-
-::::{.columns}
-:::{.column width="75%"}
-![](figures/pritchard_all_of_us.png){width=600}
-:::
-:::{.column width="25%"}
-See also [@Kozlov2024; @simplystatisticsSimplyStatistics].
-:::
-::::
-
----
-
 ### Approach
 
 Rather than abandoning nonlinear dimensionality reduction, we augment the
