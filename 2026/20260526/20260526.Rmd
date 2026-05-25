@@ -97,6 +97,20 @@ diarrhea and mucositis, limiting treatment dosage and duration
 
 ---
 
+### Integration Challenge
+
+Our interest in this project came from a re-analysis of a gut-brain axis
+microbiome study. Participants were randomized into either a mindfulness
+intervention or a control group. In this case, the the taxonomic community
+composition is an outcome, and the survey measurements are mediators.
+
+.center[
+<img src="figures/mediation-dag-mindfulness.png" width=550/>
+]
+
+---
+
+
 ### Causal Inference Setup
 
 Causal mediation analysis is often a good match for carrying out these studies
