@@ -674,20 +674,6 @@ in fact closer than they appear
 
 ---
 
-### Hydra Cell Atlas
-
-:::: {.columns}
-::: {.column width="50%"}
-The local isometry visualization highlights some "threads" are more spread in
-the original data.
-:::
-::: {.column width="50%"}
-![](figures/hydra_isometry.gif){width=470}
-:::
-::::
-
----
-
 ### DensMap vs. UMAP
 
 Both variation in ellipses and fragmented neighborhood statistics can be used to
@@ -1156,6 +1142,20 @@ They can make high-dimensional random walks look artificially smooth...
 
 ![](figures/gaussian_rw.png){width=600}
 Example from [@wattenberg2016how].
+
+---
+
+### Hydra Cell Atlas
+
+:::: {.columns}
+::: {.column width="50%"}
+The local isometry visualization highlights some "threads" are more spread in
+the original data.
+:::
+::: {.column width="50%"}
+![](figures/hydra_isometry.gif){width=470}
+:::
+::::
 
 ---
 
