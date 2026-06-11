@@ -10,10 +10,13 @@
 *.toc
 *.nav
 *.out
-*.png
-*.html
 *cache*
+*.png
 *_files/
+*.html
+*.mov
 .Rproj.user
 libs/
 .DS_Store
+2026/20260612/figures/*.ai
+2026/20260612/lda_models*
