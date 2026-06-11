@@ -1,0 +1,1162 @@
+---
+title: New Diagnostics for Dimensionality Reduction of Genomic Data
+author: Kris Sankaran
+institute: University of Wisconsin - Madison
+bibliography: references.bib
+date: June 12, 2026
+execute:
+    message: false
+    warning: false
+    cache: false
+citeproc: false
+filters:
+  - split-refs.lua
+format:
+  revealjs:
+    width: 1200
+    margin: 0.04
+    css: styles.css
+    embed-resources: false
+    template-partials:
+      - title-slide.html
+---
+
+### Dimensionality Reduction
+
+Modern omics data have many features, and dimensionality reduction methods help
+create overview visualizations.
+
+![](figures/samples_by_microbes.png){width=1200}
+
+They can summarize microbiome community structure
+
+$\def\Dir{\text{Dir}}$
+$\def\Mult{\text{Mult}}$
+$\def\*#1{\mathbf{#1}}$
+$\def\m#1{\boldsymbol{#1}}$
+$\def\Unif{\text{Unif}}$
+$\def\win{\tilde{w}_{\text{in}}}$
+$\def\reals{\mathbb{R}}$
+$\newcommand{\wout}{\tilde w_{\text{out}}}$
+
+---
+
+### Dimensionality Reduction
+
+Modern omics data have many features, and dimensionality reduction methods help
+create overview visualizations.
+
+![](figures/cell_by_genes.png){width=1200}
+
+They are also used in cell atlas construction and trajectory inference.
+
+---
+
+### Challenges
+
+These methods need to be used with caution:
+
+- The assumed number of latent communities can influence topic model interpretation.
+- UMAP can introduce visual artifacts, like spurious cell types.
+
+Despite being widely used, there are few diagnostics for these dimensionality
+reduction methods.
+
+---
+
+
+## Topic Alignment
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<span style="font-size: 36px">
+Fukuyama, J., Sankaran, K., & Symul, L. (2023). Multiscale analysis of count data through topic alignment. Biostatistics (Oxford, England), 24(4), 1045–1065. doi:10.1093/biostatistics/kxac018
+</span>
+
+---
+
+### Model
+
+Topic models suppose that samples $x_i \in \mathbb{R}^{D}$ are drawn independently:
+\begin{align*}
+x_i \vert \gamma_i &\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
+\gamma_{i} &\sim \text{Dir}\left(\lambda_{\gamma} 1_{K}\right)
+\end{align*}
+where the columns $\beta_{k}$ of $\*B \in \Delta^{K}_{D}$ lie in the $D$-dimensional simplex and are drawn independently from,
+\begin{align*}
+\beta_{k} \sim \text{Dir}\left(\lambda_{\beta} 1_{D}\right).
+\end{align*}
+
+Vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
+
+---
+
+### Microbiome Analogy
+
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+
+![](figures/lda-breakdown-1.png)
+
+---
+
+### Microbiome Analogy
+
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+
+![](figures/lda-breakdown-2.png)
+
+---
+
+### Microbiome Analogy
+
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+
+![](figures/lda-breakdown-3.png)
+
+---
+
+### Microbiome Analogy
+
+* Topics: $\beta_{k}$ describes $K$ underlying community types.
+* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+
+![](figures/lda-breakdown.png)
+
+---
+
+### Example: Antibiotics Time Course
+
+If we use topic models, <span style="color: #476b57;">Topic 2</span> increases
+during the antibiotic interventions, especially the first [@Sankaran2018].
+
+![](figures/antibiotic_memberships.png){width=1000}
+
+---
+
+### Choice of $K$
+
+> However, we stress that care should be taken in the interpretation of the
+inferred value of $K$. To begin with, due to the very high dimensionality of the
+parameter space, we found it difficult to obtain reliable estimates of
+$P\left(X \vert K\right)$... There are also biological reasons to be careful
+interpreting $K$.
+
+-- From [@Pritchard2000].
+
+In practice, models are fit across many $K$ and their goodness-of-fits are
+compared [@Novembre2016; @Wallach2009EvaluationMF; @Lawson2018].
+
+---
+
+### `alto`: Main Idea
+
+We fit models of varying complexity $K$ and build a compact representation of
+the ensemble
+
+![](figures/alto_sketches_annotated alignment.png)
+
+Columns are models and rectangles are topics.
+
+---
+
+### Alignment as a Graph
+
+An alignment is a graph where nodes $V$ represent topics $\beta\left(v\right)
+\in \Delta^D$ and memberships $\Gamma\left(v\right)  =
+\left(\gamma_{ik}^{m}\right)_{i=1}^{n} \in \reals^{N}$ across models.
+
+* Edges $E$ connect topics across complexities $K \to K + 1$
+* Weights $W$ measure topic similarity
+
+![](figures/alto_sketches_annotated alignment.png){width=1500}
+
+---
+
+### Estimating Weights
+
+Let $V_p$ and $V_q$ be two subsets of topics within the graph.
+
+* Let the total "mass" of $V_p$ be $p = \left\{\Gamma\left(v\right)^T 1 : v \in V_{p}\right\}$.
+* Define the transport cost $C\left(v, v^\prime\right) := JSD\left(\beta\left(v\right), \beta\left(v^\prime\right)\right)$, the Jensen-Shannon divergence between topics [@https://doi.org/10.48550/arxiv.1803.00567].
+
+![](figures/transport_alignment_conceptual.png){width=420}
+
+---
+
+### Estimating Weights
+
+The weights $W$ can be learned using optimal transport,
+\begin{align*}
+&\min_{W \in \mathcal{U}\left(p, q\right)} \left<C,W\right>
+\end{align*}
+<span style="font-size: 20px;">
+\begin{align*}
+\mathcal{U}\left(p, q\right) := &\{W\in \mathbb{R}^{\left|V_{p}\right| \times \left|V_{q}\right|}_{+} : W 1_{\left|V_{q}\right|} = p \text{ and } W^{T} 1_{\left|V_{p}\right|} = q\}.
+\end{align*}
+</span>
+
+![](figures/transport_alignment_conceptual.png){width=420}
+
+---
+
+### Path-based Diagnostics
+
+* Paths: Partitions the Sankey diagram into connected sets of topics.
+* Coherence: Average similarity of $\beta\left(v\right)$ to other topics along the same a path. High coherence $\to$ persistent structure.
+* Refinement: Mixing between descendants. High refinement $\to$ genuine increase in complexity.
+
+![](figures/alto_sketches_diagnotics.png)
+
+---
+
+### Examples: True Model
+
+Below is the alignment for data from a topic model. Can you guess
+$K$?
+
+* $N = 250, D = 1000, \lambda_{\gamma} = 0.5, \lambda_{\beta} = 0.1$
+
+![](figures/transport-true-lda.png){width=480}
+
+---
+
+### Examples: True Model
+
+The diagnostics suggest that the true $K$ is 5.
+
+![](figures/lda-combined.png)
+
+---
+
+
+### Data Analysis Background
+
+:::: {.columns}
+::: {.column width="50%"}
+[@Ravel2010] used clustering to identify 5 Community State Types in
+the vaginal microbiome.
+
+  - Four healthy CSTs are dominated by Lactobacillus variants.
+
+  - A fifth CST is more diverse and
+  is associated with preterm birth [@Fettweis2019; @Gudnadottir2022] and HIV transmission [@Gosmann2017].
+
+:::
+::: {.column width="50%"}
+![](figures/community_state_types.jpg){width=380}
+
+<span style="font-size: 18px;">
+[@Ravel2010] grouped samples (columns) into CSTs.
+</span>
+:::
+::::
+
+---
+
+### Deconstructing CSTs
+
+:::: {.columns}
+::: {.column width="50%"}
+The follow-up study [@Symul2023] had more samples than [@Ravel2010] and so could
+identify additional structure lying behind CSTs.
+
+* They had 2179 samples from 135 women, sampled longitudinally.
+* The green and blue paths to the right reflect the known Lactobacillus CSTs.
+:::
+::: {.column width="50%"}
+![](figures/pregnancy_sankey.jpg){width=500}
+:::
+::::
+
+---
+
+### Coherence Scores
+
+:::: {.columns}
+::: {.column width="50%"}
+Coherence is not a function of $K$ alone.
+:::
+::: {.column width="50%"}
+![](figures/coherence_on_tree.png){width=340}
+:::
+::::
+
+```{r}
+# echo: false
+# message: false
+library(ggplot2)
+theme_set(theme_classic())
+```
+
+---
+
+### Software
+
+Topic alignment is implemented in the R package [alto](https://lasy.github.io/alto).
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r, echo = TRUE, warning = FALSE}
+library(purrr)
+library(alto)
+
+# Define LDA parameters
+params <- map(
+  set_names(1:10),
+  ~ list(k = .)
+)
+models <- run_lda_models(
+  vm_data$counts,
+  params
+)
+```
+:::
+
+::: {.column width="50%"}
+```{r, eval = TRUE, echo = TRUE}
+# Run alignment
+result <- align_topics(
+    models,
+    method = "transport"
+)
+plot(result)
+```
+:::
+::::
+
+All the simulations discussed today are vignettes in the package.
+
+---
+
+## Distortion Visualization
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<span style="font-size: 36px">
+Sankaran, K., Zhang, S., Chenab, & Meilă, M. (2025). Interactive Visualization of Metric Distortion in Nonlinear Data Embeddings using the distortions Package. doi:10.1101/2025.08.21.671523
+</span>
+
+---
+
+### Distortions in $t$-SNE and UMAP
+
+Both $t$-SNE and UMAP introduce distortions. For example, they may not preserve
+density within different regions of the plot.
+
+![](figures/densmap_example.png){width=1000}
+
+Example from [@narayan2021assessing].
+
+---
+
+
+### Distortions in $t$-SNE and UMAP
+
+They can also fail to preserve the topology of the underlying data...
+
+![](figures/tsne-initialization.png){width=600}
+
+Example from [@Kobak2021].
+
+---
+
+### Consequences
+
+These distortions are not mere technical curiosities -- they significantly
+impact scientific interpretation [@Liu2025; @Kobak2021]. For example, they
+create misleading differences between cell types that are actually similar.
+
+![](figures/scdeed-example.png){width=700}
+Example from [@xia2024statistical].
+
+---
+
+### Controversy
+
+::::{.columns}
+:::{.column width="75%"}
+![](figures/pritchard_all_of_us.png){width=600}
+:::
+:::{.column width="25%"}
+See also [@Kozlov2024; @simplystatisticsSimplyStatistics].
+:::
+::::
+
+---
+
+### Approach
+
+Rather than abandoning nonlinear dimensionality reduction, we augment the
+embeddings to characterize distortion.
+
+:::: {.columns}
+::: {.column width="50%"}
+![](figures/tissot-1.png){width=400}
+:::
+::: {.column width="50%"}
+![](figures/tissot-2.png){width=400}
+:::
+::::
+
+This is a high-dimensional version of Tissot's indicatrix from cartography
+[@laskowski1989traditional].
+
+---
+
+### RMetric Motivation
+
+The RMetric algorithm [@perrault2006metric; @mcqueen2016megaman] quantifies
+distortion geometrically. To motivate the algorithm, consider the distortion
+induced by mapping the sphere into latitude/longitude coordinates.
+
+![](figures/sphere_embedding_setup.png){width=800}
+
+---
+
+### Half-Sphere Parameterization
+
+Parameterize points on $\mathcal{M}$ using spherical coordinates:
+
+\begin{align*}
+\mathbf{x}\left(p\right) = \left(\cos\varphi\cos\theta, \cos\varphi \sin\theta, \sin\varphi\right)
+\end{align*}
+
+The associated (latitude, longitude) embedding is
+
+\begin{align*}
+\mathbf{z}\left(p\right) =
+\left(\theta\left(p\right), \varphi\left(p\right)\right).
+\end{align*}
+
+![](figures/sphere_embedding_setup.png){width=800}
+
+---
+
+### Dual Pushforward Metric
+
+The gradients $\nabla z^i$ of the embedding dimensions reflect distortion.
+
+![](figures/gradients_z_theta.png){width=1000}
+
+Since the level sets of $z^\theta$ become more compressed near the poles, the
+gradients $\nabla z^\theta$ become larger there.
+
+---
+
+
+### Dual Pushforward Metric
+
+This gradient information can be stored in the matrix $H$ with elements,
+
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
+\end{align*}
+where $g_{0}$ is the metric on $\mathcal{M}$ inherited from the ambient space.
+
+<br/>
+<br/>
+In our example,
+
+\begin{align*}
+H = \begin{pmatrix} 1/\cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
+\end{align*}
+
+---
+
+### Product Rule for Laplacians
+
+For any $f$ and $g$, the Laplacian $\Delta$ satisfies,
+\begin{align*}
+\Delta(fg) = f\,\Delta g + g\,\Delta f + 2\langle \nabla f, \nabla g \rangle_{g_{0}}
+\end{align*}
+
+Setting $f = z^i$, $g = z^j$ and rearranging,
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(z^i z^j) - z^i\Delta z^j - z^j\Delta z^i\right]
+\end{align*}
+
+Since there are methods for estimating $\Delta$ from data [@Hein2005;
+@Coifman2006], we also have a practical method for approximating local
+distortions $H$!
+
+---
+
+### Implementation
+
+Let $z_{k} \in \mathbb{R}^{N}$ be the $k^{th}$ embedding dimension. Let $L$ be
+the doubly-normalized graph Laplacian [@Coifman2006]. Compute
+
+\begin{align*}
+H_{kk'}^{(\cdot)} := \frac{1}{2}\left[L\left(z_{k} \circ z_{k'}\right) - z_{k} \circ \left(L z_{k'}\right) - z_{k'} \circ \left(L z_{k}\right)  \right] \in \mathbb{R}^{N}
+\end{align*}
+
+The embedding distortion for sample $n$ is given by $H^{(n)} \in \mathbb{R}^{K
+\times K}$
+
+![](figures/g_kl.png){width=350}
+
+---
+
+### Example
+
+These two clusters are generated as:
+
+\begin{align*}
+x_{i} \sim \frac{1}{2}\mathcal{N}\left(0, 10\right) + \frac{1}{2}\mathcal{N}\left(100, 1\right)
+\end{align*}
+
+![](figures/unequal_variances.png){width=700}
+
+---
+
+### Example
+
+The UMAP embeddings lose information about the cluster density, but the
+difference is captured in the local metrics.
+
+![](figures/unequal_variances_ellipse.png){width=700}
+
+---
+
+### Local Isometrization
+
+Since the metrics are known locally, the distortion can be inverted within a
+neighborhood of the cursor. For example, here we interactively adapt the
+embeddings in the Gaussian mixtures example.
+
+![](figures/two_cluster_interaction.gif){width=600}
+
+---
+
+### Fragmented Neighborhoods
+
+:::: {.columns}
+::: {.column width="50%"}
+Besides RMetric, we also visualize distortions using the scatterplot of true vs.
+embedding neighborhood distances.
+:::
+::: {.column width="50%"}
+![](figures/distance_preservation.png){width=400}
+:::
+::::
+
+---
+
+### Fragmented Neighborhoods
+
+To detect poorly preserved neighborhoods, we fit a running median to true vs.
+embedding distances, flag outliers above $3\times \text{IQR}$, and mark points
+with many outlier links as "broken."
+
+![](figures/bin-outlier-defin.png){width=1100}
+
+---
+
+### Examples
+
+This is the classic Swiss Roll data, but with higher density near the endpoints.
+
+```{r}
+#| echo: false
+#| out-width: 60%
+library(tidyverse)
+library(plotly)
+library(scico)
+library(grDevices)
+library(scales)
+
+sr <- read_csv("https://raw.githubusercontent.com/krisrs1128/distortions/5df30d71e6092f9f06c203021ba38e6f24a0c50c/site/tutorials/baselines/data/swiss_noise_0.5.csv") |>
+  rename(x = `0`, y = `1`, z = `2`, t = `3`)
+
+# map continuous `t` to the ggplot2-style gradient
+rng <- range(sr$t, na.rm = TRUE)
+t_scaled <- (sr$t - rng[1]) / diff(rng)
+pal_fun <- colorRamp(c("#B776A6", "#BAC4A2"))
+cols_mat <- matrix(NA_real_, nrow = length(t_scaled), ncol = 3)
+cols_mat <- pal_fun(t_scaled)
+sr$col <- rgb(cols_mat[,1], cols_mat[,2], cols_mat[,3], maxColorValue = 255)
+
+
+p <- plot_ly(sr, x = ~x, y = ~y, z = ~z, type = 'scatter3d', mode = 'markers', marker = list(color = ~col, size = 4), hoverinfo = 'none', showlegend = FALSE) %>%
+  layout(scene = list(
+    xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+    yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+    zaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)
+  )) %>%
+  config(displayModeBar = FALSE)
+p
+```
+
+---
+
+### Variable Density Swiss Roll
+
+$t$-SNE (perplexity = 100) breaks the roll in the low-density region and
+artificially spreads the high density area.
+
+![](figures/noisy_embedding_0.5.png){width=640}
+
+---
+
+### Fragmented Neighborhoods
+
+![](figures/swiss_roll_neighborhoods.gif){width=640}
+
+---
+
+### Poorly Preserved Distances
+
+![](figures/swiss_roll_boxplot.gif){width=710}
+
+---
+
+
+### PBMC Dataset
+
+This single-cell gene expression data set was used in the data visualization
+tutorial from the scanpy package [@Wolf2018]. Each point is the UMAP embedding
+of a cell's high-dimensional gene expression data.
+
+![](figures/pbmc-a.png){width=490}
+
+---
+
+### PBMC Dataset
+
+* Distance scales vary both across and within clusters.
+* Two T-cell sets appear farther from Monocytes than they actually are.
+
+![](figures/pbmc_boxplot_inter.gif){width=570}
+
+---
+
+### Hydra Cell Atlas
+
+:::: {.columns}
+::: {.column width="50%"}
+In this hydra cell differentiation dataset [@Siebert2019; @xia2024statistical],
+$t$-SNE (perplexity = 80) collapses points along the dataset periphery and
+exaggerates between-cluster distances
+:::
+::: {.column width="50%"}
+![](figures/hydra_perplexity_80.gif){width=470}
+:::
+::::
+
+---
+
+### Hydra Cell Atlas
+
+:::: {.columns}
+::: {.column width="50%"}
+At perplexity = 500, the clusters are more reliable, but peripheral samples are
+in fact closer than they appear
+:::
+::: {.column width="50%"}
+![](figures/hydra_perplexity_500.gif){width=470}
+:::
+::::
+
+---
+
+### Hydra Cell Atlas
+
+:::: {.columns}
+::: {.column width="50%"}
+The local isometry visualization highlights some "threads" are more spread in
+the original data.
+:::
+::: {.column width="50%"}
+![](figures/hydra_isometry.gif){width=470}
+:::
+::::
+
+---
+
+### DensMap vs. UMAP
+
+Both variation in ellipses and fragmented neighborhood statistics can be used to
+compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
+
+![](figures/densmap_v_umap.png){width=900}
+
+This example uses data from a _C. elegans_ cell differentiation study [@Packer2019].
+
+---
+
+### DensMap vs. UMAP
+
+Both variation in ellipses and fragmented neighborhood statistics can be used to
+compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
+
+![](figures/densmap_v_umap_hist.png){width=950}
+
+This example uses data from a _C. elegans_ cell differentiation study [@Packer2019].
+
+---
+
+### Summary
+
+1. Topic alignment helps better understand the influence of $K$ in exploratory
+analysis of count data.
+
+1. Interactivity can reveal distortion information based on the analyst's
+priorities.
+
+**Papers**: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62), [https://go.wisc.edu/tify36](https://go.wisc.edu/tify36)
+
+**Packages**: [https://lasy.github.io/alto](https://lasy.github.io/alto), [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
+
+---
+
+### Acknowledgments
+
+* Contact: ksankaran@wisc.edu
+* Lab Members: Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Helena Huang
+* Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates INV-072185, NIH R01HG014687
+
+---
+
+## Appendix
+
+---
+
+### Focus-plus-Context
+
+The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
+
+<video controls style="max-width: 700px; display: block; margin: 0 auto;">
+  <source src="figures/doi_trees.mp4" type="video/mp4">
+</video>
+
+---
+
+### Focus-plus-Context: Barplots
+
+Stacked barplots visualize sample-to-sample variation in microbiome community
+structure. They struggle to show finer taxonomic resolutions.
+
+![](figures/composition_barplot_microbiomeviz.png){width=900}
+
+::: {.smaller}
+Figure from the [microbiomeViz documentation](https://david-barnett.github.io/microViz/reference/comp_barplot.html) [@microbiomeviz].
+:::
+
+---
+
+### Focus-plus-Context: Barplots
+
+Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
+
+![](figures/qiime_barplot.png){width=900}
+
+::: {.smaller}
+Figure from the [Qiime2 View documentation](https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv) [@Bolyen2019].
+:::
+
+---
+
+### Phylobar
+
+Applying focus-plus-context reveals rare taxa abundances while preserving
+overall structure
+
+![](figures/phylobar_overview.png){width=900}
+
+::: {.smaller}
+Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/articles/hfhs.html#htmlwidget-ac96cb3ee4656e2e9ec3)  [@Kuo2025].
+:::
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-1.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-2.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-3.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-4.png){width=90%}
+
+---
+
+### Paths
+
+For each vertex $v$, select the highest-weight incoming edge:
+$$e^\ast(v) = \arg\max_{e:\,\text{target}(e)=v}\bigl[\tilde{w}_{\text{out}}(e)+\tilde{w}_{\text{in}}(e)\bigr].$$
+
+Iterating from largest to smallest $l$ yields a set of vertex-disjoint paths,
+the number of such paths characterizes the alignment.
+
+![](figures/refinement-branches-5.png){width=90%}
+
+---
+
+### Coherence
+
+A topic's coherence measures its average similarity to other topics along the same path,
+
+\begin{align*}
+ c(v) = \frac{1}{|\text{Path}\left(v\right)|} \sum_{v' \in \text{Path}\left(v\right)} \min\left(\win\left(v, v'\right), \wout\left(v, v'\right) \right)
+\end{align*}
+
+Transient topics (appearing or vanishing across $K$) score low, while consistently recovered topics score high.
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+![](figures/refinement_diagnostic_example.png){width=390}
+
+---
+
+### Refinement
+
+Parent specificity identifies two distinct regimes,
+
+* High Refinement: Each topic receives the most mass from a unique parent,
+corresponding to a true or "compromise" topic
+* Low Refinement: Each topic receives substantial mass from several parents,
+each corresponding to an arbitrary split of a true topic
+
+
+\begin{align*}
+  r(v)=\frac{\left|V_{m}\right|}{M-m} \sum_{m^{\prime}=m+1}^{M} \sum_{v_{m^{\prime}}^{\prime} \in V_{m^{\prime}}} \wout \left(v, v_{m^{\prime}}^{\prime}\right) \win\left(v, v_{m^{\prime}}^{\prime}\right)
+\end{align*}
+
+---
+
+### Mammoth
+
+This example comes from [@paircodeUnderstandingUMAP; @maxnoichlNoichlFlattening]. The 3D skeleton scans were produced by the
+Smithsonian, and we can use nonlinear dimensionality reduction to "flatten" the
+skeleton into 2D.
+
+![](figures/mammoth_truth.gif){width=600}
+
+---
+
+### Mammoth
+
+This is the embedding when applying UMAP with a 50 nearest-neighbor graph and
+`min_dist = 0.5`.
+
+![](figures/mammoth_plain_umap.png){width=500}
+
+---
+
+### Mammoth
+
+Parts of the shoulders, head, and tail are further apart in the embedding
+compared to the original data. Most other distortions are points that are
+placed too close to one another.
+
+![](figures/mammoth_neighborhoods.gif){width=450}
+
+---
+
+### Mammoth
+
+Parts of the shoulders, head, and tail are further apart in the embedding
+compared to the original data. Most other distortions are points that are
+placed too close to one another.
+
+![](figures/mammoth_boxplot_inter.gif){width=550}
+
+---
+
+### Graph Laplacian
+
+To compute $L$, we use the estimator from [@Coifman2006].
+
+1. Build the kernel matrix $W_{kl} = \exp(-\|X_k - X_l\|^2 / h)$, where $h$ is a bandwidth hyperparameter.
+
+2. Normalize both columns and rows.
+\begin{align*}
+D &= \text{diag}(W\mathbf{1}) \qquad \tilde{W} = D^{-1}WD^{-1}  \\
+\tilde{D} &= \text{diag}(\tilde{W}\mathbf{1}) \qquad L = \tilde{D}^{-1}\tilde{W}
+\end{align*}
+Column normalization accounts for differences in sampling density.
+
+---
+
+### Pushforward Metric
+
+What does a small step in the embedding space correspond to in $\mathcal{M}$? The pushforward metric answers this,
+
+\begin{align*}
+g_{ij} = \left\langle \frac{\partial\mathbf{x}}{\partial z^i}, \frac{\partial\mathbf{x}}{\partial z^j}\right\rangle_{\mathbb{R}^3}
+\end{align*}
+
+This varies across $p \in \mathcal{M}$ but we suppress it from the notation.
+
+![](figures/dx_dphi.png){width=800}
+
+---
+
+### Pushforward Metric
+
+In the sphere example, these derivatives can be directly computed and to obtain,
+
+\begin{align*}
+G = \begin{pmatrix} \cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
+\end{align*}
+Near the equator ($\varphi \approx 0$), a small step in $\theta$ covers more
+distance than near the north pole ($\varphi \approx \frac{\pi}{2}$).
+
+![](figures/dx_dphi.png){width=800}
+
+---
+
+### Derivation of $G$
+
+First note that,
+\begin{align*}
+\frac{\partial\mathbf{x}}{\partial \theta} = \left(-\cos\varphi\sin\theta, \cos\varphi\cos\theta, 0\right).
+\end{align*}
+Therefore,
+\begin{align*}
+g_{11} &= \left\langle \frac{\partial\mathbf{x}}{\partial \theta}, \frac{\partial\mathbf{x}}{\partial \theta}\right\rangle_{\mathbb{R}^3} \\
+&= \cos^2\varphi\sin^2\theta + \cos^2\varphi\cos^2\theta \\
+&= \cos^2\varphi
+\end{align*}
+
+---
+
+### Derivation of $H$ from $\Delta\left(fg\right)$
+
+By the product formula with $z^1 = \theta$:
+\begin{align*}
+h^{11} = \langle \nabla \theta, \nabla \theta \rangle_{g_0} = \frac{1}{2}\left[\Delta(\theta^2) - 2\theta\Delta\theta\right]
+\end{align*}
+
+---
+
+### Derivation of $H$ from $\Delta\left(fg\right)$
+
+The general formula for the Laplace-Beltrami operator is
+$$\Delta f = \frac{1}{\sqrt{\det G}}\sum_{i,j}\frac{\partial}{\partial z^i}\left(\sqrt{\det G}\, g^{ij}\frac{\partial f}{\partial z^j}\right).$$
+
+Since $\det(G) = \cos^2\varphi$ and the off-diagonal $g^{ij}$ are zero,
+\begin{align*}
+\Delta f = \frac{1}{\cos^2\varphi}\frac{\partial^2 f}{\partial\theta^2} + \frac{1}{\cos\varphi}\frac{\partial}{\partial\varphi}\left(\cos\varphi\frac{\partial f}{\partial\varphi}\right)
+\end{align*}
+
+---
+
+### Derivation of $H$ from $\Delta\left(fg\right)$
+
+We can plug in the choices of $f$ that we care about,
+\begin{align*}
+\Delta\theta &= 0\\
+\Delta(\theta^2) &= \frac{1}{\cos^2\varphi}\frac{\partial^2(\theta^2)}{\partial\theta^2} = \frac{2}{\cos^2\varphi}
+\end{align*}
+
+and then substitute into the formula from 2 slides ago,
+\begin{align*}
+h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \frac{1}{\cos^2\varphi}.
+\end{align*}
+
+---
+
+### Interaction Gulfs
+
+There are two classic challenges in interactive interfaces [@Hutchins1985],
+
+- Gulf of Execution: The gap between what you want to do and how you specify it in the system.
+
+![](figures/interaction_gulfs.png){width=600}
+
+These challenges also apply to interactive data analysis.
+
+---
+
+### Interaction Gulfs
+
+There are two classic challenges in interactive interfaces [@Hutchins1985],
+
+- Gulf of Evaluation: The gap between what the system shows you and an understanding of what it represents.
+
+![](figures/interaction_gulfs.png){width=600}
+
+These challenges also apply to interactive data analysis.
+
+---
+
+### Specious Art
+
+Nonlinear dimensionality reduction has become the source of widespread concern
+in the single-cell literature [@Chari2023].
+
+![](figures/specious_art.png){width=700}
+
+---
+
+We introduce two new diagnostic visualizations.
+
+:::: {.columns}
+::: {.column width="60%"}
+::: {.smaller}
+alto plots for choice of $K$ in topic models .
+![](figures/alto_sketches_annotated%20alignment.png)
+:::
+:::
+::: {.column width="40%"}
+::: {.smaller}
+RMetric plots for nonlinear embeddings.
+![](figures/swiss_roll_boxplot.gif){width=710}
+:::
+:::
+::::
+
+Both are grounded in the data visualization principles that we review next.
+
+---
+
+### Example: Antibiotics Time Course
+
+To interpret topics, look for representative taxa. These species have higher
+probabilities in one topic compared to the others.
+
+![](figures/antibiotic_prototypes.png){width=900}
+
+---
+
+### Model with background variation
+
+Topic alignment identifies departures from the assumed model. Consider the
+generative mechanism,
+
+\begin{align*}
+x_{i} \vert \*B, \gamma_{i}, \nu_i &\sim \Mult\left(n_{i}, \alpha \*B\gamma_{i} + \left(1 - \alpha\right)\nu_i\right) \\
+\nu_{i} &\sim \Dir\left(\lambda_{\nu}\right) \\
+\gamma_i &\sim \Dir\left(\lambda_{\gamma}\right) \\
+\beta_{k} &\sim \Dir\left(\lambda_{\beta}\right),
+\end{align*}
+
+where $\*B$ stacks the $\beta_k$ rowwise.
+
+---
+
+### Result
+
+The alignment structure is sensitive to changes in $\alpha$ and fragments when
+structure is not present.
+
+:::: {.columns}
+::: {.column width="50%"}
+![](figures/gradient_flow-1.png){width=300}
+![](figures/gradient_flow-2.png){width=300}
+:::
+::: {.column width="50%"}
+![](figures/gradient_flow-3.png){width=300}
+![](figures/gradient_flow-4.png){width=300}
+:::
+::::
+
+---
+
+### Diagnostics
+
+:::: {.columns}
+::: {.column width="40%"}
+This structure is consistent across simulation runs, and the diagnostics
+quantify topic deterioration.
+:::
+::: {.column width="60%"}
+![](figures/gradient-combined.png){width=635}
+:::
+::::
+
+---
+
+### Dual Pushforward Metric
+
+Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
+reflect distortion.
+
+![](figures/level_sets_phi.png){width=1000}
+
+In contrast, the gradients $\nabla z^{\varphi}$ don't depend on $\varphi$.
+
+---
+
+### Comparison with LOO-map
+
+The stability-based algorithm [@Liu2025] gives a similar
+interpretation. But the visual encoding is more subtle, and the leave-one-out
+approach is time consuming even with approximations.
+
+![](figures/p_scores_0.5.png){width=600}
+
+---
+
+### Distortions in $t$-SNE and UMAP
+
+They can make high-dimensional random walks look artificially smooth...
+
+![](figures/gaussian_rw.png){width=600}
+Example from [@wattenberg2016how].
+
+---
+
+### References {.smaller}
