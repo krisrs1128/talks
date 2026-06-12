@@ -348,7 +348,7 @@ All the simulations discussed today are vignettes in the package.
 <br/>
 
 <span style="font-size: 36px">
-Sankaran, K., Zhang, S., Chenab, & Meilă, M. (2025). Interactive Visualization of Metric Distortion in Nonlinear Data Embeddings using the distortions Package. doi:10.1101/2025.08.21.671523
+Sankaran, K., Zhang, S., Chenab, & Meilă, M. (2026). Interactive visualization of metric distortion in nonlinear data embeddings using the distortions package. Briefings in Bioinformatics, 27(2). doi:10.1093/bib/bbag136
 </span>
 
 ---
@@ -704,7 +704,7 @@ analysis of count data.
 1. Interactivity can reveal distortion information based on the analyst's
 priorities.
 
-**Papers**: [https://go.wisc.edu/oe3g62](https://go.wisc.edu/oe3g62), [https://go.wisc.edu/tify36](https://go.wisc.edu/tify36)
+**Papers**: [https://go.wisc.edu/e2c16h](https://go.wisc.edu/e2c16h), [https://go.wisc.edu/tify36](https://go.wisc.edu/tify36)
 
 **Packages**: [https://lasy.github.io/alto](https://lasy.github.io/alto), [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
 

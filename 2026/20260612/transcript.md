@@ -31,7 +31,7 @@
 - this is the model assumed by topic models
 - x are samples (D species)
 - It is a vector of counts. The probability of each coordinate comes from this multiplication
-- B is a probability vector, gamma mixes them.
+- columns of B are probability distributions, gamma mixes them.
 
 7
 
@@ -189,7 +189,7 @@
 
 - in our code, estimate a laplacian from the real data
 - z's are the UMAP embeddings
-- substituting into the ormula from before, we get the H matrices
+- substituting into the formula from before, we get the H matrices
 - when this is identity, limited distortion, when far from identity, lrage distortion
 
 36
