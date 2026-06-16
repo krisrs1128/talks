@@ -54,7 +54,7 @@ set.seed(2026)
 use_condaenv("stat479_week6")
 ```
 
-_Readings: [1](https://arxiv.org/abs/2207.07605), [2](https://proceedings.mlr.press/v108/janzing20a.html), [3](https://proceedings.neurips.cc/paper_files/paper/2024/hash/084252ec5f05f13bf565843c1873686d-Abstract-Conference.html)_, _[Code](https://github.com/krisrs1128/stat479_notes/blob/master/notes/09-shap_definitions.qmd)_
+_Readings: [1](https://arxiv.org/abs/2207.07605), [2](https://proceedings.mlr.press/v108/janzing20a.html), [3](https://proceedings.neurips.cc/paper_files/paper/2024/hash/084252ec5f05f13bf565843c1873686d-Abstract-Conference.html)_, _[Code](https://github.com/krisrs1128/talks/blob/master/2026/20260619/20260619.qmd)_
 
 # Conceptual Foundation
 
@@ -342,7 +342,7 @@ get a nonzero attribution for $X_1$, even though it isn't in the model^[In full 
    - The value function $v(S)$ evaluates $f$ on $x$ after "removing" features
    outside of $S$ removed. We covered three removal strategies:
      - Baseline $v(S) = f(x_S, x'_{\bar{S}})$
-     - Marginal^[Compared to our earlier notes, we're allowing for background subsamples B < N.]: $v(S) = \mathbb{E}_{p(X_{\bar{S}})}[f(x_S, X_{\bar{S}})] \approx \frac{1}{B}\sum_{i=1}^{B} f(x_S, x_{i,\bar{S}})$
+     - Marginal^[Compared to the earlier discussion, we're allowing for background subsamples B < N.]: $v(S) = \mathbb{E}_{p(X_{\bar{S}})}[f(x_S, X_{\bar{S}})] \approx \frac{1}{B}\sum_{i=1}^{B} f(x_S, x_{i,\bar{S}})$
      - Conditional: $v(S) = \mathbb{E}_{p(X_{\bar{S}} \mid X_S = x_S)}[f(x_S, X_{\bar{S}})]$
 
 1. To compute all $D$ attributions for one sample, we need $v(S)$ for every $S
@@ -578,7 +578,7 @@ fidelity.
 ## Model-Specific Versions
 
 1. Within specific model classes, we can derive closed-form SHAP formulas that
-bypass enumeration over subsets. For example, in your HW3, you will show that
+bypass enumeration over subsets. For example, it is straightforward to show that
 linear models $f(x) = \beta_0 + \sum_{d} \beta_{d}x_{d}$ with baseline removal
 satisfy,
    $$
@@ -606,7 +606,9 @@ satisfy,
    through the `DeepExplainer` class in `shap` and the `DeepSHAP` class in the
    `innsight` R package.
 
-## Code Example
+# Case Studies
+
+## Income Data
 
 1. Let's apply the `shap` python package to identify important variables in the
 `adult` dataset. Each $x_i$ is a survey response for person $i$, and $y_i$
@@ -633,11 +635,11 @@ model.fit(X, y)
    ```
 
 1. Here, we're explaining the first 50 samples $x_1, \dots, x_{50}$ using the
-marginal feature removal approach, as implemented by `KernelExplainer` (we'll go
-over the exact computational algorithm next week). The $N = 2000$ rows in `X`
-are used in estimating the marginal expectation @eq-marginal. Notice that the
-explainer only needs access to the anonymous function `predictor` -- it doesn't
-require any knowledge of the type of model implemented within it.
+marginal feature removal approach, as implemented by `KernelExplainer` (see also
+the case study below).  The $N = 2000$ rows in `X` are used in estimating the
+marginal expectation @eq-marginal. Notice that the explainer only needs access
+to the anonymous function `predictor` -- it doesn't require any knowledge of the
+type of model implemented within it.
 
    ```{python}
 #| label: shap-values
@@ -681,16 +683,7 @@ shap.decision_plot(explainer.expected_value, sv, X_explain)
 
    _Exercise: Imagine explaining this visualization to a non-data scientist. Describe each component without jargon and summarize the main takeaways within the salary prediction context._
 
-1. Throughout these notes, we've assumed we can easily compute,
-    $$
-  \varphi_d(v) = \sum_{S \subseteq \mathcal{D} - \{d\}} \frac{1}{D {D - 1 \choose \left|S\right|}} C(d \vert S)
-    $$
-    This is actually challenging to compute! It runs over exponentially many
-    subsets _just to explain a single sample_. So far, we've swept this
-    computational challenge under the rug. Next week we'll discuss practical
-    strategies to computing SHAP values efficiently.
-
-## Code Example: KernelSHAP Implementation
+## KernelSHAP Implementation
 
 1. This example shows that the `KernelSHAP` sketch above indeed agrees with the
 [official
@@ -783,3 +776,92 @@ We've copied our code into the `explain` method in the class below.
    print("Package: ", np.round(official_shap_values[:5], 4))
    print("Ours: ", np.round(shap_values[:5], 4))
    ```
+
+## Drosophila Development
+
+### Problem Formulation
+
+1. Enhancers are DNA sequences that coordinate downstream gene expression.
+Their activity depends on genome state, like transcription factor binding and
+chromatin state.
+
+   ![](figures/enhancer.jpg){width=60%}
+
+1. Understanding enhancers means understanding how genotype becomes phenotype, a
+fundamental problem in biology.  To make the problem tractable, we usually study
+it in simple organisms, like the fruit fly _Drosophila melanogaster_, often during embryo development.
+
+   ![](figures/drosophila.gif){width=60%}
+
+1. [@Basu2018] asked a precise question: given the genomic state of a fruit fly
+embryo at a fixed developmental stage, can we predict whether a given enhancer
+is active? They used genome-wide measurements from blastoderm (stage 5) embryos:
+
+    - DNA occupancy for 23 transcription factors
+    - Activity for 13 chromatin markers
+    - Binary enhancer activity labels
+
+1. This is a binary classification problem.
+   Each observation is a genomic region with associated regulatory features.
+
+   - Enhancer status: $y \in \{0,1\}$
+   - Predictors: $x = (x_1, \ldots, x_D)$ transcription factor binding intensities and chromatin signals
+   - Model: $f(x_i) = \mathbb{P}(y_i = 1 \mid x_i)$
+
+   SHAP quantifies each feature's contribution to $f(x_i)$.
+
+### Model Training
+
+1. We train a boosting classifier on the enhancer data. The tuning grid considers
+the number of trees `nrounds` and learning rate `eta`, selecting
+hyperparameters using three fold CV.
+
+1. The histogram of predicted probabilities shows that the model behaves as
+expected: inactive enhancers (class 0) clusters near zero probability, and
+active enhancers (class 1) is more spread to high probability regions. Though,
+there is still noticeable overlap.
+
+### Interpretation Setup
+
+1. Entry $(i, d)$ of `shp$S` is the SHAP attribution $\varphi_d(x_i)$, feature
+$d$'s contribution to $f(x_i)$.
+
+1. The efficiency axiom holds, though on a log-odds scale: $\sum_d \varphi_d(x_i) +
+\varphi_0 = \text{logit}^{-1}\mathbb{P}(y \vert x_i)$. Most feature importance
+measures lack this sum-to-prediction property; this is something that helps SHAP
+stand out.
+
+#### Variable-Level Plots
+
+1. The beeswarm plot ranks features using $\left|\varphi_d(x_i)\right|$. Across
+many samples, the `wt_ZLD`, `input_c14c`, and `sna1` features stand out. For most
+features, the attributions have consistent signs across samples, but the tails
+show that the sign can flip, perhaps when the feature has an unusual
+value/context.
+
+1. The dependence plot for `sna1` shows that high `sna1` TF binding leads to
+positive attribution.
+
+1. This is consistent with the data, where large `sna1` increases enhancer
+activity. The [`sna1`](https://en.wikipedia.org/wiki/SNAI1) gene is generally a
+transcriptional repressor, but in these data, it seems that when `sna1` is
+present at a location, the enhancer is more likely to be active.
+
+#### Sample-Level Plots
+
+1. Alternatively, waterfall plots break a single prediction down into feature
+contributions. Each bar is one feature, and tracking the endpoints across bars
+shows how the model arrives at the output by weighing evidence across many
+features.
+
+1. Waterfall plots don't scale well to many samples. A stacked bar alternative
+solves this issue -- each vertical bar below is one sample, colored by SHAP
+attributions for the 11 most improtant features. Samples are sorted so that
+those with similar attribution profiles are side-by-side. The "x" marks  give
+the actual log-odds predictions, and features above or below indicate positive
+or negative attributions, respectively.
+
+1. This view shows that samples with nearly identical predictions can have
+different reasons for those predictions. For example, `kr1` drives high
+predictions for a cluster of sequences near the left, but has barely any
+influence elsewhere.
