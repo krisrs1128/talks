@@ -61,8 +61,6 @@ use_condaenv("stat479_week6")
 
 _Readings: [1](https://arxiv.org/abs/2207.07605), [2](https://proceedings.mlr.press/v108/janzing20a.html), [3](https://proceedings.neurips.cc/paper_files/paper/2024/hash/084252ec5f05f13bf565843c1873686d-Abstract-Conference.html)_, _[Code](https://github.com/krisrs1128/talks/blob/master/2026/20260619/20260619.qmd)_
 
-# Conceptual Foundation
-
 ## Setup
 
 **Goal.** Given a model <span class="purple">$f$</span> and a sample $x \in \reals^{D}$, return a _local feature attribution_ $\varphi_d\left(x\right)$ that quantifies the contribution of <span class="pink">feature $d$</span> to the prediction <span class="purple">$f\left(x\right)$</span>.
@@ -81,24 +79,10 @@ _Readings: [1](https://arxiv.org/abs/2207.07605), [2](https://proceedings.mlr.pr
    - _Principled._ The attribution measure should be derivable from a clear set
    of mathematical axioms.
 
-**Approach.**
+**Approach.** SHAP values satisfy all three requirements. This handout focuses on their
+conceptual foundation (Section 1) and practical computation (Section 2).
 
-SHAP values satisfy all three requirements. This handout focuses on their
-theoretical development and practical computation. We proceed in these steps,
-
-1. _Game theory definitions._ SHAP is inspired by a classic result $n$-player
-game theory.  We're not interested in game theory for its own sake, but this
-framing will help us see why there are several defensible ways to adapt it to
-machine learning.
-
-1. _Machine learning analogy._ We develop an analogy between the game theoretic
-definition and quantities of interest in local feature attribution.
-
-1. _Feature removal._ The most ambiguous part of the game theory $\to$ ML
-analogy is how implement "feature removal."  Different choices lead to different
-SHAP variants
-
-1. _Computation._ We discuss efficient strategies for computing SHAP values.
+# Conceptual Foundation
 
 ## Local Feature Attributions
 
@@ -128,7 +112,7 @@ identifying which features drive drug effectiveness in one subgroup vs. another.
 ## Game Theory Definitions
 
 1. SHAP is motivated by the credit assignment problem from game theory. Imagine
-agents $\mathcal{D} = \{1, \dots, D\}$ and imagine where any <span
+agents $\mathcal{D} = \{1, \dots, D\}$ where any <span
 class="green">subset $S$</span> earns profit $v(S)$. How much of the total
 profit $v(\mathcal{D})$ should agent $d$ receive?  This share is the **Shapley
 value** $\varphi_{d}(v)$.
@@ -239,10 +223,12 @@ values from sample $x$ for coordinates in $S$ and substitutes the baseline
    C(d \vert S) &= v\left(S \cup \{d\}\right) - v(S)\\n   &= f\left(x_{S \cup \{d\}}, x'_{\overline{S \cup \{d\}}}\right) - f\left(x_{S}, x'_{\bar{S}}\right)
    \end{align*}
    $$
-   This is the change in prediction when feature $d$ is included (left) vs.
-   replaced by the baseline (right).
+   This is the change in prediction when feature $d$ is included (top) vs.
+   replaced by the baseline (bottom).
 
    ![](figures/shap_baseline_vector.png){width=50%}
+
+    The figure below represents $C\left(2 \vert 1\right)$ under baseline removal.
 
    ![](figures/shap_baseline_geometry.png){width=90%}
 
@@ -277,15 +263,6 @@ represents $C(2 | 1)$ under marginal removal.
 
    - **Right panel.** The decreasing curve is a cross-section of $f$ along that vertical dashed line (i.e., holding $x_1$ fixed). The pink dashed line marks $x_2$ for the point we want to explain, and the solid horizontal line has $y$-value equal to $f(x)$. The blue dashed lines show the $x_{i2}$ from training samples, and the blue histogram summarizes the resulting values $f(x_1, x_{i2})$. The gap between $f(x)$ and the center of the histogram is $C(2 \mid 1)$.
 
-   - $C(1 \mid 2)$ flips the roles of the two coordinates. Now we replace the first coordinate with training values $x_{i1}$ rather than the second, so the dashed lines would run horizontally (in the $x_1$ direction) instead of vertically, and the cross-section would be taken along $x_2 = x_2$ rather than $x_1 = x_1$.
-   - $C(1 \mid \emptyset)$ involves $v(\{1\}) - v(\emptyset)$. We already have $v(\{1\})$, it is the mean of the blue histogram above. For $v(\emptyset)$, we remove both coordinates, meaning we evaluate $f$ at the original training points without moving them to any dashed line. That is:
-
-   $$
-   v(\emptyset) = \frac{1}{N} \sum_{i} f(x_{i1}, x_{i2})
-   $$
-
-   - $\phi_1$ **vs.** $\phi_2$. We would expect $\phi_2 > \phi_1$ because the contours vary more steeply in the $x_2$ direction. Intuitively, the second coordinate matters more for explaining almost any prediction. More concretely, the analog of the right-hand panel for $C(1 \mid 2)$ would have a flatter cross-section, leading to a smaller gap between $f(x)$ and the histogram mean.
-
    ![](figures/shap_marginal_geometry.png){width=90%}
 
    _Exercise: What would $C\left(1 \vert 2\right)$ look like in this figure? What about $C\left(1 \vert \emptyset\right)$?_
@@ -313,7 +290,7 @@ conditional distributions.
 
 ## Causal Intervention Perspective
 
-1. Some researchers [@janzing20a] have argued that point (3) in the
+1. Some researchers [@janzing20a] have argued that point (4) in the
 previous section is not actually a problem, and that, from a causality
 perspective, the marginal approach computes the more meaningful expectation.
 
@@ -437,8 +414,6 @@ example, for 10 features we could use,
 1. _Adaptive sampling_. The terms $C\left(d \vert S_{m}\right)$ are random
 variables with mean $\varphi_{d}\left(x\right)$.
 
-   (picture of their histograms across $d$)
-
    For features that are irrelevant, the contributions are tightly clustered
    near zero, so even small values of $M$ are enough. Inspired by this
    observation, adaptive sampling tracks the variance of $C(d \mid S_m)$ across
@@ -485,7 +460,7 @@ be characterized through a weighted least squares problem,
 approximation: sample random subsets $S_1, \dots, S_M$ and solve the weighted
 regression on the reduced design. This is "KernelSHAP."
 
-1. Let $z_{md} = \mathbf{1}[d \in s_m]$ be the associated design matrix. the
+1. Let $z_{md} = \mathbf{1}[d \in s_m]$ be the associated design matrix. The
 regression suggests $v(\emptyset) \approx \beta_0$ and
    $$
    v(S_m) - v(\emptyset) \approx \sum_{d = 1}^{D} z_{md}\beta_d.
@@ -497,7 +472,7 @@ regression suggests $v(\emptyset) \approx \beta_0$ and
    We can improve the quality of our approximation by enforcing these
    constraints, substituting $v(\emptyset) = \Esubarg{p(x)}{f(X)} \approx \frac{1}{N}\sum_{i = 1}^{N} f(x_i)$ and $v(\mathcal{D}) = f(x)$.
 
-   _Exercise: In fact, the regression objective ensures that $v\left(\emptyset\right) = \beta_0$ and $v(\mathcal{D}) - v(\emptyset) = \Delta$ hold exactly. Can you see why?_
+   _Exercise: In fact, the regression objective ensures that $v\left(\emptyset\right) = \beta_0$ and $v(\mathcal{D}) - v(\emptyset) = \Delta$ hold exactly. Can you see why? (Hint: Consider the weights)_
 
    ![](figures/regression_perspective.png){width=65%}
 
@@ -631,81 +606,6 @@ satisfy,
 
 # Case Studies
 
-## Income Data
-
-1. Let's apply the `shap` python package to identify important variables in the
-`adult` dataset. Each $x_i$ is a survey response for person $i$, and $y_i$
-indicates whether they make more than $50K/year.
-
-   ```{python}
-#| label: shap-data
-import shap
-import matplotlib.pyplot as plt
-plt.rcParams['figure.autolayout'] = True
-
-X, y = shap.datasets.adult()
-X, y = X.iloc[:2000], y[:2000]   # subsample for speed
-X
-   ```
-
-1. We train a random forest model to these data using the `sklearn` package.
-
-   ```{python}
-#| label: shap-model
-from sklearn.ensemble import RandomForestClassifier
-model = RandomForestClassifier(n_estimators=100)
-model.fit(X, y)
-   ```
-
-1. Here, we're explaining the first 50 samples $x_1, \dots, x_{50}$ using the
-marginal feature removal approach, as implemented by `KernelExplainer` (see also
-the case study below).  The $N = 2000$ rows in `X` are used in estimating the
-marginal expectation @eq-marginal. Notice that the explainer only needs access
-to the anonymous function `predictor` -- it doesn't require any knowledge of the
-type of model implemented within it.
-
-   ```{python}
-#| label: shap-values
-#| output: false
-X_explain = X.iloc[:50]
-predictor = lambda X: model.predict_proba(X)[:, 1]
-
-#explainer  = shap.KernelExplainer(predictor, X) # if you want to run accurate version
-explainer  = shap.KernelExplainer(predictor, X.sample(100)) # if you want to run the fast version
-sv = explainer.shap_values(X_explain)
-   ```
-
-   _Exercise: What is the dimension of `sv`?_
-
-1. A waterfall plot shows $\varphi_d(f, x)$ for all $d$ features. By the
-efficiency axiom, the sum of these bars is equal to the predicted response.
-
-   ```{python}
-#| label: shap-waterfall
-#| fig-width: 12
-#| fig-height: 6
-exp_single = shap.Explanation(
-    values = sv[0],
-    base_values = explainer.expected_value,
-    data = X_explain.iloc[0].values,
-    feature_names = X_explain.columns.tolist(),
-)
-shap.plots.waterfall(exp_single)
-   ```
-
-1. Here is an alternative visualization well-suited for visualizing attributions
-for multiple samples (lines) simultaneously.  This visualization is helpful for
-identifying clusters of samples with similar feature attributions.
-
-   ```{python}
-#| label: shap-force
-#| fig-width: 12
-#| fig-height: 6
-shap.decision_plot(explainer.expected_value, sv, X_explain)
-   ```
-
-   _Exercise: Imagine explaining this visualization to a non-data scientist. Describe each component without jargon and summarize the main takeaways within the salary prediction context._
-
 ## KernelSHAP Implementation
 
 1. This example shows that the `KernelSHAP` sketch above indeed agrees with the
@@ -799,6 +699,81 @@ We've copied our code into the `explain` method in the class below.
    print("Package: ", np.round(official_shap_values[:5], 4))
    print("Ours: ", np.round(shap_values[:5], 4))
    ```
+
+## Income Data
+
+1. Let's apply the `shap` python package to identify important variables in the
+`adult` dataset. Each $x_i$ is a survey response for person $i$, and $y_i$
+indicates whether they make more than $50K/year.
+
+   ```{python}
+#| label: shap-data
+import shap
+import matplotlib.pyplot as plt
+plt.rcParams['figure.autolayout'] = True
+
+X, y = shap.datasets.adult()
+X, y = X.iloc[:2000], y[:2000]   # subsample for speed
+X
+   ```
+
+1. We train a random forest model to these data using the `sklearn` package.
+
+   ```{python}
+#| label: shap-model
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators=100)
+model.fit(X, y)
+   ```
+
+1. Here, we're explaining the first 50 samples $x_1, \dots, x_{50}$ using the
+marginal feature removal approach, as implemented by `KernelExplainer`.  The $N = 2000$ rows in `X` are used in estimating the
+marginal expectation @eq-marginal. Notice that the explainer only needs access
+to the anonymous function `predictor` -- it doesn't require any knowledge of the
+type of model implemented within it.
+
+   ```{python}
+#| label: shap-values
+#| output: false
+X_explain = X.iloc[:50]
+predictor = lambda X: model.predict_proba(X)[:, 1]
+
+#explainer  = shap.KernelExplainer(predictor, X) # if you want to run accurate version
+explainer  = shap.KernelExplainer(predictor, X.sample(100)) # if you want to run the fast version
+sv = explainer.shap_values(X_explain)
+   ```
+
+   _Exercise: What is the dimension of `sv`?_
+
+1. A waterfall plot shows $\varphi_d(f, x)$ for all $d$ features. By the
+efficiency axiom, the sum of these bars is equal to the predicted response.
+
+   ```{python}
+#| label: shap-waterfall
+#| fig-width: 12
+#| fig-height: 6
+exp_single = shap.Explanation(
+    values = sv[0],
+    base_values = explainer.expected_value,
+    data = X_explain.iloc[0].values,
+    feature_names = X_explain.columns.tolist(),
+)
+shap.plots.waterfall(exp_single)
+   ```
+
+1. Here is an alternative visualization well-suited for visualizing attributions
+for multiple samples (lines) simultaneously.  This visualization is helpful for
+identifying clusters of samples with similar feature attributions.
+
+   ```{python}
+#| label: shap-force
+#| fig-width: 12
+#| fig-height: 6
+shap.decision_plot(explainer.expected_value, sv, X_explain)
+   ```
+
+   _Exercise: Imagine explaining this visualization to a non-data scientist. Describe each component without jargon and summarize the main takeaways within the salary prediction context._
+
 
 ## Drosophila Development
 
