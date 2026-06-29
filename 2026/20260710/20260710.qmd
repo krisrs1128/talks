@@ -508,13 +508,4 @@ approach is time consuming even with approximations.
 
 ---
 
-### Distortions in $t$-SNE and UMAP
-
-They can make high-dimensional random walks look artificially smooth...
-
-![](figures/gaussian_rw.png){width=600}
-Example from [@wattenberg2016how].
-
----
-
 ### References {.smaller}
