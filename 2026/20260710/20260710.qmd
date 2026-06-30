@@ -21,17 +21,74 @@ format:
       - title-slide.html
 ---
 
-### Interactive Visualization
+### Visualization
+
+Good visualizations:
+
+- Give more information than summary statistics alone
+- Help sanity check the data generation process
+- Help diagnose model fitting failures
+
+![](figures/anscombe.svg)
 
 ---
 
-### Focus-plus-Context
+### Visualization
 
-The focus-plus-context principle [@heer2004] states that readers should be able to zoom into patterns of interest without losing relevant context.
+Always plot your data.
 
-<video controls style="max-width: 700px; display: block; margin: 0 auto;">
-  <source src="figures/doi_trees.mp4" type="video/mp4">
-</video>
+![](figures/autodesk-dino.gif)
+
+---
+
+### Limitations
+
+But sometimes visualizations be misleading.
+
+![](figures/GTAI_average_hours.gif)
+
+There's only so much we can show in a single view.
+
+---
+
+### Limitations
+
+But sometimes visualizations be misleading.
+
+![](figures/GTAI_redrawn.png)
+
+There's only so much we can show in a single view.
+
+---
+
+### Limitations
+
+But sometimes visualizations be misleading.
+
+![](figures/GTAI_redrawn.png)
+
+---
+
+---
+
+### Limitations
+
+But sometimes visualizations be misleading.
+
+![](figures/stop_umap.png)
+
+There's only so much we can show in a single view.
+
+---
+
+### Interactive Visualization
+
+Interactivity can help a visualization withstand scientific scrutiny.
+
+I'll present two examples from recent work that apply the focus-plus-context
+principle to improve high-dimensional data visualizations.
+
+> Allow readers to look up details by interacting with parts of the visualization without losing context.
 
 ---
 
@@ -53,12 +110,19 @@ Kuo, M., Lê Cao, K.-A., Kodikara, S., Mao, J., & Sankaran, K. (2026). phylobar:
 
 ### Motivation
 
+Stacked bar pots are a basic visualization used in Microbiome research.
+
+- $X$-axis position encodes samples
+- Color encodes taxonomy
+
+We can use this to compare composition across groups or over time.
+
 ---
 
 ### Motivation
 
-Stacked barplots visualize sample-to-sample variation in microbiome community
-structure. They struggle to show finer taxonomic resolutions.
+The basic limitation is that they can only show so many colors at a time. This
+makes it difficult to study rarer taxa.
 
 ![](figures/composition_barplot_microbiomeviz.png){width=900}
 
@@ -70,7 +134,8 @@ Figure from the [microbiomeViz documentation](https://david-barnett.github.io/mi
 
 ### Motivation
 
-Stacked barplots visualize sample-to-sample variation in microbiome community structure. They struggle to show finer taxonomic resolutions.
+The basic limitation is that they can only show so many colors at a time. This
+makes it difficult to study rarer taxa.
 
 ![](figures/qiime_barplot.png){width=900}
 
@@ -80,10 +145,10 @@ Figure from the [Qiime2 View documentation](https://view.qiime2.org/visualizatio
 
 ---
 
-### Phylobar
+### Approach
 
-Applying focus-plus-context reveals rare taxa abundances while preserving
-overall structure
+The basic idea of phylobar is to use this tree structure (context) to
+interactively paint (focus) the stacked bar plot.
 
 ![](figures/phylobar_overview.png){width=900}
 
@@ -93,6 +158,31 @@ Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/art
 
 ---
 
+### Interactions
+
+We can press the Cntl or number keys to cycle across a color palette.
+
+Hovering over a node or rectangle colors is the associated taxonomic group.
+
+---
+
+### Interactions
+
+We can collapse and expand the tree and the stacked bar plot rectangles merge or split according.
+
+---
+
+### Interactions
+
+We can use a search bar to look up groups we care about in advance.
+
+---
+
+### Pseudobulk Data
+
+This idea works whenever you cared about hierarchically organized compositions. Our paper gives an example applied to immune cell populations.
+
+---
 
 ## Distortion Visualization
 
@@ -354,6 +444,14 @@ priorities.
 **Papers**: [https://go.wisc.edu/e2c16h](https://go.wisc.edu/e2c16h)
 
 **Packages**: [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
+
+---
+
+### Conclusion
+
+- Interactivity allows us to see the equivalent of hundreds of static views easily.
+- Computers make this easy but we shouldn't take it for granted!
+
 
 ---
 
