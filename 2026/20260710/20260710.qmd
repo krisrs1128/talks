@@ -43,7 +43,7 @@ Always plot your data.
 
 ### Limitations
 
-But sometimes visualizations be misleading.
+But sometimes visualizations themselves can be misleading.
 
 ![](figures/GTAI_average_hours.gif)
 
@@ -53,7 +53,7 @@ There's only so much we can show in a single view.
 
 ### Limitations
 
-But sometimes visualizations be misleading.
+But sometimes visualizations themselves can be misleading.
 
 ![](figures/GTAI_redrawn.png)
 
@@ -63,17 +63,15 @@ There's only so much we can show in a single view.
 
 ### Limitations
 
-But sometimes visualizations be misleading.
+But sometimes visualizations themselves can be misleading.
 
 ![](figures/GTAI_redrawn.png)
 
 ---
 
----
-
 ### Limitations
 
-But sometimes visualizations be misleading.
+But sometimes visualizations themselves can be misleading.
 
 ![](figures/stop_umap.png)
 
@@ -83,12 +81,13 @@ There's only so much we can show in a single view.
 
 ### Interactive Visualization
 
-Interactivity can help a visualization withstand scientific scrutiny.
-
-I'll present two examples from recent work that apply the focus-plus-context
-principle to improve high-dimensional data visualizations.
+I'll go over two recent proejcts that apply the _focus-plus-context principle_
+to support high-dimensional data visualization.
 
 > Allow readers to look up details by interacting with parts of the visualization without losing context.
+
+This form of interactivity can help visualization withstand scientific scrutiny.
+
 
 ---
 
@@ -112,7 +111,7 @@ Kuo, M., Lê Cao, K.-A., Kodikara, S., Mao, J., & Sankaran, K. (2026). phylobar:
 
 Stacked bar pots are a basic visualization used in Microbiome research.
 
-- $X$-axis position encodes samples
+- $x$-axis position encodes samples
 - Color encodes taxonomy
 
 We can use this to compare composition across groups or over time.
@@ -175,6 +174,10 @@ We can collapse and expand the tree and the stacked bar plot rectangles merge or
 ### Interactions
 
 We can use a search bar to look up groups we care about in advance.
+
+---
+
+### Oral Microbiome and Mucositis
 
 ---
 
@@ -429,7 +432,24 @@ This example uses data from a _C. elegans_ cell differentiation study [@Packer20
 Both variation in ellipses and fragmented neighborhood statistics can be used to
 compare competing algorithms, similarly to [@xia2024statistical; @Venna2006].
 
-![](figures/densmap_v_umap_hist.png){width=950}
+```{r}
+#| echo: false
+library(tidyverse)
+theme_set(theme_bw())
+kappa <- read_csv("figures/df_kappa.csv")
+pal <- c("#3C284D", "#D47FBA","#5CA077", "#DB4022", "#F9E340")
+kappa$cell_type <- c(kappa$cell_type[1:2500], kappa$cell_type[1:2500])
+
+ggplot(kappa) +
+    geom_histogram(aes(ratio, fill = cell_type), bins=80) +
+    geom_vline(xintercept = 1, col = "#7e7e7e", linetype = 2) +
+    scale_y_continuous(expand = c(0, 0, 0, 10)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_fill_manual(values = pal) +
+    theme(strip.text.y = element_text(angle = 0, size = 14)) +
+    labs(x = "Ellipse Condition Number", y = "Count", fill = "Cell Type") +
+    facet_grid(method ~ .)
+```
 
 This example uses data from a _C. elegans_ cell differentiation study [@Packer2019].
 
