@@ -161,13 +161,35 @@ Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/art
 
 We can press the Cntl or number keys to cycle across a color palette.
 
-Hovering over a node or rectangle colors is the associated taxonomic group.
+{{<video figures/screen-across-trim.mp4>}}
+
+Hovering over a tree nodes highlights the associated composition bar.
 
 ---
 
 ### Interactions
 
-We can collapse and expand the tree and the stacked bar plot rectangles merge or split according.
+We can press the Cntl or number keys to cycle across a color palette.
+
+{{<video figures/zoom-in-trimmed.mp4>}}
+
+Hovering over a tree nodes highlights the associated composition bar.
+
+---
+
+### Interactions
+
+We can collapse and expand the tree and the stacked bar plot rectangles merge or split accordingly.
+
+{{<video figures/collapsing-v2-trim.mp4>}}
+
+---
+
+### Interactions
+
+We can collapse and expand the tree and the stacked bar plot rectangles merge or split accordingly.
+
+{{<video figures/zoom-in-trimmed.mp4>}}
 
 ---
 
@@ -175,9 +197,13 @@ We can collapse and expand the tree and the stacked bar plot rectangles merge or
 
 We can use a search bar to look up groups we care about in advance.
 
+{{<video figures/bar-search-trim.mp4>}}
+
 ---
 
-### Oral Microbiome and Mucositis
+### Quarto
+
+We can embed these visualizations into quarto documents.
 
 ---
 
