@@ -41,29 +41,43 @@ Always plot your data.
 
 ---
 
-### Limitations
+### How many times larger is the circle on the right?
 
-But sometimes visualizations themselves can be misleading.
+Design choices make a big difference in the accuracy of our interpretations.
 
-![](figures/GTAI_average_hours.gif)
-
-There's only so much we can show in a single view.
-
----
-
-### Limitations
-
-But sometimes visualizations themselves can be misleading.
-
-![](figures/GTAI_redrawn.png)
-
-There's only so much we can show in a single view.
+<div style="text-align: center;">
+<iframe src="figures/circles.html" style="height: 620px; width: 600px" frameborder="0"></iframe><br/>
+</div>
 
 ---
 
-### Limitations
+### How many times taller is the bar on the right?
 
-But sometimes visualizations themselves can be misleading.
+Design choices make a big difference in the accuracy of our interpretations.
+
+<div style="text-align: center;">
+<iframe src="figures/bars.html" style="height: 620px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
+### Encoding and Efficiency
+
+Different ways of encoding information are perceived with different accuracies.
+This means that any visualization implicitly prioritizes some comparisons over
+others.
+
+<div style="text-align: center;">
+<img src="figures/ranking_encodings.png" width=600/><br/>
+Figure from @heer2010crowdsourcing.
+</div>
+
+---
+
+### Visualizing High Dimensions
+
+Effective visualization becomes even more difficult when we measure many
+features.
 
 ![](figures/stop_umap.png)
 
@@ -101,12 +115,21 @@ Kuo, M., Lê Cao, K.-A., Kodikara, S., Mao, J., & Sankaran, K. (2026). phylobar:
 
 ### Motivation
 
-Stacked bar pots are a basic visualization used in Microbiome research.
+:::: {.columns}
+::: {.column width="50%"}
+Stacked bar plots are used in microbiome research to compare composition across groups or over time.
 
 - $x$-axis position encodes samples
 - Color encodes taxonomy
+:::
 
-We can use this to compare composition across groups or over time.
+::: {.column width="50%"}
+![](figures/qiime_taxonomic_barplot_nature.png)
+
+Figure from the Qiime2 paper [@Bolyen2019].
+:::
+::::
+
 
 ---
 
@@ -131,7 +154,7 @@ makes it difficult to study rarer taxa.
 ![](figures/qiime_barplot.png){width=900}
 
 ::: {.smaller}
-Figure from the [Qiime2 View documentation](https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv) [@Bolyen2019].
+Figure from the [Qiime2 documentation](https://view.qiime2.org/visualization/?src=https://docs.qiime2.org/2024.2/data/tutorials/moving-pictures/taxa-bar-plots.qzv) [@Bolyen2019].
 :::
 
 ---
@@ -167,7 +190,8 @@ We can press the control or number keys to cycle across a color palette.
 
 ### Interactions
 
-We can collapse and expand the tree and the stacked bar plot rectangles merge or split accordingly.
+We can collapse and expand the tree and the barplot rectangles merge or split
+accordingly.
 
 {{<video figures/collapsing-v2-trim.mp4>}}
 
@@ -175,36 +199,28 @@ We can collapse and expand the tree and the stacked bar plot rectangles merge or
 
 ### Interactions
 
-We can collapse and expand the tree and the stacked bar plot rectangles merge or split accordingly.
+We can collapse and expand the tree and the barplot rectangles merge or split
+accordingly.
 
 {{<video figures/zoom-in-trimmed.mp4>}}
 
 ---
 
-### Interactions
+### Pseudobulk Data
 
-We can use a search bar to look up groups we care about in advance.
+This idea works whenever you cared about hierarchically organized compositions,
+like this COVID-19 immunology data from @suetal.
 
-{{<video figures/bar-search-trim.mp4>}}
+![](figures/phylobar-immunology.png)
 
 ---
+
 
 ### Quarto
 
 We can embed these visualizations into quarto documents.
 
 ![](figures/phylobar-quarto.png)
-
----
-
-### Pseudobulk Data
-
-This idea works whenever you cared about hierarchically organized compositions.
-For example, when we analyzed the COVID-19 immunology data from @suetal,
-analyzing cell compositions at multiple scales showed us that $\gamma\delta$
-cells were only present in patients with mild symptoms.
-
-![](figures/phylobar-immunology.png)
 
 ---
 
@@ -251,6 +267,35 @@ Example from [@xia2024statistical].
 Rather than abandoning nonlinear dimensionality reduction, we augment the
 embeddings to characterize distortion.
 
+- Local distortion: How does the data manifold get warped by the embedding?
+- Fragmented neighborhoods: How do distances in the original and embedding spaces compare?
+
+---
+
+### Local Distortion
+
+The RMetric method [@perrault2006metric; @mcqueen2016megaman] estimates an
+embedding's effect on a unit circle in the original space.
+
+![](figures/bbag136f1.jpeg)
+
+---
+
+### Local Distortion
+
+For a $K$-dimensional embedding map, it returns a collection of matrices $H_{n}
+\in \reals^{K \times K}$ showing how each dimension is dilated or compressed.
+
+(examples of different $H_{n}$)
+
+---
+
+### Local Distortion
+
+RMetric can be viewed as a version of Tissot's indacatric
+[@laskowski1989traditional] when the embedding map doesn't have an analytical
+formula.
+
 :::: {.columns}
 ::: {.column width="50%"}
 ![](figures/tissot-1.png){width=400}
@@ -260,89 +305,17 @@ embeddings to characterize distortion.
 :::
 ::::
 
-This is a high-dimensional version of Tissot's indicatrix from cartography
-[@laskowski1989traditional].
-
 ---
 
-### RMetric Motivation
+### Fragmented Neighborhoods
 
-The RMetric algorithm [@perrault2006metric; @mcqueen2016megaman] quantifies
-distortion geometrically. To motivate the algorithm, consider the distortion
-induced by mapping the sphere into latitude/longitude coordinates.
+For a more global summary of distortion, we fit a running median to true vs.
+embedding distances, flag outliers above $\sigma \times \text{IQR}$, and mark
+points with many outlier links as "fragmented."
 
-![](figures/sphere_embedding_setup.png){width=800}
-
----
-
-### Half-Sphere Parameterization
-
-Parameterize points on $\mathcal{M}$ using spherical coordinates:
-
-\begin{align*}
-\mathbf{x}\left(p\right) = \left(\cos\varphi\cos\theta, \cos\varphi \sin\theta, \sin\varphi\right)
-\end{align*}
-
-The associated (latitude, longitude) embedding is
-
-\begin{align*}
-\mathbf{z}\left(p\right) =
-\left(\theta\left(p\right), \varphi\left(p\right)\right).
-\end{align*}
-
-![](figures/sphere_embedding_setup.png){width=800}
+![](figures/outlier_neighbors.jpeg)
 
 ---
-
-### Dual Pushforward Metric
-
-The gradients $\nabla z^i$ of the embedding dimensions reflect distortion.
-
-![](figures/gradients_z_theta.png){width=1000}
-
-Since the level sets of $z^\theta$ become more compressed near the poles, the
-gradients $\nabla z^\theta$ become larger there.
-
----
-
-
-### Dual Pushforward Metric
-
-This gradient information can be stored in the matrix $H$ with elements,
-
-\begin{align*}
-h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
-\end{align*}
-where $g_{0}$ is the metric on $\mathcal{M}$ inherited from the ambient space.
-
-<br/>
-<br/>
-In our example,
-
-\begin{align*}
-H = \begin{pmatrix} 1/\cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
-\end{align*}
-
----
-
-### Product Rule for Laplacians
-
-For any $f$ and $g$, the Laplacian $\Delta$ satisfies,
-\begin{align*}
-\Delta(fg) = f\,\Delta g + g\,\Delta f + 2\langle \nabla f, \nabla g \rangle_{g_{0}}
-\end{align*}
-
-Setting $f = z^i$, $g = z^j$ and rearranging,
-\begin{align*}
-h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(z^i z^j) - z^i\Delta z^j - z^j\Delta z^i\right]
-\end{align*}
-
-Since there are methods for estimating $\Delta$ from data [@Hein2005;
-@Coifman2006], we also have a practical method for approximating local
-distortions $H$!
-
----
-
 
 ### Examples
 
@@ -444,22 +417,6 @@ artificially spreads the high density area.
 
 ---
 
-
-
-### Hydra Cell Atlas
-
-:::: {.columns}
-::: {.column width="50%"}
-At perplexity = 500, the clusters are more reliable, but peripheral samples are
-in fact closer than they appear
-:::
-::: {.column width="50%"}
-![](figures/hydra_perplexity_500.gif){width=470}
-:::
-::::
-
----
-
 ### DensMap vs. UMAP
 
 Both variation in ellipses and fragmented neighborhood statistics can be used to
@@ -501,21 +458,18 @@ ggplot(kappa) +
 
 ### Summary
 
+The focus-plus-context principle lets us create more reliable visualizations by
+overlaying important details onto initial views.
 
-1. Interactivity can reveal distortion information based on the analyst's
-priorities.
+**Papers**:
 
-**Papers**: [https://go.wisc.edu/e2c16h](https://go.wisc.edu/e2c16h)
+- [phylobar: an R package for multiresolution compositional barplots in omics studies.](https://academic.oup.com/bioinformatics/article/42/4/btag151/8540456)
+- [Interactive visualization of metric distortion in nonlinear data embeddings using the distortions package.](https://academic.oup.com/bib/article/27/2/bbag136/8559622)
 
-**Packages**: [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
+**Packages**:
 
----
-
-### Conclusion
-
-- Interactivity allows us to see the equivalent of hundreds of static views easily.
-- Computers make this easy but we shouldn't take it for granted!
-
+- [https://bioconductor.org/packages/devel/bioc/html/phylobar.html](https://bioconductor.org/packages/devel/bioc/html/phylobar.html)
+- [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
 
 ---
 
@@ -531,18 +485,32 @@ priorities.
 
 ---
 
-### Graph Laplacian
+### RMetric Motivation
 
-To compute $L$, we use the estimator from [@Coifman2006].
+The RMetric algorithm [@perrault2006metric; @mcqueen2016megaman] quantifies
+distortion geometrically. To motivate the algorithm, consider the distortion
+induced by mapping the sphere into latitude/longitude coordinates.
 
-1. Build the kernel matrix $W_{kl} = \exp(-\|X_k - X_l\|^2 / h)$, where $h$ is a bandwidth hyperparameter.
+![](figures/sphere_embedding_setup.png){width=800}
 
-2. Normalize both columns and rows.
+---
+
+### Half-Sphere Parameterization
+
+Parameterize points on $\mathcal{M}$ using spherical coordinates:
+
 \begin{align*}
-D &= \text{diag}(W\mathbf{1}) \qquad \tilde{W} = D^{-1}WD^{-1}  \\
-\tilde{D} &= \text{diag}(\tilde{W}\mathbf{1}) \qquad L = \tilde{D}^{-1}\tilde{W}
+\mathbf{x}\left(p\right) = \left(\cos\varphi\cos\theta, \cos\varphi \sin\theta, \sin\varphi\right)
 \end{align*}
-Column normalization accounts for differences in sampling density.
+
+The associated (latitude, longitude) embedding is
+
+\begin{align*}
+\mathbf{z}\left(p\right) =
+\left(\theta\left(p\right), \varphi\left(p\right)\right).
+\end{align*}
+
+![](figures/sphere_embedding_setup.png){width=800}
 
 ---
 
@@ -571,6 +539,91 @@ Near the equator ($\varphi \approx 0$), a small step in $\theta$ covers more
 distance than near the north pole ($\varphi \approx \frac{\pi}{2}$).
 
 ![](figures/dx_dphi.png){width=800}
+
+---
+
+### Dual Pushforward Metric
+
+Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
+reflect distortion.
+
+![](figures/gradients_z_theta.png){width=1000}
+
+Since the level sets of $z^\theta$ become more compressed near the poles, the
+gradients $\nabla z^\theta$ become larger there.
+
+---
+
+### Dual Pushforward Metric
+
+Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
+reflect distortion.
+
+![](figures/level_sets_phi.png){width=1000}
+
+In contrast, the gradients $\nabla z^{\varphi}$ don't depend on $\varphi$.
+
+---
+
+### Dual Pushforward Metric
+
+This gradient information can be stored in the matrix $H$ with elements,
+
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
+\end{align*}
+where $g_{0}$ is the metric on $\mathcal{M}$ inherited from the ambient space.
+
+<br/>
+<br/>
+
+_$H$ is computable from data while $G$ requires an explicit manifold
+parameterization._
+
+---
+
+### Dual Pushforward Metric
+
+In our running example,
+
+\begin{align*}
+H = \begin{pmatrix} 1/\cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
+\end{align*}
+
+We can see that $H = G^{-1}$ and that is actually true more generally.
+
+---
+
+### Product Rule for Laplacians
+
+For any $f$ and $g$, the Laplacian $\Delta$ satisfies,
+\begin{align*}
+\Delta(fg) = f\,\Delta g + g\,\Delta f + 2\langle \nabla f, \nabla g \rangle_{g_{0}}
+\end{align*}
+
+Setting $f = z^i$, $g = z^j$ and rearranging,
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(z^i z^j) - z^i\Delta z^j - z^j\Delta z^i\right]
+\end{align*}
+
+Since there are methods for estimating $\Delta$ from data [@Hein2005;
+@Coifman2006], we also have a practical method for approximating local
+distortions $H$!
+
+---
+
+### Graph Laplacian
+
+To compute $L$, we use the estimator from [@Coifman2006].
+
+1. Build the kernel matrix $W_{kl} = \exp(-\|X_k - X_l\|^2 / h)$, where $h$ is a bandwidth hyperparameter.
+
+2. Normalize both columns and rows.
+\begin{align*}
+D &= \text{diag}(W\mathbf{1}) \qquad \tilde{W} = D^{-1}WD^{-1}  \\
+\tilde{D} &= \text{diag}(\tilde{W}\mathbf{1}) \qquad L = \tilde{D}^{-1}\tilde{W}
+\end{align*}
+Column normalization accounts for differences in sampling density.
 
 ---
 
@@ -625,6 +678,23 @@ h^{11} = \frac{1}{2}\left[\frac{2}{\cos^2\varphi} - 2\theta \cdot 0\right] = \fr
 
 ---
 
+### RMetric Implementation
+
+Let $z_{k} \in \mathbb{R}^{N}$ be the $k^{th}$ embedding dimension. Let $L$ be
+the doubly-normalized graph Laplacian [@Coifman2006]. Compute
+
+\begin{align*}
+H_{kk'}^{(\cdot)} := \frac{1}{2}\left[L\left(z_{k} \circ z_{k'}\right) - z_{k} \circ \left(L z_{k'}\right) - z_{k'} \circ \left(L z_{k}\right)  \right] \in \mathbb{R}^{N}
+\end{align*}
+
+The embedding distortion for sample $n$ is given by $H^{(n)} \in \mathbb{R}^{K
+\times K}$
+
+![](figures/g_kl.png){width=350}
+
+---
+
+
 ### Interaction Gulfs
 
 There are two classic challenges in interactive interfaces [@Hutchins1985],
@@ -649,17 +719,6 @@ These challenges also apply to interactive data analysis.
 
 ---
 
-### Dual Pushforward Metric
-
-Alternatively, the gradients $\nabla z^i$ of the embedding dimensions also
-reflect distortion.
-
-![](figures/level_sets_phi.png){width=1000}
-
-In contrast, the gradients $\nabla z^{\varphi}$ don't depend on $\varphi$.
-
----
-
 ### Comparison with LOO-map
 
 The stability-based algorithm [@Liu2025] gives a similar
@@ -669,5 +728,14 @@ approach is time consuming even with approximations.
 ![](figures/p_scores_0.5.png){width=600}
 
 ---
+
+### Interactions
+
+We can use a search bar to look up groups we care about in advance.
+
+{{<video figures/search.mp4>}}
+
+---
+
 
 ### References {.smaller}
