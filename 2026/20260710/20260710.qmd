@@ -278,6 +278,22 @@ embeddings to characterize distortion.
 
 ### Local Distortion
 
+Our approach is similar to Tissot's indacatrix [@laskowski1989traditional]
+except the embedding map doesn't have an analytical formula.
+
+:::: {.columns}
+::: {.column width="50%"}
+![](figures/tissot-1.png){width=400}
+:::
+::: {.column width="50%"}
+![](figures/tissot-2.png){width=400}
+:::
+::::
+
+---
+
+### Local Distortion
+
 The RMetric method [@perrault2006metric; @mcqueen2016megaman] estimates an
 embedding's effect on a unit circle in the original space.
 
@@ -291,26 +307,46 @@ For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
 compressed.
 
-(examples of different $H_{n}$)
+![](figures/manifold_overview.png)
 
 ---
 
 ### Local Distortion
 
-RMetric can be viewed as a version of Tissot's indacatric
-[@laskowski1989traditional] when the embedding map doesn't have an analytical
-formula.
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
 
-:::: {.columns}
-::: {.column width="50%"}
-![](figures/tissot-1.png){width=400}
-:::
-::: {.column width="50%"}
-![](figures/tissot-2.png){width=400}
-:::
-::::
+![](figures/density_shrinks.png)
+
+In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.5 & 0 \\ 0 & 0.5 \end{pmatrix}$.
 
 ---
+
+### Local Distortion
+
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
+
+![](figures/density_stretch.png)
+
+In this neighborhood $H_{n} \approx \begin{pmatrix} 1 & 0 \\ 0 & 0.2 \end{pmatrix}$.
+
+---
+
+### Local Distortion
+
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
+
+![](figures/embedding_shear.png)
+
+In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.7 & 0.2 \\ 0.2 & 0.6 \end{pmatrix}$.
+
+---
+
 
 ### Fragmented Neighborhoods
 
@@ -471,7 +507,7 @@ overlaying important details onto initial views.
 - [phylobar: an R package for multiresolution compositional barplots in omics studies.](https://academic.oup.com/bioinformatics/article/42/4/btag151/8540456)
 - [Interactive visualization of metric distortion in nonlinear data embeddings using the distortions package.](https://academic.oup.com/bib/article/27/2/bbag136/8559622)
 
-**Packages**: `phylobar` on Bioconductor and `distortions` on pypi
+**Packages**: `phylobar` is on Bioconductor and `distortions` is on pypi
 
 ---
 
