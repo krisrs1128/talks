@@ -8,7 +8,8 @@ execute:
     message: false
     warning: false
     cache: false
-citeproc: false
+citeproc: true
+csl: elsevier-vancouver.csl
 filters:
   - split-refs.lua
 format:
@@ -38,6 +39,8 @@ Good visualizations:
 Always plot your data.
 
 ![](figures/autodesk-dino.gif)
+
+Many datasets with the same summary statistics @matejka2017same.
 
 ---
 
@@ -209,7 +212,7 @@ accordingly.
 ### Pseudobulk Data
 
 This idea works whenever you cared about hierarchically organized compositions,
-like this COVID-19 immunology data from @suetal.
+like this COVID-19 immunology data from @Su2020.
 
 ![](figures/phylobar-immunology.png)
 
@@ -247,18 +250,19 @@ density within different regions of the plot.
 
 ![](figures/densmap_example.png){width=1000}
 
-Example from [@narayan2021assessing].
+DensMAP is designed to address density distortion [@narayan2021assessing].
 
 ---
 
 ### Consequences
 
 These distortions are not mere technical curiosities -- they significantly
-impact scientific interpretation [@Liu2025; @Kobak2021]. For example, they
-create misleading differences between cell types that are actually similar.
+impact scientific interpretation [@Liu2025; @Kobak2021;
+@simplystatisticsSimplyStatistics]. For example, they create misleading
+differences between cell types that are actually similar.
 
 ![](figures/scdeed-example.png){width=700}
-Example from [@xia2024statistical].
+scDEED tunes hyperparameters to improve embedding reliability [@xia2024statistical].
 
 ---
 
@@ -267,8 +271,8 @@ Example from [@xia2024statistical].
 Rather than abandoning nonlinear dimensionality reduction, we augment the
 embeddings to characterize distortion.
 
-- Local distortion: How does the data manifold get warped by the embedding?
-- Fragmented neighborhoods: How do distances in the original and embedding spaces compare?
+- **Local distortion**: How does the data manifold get warped by the embedding?
+- **Fragmented neighborhoods**: How do distances in the original and embedding spaces compare?
 
 ---
 
@@ -283,8 +287,9 @@ embedding's effect on a unit circle in the original space.
 
 ### Local Distortion
 
-For a $K$-dimensional embedding map, it returns a collection of matrices $H_{n}
-\in \reals^{K \times K}$ showing how each dimension is dilated or compressed.
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
 
 (examples of different $H_{n}$)
 
@@ -466,10 +471,7 @@ overlaying important details onto initial views.
 - [phylobar: an R package for multiresolution compositional barplots in omics studies.](https://academic.oup.com/bioinformatics/article/42/4/btag151/8540456)
 - [Interactive visualization of metric distortion in nonlinear data embeddings using the distortions package.](https://academic.oup.com/bib/article/27/2/bbag136/8559622)
 
-**Packages**:
-
-- [https://bioconductor.org/packages/devel/bioc/html/phylobar.html](https://bioconductor.org/packages/devel/bioc/html/phylobar.html)
-- [https://pypi.org/project/distortions](https://pypi.org/project/distortions)
+**Packages**: `phylobar` on Bioconductor and `distortions` on pypi
 
 ---
 
