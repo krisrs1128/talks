@@ -374,6 +374,14 @@ also fewer outliers if you zoom into the large condition number values.
 
 ---
 
+### Distortions App
+
+We've just created a webapp where you can create these visualizations
+interactively in the browser. You can either upload your own embeddings or your
+raw data and we hvae options for running a few common embedding methods.
+
+---
+
 ### Summary
 
 Okay, so that's all I wanted to share today. These are the papers that explain

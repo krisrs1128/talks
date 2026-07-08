@@ -507,6 +507,16 @@ ggplot(kappa) +
 
 ---
 
+### Online App
+
+You can experiment with this method in the browser at this link:
+
+> [https://distortionwebapp.streamlit.app/](https://distortionwebapp.streamlit.app/)
+
+![](figures/distortions-app.png)
+
+---
+
 ### Summary
 
 The focus-plus-context principle lets us create more reliable visualizations by
@@ -524,7 +534,8 @@ overlaying important details onto initial views.
 ### Acknowledgments
 
 * Contact: ksankaran@wisc.edu
-* Lab Members: Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Helena Huang
+* Lab Members: Megan Kuo, Yuliang Peng, Langtian Ma, Cameron Jones, Jiaxin Ye, Helena Huang
+* Collaborators: Jiadong Mao, Saritha Kodikara, Kim-Anh Le Cao, Chenab, Shuzhen Zhang, Taiqian Zhang, Marina Meila
 * Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates INV-072185, NIH R01HG014687
 
 ---
