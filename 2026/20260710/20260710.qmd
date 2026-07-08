@@ -8,10 +8,10 @@ execute:
     message: false
     warning: false
     cache: false
-citeproc: true
+citeproc: false
 csl: elsevier-vancouver.csl
 filters:
-  - split-refs.lua
+  - /Users/krissankaran/Desktop/laboratory/talks/2026/20260710/split-refs.lua
 format:
   revealjs:
     width: 1200
@@ -136,7 +136,7 @@ Figure from the Qiime2 paper [@Bolyen2019].
 
 ---
 
-### Motivation
+### Challenges
 
 The basic limitation is that they can only show so many colors at a time. This
 makes it difficult to study rarer taxa.
@@ -149,7 +149,7 @@ Figure from the [microbiomeViz documentation](https://david-barnett.github.io/mi
 
 ---
 
-### Motivation
+### Challenges
 
 The basic limitation is that they can only show so many colors at a time. This
 makes it difficult to study rarer taxa.
@@ -219,7 +219,7 @@ like this COVID-19 immunology data from @Su2020.
 ---
 
 
-### Quarto
+### Notebooks
 
 We can embed these visualizations into quarto documents.
 
@@ -254,6 +254,16 @@ DensMAP is designed to address density distortion [@narayan2021assessing].
 
 ---
 
+### Distortions in $t$-SNE and UMAP
+
+They can also fail to preserve the topology of the underlying data...
+
+![](figures/tsne-initialization.png){width=600}
+
+Example from [@Kobak2021].
+
+---
+
 ### Consequences
 
 These distortions are not mere technical curiosities -- they significantly
@@ -276,9 +286,9 @@ embeddings to characterize distortion.
 
 ---
 
-### Local Distortion
+### Precedent
 
-Our approach is similar to Tissot's indacatrix [@laskowski1989traditional]
+Our approach is similar to Tissot's indicatrix [@laskowski1989traditional]
 except the embedding map doesn't have an analytical formula.
 
 :::: {.columns}
@@ -301,7 +311,7 @@ embedding's effect on a unit circle in the original space.
 
 ---
 
-### Local Distortion
+### Example Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
@@ -311,7 +321,7 @@ compressed.
 
 ---
 
-### Local Distortion
+### Example Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
@@ -323,7 +333,7 @@ In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.5 & 0 \\ 0 & 0.5 \end{pma
 
 ---
 
-### Local Distortion
+### Example Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
@@ -335,7 +345,7 @@ In this neighborhood $H_{n} \approx \begin{pmatrix} 1 & 0 \\ 0 & 0.2 \end{pmatri
 
 ---
 
-### Local Distortion
+### Example Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
