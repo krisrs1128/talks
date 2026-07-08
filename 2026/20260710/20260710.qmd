@@ -311,7 +311,7 @@ embedding's effect on a unit circle in the original space.
 
 ---
 
-### Example Interpretation
+### Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
@@ -321,7 +321,7 @@ compressed.
 
 ---
 
-### Example Interpretation
+### Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
@@ -333,7 +333,7 @@ In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.5 & 0 \\ 0 & 0.5 \end{pma
 
 ---
 
-### Example Interpretation
+### Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
@@ -341,11 +341,11 @@ compressed.
 
 ![](figures/density_stretch.png)
 
-In this neighborhood $H_{n} \approx \begin{pmatrix} 1 & 0 \\ 0 & 0.2 \end{pmatrix}$.
+In this neighborhood $H_{n} \approx \begin{pmatrix} 2 & 0 \\ 0 & 0.2 \end{pmatrix}$.
 
 ---
 
-### Example Interpretation
+### Interpretation
 
 For a $K$-dimensional embedding map, it returns a collection of matrices
 $H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
@@ -368,7 +368,7 @@ points with many outlier links as "fragmented."
 
 ---
 
-### Examples
+### Variable Density Swiss Roll
 
 This is the classic Swiss Roll data, but with higher density near the endpoints.
 

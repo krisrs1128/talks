@@ -6,7 +6,8 @@
 I'm very excited to be here. Thank you to all the organizers for putting together such a nice retreat.
 
 Today I'm going to be sharing some new methods for visualizing omics data, if
-you'd like to follow along you can find the slides at this link.
+you'd like to follow along you can find the slides at this link. If you have any
+questions along the way, please just raise your hand.
 
 ---
 
@@ -237,14 +238,145 @@ omics expression space would be warped by the embedding.
 
 ---
 
-### Example Interpretation
+### Interpretation
+
+Here's a more concrete example. Imagine the data actually lie on a manifold in
+high-dimensional space. Let's say we're interested in the embedding distortion
+in the neighborhood of these three points.
 
 ---
 
-### Example Interpretation
+### Interpretation
+
+Think of the points on the left as being like the true data when you unwrap that
+manifold. Suppose the embedding actually returns the version in the middle.
+Then, the $H_{n}$ matrix is like the identity but the diagonal elements are less
+than one. We visualize this as a circle -- the identity circle would be the
+dashed lines, the $H_{n}$ we have is the solid circle.
 
 ---
 
-### Example Interpretation
+### Interpretation
+
+It could have been the case that the embedding stretches one direction more
+strongly than the other. In this case, you would expect the ellipse to have a
+wide x-axis and narrow y-axis.
 
 ---
+
+### Interpretation
+
+You could also have a shear. In this case, you will have offdiagonal elements
+showing what happens to the standard basis vectors near the point of interest.
+
+---
+
+### Fragmented Neighborhoods
+
+Besides the local stretches and compressions, we might also be concerned about
+long-range breaks in the distance. For this, for each point, we compute the
+distance to the $K$ nearest neighbors in both the original and the embedding
+space. You hope that these broadly increase with one another. But sometimes you
+have outliers where the the embedding distance is unusual considering the
+original data distance. If a point has many outliers in its neighborhood, then
+we flag that center point as a fragmented neighborhood.
+
+---
+
+### Variable Density Swiss Roll
+
+That is our setup. Let's look at some examples. This is the classic swiss roll
+dataset, except we slightly decreased density near the middle of the roll.
+
+---
+
+### Variable Density Swiss Roll
+
+Here is the resutl when you run $t$-SNE on these data. First thing is that it
+breaks the roll in the low density region.
+
+Second thing is that the areas with higher density get spread out into a wider
+area, even though they occupied the same width in the original roll.
+
+---
+
+### Fragmented Neighborhoods
+
+Here is the output from our visualization. Notice that the ellipses are larger
+in the high-density area -- this exactly reflects the fact that the embedding
+has inappropriately spread the points out.
+
+It has also highlighted these points as being fragmented neighborhoods.
+
+---
+
+### Fragmented Neighborhoods
+
+If we interact with those fragmented neighborhoods, we can see very clearly that
+the embedding tore at this point. It actually flags another more subtle break
+down here.
+
+---
+
+### Poorly Preserved Distances
+
+Here's another view. This is a boxplot of the original vs. embedding distances.
+These outliers are exactly the distances that are too large in the embedding
+relative to the original data.
+
+---
+
+### Hydra Cell Atlas
+
+Let me revisit the hydra example from teh motivation. This is the visualization
+with default perplexity. Once you hover over the plot, it highlights the
+fragmented neighborhoods. And when we hover over it, you can exactly see that
+those neuron EC cells are split across the visualization.
+
+---
+
+### Hydra Cell Atlas
+
+Here is the same visualization when we use a higher perplexity.
+
+---
+
+### Hydra Cell Atlas
+
+Immediately on hovering, we see that there are fewer fragmented neighborhoods,
+which is consistent with the visualization we had before. This is exactly the
+hyperparameter that had been optimized by scDEED, so it's not surprising.
+
+---
+
+### Hydra Cell Atlas
+
+It's a little interesting that the visualization is still not perfect. What I
+think happens is there area outliers that are getting embedded in the center of
+the plot -- a more accurate embedding would probably find that this is coming
+out of the page in 3D.
+
+---
+
+### DensMAP vs. UMAP
+
+Here I've revisited the densmap vs. umap example. First thing you notice is that
+there are fewer fragmented neighborhoods when using DensMAP.
+
+---
+
+### DensMAP vs. UMAP
+
+For the more local distortion, I can also measure how eccentric each of those
+ellipses are. It shows that the compression/dilation effects locally are less
+severe in Densmap, because across cell types the peak at 1 is larger, there are
+also fewer outliers if you zoom into the large condition number values.
+
+---
+
+### Summary
+
+Okay, so that's all I wanted to share today. These are the papers that explain
+the ideas in more detail. We also hosted packages and examples in bioconductor
+and pypi. If you try it out and find anything interesting (or discover any
+issues), I'd love to hear from you. Thank you for your attention.
