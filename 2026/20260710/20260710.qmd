@@ -88,18 +88,6 @@ There's only so much we can show in a single view.
 
 ---
 
-### Focus-plus-context
-
-- We'll go over two recent projects that apply the _focus-plus-context
-principle_ to help omics visualizations stand up to scientific scrutiny.
-
-- These visualizations "provide a detailed view of a high interest data region
-while retaining surrounding context to help keep analysts oriented" @heer2004.
-
-![](figures/focus-context-map.png)
-
----
-
 ## phylobar
 
 <br/>
@@ -197,15 +185,6 @@ We can collapse and expand the tree and the barplot rectangles merge or split
 accordingly.
 
 {{<video figures/collapsing-v2-trim.mp4>}}
-
----
-
-### Interactions
-
-We can collapse and expand the tree and the barplot rectangles merge or split
-accordingly.
-
-{{<video figures/zoom-in-trimmed.mp4>}}
 
 ---
 
@@ -341,7 +320,7 @@ compressed.
 
 ![](figures/density_stretch.png)
 
-In this neighborhood $H_{n} \approx \begin{pmatrix} 2 & 0 \\ 0 & 0.2 \end{pmatrix}$.
+In this neighborhood $H_{n} \approx \begin{pmatrix} 2 & 0 \\ 0 & 0.5 \end{pmatrix}$.
 
 ---
 
@@ -361,8 +340,8 @@ In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.7 & 0.2 \\ 0.2 & 0.6 \end
 ### Fragmented Neighborhoods
 
 For a more global summary of distortion, we fit a running median to true vs.
-embedding distances, flag outliers above $\sigma \times \text{IQR}$, and mark
-points with many outlier links as "fragmented."
+embedding neighbor distances, flag outliers above $\sigma \times \text{IQR}$,
+and mark points with many outlier links as "fragmented."
 
 ![](figures/outlier_neighbors.jpeg)
 
@@ -514,6 +493,16 @@ You can experiment with this method in the browser at this link:
 > [https://distortionwebapp.streamlit.app/](https://distortionwebapp.streamlit.app/)
 
 ![](figures/distortions-app.png)
+
+---
+
+### Focus-plus-context
+
+- The thread in both these projects is the _focus-plus-context principle_ from data visualization [@heer2004].
+
+- We allowed the viewer to query for details relevant to the overall interpretation while maintaining relevant context.
+
+![](figures/focus-context-map.png)
 
 ---
 
