@@ -403,7 +403,6 @@ kappa$cell_type <- c(kappa$cell_type[1:2500], kappa$cell_type[1:2500])
 
 ggplot(kappa) +
     geom_histogram(aes(ratio, fill = cell_type), bins=80) +
-    geom_vline(xintercept = 1, col = "#7e7e7e", linetype = 2) +
     scale_y_continuous(expand = c(0, 0, 0, 10)) +
     scale_x_continuous(expand = c(0, 0)) +
     scale_fill_manual(values = pal) +
@@ -412,7 +411,7 @@ ggplot(kappa) +
         axis.title = element_text(size=14),
         legend.text = element_text(size=14)
         ) +
-    labs(x = "Ellipse Condition Number", y = "Count", fill = "Cell Type") +
+    labs(x = "Log Condition Number", y = "Count", fill = "Cell Type") +
     facet_grid(method ~ .)
 ```
 
