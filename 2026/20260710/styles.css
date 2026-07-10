@@ -15,6 +15,13 @@
   margin-top: .5em;
 }
 
+.custom-title-slide .title-slide-cover {
+  display: block;
+  max-width: 100%;
+  max-height: 37vh;
+  margin: 1em auto;
+}
+
 .custom-title-slide .title-slide-bottom-row {
   display: flex;
   flex-direction: row;

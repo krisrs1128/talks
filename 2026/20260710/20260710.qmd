@@ -22,28 +22,6 @@ format:
       - title-slide.html
 ---
 
-### Visualization
-
-Good visualizations:
-
-- Give more information than summary statistics alone
-- Help sanity check the data generation process
-- Help diagnose model fitting failures
-
-![](figures/anscombe.svg)
-
----
-
-### Visualization
-
-Always plot your data.
-
-![](figures/autodesk-dino.gif)
-
-Many datasets with the same summary statistics @matejka2017same.
-
----
-
 ### How many times larger is the circle on the right?
 
 Design choices make a big difference in the accuracy of our interpretations.
@@ -287,52 +265,6 @@ The RMetric method [@perrault2006metric; @mcqueen2016megaman] estimates an
 embedding's effect on a unit circle in the original space.
 
 ![](figures/bbag136f1.jpeg)
-
----
-
-### Interpretation
-
-For a $K$-dimensional embedding map, it returns a collection of matrices
-$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
-compressed.
-
-![](figures/manifold_overview.png)
-
----
-
-### Interpretation
-
-For a $K$-dimensional embedding map, it returns a collection of matrices
-$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
-compressed.
-
-![](figures/density_shrinks.png)
-
-In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.5 & 0 \\ 0 & 0.5 \end{pmatrix}$.
-
----
-
-### Interpretation
-
-For a $K$-dimensional embedding map, it returns a collection of matrices
-$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
-compressed.
-
-![](figures/density_stretch.png)
-
-In this neighborhood $H_{n} \approx \begin{pmatrix} 2 & 0 \\ 0 & 0.5 \end{pmatrix}$.
-
----
-
-### Interpretation
-
-For a $K$-dimensional embedding map, it returns a collection of matrices
-$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
-compressed.
-
-![](figures/embedding_shear.png)
-
-In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.7 & 0.2 \\ 0.2 & 0.6 \end{pmatrix}$.
 
 ---
 
@@ -739,6 +671,52 @@ The embedding distortion for sample $n$ is given by $H^{(n)} \in \mathbb{R}^{K
 \times K}$
 
 ![](figures/g_kl.png){width=350}
+
+---
+
+### Interpretation
+
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
+
+![](figures/manifold_overview.png)
+
+---
+
+### Interpretation
+
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
+
+![](figures/density_shrinks.png)
+
+In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.5 & 0 \\ 0 & 0.5 \end{pmatrix}$.
+
+---
+
+### Interpretation
+
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
+
+![](figures/density_stretch.png)
+
+In this neighborhood $H_{n} \approx \begin{pmatrix} 2 & 0 \\ 0 & 0.5 \end{pmatrix}$.
+
+---
+
+### Interpretation
+
+For a $K$-dimensional embedding map, it returns a collection of matrices
+$H_{n} \in \mathbb{R}^{K \times K}$ showing how each dimension is dilated or
+compressed.
+
+![](figures/embedding_shear.png)
+
+In this neighborhood, $H_{n} \approx \begin{pmatrix} 0.7 & 0.2 \\ 0.2 & 0.6 \end{pmatrix}$.
 
 ---
 
