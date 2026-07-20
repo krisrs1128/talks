@@ -41,7 +41,7 @@ $$
 #| echo: false
 library(tidyverse)
 library(reticulate)
-theme_set(theme_classic() + theme(panel.border= element_rect(fill = NA, linewidth = .5)))
+theme_set(theme_classic() + theme(panel.border = element_rect(fill = NA, linewidth = .5)))
 set.seed(2026)
 
 # disable parallel processing
@@ -59,7 +59,24 @@ Sys.setenv(MKL_NUM_THREADS = "1")
 use_condaenv("stat479_week6")
 ```
 
-_Readings: [1](https://arxiv.org/abs/2207.07605), [2](https://proceedings.mlr.press/v108/janzing20a.html), [3](https://proceedings.neurips.cc/paper_files/paper/2024/hash/084252ec5f05f13bf565843c1873686d-Abstract-Conference.html)_, _[Code](https://github.com/krisrs1128/talks/blob/master/2026/20260619/20260619.qmd)_
+_Readings: [1](https://arxiv.org/abs/2207.07605), [2](https://proceedings.mlr.press/v108/janzing20a.html), [3](https://proceedings.neurips.cc/paper_files/paper/2024/hash/084252ec5f05f13bf565843c1873686d-Abstract-Conference.html)_; _[Source](https://github.com/krisrs1128/talks/blob/master/2026/20260619/20260619.qmd); Colab: [1](https://colab.research.google.com/drive/1vsdIELDbONhZPPNnNR2Q7MSLBLmXdSC2?usp=sharing), [2](https://colab.research.google.com/drive/1bDTP8cas2EkHqx20KEjiCZ3z-mHAv0g4?usp=sharing)_
+
+## CGSI Motivation
+
+1. On Friday, Prof. Na Cai described an approach to making EHR-based GWAS more
+reliable [@Di2026]. A part of the method used a multilayer perceptron model,
+EDGAR, to predict deep phenotypes from EHR codes. This is Supplementary Figure 7.
+
+   ![](figures/edgar_shap.png){width=90%}
+
+1. At [CGSI 2024](https://www.youtube.com/watch?v=iWmhAycjEcI), Prof. Christina
+Leslie presented SCARlink [@Mitra2024], a model to predict gene expression from
+chromatin accessibility data, which can be used to identify cell-type specific
+enhancers.  This is from their introduction:
+
+   > Moreover, we can use Shapley values, a well-known feature attribution method, to identify cell-type-specific enhancers, that is, genomic tiles that are important for predicting expression across cells from a given cluster or annotation. Therefore, although SCARlink is formulated as a gene expression prediction problem, we can use the learned model parameters to infer enhancer–gene links in a cell-type-specific manner.
+
+1. So, what exactly are Shapley values???
 
 ## Setup
 
@@ -79,8 +96,8 @@ _Readings: [1](https://arxiv.org/abs/2207.07605), [2](https://proceedings.mlr.pr
    - _Principled._ The attribution measure should be derivable from a clear set
    of mathematical axioms.
 
-**Approach.** SHAP values satisfy all three requirements. This handout focuses on their
-conceptual foundation (Section 1) and practical computation (Section 2).
+**Approach.** SHAP values satisfy all three requirements. This handout focuses
+on their theory (Section 1), computation (Section 2), and software (Section 3).
 
 # Conceptual Foundation
 
@@ -88,20 +105,11 @@ conceptual foundation (Section 1) and practical computation (Section 2).
 
 1. _High-stakes decisions._ When an individual is given a medical diagnosis, knowing the globally most important features isn't enough. They deserve an explanation specific to their case.
 
-   - A related use case is _algorithmic recourse_. What could a stakeholder
-   change to reverse a decision? (e.g., which change to their resume would have
-   gotten them a job interview?)
+   - A related use case is _algorithmic recourse_. What could a stakeholder change to reverse a decision? (e.g., are there any lifestyle changes that might help delay disease symptoms?)
 
 1. _Model debugging._ A model might classify a radiograph $x$ as COVID-19 positive because it has the watermark of a hospital with disproportionately many COVID-19 patients [@DeGrave2021]. This means the model has learned a "shortcut" and won't generalize well -- a patient with the disease but scanned with a different machine would get misclassified.
 
    ![](figures/covid_shortcut.png){width=60%}
-
-1. _Scientific discovery_. In heterogeneous populations (e.g., different disease
-subtypes), a model might rely on different sets of features for each
-subpopulation. Local attributions can highlight these differences -- e.g.,
-identifying which features drive drug effectiveness in one subgroup vs. another.
-
-   _Exercise: Give one example (hypothetical, or from your own experience) where local feature attribution would be useful. How would it differ from global variable importance?_
 
 ## Game Theory Definitions
 
