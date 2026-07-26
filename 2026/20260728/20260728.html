@@ -300,6 +300,12 @@ We should make it possible to combine simulators like Lego blocks.
 
 
 
+``` r
+experiments &lt;- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
+families &lt;- list(~ BI(), ~ GaussianLSS())
+sims &lt;- experiments |&gt;
+  map2(families, \(x, y) setup_simulator(x, ~ cell_type, y))
+```
 
 &lt;img src="figures/simulator_join_motivation.png"/&gt;
 
@@ -310,11 +316,15 @@ We should make it possible to combine simulators like Lego blocks.
 One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
 
 
+``` r
+sim_joined &lt;- map(sims, estimate, nu = 0.1) |&gt;
+  join_copula(copula_glasso())
+```
 
 This assumes that we have samples where all features are measured.
 
 .center[
-&lt;img src="figures/copula_join.png" width = 950/&gt;
+&lt;img src="figures/copula_join.png" width = 700/&gt;
 ]
 
 ---
@@ -324,14 +334,12 @@ This assumes that we have samples where all features are measured.
 Alternatively, we can combine two simulators by conditioning them on shared latent structure.
 
 
-```
-## Pamona start!
-## use random seed: 1
-## Pamona Done! takes 1.572290 seconds
+``` r
+sim_joined &lt;- join_pamona(sims)
 ```
 
 .center[
-&lt;img src="figures/simulator_join.png" width = 1000/&gt;
+&lt;img src="figures/simulator_join.png" width = 1200/&gt;
 ]
 
 ---

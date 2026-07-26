@@ -327,7 +327,7 @@ rownames(SCGEMMETH_sce) <- make.names(rownames(SCGEMMETH_sce))
 rownames(SCGEMRNA_sce) <- make.names(rownames(SCGEMRNA_sce))
 ```
 
-```{r illustrate_joins}
+```{r illustrate_joins, echo = TRUE, eval = FALSE}
 experiments <- list(methylation = SCGEMMETH_sce, rna = SCGEMRNA_sce)
 families <- list(~ BI(), ~ GaussianLSS())
 sims <- experiments |>
@@ -342,7 +342,7 @@ sims <- experiments |>
 
 One approach is to merge the list of marginal distributions and re-estimate the joint distribution.
 
-```{r, join_simulators_glasso, eval = FALSE}
+```{r, join_simulators_glasso, echo = TRUE, eval = FALSE}
 sim_joined <- map(sims, estimate, nu = 0.1) |>
   join_copula(copula_glasso())
 ```
@@ -350,7 +350,7 @@ sim_joined <- map(sims, estimate, nu = 0.1) |>
 This assumes that we have samples where all features are measured.
 
 .center[
-<img src="figures/copula_join.png" width = 950/>
+<img src="figures/copula_join.png" width = 700/>
 ]
 
 ---
@@ -359,12 +359,12 @@ This assumes that we have samples where all features are measured.
 
 Alternatively, we can combine two simulators by conditioning them on shared latent structure.
 
-```{r join_simulators}
+```{r join_simulators, echo = TRUE, eval = FALSE}
 sim_joined <- join_pamona(sims)
 ```
 
 .center[
-<img src="figures/simulator_join.png" width = 1000/>
+<img src="figures/simulator_join.png" width = 1200/>
 ]
 
 ---
