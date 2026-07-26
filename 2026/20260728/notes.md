@@ -16,14 +16,14 @@ An Early Simulation Study
 
 Preparing this talk made me wonder about the first time I ever used simulation
 in a paper, and I think it was this one.  The topic was to do a kind of
-multiomic analysis of some longitudinal data about the microbiome and I
-remember, and a natural question was -- when should we use this design? so the
-design was every single person was traced overtime, and they were given an
-intervention over the course of this experiment. This is pretty different from
-if you were just taken cross-sectional data and then divide the group into a
-treatment group and a control group. To answer this we ran a small simulation
-experiment. What are the trade-offs between doing a pure case control study and
-a study where you intervene within a longitudinal structure.
+multiomic analysis of some longitudinal data about the microbiome and a natural
+question was -- when should we use this design? so the design was every single
+person was traced overtime, and they were given an intervention over the course
+of this experiment. This is pretty different from if you were just taken
+cross-sectional data and then divide the group into a treatment group and a
+control group. To answer this we ran a small simulation experiment. What are the
+trade-offs between doing a pure case control study and a study where you
+intervene within a longitudinal structure.
 
 ---
 
@@ -43,10 +43,9 @@ Veridical Data Science
 We wrote that simulation many years ago, and it was just a supplementary
 section, not something we really highlighted in the work.
 
-Over time, I've been drawn back to the theme of good simulation, sparked mainly
-by recent efforts to develop veridical data science. The idea is that simulation
-is one of our best ways of checking whether an statistical analysis can really
-be trusted.
+Over time, I've been drawn back to the theme of simulation, sparked mainly by
+recent efforts in veridical data science. The idea is that simulation is one of
+our best ways of checking whether an statistical analysis can really be trusted.
 
 ---
 
@@ -212,7 +211,7 @@ Verbs: Join - Conditioning
 
 Another way that we have implemented the join operation is to condition on
 latent structure. For example, you can learn something like partial manifold
-alignment, which works, even when the samples are not exactly aligned, and use
+alignment, which works even when the samples are not exactly aligned, and use
 that to obtain latent structure shared across all the omics. By simulating with
 a shared conditional variable, we can induce correlation across the two omics.
 
@@ -225,8 +224,8 @@ very common type of output in microbiome analysis, but there are no technologies
 for establishing ground truth. Instead, we rely on benchmarking algorithms using
 simulation.
 
-Here are template data comes from the American gut project. We filter to adjust
-45 abundant taxa. Will estimate a zero inflated negative binomial copula model,
+Here are template data comes from the American gut project. We filter to just
+45 abundant taxa. We'll estimate a zero inflated negative binomial copula model,
 insert some ground truth in the copula covariance matrix, and then compare how
 well different algorithms can capture that ground truth correlation.
 
@@ -292,7 +291,7 @@ networks for example
 Future Work
 
 We have run a few workshops based on a prototype of this simulator and two
-questions come up often. When is how do we make this a bit faster and second is
+questions come up often. One is how do we make this a bit faster and second is
 how can we make sure that the generator data are useful enough for whatever
 downstream task we have and I have a lot of thoughts on this and we are updating
 our work to refle so happy to talk about this off-line
@@ -304,23 +303,19 @@ Bigger Picture
 So stepping back one thing, I really enjoy about this project is that it has
 helped really overcome some of the communication barriers that arise when doing
 collaborative work in biology it's much easier to communicate different kinds of
-outcomes of an analysis when we have a simulation that we can point to. It tears
-a little quote that I like that I think of a lot in the context of simulation.
-People who know here probably know that I also really enjoy classical music and
-this quote is something I think about in the context of simulation so the story
-is that before Tchaikovsky ballet music was always kind of an afterthought the
-main point of the valet was the dancing so we need a good music and I think
-about this simulation sometimes because when I'm reviewing papers, I often see
-people use stimulation and ask just a kind of cursory thing not something to
-take very seriously, but I really think that there's a lot of value in taking
+outcomes of an analysis when we have a simulation that we can point to.
+
+Also, sometimes when I'm reviewing papers, I see people use simulation as a kind
+of cursory thing not something to take very seriously, people often skip those
+slides in their talks.  But I really think that there's a lot of value in taking
 simulation seriously.
 
 ---
 
 Software and Resources
 
-OK, so about wrapping up on the slides, I have a bunch of links for more
-resources examples from the workshop and the paper.
+OK, so wrapping up, I have a bunch of links for more resources examples from the
+workshop and the paper.
 
 ---
 
