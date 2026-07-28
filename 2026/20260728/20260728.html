@@ -429,6 +429,83 @@ In our review, we consider a wider range of underlying correlation matrices.
 
 ---
 
+### Data Analysis Controversy 
+
+.center[
+    &lt;img src="figures/retraction.png"/&gt;
+]
+
+In June 2024, _Nature_ retracted a paper [17] that claimed
+identify microbiome signatures of cancer. This came after one year's worth of
+debate [18; 19]
+about the data analysis.
+
+---
+
+### Data Analysis Controversy 
+
+.center[
+    &lt;img src="figures/retraction.png"/&gt;
+]
+
+The "disease signature" was an artifact resulting from the use of a batch effect
+correction method.  Before we can understand the nuances of the story, we need
+to learn about batch effects and correction methods.
+
+---
+
+### Simulation to Resolve Controversy
+
+Gerry Tonkin-Hill has an excellent re-analysis
+[10] of the data from
+[17] which sheds light what was likely the source of the
+phantom signals. The first part is a simulation.
+
+.pull-left[
+&lt;img src="figures/gth_sim1.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim2.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+This setting is balanced -- each condition is equally likely across batches. In
+this case, SVN batch effect correction 
+works well.
+.pull-left[
+&lt;img src="figures/gth_sim3.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim4.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+But what happens if there is imbalance?
+
+.pull-left[
+&lt;img src="figures/gth_sim5.png"/&gt;
+]
+.pull-right[
+&lt;img src="figures/gth_sim6.png"/&gt;
+]
+
+---
+
+### Simulation and Supervised Normalization
+
+In this case, the SVN correction introduces an artificial difference.
+.center[ &lt;img src="figures/gth_sim7.png" width=500/&gt; ]
+This should cause concern about the original analysis: Hospitals specialize in
+cancer types. Then again, this simulation is quite unrealistic.
+
+---
+
 ### Software and Resources
 
 All the examples I discussed today can be run from online tutorials:
@@ -443,8 +520,8 @@ Our workshop materials are online:
 
 The relevant R packages behind these analyses are:
 
-* `multimedia` - Mediation analysis for microbiome data [17].
-* `scDesign3` - An existing simulator for single cell data [18; 19; 11].
+* `multimedia` - Mediation analysis for microbiome data [20].
+* `scDesign3` - An existing simulator for single cell data [21; 22; 11].
 * `scDesigner` - [Under-development](github.com/krisrs1128/scDesigner) version used in the first tutorial.
 
 ---
@@ -607,82 +684,6 @@ We can tie together a collection of marginals using a copula model.
 
 ---
 
-### Data Analysis Controversy 
-
-.center[
-    &lt;img src="figures/retraction.png"/&gt;
-]
-
-In June 2024, _Nature_ retracted a paper [20] that claimed
-identify microbiome signatures of cancer. This came after one year's worth of
-debate [21; 22]
-about the data analysis.
-
----
-
-### Data Analysis Controversy 
-
-.center[
-    &lt;img src="figures/retraction.png"/&gt;
-]
-
-The "disease signature" was an artifact resulting from the use of a batch effect
-correction method.  Before we can understand the nuances of the story, we need
-to learn about batch effects and correction methods.
-
----
-
-### Simulation to Resolve Controversy
-
-Gerry Tonkin-Hill has an excellent re-analysis
-[10] of the data from
-[20] which sheds light what was likely the source of the
-phantom signals. The first part is a simulation.
-
-.pull-left[
-&lt;img src="figures/gth_sim1.png"/&gt;
-]
-.pull-right[
-&lt;img src="figures/gth_sim2.png"/&gt;
-]
-
----
-
-### Simulation and Supervised Normalization
-
-This setting is balanced -- each condition is equally likely across batches. In
-this case, SVN batch effect correction 
-works well.
-.pull-left[
-&lt;img src="figures/gth_sim3.png"/&gt;
-]
-.pull-right[
-&lt;img src="figures/gth_sim4.png"/&gt;
-]
-
----
-
-### Simulation and Supervised Normalization
-
-But what happens if there is imbalance?
-
-.pull-left[
-&lt;img src="figures/gth_sim5.png"/&gt;
-]
-.pull-right[
-&lt;img src="figures/gth_sim6.png"/&gt;
-]
-
----
-
-### Simulation and Supervised Normalization
-
-In this case, the SVN correction introduces an artificial difference.
-.center[ &lt;img src="figures/gth_sim7.png" width=500/&gt; ]
-This should cause concern about the original analysis: Hospitals specialize in
-cancer types. Then again, this simulation is quite unrealistic.
-
----
 
 ### Future Work
 
