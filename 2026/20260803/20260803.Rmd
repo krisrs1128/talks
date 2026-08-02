@@ -78,8 +78,6 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
 ---
 
-### Open Source Statistical Software
-
 <img src="figures/noun-data-science-7988125.png" width=40/> **Software shapes reasoning.**
 
 Good software democratizes statistical advances and sharpens the way research communities reason about their problems.
@@ -250,15 +248,15 @@ effects(model)
 ]
 
 We can now accommodate any mediation or outcome model, not just linear ones!
-Indeed, it's easy to use `glm` in the `mediation` package.
+E.g., it's easy to use `glm` in the `mediation` package.
 
 ---
 
 ### Multimedia Interface
 
 `multimedia` generalizes this interface for multivariate responses and outcomes
-appropriate to microbiome data. For example, for the mindfulness study, we use a
-logistic-normal multinomial model
+appropriate to microbiome data. For example, if the outcome is a microbiome
+profile, we use a logistic-normal multinomial model
 `r Citep(bib, c("atchison1980logistic", "xia2013logistic"))` for the outcomes
 and lasso regression `r Citep(bib, "tibshirani1996regression")` for the
 mediators.
@@ -396,7 +394,8 @@ Y^*(t, m)=\hat{Y}(t, m)+\epsilon^y \\
 M^*(t)=\hat{M}(t)+\epsilon^m .
 \end{align*}
 
-A caveat is that this only makes sense for continuous outcomes and mediators.
+where $\left(\epsilon^y, \epsilon^m\right)$ are correlated. A caveat is that
+this only makes sense for continuous outcomes and mediators.
 
 ---
 
