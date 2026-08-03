@@ -483,7 +483,7 @@ Good software democratizes statistical advances and sharpens the way research co
 
 Software that raises intellectual agency is even more important now that LLMs can immediately generate data analysis reports.
 
-<img src="figures/noun-microbe-8093335.png" width=40/> **Mediation and microbes.**
+<img src="figures/noun-microbe-8093335.png" width=40/> **Mediation and the microbiome.**
 
 Mediation analysis gives a precise way of specifying what might otherwise be vague integration questions.
 
@@ -496,7 +496,8 @@ Paper: [go.wisc.edu/ebm917](https://go.wisc.edu/ebm917)
 Package: [go.wisc.edu/830110](https://go.wisc.edu/830110)
 
 * Contact: ksankaran@wisc.edu
-* Lab Members: Margaret Thairu, Shuchen Yan, Yuliang Peng, Langtian Ma, Helena Huang
+* Lead Authors: Hanying Jiang, Xinran Miao
+* Lab Members: Yuliang Peng, Langtian Ma, Jiaxin Ye, Cameron Jones, Helena Huang, Jiaru Gong
 * Funding: NIGMS R01GM152744, NIAID R01AI184095, Gates 072185
 
 ---
