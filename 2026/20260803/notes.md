@@ -5,12 +5,12 @@ Thank you to the organizers for putting together this session. Today I want to t
 
 ---
 
-Microbiome as mediator - 1
+Microbiome as mediator
 
-One of the main areas of interest in microbiome research is how microbes might
-mediate the relationship between hosts and their environment. For example, some
+Mediation analysis could help improve the lives of patients.  For example, some
 adverse events during chemotherapy can be traced to changes that those
-treatments induce on the microbiome.
+treatments induce on the microbiome. This figure comes from a review that
+studied how we could target specific microbes to improve cancer treatment.
 
 ---
 
