@@ -5,22 +5,6 @@ Thank you to the organizers for putting together this session. Today I want to t
 
 ---
 
-Open Source Statisitcal Software
-
-This project focuses on statistical software, and I want to share a
-philosophical point before I dive in. I've heard from a few people that now that
-we can vibe code our way into any data analysis, we might not need so many
-statisticians, let alone statisticians who focus on software.
-
-But I completely disagree. Statistical software is how we democratize statistics
-research, and many people learn how to analyze their data well from good
-software documentation. It's still incredibly important for statisticians to
-help people think clearly about their data hopefully we can design code and
-algorithms that gives people a sense of agency rather than forcing them to trust
-a black box.
-
----
-
 Microbiome as mediator - 1
 
 One of the main areas of interest in microbiome research is how microbes might
@@ -208,6 +192,24 @@ microbes and the metabolites. For example, this metabolite has a strong indirect
 effect even when confounding is large, while this one doesn't seem so reliable.
 
 ---
+
+
+Open Source Statisitcal Software
+
+This project focuses on statistical software, and I want to share a
+philosophical point before I dive in. I've heard from a few people that now that
+we can vibe code our way into any data analysis, we might not need so many
+statisticians, let alone statisticians who focus on software.
+
+But I completely disagree. Statistical software is how we democratize statistics
+research, and many people learn how to analyze their data well from good
+software documentation. It's still incredibly important for statisticians to
+help people think clearly about their data hopefully we can design code and
+algorithms that gives people a sense of agency rather than forcing them to trust
+a black box.
+
+---
+
 
 You can learn more details in our paper, and the package is available on CRAN. I
 think that if there's one thing you takeaway is that, we've already seen a few
