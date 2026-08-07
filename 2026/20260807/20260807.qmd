@@ -3,7 +3,7 @@ title: Interactive Tools for Reliable Omics Visualization
 author: Kris Sankaran
 institute: University of Wisconsin - Madison
 bibliography: references.bib
-date: July 10, 2026
+date: August 7, 2026
 execute:
     message: false
     warning: false
