@@ -3,7 +3,7 @@ title: Interactive Tools for Reliable Omics Visualization
 author: Kris Sankaran
 institute: University of Wisconsin - Madison
 bibliography: references.bib
-date: July 10, 2026
+date: August 8, 2026
 execute:
     message: false
     warning: false
@@ -20,26 +20,6 @@ format:
     embed-resources: false
     template-partials:
       - title-slide.html
----
-
-### How many times larger is the circle on the right?
-
-Design choices make a big difference in the accuracy of our interpretations.
-
-<div style="text-align: center;">
-<iframe src="figures/circles.html" style="height: 620px; width: 600px" frameborder="0"></iframe><br/>
-</div>
-
----
-
-### How many times taller is the bar on the right?
-
-Design choices make a big difference in the accuracy of our interpretations.
-
-<div style="text-align: center;">
-<iframe src="figures/bars.html" style="height: 620px" frameborder="0"></iframe><br/>
-</div>
-
 ---
 
 ### Encoding and Efficiency
@@ -424,16 +404,6 @@ You can experiment with this method in the browser at this link:
 > [https://distortionwebapp.streamlit.app/](https://distortionwebapp.streamlit.app/)
 
 ![](figures/distortions-app.png)
-
----
-
-### Focus-plus-context
-
-- The thread in both these projects is the _focus-plus-context principle_ from data visualization [@heer2004].
-
-- We allowed the viewer to query for details relevant to the overall interpretation while maintaining relevant context.
-
-![](figures/focus-context-map.png)
 
 ---
 
