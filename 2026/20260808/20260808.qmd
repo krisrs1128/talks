@@ -22,6 +22,27 @@ format:
       - title-slide.html
 ---
 
+
+### How many times larger is the circle on the right?
+
+Design choices make a big difference in the accuracy of our interpretations.
+
+<div style="text-align: center;">
+<iframe src="figures/circles.html" style="height: 620px; width: 600px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
+### How many times taller is the bar on the right?
+
+Design choices make a big difference in the accuracy of our interpretations.
+
+<div style="text-align: center;">
+<iframe src="figures/bars.html" style="height: 620px" frameborder="0"></iframe><br/>
+</div>
+
+---
+
 ### Encoding and Efficiency
 
 Different ways of encoding information are perceived with different accuracies.
