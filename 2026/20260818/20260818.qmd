@@ -50,7 +50,7 @@ and downstream analysis.
 
 ![](figures/brain_parcellation.png){width=1200}
 
-There are also used to identify brain regions with similar voxel patterns.
+They are also used to identify brain regions with similar voxel patterns.
 
 ---
 
@@ -225,7 +225,7 @@ The weights $W$ can be learned using optimal transport,
 ### Path-based Diagnostics
 
 * Paths: Partitions the Sankey diagram into connected sets of topics.
-* Coherence: Average similarity of $\beta\left(v\right)$ to other topics along the same a path. High coherence $\to$ persistent structure.
+* Coherence: Average similarity of $\beta\left(v\right)$ to other topics along the same path. High coherence $\to$ persistent structure.
 * Refinement: Mixing between descendants. High refinement $\to$ genuine increase in complexity.
 
 ![](figures/alto_sketches_diagnotics.png)
@@ -375,7 +375,7 @@ embedding.
 
 ![](figures/thalamus_umap.png){width=800}
 
-Manually labels were propagated across neighbors in the UMAP space. But can we
+Manual labels were propagated across neighbors in the UMAP space. But can we
 trust these?
 
 ---
