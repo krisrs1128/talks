@@ -23,8 +23,9 @@ format:
 
 ### Dimensionality Reduction
 
-Modern omics data have many features, and dimensionality reduction methods help
-create overview visualizations.
+Modern biomedical data have many measurements per sample, and dimensionality
+reduction methods help create simpler representations useful for visualization
+and downstream analysis.
 
 ![](figures/samples_by_microbes.png){width=1200}
 
@@ -43,12 +44,13 @@ $\newcommand{\wout}{\tilde w_{\text{out}}}$
 
 ### Dimensionality Reduction
 
-Modern omics data have many features, and dimensionality reduction methods help
-create overview visualizations.
+Modern biomedical data have many measurements per sample, and dimensionality
+reduction methods help create simpler representations useful for visualization
+and downstream analysis.
 
-![](figures/cell_by_genes.png){width=1200}
+![](figures/brain_parcellation.png){width=1200}
 
-They are also used in cell atlas construction and trajectory inference.
+There are also used to identify brain regions with similar voxel patterns.
 
 ---
 
@@ -57,7 +59,7 @@ They are also used in cell atlas construction and trajectory inference.
 These methods need to be used with caution:
 
 - The assumed number of latent communities can influence topic model interpretation.
-- UMAP can introduce visual artifacts, like spurious cell types.
+- Nonlinear embeddings can distort neighborhoods in a way that biases downstream interpretations.
 
 Despite being widely used, there are few diagnostics for these dimensionality
 reduction methods.
@@ -97,48 +99,60 @@ Vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ---
 
-### Microbiome Analogy
+### Imaging Analogy
 
-* Topics: $\beta_{k}$ describes $K$ underlying community types.
-* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
 
 ![](figures/lda-breakdown-1.png)
 
 ---
 
-### Microbiome Analogy
+### Imaging Analogy
 
-* Topics: $\beta_{k}$ describes $K$ underlying community types.
-* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
 
 ![](figures/lda-breakdown-2.png)
 
 ---
 
-### Microbiome Analogy
+### Imaging Analogy
 
-* Topics: $\beta_{k}$ describes $K$ underlying community types.
-* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
 
 ![](figures/lda-breakdown-3.png)
 
 ---
 
-### Microbiome Analogy
+### Imaging Analogy
 
-* Topics: $\beta_{k}$ describes $K$ underlying community types.
-* Memberships: $\gamma_{i}$ describes sample $x_i$ as a mixture of community types.
+* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
 
 ![](figures/lda-breakdown.png)
 
 ---
 
-### Example: Antibiotics Time Course
+### Example: COPD Subtypes
 
-If we use topic models, <span style="color: #476b57;">Topic 2</span> increases
-during the antibiotic interventions, especially the first [@Sankaran2018].
+[@pmlr-v149-saeedi21a] use a version of topic models adapted to continuous
+imaging data. Each patient's lung is a Dirichlet mixture of underlying tissue
+patterns, but the final step is a Gaussian rather than multinomial likelihood.
 
-![](figures/antibiotic_memberships.png){width=1000}
+Subtypes 1 and 2 in their analysis are associated with greater COPD severity.
+
+![](figures/lung_subtypes_memberships.png){width=1000}
+
+---
+
+### Choice of $K$
+
+Analyzing the held-out likelihood suggests that $K \approx 10$ is enough, but
+it's unclear which of the recovered patterns are sensitive to this choice.
+
+![](figures/subtypes_test_ll.png){width=1000}
 
 ---
 
@@ -353,21 +367,23 @@ Sankaran, K., Zhang, S., Chenab, & Meilă, M. (2026). Interactive visualization 
 
 ---
 
-### Distortions in $t$-SNE and UMAP
+### Nonlinear Dimensionality Reduction
 
-Both $t$-SNE and UMAP introduce distortions. For example, they may not preserve
-density within different regions of the plot.
+To distinguish between nuclei in the thalamus, [@Yan2023] gathered 63 features
+per voxel and applied UMAP to reduce those features to a low-dimensional
+embedding.
 
-![](figures/densmap_example.png){width=1000}
+![](figures/thalamus_umap.png){width=800}
 
-Example from [@narayan2021assessing].
+Manually labels were propagated across neighbors in the UMAP space. But can we
+trust these?
 
 ---
 
-
 ### Distortions in $t$-SNE and UMAP
 
-They can also fail to preserve the topology of the underlying data...
+Both $t$-SNE and UMAP introduce distortions. For example, they can fail to
+preserve the topology of the underlying data.
 
 ![](figures/tsne-initialization.png){width=600}
 
@@ -375,11 +391,21 @@ Example from [@Kobak2021].
 
 ---
 
+### Distortions in $t$-SNE and UMAP
+
+They also may not preserve density within different regions of the plot.
+
+![](figures/densmap_example.png){width=1000}
+
+Example from [@narayan2021assessing].
+
+---
+
 ### Consequences
 
 These distortions are not mere technical curiosities -- they significantly
 impact scientific interpretation [@Liu2025; @Kobak2021]. For example, they
-create misleading differences between cell types that are actually similar.
+create misleading separation between neighborhoods that are actually similar.
 
 ![](figures/scdeed-example.png){width=700}
 Example from [@xia2024statistical].
