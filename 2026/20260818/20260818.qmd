@@ -50,7 +50,7 @@ and downstream analysis.
 
 ![](figures/brain_parcellation.png){width=1200}
 
-They are also used to identify brain regions with similar voxel patterns [@Schell2026].
+They are also used to identify clinical relevant spatial patterns in the brain [@Schell2026].
 
 ---
 
@@ -137,9 +137,9 @@ Vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ### Example: COPD Subtypes
 
-[@pmlr-v149-saeedi21a] use a version of topic models adapted to continuous
-imaging data. Each patient's lung is a Dirichlet mixture of latent tissue
-patterns, but the final step is a Gaussian rather than multinomial likelihood.
+[@pmlr-v149-saeedi21a] use a version of topic models adapted to CT data.  Each
+patient's lung is a Dirichlet mixture of latent tissue patterns, but the final
+step is a Gaussian over image features rather than multinomial.
 
 ![](figures/lung_subtypes_memberships.png){width=1000}
 

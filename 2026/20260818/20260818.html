@@ -254,7 +254,7 @@
 <h3 id="dimensionality-reduction-1">Dimensionality Reduction</h3>
 <p>Modern biomedical data have many measurements per sample, and dimensionality reduction methods help create simpler representations useful for visualization and downstream analysis.</p>
 
-<img data-src="figures/brain_parcellation.png" width="1200" class="r-stretch"><p>They are also used to identify brain regions with similar voxel patterns <span class="citation" data-cites="Schell2026">(<a href="" role="doc-biblioref" onclick="return false;">Schell et al. 2026</a>)</span>.</p>
+<img data-src="figures/brain_parcellation.png" width="1200" class="r-stretch"><p>They are also used to identify clinical relevant spatial patterns in the brain <span class="citation" data-cites="Schell2026">(<a href="" role="doc-biblioref" onclick="return false;">Schell et al. 2026</a>)</span>.</p>
 </section>
 <section class="slide level2">
 
@@ -321,7 +321,7 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 <section class="slide level2">
 
 <h3 id="example-copd-subtypes">Example: COPD Subtypes</h3>
-<p><span class="citation" data-cites="pmlr-v149-saeedi21a">(<a href="" role="doc-biblioref" onclick="return false;">Saeedi et al. 2021</a>)</span> use a version of topic models adapted to continuous imaging data. Each patient’s lung is a Dirichlet mixture of latent tissue patterns, but the final step is a Gaussian rather than multinomial likelihood.</p>
+<p><span class="citation" data-cites="pmlr-v149-saeedi21a">(<a href="" role="doc-biblioref" onclick="return false;">Saeedi et al. 2021</a>)</span> use a version of topic models adapted to CT data. Each patient’s lung is a Dirichlet mixture of latent tissue patterns, but the final step is a Gaussian over image features rather than multinomial.</p>
 
 <img data-src="figures/lung_subtypes_memberships.png" width="1000" class="r-stretch"></section>
 <section class="slide level2">
