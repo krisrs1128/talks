@@ -3,11 +3,11 @@ title: New Diagnostics for Dimensionality Reduction
 author: Kris Sankaran
 institute: University of Wisconsin - Madison
 bibliography: references.bib
-date: June 12, 2026
+date: August 18, 2026
 execute:
     message: false
     warning: false
-    cache: false
+    cache: true
 citeproc: false
 filters:
   - split-refs.lua
@@ -29,7 +29,7 @@ and downstream analysis.
 
 ![](figures/samples_by_microbes.png){width=1200}
 
-They can summarize microbiome community structure
+They can summarize microbiome community structure [@Sankaran2018].
 
 $\def\Dir{\text{Dir}}$
 $\def\Mult{\text{Mult}}$
@@ -50,7 +50,7 @@ and downstream analysis.
 
 ![](figures/brain_parcellation.png){width=1200}
 
-They are also used to identify brain regions with similar voxel patterns.
+They are also used to identify brain regions with similar voxel patterns [@Schell2026].
 
 ---
 
@@ -99,37 +99,37 @@ Vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 
 ---
 
-### Imaging Analogy
+### Graphical Overview
 
-* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
-* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
+* Topics: $\beta_{k}$ describes $K$ latent topics.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of topics.
 
 ![](figures/lda-breakdown-1.png)
 
 ---
 
-### Imaging Analogy
+### Graphical Overview
 
-* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
-* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
+* Topics: $\beta_{k}$ describes $K$ latent topics.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of topics.
 
 ![](figures/lda-breakdown-2.png)
 
 ---
 
-### Imaging Analogy
+### Graphical Overview
 
-* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
-* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
+* Topics: $\beta_{k}$ describes $K$ latent topics.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of topics.
 
 ![](figures/lda-breakdown-3.png)
 
 ---
 
-### Imaging Analogy
+### Graphical Overview
 
-* Topics: $\beta_{k}$ describes $K$ underlying tissue subtypes.
-* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of subtypes.
+* Topics: $\beta_{k}$ describes $K$ latent topics.
+* Memberships: $\gamma_{i}$ describes supervoxel $x_i$ as a mixture of topics.
 
 ![](figures/lda-breakdown.png)
 
@@ -138,10 +138,8 @@ Vertically stack the $N$ $\gamma_i$'s into $\Gamma \in \Delta^{N}_{K}$.
 ### Example: COPD Subtypes
 
 [@pmlr-v149-saeedi21a] use a version of topic models adapted to continuous
-imaging data. Each patient's lung is a Dirichlet mixture of underlying tissue
+imaging data. Each patient's lung is a Dirichlet mixture of latent tissue
 patterns, but the final step is a Gaussian rather than multinomial likelihood.
-
-Subtypes 1 and 2 in their analysis are associated with greater COPD severity.
 
 ![](figures/lung_subtypes_memberships.png){width=1000}
 
@@ -174,7 +172,7 @@ compared [@Novembre2016; @Wallach2009EvaluationMF; @Lawson2018].
 ### `alto`: Main Idea
 
 We fit models of varying complexity $K$ and build a compact representation of
-the ensemble
+the ensemble.
 
 ![](figures/alto_sketches_annotated alignment.png)
 
@@ -323,7 +321,7 @@ Topic alignment is implemented in the R package [alto](https://lasy.github.io/al
 library(purrr)
 library(alto)
 
-# Define LDA parameters
+# Estimate LDA parameters
 params <- map(
   set_names(1:10),
   ~ list(k = .)
@@ -404,24 +402,11 @@ Example from [@narayan2021assessing].
 ### Consequences
 
 These distortions are not mere technical curiosities -- they significantly
-impact scientific interpretation [@Liu2025; @Kobak2021]. For example, they
+impact scientific interpretation [@Liu2025; @Kobak2021; @Kozlov2024; @simplystatisticsSimplyStatistics]. For example, they
 create misleading separation between neighborhoods that are actually similar.
 
 ![](figures/scdeed-example.png){width=700}
 Example from [@xia2024statistical].
-
----
-
-### Controversy
-
-::::{.columns}
-:::{.column width="75%"}
-![](figures/pritchard_all_of_us.png){width=600}
-:::
-:::{.column width="25%"}
-See also [@Kozlov2024; @simplystatisticsSimplyStatistics].
-:::
-::::
 
 ---
 
@@ -518,7 +503,7 @@ h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(
 
 Since there are methods for estimating $\Delta$ from data [@Hein2005;
 @Coifman2006], we also have a practical method for approximating local
-distortions $H$!
+distortions $H$.
 
 ---
 
@@ -556,16 +541,6 @@ The UMAP embeddings lose information about the cluster density, but the
 difference is captured in the local metrics.
 
 ![](figures/unequal_variances_ellipse.png){width=700}
-
----
-
-### Local Isometrization
-
-Since the metrics are known locally, the distortion can be inverted within a
-neighborhood of the cursor. For example, here we interactively adapt the
-embeddings in the Gaussian mixtures example.
-
-![](figures/two_cluster_interaction.gif){width=600}
 
 ---
 
@@ -976,7 +951,7 @@ This varies across $p \in \mathcal{M}$ but we suppress it from the notation.
 
 ### Pushforward Metric
 
-In the sphere example, these derivatives can be directly computed and to obtain,
+In the sphere example, these derivatives can be directly computed to obtain,
 
 \begin{align*}
 G = \begin{pmatrix} \cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
@@ -1077,7 +1052,7 @@ We introduce two new diagnostic visualizations.
 :::: {.columns}
 ::: {.column width="60%"}
 ::: {.smaller}
-alto plots for choice of $K$ in topic models .
+alto plots for choice of $K$ in topic models.
 ![](figures/alto_sketches_annotated%20alignment.png)
 :::
 :::
@@ -1184,8 +1159,8 @@ Example from [@wattenberg2016how].
 
 :::: {.columns}
 ::: {.column width="50%"}
-The local isometry visualization highlights some "threads" are more spread in
-the original data.
+The local isometry visualization highlights some "threads" that are more spread
+in the original data.
 :::
 ::: {.column width="50%"}
 ![](figures/hydra_isometry.gif){width=470}
