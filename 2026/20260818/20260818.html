@@ -258,10 +258,17 @@
 </section>
 <section class="slide level2">
 
+<h3 id="dimensionality-reduction-2">Dimensionality Reduction</h3>
+<p>Modern biomedical data have many measurements per sample, and dimensionality reduction methods help create simpler representations useful for visualization and downstream analysis.</p>
+
+<img data-src="figures/cell_by_genes.png" width="1200" class="r-stretch"><p>They are also used in cell atlas construction and trajectory inference.</p>
+</section>
+<section class="slide level2">
+
 <h3 id="challenges">Challenges</h3>
 <p>These methods need to be used with caution:</p>
 <ul>
-<li>The assumed number of latent communities can influence topic model interpretation.</li>
+<li>The assumed number of latent topics can influence topic model interpretation.</li>
 <li>Nonlinear embeddings can distort neighborhoods in a way that biases downstream interpretations.</li>
 </ul>
 <p>Despite being widely used, there are few diagnostics for these dimensionality reduction methods.</p>
@@ -327,12 +334,6 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 <section class="slide level2">
 
 <h3 id="choice-of-k">Choice of <span class="math inline">\(K\)</span></h3>
-<p>Analyzing the held-out likelihood suggests that <span class="math inline">\(K \approx 10\)</span> is enough, but it’s unclear which of the recovered patterns are sensitive to this choice.</p>
-
-<img data-src="figures/subtypes_test_ll.png" width="1000" class="r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="choice-of-k-1">Choice of <span class="math inline">\(K\)</span></h3>
 <blockquote>
 <p>However, we stress that care should be taken in the interpretation of the inferred value of <span class="math inline">\(K\)</span>. To begin with, due to the very high dimensionality of the parameter space, we found it difficult to obtain reliable estimates of <span class="math inline">\(P\left(X \vert K\right)\)</span>… There are also biological reasons to be careful interpreting <span class="math inline">\(K\)</span>.</p>
 </blockquote>
@@ -525,67 +526,6 @@ x_i \vert \gamma_i &amp;\sim \text{Mult}\left(n_{i}, \*B\gamma_{i}\right) \\
 </div></div>
 <p>This is a high-dimensional version of Tissot’s indicatrix from cartography <span class="citation" data-cites="laskowski1989traditional">(<a href="" role="doc-biblioref" onclick="return false;">Laskowski 1989</a>)</span>.</p>
 </section>
-<section class="slide level2">
-
-<h3 id="rmetric-motivation">RMetric Motivation</h3>
-<p>The RMetric algorithm <span class="citation" data-cites="perrault2006metric mcqueen2016megaman">(<a href="" role="doc-biblioref" onclick="return false;">Perrault-Joncas and Meila 2006</a>; <a href="" role="doc-biblioref" onclick="return false;">McQueen et al. 2016</a>)</span> quantifies distortion geometrically. To motivate the algorithm, consider the distortion induced by mapping the sphere into latitude/longitude coordinates.</p>
-
-<img data-src="figures/sphere_embedding_setup.png" width="800" class="r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="half-sphere-parameterization">Half-Sphere Parameterization</h3>
-<p>Parameterize points on <span class="math inline">\(\mathcal{M}\)</span> using spherical coordinates:</p>
-<p><span class="math display">\[\begin{align*}
-\mathbf{x}\left(p\right) = \left(\cos\varphi\cos\theta, \cos\varphi \sin\theta, \sin\varphi\right)
-\end{align*}\]</span></p>
-<p>The associated (latitude, longitude) embedding is</p>
-<p><span class="math display">\[\begin{align*}
-\mathbf{z}\left(p\right) =
-\left(\theta\left(p\right), \varphi\left(p\right)\right).
-\end{align*}\]</span></p>
-
-<img data-src="figures/sphere_embedding_setup.png" width="800" class="r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="dual-pushforward-metric">Dual Pushforward Metric</h3>
-<p>The gradients <span class="math inline">\(\nabla z^i\)</span> of the embedding dimensions reflect distortion.</p>
-
-<img data-src="figures/gradients_z_theta.png" width="1000" class="r-stretch"><p>Since the level sets of <span class="math inline">\(z^\theta\)</span> become more compressed near the poles, the gradients <span class="math inline">\(\nabla z^\theta\)</span> become larger there.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="dual-pushforward-metric-1">Dual Pushforward Metric</h3>
-<p>This gradient information can be stored in the matrix <span class="math inline">\(H\)</span> with elements,</p>
-<p><span class="math display">\[\begin{align*}
-h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
-\end{align*}\]</span> where <span class="math inline">\(g_{0}\)</span> is the metric on <span class="math inline">\(\mathcal{M}\)</span> inherited from the ambient space.</p>
-<p><br> <br> In our example,</p>
-<p><span class="math display">\[\begin{align*}
-H = \begin{pmatrix} 1/\cos^2\varphi &amp; 0 \\ 0 &amp; 1 \end{pmatrix}
-\end{align*}\]</span></p>
-</section>
-<section class="slide level2">
-
-<h3 id="product-rule-for-laplacians">Product Rule for Laplacians</h3>
-<p>For any <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>, the Laplacian <span class="math inline">\(\Delta\)</span> satisfies, <span class="math display">\[\begin{align*}
-\Delta(fg) = f\,\Delta g + g\,\Delta f + 2\langle \nabla f, \nabla g \rangle_{g_{0}}
-\end{align*}\]</span></p>
-<p>Setting <span class="math inline">\(f = z^i\)</span>, <span class="math inline">\(g = z^j\)</span> and rearranging, <span class="math display">\[\begin{align*}
-h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(z^i z^j) - z^i\Delta z^j - z^j\Delta z^i\right]
-\end{align*}\]</span></p>
-<p>Since there are methods for estimating <span class="math inline">\(\Delta\)</span> from data <span class="citation" data-cites="Hein2005 Coifman2006">(<a href="" role="doc-biblioref" onclick="return false;">Hein et al. 2005</a>; <a href="" role="doc-biblioref" onclick="return false;">Coifman and Lafon 2006</a>)</span>, we also have a practical method for approximating local distortions <span class="math inline">\(H\)</span>.</p>
-</section>
-<section class="slide level2">
-
-<h3 id="implementation">Implementation</h3>
-<p>Let <span class="math inline">\(z_{k} \in \mathbb{R}^{N}\)</span> be the <span class="math inline">\(k^{th}\)</span> embedding dimension. Let <span class="math inline">\(L\)</span> be the doubly-normalized graph Laplacian <span class="citation" data-cites="Coifman2006">(<a href="" role="doc-biblioref" onclick="return false;">Coifman and Lafon 2006</a>)</span>. Compute</p>
-<p><span class="math display">\[\begin{align*}
-H_{kk'}^{(\cdot)} := \frac{1}{2}\left[L\left(z_{k} \circ z_{k'}\right) - z_{k} \circ \left(L z_{k'}\right) - z_{k'} \circ \left(L z_{k}\right)  \right] \in \mathbb{R}^{N}
-\end{align*}\]</span></p>
-<p>The embedding distortion for sample <span class="math inline">\(n\)</span> is given by <span class="math inline">\(H^{(n)} \in \mathbb{R}^{K
-\times K}\)</span></p>
-
-<img data-src="figures/g_kl.png" width="350" class="r-stretch"></section>
 <section class="slide level2">
 
 <h3 id="example">Example</h3>
@@ -988,7 +928,7 @@ x_{i} \vert \*B, \gamma_{i}, \nu_i &amp;\sim \Mult\left(n_{i}, \alpha \*B\gamma_
 </section>
 <section class="slide level2">
 
-<h3 id="dual-pushforward-metric-2">Dual Pushforward Metric</h3>
+<h3 id="dual-pushforward-metric">Dual Pushforward Metric</h3>
 <p>Alternatively, the gradients <span class="math inline">\(\nabla z^i\)</span> of the embedding dimensions also reflect distortion.</p>
 
 <img data-src="figures/level_sets_phi.png" width="1000" class="r-stretch"><p>In contrast, the gradients <span class="math inline">\(\nabla z^{\varphi}\)</span> don’t depend on <span class="math inline">\(\varphi\)</span>.</p>
@@ -1044,9 +984,6 @@ Gudnadottir, Unnur, Justine W. Debelius, Juan Du, et al. 2022. <span>“The Vagi
 <div id="ref-heer2004" class="csl-entry" role="listitem">
 Heer, Jeffrey, and Stuart K. Card. 2004. <span>“DOITrees Revisited: Scalable, Space-Constrained Visualization of Hierarchical Data.”</span> <em>Proceedings of the Working Conference on Advanced Visual Interfaces</em> (New York, NY, USA), AVI ’04, 421–24. <a href="https://doi.org/10.1145/989863.989941">https://doi.org/10.1145/989863.989941</a>.
 </div>
-<div id="ref-Hein2005" class="csl-entry" role="listitem">
-Hein, Matthias, Jean-Yves Audibert, and Ulrike von Luxburg. 2005. <span>“From Graphs to Manifolds – Weak and Strong Pointwise Consistency of Graph Laplacians.”</span> In <em>Learning Theory</em>. Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/11503415_32">https://doi.org/10.1007/11503415_32</a>.
-</div>
 <div id="ref-Hutchins1985" class="csl-entry" role="listitem">
 Hutchins, Edwin L., James D. Hollan, and Donald A. Norman. 1985. <span>“Direct Manipulation Interfaces.”</span> <em>Human–Computer Interaction</em> 1 (4): 311–38. <a href="https://doi.org/10.1207/s15327051hci0104_2">https://doi.org/10.1207/s15327051hci0104_2</a>.
 </div>
@@ -1056,15 +993,15 @@ Irizarry, Rafael. 2024. <em><span>S</span>imply <span>S</span>tatistics: <span>B
 <div id="ref-Kobak2021" class="csl-entry" role="listitem">
 Kobak, Dmitry, and George C. Linderman. 2021. <span>“Initialization Is Critical for Preserving Global Data Structure in Both t-SNE and UMAP.”</span> <em>Nature Biotechnology</em> 39 (2): 156–57. <a href="https://doi.org/10.1038/s41587-020-00809-z">https://doi.org/10.1038/s41587-020-00809-z</a>.
 </div>
+<div id="ref-Kozlov2024" class="csl-entry" role="listitem">
+Kozlov, Max. 2024. <span>“<span>‘All of Us’</span> Genetics Chart Stirs Unease over Controversial Depiction of Race.”</span> <em>Nature</em>, ahead of print, February. <a href="https://doi.org/10.1038/d41586-024-00568-w">https://doi.org/10.1038/d41586-024-00568-w</a>.
+</div>
 </div>
 </section>
 <section class="slide level2">
 
 <h3>References (cont.)</h3>
 <div id="refs-2" class="references csl-bib-body" role="list">
-<div id="ref-Kozlov2024" class="csl-entry" role="listitem">
-Kozlov, Max. 2024. <span>“<span>‘All of Us’</span> Genetics Chart Stirs Unease over Controversial Depiction of Race.”</span> <em>Nature</em>, ahead of print, February. <a href="https://doi.org/10.1038/d41586-024-00568-w">https://doi.org/10.1038/d41586-024-00568-w</a>.
-</div>
 <div id="ref-Kuo2025" class="csl-entry" role="listitem">
 Kuo, Megan, Kim-Anh Lê Cao, Saritha Kodikara, Jiadong Mao, and Kris Sankaran. 2025. <em>Phylobar: An r Package for Multiresolution Compositional Barplots in Omics Studies</em>. November. <a href="https://doi.org/10.1101/2025.11.05.686662">https://doi.org/10.1101/2025.11.05.686662</a>.
 </div>
@@ -1077,9 +1014,6 @@ Lawson, Daniel J., Lucy van Dorp, and Daniel Falush. 2018. <span>“A Tutorial o
 <div id="ref-Liu2025" class="csl-entry" role="listitem">
 Liu, Zhexuan, Rong Ma, and Yiqiao Zhong. 2025. <span>“Assessing and Improving Reliability of Neighbor Embedding Methods: A Map-Continuity Perspective.”</span> <em>Nature Communications</em> 16 (1). <a href="https://doi.org/10.1038/s41467-025-60434-9">https://doi.org/10.1038/s41467-025-60434-9</a>.
 </div>
-<div id="ref-mcqueen2016megaman" class="csl-entry" role="listitem">
-McQueen, James, Marina Meilă, Jacob VanderPlas, and Zhongyue Zhang. 2016. <span>“Megaman: Scalable Manifold Learning in Python.”</span> <em>Journal of Machine Learning Research</em> 17 (148): 1–5.
-</div>
 <div id="ref-narayan2021assessing" class="csl-entry" role="listitem">
 Narayan, Ashwin, Bonnie Berger, and Hyunghoon Cho. 2021. <span>“Assessing Single-Cell Transcriptomic Variability Through Density-Preserving Data Visualization.”</span> <em>Nature Biotechnology</em> 39 (6): 765–74.
 </div>
@@ -1089,21 +1023,12 @@ Noichl, Max. <em><span>M</span>ax <span>N</span>oichl | <span>F</span>lattening 
 <div id="ref-Novembre2016" class="csl-entry" role="listitem">
 Novembre, John. 2016. <span>“Pritchard, Stephens, and Donnelly on Population Structure.”</span> <em>Genetics</em> 204 (2): 391–93. <a href="https://doi.org/10.1534/genetics.116.195164">https://doi.org/10.1534/genetics.116.195164</a>.
 </div>
-<div id="ref-perrault2006metric" class="csl-entry" role="listitem">
-Perrault-Joncas, Dominique, and Marina Meila. 2006. <span>“Metric Learning of Manifolds.”</span> <em>Semisupervised Learn</em> 1: 293–306.
-</div>
 <div id="ref-https://doi.org/10.48550/arxiv.1803.00567" class="csl-entry" role="listitem">
 Peyré, Gabriel, and Marco Cuturi. 2018. <em>Computational Optimal Transport</em>. <a href="https://doi.org/10.48550/ARXIV.1803.00567">https://doi.org/10.48550/ARXIV.1803.00567</a>.
 </div>
 <div id="ref-Pritchard2000" class="csl-entry" role="listitem">
 Pritchard, Jonathan K, Matthew Stephens, and Peter Donnelly. 2000. <span>“Inference of Population Structure Using Multilocus Genotype Data.”</span> <em>Genetics</em> 155 (2): 945–59. <a href="https://doi.org/10.1093/genetics/155.2.945">https://doi.org/10.1093/genetics/155.2.945</a>.
 </div>
-</div>
-</section>
-<section class="slide level2">
-
-<h3>References (cont.)</h3>
-<div id="refs-3" class="references csl-bib-body" role="list">
 <div id="ref-Ravel2010" class="csl-entry" role="listitem">
 Ravel, Jacques, Pawel Gajer, Zaid Abdo, et al. 2010. <span>“Vaginal Microbiome of Reproductive-Age Women.”</span> <em>Proceedings of the National Academy of Sciences</em> 108 (supplement_1): 4680–87. <a href="https://doi.org/10.1073/pnas.1002611107">https://doi.org/10.1073/pnas.1002611107</a>.
 </div>
@@ -1113,6 +1038,12 @@ Saeedi, Ardvan, Payman Yadollahpour, Sumedha Singla, et al. 2021. <span>“Incor
 <div id="ref-Sankaran2018" class="csl-entry" role="listitem">
 Sankaran, Kris, and Susan P Holmes. 2018. <span>“Latent Variable Modeling for the Microbiome.”</span> <em>Biostatistics</em> 20 (4): 599–614. <a href="https://doi.org/10.1093/biostatistics/kxy018">https://doi.org/10.1093/biostatistics/kxy018</a>.
 </div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3>References (cont.)</h3>
+<div id="refs-3" class="references csl-bib-body" role="list">
 <div id="ref-Schell2026" class="csl-entry" role="listitem">
 Schell, Marianne, Joel Kohler, Martha Folty-Dumitru, et al. 2026. <span>“From Anatomy to Outcome: Linking Glioma Location Patterns to Survival Using Non-Negative Matrix Factorization.”</span> <em>Clinical Neuroradiology</em>, ahead of print, March. <a href="https://doi.org/10.1007/s00062-026-01642-8">https://doi.org/10.1007/s00062-026-01642-8</a>.
 </div>
