@@ -829,6 +829,101 @@ placed too close to one another.
 
 ---
 
+
+### RMetric Motivation
+
+The RMetric algorithm [@perrault2006metric; @mcqueen2016megaman] quantifies
+distortion geometrically. To motivate the algorithm, consider the distortion
+induced by mapping the sphere into latitude/longitude coordinates.
+
+![](figures/sphere_embedding_setup.png){width=800}
+
+---
+
+### Half-Sphere Parameterization
+
+Parameterize points on $\mathcal{M}$ using spherical coordinates:
+
+\begin{align*}
+\mathbf{x}\left(p\right) = \left(\cos\varphi\cos\theta, \cos\varphi \sin\theta, \sin\varphi\right)
+\end{align*}
+
+The associated (latitude, longitude) embedding is
+
+\begin{align*}
+\mathbf{z}\left(p\right) =
+\left(\theta\left(p\right), \varphi\left(p\right)\right).
+\end{align*}
+
+![](figures/sphere_embedding_setup.png){width=800}
+
+---
+
+### Dual Pushforward Metric
+
+The gradients $\nabla z^i$ of the embedding dimensions reflect distortion.
+
+![](figures/gradients_z_theta.png){width=1000}
+
+Since the level sets of $z^\theta$ become more compressed near the poles, the
+gradients $\nabla z^\theta$ become larger there.
+
+---
+
+
+### Dual Pushforward Metric
+
+This gradient information can be stored in the matrix $H$ with elements,
+
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_{0}}
+\end{align*}
+where $g_{0}$ is the metric on $\mathcal{M}$ inherited from the ambient space.
+
+<br/>
+<br/>
+In our example,
+
+\begin{align*}
+H = \begin{pmatrix} 1/\cos^2\varphi & 0 \\ 0 & 1 \end{pmatrix}
+\end{align*}
+
+---
+
+### Product Rule for Laplacians
+
+For any $f$ and $g$, the Laplacian $\Delta$ satisfies,
+\begin{align*}
+\Delta(fg) = f\,\Delta g + g\,\Delta f + 2\langle \nabla f, \nabla g \rangle_{g_{0}}
+\end{align*}
+
+Setting $f = z^i$, $g = z^j$ and rearranging,
+\begin{align*}
+h^{ij} = \langle \nabla z^i, \nabla z^j \rangle_{g_0} = \frac{1}{2}\left[\Delta(z^i z^j) - z^i\Delta z^j - z^j\Delta z^i\right]
+\end{align*}
+
+Since there are methods for estimating $\Delta$ from data [@Hein2005;
+@Coifman2006], we also have a practical method for approximating local
+distortions $H$!
+
+---
+
+### Implementation
+
+Let $z_{k} \in \mathbb{R}^{N}$ be the $k^{th}$ embedding dimension. Let $L$ be
+the doubly-normalized graph Laplacian [@Coifman2006]. Compute
+
+\begin{align*}
+H_{kk'}^{(\cdot)} := \frac{1}{2}\left[L\left(z_{k} \circ z_{k'}\right) - z_{k} \circ \left(L z_{k'}\right) - z_{k'} \circ \left(L z_{k}\right)  \right] \in \mathbb{R}^{N}
+\end{align*}
+
+The embedding distortion for sample $n$ is given by $H^{(n)} \in \mathbb{R}^{K
+\times K}$
+
+![](figures/g_kl.png){width=350}
+
+---
+
 ### Graph Laplacian
 
 To compute $L$, we use the estimator from [@Coifman2006].
