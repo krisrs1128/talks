@@ -28,9 +28,11 @@ bib <- ReadBib("references.bib")
 ```
 
 <div id="links">
-Slides: https://go.wisc.edu/<br>
+Slides: https://go.wisc.edu/669t74<br>
 Lab Site: https://measurement-and-microbes.org
 </div>
+
+<div style="height: 2em;"></div>
 
 ### Interactive and Interpretable Omics Analysis
 
@@ -97,8 +99,8 @@ Figure from the [Qiime2 documentation](https://view.qiime2.org/visualization/?sr
 
 ### Themes: Visualization
 
-The basic idea of phylobar is to use this tree structure (context) to
-interactively paint (focus) the stacked bar plot.
+Undergraduate Megan Kuo wrote the phylobar package to create color palettes by painting an
+accompanying tree structure `r Citep(bib, "Kuo2026")`.
 
 .center[
   <img src="figures/phylobar_overview.png" width=600/>
@@ -110,7 +112,7 @@ Figure from the [phylobar documentation](https://mkdiro-o.github.io/phylobar/art
 ### Pseudobulk Data
 
 This idea works whenever you cared about hierarchically organized compositions,
-like this COVID-19 immunology data from @Su2020.
+like this COVID-19 immunology data.
 
 ![](figures/phylobar-immunology.png)
 
@@ -201,9 +203,8 @@ inference. VAEs can generate realistic data, but how can we create ground truth?
 
 ### Themes: Interpretability
 
-PhD student Langtian Ma has found a way to intervene on VAE latent states in a
-way that supports precise control of both ground truth signal and technical
-effects.
+PhD student Langtian Ma found a way to intervene on VAE latent states in a way
+that supports precise control of both ground truth signal and technical effects.
 
 .center[
 <img src="figures/batch_effect_dose_response.png" width=750 />
@@ -229,7 +230,7 @@ better understand these gut-brain connections.
 
 * You can learn more at [https://measurement-and-microbes.org](https://go.wisc.edu/pgb8nl).
     - Interactivity: `r Citep(bib, c("Kuo2026", "Temirbek2026", "Jiang2025", "distortions", "Sankaran2024"))`
-    - Interpretability: `r Citep(bib, c("Sankaran2024inter", "Yang2026", "Fukuyama2022", "Janik2021"))`
+    - Interpretability: `r Citep(bib, c("Sankaran2024inter", "Yang2026", "Fukuyama2022", "Janik2021", "sankaran2019remembrances"))`
 
 * I enjoy working with students with different educational levels and backgrounds.
 

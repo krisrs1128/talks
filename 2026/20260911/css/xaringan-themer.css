@@ -24,9 +24,10 @@
 
 body {
   font-family: 'Poppins', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', serif;
-  font-weight: ;
+  font-weight: normal;
   color: #0c0c0c;
 }
+
 
 h1, h2, h3 {
   font-weight: normal;
