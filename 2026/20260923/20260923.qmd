@@ -56,21 +56,88 @@ interest. From an analysis perspective, there are two fundamental challenges:
    specific procedure adopted by limma, though many of the ideas of this
    approach appear throughout the literature.
 
+## Example
+
+1. Before diving more deeply into the theoretical concepts, let's briefly look
+at a concrete code example^[You can find many more in the [online manual](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).]
+The block below loads the packages that we'll need.
+
+```{r}
+library(limma)
+library(edgeR)
+library(tidyverse)
+library(airway)
+
+```
+
+We'll analyze the
+[airway dataset](https://www.bioconductor.org/packages/release/data/experiment/html/airway.html),
+which comes from an RNA-seq experiment to study how gene expression profiles
+change in smooth muscle tissue treated with dexamethasone. The data come from
+four cell lines, and for each line, we have one control and one treated sample
+(8 samples total).
+
+```{r}
+data(airway)
+airway
+```
+
+1. The experiment object above includes the raw counts (`assay`) and metadata
+about the genes (`rowData`) and samples (`colData`).
+
+[picture of row, column data]
+
+The first line below makes sure that `untrt` is the reference level, so a
+positive $t$-statistic is interpreted as the treatment being larger than the
+control. Limma expects the experiment object to be stored in a DGEList, which
+just reorganizes the counts and metadata already present in the original
+experiment object
+
+```{r}
+colData(airway)$dex <- factor(colData(airway)$dex, levels = c("untrt", "trt"))
+dge <- DGEList(counts = assay(airway), samples = colData(airway), genes = rowData(airway))
+dge
+```
+
+1. We next filter genes that are expressed at very low levels. The commands
+below apply normalization steps, which we'll discuss in more detail below. The
+most important part of the block below is that we define the factors that
+influence gene expression. Here, both the cell line and the dexamethasone status
+are allowed to influence each gene's expression levels. This is encoded in the
+"formula" object `~ cell + dex`.
+
+```{r}
+keep <- filterByExpr(dge, group = dge$samples$dex)
+dge  <- normLibSizes(dge[keep, ])
+design <- model.matrix(~ cell + dex, data = dge$samples)
+v <- voom(dge, design)
+```
+
+1. We use the output from the normalization step as input for hypothesis
+testing. The top table output shows those genes which have the most significant
+difference between dexamethasone and control settings.
+
+```{r}
+fit_raw <- lmFit(v, design)
+fit <- eBayes(fit_raw)
+topTable(fit, coef = "dextrt")
+```
+
 ## Linear Models Background
 
 4. The machinery that underlies both normalization and multiple hypothesis
 testing is the linear model. We will take a brief detour to understand some of
 the basic mechanics of hypothesis testing through linear models.
 
-5. Let $y_i$ represent measurements of interest across samples $i$. Imagine that
+5. Let $y_i$ represent measurements of interest across samples $n$. Imagine that
 data come from two groups (e.g., healthy and disease, or knockout and control)
 and that are both normally distributed. The groups may have different means but
 are required to have the same variances.
 
 $$
 \begin{align}
-Y_{i} \sim \mathcal{N}\left(\mu_{A}, \sigma^2\right) \text{ for }i \in \text{ Group } A\\
-Y_{i} \sim \mathcal{N}\left(\mu_{B}, \sigma^2\right) \text{ for }i \in \text{ Group } B
+Y_{n} \sim \mathcal{N}\left(\mu_{A}, \sigma^2\right) \text{ for }n \in \text{ Group } A\\
+Y_{n} \sim \mathcal{N}\left(\mu_{B}, \sigma^2\right) \text{ for }n \in \text{ Group } B
 \end{align}
 $$
 
@@ -78,7 +145,7 @@ If we want to see whether or not these two underlying means are the same, we can
 consider the statistic,
 
 $$
-t = \frac{\bar{y}_A - \bar{y}_B}{\hat{\sigma}\sqrt{1/n_A + 1/n_B}}.
+t = \frac{\bar{y}_A - \bar{y}_B}{s\sqrt{1/N_A + 1/N_B}}.
 $$
 
 This is the differences in empirical means of groups A and B, adjusted according
@@ -131,10 +198,10 @@ above the test statistic, and it is a measure of the strength of this evidence
 
 9. So if we're willing to believe the Gaussian assumption, we have a full
 procedure for comparing two groups of data. But in genomics we often will need
-to account for variables that could influecne the response $y_i$ but which
+to account for variables that could influecne the response $y_n$ but which
 aren't the actual treatment of interest. The situation might be like in the
 figure below, where we care about the difference between A and B, but the
-response is influenced by a sample-specific factor $X_i$. If we ignored this
+response is influenced by a sample-specific factor $X_n$. If we ignored this
 factor and only compared the $y_i$ values, then the groups would blend into one
 another and we wouldn't be able to detect any difference
 
@@ -142,8 +209,8 @@ another and we wouldn't be able to detect any difference
 
 10. In this case we might want to test the null hypothesis $H_{0}$ that the
 lines for the two groups are exactly overlapping. The main trick is to subtract
-out the effects from the $X_i$ and see whether there still remains a difference
-between the two groups. That is, after subtracing the $X_i$ effects (i.e.,
+out the effects from the $X_n$ and see whether there still remains a difference
+between the two groups. That is, after subtracing the $X_n$ effects (i.e.,
 looking at the gaps between the points and the dashed line), we return to the
 setting above.
 
@@ -156,9 +223,9 @@ distribution under $H_{0}$.
 11. The fact that we can make comparisons between groups while accounting for
 other variables is what makes linear models such a versatile statistical method.
 The concrete example here uses a straight line for $X$ but in fact the same
-machinery works very generally, including when the effects are nonlinear, when
-the slopes of the lines are not parallel, and when we have more than two groups
-to compare.
+machinery works generally, including when the effects are nonlinear, when the
+slopes of the lines are not parallel, and when we have more than two groups to
+compare.
 
 ## Normalization
 
@@ -176,43 +243,69 @@ obscure the actual biological differences between conditions.
 
 14. An idea that solves both problems at once is to apply a log
 counts-per-million (CPM) transformation. Suppose that the expression for gene
-$j$ in sample $i$ is $y_{ij}$. Arrange all these data into a samples-by-genes
-matrix $Y \in \mathbb{R}^{N\times J}$.
+$g$ in sample $n$ is $y_{ng}$. Arrange all these data into a samples-by-genes
+matrix $Y \in \mathbb{R}^{N\times G}$.
 
    [draw picture of the matrix]
 
    The log CPM transformation is,
 
    $$
-   y_{ij} \to \log\left(1 + \frac{y_{ij}}{\sum_{k}y_{ik}} \times 10^{4}\right)
+   y_{ng} \rightsquigarrow \log\left(\frac{y_{ng} + \frac{1}{2}}{\sum_{k}y_{nk} + 1} \times 10^{6}\right)
    $$
 
-   The fraction inside of the log converts each sample into a relative
-   frequency, which removes the differences in sequencing depths. The 10^4
-   converts everything back to counts and it's where the "per-million" name
-   comes from. Second by taking the log transformation, we convert the often
-   count data into continuous data where the normal distribution assumption is
-   more believable.
+   The $\frac{1}{2}$ and $1$ offsets prevent us from taking a log of zero, which
+   is undefined. Besides this, the fraction inside of the log converts each
+   sample into something close to a relative frequency of gene $j$ in sample $i$
+   (it would be exact without the offsets). This removes the differences in
+   sequencing depths. The 10^4 converts everything back to counts and it's where
+   the "per-million" name comes from. Second by taking the log transformation,
+   we convert the often count data into continuous data where the normal
+   distribution assumption is more believable.
 
 15. Here are histograms of three genes before and after applying the CPM
+transformation. The data are described in more detail in the second case study
+below. For XIST, the normal approximation makes much more sense after the
 transformation.
-   [code to generate these figures]
 
-16. One problem is that when we convert to compositions we're actually losing a
-lot of meaningful information about the precision of our measurements. A sample
-with very deep sequencing is measured more accurately than one with very shallow
-sequencing even if they have roughly comparable relative gene frequencies.
+<img src="figures/pickrell_01_normalization.png" width=700/>
 
-17. The limma-voom workflow addresses this by storing not simply the log CPM
-values but also the associated precision weights. I've included an appendix
-about where these weights come from but for our purposes it's enough to think
-about the high-precision samples being those with deeper sequencing.
+At this point, we can, in principle, fit a linear model where the experimental
+designs are the predictors and the transformed gene expression values are the
+response.
 
-18. It turns out that these weights can be incorporated into linear models. For
-example in the simple case where we're simply looking at the difference between
-two groups, we would compute a weighted average where the samples that are
-measured with higher precision are given higher weights. In limma all the
-differential analysis is based on linear models with these precision weights.
+16. One problem is that when we convert to frequencies we're losing a
+meaningful information about the precision of our measurements. Two samples can
+have exactly the same log CPM value for a gene but have different total counts.
+The total count information is important because the sample with very deep
+sequencing is measured more accurately than one with shallow sequencing.
+
+17. This shows up in the spread of the groups after the log CPM transformation
+has been applied. For example, in the three genes below^[This is from a
+different case study, which we'll also review below. ], the logCPM
+transformation has put all the genes on roughly the same scale. Instead of
+ranging from 0 to 40,000, they're in roughly the range from -5 to 10.
+
+<img src="figures/airway_01b_normalization_by_treatment.png" width=650/>
+
+But notice that the ZBTB16 gene has more variation within each group compared to
+the other two genes. In formal statistical language, this is called the residual
+variation, and it turns out to be a general phenomenon that genes that have
+smaller total counts originally also have larger residual variation.
+
+<img src="figures/airway_02_voom.png" width=600/>
+
+17. Lima uses this empirical trend to reweight the observations. The curve above
+was learned using gene-level quantities. But we can compute the quantity on the
+x-axis for any particular $y_{ng}$, and this is used to derive an associated
+weight (details in appendix), called precision weights. Intuitively, if an
+observation comes from a sample with very deep sequencing, it will have higher
+precision.
+
+These weights can then be incorporated into linear models through weighted
+linear regression. For example in the simple case where we're simply looking at
+the difference between two groups, we would compute a weighted average instead
+of a plain average.
 
 ## Multiple Hypothesis Testing
 
@@ -223,45 +316,66 @@ gene. We would reject those where the groups means seem to be different
 genes would be the ones that we prioritize for follow-up analysis.
 
 20. This doesn't quite work, though. It's easiest to understand through a small
-example. Here I've simulated (? refer to paper) gaussian samples each from two
-groups. All the linear model assumptions hold. There are (?) "genes", the first
-(?) of which are nonnull.
+example. Here I've simulated a thousand hypothetical genes from two groups. For
+every gene, I have simulated variances $\sigma_{g}^{2}$ from a uniform
+distribution between 0.5 and 2, some have expression values that stay closer to
+their mean than others. For 50 of these genes, I introduce a true difference of
+2.5 between the means . In the language of the two-groups model above, $\mu_{A}
+= 0, \mu_{B} = 2.5$.  I sample only two replicates per group (four samples
+total).
 
-   [write a small simulation following Hongkai Ji and X. Shirley Liu's paper: https://doi.org/10.1038/nbt.1619].
+21. The top panel in the plot below shows the 50 genes with the most significant
+t-statistics.  Only 12 of these are actually related to the treatment! Of the
+top 10 genes, only two are actually relevant.
 
-21. I've plotted the t-statistics vs. the gene index, and I've shaded in those
-that would be rejected according to a 0.05 cutoff. Many of the genes that we
-know of seem to have very large t-statistics.
+<img src="figures/07_top_genes.png" width=600/>
 
-   [create a figure representing this]
+The bottom panel makes clear what's going on. The genes that appear the most
+significant actually just have estimated variances $s_{g}^2$ that are smaller
+than their true variances $\sigma_{g}^2$, which we know in the simulation, but
+which we wouldn't know in reality. The problem is that with small sample sizes,
+we might have a small empirical variance just by chance, and since the
+t-statistic divides by the square root of that variance, we end up
+overestimating the associated genes' significance.
 
-   The problem immediately becomes clear if we look at the associated standard
-   deviations. Just by chance some of these genes have low estimated standard
-   deviations and that makes the t-statistic very large. This is a consequence
-   of the relatively small sample size. If we had more samples we'd be able to
-   better estimate $\hat{\sigma}$, but as it is we sometimes underestimate and
-   these genes end up appearing significant.
+$$
+t_{g} = \frac{\bar{y}_{A,g} - \bar{y}_{B,g}}{s_{g}\sqrt{1/N_A + 1/N_B}}.
+$$
 
-22. We somehow need a better way of estimating these variances. The insight of
-limma is that we can pool information across all the genes to improve our
-variance estimates. Specifically if we plot the observed gene means against
-their observed standard deviations (after normalization), we often see a trend
-like this.
+22. There are two ways a gene could have small estimated variance $s_{g}^2$.
+Either (i) the gene truly has little variation around its mean (i.e. we would
+see this if we continued sampling), or (ii) just by chance, the replicates we
+observed happen to be close to one another. The major insight of limma is that
+the other genes can help us tell which of these two situations we are in.
 
-   (show picture of limma trend relationship)
+It first posits a prior distribution $H$ for the genewise variances,
+$$
+\sigma_{g}^{2} \over{iid}\sim H.
+$$
+Since the distribution of $s_{g}^2$ given $\sigma_{g}^{2}$ has a known form, it
+then becomes possible to compute a posterior for each gene $g$,
+$$
+p\left(\sigma_{g}^2 \vert s_{g}^2\right),
+$$
+and this posterior allows us to bypass using the original $s_{g}$ in a new,
+"moderated" $t$-statistic.
 
-   The genes with the very low standard deviation cause the problems we observed
-   above. Therefore limma replaces the raw standard deviation estimates with a
-   version that "pushes" all the estimates toward the fitted trend. This ensures
-   that no samples have very low standard deviation. This is where the
-   "moderated" in "moderated fold change estimation" comes from in the subtitle
-   of the limma package.
+Since we observe the standard deviations $s_{g}$ across many genes, it's
+possible to actually estimate $H$. This is what is meant by limma performing
+empirical Bayes. Compared to standard Bayesian inference, where the prior must
+simply be assumed, we can use the many parallel genes to inform our prior $H$.
+
+In practice, the moderated $t$-statistics are much less affected by the small
+standard deviations $s_{g}$.  When using these $t$-statistics instead of the
+original ones, we have many fewer false positives among our top-ranked genes.
+
+<img src="figures/09_fraction_null_top_k_moderated.png" width=600/>
 
 23. There's one last statistical consideration. If we use the usual hypothesis
 testing cutoffs then we're liable to return many false positives. The issue
 appears in this XKCD comic.
 
-   (jellybeans comic)
+<img src="figures/significant.png" width=250/>
 
    The problem is that the hypothesis testing cutoffs are originally designed so
    that under the null hypothesis the probability of a false positive is
@@ -275,8 +389,8 @@ control the proportion of false positives among all rejections. They called the
 false positives "false discoveries," which led to the definition of the false
 discovery rate.
 
-25. Formally let $H_{1}, \dots, H_{J}$ represent the null hypothesis for the $J$
-genes. Suppose we obtain p-values $p_{1}, \dots, p_{J}$. Suppose that $R$ of
+25. Formally let $H_{1}, \dots, H_{G}$ represent the null hypothesis for the $G$
+genes. Suppose we obtain p-values $p_{1}, \dots, p_{G}$. Suppose that $R$ of
 these $p$-values are smaller than $\alpha$. These are our rejections, they are
 the discoveries we would comment on in our paper. Among these $R$ rejections,
 suppose that $V$ are false discoveries (in practice, we would never know this).
@@ -285,7 +399,9 @@ The quantity
    $$
    \widehat{\mathrm{FDP}} = \frac{V}{R\vee 1}
    $$
-   is the empirical false discovery proportion in this one experiment and its expectation across many experiments with the same underlying distribution is called the false discovery rate,
+   is the empirical false discovery proportion in this one experiment and its
+   expected value across many experiments with the same underlying distribution
+   is called the false discovery rate,
    $$
    \mathrm{FDR} = \mathbb{E}\left[\widehat{\mathrm{FDP}}\right]
    $$
@@ -296,20 +412,45 @@ these cutoffs instead of the canonical $\alpha$, we would provably control the
 false discovery rate. Their procedure is now called the Benjamini-Hochberg (or
 BH) procedure,
 
-   * Order the $J$ p-values from smallest to largest
+   * Order the $G$ p-values from smallest to largest
     $$
-    p_{(1)} \le p_{(2)} \le \cdots \le p_{(J)}
+    p_{(1)} \le p_{(2)} \le \cdots \le p_{(G)}
     $$
-    and denote the associated null hypothesis by $H_{(1)}, \dots, H_{(J)}$.
-   * Fix a target FDR level $q$^[This is the analog of $\alpha$ in ordinary hypothesis testing] and define a new sequence of thresholds $\alpha_{k} = \frac{kq}{J}$. This means that the smallest p-value is compared to the strictest threshold, the next smallest is compared to a slightly more lenient one, etc.
+    and denote the associated null hypothesis by $H_{(1)}, \dots, H_{(G)}$.
+   * Fix a target FDR level $q$^[This is the analog of $\alpha$ in ordinary hypothesis testing] and define a new sequence of thresholds $\alpha_{k} = \frac{kq}{G}$. This means that the smallest p-value is compared to the strictest threshold, the next smallest is compared to a slightly more lenient one, etc.
    * Find the largest $k$ where $p_{(k)} \le \alpha_{k}$, and reject all hypotheses $H_{(1)}, \dots, H_{(k)}$. If there is no such $k$, don't make any rejections.
 
 27. This procedure actually has an intuitive explanation in terms of the histogram of p-values.
 
-## Annotated Example
+## Extra Code Example
 
-plotMA
+1.
 
-volcano plot
+```{r}
+data(pickrell1)
+data(annotEnsembl63)
 
-toptable
+counts  <- exprs(pickrell1.eset)
+samples <- data.frame(sex = factor(pickrell1.eset$gender, levels = names(pal_sex)), row.names = colnames(counts))
+genes   <- data.frame(gene_id = rownames(counts), symbol = annotEnsembl63[rownames(counts), "Symbol"],
+                      chr = annotEnsembl63[rownames(counts), "Chr"], row.names = rownames(counts))
+
+dge <- DGEList(counts = counts, samples = samples, genes = genes)
+dge
+```
+
+```{r}
+keep <- filterByExpr(dge, group = dge$samples$sex)
+dge  <- normLibSizes(dge[keep, ])
+```
+
+```{r}
+design <- model.matrix(~ sex, data = dge$samples)
+v <- voom(dge, design)
+```
+
+```{r}
+fit_raw <- lmFit(v, design)
+fit     <- eBayes(fit_raw)
+top <- topTable(fit, coef = "sexmale")
+```
