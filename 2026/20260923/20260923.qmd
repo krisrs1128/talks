@@ -325,7 +325,7 @@ their mean than others. For 50 of these genes, I introduce a true difference of
 total).
 
 21. The top panel in the plot below shows the 50 genes with the most significant
-t-statistics.  Only 12 of these are actually related to the treatment! Of the
+$t$-statistics.  Only 12 of these are actually related to the treatment! Of the
 top 10 genes, only two are actually relevant.
 
 <img src="figures/07_top_genes.png" width=600/>
@@ -365,11 +365,36 @@ possible to actually estimate $H$. This is what is meant by limma performing
 empirical Bayes. Compared to standard Bayesian inference, where the prior must
 simply be assumed, we can use the many parallel genes to inform our prior $H$.
 
-In practice, the moderated $t$-statistics are much less affected by the small
-standard deviations $s_{g}$.  When using these $t$-statistics instead of the
-original ones, we have many fewer false positives among our top-ranked genes.
+1. The posterior mean of $\sigma_{g}^{2}$ will be drawn closer to the observed
+prior mean. The consequence is that the moderated $t$-statistics are much less
+affected by the small standard deviations $s_{g}$.  When using these
+$t$-statistics instead of the original ones, we have many fewer false positives
+among our top-ranked genes. For example, consider the gene YWHAB. Since the
+lines connecting each treatment-control pair are nearly parallel, the residual
+variance after accounting for cell line effects is very small.
 
-<img src="figures/09_fraction_null_top_k_moderated.png" width=600/>
+<img src="figures/airway_03f_ywhab_by_treatment.png" width=350/>
+
+The posterior update pulls the $\sigma_{g}^2$ into a more reasonable range,
+using information about the variances from all the other genes that we've
+observed.
+
+<img src="figures/airway_03e_variance_posterior_low.png" width=400/>
+
+1. Looking across all genes, we can see that the $t$-statistics are generally
+shrunken towards zero. The genes that we expect to be shrunk the most are those
+whose standard deviations were much lower than expected after estimating the
+prior variance $H$.
+
+<img src="figures/airway_03_shrinkage.png" width=300/>
+
+ Using these moderated $t$ statistics tends to greatly reduce the number of
+ false positives. For example, returning to our simulation setup from before, we
+ can see that ranking using the moderated $t$-statistics leads to fewer false
+ positives among the top-ranked genes and is nearly as good as using the ground
+ truth standard deviation.
+
+<img src="figures/09_fraction_null_top_k_moderated.png" width=550/>
 
 23. There's one last statistical consideration. If we use the usual hypothesis
 testing cutoffs then we're liable to return many false positives. The issue
@@ -427,14 +452,12 @@ BH) procedure,
 1.
 
 ```{r}
+library(tweeDEseqCountData)
 data(pickrell1)
-data(annotEnsembl63)
 
 counts  <- exprs(pickrell1.eset)
-samples <- data.frame(sex = factor(pickrell1.eset$gender, levels = names(pal_sex)), row.names = colnames(counts))
-genes   <- data.frame(gene_id = rownames(counts), symbol = annotEnsembl63[rownames(counts), "Symbol"],
-                      chr = annotEnsembl63[rownames(counts), "Chr"], row.names = rownames(counts))
-
+samples <- data.frame(sex = factor(pickrell1.eset$gender), row.names = colnames(counts))
+genes   <- data.frame(gene_id = rownames(counts), row.names = rownames(counts))
 dge <- DGEList(counts = counts, samples = samples, genes = genes)
 dge
 ```
@@ -451,6 +474,6 @@ v <- voom(dge, design)
 
 ```{r}
 fit_raw <- lmFit(v, design)
-fit     <- eBayes(fit_raw)
-top <- topTable(fit, coef = "sexmale")
+fit <- eBayes(fit_raw)
+topTable(fit, coef = "sexmale")
 ```
