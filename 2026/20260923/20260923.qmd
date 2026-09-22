@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Multiple Testing"
+title: "Introduction to Differential Expression Analysis"
 author: Kris Sankaran
 date: 2026-09-23
 bibliography: references.bib
@@ -82,21 +82,30 @@ data(airway)
 airway
 ```
 
-5. The experiment object above includes the raw counts (`assay`) and metadata
-about the genes (`rowData`) and samples (`colData`).
+5. The experiment object above includes the gene transcript counts (`assay`) and
+data about the genes (`rowData`) and samples (`colData`). The example we're
+working was already prepared by the `airway` package. In practice, we would need
+to construct this using the `SummarizedExperiment` function, whose inputs are
+the counts and supplementary data about each sample and gene. For any regression
+models that we do below, we will need the relevant variables to be defined as
+column names in the `colData`.
 
-[picture of row, column data]
+```{r}
+head(colData(airway))
+head(rowData(airway))
+assay(airway)[1:4, 1:4]
+```
 
 The first line below makes sure that `untrt` is the reference level, so a
 positive $t$-statistic is interpreted as the treatment being larger than the
-control. Limma expects the experiment object to be stored in a DGEList, which
+control. Limma expects the experiment object to be stored in a `DGEList`, which
 just reorganizes the counts and metadata already present in the original
-experiment object
+experiment object. The `SE2DGEList` function converts from
+`SummarizedExperiment` to `DGEList`.
 
 ```{r}
-colData(airway)$dex <- factor(colData(airway)$dex, levels = c("untrt", "trt"))
-dge <- DGEList(counts = assay(airway), samples = colData(airway), genes = rowData(airway))
-dge
+airway$dex <- relevel(airway$dex, ref = "untrt")
+dge <- SE2DGEList(airway)
 ```
 
 6. We next filter genes that are expressed at very low levels. The commands
@@ -110,7 +119,7 @@ are allowed to influence each gene's expression levels. This is encoded in the
 keep <- filterByExpr(dge, group = dge$samples$dex)
 dge <- normLibSizes(dge[keep, ])
 design <- model.matrix(~ cell + dex, data = dge$samples)
-v <- voom(dge, design)
+v <- voom(dge, design, save.plot = TRUE)
 ```
 
 7. We use the output from the normalization step as input for hypothesis
@@ -216,8 +225,10 @@ simulate_two_groups <- function(n_sims, n_per_group, effect, sigma) {
 }
 t_statistics <- function(sim_data) {
     sim_data |>
-        group_by(sim, group) |>
-        summarise(n = n(), mean = mean(y), ss = sum((y - mean(y))^2), .groups = "drop") |>
+        summarise(
+            n = n(), mean = mean(y), ss = sum((y - mean(y))^2),
+            .by = c(sim, group)
+        ) |>
         pivot_wider(names_from = group, values_from = c(n, mean, ss)) |>
         mutate(
             sigma_hat = sqrt((ss_A + ss_B) / (n_A + n_B - 2)),
@@ -225,9 +236,6 @@ t_statistics <- function(sim_data) {
         )
 }
 group_dotplot <- function(data, subtitle = NULL, population_means = NULL, population_range = NULL) {
-    means <- data |>
-        group_by(group) |>
-        summarise(y = mean(y), .groups = "drop")
     population_layer <- NULL
     if (!is.null(population_means)) {
         population <- expand_grid(
@@ -248,7 +256,10 @@ group_dotplot <- function(data, subtitle = NULL, population_means = NULL, popula
         population_layer +
         geom_hline(yintercept = 0, colour = ink[["axis"]], linewidth = 0.3) +
         geom_point(size = 2.4, alpha = 0.85, position = position_jitter(width = 0.06, height = 0, seed = 1)) +
-        geom_segment(data = means, aes(x = as.numeric(factor(group)) - 0.25, xend = as.numeric(factor(group)) + 0.25, yend = y), linewidth = 1) +
+        geom_crossbar(
+            stat = "summary", fun = mean, fun.min = mean, fun.max = mean,
+            width = 0.5, linewidth = 1, middle.linewidth = 1
+        ) +
         scale_colour_manual(values = pal_group, guide = "none") +
         scale_fill_manual(values = pal_group, guide = "none") +
         labs(x = "Group", y = "y", subtitle = subtitle)
@@ -496,12 +507,23 @@ tidy_expr <- function(mat, dge, scale) {
         mutate(scale = scale)
 }
 
-pk_three_genes <- bind_rows(
-    tidy_expr(pk_dge$counts, pk_dge, "raw count"),
-    tidy_expr(cpm(pk_dge, log = TRUE), pk_dge, "log-CPM")
-) |>
-    filter(symbol %in% pickrell_genes) |>
-    mutate(symbol = factor(symbol, levels = pickrell_genes), scale = factor(scale, levels = c("raw count", "log-CPM")))
+# reused below for the airway and YWHAB examples as well
+expression_scales <- function(dge, symbols) {
+    keep <- dge$genes$symbol %in% symbols
+
+    list(
+        `raw count` = dge$counts[keep, , drop = FALSE],
+        `log-CPM` = cpm(dge, log = TRUE)[keep, , drop = FALSE]
+    ) |>
+        imap(\(mat, scale) tidy_expr(mat, dge, scale)) |>
+        list_rbind() |>
+        mutate(
+            symbol = factor(symbol, levels = symbols),
+            scale = factor(scale, levels = c("raw count", "log-CPM"))
+        )
+}
+
+pk_three_genes <- expression_scales(pk_dge, pickrell_genes)
 ```
 
 ```{r}
@@ -548,12 +570,7 @@ pal_dex <- c(trt = "#A53C61", untrt = "#487150")
 lab_dex <- c(untrt = "untreated", trt = "dexamethasone")
 airway_genes <- c("GAPDH", "DUSP1", "ZBTB16")
 
-airway_three_genes <- bind_rows(
-    tidy_expr(dge$counts, dge, "raw count"),
-    tidy_expr(cpm(dge, log = TRUE), dge, "log-CPM")
-) |>
-    filter(symbol %in% airway_genes) |>
-    mutate(symbol = factor(symbol, levels = airway_genes), scale = factor(scale, levels = c("raw count", "log-CPM")))
+airway_three_genes <- expression_scales(dge, airway_genes)
 
 # reused below for the YWHAB figure as well
 plot_by_treatment <- function(data, ylab, scales = "free_y") {
@@ -585,7 +602,7 @@ But notice that the ZBTB16 gene has more variation within each group compared to
 the other two genes. In formal statistical language, this is called the residual
 variation (after residualizing out the group effect), and it turns out to be a
 general phenomenon that genes with smaller total counts originally also have
-larger residual variation.
+larger residual variation after the logCPM transformation.
 
 ```{r}
 #| label: fig-airway-voom
@@ -593,10 +610,9 @@ larger residual variation.
 #| fig-width: 6
 #| fig-height: 4.2
 #| out-width: 600px
-v_plot <- voom(dge, design, save.plot = TRUE)
-trend_points <- tibble(gene_id = rownames(v_plot), mean_log_count = v_plot$voom.xy$x, sqrt_sd = v_plot$voom.xy$y) |>
+trend_points <- tibble(gene_id = rownames(v), mean_log_count = v$voom.xy$x, sqrt_sd = v$voom.xy$y) |>
     left_join(dge$genes, by = "gene_id")
-trend_line <- as_tibble(v_plot$voom.line)
+trend_line <- as_tibble(v$voom.line)
 
 ggplot(trend_points, aes(mean_log_count, sqrt_sd)) +
     geom_point(colour = ink[["muted"]], alpha = 0.15, size = 0.5) +
@@ -606,7 +622,7 @@ ggplot(trend_points, aes(mean_log_count, sqrt_sd)) +
     labs(x = expression("Average" ~ log[2] * "(count)"), y = "sqrt(residual SD)")
 ```
 
-22. Lima uses this empirical trend to reweight the observations. The curve above
+22. Limma uses this empirical trend to reweight the observations. The curve above
 was learned using gene-level quantities. But we can compute the quantity on the
 x-axis for any particular $y_{ng}$, and this is used to derive an associated
 weight (details in appendix), called precision weights. Intuitively, if an
@@ -636,7 +652,7 @@ their mean than others. For 50 of these genes, I introduce a true difference of
 total).
 
 25. The top panel in the plot below shows the 50 genes with the most significant
-$t$-statistics.  Only 12 of these are actually related to the treatment! Of the
+$t$-statistics.  Only 11 of these are actually related to the treatment! Of the
 top 10 genes, only two are actually relevant.
 
 ```{r}
@@ -650,12 +666,11 @@ effect2 <- 2.5
 
 gene_t_stats <- function(sim) {
     sim |>
-        group_by(gene) |>
         summarise(
             sigma = sigma[1],
             mean_A = mean(y[group == "A"]), mean_B = mean(y[group == "B"]),
             ss = sum((y[group == "A"] - mean_A)^2) + sum((y[group == "B"] - mean_B)^2),
-            .groups = "drop"
+            .by = gene
         ) |>
         mutate(
             df = 2 * n_per_group2 - 2,
@@ -730,36 +745,39 @@ $$
 t_{g} = \frac{\bar{y}_{A,g} - \bar{y}_{B,g}}{s_{g}\sqrt{1/N_A + 1/N_B}}.
 $$
 
-26. There are two ways a gene could have small estimated variance $s_{g}^2$.
-Either (i) the gene truly has little variation around its mean (i.e. we would
-see this if we continued sampling), or (ii) just by chance, the replicates we
-observed happen to be close to one another. The major insight of limma is that
-the other genes can help us tell which of these two situations we are in.
+26. When we observe a very small $s_{g}^2$, it could either be because the gene
+truly has small variation around its mean, or we just got replicates that are
+unusually close to each other.  The major insight of limma is that the other
+genes can help us tell which of these two situations we are in.
 
-It first posits a prior distribution $H$ for the genewise variances,
+To this end, imagine we had a prior distribution $H$ for the genewise variances,
 $$
 \sigma_{g}^{2} \overset{\text{iid}}{\sim} H
 $$
-Since the distribution of $s_{g}^2$ given $\sigma_{g}^{2}$ has a known form, it
-then becomes possible to compute a posterior for each gene $g$,
+This would capture our prior knowledge about how much variation we would expect
+in each group. Since the distribution of $s_{g}^2$ given $\sigma_{g}^{2}$ has a
+known form, it is possible to compute a posterior for each gene $g$,
 $$
-p\left(\sigma_{g}^2 \vert s_{g}^2\right),
+p\left(\sigma_{g}^2 \vert s_{g}^2\right).
 $$
-and this posterior allows us to bypass using the original $s_{g}$ in a new,
-"moderated" $t$-statistic.
+This posterior gives a better estimate of $\sigma_{g}^2$ which we can use in
+place of $s_{g}^2$, and substituting this estimate in our $t$-statistic gives a
+new, "moderated" version.
 
-Since we observe the standard deviations $s_{g}$ across many genes, it's
-possible to actually estimate $H$. This is what is meant by limma performing
-empirical Bayes. Compared to standard Bayesian inference, where the prior must
-simply be assumed, we can use the many parallel genes to inform our prior $H$.
+How can we choose a believable $H$? It turns out that it is possible to estimate
+$H$ by looking at the $s_{g}^2$ across all the genes. This is what is meant by
+limma performing empirical Bayes. Compared to standard Bayesian inference, where
+the prior must simply be assumed, we can use the many parallel genes to form an
+"empirical" prior $\hat{H}$, which then can be substituted in all the posterior
+calculations.
 
-27. The posterior mean of $\sigma_{g}^{2}$ will be drawn closer to the observed
-prior mean. The consequence is that the moderated $t$-statistics are much less
-affected by the small standard deviations $s_{g}$.  When using these
-$t$-statistics instead of the original ones, we have many fewer false positives
-among our top-ranked genes. For example, consider the gene YWHAB. Since the
-lines connecting each treatment-control pair are nearly parallel, the residual
-variance after accounting for cell line effects is very small.
+27. The posterior mean of $\sigma_{g}^{2}$ will be drawn toward the prior mean.
+The consequence is that the moderated $t$-statistics are less affected by small
+values of $s_{g}$.  When using these $t$-statistics instead of the original
+ones, we have fewer false positives among our top-ranked genes. For example,
+consider the gene YWHAB. Since the lines connecting each treatment-control pair
+are nearly parallel, the residual variance after accounting for cell line
+effects is very small.
 
 ```{r}
 #| label: airway-shrinkage-setup
@@ -768,23 +786,37 @@ variance after accounting for cell line effects is very small.
 coef_dex <- "dextrt"
 q_airway <- 0.01
 
-shrinkage <- tibble(
-    gene_id = rownames(fit),
-    symbol = fit$genes$symbol,
-    sd_raw = fit$sigma,
-    sd_mod = sqrt(fit$s2.post),
-    t_raw = fit$coefficients[, coef_dex] / (fit$sigma * fit$stdev.unscaled[, coef_dex]),
-    t_mod = fit$t[, coef_dex],
-    p_mod = fit$p.value[, coef_dex],
-    adj_p = p.adjust(p_mod, method = "BH"),
-    decision = factor(if_else(adj_p < q_airway, "rejected", "not rejected"), levels = c("rejected", "not rejected"))
-)
+# reused below for the Pickrell diagnostics as well
+shrinkage_table <- function(fit, coef, q = 0.01) {
+    tibble(
+        gene_id = rownames(fit),
+        symbol = fit$genes$symbol,
+        sd_raw = fit$sigma,
+        sd_mod = sqrt(fit$s2.post),
+        t_raw = fit$coefficients[, coef] / (fit$sigma * fit$stdev.unscaled[, coef]),
+        t_mod = fit$t[, coef],
+        p_mod = fit$p.value[, coef],
+        adj_p = p.adjust(p_mod, method = "BH"),
+        decision = factor(if_else(adj_p < q, "rejected", "not rejected"), levels = c("rejected", "not rejected"))
+    )
+}
 pal_decision <- c("rejected" = "#2a78d6", "not rejected" = "#898781")
+plot_shrinkage <- function(data, q = 0.01) {
+    ggplot(data, aes(t_raw, t_mod, colour = decision)) +
+        geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = ink[["secondary"]], linewidth = 0.4) +
+        geom_point(alpha = 0.3, size = 0.6) +
+        scale_colour_manual(values = pal_decision, name = sprintf("BH at q = %s", q), drop = FALSE) +
+        guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+        coord_equal(xlim = c(-60, 60), ylim = c(-60, 60)) +
+        labs(x = "Ordinary t-statistic", y = "Moderated t-statistic")
+}
+
+shrinkage <- shrinkage_table(fit, coef_dex, q_airway)
 
 # InvGamma prior/posterior density of a gene's underlying variance, on the log10 scale
 log_variance_density <- function(u, a, b) {
-    x <- 10^u
-    exp(a * log(b) - lgamma(a) - a * log(x) - b / x) * log(10)
+    precision <- 10^(-u)
+    dgamma(precision, shape = a, rate = b) * precision * log(10)
 }
 
 variance_posterior_curve <- function(symbol_name) {
@@ -819,12 +851,7 @@ variance_posterior_curve <- function(symbol_name) {
 #| fig-width: 3.2
 #| fig-height: 4.6
 #| out-width: 350px
-ywhab_expr <- bind_rows(
-    tidy_expr(dge$counts, dge, "raw count"),
-    tidy_expr(cpm(dge, log = TRUE), dge, "log-CPM")
-) |>
-    filter(symbol == "YWHAB") |>
-    mutate(scale = factor(scale, levels = c("raw count", "log-CPM")))
+ywhab_expr <- expression_scales(dge, "YWHAB")
 
 (
     (plot_by_treatment(filter(ywhab_expr, scale == "raw count"), "Raw count") + labs(x = NULL)) /
@@ -869,13 +896,7 @@ prior variance $H$.
 #| fig-width: 6
 #| fig-height: 4.2
 #| out-width: 800px
-ggplot(shrinkage, aes(t_raw, t_mod, colour = decision)) +
-    geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = ink[["secondary"]], linewidth = 0.4) +
-    geom_point(alpha = 0.3, size = 0.6) +
-    scale_colour_manual(values = pal_decision, name = sprintf("BH at q = %s", q_airway), drop = FALSE) +
-    guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
-    coord_equal(xlim = c(-60, 60), ylim = c(-60, 60)) +
-    labs(x = "Ordinary t-statistic", y = "Moderated t-statistic")
+plot_shrinkage(shrinkage, q_airway)
 ```
 
  Using these moderated $t$ statistics tends to greatly reduce the number of
@@ -894,7 +915,7 @@ fraction_null_top_k <- function(results, rank_col, k_max) {
     results |>
         arrange(.data[[rank_col]]) |>
         slice_head(n = k_max) |>
-        transmute(k = row_number(), fraction_null = cumsum(truth == "null") / k)
+        transmute(k = row_number(), fraction_null = cummean(truth == "null"))
 }
 
 pal_ranking <- c("ordinary t" = "#0b0b0b", "t with the true SD" = "#898781", "moderated t" = "#4a3aa7")
@@ -1020,22 +1041,8 @@ airway dataset.
 coef_sex <- "sexmale"
 q_pickrell <- 0.01
 
-shrinkage_pickrell <- tibble(
-    gene_id = rownames(fit),
-    t_raw = fit_raw$coefficients[, coef_sex] / (fit_raw$sigma * fit_raw$stdev.unscaled[, coef_sex]),
-    t_mod = fit$t[, coef_sex],
-    p_mod = fit$p.value[, coef_sex],
-    adj_p = p.adjust(p_mod, method = "BH"),
-    decision = factor(if_else(adj_p < q_pickrell, "rejected", "not rejected"), levels = c("rejected", "not rejected"))
-)
-
-ggplot(shrinkage_pickrell, aes(t_raw, t_mod, colour = decision)) +
-    geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = ink[["secondary"]], linewidth = 0.4) +
-    geom_point(alpha = 0.3, size = 0.6) +
-    scale_colour_manual(values = pal_decision, name = sprintf("BH at q = %s", q_pickrell), drop = FALSE) +
-    guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
-    coord_equal(xlim = c(-60, 60), ylim = c(-60, 60)) +
-    labs(x = "Ordinary t-statistic", y = "Moderated t-statistic")
+shrinkage_pickrell <- shrinkage_table(fit, coef_sex, q_pickrell)
+plot_shrinkage(shrinkage_pickrell, q_pickrell)
 ```
 
 38.  Looking
