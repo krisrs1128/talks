@@ -18,37 +18,36 @@ execute:
 
 ## Motivation
 
-1. Comparison is fundamental to discovery in biology. In the sequencing era we
-make comparisons by looking at large-scale molecular readouts.
+1. Comparison is fundamental to biological discovery. In the sequencing era, our
+comparisons are often based on large-scale molecular readouts.
 
-   * In functional genomics we compare molecular profiles before and after knocking out genes.
-   * In cancer biology we compare molecular profiles in cancer versus healthy tissue.
-   * In single cell eQTL studies, we might look for cell-type specific gene expression that differs across genotypes.
+   * In functional genomics, we compare molecular profiles before and after knocking out genes.
+   * In cancer biology, we compare molecular profiles in cancer versus healthy tissue.
+   * In single cell eQTL studies, we look for cell-type-specific expression profiles that differs across genotypes.
 
    This is true across many different assay types, for example bulk RNA,
    single-cell pseudobulk data, or ATAC-seq data.
 
    [pictures of molecular assays]
 
-   Viewed more abstractly we're often interested in comparing the levels of
-   genomic features across conditions. We may also be aware of some external
-   factors that influence the level of the observed feature (e.g., different
-   timepoints in a time course experiment or levels of a secondary treatment)
-   and may want to account for that.
+   Viewed more abstractly, this is a problem of comparing the frequency of
+   genomic features across conditions, potentially accounting for secondary
+   factors, like timepoints or patient characteristics, that can also influence
+   the observed frequencies.
 
 2. Naive approaches to comparison can miss interesting signal. Small biological
 effects might be drowned out by large but technical ones. By using appropriate
 controls and properly accounting for measurement errors, we can make more
 accurate comparisons.
 
-3. The overarching goal of multiple testing in high-throughput biology is to
-identify genomic features that vary in a systematic way across conditions of
-interest. From an analysis perspective, there are two fundamental challenges:
+3. The overarching goal of differential expression analysis is to identify
+genomic features that vary systematically across conditions of interest. From an
+analysis perspective, there are two fundamental challenges:
 
-   - The usual statistical assumptions do not immediately apply.
-   - There may be hundreds or thousands of features of potential interest. The
-   more we analyze, the greater the risk that irrelevant features might appear
-   associated just by chance.
+   - The "usual" statistical assumptions do not immediately apply.
+   - There may be thousands of features of potential interest. The more we
+   analyze, the greater the risk that irrelevant features appear associated just
+   by chance.
 
    The first problem motivates _normalization methods_, and the second motivates
    _multiple hypothesis testing methods_. There have been very many proposals
@@ -58,79 +57,87 @@ interest. From an analysis perspective, there are two fundamental challenges:
 
 ## Example
 
-4. Before diving more deeply into the theoretical concepts, let's briefly look
-at a concrete code example^[You can find many more in the [online manual](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).]
-The block below loads the packages that we'll need.
+4. Before diving more deeply into the statistics, let's look at a prawctical
+code example using the limma
+package^[You can find many more examples in the [online manual](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).]
+The block below loads our software packages and sets a random number seed for
+reproducibility.
 
-```{r}
-library(limma)
-library(edgeR)
-library(tidyverse)
-library(airway)
-set.seed(20260923)
-```
+   ```{r}
+   library(limma)
+   library(edgeR)
+   library(tidyverse)
+   library(airway)
+   set.seed(20260923)
+   ```
 
-We'll analyze the
-[airway dataset](https://www.bioconductor.org/packages/release/data/experiment/html/airway.html),
-which comes from an RNA-seq experiment to study how gene expression profiles
-change in smooth muscle tissue treated with dexamethasone. The data come from
-four cell lines, and for each line, we have one control and one treated sample
-(8 samples total).
+   We'll analyze the
+   [airway dataset](https://www.bioconductor.org/packages/release/data/experiment/html/airway.html),
+   which comes from an RNA-seq experiment of how gene expression profiles change
+   in smooth muscle tissue treated with dexamethasone. The data come from four
+   cell lines, and for each line, there are paired treatment and control
+   samples.
 
-```{r}
-data(airway)
-airway
-```
+   ```{r}
+   data(airway)
+   airway
+   ```
 
-5. The experiment object above includes the gene transcript counts (`assay`) and
-data about the genes (`rowData`) and samples (`colData`). The example we're
-working was already prepared by the `airway` package. In practice, we would need
-to construct this using the `SummarizedExperiment` function, whose inputs are
-the counts and supplementary data about each sample and gene. For any regression
-models that we do below, we will need the relevant variables to be defined as
-column names in the `colData`.
+5. This experiment object includes counts and context. The `assay` slot includes
+the counts of each gene transcript across the measured samples. The `rowData`
+and `colData` slots include contextual data about the genes and samples,
+respectively.  This object was assembled by the `airway` package, but in
+practice, we would create our own using the `SummarizedExperiment` function,
+whose inputs are the counts matrix and the contextual data about each sample and
+gene. For any regression models that we run below, we will need the relevant
+variables to be defined as column names in the `colData`.
 
-```{r}
-head(colData(airway))
-head(rowData(airway))
-assay(airway)[1:4, 1:4]
-```
+   ```{r}
+   head(colData(airway))
+   head(rowData(airway))
+   assay(airway)[1:4, 1:4]
+   ```
 
-The first line below makes sure that `untrt` is the reference level, so a
-positive $t$-statistic is interpreted as the treatment being larger than the
-control. Limma expects the experiment object to be stored in a `DGEList`, which
-just reorganizes the counts and metadata already present in the original
-experiment object. The `SE2DGEList` function converts from
-`SummarizedExperiment` to `DGEList`.
+   The first line below makes sure that `untrt` is the reference level, so a
+   positive $t$-statistic is interpreted as the treatment being larger than the
+   control. Limma expects the experiment object to be stored in a `DGEList`
+   ("differential gene expression list"), which reorganizes the counts and
+   context present in the original experiment object. The `SE2DGEList` function
+   converts from `SummarizedExperiment` to `DGEList`.
 
-```{r}
-airway$dex <- relevel(airway$dex, ref = "untrt")
-dge <- SE2DGEList(airway)
-```
+   ```{r}
+   airway$dex <- relevel(airway$dex, ref = "untrt")
+   dge <- SE2DGEList(airway)
+   ```
 
-6. We next filter genes that are expressed at very low levels. The commands
-below apply normalization steps, which we'll discuss in more detail below. The
-most important part of the block below is that we define the factors that
+6. We next filter genes that are expressed at very low levels. The commands that
+follow normalize the data, which we discuss in detail below. The most important
+part of this code block is that `model.matrix` specifies the factors that
 influence gene expression. Here, both the cell line and the dexamethasone status
 are allowed to influence each gene's expression levels. This is encoded in the
-"formula" object `~ cell + dex`.
+"formula" object `~ cell + dex`. Both variables were columns in the `colData`
+slot of our original summarized experiment.
 
-```{r}
-keep <- filterByExpr(dge, group = dge$samples$dex)
-dge <- normLibSizes(dge[keep, ])
-design <- model.matrix(~ cell + dex, data = dge$samples)
-v <- voom(dge, design, save.plot = TRUE)
-```
+   ```{r}
+   keep <- filterByExpr(dge, group = dge$samples$dex)
+   dge <- normLibSizes(dge[keep, ])
+   design <- model.matrix(~ cell + dex, data = dge$samples)
+   v <- voom(dge, design, save.plot = TRUE)
+   ```
 
-7. We use the output from the normalization step as input for hypothesis
-testing. The top table output shows those genes which have the most significant
-difference between dexamethasone and control settings.
+7. We use the output from normalization as input for hypothesis testing. The top
+table output shows genes that limma declares to be the most significantly
+different between dexamethasone and control settings. My point in showing the
+code here is that even though the statistical discussion below might seem long,
+the actual implementation is only a few lines. Like most intellectually
+rewarding ideas, understanding them can take time, but using them to solve new
+problems is easy.
 
-```{r}
-fit_raw <- lmFit(v, design)
-fit <- eBayes(fit_raw)
-topTable(fit, coef = "dextrt")
-```
+   ```{r}
+   fit_raw <- lmFit(v, design)
+   fit <- eBayes(fit_raw)
+   topTable(fit, coef = "dextrt")
+   ```
 
 ## Linear Models Background
 
@@ -164,166 +171,169 @@ theme_set(theme_note())
 ```
 
 8. The machinery that underlies both normalization and multiple hypothesis
-testing is the linear model. We will take a brief detour to understand some of
-the basic mechanics of hypothesis testing through linear models.
+testing is the linear model. We briefly detour to review the mechanics of
+hypothesis testing through linear models. There will be math, but the math is
+necessary to make our understanding precise.
 
 9. Let $y_i$ represent measurements of interest across samples $n$. Imagine that
 data come from two groups (e.g., healthy and disease, or knockout and control)
 and that are both normally distributed. The groups may have different means but
 are required to have the same variances.
 
-$$
-\begin{align}
-Y_{n} \sim \mathcal{N}\left(\mu_{A}, \sigma^2\right) \text{ for }n \in \text{ Group } A\\
-Y_{n} \sim \mathcal{N}\left(\mu_{B}, \sigma^2\right) \text{ for }n \in \text{ Group } B
-\end{align}
-$$
+   $$
+   \begin{align}
+    Y_{n} \sim
+    \begin{cases}
+    \mathcal{N}\left(\mu_{A}, \sigma^2\right) & \text{for } n \in \text{Group A} \\
+    \mathcal{N}\left(\mu_{B}, \sigma^2\right) & \text{for } n \in \text{Group B}
+    \end{cases}   \end{align}
+   $$
 
-If we want to see whether or not these two underlying means are the same, we can
-consider the statistic,
+   If we want to see whether the true group means are the same, we can consider
+   the statistic,
 
-$$
-t = \frac{\bar{y}_A - \bar{y}_B}{s\sqrt{1/N_A + 1/N_B}}.
-$$
+   $$
+   t = \frac{\bar{y}_A - \bar{y}_B}{s\sqrt{1/N_A + 1/N_B}}.
+   $$
 
-This is the differences in empirical means of groups A and B, adjusted according
-to an empirical estimate of the within-group variance. This adjustment ensures
-that we account for the spread within each group when interpreting the
-difference in means.
+   This is the differences in observed means of groups A and B, adjusted according
+   to an empirical estimate of the within-group variance. This adjustment ensures
+   that we account for the spread within each group when interpreting the
+   difference in means.
 
 10. We will say that when the means of the two groups are equal, the "null
 hypothesis" holds. The reason for the naming is that when the two groups have
 the same mean, there is no need to further investigate differences between the
 groups (our interest is "null"). Formally, this is denoted,
 
- $$H_{0}: \mu_{A} = \mu_{B}$$
+    $$H_{0}: \mu_{A} = \mu_{B}$$
 
-Notice that even when $H_{0}$ holds theoretically, on any actual dataset, the
-observed difference in sample means will be nonzero, and therefore $t \neq 0$.
-In the plot below, the normal densities denote the true data distributions in
-each group, the points represent the observed data, and the horizontal lines
-reflect the observed sample means.
+    Notice that even when $H_{0}$ holds theoretically, on any actual dataset, the
+    observed difference in sample means will be nonzero, and therefore $t \neq 0$.
+    In the plot below, the normal densities denote the true data distributions in
+    each group, the points represent the observed data, and the horizontal lines
+    reflect the observed sample means.
 
-```{r}
-#| label: lm-setup
-#| echo: false
-#| include: false
-n_per_group <- 5
-sigma <- 1
-n_sims <- 10000
-effect <- 2
-slope <- 1.5
-df_t <- 2 * n_per_group - 2
+    ```{r}
+    #| label: lm-setup
+    #| echo: false
+    #| include: false
+    n_per_group <- 5
+    sigma <- 1
+    n_sims <- 10000
+    effect <- 2
+    slope <- 1.5
+    df_t <- 2 * n_per_group - 2
 
-simulate_two_groups <- function(n_sims, n_per_group, effect, sigma) {
-    expand_grid(sim = seq_len(n_sims), sample = seq_len(2 * n_per_group)) |>
-        mutate(
-            group = if_else(sample <= n_per_group, "A", "B"),
-            mu = if_else(group == "A", effect, 0),
-            y = rnorm(n(), mu, sigma)
-        )
-}
-t_statistics <- function(sim_data) {
-    sim_data |>
-        summarise(
-            n = n(), mean = mean(y), ss = sum((y - mean(y))^2),
-            .by = c(sim, group)
-        ) |>
-        pivot_wider(names_from = group, values_from = c(n, mean, ss)) |>
-        mutate(
-            sigma_hat = sqrt((ss_A + ss_B) / (n_A + n_B - 2)),
-            t = (mean_A - mean_B) / (sigma_hat * sqrt(1 / n_A + 1 / n_B))
-        )
-}
-group_dotplot <- function(data, subtitle = NULL, population_means = NULL, population_range = NULL) {
-    population_layer <- NULL
-    if (!is.null(population_means)) {
-        population <- expand_grid(
-            group = names(population_means),
-            y = seq(population_range[1], population_range[2], length.out = 300)
-        ) |>
+    simulate_two_groups <- function(n_sims, n_per_group, effect, sigma) {
+        expand_grid(sim = seq_len(n_sims), sample = seq_len(2 * n_per_group)) |>
             mutate(
-                center = match(group, c("A", "B")),
-                density_width = 0.36 * dnorm(y, population_means[group], sigma) / dnorm(0, 0, sigma)
+                group = if_else(sample <= n_per_group, "A", "B"),
+                mu = if_else(group == "A", effect, 0),
+                y = rnorm(n(), mu, sigma)
             )
-        population_layer <- geom_ribbon(
-            data = population,
-            aes(y = y, xmin = center, xmax = center + density_width, fill = group, group = group),
-            orientation = "y", inherit.aes = FALSE, alpha = 0.18, colour = NA
-        )
     }
-    ggplot(data, aes(group, y, colour = group)) +
-        population_layer +
-        geom_hline(yintercept = 0, colour = ink[["axis"]], linewidth = 0.3) +
-        geom_point(size = 2.4, alpha = 0.85, position = position_jitter(width = 0.06, height = 0, seed = 1)) +
-        geom_crossbar(
-            stat = "summary", fun = mean, fun.min = mean, fun.max = mean,
-            width = 0.5, linewidth = 1, middle.linewidth = 1
-        ) +
-        scale_colour_manual(values = pal_group, guide = "none") +
-        scale_fill_manual(values = pal_group, guide = "none") +
-        labs(x = "Group", y = "y", subtitle = subtitle)
-}
-null_histogram <- function(subtitle = NULL) {
-    ggplot(null_t, aes(t)) +
-        geom_histogram(aes(y = after_stat(density)),
-            binwidth = 0.25, boundary = 0,
-            fill = ink[["grid"]], colour = "white", linewidth = 0.2
-        ) +
-        geom_line(data = t_curve, aes(t, density), colour = ink[["primary"]], linewidth = 0.8) +
-        scale_x_continuous(limits = c(-6, 6), breaks = seq(-6, 6, 2)) +
-        labs(x = "t-statistic", y = "Density", subtitle = subtitle)
-}
+    t_statistics <- function(sim_data) {
+        sim_data |>
+            summarise(
+                n = n(), mean = mean(y), ss = sum((y - mean(y))^2),
+                .by = c(sim, group)
+            ) |>
+            pivot_wider(names_from = group, values_from = c(n, mean, ss)) |>
+            mutate(
+                sigma_hat = sqrt((ss_A + ss_B) / (n_A + n_B - 2)),
+                t = (mean_A - mean_B) / (sigma_hat * sqrt(1 / n_A + 1 / n_B))
+            )
+    }
+    group_dotplot <- function(data, subtitle = NULL, population_means = NULL, population_range = NULL) {
+        population_layer <- NULL
+        if (!is.null(population_means)) {
+            population <- expand_grid(
+                group = names(population_means),
+                y = seq(population_range[1], population_range[2], length.out = 300)
+            ) |>
+                mutate(
+                    center = match(group, c("A", "B")),
+                    density_width = 0.36 * dnorm(y, population_means[group], sigma) / dnorm(0, 0, sigma)
+                )
+            population_layer <- geom_ribbon(
+                data = population,
+                aes(y = y, xmin = center, xmax = center + density_width, fill = group, group = group),
+                orientation = "y", inherit.aes = FALSE, alpha = 0.18, colour = NA
+            )
+        }
+        ggplot(data, aes(group, y, colour = group)) +
+            population_layer +
+            geom_hline(yintercept = 0, colour = ink[["axis"]], linewidth = 0.3) +
+            geom_point(size = 2.4, alpha = 0.85, position = position_jitter(width = 0.06, height = 0, seed = 1)) +
+            geom_crossbar(
+                stat = "summary", fun = mean, fun.min = mean, fun.max = mean,
+                width = 0.5, linewidth = 1, middle.linewidth = 1
+            ) +
+            scale_colour_manual(values = pal_group, guide = "none") +
+            scale_fill_manual(values = pal_group, guide = "none") +
+            labs(x = "Group", y = "y", subtitle = subtitle)
+    }
+    null_histogram <- function(subtitle = NULL) {
+        ggplot(null_t, aes(t)) +
+            geom_histogram(aes(y = after_stat(density)),
+                binwidth = 0.25, boundary = 0,
+                fill = ink[["grid"]], colour = "white", linewidth = 0.2
+            ) +
+            geom_line(data = t_curve, aes(t, density), colour = ink[["primary"]], linewidth = 0.8) +
+            scale_x_continuous(limits = c(-6, 6), breaks = seq(-6, 6, 2)) +
+            labs(x = "t-statistic", y = "Density", subtitle = subtitle)
+    }
 
-null_data <- simulate_two_groups(n_sims, n_per_group, effect = 0, sigma = sigma)
-null_t <- t_statistics(null_data)
-one <- filter(null_data, sim == 1)
-t_curve <- tibble(t = seq(-6, 6, length.out = 400), density = dt(t, df_t))
+    null_data <- simulate_two_groups(n_sims, n_per_group, effect = 0, sigma = sigma)
+    null_t <- t_statistics(null_data)
+    one <- filter(null_data, sim == 1)
+    t_curve <- tibble(t = seq(-6, 6, length.out = 400), density = dt(t, df_t))
 
-alt_data <- simulate_two_groups(1, n_per_group, effect = effect, sigma = sigma)
-t_obs <- t_statistics(alt_data)$t
-population_range <- range(one$y, alt_data$y, c(0, effect) - 4 * sigma, c(0, effect) + 4 * sigma)
+    alt_data <- simulate_two_groups(1, n_per_group, effect = effect, sigma = sigma)
+    t_obs <- t_statistics(alt_data)$t
+    population_range <- range(one$y, alt_data$y, c(0, effect) - 4 * sigma, c(0, effect) + 4 * sigma)
 
-n_cov <- 12
-cov_data <- tibble(
-    group = rep(c("A", "B"), each = n_cov),
-    X = runif(2 * n_cov, 0, 4),
-    y = if_else(group == "A", effect, 0) + slope * X + rnorm(2 * n_cov, 0, sigma)
-)
-fit_null <- lm(y ~ X, data = cov_data)
-beta <- coef(lm(y ~ group + X, data = cov_data))
-```
+    n_cov <- 12
+    cov_data <- tibble(
+        group = rep(c("A", "B"), each = n_cov),
+        X = runif(2 * n_cov, 0, 4),
+        y = if_else(group == "A", effect, 0) + slope * X + rnorm(2 * n_cov, 0, sigma)
+    )
+    fit_null <- lm(y ~ X, data = cov_data)
+    beta <- coef(lm(y ~ group + X, data = cov_data))
+    ```
 
-```{r}
-#| label: fig-lm-null-population
-#| echo: false
-#| fig-width: 4.5
-#| fig-height: 4
-#| out-width: 400px
-group_dotplot(
-    one,
-    subtitle = sprintf("True means: A = 0, B = 0; SD = %s", sigma),
-    population_means = c(A = 0, B = 0), population_range = population_range
-) + coord_cartesian(ylim = population_range)
-```
+    ```{r}
+    #| label: fig-lm-null-population
+    #| echo: false
+    #| fig-width: 4.5
+    #| fig-height: 4
+    #| out-width: 400px
+    group_dotplot(
+        one,
+        subtitle = sprintf("True means: A = 0, B = 0; SD = %s", sigma),
+        population_means = c(A = 0, B = 0), population_range = population_range
+    ) + coord_cartesian(ylim = population_range)
+    ```
 
-However, the further the statistic $t$ is from zero (either very negative or
-very positive), the less plausible the null hypothesis $H_0$ becomes. The
-example below is a case where $H_{0}$ does not hold, and this is reflected in
-the relatively larger $t$-statistic.
+    However, the further the statistic $t$ is from zero (either very negative or
+    very positive), the less plausible the null hypothesis $H_0$ becomes. The
+    example below is a case where $H_{0}$ does not hold, and this is reflected in
+    the relatively larger $t$-statistic.
 
-```{r}
-#| label: fig-lm-alt-population
-#| echo: false
-#| fig-width: 4.5
-#| fig-height: 4
-#| out-width: 400px
-group_dotplot(
-    alt_data,
-    subtitle = sprintf("True means: A = %s, B = 0; SD = %s", effect, sigma),
-    population_means = c(A = effect, B = 0), population_range = population_range
-) + coord_cartesian(ylim = population_range)
-```
+    ```{r}
+    #| label: fig-lm-alt-population
+    #| echo: false
+    #| fig-width: 4.5
+    #| fig-height: 4
+    #| out-width: 400px
+    group_dotplot(
+        alt_data,
+        subtitle = sprintf("True means: A = %s, B = 0; SD = %s", effect, sigma),
+        population_means = c(A = effect, B = 0), population_range = population_range
+    ) + coord_cartesian(ylim = population_range)
+    ```
 
 11. Under the null hypothesis $H_{0}$, what would be typical values of $t$? We
 can answer this with a simulation. Here I've simulated 10K null datasets,
@@ -331,82 +341,93 @@ computed the associated $t$-statistics, and put those statistics into a
 histogram. These turn out to follow a very clean distribution, and it's in fact
 possible to derive a theoretical formula for it, which is overlaid.
 
-<img src="figures/lm_01_null_distribution_animation.gif" width=600/>
+    <img src="figures/lm_01_null_distribution_animation.gif" width=600/>
 
 12. This is very useful because it tells us that anything that doesn't fall into
 this distribution counts as evidence against the null hypothesis. Here I
 generated one sample where the true group difference is 2 and I've overlaid the
 t-statistic from that dataset onto the null from before.
 
-```{r}
-#| label: fig-lm-observed-t
-#| echo: false
-#| fig-width: 8
-#| fig-height: 3.6
-#| out-width: 700px
-tail_region <- filter(t_curve, t >= t_obs)
-group_dotplot(alt_data, subtitle = sprintf("True difference = %s", effect)) +
-    (null_histogram(subtitle = "Observed t on the null distribution") +
-        geom_area(data = tail_region, aes(t, density), fill = pal_group[["A"]], alpha = 0.6) +
-        geom_vline(xintercept = t_obs, colour = pal_group[["A"]], linewidth = 0.9) +
-        annotate("text",
-            x = t_obs + 0.2, y = 0.3, hjust = 0, colour = ink[["primary"]], size = 3.4,
-            label = sprintf("t = %.2f\np-value = %.3f", t_obs, pt(t_obs, df_t, lower.tail = FALSE))
-        )) +
-    plot_layout(widths = c(1, 2))
-```
+    ```{r}
+    #| label: fig-lm-observed-t
+    #| echo: false
+    #| fig-width: 8
+    #| fig-height: 3.6
+    #| out-width: 700px
+    tail_region <- filter(t_curve, t >= t_obs)
+    group_dotplot(alt_data, subtitle = sprintf("True difference = %s", effect)) +
+        (null_histogram(subtitle = "Observed t on the null distribution") +
+            geom_area(data = tail_region, aes(t, density), fill = pal_group[["A"]], alpha = 0.6) +
+            geom_vline(xintercept = t_obs, colour = pal_group[["A"]], linewidth = 0.9) +
+            annotate("text",
+                x = t_obs + 0.2, y = 0.3, hjust = 0, colour = ink[["primary"]], size = 3.4,
+                label = sprintf("t = %.2f\np-value = %.3f", t_obs, pt(t_obs, df_t, lower.tail = FALSE))
+            )) +
+        plot_layout(widths = c(1, 2))
+    ```
 
-This is the essential logic of hypothesis testing: if we see a statistic that's
-very unlikely under the null distribution, then we have evidence that the null
-hypothesis is false. A $p$-value is defined as the area of the distribution
-above the test statistic, and it is a measure of the strength of this evidence
-(smaller area $\to$ less likely to come from the null).
+    This is the essential logic of hypothesis testing: if we see a statistic that's
+    very unlikely under the null distribution, then we have evidence that the null
+    hypothesis is false. A $p$-value is defined as the area of the distribution
+    above the test statistic, and it is a measure of the strength of this evidence
+    (smaller area $\to$ less likely to come from the null).
 
 13. So if we're willing to believe the Gaussian assumption, we have a full
-procedure for comparing two groups of data. But in genomics we often will need
-to account for variables that could influecne the response $y_n$ but which
-aren't the actual treatment of interest. The situation might be like in the
-figure below, where we care about the difference between A and B, but the
-response is influenced by a sample-specific factor $X_n$. If we ignored this
-factor and only compared the $y_i$ values, then the groups would blend into one
-another and we wouldn't be able to detect any difference
+procedure for comparing two groups of data. But in genomics, we often want to
+analyze several factors at once, either because we have several treatments to
+give simultaneously or because we need to control for secondary factors. For
+many centuries, the guiding principle was to analyze one factor at a time,
+varying one but fixing all the others. This means we would work with separate
+subsets of the data.
 
-```{r}
-#| label: fig-lm-parallel
-#| echo: false
-#| fig-width: 5.5
-#| fig-height: 3.8
-#| out-width: 450px
-lines <- tibble(
-    group = c("A", "B"),
-    intercept = c(beta[["(Intercept)"]], beta[["(Intercept)"]] + beta[["groupB"]]),
-    slope = beta[["X"]]
-)
-x_arrow <- 3.4
-arrow_df <- tibble(
-    x = x_arrow,
-    y = lines$intercept[2] + lines$slope[2] * x_arrow,
-    yend = lines$intercept[1] + lines$slope[1] * x_arrow
-)
+14. One of the major insights of statistics is that it can be beneficial to
+analyze multiple factors at once, because it allows you to share evidence across
+related settings^[Stephen Stigler lists this as #6 of his ["7 Pillars of
+Statistical Wisdom"](https://www.hup.harvard.edu/books/9780674088917).]
 
-p_parallel <- ggplot(cov_data, aes(X, y, colour = group)) +
-    geom_abline(intercept = coef(fit_null)[1], slope = coef(fit_null)[2], colour = ink[["muted"]], linetype = "22", linewidth = 0.5) +
-    geom_abline(data = lines, aes(intercept = intercept, slope = slope, colour = group), linewidth = 0.9) +
-    geom_point(size = 2.4, alpha = 0.85) +
-    geom_segment(
-        data = arrow_df, aes(x = x, xend = x, y = y, yend = yend), inherit.aes = FALSE,
-        colour = ink[["primary"]], linewidth = 0.5,
-        arrow = arrow(ends = "both", length = unit(0.06, "in"), type = "closed")
-    ) +
-    annotate("text",
-        x = x_arrow + 0.08, y = mean(c(arrow_df$y, arrow_df$yend)), hjust = 0, size = 3.4,
-        colour = ink[["primary"]], label = "group difference"
-    ) +
-    scale_colour_manual(values = pal_group, name = "Group") +
-    scale_x_continuous(expand = expansion(mult = c(0.02, 0.12))) +
-    labs(x = "Covariate X", y = "y")
-p_parallel
-```
+    The idea is to proceed like in the figure below, where we care about the
+    difference between A and B, but the response is influenced by a secondary factor
+    $x_n$. If we subsampled into data within a narorw range of $x_n$, then we would
+    be discarding most of the information.  Conversely, if we ignored this factor
+    and only compared the $y_n$ values, then the groups would blend into one another
+    and we wouldn't be able to detect any difference.
+
+    ```{r}
+    #| label: fig-lm-parallel
+    #| echo: false
+    #| fig-width: 5.5
+    #| fig-height: 3.8
+    #| out-width: 450px
+    lines <- tibble(
+        group = c("A", "B"),
+        intercept = c(beta[["(Intercept)"]], beta[["(Intercept)"]] + beta[["groupB"]]),
+        slope = beta[["X"]]
+    )
+    x_arrow <- 3.4
+    arrow_df <- tibble(
+        x = x_arrow,
+        y = lines$intercept[2] + lines$slope[2] * x_arrow,
+        yend = lines$intercept[1] + lines$slope[1] * x_arrow
+    )
+
+    p_parallel <- ggplot(cov_data, aes(X, y, colour = group)) +
+        geom_abline(intercept = coef(fit_null)[1], slope = coef(fit_null)[2], colour = ink[["muted"]], linetype = "22", linewidth = 0.5) +
+        geom_abline(data = lines, aes(intercept = intercept, slope = slope, colour = group), linewidth = 0.9) +
+        geom_point(size = 2.4, alpha = 0.85) +
+        geom_segment(
+            data = arrow_df, aes(x = x, xend = x, y = y, yend = yend), inherit.aes = FALSE,
+            colour = ink[["primary"]], linewidth = 0.5,
+            arrow = arrow(ends = "both", length = unit(0.06, "in"), type = "closed")
+        ) +
+        annotate("text",
+            x = x_arrow + 0.08, y = mean(c(arrow_df$y, arrow_df$yend)), hjust = 0, size = 3.4,
+            colour = ink[["primary"]], label = "group difference"
+        ) +
+        scale_colour_manual(values = pal_group, name = "Group") +
+        scale_x_continuous(expand = expansion(mult = c(0.02, 0.12))) +
+        labs(x = "Covariate X", y = "y")
+    p_parallel
+    ```
 
 14. In this case we might want to test the null hypothesis $H_{0}$ that the
 lines for the two groups are exactly overlapping. The main trick is to subtract
@@ -415,21 +436,21 @@ between the two groups. That is, after subtracing the $X_n$ effects (i.e.,
 looking at the gaps between the points and the dashed line), we return to the
 setting above.
 
-```{r}
-#| label: fig-lm-adjusted
-#| echo: false
-#| fig-width: 8
-#| fig-height: 3.6
-#| out-width: 650px
-adjusted <- mutate(cov_data, y = y - beta[["X"]] * X)
-(p_parallel + theme(legend.position = "none") + labs(subtitle = "y depends on group and X")) +
-    (group_dotplot(adjusted, subtitle = "Removing the X effect") + labs(y = expression(y - hat(beta) * X))) +
-    plot_layout(widths = c(3, 2))
-```
+    ```{r}
+    #| label: fig-lm-adjusted
+    #| echo: false
+    #| fig-width: 8
+    #| fig-height: 3.6
+    #| out-width: 650px
+    adjusted <- mutate(cov_data, y = y - beta[["X"]] * X)
+    (p_parallel + theme(legend.position = "none") + labs(subtitle = "y depends on group and X")) +
+        (group_dotplot(adjusted, subtitle = "Removing the X effect") + labs(y = expression(y - hat(beta) * X))) +
+        plot_layout(widths = c(3, 2))
+    ```
 
-This is exactly what a linear model does. The formula becomes a bit more
-complicated, but we can again derive a statistic $t$ that has a closed form null
-distribution under $H_{0}$.
+    This is exactly what a linear model does. The formula becomes a bit more
+    complicated, but we can again derive a statistic $t$ that has a closed form null
+    distribution under $H_{0}$.
 
 15. The fact that we can make comparisons between groups while accounting for
 other variables is what makes linear models such a versatile statistical method.
@@ -457,98 +478,98 @@ counts-per-million (CPM) transformation. Suppose that the expression for gene
 $g$ in sample $n$ is $y_{ng}$. Arrange all these data into a samples-by-genes
 matrix $Y \in \mathbb{R}^{N\times G}$.
 
-   [draw picture of the matrix]
+    [draw picture of the matrix]
 
-   The log CPM transformation is,
+    The log CPM transformation is,
 
-   $$
-   y_{ng} \rightsquigarrow \log\left(\frac{y_{ng} + \frac{1}{2}}{\sum_{k}y_{nk} + 1} \times 10^{6}\right)
-   $$
+    $$
+    y_{ng} \rightsquigarrow \log\left(\frac{y_{ng} + \frac{1}{2}}{\sum_{k}y_{nk} + 1} \times 10^{6}\right)
+    $$
 
-   The $\frac{1}{2}$ and $1$ offsets prevent us from taking a log of zero, which
-   is undefined. Besides this, the fraction inside of the log converts each
-   sample into something close to a relative frequency of gene $j$ in sample $i$
-   (it would be exact without the offsets). This removes the differences in
-   sequencing depths. The 10^4 converts everything back to counts and it's where
-   the "per-million" name comes from. Second by taking the log transformation,
-   we convert the often count data into continuous data where the normal
-   distribution assumption is more believable.
+    The $\frac{1}{2}$ and $1$ offsets prevent us from taking a log of zero, which
+    is undefined. Besides this, the fraction inside of the log converts each
+    sample into something close to a relative frequency of gene $j$ in sample $i$
+    (it would be exact without the offsets). This removes the differences in
+    sequencing depths. The 10^4 converts everything back to counts and it's where
+    the "per-million" name comes from. Second by taking the log transformation,
+    we convert the often count data into continuous data where the normal
+    distribution assumption is more believable.
 
 19. Here are histograms of three genes before and after applying the CPM
 transformation. The data are described in more detail in the second case study
 below. For XIST, the normal approximation makes much more sense after the
 transformation.
 
-```{r}
-#| label: pickrell-setup
-#| echo: false
-#| include: false
-library(tweeDEseqCountData)
-data(pickrell1)
-data(annotEnsembl63)
+    ```{r}
+    #| label: pickrell-setup
+    #| echo: false
+    #| include: false
+    library(tweeDEseqCountData)
+    data(pickrell1)
+    data(annotEnsembl63)
 
-pk_counts <- exprs(pickrell1.eset)
-pk_samples <- data.frame(sex = factor(pickrell1.eset$gender, levels = c("male", "female")), row.names = colnames(pk_counts))
-pk_genes <- data.frame(gene_id = rownames(pk_counts), symbol = annotEnsembl63[rownames(pk_counts), "Symbol"], row.names = rownames(pk_counts))
-pk_dge <- DGEList(counts = pk_counts, samples = pk_samples, genes = pk_genes)
-pk_keep <- filterByExpr(pk_dge, group = pk_dge$samples$sex)
-pk_dge <- pk_dge[pk_keep, , keep.lib.sizes = FALSE] |> normLibSizes()
+    pk_counts <- exprs(pickrell1.eset)
+    pk_samples <- data.frame(sex = factor(pickrell1.eset$gender, levels = c("male", "female")), row.names = colnames(pk_counts))
+    pk_genes <- data.frame(gene_id = rownames(pk_counts), symbol = annotEnsembl63[rownames(pk_counts), "Symbol"], row.names = rownames(pk_counts))
+    pk_dge <- DGEList(counts = pk_counts, samples = pk_samples, genes = pk_genes)
+    pk_keep <- filterByExpr(pk_dge, group = pk_dge$samples$sex)
+    pk_dge <- pk_dge[pk_keep, , keep.lib.sizes = FALSE] |> normLibSizes()
 
-pal_sex <- c(male = "#A53C61", female = "#487150")
-pickrell_genes <- c("GAPDH", "KDM5D", "XIST")
+    pal_sex <- c(male = "#A53C61", female = "#487150")
+    pickrell_genes <- c("GAPDH", "KDM5D", "XIST")
 
-# reused below for the airway examples as well
-tidy_expr <- function(mat, dge, scale) {
-    as.data.frame(mat) |>
-        rownames_to_column("gene_id") |>
-        pivot_longer(-gene_id, names_to = "sample", values_to = "value") |>
-        left_join(dge$genes, by = "gene_id") |>
-        left_join(dge$samples |> rownames_to_column("sample"), by = "sample") |>
-        mutate(scale = scale)
-}
+    # reused below for the airway examples as well
+    tidy_expr <- function(mat, dge, scale) {
+        as.data.frame(mat) |>
+            rownames_to_column("gene_id") |>
+            pivot_longer(-gene_id, names_to = "sample", values_to = "value") |>
+            left_join(dge$genes, by = "gene_id") |>
+            left_join(dge$samples |> rownames_to_column("sample"), by = "sample") |>
+            mutate(scale = scale)
+    }
 
-# reused below for the airway and YWHAB examples as well
-expression_scales <- function(dge, symbols) {
-    keep <- dge$genes$symbol %in% symbols
+    # reused below for the airway and YWHAB examples as well
+    expression_scales <- function(dge, symbols) {
+        keep <- dge$genes$symbol %in% symbols
 
-    list(
-        `raw count` = dge$counts[keep, , drop = FALSE],
-        `log-CPM` = cpm(dge, log = TRUE)[keep, , drop = FALSE]
-    ) |>
-        imap(\(mat, scale) tidy_expr(mat, dge, scale)) |>
-        list_rbind() |>
-        mutate(
-            symbol = factor(symbol, levels = symbols),
-            scale = factor(scale, levels = c("raw count", "log-CPM"))
-        )
-}
+        list(
+            `raw count` = dge$counts[keep, , drop = FALSE],
+            `log-CPM` = cpm(dge, log = TRUE)[keep, , drop = FALSE]
+        ) |>
+            imap(\(mat, scale) tidy_expr(mat, dge, scale)) |>
+            list_rbind() |>
+            mutate(
+                symbol = factor(symbol, levels = symbols),
+                scale = factor(scale, levels = c("raw count", "log-CPM"))
+            )
+    }
 
-pk_three_genes <- expression_scales(pk_dge, pickrell_genes)
-```
+    pk_three_genes <- expression_scales(pk_dge, pickrell_genes)
+    ```
 
-```{r}
-#| label: fig-pickrell-normalization
-#| echo: false
-#| fig-width: 8
-#| fig-height: 5
-#| out-width: 700px
-plot_three_genes <- function(data, xlab) {
-    ggplot(data, aes(value, fill = sex)) +
-        geom_histogram(bins = 25, colour = "white", linewidth = 0.2, position = "identity", alpha = 0.7) +
-        scale_fill_manual(values = pal_sex, name = "Sex") +
-        facet_wrap(~symbol, nrow = 1, scales = "free_x") +
-        scale_x_continuous(labels = scales::label_comma()) +
-        labs(x = xlab, y = "Samples")
-}
-(
-    plot_three_genes(filter(pk_three_genes, scale == "raw count"), "Raw count") /
-        (plot_three_genes(filter(pk_three_genes, scale == "log-CPM"), "log-CPM") + theme(strip.text = element_blank()))
-) + plot_layout(guides = "collect")
-```
+    ```{r}
+    #| label: fig-pickrell-normalization
+    #| echo: false
+    #| fig-width: 8
+    #| fig-height: 5
+    #| out-width: 700px
+    plot_three_genes <- function(data, xlab) {
+        ggplot(data, aes(value, fill = sex)) +
+            geom_histogram(bins = 25, colour = "white", linewidth = 0.2, position = "identity", alpha = 0.7) +
+            scale_fill_manual(values = pal_sex, name = "Sex") +
+            facet_wrap(~symbol, nrow = 1, scales = "free_x") +
+            scale_x_continuous(labels = scales::label_comma()) +
+            labs(x = xlab, y = "Samples")
+    }
+    (
+        plot_three_genes(filter(pk_three_genes, scale == "raw count"), "Raw count") /
+            (plot_three_genes(filter(pk_three_genes, scale == "log-CPM"), "log-CPM") + theme(strip.text = element_blank()))
+    ) + plot_layout(guides = "collect")
+    ```
 
-At this point, we can, in principle, fit a linear model where the experimental
-designs are the predictors and the transformed gene expression values are the
-response.
+    At this point, we can, in principle, fit a linear model where the experimental
+    designs are the predictors and the transformed gene expression values are the
+    response.
 
 20. One problem is that when we convert to frequencies we're losing a
 meaningful information about the precision of our measurements. Two samples can
@@ -562,65 +583,65 @@ different case study, which we'll also review below. ], the logCPM
 transformation has put all the genes on roughly the same scale. Instead of
 ranging from 0 to 40,000, they're in roughly the range from -5 to 10.
 
-```{r}
-#| label: airway-treatment-setup
-#| echo: false
-#| include: false
-pal_dex <- c(trt = "#A53C61", untrt = "#487150")
-lab_dex <- c(untrt = "untreated", trt = "dexamethasone")
-airway_genes <- c("GAPDH", "DUSP1", "ZBTB16")
+    ```{r}
+    #| label: airway-treatment-setup
+    #| echo: false
+    #| include: false
+    pal_dex <- c(trt = "#A53C61", untrt = "#487150")
+    lab_dex <- c(untrt = "untreated", trt = "dexamethasone")
+    airway_genes <- c("GAPDH", "DUSP1", "ZBTB16")
 
-airway_three_genes <- expression_scales(dge, airway_genes)
+    airway_three_genes <- expression_scales(dge, airway_genes)
 
-# reused below for the YWHAB figure as well
-plot_by_treatment <- function(data, ylab, scales = "free_y") {
-    ggplot(data, aes(dex, value)) +
-        geom_line(aes(group = cell), colour = ink[["axis"]], linewidth = 0.5) +
-        geom_point(aes(size = lib.size / 1e6, colour = dex)) +
-        scale_colour_manual(values = pal_dex, guide = "none") +
-        scale_size(range = c(1.2, 5), name = "Library size (M reads)") +
-        facet_wrap(~symbol, nrow = 1, scales = scales) +
-        scale_x_discrete(labels = lab_dex, expand = expansion(add = 0.5)) +
-        scale_y_continuous(labels = scales::label_comma()) +
-        labs(x = NULL, y = ylab)
-}
-```
+    # reused below for the YWHAB figure as well
+    plot_by_treatment <- function(data, ylab, scales = "free_y") {
+        ggplot(data, aes(dex, value)) +
+            geom_line(aes(group = cell), colour = ink[["axis"]], linewidth = 0.5) +
+            geom_point(aes(size = lib.size / 1e6, colour = dex)) +
+            scale_colour_manual(values = pal_dex, guide = "none") +
+            scale_size(range = c(1.2, 5), name = "Library size (M reads)") +
+            facet_wrap(~symbol, nrow = 1, scales = scales) +
+            scale_x_discrete(labels = lab_dex, expand = expansion(add = 0.5)) +
+            scale_y_continuous(labels = scales::label_comma()) +
+            labs(x = NULL, y = ylab)
+    }
+    ```
 
-```{r}
-#| label: fig-airway-normalization-treatment
-#| echo: false
-#| fig-width: 8
-#| fig-height: 4.6
-#| out-width: 650px
-(
-    (plot_by_treatment(filter(airway_three_genes, scale == "raw count"), "Raw count") + labs(x = NULL)) /
-        (plot_by_treatment(filter(airway_three_genes, scale == "log-CPM"), "log-CPM") + theme(strip.text = element_blank()))
-) + plot_layout(guides = "collect")
-```
+    ```{r}
+    #| label: fig-airway-normalization-treatment
+    #| echo: false
+    #| fig-width: 8
+    #| fig-height: 4.6
+    #| out-width: 650px
+    (
+        (plot_by_treatment(filter(airway_three_genes, scale == "raw count"), "Raw count") + labs(x = NULL)) /
+            (plot_by_treatment(filter(airway_three_genes, scale == "log-CPM"), "log-CPM") + theme(strip.text = element_blank()))
+    ) + plot_layout(guides = "collect")
+    ```
 
-But notice that the ZBTB16 gene has more variation within each group compared to
-the other two genes. In formal statistical language, this is called the residual
-variation (after residualizing out the group effect), and it turns out to be a
-general phenomenon that genes with smaller total counts originally also have
-larger residual variation after the logCPM transformation.
+    But notice that the ZBTB16 gene has more variation within each group compared to
+    the other two genes. In formal statistical language, this is called the residual
+    variation (after residualizing out the group effect), and it turns out to be a
+    general phenomenon that genes with smaller total counts originally also have
+    larger residual variation after the logCPM transformation.
 
-```{r}
-#| label: fig-airway-voom
-#| echo: false
-#| fig-width: 6
-#| fig-height: 4.2
-#| out-width: 600px
-trend_points <- tibble(gene_id = rownames(v), mean_log_count = v$voom.xy$x, sqrt_sd = v$voom.xy$y) |>
-    left_join(dge$genes, by = "gene_id")
-trend_line <- as_tibble(v$voom.line)
+    ```{r}
+    #| label: fig-airway-voom
+    #| echo: false
+    #| fig-width: 6
+    #| fig-height: 4.2
+    #| out-width: 600px
+    trend_points <- tibble(gene_id = rownames(v), mean_log_count = v$voom.xy$x, sqrt_sd = v$voom.xy$y) |>
+        left_join(dge$genes, by = "gene_id")
+    trend_line <- as_tibble(v$voom.line)
 
-ggplot(trend_points, aes(mean_log_count, sqrt_sd)) +
-    geom_point(colour = ink[["muted"]], alpha = 0.15, size = 0.5) +
-    geom_line(data = trend_line, aes(x, y), colour = pal_dex[["trt"]], linewidth = 1) +
-    geom_point(data = filter(trend_points, symbol %in% airway_genes), colour = ink[["primary"]], size = 2) +
-    geom_text_repel(data = filter(trend_points, symbol %in% airway_genes), aes(label = symbol), size = 3.2, colour = ink[["primary"]]) +
-    labs(x = expression("Average" ~ log[2] * "(count)"), y = "sqrt(residual SD)")
-```
+    ggplot(trend_points, aes(mean_log_count, sqrt_sd)) +
+        geom_point(colour = ink[["muted"]], alpha = 0.15, size = 0.5) +
+        geom_line(data = trend_line, aes(x, y), colour = pal_dex[["trt"]], linewidth = 1) +
+        geom_point(data = filter(trend_points, symbol %in% airway_genes), colour = ink[["primary"]], size = 2) +
+        geom_text_repel(data = filter(trend_points, symbol %in% airway_genes), aes(label = symbol), size = 3.2, colour = ink[["primary"]]) +
+        labs(x = expression("Average" ~ log[2] * "(count)"), y = "sqrt(residual SD)")
+    ```
 
 22. Limma uses this empirical trend to reweight the observations. The curve above
 was learned using gene-level quantities. But we can compute the quantity on the
@@ -629,10 +650,10 @@ weight (details in appendix), called precision weights. Intuitively, if an
 observation comes from a sample with very deep sequencing, it will have higher
 precision.
 
-These weights can then be incorporated into linear models through weighted
-linear regression. For example in the simple case where we're simply looking at
-the difference between two groups, we would compute a weighted average instead
-of a plain average.
+    These weights can then be incorporated into linear models through weighted
+    linear regression. For example in the simple case where we're simply looking at
+    the difference between two groups, we would compute a weighted average instead
+    of a plain average.
 
 ## Multiple Hypothesis Testing
 
@@ -655,121 +676,121 @@ total).
 $t$-statistics.  Only 11 of these are actually related to the treatment! Of the
 top 10 genes, only two are actually relevant.
 
-```{r}
-#| label: many-genes-setup
-#| echo: false
-#| include: false
-n_genes_many <- 1000
-n_nonnull_many <- 50
-n_per_group2 <- 2
-effect2 <- 2.5
+    ```{r}
+    #| label: many-genes-setup
+    #| echo: false
+    #| include: false
+    n_genes_many <- 1000
+    n_nonnull_many <- 50
+    n_per_group2 <- 2
+    effect2 <- 2.5
 
-gene_t_stats <- function(sim) {
-    sim |>
-        summarise(
-            sigma = sigma[1],
-            mean_A = mean(y[group == "A"]), mean_B = mean(y[group == "B"]),
-            ss = sum((y[group == "A"] - mean_A)^2) + sum((y[group == "B"] - mean_B)^2),
-            .by = gene
-        ) |>
+    gene_t_stats <- function(sim) {
+        sim |>
+            summarise(
+                sigma = sigma[1],
+                mean_A = mean(y[group == "A"]), mean_B = mean(y[group == "B"]),
+                ss = sum((y[group == "A"] - mean_A)^2) + sum((y[group == "B"] - mean_B)^2),
+                .by = gene
+            ) |>
+            mutate(
+                df = 2 * n_per_group2 - 2,
+                sd_hat = sqrt(ss / df),
+                estimate = mean_A - mean_B,
+                se = sd_hat * sqrt(2 / n_per_group2),
+                t = estimate / se
+            ) |>
+            select(-ss)
+    }
+
+    sigma2_many <- runif(n_genes_many, 0.5, 2)
+    many_genes <- expand_grid(gene = seq_len(n_genes_many), sample = seq_len(2 * n_per_group2)) |>
         mutate(
-            df = 2 * n_per_group2 - 2,
-            sd_hat = sqrt(ss / df),
-            estimate = mean_A - mean_B,
-            se = sd_hat * sqrt(2 / n_per_group2),
-            t = estimate / se
+            group = if_else(sample <= n_per_group2, "A", "B"),
+            mu = if_else(group == "A" & gene <= n_nonnull_many, effect2, 0),
+            sigma = sqrt(sigma2_many[gene]),
+            y = rnorm(n(), mu, sigma)
         ) |>
-        select(-ss)
-}
+        gene_t_stats() |>
+        mutate(
+            truth = factor(if_else(gene <= n_nonnull_many, "truly non-null", "null"), levels = c("truly non-null", "null")),
+            ratio = sd_hat / sigma,
+            t_oracle = estimate / (sigma * sqrt(2 / n_per_group2)),
+            rank = rank(-abs(t)),
+            rank_oracle = rank(-abs(t_oracle))
+        )
 
-sigma2_many <- runif(n_genes_many, 0.5, 2)
-many_genes <- expand_grid(gene = seq_len(n_genes_many), sample = seq_len(2 * n_per_group2)) |>
-    mutate(
-        group = if_else(sample <= n_per_group2, "A", "B"),
-        mu = if_else(group == "A" & gene <= n_nonnull_many, effect2, 0),
-        sigma = sqrt(sigma2_many[gene]),
-        y = rnorm(n(), mu, sigma)
-    ) |>
-    gene_t_stats() |>
-    mutate(
-        truth = factor(if_else(gene <= n_nonnull_many, "truly non-null", "null"), levels = c("truly non-null", "null")),
-        ratio = sd_hat / sigma,
-        t_oracle = estimate / (sigma * sqrt(2 / n_per_group2)),
-        rank = rank(-abs(t)),
-        rank_oracle = rank(-abs(t_oracle))
-    )
+    # moderated t, in the style of limma::eBayes, for the last figure of this section
+    shrunk_many <- limma::squeezeVar(many_genes$sd_hat^2, df = many_genes$df)
+    many_genes <- many_genes |>
+        mutate(
+            sd_mod = sqrt(shrunk_many$var.post),
+            se_mod = sd_mod * sqrt(2 / n_per_group2),
+            t_moderated = estimate / se_mod,
+            rank_moderated = rank(-abs(t_moderated))
+        )
 
-# moderated t, in the style of limma::eBayes, for the last figure of this section
-shrunk_many <- limma::squeezeVar(many_genes$sd_hat^2, df = many_genes$df)
-many_genes <- many_genes |>
-    mutate(
-        sd_mod = sqrt(shrunk_many$var.post),
-        se_mod = sd_mod * sqrt(2 / n_per_group2),
-        t_moderated = estimate / se_mod,
-        rank_moderated = rank(-abs(t_moderated))
-    )
+    pal_truth <- c("truly non-null" = "#4A7F94", "null" = "#d3c8a6")
+    ```
 
-pal_truth <- c("truly non-null" = "#4A7F94", "null" = "#d3c8a6")
-```
+    ```{r}
+    #| label: fig-top-genes
+    #| echo: false
+    #| fig-width: 7
+    #| fig-height: 6
+    #| out-width: 600px
+    top50 <- filter(many_genes, rank <= 50)
+    top_t <- ggplot(top50, aes(rank, abs(t), colour = truth)) +
+        geom_point(shape = 16, size = 2.2) +
+        scale_colour_manual(values = pal_truth, name = NULL, drop = FALSE) +
+        scale_y_log10() +
+        labs(x = NULL, y = "|t| (log scale)")
+    top_sd <- ggplot(top50, aes(rank, ratio, colour = truth)) +
+        geom_hline(yintercept = 1, colour = ink[["axis"]], linewidth = 0.4) +
+        geom_point(shape = 16, size = 2.2) +
+        scale_colour_manual(values = pal_truth, name = NULL, drop = FALSE) +
+        expand_limits(y = 0) +
+        labs(x = sprintf("Rank by |t| (top 50 of %d genes)", nrow(many_genes)), y = "Estimated SD / true SD")
+    (top_t / top_sd) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "A")
+    ```
 
-```{r}
-#| label: fig-top-genes
-#| echo: false
-#| fig-width: 7
-#| fig-height: 6
-#| out-width: 600px
-top50 <- filter(many_genes, rank <= 50)
-top_t <- ggplot(top50, aes(rank, abs(t), colour = truth)) +
-    geom_point(shape = 16, size = 2.2) +
-    scale_colour_manual(values = pal_truth, name = NULL, drop = FALSE) +
-    scale_y_log10() +
-    labs(x = NULL, y = "|t| (log scale)")
-top_sd <- ggplot(top50, aes(rank, ratio, colour = truth)) +
-    geom_hline(yintercept = 1, colour = ink[["axis"]], linewidth = 0.4) +
-    geom_point(shape = 16, size = 2.2) +
-    scale_colour_manual(values = pal_truth, name = NULL, drop = FALSE) +
-    expand_limits(y = 0) +
-    labs(x = sprintf("Rank by |t| (top 50 of %d genes)", nrow(many_genes)), y = "Estimated SD / true SD")
-(top_t / top_sd) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "A")
-```
+    The bottom panel makes clear what's going on. The genes that appear the most
+    significant actually just have estimated variances $s_{g}^2$ that are smaller
+    than their true variances $\sigma_{g}^2$, which we know in the simulation, but
+    which we wouldn't know in reality. The problem is that with small sample sizes,
+    we might have a small empirical variance just by chance, and since the
+    t-statistic divides by the square root of that variance, we end up
+    overestimating the associated genes' significance.
 
-The bottom panel makes clear what's going on. The genes that appear the most
-significant actually just have estimated variances $s_{g}^2$ that are smaller
-than their true variances $\sigma_{g}^2$, which we know in the simulation, but
-which we wouldn't know in reality. The problem is that with small sample sizes,
-we might have a small empirical variance just by chance, and since the
-t-statistic divides by the square root of that variance, we end up
-overestimating the associated genes' significance.
-
-$$
-t_{g} = \frac{\bar{y}_{A,g} - \bar{y}_{B,g}}{s_{g}\sqrt{1/N_A + 1/N_B}}.
-$$
+    $$
+    t_{g} = \frac{\bar{y}_{A,g} - \bar{y}_{B,g}}{s_{g}\sqrt{1/N_A + 1/N_B}}.
+    $$
 
 26. When we observe a very small $s_{g}^2$, it could either be because the gene
 truly has small variation around its mean, or we just got replicates that are
 unusually close to each other.  The major insight of limma is that the other
 genes can help us tell which of these two situations we are in.
 
-To this end, imagine we had a prior distribution $H$ for the genewise variances,
-$$
-\sigma_{g}^{2} \overset{\text{iid}}{\sim} H
-$$
-This would capture our prior knowledge about how much variation we would expect
-in each group. Since the distribution of $s_{g}^2$ given $\sigma_{g}^{2}$ has a
-known form, it is possible to compute a posterior for each gene $g$,
-$$
-p\left(\sigma_{g}^2 \vert s_{g}^2\right).
-$$
-This posterior gives a better estimate of $\sigma_{g}^2$ which we can use in
-place of $s_{g}^2$, and substituting this estimate in our $t$-statistic gives a
-new, "moderated" version.
+    To this end, imagine we had a prior distribution $H$ for the genewise variances,
+    $$
+    \sigma_{g}^{2} \overset{\text{iid}}{\sim} H
+    $$
+    This would capture our prior knowledge about how much variation we would expect
+    in each group. Since the distribution of $s_{g}^2$ given $\sigma_{g}^{2}$ has a
+    known form, it is possible to compute a posterior for each gene $g$,
+    $$
+    p\left(\sigma_{g}^2 \vert s_{g}^2\right).
+    $$
+    This posterior gives a better estimate of $\sigma_{g}^2$ which we can use in
+    place of $s_{g}^2$, and substituting this estimate in our $t$-statistic gives a
+    new, "moderated" version.
 
-How can we choose a believable $H$? It turns out that it is possible to estimate
-$H$ by looking at the $s_{g}^2$ across all the genes. This is what is meant by
-limma performing empirical Bayes. Compared to standard Bayesian inference, where
-the prior must simply be assumed, we can use the many parallel genes to form an
-"empirical" prior $\hat{H}$, which then can be substituted in all the posterior
-calculations.
+    How can we choose a believable $H$? It turns out that it is possible to estimate
+    $H$ by looking at the $s_{g}^2$ across all the genes. This is what is meant by
+    limma performing empirical Bayes. Compared to standard Bayesian inference, where
+    the prior must simply be assumed, we can use the many parallel genes to form an
+    "empirical" prior $\hat{H}$, which then can be substituted in all the posterior
+    calculations.
 
 27. The posterior mean of $\sigma_{g}^{2}$ will be drawn toward the prior mean.
 The consequence is that the moderated $t$-statistics are less affected by small
@@ -779,170 +800,170 @@ consider the gene YWHAB. Since the lines connecting each treatment-control pair
 are nearly parallel, the residual variance after accounting for cell line
 effects is very small.
 
-```{r}
-#| label: airway-shrinkage-setup
-#| echo: false
-#| include: false
-coef_dex <- "dextrt"
-q_airway <- 0.01
+    ```{r}
+    #| label: airway-shrinkage-setup
+    #| echo: false
+    #| include: false
+    coef_dex <- "dextrt"
+    q_airway <- 0.01
 
-# reused below for the Pickrell diagnostics as well
-shrinkage_table <- function(fit, coef, q = 0.01) {
-    tibble(
-        gene_id = rownames(fit),
-        symbol = fit$genes$symbol,
-        sd_raw = fit$sigma,
-        sd_mod = sqrt(fit$s2.post),
-        t_raw = fit$coefficients[, coef] / (fit$sigma * fit$stdev.unscaled[, coef]),
-        t_mod = fit$t[, coef],
-        p_mod = fit$p.value[, coef],
-        adj_p = p.adjust(p_mod, method = "BH"),
-        decision = factor(if_else(adj_p < q, "rejected", "not rejected"), levels = c("rejected", "not rejected"))
-    )
-}
-pal_decision <- c("rejected" = "#2a78d6", "not rejected" = "#898781")
-plot_shrinkage <- function(data, q = 0.01) {
-    ggplot(data, aes(t_raw, t_mod, colour = decision)) +
-        geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = ink[["secondary"]], linewidth = 0.4) +
-        geom_point(alpha = 0.3, size = 0.6) +
-        scale_colour_manual(values = pal_decision, name = sprintf("BH at q = %s", q), drop = FALSE) +
-        guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
-        coord_equal(xlim = c(-60, 60), ylim = c(-60, 60)) +
-        labs(x = "Ordinary t-statistic", y = "Moderated t-statistic")
-}
+    # reused below for the Pickrell diagnostics as well
+    shrinkage_table <- function(fit, coef, q = 0.01) {
+        tibble(
+            gene_id = rownames(fit),
+            symbol = fit$genes$symbol,
+            sd_raw = fit$sigma,
+            sd_mod = sqrt(fit$s2.post),
+            t_raw = fit$coefficients[, coef] / (fit$sigma * fit$stdev.unscaled[, coef]),
+            t_mod = fit$t[, coef],
+            p_mod = fit$p.value[, coef],
+            adj_p = p.adjust(p_mod, method = "BH"),
+            decision = factor(if_else(adj_p < q, "rejected", "not rejected"), levels = c("rejected", "not rejected"))
+        )
+    }
+    pal_decision <- c("rejected" = "#2a78d6", "not rejected" = "#898781")
+    plot_shrinkage <- function(data, q = 0.01) {
+        ggplot(data, aes(t_raw, t_mod, colour = decision)) +
+            geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = ink[["secondary"]], linewidth = 0.4) +
+            geom_point(alpha = 0.3, size = 0.6) +
+            scale_colour_manual(values = pal_decision, name = sprintf("BH at q = %s", q), drop = FALSE) +
+            guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+            coord_equal(xlim = c(-60, 60), ylim = c(-60, 60)) +
+            labs(x = "Ordinary t-statistic", y = "Moderated t-statistic")
+    }
 
-shrinkage <- shrinkage_table(fit, coef_dex, q_airway)
+    shrinkage <- shrinkage_table(fit, coef_dex, q_airway)
 
-# InvGamma prior/posterior density of a gene's underlying variance, on the log10 scale
-log_variance_density <- function(u, a, b) {
-    precision <- 10^(-u)
-    dgamma(precision, shape = a, rate = b) * precision * log(10)
-}
+    # InvGamma prior/posterior density of a gene's underlying variance, on the log10 scale
+    log_variance_density <- function(u, a, b) {
+        precision <- 10^(-u)
+        dgamma(precision, shape = a, rate = b) * precision * log(10)
+    }
 
-variance_posterior_curve <- function(symbol_name) {
-    row <- filter(shrinkage, symbol == symbol_name)
-    df_prior <- fit$df.prior
-    df_resid <- fit$df.residual[1]
-    var_prior <- fit$s2.prior
-    var_raw <- row$sd_raw^2
-    var_mod <- row$sd_mod^2
-    a_prior <- df_prior / 2
-    b_prior <- df_prior * var_prior / 2
-    a_post <- (df_prior + df_resid) / 2
-    b_post <- (df_prior * var_prior + df_resid * var_raw) / 2
-    lims <- range(
-        1 / qgamma(c(0.001, 0.999), a_prior, rate = b_prior),
-        1 / qgamma(c(0.001, 0.999), a_post, rate = b_post), var_raw, var_mod
-    )
-    grid <- seq(log10(lims[1]) - 0.08, log10(lims[2]) + 0.08, length.out = 1000)
-    list(
-        curves = bind_rows(
-            tibble(log_variance = grid, density = log_variance_density(grid, a_prior, b_prior), distribution = "Fitted prior"),
-            tibble(log_variance = grid, density = log_variance_density(grid, a_post, b_post), distribution = "Posterior")
-        ),
-        markers = tibble(estimate = c("Observed", "Moderated"), variance = c(var_raw, var_mod))
-    )
-}
-```
+    variance_posterior_curve <- function(symbol_name) {
+        row <- filter(shrinkage, symbol == symbol_name)
+        df_prior <- fit$df.prior
+        df_resid <- fit$df.residual[1]
+        var_prior <- fit$s2.prior
+        var_raw <- row$sd_raw^2
+        var_mod <- row$sd_mod^2
+        a_prior <- df_prior / 2
+        b_prior <- df_prior * var_prior / 2
+        a_post <- (df_prior + df_resid) / 2
+        b_post <- (df_prior * var_prior + df_resid * var_raw) / 2
+        lims <- range(
+            1 / qgamma(c(0.001, 0.999), a_prior, rate = b_prior),
+            1 / qgamma(c(0.001, 0.999), a_post, rate = b_post), var_raw, var_mod
+        )
+        grid <- seq(log10(lims[1]) - 0.08, log10(lims[2]) + 0.08, length.out = 1000)
+        list(
+            curves = bind_rows(
+                tibble(log_variance = grid, density = log_variance_density(grid, a_prior, b_prior), distribution = "Fitted prior"),
+                tibble(log_variance = grid, density = log_variance_density(grid, a_post, b_post), distribution = "Posterior")
+            ),
+            markers = tibble(estimate = c("Observed", "Moderated"), variance = c(var_raw, var_mod))
+        )
+    }
+    ```
 
-```{r}
-#| label: fig-ywhab-by-treatment
-#| echo: false
-#| fig-width: 3.2
-#| fig-height: 4.6
-#| out-width: 350px
-ywhab_expr <- expression_scales(dge, "YWHAB")
+    ```{r}
+    #| label: fig-ywhab-by-treatment
+    #| echo: false
+    #| fig-width: 3.2
+    #| fig-height: 4.6
+    #| out-width: 350px
+    ywhab_expr <- expression_scales(dge, "YWHAB")
 
-(
-    (plot_by_treatment(filter(ywhab_expr, scale == "raw count"), "Raw count") + labs(x = NULL)) /
-        (plot_by_treatment(filter(ywhab_expr, scale == "log-CPM"), "log-CPM") + theme(strip.text = element_blank()))
-) + plot_layout(guides = "collect")
-```
+    (
+        (plot_by_treatment(filter(ywhab_expr, scale == "raw count"), "Raw count") + labs(x = NULL)) /
+            (plot_by_treatment(filter(ywhab_expr, scale == "log-CPM"), "log-CPM") + theme(strip.text = element_blank()))
+    ) + plot_layout(guides = "collect")
+    ```
 
-The posterior update pulls the $\sigma_{g}^2$ into a more reasonable range,
-using information about the variances from all the other genes that we've
-observed.
+    The posterior update pulls the $\sigma_{g}^2$ into a more reasonable range,
+    using information about the variances from all the other genes that we've
+    observed.
 
-```{r}
-#| label: fig-variance-posterior-low
-#| echo: false
-#| fig-width: 4.5
-#| fig-height: 4.2
-#| out-width: 400px
-ywhab_post <- variance_posterior_curve("YWHAB")
-ggplot(ywhab_post$curves, aes(log_variance, density)) +
-    geom_area(data = filter(ywhab_post$curves, distribution == "Posterior"), fill = "#2a78d6", alpha = 0.12) +
-    geom_line(aes(colour = distribution), linewidth = 0.9) +
-    geom_vline(
-        data = ywhab_post$markers, aes(xintercept = log10(variance), linetype = estimate),
-        colour = ink[["primary"]], linewidth = 0.5
-    ) +
-    scale_colour_manual(values = c("Fitted prior" = ink[["muted"]], "Posterior" = "#2a78d6"), name = NULL) +
-    scale_linetype_manual(values = c(Observed = "dashed", Moderated = "solid"), name = NULL) +
-    scale_x_continuous(labels = function(x) scales::label_number(accuracy = 0.01)(10^x)) +
-    scale_y_continuous(expand = expansion(mult = c(0, 0.06))) +
-    labs(x = "Underlying weighted residual variance (log scale)", y = "Density on log10 variance scale") +
-    theme(legend.position = "bottom", legend.box = "vertical")
-```
+    ```{r}
+    #| label: fig-variance-posterior-low
+    #| echo: false
+    #| fig-width: 4.5
+    #| fig-height: 4.2
+    #| out-width: 400px
+    ywhab_post <- variance_posterior_curve("YWHAB")
+    ggplot(ywhab_post$curves, aes(log_variance, density)) +
+        geom_area(data = filter(ywhab_post$curves, distribution == "Posterior"), fill = "#2a78d6", alpha = 0.12) +
+        geom_line(aes(colour = distribution), linewidth = 0.9) +
+        geom_vline(
+            data = ywhab_post$markers, aes(xintercept = log10(variance), linetype = estimate),
+            colour = ink[["primary"]], linewidth = 0.5
+        ) +
+        scale_colour_manual(values = c("Fitted prior" = ink[["muted"]], "Posterior" = "#2a78d6"), name = NULL) +
+        scale_linetype_manual(values = c(Observed = "dashed", Moderated = "solid"), name = NULL) +
+        scale_x_continuous(labels = function(x) scales::label_number(accuracy = 0.01)(10^x)) +
+        scale_y_continuous(expand = expansion(mult = c(0, 0.06))) +
+        labs(x = "Underlying weighted residual variance (log scale)", y = "Density on log10 variance scale") +
+        theme(legend.position = "bottom", legend.box = "vertical")
+    ```
 
 28. Looking across all genes, we can see that the $t$-statistics are generally
 shrunken towards zero. The genes that we expect to be shrunk the most are those
 whose standard deviations were much lower than expected after estimating the
 prior variance $H$.
 
-```{r}
-#| label: fig-airway-shrinkage
-#| echo: false
-#| fig-width: 6
-#| fig-height: 4.2
-#| out-width: 800px
-plot_shrinkage(shrinkage, q_airway)
-```
+    ```{r}
+    #| label: fig-airway-shrinkage
+    #| echo: false
+    #| fig-width: 6
+    #| fig-height: 4.2
+    #| out-width: 800px
+    plot_shrinkage(shrinkage, q_airway)
+    ```
 
- Using these moderated $t$ statistics tends to greatly reduce the number of
- false positives. For example, returning to our simulation setup from before, we
- can see that ranking using the moderated $t$-statistics leads to fewer false
- positives among the top-ranked genes and is nearly as good as using the ground
- truth standard deviation.
+    Using these moderated $t$ statistics tends to greatly reduce the number of
+    false positives. For example, returning to our simulation setup from before, we
+    can see that ranking using the moderated $t$-statistics leads to fewer false
+    positives among the top-ranked genes and is nearly as good as using the ground
+    truth standard deviation.
 
-```{r}
-#| label: fig-fraction-null-moderated
-#| echo: false
-#| fig-width: 6.5
-#| fig-height: 3.6
-#| out-width: 550px
-fraction_null_top_k <- function(results, rank_col, k_max) {
-    results |>
-        arrange(.data[[rank_col]]) |>
-        slice_head(n = k_max) |>
-        transmute(k = row_number(), fraction_null = cummean(truth == "null"))
-}
+    ```{r}
+    #| label: fig-fraction-null-moderated
+    #| echo: false
+    #| fig-width: 6.5
+    #| fig-height: 3.6
+    #| out-width: 550px
+    fraction_null_top_k <- function(results, rank_col, k_max) {
+        results |>
+            arrange(.data[[rank_col]]) |>
+            slice_head(n = k_max) |>
+            transmute(k = row_number(), fraction_null = cummean(truth == "null"))
+    }
 
-pal_ranking <- c("ordinary t" = "#0b0b0b", "t with the true SD" = "#898781", "moderated t" = "#4a3aa7")
-curves <- bind_rows(
-    `ordinary t` = fraction_null_top_k(many_genes, "rank", 100),
-    `t with the true SD` = fraction_null_top_k(many_genes, "rank_oracle", 100),
-    `moderated t` = fraction_null_top_k(many_genes, "rank_moderated", 100),
-    .id = "statistic"
-)
-ggplot(curves, aes(k, fraction_null, colour = statistic)) +
-    geom_step(linewidth = 0.7) +
-    scale_colour_manual(values = pal_ranking, name = "Ranked by", breaks = names(pal_ranking)) +
-    scale_y_continuous(limits = c(0, 1), labels = scales::label_percent()) +
-    labs(x = "k", y = "Null genes among the top k")
-```
+    pal_ranking <- c("ordinary t" = "#0b0b0b", "t with the true SD" = "#898781", "moderated t" = "#4a3aa7")
+    curves <- bind_rows(
+        `ordinary t` = fraction_null_top_k(many_genes, "rank", 100),
+        `t with the true SD` = fraction_null_top_k(many_genes, "rank_oracle", 100),
+        `moderated t` = fraction_null_top_k(many_genes, "rank_moderated", 100),
+        .id = "statistic"
+    )
+    ggplot(curves, aes(k, fraction_null, colour = statistic)) +
+        geom_step(linewidth = 0.7) +
+        scale_colour_manual(values = pal_ranking, name = "Ranked by", breaks = names(pal_ranking)) +
+        scale_y_continuous(limits = c(0, 1), labels = scales::label_percent()) +
+        labs(x = "k", y = "Null genes among the top k")
+    ```
 
 29. There's one last statistical consideration. If we use the usual hypothesis
 testing cutoffs then we're liable to return many false positives. The issue
 appears in this XKCD comic.
 
-<img src="figures/significant.png" width=400/>
+    <img src="figures/significant.png" width=400/>
 
-   The problem is that the hypothesis testing cutoffs are originally designed so
-   that under the null hypothesis the probability of a false positive is
-   $\alpha$ (usually set to 0.05). But as we test more and more hypotheses, the
-   probability of encountering at least one false positive grows, because each
-   time there is a probability $\alpha$ of a false positive
+    The problem is that the hypothesis testing cutoffs are originally designed so
+    that under the null hypothesis the probability of a false positive is
+    $\alpha$ (usually set to 0.05). But as we test more and more hypotheses, the
+    probability of encountering at least one false positive grows, because each
+    time there is a probability $\alpha$ of a false positive
 
 30. To deal with this phenomenon Benjamini and Hochberg had the idea that
 instead of controlling the probability of a single false positive, we should
@@ -957,15 +978,15 @@ the discoveries we would comment on in our paper. Among these $R$ rejections,
 suppose that $V$ are false discoveries (in practice, we would never know this).
 The quantity
 
-   $$
-   \widehat{\mathrm{FDP}} = \frac{V}{R\vee 1}
-   $$
-   is the empirical false discovery proportion in this one experiment and its
-   expected value across many experiments with the same underlying distribution
-   is called the false discovery rate,
-   $$
-   \mathrm{FDR} = \mathbb{E}\left[\widehat{\mathrm{FDP}}\right]
-   $$
+    $$
+    \widehat{\mathrm{FDP}} = \frac{V}{R\vee 1}
+    $$
+    is the empirical false discovery proportion in this one experiment and its
+    expected value across many experiments with the same underlying distribution
+    is called the false discovery rate,
+    $$
+    \mathrm{FDR} = \mathbb{E}\left[\widehat{\mathrm{FDP}}\right]
+    $$
 
 32. In addition to introducing this quantity, Benjamini and Hochberg proposed a
 way of adjusting the $p$-value cutoffs so that if we reject our hypothesis using
@@ -973,13 +994,13 @@ these cutoffs instead of the canonical $\alpha$, we would provably control the
 false discovery rate. Their procedure is now called the Benjamini-Hochberg (or
 BH) procedure,
 
-   * Order the $G$ p-values from smallest to largest
-    $$
-    p_{(1)} \le p_{(2)} \le \cdots \le p_{(G)}
-    $$
-    and denote the associated null hypothesis by $H_{(1)}, \dots, H_{(G)}$.
-   * Fix a target FDR level $q$^[This is the analog of $\alpha$ in ordinary hypothesis testing] and define a new sequence of thresholds $\alpha_{k} = \frac{kq}{G}$. This means that the smallest p-value is compared to the strictest threshold, the next smallest is compared to a slightly more lenient one, etc.
-   * Find the largest $k$ where $p_{(k)} \le \alpha_{k}$, and reject all hypotheses $H_{(1)}, \dots, H_{(k)}$. If there is no such $k$, don't make any rejections.
+    * Order the $G$ p-values from smallest to largest
+     $$
+     p_{(1)} \le p_{(2)} \le \cdots \le p_{(G)}
+     $$
+     and denote the associated null hypothesis by $H_{(1)}, \dots, H_{(G)}$.
+    * Fix a target FDR level $q$^[This is the analog of $\alpha$ in ordinary hypothesis testing] and define a new sequence of thresholds $\alpha_{k} = \frac{kq}{G}$. This means that the smallest p-value is compared to the strictest threshold, the next smallest is compared to a slightly more lenient one, etc.
+    * Find the largest $k$ where $p_{(k)} \le \alpha_{k}$, and reject all hypotheses $H_{(1)}, \dots, H_{(k)}$. If there is no such $k$, don't make any rejections.
 
 33. This procedure actually has an intuitive explanation in terms of the histogram of p-values.
 
@@ -991,59 +1012,59 @@ focused on sex differences in gene expression, which we'll analyze here.
 Compared to the motivating airway example, the sample size is much larger. This
 makes the moderated $t$-statistics less essential, as we will see.
 
-```{r}
-library(tweeDEseqCountData)
-data(pickrell1)
+    ```{r}
+    library(tweeDEseqCountData)
+    data(pickrell1)
 
-counts <- exprs(pickrell1.eset)
-samples <- data.frame(sex = factor(pickrell1.eset$gender), row.names = colnames(counts))
-genes <- data.frame(gene_id = rownames(counts), row.names = rownames(counts))
-dge <- DGEList(counts = counts, samples = samples, genes = genes)
-dge
-```
+    counts <- exprs(pickrell1.eset)
+    samples <- data.frame(sex = factor(pickrell1.eset$gender), row.names = colnames(counts))
+    genes <- data.frame(gene_id = rownames(counts), row.names = rownames(counts))
+    dge <- DGEList(counts = counts, samples = samples, genes = genes)
+    dge
+    ```
 
 35. As before, the first step is to filter genes that have low expression. This
 reduces the data from 38410 to 18189 rows (we have so many genes because RNA-seq
 picks up on the noncoding RNAs as well).
 
-```{r}
-keep <- filterByExpr(dge, group = dge$samples$sex)
-dge <- normLibSizes(dge[keep, ])
-```
+    ```{r}
+    keep <- filterByExpr(dge, group = dge$samples$sex)
+    dge <- normLibSizes(dge[keep, ])
+    ```
 
 36. Next we apply the logCPM normalization and recover expression weights. This
 depends on the `design` because the residual variances are computed after the
 initial regression onto `sex`.
 
-```{r}
-design <- model.matrix(~sex, data = dge$samples)
-v <- voom(dge, design)
-```
+    ```{r}
+    design <- model.matrix(~sex, data = dge$samples)
+    v <- voom(dge, design)
+    ```
 
 37. The weights and original design are passed to the linear model, and the
 variances are shrunk towards the prior mean in the empirical Bayes step.
 
-```{r}
-fit_raw <- lmFit(v, design)
-fit <- eBayes(fit_raw)
-```
+    ```{r}
+    fit_raw <- lmFit(v, design)
+    fit <- eBayes(fit_raw)
+    ```
 
-Plotting the original vs. moderated $t$-statistics shows that, with more
-samples, the empirical bayes shrinkage step has less effect than it did in the
-airway dataset.
+    Plotting the original vs. moderated $t$-statistics shows that, with more
+    samples, the empirical bayes shrinkage step has less effect than it did in the
+    airway dataset.
 
-```{r}
-#| label: fig-pickrell-shrinkage
-#| echo: false
-#| fig-width: 6
-#| fig-height: 4.2
-#| out-width: 800px
-coef_sex <- "sexmale"
-q_pickrell <- 0.01
+    ```{r}
+    #| label: fig-pickrell-shrinkage
+    #| echo: false
+    #| fig-width: 6
+    #| fig-height: 4.2
+    #| out-width: 800px
+    coef_sex <- "sexmale"
+    q_pickrell <- 0.01
 
-shrinkage_pickrell <- shrinkage_table(fit, coef_sex, q_pickrell)
-plot_shrinkage(shrinkage_pickrell, q_pickrell)
-```
+    shrinkage_pickrell <- shrinkage_table(fit, coef_sex, q_pickrell)
+    plot_shrinkage(shrinkage_pickrell, q_pickrell)
+    ```
 
 38.  Looking
 up^[The source data uses the hg19 reference genome, which is why the ENSEMBL IDs
@@ -1053,6 +1074,6 @@ look different.] the most significant genes, we see that the
 [second](https://www.ncbi.nlm.nih.gov/gene/7503?utm_source=gemini) is associated
 with X inactivation.
 
-```{r}
-topTable(fit, coef = "sexmale")
-```
+    ```{r}
+    topTable(fit, coef = "sexmale")
+    ```
