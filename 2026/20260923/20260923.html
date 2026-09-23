@@ -506,6 +506,7 @@ Figure&nbsp;8
 <li><p>Limma uses this trend to reweight the observations. The curve above was learned using gene-level quantities. But we can compute the quantity on the x-axis for any count <span class="math inline">\(y_{ng}\)</span>, and this suggests an associated weight, called the precision weight. Intuitively, if an observation comes from a sample with deep sequencing, it will have higher precision.</p>
 <p>These weights can then be incorporated into linear models through weighted linear regression. For example in the simple case where we’re simply looking at the difference between two groups, we would compute a weighted average instead of a plain average.</p></li>
 </ol>
+<p><em>Exercise: What are some visual and numerical checks you could implement to decide whether normalization is necessary in your dataset? If you do apply normalization, what are some checks you could carry out to see whether the outputs make sense? </em></p>
 </section>
 <section id="multiple-hypothesis-testing" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-hypothesis-testing">Multiple Hypothesis Testing</h2>

@@ -654,6 +654,8 @@ deep sequencing, it will have higher precision.
     the difference between two groups, we would compute a weighted average instead
     of a plain average.
 
+_Exercise: What are some visual and numerical checks you could implement to decide whether normalization is necessary in your dataset? If you do apply normalization, what are some checks you could carry out to see whether the outputs make sense? _
+
 ## Multiple Hypothesis Testing
 
 23. At this point, we could imagine applying a linear model to every single
@@ -927,6 +929,8 @@ were much lower than expected after estimating the prior variance $H$.
         labs(x = "k", y = "Null genes among the top k")
     ```
 
+_Exercise: What would be a sign that an initial analysis is contaminated by many false positives?_
+
 28. There's one last statistical consideration. If we use the usual hypothesis
 testing cutoffs then we're liable to return many false positives...
 
@@ -1059,6 +1063,8 @@ where the BH procedure came from. Finally, while it's nice to know where the
 multiple testing correction comes from, we never have to compute the
 Benjamini-Hochberg thresholds ourselves. When we run `topTable`, limma
 automatically performs this multiple testing correction.
+
+_Exercise: How would you explain false discovery rate control to someone who has experience running standard hypothesis tests but corrections for multiple testing?_
 
 ## Extra Code Example
 
