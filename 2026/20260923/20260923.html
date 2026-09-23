@@ -2368,6 +2368,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Introduction to Differential Expression Analysis</h1>
+<p class="subtitle lead">BME780 Guest Lecture</p>
 </div>
 
 
@@ -2701,7 +2702,7 @@ Figure 6
 </div>
 </div>
 </div>
-<p>At this point, we can, in principle, fit a linear model where the experimental factors are features <span class="math inline">\(x_{n}\)</span> and the transformed gene expression is teh response <span class="math inline">\(y_n\)</span>.</p></li>
+<p>At this point, we can, in principle, fit a linear model where the experimental factors are features <span class="math inline">\(x_{n}\)</span> and the transformed gene expression is the response <span class="math inline">\(y_n\)</span>.</p></li>
 <li><p>But there are still issues. When we convert to frequencies, we’re losing a meaningful information about the precision of our measurements. Two samples can have exactly the same logCPM value for a gene but different total counts. The total count information is important because a sample with deep sequencing is measured more accurately than one with shallow sequencing.</p></li>
 <li><p>This shows up in the spread of the groups after the logCPM transformation has been applied. For example, in Figure 7<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, the logCPM transformation has put all the genes on roughly the same scale. Instead of ranging from 0 to 40,000, they’re in roughly the range from -5 to 10.</p>
 <div class="cell">
@@ -2859,7 +2860,7 @@ p_{(1)} \le p_{(2)} \le \cdots \le p_{(G)}
 \]</span></p>
 <p>Approximating<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> <span class="math inline">\(\pi_{0} \approx 1\)</span> (i.e., most genes are null), the right hand side is <span class="math inline">\(\alpha_{k}\)</span>. So, if we want to reject as many hypothesis as possible while controlling the FDR below <span class="math inline">\(q\)</span>, then we should choose the largest <span class="math inline">\(p_{\left(k\right)} \leq
 \alpha_{k}\)</span>. This is exactly the BH procedure.</p></li>
-<li><p>This isn’t exactly a proof, but hopefully this gives some intuition about where the BH thresholds came from. Finally, while it’s nice to know where the multiple testing correction comes from, we never have to compute the Benjamini-Hochberg thresholds ourselves. When we run <code>topTable</code>, limma automatically performs this multiple testing correction.</p></li>
+<li><p>This isn’t exactly a proof, but hopefully it gives some intuition about where the BH procedure came from. Finally, while it’s nice to know where the multiple testing correction comes from, we never have to compute the Benjamini-Hochberg thresholds ourselves. When we run <code>topTable</code>, limma automatically performs this multiple testing correction.</p></li>
 </ol>
 </section>
 <section id="extra-code-example" class="level2">
