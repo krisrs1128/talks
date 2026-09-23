@@ -1,11 +1,11 @@
 ---
 title: "Introduction to Differential Expression Analysis"
 author: Kris Sankaran
+subtitle: "BME780 Guest Lecture"
 date: 2026-09-23
 bibliography: references.bib
 format:
   html:
-    embed-resources: true
     html-math-method: mathjax
     fig-align: center
 execute:
@@ -434,9 +434,8 @@ would struggle to detect a difference.
 14. In this case we might want to test the null hypothesis $H_{0}$ that the
 lines for the two groups are exactly overlapping. The main trick is to subtract
 out the effects from the $x_n$ and see whether there still remains a difference
-between the two groups. That is, after subtracing the $x_n$ effects (i.e.,
-looking at the gaps between the points and the dashed line), we return to the
-setting above.
+between the two groups. That is, after subtracing the $x_n$ effects, we return
+to the setting above.
 
     ```{r}
     #| label: fig-lm-adjusted
@@ -483,6 +482,8 @@ $y_{ng}$. Arrange all these data into a samples-by-genes matrix^[This is the tra
     y_{ng} \rightsquigarrow \log\left(\frac{y_{ng} + \frac{1}{2}}{\sum_{k}y_{nk} + 1} \times 10^{6}\right)
     $$
 
+    <img src="figures/yng_cpm.png" width=400/>
+
     The $\frac{1}{2}$ and $1$ offfsets help us avoid $\log\left(0\right)$, which
     is undefined. Besides this, the fraction inside of the log converts each
     sample into something like a relative frequency of gene $g$ in sample $n$
@@ -491,6 +492,9 @@ $y_{ng}$. Arrange all these data into a samples-by-genes matrix^[This is the tra
     Finally, by taking the log transformation, we convert discrete counts into a
     continuous scale where the normal distribution assumption is more
     believable.
+
+    <img src="figures/cpm.png" width=400/>
+    <img src="figures/log_cpm.png" width=400/>
 
 19. The three genes in Figure 6 are shown before and after applying the CPM
 transformation. The data are described in more detail in the code example below.
@@ -565,7 +569,7 @@ transformation.
     ```
 
     At this point, we can, in principle, fit a linear model where the experimental
-    factors are features $x_{n}$ and the transformed gene expression is teh response $y_n$.
+    factors are features $x_{n}$ and the transformed gene expression is the response $y_n$.
 
 20. But there are still issues. When we convert to frequencies, we're losing a
 meaningful information about the precision of our measurements. Two samples can
@@ -930,8 +934,9 @@ testing cutoffs then we're liable to return many false positives...
 
     The problem is that the hypothesis testing cutoffs were originally designed
     so that, under the null hypothesis, the probability of a false positive is
-    $\alpha$ (usually 0.05). But as we test more and more hypotheses, the
-    probability of encountering at least one false positive grows.
+    $\alpha$ (usually 0.05). But in modern biology we test many hypothesis, and
+    the probability of encountering at least one false positive grows with the
+    number of tests.
 
 29. To deal with this phenomenon [@Benjamini1995] had the idea that instead of
 controlling the probability of a single false positive, we should control the
@@ -1042,7 +1047,7 @@ into $t$ and $R\left(t\right)$, we find,
     \end{align}
     $$
 
-    Approximating^[In fact, $\pi_{0}$ is always less than 1, so replacing it
+    Approximating^[In fact, $\pi_{0}$ is always less than one, so replacing it
     with one only makes our FDR estimate more conservative.] $\pi_{0} \approx 1$
     (i.e., most genes are null), the right hand side is $\alpha_{k}$. So, if we
     want to reject as many hypothesis as possible while controlling the FDR
