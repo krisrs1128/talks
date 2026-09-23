@@ -506,7 +506,7 @@ Figure&nbsp;8
 <li><p>Limma uses this trend to reweight the observations. The curve above was learned using gene-level quantities. But we can compute the quantity on the x-axis for any count <span class="math inline">\(y_{ng}\)</span>, and this suggests an associated weight, called the precision weight. Intuitively, if an observation comes from a sample with deep sequencing, it will have higher precision.</p>
 <p>These weights can then be incorporated into linear models through weighted linear regression. For example in the simple case where we’re simply looking at the difference between two groups, we would compute a weighted average instead of a plain average.</p></li>
 </ol>
-<p><em>Exercise: What are some visual and numerical checks you could implement to decide whether normalization is necessary in your dataset? If you do apply normalization, what are some checks you could carry out to see whether the outputs make sense? </em></p>
+<p><em>Exercise: What are some visual and numerical checks you could implement to decide whether normalization is necessary in your dataset? If you do apply normalization, what are some checks you could carry out to see whether the outputs make sense?</em></p>
 </section>
 <section id="multiple-hypothesis-testing" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-hypothesis-testing">Multiple Hypothesis Testing</h2>
@@ -583,6 +583,9 @@ Figure&nbsp;12
 </div>
 </div>
 </div></li>
+</ol>
+<p><em>Exercise: What would be a sign that an initial analysis is contaminated by many false positives?</em></p>
+<ol start="28" type="1">
 <li><p>There’s one last statistical consideration. If we use the usual hypothesis testing cutoffs then we’re liable to return many false positives…</p>
 <p><img src="figures/significant.png" width="400/"></p>
 <p>The problem is that the hypothesis testing cutoffs were originally designed so that, under the null hypothesis, the probability of a false positive is <span class="math inline">\(\alpha\)</span> (usually 0.05). But in modern biology we test many hypothesis, and the probability of encountering at least one false positive grows with the number of tests.</p></li>
@@ -632,6 +635,8 @@ p_{(1)} \le p_{(2)} \le \cdots \le p_{(G)}
 \alpha_{k}\)</span>. This is exactly the BH procedure.</p></li>
 <li><p>This isn’t exactly a proof, but hopefully it gives some intuition about where the BH procedure came from. Finally, while it’s nice to know where the multiple testing correction comes from, we never have to compute the Benjamini-Hochberg thresholds ourselves. When we run <code>topTable</code>, limma automatically performs this multiple testing correction.</p></li>
 </ol>
+<p><em>Exercise: How would you explain false discovery rate control to someone who has experience running standard hypothesis tests but not corrections for multiple testing?</em></p>
+<p><em>Exercise: Describe one dataset that you plan to analyze during your degree program. Could a differential expression analysis be applied? Which potential issues discussed in this lecture might arise in your analysis?</em></p>
 </section>
 <section id="extra-code-example" class="level2">
 <h2 class="anchored" data-anchor-id="extra-code-example">Extra Code Example</h2>

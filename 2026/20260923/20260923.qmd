@@ -654,7 +654,7 @@ deep sequencing, it will have higher precision.
     the difference between two groups, we would compute a weighted average instead
     of a plain average.
 
-_Exercise: What are some visual and numerical checks you could implement to decide whether normalization is necessary in your dataset? If you do apply normalization, what are some checks you could carry out to see whether the outputs make sense? _
+_Exercise: What are some visual and numerical checks you could implement to decide whether normalization is necessary in your dataset? If you do apply normalization, what are some checks you could carry out to see whether the outputs make sense?_
 
 ## Multiple Hypothesis Testing
 
@@ -1064,7 +1064,9 @@ multiple testing correction comes from, we never have to compute the
 Benjamini-Hochberg thresholds ourselves. When we run `topTable`, limma
 automatically performs this multiple testing correction.
 
-_Exercise: How would you explain false discovery rate control to someone who has experience running standard hypothesis tests but corrections for multiple testing?_
+_Exercise: How would you explain false discovery rate control to someone who has experience running standard hypothesis tests but not corrections for multiple testing?_
+
+_Exercise: Describe one dataset that you plan to analyze during your degree program. Could a differential expression analysis be applied? Which potential issues discussed in this lecture might arise in your analysis?_
 
 ## Extra Code Example
 
